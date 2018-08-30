@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/layout_play_select"
+    android:orientation="vertical"
+    android:splitMotionEvents="false"
+    android:layout_marginTop="@dimen/element_spacing_small"
+    android:visibility="gone">
+
+    <include layout="@layout/button_choice"
+        android:id="@+id/button1"/>
+
+    <include layout="@layout/button_choice"
+        android:id="@+id/button2"/>
+
+    <include layout="@layout/button_choice"
+        android:id="@+id/button3"/>
+
+    <include layout="@layout/button_choice"
+        android:id="@+id/button4"/>
+
+    <include layout="@layout/button_choice"
+        android:id="@+id/button5"/>
+
+    <include layout="@layout/button_choice"
+        android:id="@+id/button6"/>
+
+</LinearLayout>

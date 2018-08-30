@@ -1,0 +1,143 @@
+<resources>
+    <string name="app_name">暗記メーカー</string>
+    <string name="add_exam">問題集の追加</string>
+    <string name="edit_exam">問題集の編集</string>
+    <string name="delete_exam">問題集の削除</string>
+    <string name="message_delete_exam">問題集: %1$s を削除しますか？</string>
+    <string name="message_share_exam">「 %1$s 」をテキストデータに変換します　　※現在 画像は変換できないのでご注意下さい. また，作成したテキストデータは「コピペで読み込む」機能で問題集に復元できます．</string>
+    <string name="edit_color">色設定</string>
+    <string name="category">カテゴリ</string>
+    <string name="action_add">+ 追加して保存</string>
+    <string name="action_choose">選択問題</string>
+    <string name="action_write">記述問題</string>
+    <string name="action_detail">詳細設定</string>
+    <string name="action_paste">コピペで読み込む</string>
+    <string name="action_next">次へ</string>
+    <string name="action_right">正解</string>
+    <string name="action_wrong">不正解</string>
+    <string name="add_question">問題の追加</string>
+    <string name="edit_question">問題の編集</string>
+    <string name="delete_question">問題の削除</string>
+    <string name="save_question">変更を保存</string>
+    <string name="add_question_write">問題の追加: 記述</string>
+    <string name="add_question_choose">問題の追加: 選択</string>
+    <string name="number_answers">・解答の数(完答)</string>
+    <string name="number_choosers">・選択肢の数</string>
+    <string name="number_questions">出題数</string>
+    <string name="number_existing_questions">問題数: %1$d</string>
+    <string name="number_exams">問題集数 %1$d</string>
+    <string name="confirm">確認</string>
+    <string name="open">開く</string>
+    <string name="play">解く</string>
+    <string name="auto">・選択肢の自動生成</string>
+    <string name="state_auto">自動生成</string>
+    <string name="share">共有</string>
+    <string name="help">ヘルプ</string>
+    <string name="menu">メニュー</string>
+    <string name="result">結果</string>
+    <string name="retry">解き直す</string>
+    <string name="edit">編集</string>
+    <string name="delete">削除</string>
+    <string name="loading">読み込み中</string>
+    <string name="way">出題形式</string>
+    <string name="load">読み込む</string>
+    <string name="unknown">タイトル不明</string>
+    <string name="limit">%1$d ~ %2$d までにしてください</string>
+    <string name="trim">トリミング</string>
+    <string name="cancel">キャンセル</string>
+    <string name="new_category">新しいカテゴリ</string>
+    <string name="old_category">既存のカテゴリ</string>
+    <string name="edit_category">カテゴリ設定</string>
+    <string name="cancel_category">カテゴリ設定を取り消しますか</string>
+    <string name="sort">並び替え</string>
+    <string name="message_add">問題集を追加しました</string>
+    <string name="message_wrong">名前を入力してください</string>
+    <string name="message_shortage">全項目を入力してください</string>
+    <string name="message_delete">問題 %1$s を削除しますか</string>
+    <string name="message_answer">正解: %1$s</string>
+    <string name="message_auto">他の問題の答えが選択肢になります</string>
+    <string name="message_not_auto">問題数不足で自動生成できません</string>
+    <string name="message_explanation">・解説文を入れる</string>
+    <string name="message_paste">共有機能で作成したテキストを\nここに貼り付けてください</string>
+    <string name="message_order">順番通りに出題</string>
+    <string name="message_random">ランダムに出題</string>
+    <string name="message_wrong_only">間違えた問題のみ出題</string>
+    <string name="message_switch_question">問題文と解答の入れ替え(記述問題)</string>
+    <string name="message_self">自己採点モード(記述問題)</string>
+    <string name="message_delete_sound">効果音を消す</string>
+    <string name="message_wrong_load">%1$s 行目に入力の不備があります。</string>
+    <string name="message_success_load">%1$s を読み込みました</string>
+    <string name="message_null_questions">問題が登録されていません</string>
+    <string name="message_null_wrongs">間違えた問題がありません</string>
+    <string name="message_null_number">出題数を入力してください</string>
+    <string name="message_ratio">正答率 %1$d / %2$d</string>
+    <string name="question">問題: </string>
+    <string name="answer">解答: </string>
+    <string name="explanation">解説: %1$s</string>
+    <string name="your_answer">あなたの解答: %1$s</string>
+    <string name="image">画像</string>
+    <string name="title_activity_edit">編集</string>
+    <string name="title_activity_set">SetActivity</string>
+    <string name="add">add</string>
+    <string name="hint_name">問題集の名前</string>
+    <string name="hint_explanation">解説</string>
+    <string name="action_settings">使い方</string>
+    <string name="create">新しい問題集の作成</string>
+    <string name="hint_answer">解答</string>
+    <string name="hint_answer1">解答1</string>
+    <string name="hint_answer2">解答2</string>
+    <string name="hint_answer3">解答3</string>
+    <string name="hint_answer4">解答4</string>
+    <string name="hint_question">問題文</string>
+    <string name="next">次の問題の作成</string>
+    <string name="finish">問題作成の終了</string>
+    <string name="hint_other">他の選択肢</string>
+    <string name="action_rev">レビューする</string>
+    <string name="action_other">この開発者の他のアプリ</string>
+    <string name="action_import">ファイルのインポート</string>
+    <string name="action_cloud">問題集置き場</string>
+    <string name="action_license">ライセンス</string>
+    <string name="share_short_answers">記述,%1$s,%2$s</string>
+    <string name="share_multiple_answers">記述A,%1$s,</string>
+    <string name="share_selection_problems">選択,%1$s,%2$s,</string>
+    <string name="share_selection_auto_problems">選択A,%1$s,%2$s,%3$d</string>
+    <string name="share_explanation">解説,%1$s</string>
+    <string name="share_title">タイトル,%1$s</string>
+    <string name="share_category">カテゴリ,%1$s</string>
+    <string name="load_short_answers">記述</string>
+    <string name="load_multiple_answers">記述A</string>
+    <string name="load_selection_problems">選択</string>
+    <string name="load_selection_auto_problems">選択A</string>
+    <string name="load_explanation">解説</string>
+    <string name="load_title">タイトル</string>
+    <string name="load_category">カテゴリ</string>
+    <string name="msg_save">保存しました</string>
+    <string name="msg_already_delete">すでに削除されています</string>
+    <string name="save">保存する</string>
+    <string name="edit_pro">テキストエディタで編集</string>
+
+    <string-array name="sort_exam">
+        <item>五十音順(降順)</item>
+        <item>五十音順(昇順)</item>
+        <item>最近解いた順</item>
+    </string-array>
+
+    <string-array name="action_image">
+        <item>画像の差し替え</item>
+        <item>取り消し</item>
+    </string-array>
+    
+    <string-array name="action_reload">
+        <item>全部</item>
+        <item>間違えた問題だけ</item>
+    </string-array>
+    <string name="share_color">色,%1$s</string>
+    <string name="title_activity_edit_pro">編集</string>
+    <string name="load_color">色</string>
+    <string name="message_success_update">保存しました</string>
+    <string name="config">問題集の設定</string>
+    <string name="search">検索</string>
+    <string name="incorrect">不正解</string>
+    <string name="ok">OK</string>
+    <string name="number">No.%1$s</string>
+</resources>

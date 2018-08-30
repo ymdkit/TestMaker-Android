@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/layout_dialog_detail"
+    android:padding="@dimen/element_spacing_small"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/element_spacing_normal"
+        >
+
+        <TextView
+            android:layout_marginBottom="@dimen/element_spacing_small"
+            android:layout_marginRight="@dimen/element_spacing_large"
+            android:layout_marginEnd="@dimen/element_spacing_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_large"
+            android:gravity="center_vertical"
+            android:text="@string/number_choosers"
+            android:layout_weight="2.4"
+            android:id="@+id/textView" />
+
+        <ImageButton
+            android:contentDescription="@string/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/element_spacing_small"
+            android:layout_marginStart="@dimen/element_spacing_small"
+            android:layout_marginRight="@dimen/element_spacing_small"
+            android:layout_marginEnd="@dimen/element_spacing_small"
+            android:layout_weight="5"
+            android:background="@drawable/button_blue"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_remove_white"
+            android:id="@+id/minus"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_large"
+            android:gravity="center"
+            android:layout_weight="5"
+            android:id="@+id/size_choose" />
+
+        <ImageButton
+            android:contentDescription="@string/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:layout_marginLeft="@dimen/element_spacing_small"
+            android:layout_marginRight="@dimen/element_spacing_small"
+            android:id="@+id/add"
+            android:background="@drawable/button_blue"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_add_white"
+            />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_switch"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/element_spacing_very_large"
+        >
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center_vertical"
+                android:text="@string/auto"
+                android:id="@+id/textView2" />
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+                <!--android:text="@string/message_auto"-->
+                <!--android:layout_marginLeft="@dimen/element_spacing_large"-->
+                <!--android:layout_marginStart="@dimen/element_spacing_large"-->
+                <!--android:id="@+id/explain" />-->
+        </LinearLayout>
+
+        <android.support.v7.widget.SwitchCompat
+            android:layout_weight="3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:id="@+id/change_auto" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_explanation"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/element_spacing_very_large"
+        >
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="center_vertical"
+            android:text="@string/message_explanation"
+            />
+
+
+        <android.support.v7.widget.SwitchCompat
+            android:layout_weight="3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:id="@+id/change_explanation" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_margin="@dimen/element_spacing_small"
+    android:layout_height="@dimen/view_height_normal"
+    android:background="@drawable/feedback"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:contentDescription="@string/image"
+        android:id="@+id/color"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:layout_weight="3"
+        android:background="@drawable/circle" />
+
+    <TextView
+        android:id="@+id/cate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/element_spacing_small"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ImageButton
+        android:contentDescription="@string/image"
+        android:id="@+id/delete"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:layout_weight="3"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_clear_black"
+        android:background="@drawable/feedback" />
+</LinearLayout>

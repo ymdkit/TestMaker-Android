@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context="jp.gr.java_conf.foobar.testmaker.service.activities.EditActivity">
+
+    <FrameLayout
+        android:id="@+id/toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/Theme.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:title="@string/title_activity_edit" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#999" />
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cardView"
+        style="@style/MyCardViewStyle"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        card_view:cardCornerRadius="@dimen/element_spacing_small"
+        card_view:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_height_small">
+
+                <ImageButton
+                    android:id="@+id/ImageButton_expand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/feedback"
+                    android:contentDescription="@string/open"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_expand_more_black" />
+
+                <TextView
+                    android:id="@+id/text_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/element_spacing_small"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:gravity="center_vertical"
+                    android:text="@string/add_question"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <Button
+                    android:id="@+id/button_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="@dimen/element_spacing_small"
+                    android:background="@drawable/button_blue"
+                    android:text="@string/cancel"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_small"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_body"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout_question_write"
+                        style="@style/MyTextInputLayoutStyle"
+                        android:layout_weight="1">
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/set_problem"
+                            style="@style/MyEditTextMultiLine"
+                            android:hint="@string/hint_question" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/element_spacing_small"
+                        android:layout_weight="4">
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <ImageButton
+                            android:id="@+id/button_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/view_height_normal"
+                            android:background="@drawable/button_blue"
+                            android:contentDescription="@string/image"
+                            android:padding="@dimen/element_spacing_small"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_photo_white"
+                            android:text="@string/image"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/white" />
+
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+
+                <FrameLayout
+                    android:id="@+id/edit_write"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout_answer_write"
+                        style="@style/MyTextInputLayoutStyle">
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/set_answer_write"
+                            style="@style/MyEditTextSingleLine"
+                            android:hint="@string/hint_answer" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/layout_answer_write_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <View
+                            android:id="@+id/center"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_centerInParent="true" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/textInputLayout_answer_write_1"
+                            style="@style/MyTextInputLayoutStyle"
+                            android:layout_alignEnd="@+id/center"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignRight="@+id/center">
+
+                            <android.support.v7.widget.AppCompatEditText
+                                android:id="@+id/set_answer_write_1"
+                                style="@style/MyEditTextSingleLine"
+                                android:hint="@string/hint_answer1" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/textInputLayout_anwer_write_2"
+                            style="@style/MyTextInputLayoutStyle"
+                            android:layout_alignLeft="@+id/center"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignStart="@+id/center">
+
+                            <android.support.v7.widget.AppCompatEditText
+                                android:id="@+id/set_answer_write_2"
+                                style="@style/MyEditTextSingleLine"
+                                android:hint="@string/hint_answer2" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/textInputLayout_answer_write_3"
+                            style="@style/MyTextInputLayoutStyle"
+                            android:layout_alignEnd="@+id/center"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignRight="@+id/center"
+                            android:layout_below="@+id/textInputLayout_answer_write_1">
+
+                            <android.support.v7.widget.AppCompatEditText
+                                android:id="@+id/set_answer_write_3"
+                                style="@style/MyEditTextSingleLine"
+                                android:hint="@string/hint_answer3" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/textInputLayout_answer_4"
+                            style="@style/MyTextInputLayoutStyle"
+                            android:layout_alignLeft="@+id/center"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignStart="@+id/center"
+                            android:layout_below="@+id/textInputLayout_answer_write_1">
+
+                            <android.support.v7.widget.AppCompatEditText
+                                android:id="@+id/set_answer_write_4"
+                                style="@style/MyEditTextSingleLine"
+                                android:hint="@string/hint_answer4" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                    </RelativeLayout>
+
+                </FrameLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/edit_choose"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <View
+                        android:id="@+id/center_view"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_centerInParent="true" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout_answer_choose"
+                        style="@style/MyTextInputLayoutStyle"
+                        android:layout_alignEnd="@+id/center_view"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignRight="@+id/center_view">
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/set_answer_choose"
+                            style="@style/MyEditTextMultiLine"
+                            android:hint="@string/hint_answer" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout_other"
+                        style="@style/MyTextInputLayoutStyle"
+                        android:layout_alignLeft="@+id/center_view"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignStart="@+id/center_view">
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/set_other1"
+                            style="@style/MyEditTextMultiLine"
+                            android:hint="@string/hint_other" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout_other_2"
+                        style="@style/MyTextInputLayoutStyle"
+                        android:layout_alignEnd="@+id/center_view"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignRight="@+id/center_view"
+                        android:layout_below="@+id/textInputLayout_answer_choose">
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/set_other2"
+                            style="@style/MyEditTextMultiLine"
+                            android:hint="@string/hint_other" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout_other_3"
+                        style="@style/MyTextInputLayoutStyle"
+                        android:layout_alignLeft="@+id/center_view"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignStart="@+id/center_view"
+                        android:layout_below="@+id/textInputLayout_answer_choose">
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/set_other3"
+                            style="@style/MyEditTextMultiLine"
+                            android:hint="@string/hint_other" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout_other_4"
+                        style="@style/MyTextInputLayoutStyle"
+                        android:layout_alignEnd="@+id/center_view"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignRight="@id/center_view"
+                        android:layout_below="@+id/textInputLayout_other_2">
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/set_other4"
+                            style="@style/MyEditTextMultiLine"
+                            android:hint="@string/hint_other" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout_other_5"
+                        style="@style/MyTextInputLayoutStyle"
+                        android:layout_alignLeft="@+id/center_view"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignStart="@+id/center_view"
+                        android:layout_below="@+id/textInputLayout_other_3">
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/set_other5"
+                            style="@style/MyEditTextMultiLine"
+                            android:hint="@string/hint_other" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </RelativeLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textInputLayout_explanation"
+                    style="@style/MyTextInputLayoutStyle"
+                    android:visibility="gone">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/set_explanation"
+                        style="@style/MyEditTextMultiLine"
+                        android:hint="@string/hint_explanation" />
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/button_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/element_spacing_small"
+                    android:layout_marginLeft="@dimen/element_spacing_small"
+                    android:layout_marginRight="@dimen/element_spacing_small"
+                    android:background="@drawable/button_add"
+                    android:text="@string/action_add"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button_write"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_height_small"
+                        android:layout_margin="@dimen/element_spacing_small"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_blue"
+                        android:text="@string/action_choose"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <Button
+                        android:id="@+id/button_choose"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_height_small"
+                        android:layout_margin="@dimen/element_spacing_small"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_blue"
+                        android:text="@string/action_detail"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_small" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/element_spacing_small"
+        android:orientation="vertical" />
+
+</LinearLayout>

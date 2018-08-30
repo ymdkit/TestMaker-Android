@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/button"
+        android:layout_alignBottom="@+id/text"
+        android:layout_alignTop="@+id/text"
+        style="@style/button_choose_normal"/>
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:paddingTop="@dimen/element_spacing_very_large"
+        android:paddingBottom="@dimen/element_spacing_very_large"
+        android:paddingLeft="@dimen/element_spacing_normal"
+        android:paddingStart="@dimen/element_spacing_normal"
+        android:paddingEnd="@dimen/element_spacing_normal"
+        android:paddingRight="@dimen/element_spacing_normal"
+        android:layout_centerInParent="true"
+        android:textSize="@dimen/text_size_large"
+        android:textColor="@color/white"
+        android:translationZ="2dp"/>
+
+</RelativeLayout>

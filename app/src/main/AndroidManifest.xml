@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="jp.gr.java_conf.foobar.testmaker.service">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:name=".TestMakerApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/icon_testmaker_small"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activities.MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.PlayActivity"
+            android:label="解答"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
+            android:name=".activities.EditActivity"
+            android:label="編集"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ResultActivity"
+            android:label="結果"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.WebViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.CategorizedActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.EditProActivity"
+            android:label="@string/title_activity_edit_pro"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".activities.ShowTestsActivity"
+            android:label="@string/title_activity_show_tests"
+            android:parentActivityName=".activities.BaseActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jp.gr.java_conf.foobar.testmaker.service.activities.BaseActivity" />
+        </activity>
+    </application>
+
+</manifest>

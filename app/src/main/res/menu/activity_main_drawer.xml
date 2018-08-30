@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help_outline_white"
+            android:title="@string/help" />
+        <item
+            android:id="@+id/nav_review"
+            android:icon="@drawable/ic_create_white"
+            android:title="@string/action_rev" />
+        <item
+            android:id="@+id/nav_others"
+            android:icon="@drawable/ic_play_arrow_white"
+            android:title="@string/action_other" />
+        <item
+            android:id="@+id/nav_import"
+            android:icon="@drawable/ic_file_download_white"
+            android:title="@string/action_import" />
+
+        <item
+            android:id="@+id/nav_paste"
+            android:icon="@drawable/ic_content_paste_white"
+            android:title="@string/action_paste" />
+
+        <item
+            android:id="@+id/nav_cloud"
+            android:icon="@drawable/ic_cloud_download_white"
+            android:title="@string/action_cloud" />
+
+        <item
+            android:id="@+id/nav_license"
+            android:icon="@drawable/ic_folder_open_white"
+            android:title="@string/action_license" />
+    </group>
+
+
+</menu>

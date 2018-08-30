@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_height_very_large"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="@dimen/element_spacing_small"
+        android:layout_marginRight="@dimen/element_spacing_small"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="@dimen/element_spacing_small"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/problem"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/element_spacing_small"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:layout_marginTop="@dimen/element_spacing_normal"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:scrollHorizontally="true"
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_size_medium"
+                    />
+
+                <TextView
+                    android:id="@+id/answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/element_spacing_small"
+                    android:layout_marginLeft="@dimen/element_spacing_small"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_medium"
+                    />
+            </LinearLayout>
+
+
+            <jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
+                android:id="@+id/edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0.9"
+                custom:image="@drawable/ic_create_white"
+                custom:text="@string/edit" />
+
+            <jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
+                android:id="@+id/delete"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0.9"
+                custom:image="@drawable/ic_delete_white"
+                custom:text="@string/delete" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

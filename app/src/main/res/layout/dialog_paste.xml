@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/layout_dialog_paste"
+    >
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textMultiLine"
+        android:hint="@string/message_paste"
+        android:ems="10"
+        android:layout_margin="@dimen/element_spacing_small"
+        android:maxLines="20"
+        android:id="@+id/edit_paste"
+        android:layout_weight="1" />
+
+    <Button
+        android:text="@string/load"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/element_spacing_small"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:layout_weight="8"
+        android:background="@drawable/button_blue"
+        android:id="@+id/button_paste"
+        />
+</LinearLayout>

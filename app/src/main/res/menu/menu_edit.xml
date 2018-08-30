@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_setting"
+        android:icon="@drawable/ic_settings_white"
+        android:title="@string/config"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_edit_pro"
+        android:title="@string/edit_pro"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/menu_search"
+        android:title="@string/search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom" />
+
+</menu>

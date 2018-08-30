@@ -1,0 +1,144 @@
+<resources>
+    <string name="title_activity_set">SetActivity</string>
+    <string name="add">add</string>
+    <string name="hint_name">name test</string>
+    <string name="hint_explanation">explanation</string>
+    <string name="action_settings">help</string>
+    <string name="hint_answer">answer</string>
+    <string name="hint_question">question</string>
+    <string name="next">次の問題の作成</string>
+    <string name="hint_other">other choice</string>
+    <string name="action_rev">review</string>
+    <string name="action_add">+ add</string>
+    <string name="action_choose">selection problem</string>
+    <string name="action_cloud">test place</string>
+    <string name="action_detail">setting</string>
+    <string name="action_import">import file</string>
+    <string name="action_license">license</string>
+    <string name="action_next">next</string>
+    <string name="action_other">other apps</string>
+    <string name="action_paste">load by copying and pasting</string>
+    <string name="action_right">correct</string>
+    <string name="action_write">short answer problem</string>
+    <string name="action_wrong">incorrect</string>
+    <string name="add_exam">add test</string>
+    <string name="add_question">add problem</string>
+    <string name="add_question_choose">add problem</string>
+    <string name="add_question_write">add problem</string>
+    <string name="answer">A.</string>
+    <string name="app_name">TestMaker</string>
+    <string name="auto">make selection auto</string>
+    <string name="cancel">cancel</string>
+    <string name="cancel_category">cancel category ?</string>
+    <string name="category">category</string>
+    <string name="confirm">confirm</string>
+    <string name="create">"add new test "</string>
+    <string name="delete">delete</string>
+    <string name="delete_exam">delete test</string>
+    <string name="delete_question">delete problem</string>
+    <string name="edit">edit</string>
+    <string name="edit_category">edit category</string>
+    <string name="edit_color">edit color</string>
+    <string name="edit_exam">edit test</string>
+    <string name="edit_question">edit problem</string>
+    <string name="explanation">explanation: %1$s</string>
+    <string name="finish">finish</string>
+    <string name="help">help</string>
+    <string name="hint_answer1">answer-1</string>
+    <string name="hint_answer2">answer-2</string>
+    <string name="hint_answer3">answer-3</string>
+    <string name="hint_answer4">answer-4</string>
+    <string name="image">image</string>
+    <string name="limit">only %1$d ~ %2$d</string>
+    <string name="load">load</string>
+    <string name="loading">loading</string>
+    <string name="menu">menu</string>
+    <string name="message_add">added test</string>
+    <string name="message_answer">answer: %1$s</string>
+    <string name="message_auto">other problem\'s answer become choice</string>
+    <string name="message_delete">delete %1$s ?</string>
+    <string name="message_delete_exam">delete %1$s ?</string>
+    <string name="message_delete_sound">mute sound</string>
+    <string name="message_explanation">add explanation</string>
+    <string name="message_not_auto">add more problem</string>
+    <string name="message_null_number">please input number</string>
+    <string name="message_null_questions">\"please add problems\"</string>
+    <string name="message_null_wrongs">wrong is nothing</string>
+    <string name="message_order">right order</string>
+    <string name="message_random">random order</string>
+    <string name="message_paste">paste text shared by this app</string>
+    <string name="message_ratio">%1$d / %2$d</string>
+    <string name="message_self">judge self</string>
+    <string name="message_share_exam">change %1$s into txt</string>
+    <string name="message_shortage">input all place</string>
+    <string name="message_success_load">loaded %1$s</string>
+    <string name="message_switch_question">exchange problem for answer</string>
+    <string name="message_wrong">input name</string>
+    <string name="message_wrong_load">%1$s line is wrong</string>
+    <string name="message_wrong_only">only wrong problems</string>
+    <string name="new_category">new category</string>
+    <string name="number_answers">number answers</string>
+    <string name="number_choosers">number choices</string>
+    <string name="number_exams">%1$d tests</string>
+    <string name="number_existing_questions">%1$d problems</string>
+    <string name="number_questions">quantity</string>
+    <string name="old_category">existing category</string>
+    <string name="open">open</string>
+    <string name="play">study</string>
+    <string name="question">Q.</string>
+    <string name="result">result</string>
+    <string name="retry">retry</string>
+    <string name="save_question">save</string>
+    <string name="share">share</string>
+    <string name="sort">sort</string>
+    <string name="state_auto">auto</string>
+    <string name="title_activity_edit">edit</string>
+    <string name="trim">trim</string>
+    <string name="unknown">unknown</string>
+    <string name="way">option</string>
+    <string name="your_answer">your answer is %1$s</string>
+
+    <string-array name="sort_exam">
+        <item>alphabetical(descending)</item>
+        <item>alphabetical(ascending)</item>
+        <item>latest</item>
+    </string-array>
+
+    <string-array name="action_image">
+        <item>change</item>
+        <item>delete</item>
+    </string-array>
+
+    <string-array name="action_reload">
+        <item>all</item>
+        <item>wrong only</item>
+    </string-array>
+    <string name="share_explanation">explanation,%1$s</string>
+    <string name="share_multiple_answers">multiple answers,%1$s,</string>
+    <string name="share_selection_auto_problems">selection auto problem,%1$s,%2$s,%3$d,</string>
+    <string name="share_selection_problems">selection problem,%1$s,%2$s,</string>
+    <string name="share_short_answers">short problem,%1$s,%2$s</string>
+    <string name="share_title">title,%1$s</string>
+    <string name="share_category">category,%1$s</string>
+    <string name="share_color">color,%1$s</string>
+    <string name="load_category">category</string>
+    <string name="load_explanation">explanation</string>
+    <string name="load_multiple_answers">multiple answers</string>
+    <string name="load_selection_problems">selection problem</string>
+    <string name="load_selection_auto_problems">selection auto problem</string>
+    <string name="load_short_answers">short problem</string>
+    <string name="load_title">title</string>
+    <string name="load_color">color</string>
+    <string name="msg_save">saved</string>
+    <string name="msg_already_delete">already deleted</string>
+    <string name="save">save</string>
+    <string name="edit_pro">edit texteditor</string>
+    <string name="title_activity_edit_pro">EditProActivity</string>
+    <string name="message_success_update">saved</string>
+    <string name="config">config</string>
+    <string name="search">search</string>
+    <string name="incorrect">incorrect</string>
+    <string name="ok">OK</string>
+    <string name="number">No.%1$s</string>
+    <string name="title_activity_show_tests">ShowTestsActivity</string>
+</resources>
