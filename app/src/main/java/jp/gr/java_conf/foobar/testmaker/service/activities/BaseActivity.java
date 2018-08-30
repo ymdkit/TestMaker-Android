@@ -20,7 +20,7 @@ import jp.gr.java_conf.foobar.testmaker.service.models.RealmController;
  * Created by keita on 2016/08/19.
  */
 
-//edited by macBook air
+//edited by macBook pro
 
 public class BaseActivity extends AppCompatActivity {
 
