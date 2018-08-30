@@ -31,6 +31,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R;
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadImage;
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest;
 import jp.gr.java_conf.foobar.testmaker.service.models.SePlayer;
+import jp.gr.java_conf.foobar.testmaker.service.views.PlayReviewView;
 import jp.gr.java_conf.foobar.testmaker.service.views.PlaySelectView;
 
 /**
@@ -48,10 +49,7 @@ public class PlayActivity extends BaseActivity {
     ArrayList<Quest> questions;
 
     EditText editAnswer;
-    TextView textAnswer;
     TextView textYourAnswer;
-    TextView textExplanation;
-    TextView textManualExplanation;
     Button buttonJudge;
 
     RelativeLayout layoutWrite;
@@ -64,6 +62,7 @@ public class PlayActivity extends BaseActivity {
     PlayProblemView playProblemView;
     PlayCompleteView playCompleteView;
     PlaySelectView playSelectView;
+    PlayReviewView playReviewView;
 
     InputMethodManager inputMethodManager;
 
@@ -217,8 +216,7 @@ public class PlayActivity extends BaseActivity {
 
             actionMistake(answer);
 
-            textAnswer.setText(getString(R.string.message_answer, answerOrigin));
-
+            playReviewView.setTextAnswer(questions.get(number).getAnswer());
 
         }
 
@@ -265,7 +263,7 @@ public class PlayActivity extends BaseActivity {
                 answer.append(questions.get(number).getSelections().get(i).getSelection()).append(" ");
             }
 
-            textAnswer.setText(getString(R.string.message_answer, answer.toString()));
+            playReviewView.setTextAnswer(questions.get(number).getAnswer());
 
         }
 
@@ -327,17 +325,13 @@ public class PlayActivity extends BaseActivity {
         layoutMiss.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_appear));
 
         playSelectView.hide();
+        playReviewView.show();
 
         layoutManual.setVisibility(View.GONE);
         layoutMistake.setVisibility(View.VISIBLE);
 
-        if (!questions.get(number).getExplanation().equals("")) {
-            textExplanation.setVisibility(View.VISIBLE);
-            textExplanation.setText(getString(R.string.explanation, questions.get(number).getExplanation()));
-        } else {
-            textExplanation.setVisibility(View.GONE);
-            textExplanation.setText("");
-        }
+        playReviewView.setTextExplanation(questions.get(number).getExplanation());
+
 
         if (!yourAnswer.equals("")) {
             textYourAnswer.setVisibility(View.VISIBLE);
@@ -405,6 +399,8 @@ public class PlayActivity extends BaseActivity {
         }
 
         playProblemView.setTextNumber(getString(R.string.number, String.valueOf(number + 1)));
+
+        playReviewView.hide();
 
         showImageProblem(question);
 
@@ -537,10 +533,7 @@ public class PlayActivity extends BaseActivity {
 
     void initViews() {
 
-        textAnswer = findViewById(R.id.text_answer);
         textYourAnswer = findViewById(R.id.text_your_answer);
-        textExplanation = findViewById(R.id.text_explanation);
-        textManualExplanation = findViewById(R.id.text_explanation_manual);
         layoutBody = findViewById(R.id.body);
         layoutWrite = findViewById(R.id.layout_write);
         layoutWriteOne = findViewById(R.id.textInputLayout_answer);
@@ -552,6 +545,7 @@ public class PlayActivity extends BaseActivity {
         playProblemView = findViewById(R.id.play_problem_view);
         playCompleteView = findViewById(R.id.play_complete_view);
         playSelectView = findViewById(R.id.play_select_view);
+        playReviewView = findViewById(R.id.play_review_view);
 
         playSelectView.setOnClickListener((PlaySelectView.OnClickListener) this::checkAnswer);
 
@@ -651,6 +645,7 @@ public class PlayActivity extends BaseActivity {
         layoutMistake.setVisibility(View.GONE);
 
         playSelectView.hide();
+        playReviewView.show();
 
         String answerOrigin;
 
@@ -660,17 +655,9 @@ public class PlayActivity extends BaseActivity {
             answerOrigin = questions.get(number).getAnswer();
         }
 
-        ((TextView) findViewById(R.id.text_answer_manual)).setText(getString(R.string.message_answer, answerOrigin));
+        playReviewView.setTextAnswer(getString(R.string.message_answer, answerOrigin));
 
-        if (questions.get(number).getExplanation().equals("")) {
-
-            textManualExplanation.setVisibility(View.GONE);
-
-        } else {
-
-            textManualExplanation.setText(getString(R.string.explanation, questions.get(number).getExplanation()));
-
-        }
+        playReviewView.setTextExplanation(questions.get(number).getExplanation());
 
     }
 

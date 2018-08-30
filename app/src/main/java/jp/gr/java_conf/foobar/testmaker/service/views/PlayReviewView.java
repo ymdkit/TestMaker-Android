@@ -15,6 +15,10 @@ public class PlayReviewView extends LinearLayout{
     TextView textAnswer;
     TextView textExplanation;
 
+    LinearLayout playReviewView;
+
+    Context context;
+
     public PlayReviewView(Context context) {
         super(context);
     }
@@ -22,7 +26,11 @@ public class PlayReviewView extends LinearLayout{
     public PlayReviewView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
+        this.context = context;
+
         View layout = LayoutInflater.from(context).inflate(R.layout.layout_play_review,this);
+
+        playReviewView = layout.findViewById(R.id.layout_play_review);
 
         textAnswer = layout.findViewById(R.id.text_answer);
 
@@ -35,13 +43,27 @@ public class PlayReviewView extends LinearLayout{
 
     public void setTextAnswer(String answer){
 
-        textAnswer.setText(answer);
+        textAnswer.setText(context.getString(R.string.message_answer,answer));
 
     }
 
     public void setTextExplanation(String explanation){
 
-        textExplanation.setText(explanation);
+        textExplanation.setText(context.getString(R.string.explanation, explanation));
+
+        if(explanation.equals("")) textExplanation.setVisibility(GONE);
+
+    }
+
+    public void hide(){
+
+        playReviewView.setVisibility(View.GONE);
+
+    }
+
+    public void show(){
+
+        playReviewView.setVisibility(View.VISIBLE);
 
     }
 }

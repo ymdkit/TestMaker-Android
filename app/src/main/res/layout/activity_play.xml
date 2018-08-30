@@ -59,6 +59,12 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/play_problem_view"/>
 
+                            <jp.gr.java_conf.foobar.testmaker.service.views.PlayReviewView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/play_review_view"
+                                />
+
                             <LinearLayout
                                 android:id="@+id/layout_miss"
                                 android:orientation="horizontal"
@@ -71,29 +77,6 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical">
-
-                                    <TextView
-                                        android:id="@+id/text_answer"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="0dp"
-                                        android:layout_margin="@dimen/element_spacing_small"
-                                        android:layout_weight="1"
-                                        android:gravity="start"
-                                        android:layout_gravity="center_horizontal"
-                                        android:textSize="@dimen/text_size_large"
-                                        />
-
-                                    <TextView
-                                        android:gravity="start"
-                                        android:layout_gravity="center"
-                                        android:layout_marginLeft="@dimen/element_spacing_small"
-                                        android:layout_marginRight="@dimen/element_spacing_small"
-                                        android:layout_marginBottom="@dimen/element_spacing_small"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:id="@+id/text_explanation"
-                                        android:textSize="@dimen/text_size_large"
-                                        />
 
                                     <TextView
                                         android:gravity="start"
@@ -121,22 +104,6 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:id="@+id/layout_manual">
-
-                                    <TextView
-                                        android:layout_margin="@dimen/element_spacing_small"
-                                        android:gravity="start"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="@dimen/text_size_medium"
-                                        android:id="@+id/text_answer_manual" />
-
-                                    <TextView
-                                        android:layout_margin="@dimen/element_spacing_small"
-                                        android:gravity="start"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="@dimen/text_size_medium"
-                                        android:id="@+id/text_explanation_manual" />
 
                                     <LinearLayout
                                         android:orientation="horizontal"
