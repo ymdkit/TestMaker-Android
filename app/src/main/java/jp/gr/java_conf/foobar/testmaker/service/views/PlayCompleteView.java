@@ -1,11 +1,14 @@
 package jp.gr.java_conf.foobar.testmaker.service.views;
 
 import android.content.Context;
+import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -18,9 +21,21 @@ public class PlayCompleteView extends LinearLayout {
 
     EditText[] editAnswers;
 
-    RelativeLayout layoutPlayComplete;
+    Button buttonJudge;
 
     SharedPreferenceManager sharedPreferenceManager;
+
+    public interface OnClickListener {
+        void onClick();
+    }
+
+    @Nullable
+    private PlayCompleteView.OnClickListener listener;
+
+    public void setOnClickListener(PlayCompleteView.OnClickListener listener) {
+        this.listener = listener;
+
+    }
 
     public PlayCompleteView(Context context) {
         super(context);
@@ -32,8 +47,6 @@ public class PlayCompleteView extends LinearLayout {
         View layout = LayoutInflater.from(context).inflate(R.layout.layout_play_complete, this);
 
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        layoutPlayComplete = layout.findViewById(R.id.answer_write_and);
 
         sharedPreferenceManager = new SharedPreferenceManager(context);
 
@@ -54,22 +67,30 @@ public class PlayCompleteView extends LinearLayout {
                 }
             });
         }
+
+        buttonJudge = layout.findViewById(R.id.button_judge);
+
+        buttonJudge.setOnClickListener(view -> {
+
+            if(listener != null){
+
+                buttonJudge.setEnabled(false);
+
+                listener.onClick();
+
+                new Handler().postDelayed(() -> buttonJudge.setEnabled(true), 600);
+
+            }
+
+        });
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            buttonJudge.setStateListAnimator(null);
+        }
     }
 
     public PlayCompleteView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    public void hide (){
-
-        layoutPlayComplete.setVisibility(GONE);
-
-    }
-
-    public void show(){
-
-        layoutPlayComplete.setVisibility(VISIBLE);
-
     }
 
     public void initEditAnswers(Quest question){

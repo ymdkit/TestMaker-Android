@@ -361,6 +361,12 @@ public class PlayActivity extends BaseActivity {
                         break;
                 }
 
+                if(sharedPreferenceManager.isManual()){
+
+                    playCompleteView.setVisibility(View.GONE);
+
+                }
+
 
             } else { //全問終了後
 
@@ -434,7 +440,7 @@ public class PlayActivity extends BaseActivity {
 
         layoutWriteOne.setVisibility(View.VISIBLE);
 
-        playCompleteView.hide();
+        playCompleteView.setVisibility(View.GONE);
 
         editAnswer.setText("");
         editAnswer.setFocusable(true);
@@ -460,13 +466,13 @@ public class PlayActivity extends BaseActivity {
 
             layoutWriteOne.setVisibility(View.VISIBLE);
 
-            playCompleteView.hide();
+            playCompleteView.setVisibility(View.GONE);
 
         } else {
 
             layoutWriteOne.setVisibility(View.GONE);
 
-            playCompleteView.show();
+            playCompleteView.setVisibility(View.VISIBLE);
         }
 
         playCompleteView.initEditAnswers(question);
@@ -529,6 +535,8 @@ public class PlayActivity extends BaseActivity {
 
         playSelectView.setOnClickListener((PlaySelectView.OnClickListener) this::checkAnswer);
 
+        playCompleteView.setOnClickListener(() -> checkAnswer(playCompleteView.getAnswers(questions.get(number).getSelections().size())));
+
         playMistakeView.setOnClickListener(() -> loadNext(0));
 
         playManualView.setOnClickListener(new PlayManualView.OnClickListener() {
@@ -570,7 +578,7 @@ public class PlayActivity extends BaseActivity {
             editAnswer.setVisibility(View.GONE);
             buttonJudge.setText(getString(R.string.confirm));
 
-            playCompleteView.hide();
+            playCompleteView.setVisibility(View.GONE);
 
         }
 
@@ -587,7 +595,9 @@ public class PlayActivity extends BaseActivity {
             } else {
 
                 switch (question.getType()) {
+
                     case Constants.WRITE:
+
                         checkAnswer(String.valueOf(editAnswer.getText()));
                         break;
                     case Constants.COMPLETE:
@@ -622,6 +632,7 @@ public class PlayActivity extends BaseActivity {
         layoutWrite.setVisibility(View.GONE);
 
         playSelectView.setVisibility(View.GONE);
+        playCompleteView.setVisibility(View.GONE);
         playReviewView.setVisibility(View.VISIBLE);
         playManualView.setVisibility(View.VISIBLE);
 

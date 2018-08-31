@@ -69,7 +69,6 @@ public class PlayMistakeView extends LinearLayout {
     public PlayMistakeView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-
     }
 
     public void setTextYourAnswer(String answer){

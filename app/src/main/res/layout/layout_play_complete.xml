@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:visibility="gone"
     >
 
     <View
@@ -85,5 +84,16 @@
             />
 
     </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/button_judge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/element_spacing_small"
+        android:background="@drawable/button_blue"
+        android:text="@string/ok"
+        android:textColor="@color/white"
+        android:layout_below="@+id/textInputLayout_answer_3"
+        />
 
 </RelativeLayout>
