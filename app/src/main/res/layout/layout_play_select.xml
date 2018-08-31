@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:splitMotionEvents="false"
     android:layout_marginTop="@dimen/element_spacing_small"
-    android:visibility="gone">
+    >
 
     <include layout="@layout/button_choice"
         android:id="@+id/button1"/>

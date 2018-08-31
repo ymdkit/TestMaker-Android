@@ -81,4 +81,12 @@ public class PlayMistakeView extends LinearLayout {
         if(answer.equals("")) textYourAnswer.setVisibility(GONE);
 
     }
+
+    public void show(String yourAnswer){
+
+        setVisibility(VISIBLE);
+
+        setTextYourAnswer(yourAnswer);
+
+    }
 }

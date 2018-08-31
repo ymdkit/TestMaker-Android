@@ -22,8 +22,6 @@ public class PlaySelectView extends LinearLayout {
     Button[] buttonChoices;
     TextView[] textChoices;
 
-    LinearLayout layoutPlaySelect;
-
     public interface OnClickListener {
         void onClick(String answer);
     }
@@ -43,8 +41,6 @@ public class PlaySelectView extends LinearLayout {
         super(context, attrs);
 
         View layout = LayoutInflater.from(context).inflate(R.layout.layout_play_select, this);
-
-        layoutPlaySelect = layout.findViewById(R.id.layout_play_select);
 
         buttonChoices = new Button[6];
         textChoices = new TextView[6];
@@ -116,7 +112,7 @@ public class PlaySelectView extends LinearLayout {
 
     public void show(Quest question){
 
-        layoutPlaySelect.setVisibility(VISIBLE);
+        setVisibility(VISIBLE);
 
         for (int i = 0; i < buttonChoices.length; i++) {
             if (i < question.getSelections().size() + 1) {
