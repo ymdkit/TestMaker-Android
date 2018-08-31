@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
 import java.util.Random;
 
 import jp.gr.java_conf.foobar.testmaker.service.Constants;
@@ -55,6 +54,7 @@ public class PlayActivity extends BaseActivity {
     PlayCompleteView playCompleteView;
     PlaySelectView playSelectView;
     Button buttonConfirm;
+    ImageView imageJudge;
 
     InputMethodManager inputMethodManager;
 
@@ -267,17 +267,8 @@ public class PlayActivity extends BaseActivity {
 
         realmController.updateCorrect(questions.get(number), true);
 
-        final ImageView right = findViewById(R.id.right);
-        Locale locale = Locale.getDefault();
-        String lang = locale.getLanguage();
-
-        if (lang.equals("ja")) {
-            right.setImageDrawable(getResources().getDrawable(R.drawable.maru));
-
-        } else {
-
-            right.setImageDrawable(getResources().getDrawable(R.drawable.correct_eng));
-        }
+        final ImageView right = findViewById(R.id.image_judge);
+        right.setImageDrawable(getResources().getDrawable(R.drawable.right));
         right.setVisibility(View.VISIBLE);
         right.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_appear));
 
@@ -293,16 +284,8 @@ public class PlayActivity extends BaseActivity {
 
         showLayoutMistake(yourAnswer);
 
-        final ImageView right = findViewById(R.id.right);
-        Locale locale = Locale.getDefault();
-        String lang = locale.getLanguage();
-
-        if (lang.equals("ja")) {
-            right.setImageDrawable(getResources().getDrawable(R.drawable.batsu));
-
-        } else {
-            right.setImageDrawable(getResources().getDrawable(R.drawable.incorrect_eng));
-        }
+        final ImageView right = findViewById(R.id.image_judge);
+        right.setImageDrawable(getResources().getDrawable(R.drawable.mistake));
         right.setVisibility(View.VISIBLE);
         right.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_appear));
 
@@ -518,6 +501,7 @@ public class PlayActivity extends BaseActivity {
         playReviewView = findViewById(R.id.play_review_view);
         playMistakeView = findViewById(R.id.play_mistake_view);
         playManualView = findViewById(R.id.play_manual_view);
+        imageJudge = findViewById(R.id.image_judge);
 
         playWriteView.setOnClickListener((PlayWriteView.OnClickListener) this::checkAnswer);
 

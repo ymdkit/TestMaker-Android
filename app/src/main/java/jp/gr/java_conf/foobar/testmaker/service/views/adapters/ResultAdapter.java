@@ -61,16 +61,16 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
         if (data.getCorrect()) {
 
             if (lang.equals("ja")) {
-                holder.mark.setImageResource(R.drawable.maru);
+                holder.mark.setImageResource(R.drawable.right);
             }else{
-                holder.mark.setImageResource(R.drawable.correct_eng);
+                holder.mark.setImageResource(R.drawable.right);
             }
 
         } else {
             if (lang.equals("ja")) {
-                holder.mark.setImageResource(R.drawable.batsu);
+                holder.mark.setImageResource(R.drawable.mistake);
             }else{
-                holder.mark.setImageResource(R.drawable.incorrect_eng);
+                holder.mark.setImageResource(R.drawable.mistake);
             }
         }
 
