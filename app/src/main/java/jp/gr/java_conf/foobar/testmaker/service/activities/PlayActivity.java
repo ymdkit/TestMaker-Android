@@ -7,16 +7,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.TextInputLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +31,7 @@ import jp.gr.java_conf.foobar.testmaker.service.views.PlayMistakeView;
 import jp.gr.java_conf.foobar.testmaker.service.views.PlayProblemView;
 import jp.gr.java_conf.foobar.testmaker.service.views.PlayReviewView;
 import jp.gr.java_conf.foobar.testmaker.service.views.PlaySelectView;
+import jp.gr.java_conf.foobar.testmaker.service.views.PlayWriteView;
 
 /**
  * Created by keita on 2016/07/17.
@@ -49,18 +47,14 @@ public class PlayActivity extends BaseActivity {
 
     ArrayList<Quest> questions;
 
-    EditText editAnswer;
-    Button buttonJudge;
-
-    RelativeLayout layoutWrite;
-    TextInputLayout layoutWriteOne;
-
     PlayProblemView playProblemView;
-    PlayCompleteView playCompleteView;
-    PlaySelectView playSelectView;
     PlayReviewView playReviewView;
     PlayMistakeView playMistakeView;
     PlayManualView playManualView;
+    PlayWriteView playWriteView;
+    PlayCompleteView playCompleteView;
+    PlaySelectView playSelectView;
+    Button buttonConfirm;
 
     InputMethodManager inputMethodManager;
 
@@ -165,7 +159,7 @@ public class PlayActivity extends BaseActivity {
     }
 
     protected void onPause() {
-        inputMethodManager.hideSoftInputFromWindow(editAnswer.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(playWriteView.getEditAnswer().getWindowToken(), 0);
 
         inputMethodManager.hideSoftInputFromWindow(playCompleteView.getFirstEditText().getWindowToken(), 0);
 
@@ -302,6 +296,7 @@ public class PlayActivity extends BaseActivity {
         final ImageView right = findViewById(R.id.right);
         Locale locale = Locale.getDefault();
         String lang = locale.getLanguage();
+
         if (lang.equals("ja")) {
             right.setImageDrawable(getResources().getDrawable(R.drawable.batsu));
 
@@ -318,12 +313,12 @@ public class PlayActivity extends BaseActivity {
 
     private void showLayoutMistake(String yourAnswer) {
 
-        layoutWrite.setVisibility(View.GONE);
+        playWriteView.setVisibility(View.GONE);
+        playCompleteView.setVisibility(View.GONE);
         playSelectView.setVisibility(View.GONE);
 
         playReviewView.setVisibility(View.VISIBLE);
         playReviewView.setTextExplanation(questions.get(number).getExplanation());
-
         playMistakeView.show(yourAnswer);
 
     }
@@ -361,13 +356,6 @@ public class PlayActivity extends BaseActivity {
                         break;
                 }
 
-                if(sharedPreferenceManager.isManual()){
-
-                    playCompleteView.setVisibility(View.GONE);
-
-                }
-
-
             } else { //全問終了後
 
                 showResult();
@@ -394,6 +382,9 @@ public class PlayActivity extends BaseActivity {
         playReviewView.setVisibility(View.GONE);
         playMistakeView.setVisibility(View.GONE);
         playManualView.setVisibility(View.GONE);
+        playWriteView.setVisibility(View.GONE);
+        playCompleteView.setVisibility(View.GONE);
+        playSelectView.setVisibility(View.GONE);
 
         showImageProblem(question);
 
@@ -434,48 +425,46 @@ public class PlayActivity extends BaseActivity {
 
     private void showLayoutWrite() {
 
-        layoutWrite.setVisibility(View.VISIBLE);
+        if(sharedPreferenceManager.isManual()){
 
-        playSelectView.setVisibility(View.GONE);
+            buttonConfirm.setVisibility(View.VISIBLE);
 
-        layoutWriteOne.setVisibility(View.VISIBLE);
+            return;
 
-        playCompleteView.setVisibility(View.GONE);
+        }
 
-        editAnswer.setText("");
-        editAnswer.setFocusable(true);
-        editAnswer.requestFocus();
+        playWriteView.show();
 
     }
 
     private void showLayoutSelect(Quest question) {
-        layoutWrite.setVisibility(View.GONE);
 
         playSelectView.show(question);
-
         playSelectView.setTextChoices(question, makeChoice(question.getSelections().size()));
 
     }
 
     private void showLayoutComplete(Quest question) {
-        layoutWrite.setVisibility(View.VISIBLE);
 
-        playSelectView.setVisibility(View.GONE);
+        if(sharedPreferenceManager.isManual()){
+
+            buttonConfirm.setVisibility(View.VISIBLE);
+
+            return;
+
+        }
 
         if (sharedPreferenceManager.isReverse()) {
 
-            layoutWriteOne.setVisibility(View.VISIBLE);
-
-            playCompleteView.setVisibility(View.GONE);
+            playWriteView.show();
 
         } else {
 
-            layoutWriteOne.setVisibility(View.GONE);
-
             playCompleteView.setVisibility(View.VISIBLE);
-        }
 
-        playCompleteView.initEditAnswers(question);
+            playCompleteView.initEditAnswers(question);
+
+        }
 
     }
 
@@ -522,16 +511,15 @@ public class PlayActivity extends BaseActivity {
 
     void initViews() {
 
-        layoutWrite = findViewById(R.id.layout_write);
-        layoutWriteOne = findViewById(R.id.textInputLayout_answer);
-        editAnswer = findViewById(R.id.set_answer);
-
         playProblemView = findViewById(R.id.play_problem_view);
+        playWriteView = findViewById(R.id.play_write_view);
         playCompleteView = findViewById(R.id.play_complete_view);
         playSelectView = findViewById(R.id.play_select_view);
         playReviewView = findViewById(R.id.play_review_view);
         playMistakeView = findViewById(R.id.play_mistake_view);
         playManualView = findViewById(R.id.play_manual_view);
+
+        playWriteView.setOnClickListener((PlayWriteView.OnClickListener) this::checkAnswer);
 
         playSelectView.setOnClickListener((PlaySelectView.OnClickListener) this::checkAnswer);
 
@@ -558,83 +546,32 @@ public class PlayActivity extends BaseActivity {
             }
         });
 
-        editAnswer.clearFocus();
-        editAnswer.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                // ソフトキーボードを表示する
-                inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED);
-            }
-            // フォーカスが外れたとき
-            else {
-                // ソフトキーボードを閉じる
-                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            }
-        });
 
-        buttonJudge = findViewById(R.id.judge);
+        buttonConfirm = findViewById(R.id.button_confirm);
+        buttonConfirm.setOnClickListener(v -> {
 
-        if (sharedPreferenceManager.isManual()) {
+            buttonConfirm.setEnabled(false);
 
-            editAnswer.setVisibility(View.GONE);
-            buttonJudge.setText(getString(R.string.confirm));
+            showLayoutManual();
 
-            playCompleteView.setVisibility(View.GONE);
-
-        }
-
-        buttonJudge.setOnClickListener(v -> {
-
-            buttonJudge.setEnabled(false);
-
-            Quest question = questions.get(number);
-
-            if (sharedPreferenceManager.isManual()) {
-
-                showLayoutManual();
-
-            } else {
-
-                switch (question.getType()) {
-
-                    case Constants.WRITE:
-
-                        checkAnswer(String.valueOf(editAnswer.getText()));
-                        break;
-                    case Constants.COMPLETE:
-
-                        if (sharedPreferenceManager.isReverse()) {
-
-                            checkAnswer(String.valueOf(editAnswer.getText()));
-
-                        } else {
-
-                            checkAnswer(playCompleteView.getAnswers(question.getSelections().size()));
-                        }
-
-
-                        break;
-                }
-
-            }
-
-            new Handler().postDelayed(() -> buttonJudge.setEnabled(true), 600);
+            new Handler().postDelayed(() -> buttonConfirm.setEnabled(true), 600);
 
         });
 
         if (Build.VERSION.SDK_INT >= 21) {
-            buttonJudge.setStateListAnimator(null);
+            buttonConfirm.setStateListAnimator(null);
         }
 
     }
 
     private void showLayoutManual() {
 
-        layoutWrite.setVisibility(View.GONE);
-
+        playWriteView.setVisibility(View.GONE);
         playSelectView.setVisibility(View.GONE);
         playCompleteView.setVisibility(View.GONE);
         playReviewView.setVisibility(View.VISIBLE);
         playManualView.setVisibility(View.VISIBLE);
+        buttonConfirm.setVisibility(View.GONE);
 
         String answerOrigin;
 

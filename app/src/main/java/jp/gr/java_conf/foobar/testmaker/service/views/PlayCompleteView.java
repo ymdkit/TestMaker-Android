@@ -56,6 +56,9 @@ public class PlayCompleteView extends LinearLayout {
             int strId = getResources().getIdentifier(s, "id", context.getPackageName());
             editAnswers[i] = layout.findViewById(strId);
             editAnswers[i].setOnFocusChangeListener((v, hasFocus) -> {
+
+                if(inputMethodManager == null) return;
+
                 if (hasFocus) {
                     // ソフトキーボードを表示する
                     inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED);
