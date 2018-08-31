@@ -140,5 +140,4 @@
     <string name="incorrect">incorrect</string>
     <string name="ok">OK</string>
     <string name="number">No.%1$s</string>
-    <string name="title_activity_show_tests">ShowTestsActivity</string>
 </resources>

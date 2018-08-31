@@ -51,15 +51,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name=".activities.ShowTestsActivity"
-            android:label="@string/title_activity_show_tests"
-            android:parentActivityName=".activities.BaseActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="jp.gr.java_conf.foobar.testmaker.service.activities.BaseActivity" />
-        </activity>
     </application>
 
 </manifest>

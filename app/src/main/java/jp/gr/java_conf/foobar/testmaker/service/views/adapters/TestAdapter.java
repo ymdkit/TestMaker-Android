@@ -19,7 +19,6 @@ import net.cattaka.android.adaptertoolbox.adapter.listener.ForwardingListener;
 
 import jp.gr.java_conf.foobar.testmaker.service.R;
 import jp.gr.java_conf.foobar.testmaker.service.models.Test;
-import jp.gr.java_conf.foobar.testmaker.service.models.RealmController;
 import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton;
 
 /**
