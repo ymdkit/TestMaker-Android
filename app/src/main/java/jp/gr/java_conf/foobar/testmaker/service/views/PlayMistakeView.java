@@ -1,9 +1,9 @@
 package jp.gr.java_conf.foobar.testmaker.service.views;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +19,8 @@ public class PlayMistakeView extends LinearLayout {
     Button buttonNext;
 
     LinearLayout layoutPlayMistake;
+
+    Context context;
 
     public interface OnClickListener {
         void onClick();
@@ -37,16 +39,19 @@ public class PlayMistakeView extends LinearLayout {
 
     public PlayMistakeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-    }
 
-    public PlayMistakeView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        this.context = context;
 
         View layout = LayoutInflater.from(context).inflate(R.layout.layout_play_mistake,this);
 
         textYourAnswer = layout.findViewById(R.id.text_your_answer);
 
         buttonNext = layout.findViewById(R.id.button_next);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // API level 21 以上
+            buttonNext.setStateListAnimator(null);
+        }
 
         buttonNext.setOnClickListener(view -> {
 
@@ -59,20 +64,21 @@ public class PlayMistakeView extends LinearLayout {
 
         layoutPlayMistake = layout.findViewById(R.id.layout_play_mistake);
 
-        if(layoutPlayMistake == null){
-            Log.d("","null");
-        }
     }
 
-    public void hide(){
+    public PlayMistakeView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
 
-        setVisibility(GONE);
 
     }
 
-    public void show(){
+    public void setTextYourAnswer(String answer){
 
-        setVisibility(VISIBLE);
+        textYourAnswer.setVisibility(VISIBLE);
+
+        textYourAnswer.setText(context.getString(R.string.your_answer, answer));
+
+        if(answer.equals("")) textYourAnswer.setVisibility(GONE);
 
     }
 }

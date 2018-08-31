@@ -106,6 +106,7 @@ public class PlaySelectView extends LinearLayout {
         Collections.shuffle(choices);
 
         for (int i = 0; i < question.getSelections().size() + 1; i++) {
+
             buttonChoices[i].setTag(i);
             textChoices[i].setText(choices.get(i));
 
@@ -127,13 +128,5 @@ public class PlaySelectView extends LinearLayout {
             }
         }
     }
-
-    public void hide(){
-
-        layoutPlaySelect.setVisibility(GONE);
-
-    }
-
-
 
 }

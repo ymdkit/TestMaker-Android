@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,12 +24,13 @@ import java.util.Locale;
 import java.util.Random;
 
 import jp.gr.java_conf.foobar.testmaker.service.Constants;
-import jp.gr.java_conf.foobar.testmaker.service.views.PlayCompleteView;
-import jp.gr.java_conf.foobar.testmaker.service.views.PlayProblemView;
 import jp.gr.java_conf.foobar.testmaker.service.R;
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadImage;
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest;
 import jp.gr.java_conf.foobar.testmaker.service.models.SePlayer;
+import jp.gr.java_conf.foobar.testmaker.service.views.PlayCompleteView;
+import jp.gr.java_conf.foobar.testmaker.service.views.PlayMistakeView;
+import jp.gr.java_conf.foobar.testmaker.service.views.PlayProblemView;
 import jp.gr.java_conf.foobar.testmaker.service.views.PlayReviewView;
 import jp.gr.java_conf.foobar.testmaker.service.views.PlaySelectView;
 
@@ -49,13 +49,11 @@ public class PlayActivity extends BaseActivity {
     ArrayList<Quest> questions;
 
     EditText editAnswer;
-    TextView textYourAnswer;
     Button buttonJudge;
 
     RelativeLayout layoutWrite;
     TextInputLayout layoutWriteOne;
     LinearLayout layoutMiss;
-    LinearLayout layoutMistake;
     LinearLayout layoutManual;
     LinearLayout layoutBody;
 
@@ -63,6 +61,7 @@ public class PlayActivity extends BaseActivity {
     PlayCompleteView playCompleteView;
     PlaySelectView playSelectView;
     PlayReviewView playReviewView;
+    PlayMistakeView playMistakeView;
 
     InputMethodManager inputMethodManager;
 
@@ -324,22 +323,15 @@ public class PlayActivity extends BaseActivity {
         layoutMiss.setVisibility(View.VISIBLE);
         layoutMiss.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_appear));
 
-        playSelectView.hide();
-        playReviewView.show();
+        playSelectView.setVisibility(View.GONE);
+        playReviewView.setVisibility(View.VISIBLE);
+        playMistakeView.setVisibility(View.VISIBLE);
 
         layoutManual.setVisibility(View.GONE);
-        layoutMistake.setVisibility(View.VISIBLE);
 
         playReviewView.setTextExplanation(questions.get(number).getExplanation());
 
-
-        if (!yourAnswer.equals("")) {
-            textYourAnswer.setVisibility(View.VISIBLE);
-            textYourAnswer.setText(getString(R.string.your_answer, yourAnswer));
-        } else {
-            textYourAnswer.setVisibility(View.GONE);
-            textYourAnswer.setText("");
-        }
+        playMistakeView.setTextYourAnswer(yourAnswer);
 
     }
 
@@ -400,7 +392,8 @@ public class PlayActivity extends BaseActivity {
 
         playProblemView.setTextNumber(getString(R.string.number, String.valueOf(number + 1)));
 
-        playReviewView.hide();
+        playReviewView.setVisibility(View.GONE);
+        playMistakeView.setVisibility(View.GONE);
 
         showImageProblem(question);
 
@@ -444,7 +437,7 @@ public class PlayActivity extends BaseActivity {
         layoutWrite.setVisibility(View.VISIBLE);
         layoutMiss.setVisibility(View.GONE);
 
-        playSelectView.hide();
+        playSelectView.setVisibility(View.GONE);
 
         layoutWriteOne.setVisibility(View.VISIBLE);
 
@@ -471,7 +464,7 @@ public class PlayActivity extends BaseActivity {
         layoutWrite.setVisibility(View.VISIBLE);
         layoutMiss.setVisibility(View.GONE);
 
-        playSelectView.hide();
+        playSelectView.setVisibility(View.GONE);
 
         if (sharedPreferenceManager.isReverse()) {
 
@@ -533,11 +526,9 @@ public class PlayActivity extends BaseActivity {
 
     void initViews() {
 
-        textYourAnswer = findViewById(R.id.text_your_answer);
         layoutBody = findViewById(R.id.body);
         layoutWrite = findViewById(R.id.layout_write);
         layoutWriteOne = findViewById(R.id.textInputLayout_answer);
-        layoutMistake = findViewById(R.id.layout_mistake);
         layoutManual = findViewById(R.id.layout_manual);
         layoutMiss = findViewById(R.id.layout_miss);
         editAnswer = findViewById(R.id.set_answer);
@@ -546,8 +537,11 @@ public class PlayActivity extends BaseActivity {
         playCompleteView = findViewById(R.id.play_complete_view);
         playSelectView = findViewById(R.id.play_select_view);
         playReviewView = findViewById(R.id.play_review_view);
+        playMistakeView = findViewById(R.id.play_mistake_view);
 
         playSelectView.setOnClickListener((PlaySelectView.OnClickListener) this::checkAnswer);
+
+        playMistakeView.setOnClickListener(() -> loadNext(0));
 
         editAnswer.clearFocus();
         editAnswer.setOnFocusChangeListener((v, hasFocus) -> {
@@ -574,6 +568,7 @@ public class PlayActivity extends BaseActivity {
         }
 
         buttonJudge.setOnClickListener(v -> {
+
             buttonJudge.setEnabled(false);
 
             Quest question = questions.get(number);
@@ -624,16 +619,12 @@ public class PlayActivity extends BaseActivity {
             loadNext(60);
         });
 
-        Button next = findViewById(R.id.next);
-
         if (Build.VERSION.SDK_INT >= 21) {
             buttonJudge.setStateListAnimator(null);
             mistake_self.setStateListAnimator(null);
             right_self.setStateListAnimator(null);
-            next.setStateListAnimator(null);
         }
 
-        next.setOnClickListener(v -> loadNext(0));
     }
 
     private void showLayoutManual() {
@@ -642,10 +633,9 @@ public class PlayActivity extends BaseActivity {
         layoutMiss.setVisibility(View.VISIBLE);
         layoutMiss.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_appear));
         layoutManual.setVisibility(View.VISIBLE);
-        layoutMistake.setVisibility(View.GONE);
 
-        playSelectView.hide();
-        playReviewView.show();
+        playSelectView.setVisibility(View.GONE);
+        playReviewView.setVisibility(View.VISIBLE);
 
         String answerOrigin;
 

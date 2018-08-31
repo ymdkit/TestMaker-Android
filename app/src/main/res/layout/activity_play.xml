@@ -65,6 +65,12 @@
                                 android:id="@+id/play_review_view"
                                 />
 
+                            <jp.gr.java_conf.foobar.testmaker.service.views.PlayMistakeView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/play_mistake_view"
+                                android:visibility="gone"/>
+
                             <LinearLayout
                                 android:id="@+id/layout_miss"
                                 android:orientation="horizontal"
@@ -78,23 +84,23 @@
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical">
 
-                                    <TextView
-                                        android:gravity="start"
-                                        android:layout_gravity="center"
-                                        android:layout_margin="@dimen/element_spacing_small"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="@dimen/text_size_large"
-                                        android:id="@+id/text_your_answer" />
+                                    <!--<TextView-->
+                                        <!--android:gravity="start"-->
+                                        <!--android:layout_gravity="center"-->
+                                        <!--android:layout_margin="@dimen/element_spacing_small"-->
+                                        <!--android:layout_width="wrap_content"-->
+                                        <!--android:layout_height="wrap_content"-->
+                                        <!--android:textSize="@dimen/text_size_large"-->
+                                        <!--android:id="@+id/text_your_answer" />-->
 
-                                    <Button
-                                        android:id="@+id/next"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="@dimen/element_spacing_small"
-                                        android:background="@drawable/button_blue"
-                                        android:text="@string/action_next"
-                                        android:textColor="@color/white" />
+                                    <!--<Button-->
+                                        <!--android:id="@+id/next"-->
+                                        <!--android:layout_width="match_parent"-->
+                                        <!--android:layout_height="wrap_content"-->
+                                        <!--android:layout_margin="@dimen/element_spacing_small"-->
+                                        <!--android:background="@drawable/button_blue"-->
+                                        <!--android:text="@string/action_next"-->
+                                        <!--android:textColor="@color/white" />-->
 
                                 </LinearLayout>
 
