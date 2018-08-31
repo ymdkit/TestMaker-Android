@@ -54,7 +54,7 @@
     <string name="message_wrong">名前を入力してください</string>
     <string name="message_shortage">全項目を入力してください</string>
     <string name="message_delete">問題 %1$s を削除しますか</string>
-    <string name="message_answer">正解: %1$s</string>
+    <string name="message_answer">正解:  %1$s</string>
     <string name="message_auto">他の問題の答えが選択肢になります</string>
     <string name="message_not_auto">問題数不足で自動生成できません</string>
     <string name="message_explanation">・解説文を入れる</string>
@@ -73,8 +73,8 @@
     <string name="message_ratio">正答率 %1$d / %2$d</string>
     <string name="question">問題: </string>
     <string name="answer">解答: </string>
-    <string name="explanation">解説: %1$s</string>
-    <string name="your_answer">あなたの解答: %1$s</string>
+    <string name="explanation">解説:  %1$s</string>
+    <string name="your_answer">解答:  %1$s</string>
     <string name="image">画像</string>
     <string name="title_activity_edit">編集</string>
     <string name="title_activity_set">SetActivity</string>
@@ -115,6 +115,8 @@
     <string name="msg_already_delete">すでに削除されています</string>
     <string name="save">保存する</string>
     <string name="edit_pro">テキストエディタで編集</string>
+    <string name="pass">分からない</string>
+
 
     <string-array name="sort_exam">
         <item>五十音順(降順)</item>

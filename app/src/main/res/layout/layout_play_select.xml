@@ -26,4 +26,8 @@
     <include layout="@layout/button_choice"
         android:id="@+id/button6"/>
 
+    <include layout="@layout/button_choice"
+        android:id="@+id/button_pass"
+        />
+
 </LinearLayout>

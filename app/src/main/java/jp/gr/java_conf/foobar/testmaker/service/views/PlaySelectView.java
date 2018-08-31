@@ -22,6 +22,8 @@ public class PlaySelectView extends LinearLayout {
     Button[] buttonChoices;
     TextView[] textChoices;
 
+    Button buttonPass;
+
     public interface OnClickListener {
         void onClick(String answer);
     }
@@ -41,6 +43,22 @@ public class PlaySelectView extends LinearLayout {
         super(context, attrs);
 
         View layout = LayoutInflater.from(context).inflate(R.layout.layout_play_select, this);
+
+        buttonPass = layout.findViewById(R.id.button_pass).findViewById(R.id.button);
+
+        buttonPass.setOnClickListener(view -> {
+
+            if (listener != null) {
+
+                listener.onClick("");
+
+            }
+
+        });
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            buttonPass.setStateListAnimator(null);
+        }
 
         buttonChoices = new Button[6];
         textChoices = new TextView[6];
