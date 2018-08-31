@@ -35,12 +35,28 @@ public class Quest extends RealmObject {
         return problem;
     }
 
+    public String getProblem(boolean isReverse){
+
+        if(isReverse) return answer;
+
+        return problem;
+
+    }
+
     public void setAnswer(String a) {
         answer = a;
     }
 
     public String getAnswer() {
         return answer;
+    }
+
+    public String getAnswer(boolean isReverse){
+
+        if(isReverse) return problem;
+
+        return answer;
+
     }
 
     public String getExplanation() {
@@ -91,13 +107,13 @@ public class Quest extends RealmObject {
         return solving;
     }
 
-    public void setSelections(String[] strs) {
+    public void setSelections(String[] strings) {
 
         selections.clear();
 
-        for (int i = 0; i < strs.length; i++) {
+        for (int i = 0; i < strings.length; i++) {
             Select select = new Select();
-            select.setSelection(strs[i]);
+            select.setSelection(strings[i]);
             selections.add(select);
         }
 

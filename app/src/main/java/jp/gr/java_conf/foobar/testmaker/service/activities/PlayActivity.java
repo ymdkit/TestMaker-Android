@@ -191,17 +191,11 @@ public class PlayActivity extends BaseActivity {
 
     void checkAnswer(String answer) {
 
-        String answerOrigin;
-
-        if (sharedPreferenceManager.isReverse() && (questions.get(number).getType() == Constants.WRITE || questions.get(number).getType() == Constants.COMPLETE)) {
-            answerOrigin = questions.get(number).getProblem();
-        } else {
-            answerOrigin = questions.get(number).getAnswer();
-        }
-
         playSelectView.invalidate();
 
-        if (answer.equals(answerOrigin)) {
+        Quest question = questions.get(number);
+
+        if (answer.equals(question.getAnswer(isReverse(question)))) {
 
             actionCorrect();
 
@@ -209,7 +203,7 @@ public class PlayActivity extends BaseActivity {
 
             actionMistake(answer);
 
-            playReviewView.setTextAnswer(answerOrigin);
+            playReviewView.setTextAnswer(question.getAnswer(isReverse(question)));
 
         }
 
@@ -345,21 +339,14 @@ public class PlayActivity extends BaseActivity {
                 showResult();
 
             }
+
         }, second);
 
     }
 
     private void showProblem(Quest question) {
 
-        if (sharedPreferenceManager.isReverse() && (questions.get(number).getType() == Constants.WRITE || questions.get(number).getType() == Constants.COMPLETE)) {
-
-            playProblemView.setTextProblem(questions.get(number).getAnswer());
-
-        } else {
-
-            playProblemView.setTextProblem(questions.get(number).getProblem());
-
-        }
+        playProblemView.setTextProblem(question.getProblem(isReverse(question)));
 
         playProblemView.setTextNumber(getString(R.string.number, String.valueOf(number + 1)));
 
@@ -453,6 +440,7 @@ public class PlayActivity extends BaseActivity {
     }
 
     ArrayList<String> makeChoice(int num) {
+
         ArrayList<String> other = new ArrayList<>();
 
         ArrayList<String> answers = new ArrayList<>();
@@ -558,18 +546,17 @@ public class PlayActivity extends BaseActivity {
         playManualView.setVisibility(View.VISIBLE);
         buttonConfirm.setVisibility(View.GONE);
 
-        String answerOrigin;
+        Quest question = questions.get(number);
 
-        if (sharedPreferenceManager.isReverse()) {
-            answerOrigin = questions.get(number).getProblem();
-        } else {
-            answerOrigin = questions.get(number).getAnswer();
-        }
+        playReviewView.setTextAnswer(question.getAnswer(isReverse(question)));
 
-        playReviewView.setTextAnswer(answerOrigin);
-
-        playReviewView.setTextExplanation(questions.get(number).getExplanation());
+        playReviewView.setTextExplanation(question.getExplanation());
 
     }
 
+    public boolean isReverse(Quest question) {
+
+        return (question.getType() == Constants.WRITE || question.getType() == Constants.COMPLETE) && sharedPreferenceManager.isReverse();
+
+    }
 }
