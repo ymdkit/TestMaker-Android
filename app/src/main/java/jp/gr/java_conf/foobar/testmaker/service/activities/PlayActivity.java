@@ -214,7 +214,7 @@ public class PlayActivity extends BaseActivity {
 
             actionMistake(answer);
 
-            playReviewView.setTextAnswer(questions.get(number).getAnswer());
+            playReviewView.setTextAnswer(answerOrigin);
 
         }
 
@@ -261,7 +261,7 @@ public class PlayActivity extends BaseActivity {
                 answer.append(questions.get(number).getSelections().get(i).getSelection()).append(" ");
             }
 
-            playReviewView.setTextAnswer(questions.get(number).getAnswer());
+            playReviewView.setTextAnswer(answer.toString());
 
         }
 
