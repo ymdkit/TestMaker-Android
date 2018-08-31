@@ -159,6 +159,7 @@ public class PlayActivity extends BaseActivity {
     }
 
     protected void onPause() {
+
         inputMethodManager.hideSoftInputFromWindow(playWriteView.getEditAnswer().getWindowToken(), 0);
 
         inputMethodManager.hideSoftInputFromWindow(playCompleteView.getFirstEditText().getWindowToken(), 0);
@@ -267,12 +268,7 @@ public class PlayActivity extends BaseActivity {
 
         realmController.updateCorrect(questions.get(number), true);
 
-        final ImageView right = findViewById(R.id.image_judge);
-        right.setImageDrawable(getResources().getDrawable(R.drawable.right));
-        right.setVisibility(View.VISIBLE);
-        right.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_appear));
-
-        new Handler().postDelayed(() -> right.setVisibility(View.GONE), 600);
+        showImageJudge(R.drawable.right);
 
         loadNext(600);
 
@@ -284,14 +280,19 @@ public class PlayActivity extends BaseActivity {
 
         showLayoutMistake(yourAnswer);
 
-        final ImageView right = findViewById(R.id.image_judge);
-        right.setImageDrawable(getResources().getDrawable(R.drawable.mistake));
-        right.setVisibility(View.VISIBLE);
-        right.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_appear));
-
-        new Handler().postDelayed(() -> right.setVisibility(View.GONE), 600);
+        showImageJudge(R.drawable.mistake);
 
         soundMistake.playSe();
+    }
+
+    private void showImageJudge(int id) {
+
+        imageJudge.setImageDrawable(getResources().getDrawable(id));
+        imageJudge.setVisibility(View.VISIBLE);
+        imageJudge.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha_appear));
+
+        new Handler().postDelayed(() -> imageJudge.setVisibility(View.GONE), 600);
+
     }
 
     private void showLayoutMistake(String yourAnswer) {
