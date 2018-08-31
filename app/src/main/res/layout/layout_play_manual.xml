@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layout_play_manual">
+    android:id="@+id/layout_play_manual"
+    style="?android:attr/buttonBarStyle">
 
     <Button
         android:layout_margin="@dimen/element_spacing_small"
@@ -13,7 +14,8 @@
         android:background="@drawable/button_add"
         android:textColor="@color/white"
         android:text="@string/action_right"
-        android:id="@+id/button_right" />
+        android:id="@+id/button_right"
+        style="?android:attr/buttonBarButtonStyle"/>
 
     <Button
         android:layout_margin="@dimen/element_spacing_small"
@@ -24,6 +26,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_blue"
         android:text="@string/action_wrong"
-        android:id="@+id/button_mistake" />
+        android:id="@+id/button_mistake"
+        style="?android:attr/buttonBarButtonStyle"/>
 
 </LinearLayout>
