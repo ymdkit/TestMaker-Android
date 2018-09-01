@@ -17,7 +17,7 @@ import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
  */
 class EditAdapter(private val context: Context, private val realmController: RealmController, private val testId: Long) : RecyclerView.Adapter<EditAdapter.ViewHolder>() {
 
-    private val mLayoutInflater: LayoutInflater = LayoutInflater.from(context)
+    private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     var filter: Boolean = false
     var searchWord: String = ""
@@ -34,31 +34,30 @@ class EditAdapter(private val context: Context, private val realmController: Rea
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // 1
-        val v = mLayoutInflater.inflate(R.layout.card_problem, parent, false)
-        return ViewHolder(v)
+        return ViewHolder(layoutInflater.inflate(R.layout.card_problem, parent, false))
     }
 
-    // 4
     override fun getItemCount(): Int {
 
         return if (filter) realmController.getFilterQuestions(testId, searchWord).size
-
         else realmController.getQuestions(testId).size
 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // 3
 
         val data = init(position)
 
-        holder.problem.text = context.getString(R.string.question,data.problem.toString())
-        holder.answer.text = context.getString(R.string.answer,data.answer.toString())
+        holder.problem.text = context.getString(R.string.question, data.problem.toString())
+        holder.answer.text = context.getString(R.string.answer, data.answer.toString())
 
-        holder.edit.setOnClickListener { if (listener != null) { listener!!.onClickEditQuestion(position) } }
+        holder.edit.setOnClickListener {
+            if (listener != null) listener?.onClickEditQuestion(position)
+        }
 
-        holder.delete.setOnClickListener { if (listener != null) { listener!!.onClickDeleteQuestion(data) } }
+        holder.delete.setOnClickListener {
+            if (listener != null) listener?.onClickDeleteQuestion(data)
+        }
 
     }
 
@@ -71,7 +70,6 @@ class EditAdapter(private val context: Context, private val realmController: Rea
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
-        val number: TextView = v.findViewById(R.id.number)
         val problem: TextView = v.findViewById(R.id.problem)
         val answer: TextView = v.findViewById(R.id.answer)
         val edit: ImageTextButton = v.findViewById(R.id.edit)
