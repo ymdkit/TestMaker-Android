@@ -35,7 +35,6 @@ class CategoryAdapter(private val context: Context, private val mRealmController
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         return ViewHolder(layoutInflater.inflate(R.layout.list_cate, parent, false))
     }
 
