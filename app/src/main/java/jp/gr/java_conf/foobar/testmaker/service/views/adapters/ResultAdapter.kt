@@ -17,9 +17,13 @@ class ResultAdapter(context: Context, private val mRealmController: RealmControl
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder { return ViewHolder(layoutInflater.inflate(R.layout.card_result, parent, false)) }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(layoutInflater.inflate(R.layout.card_result, parent, false))
+    }
 
-    override fun getItemCount(): Int { return mRealmController.getQuestionsSolved(testId).size }
+    override fun getItemCount(): Int {
+        return mRealmController.getQuestionsSolved(testId).size
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
@@ -29,24 +33,16 @@ class ResultAdapter(context: Context, private val mRealmController: RealmControl
         holder.problem.text = data.problem.toString()
         holder.answer.text = data.answer.toString()
 
-        if (data.correct) {
-
-            holder.mark.setImageResource(R.drawable.right)
-
-        } else {
-
-            holder.mark.setImageResource(R.drawable.mistake)
-
-        }
+        holder.mark.setImageResource(if (data.correct) R.drawable.right else R.drawable.mistake)
 
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
-        var number: TextView = v.findViewById(R.id.number)
-        var problem: TextView = v.findViewById(R.id.problem)
-        var answer: TextView = v.findViewById(R.id.answer)
-        var mark: ImageView = v.findViewById(R.id.mark)
+        val number: TextView = v.findViewById(R.id.number)
+        val problem: TextView = v.findViewById(R.id.problem)
+        val answer: TextView = v.findViewById(R.id.answer)
+        val mark: ImageView = v.findViewById(R.id.mark)
 
     }
 
