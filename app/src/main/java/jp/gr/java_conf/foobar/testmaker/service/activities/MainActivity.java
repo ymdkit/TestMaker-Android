@@ -164,7 +164,7 @@ public class MainActivity extends ShowTestsActivity {
 
             } else {
 
-                realmController.addTest(editTitle.getText().toString(), colorChooser.getId_color(), button_cate.getTag().toString());
+                realmController.addTest(editTitle.getText().toString(), colorChooser.getColorId(), button_cate.getTag().toString());
 
                 Toast.makeText(MainActivity.this, getString(R.string.message_add), Toast.LENGTH_LONG).show();
 

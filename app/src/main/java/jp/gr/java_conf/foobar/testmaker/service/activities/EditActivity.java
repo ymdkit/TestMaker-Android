@@ -546,7 +546,7 @@ public class EditActivity extends BaseActivity {
 
             name.setText(realmController.getTest(testId).getTitle());
 
-            colorChooser.setId_color(realmController.getTest(testId).getColor());
+            colorChooser.setColorId(realmController.getTest(testId).getColor());
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
             builder.setView(dialogLayout);
@@ -567,7 +567,7 @@ public class EditActivity extends BaseActivity {
 
                 } else {
 
-                    realmController.updateTest(realmController.getTest(testId), sb.toString(), colorChooser.getId_color(), button_cate.getTag().toString());
+                    realmController.updateTest(realmController.getTest(testId), sb.toString(), colorChooser.getColorId(), button_cate.getTag().toString());
 
                     dialog.dismiss();
                 }

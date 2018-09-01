@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "jp.gr.java_conf.foobar.testmaker.service"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 38
         versionName "2.0.4"

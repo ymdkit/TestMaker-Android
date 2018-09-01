@@ -84,7 +84,7 @@ public class CategoryEditor{
             final AlertDialog dialog_color = setDialog(layout_color, context.getString(R.string.edit_color));
 
             colorChooser = layout_color.findViewById(R.id.color_chooser);
-            colorChooser.setId_color(colorChooser.getColors()[0]);
+            colorChooser.setColorId(colorChooser.getColors()[0]);
             colorChooser.setDialog(dialog_color, buttonColor);
 
             dialog_color.getButton(DialogInterface.BUTTON_POSITIVE).setVisibility(View.GONE);
@@ -107,12 +107,12 @@ public class CategoryEditor{
 
                 GradientDrawable drawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.circle);
 
-                drawable.setColor(colorChooser.getId_color());
+                drawable.setColor(colorChooser.getColorId());
 
                 buttonCate.setBackgroundDrawable(drawable);
                 buttonColor.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.button_blue));
 
-                realmController.addCate(e.getText().toString(), colorChooser.getId_color());
+                realmController.addCate(e.getText().toString(), colorChooser.getColorId());
                 adapter.notifyDataSetChanged();
 
                 dialogCate.dismiss();
