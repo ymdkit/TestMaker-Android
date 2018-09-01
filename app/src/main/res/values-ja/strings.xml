@@ -131,7 +131,7 @@
     
     <string-array name="action_reload">
         <item>全部</item>
-        <item>間違えた問題だけ</item>
+        <item>間違えた問題のみ</item>
     </string-array>
     <string name="share_color">色,%1$s</string>
     <string name="title_activity_edit_pro">編集</string>

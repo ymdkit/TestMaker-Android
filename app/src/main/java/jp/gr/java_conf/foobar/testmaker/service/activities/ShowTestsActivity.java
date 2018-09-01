@@ -118,7 +118,6 @@ public class ShowTestsActivity extends BaseActivity {
         checkRefine.setChecked(sharedPreferenceManager.isRefine());
         checkRefine.setOnCheckedChangeListener((buttonView, isChecked) -> sharedPreferenceManager.setRefine(isChecked));
 
-
         final Button actionNormal = dialogLayout.findViewById(R.id.action_normal);
         actionNormal.setOnClickListener(v -> startAnswer(test, editLimit, false));
 
@@ -158,6 +157,7 @@ public class ShowTestsActivity extends BaseActivity {
     }
 
     void startAnswer(Test test, EditText editLimit, boolean rand) {
+
         boolean incorrect = false;
 
         for (int k = 0; k < test.getQuestions().size(); k++) {
@@ -168,25 +168,25 @@ public class ShowTestsActivity extends BaseActivity {
         }
 
         if (!incorrect && sharedPreferenceManager.isRefine()) {
+
             Toast.makeText(ShowTestsActivity.this, getString(R.string.message_null_wrongs), Toast.LENGTH_SHORT).show();
+
         } else if (editLimit.getText().toString().equals("")) {
+
             Toast.makeText(ShowTestsActivity.this, getString(R.string.message_null_number), Toast.LENGTH_SHORT).show();
+
         } else {
 
             Intent i = new Intent(ShowTestsActivity.this, PlayActivity.class);
             i.putExtra("testId", test.getId());
 
-            if (rand) {
-
-                i.putExtra("random", 1);
-
-            }
+            if (rand) i.putExtra("random", 1);
 
             realmController.updateLimit(test, Integer.parseInt(editLimit.getText().toString()));
 
             realmController.updateHistory(test);
 
-            startActivity(i);
+            startActivityForResult(i,REQUEST_EDIT);
         }
     }
 
@@ -204,6 +204,7 @@ public class ShowTestsActivity extends BaseActivity {
         if (resultCode == RESULT_CANCELED) {
 
             if (parentAdapter != null) {
+
                 parentAdapter.notifyDataSetChanged();
 
             }
