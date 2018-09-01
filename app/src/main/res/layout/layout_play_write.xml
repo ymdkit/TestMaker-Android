@@ -9,7 +9,7 @@
         >
 
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/set_answer"
+            android:id="@+id/edit_answer"
             android:hint="@string/hint_answer"
             style="@style/MyEditTextSingleLine"
             />

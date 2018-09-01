@@ -160,7 +160,7 @@ public class PlayActivity extends BaseActivity {
 
     protected void onPause() {
 
-        inputMethodManager.hideSoftInputFromWindow(playWriteView.getEditAnswer().getWindowToken(), 0);
+        playWriteView.hideKeyboard();
 
         inputMethodManager.hideSoftInputFromWindow(playCompleteView.getFirstEditText().getWindowToken(), 0);
 

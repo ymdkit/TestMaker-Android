@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'realm-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -35,5 +38,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-analytics:16.0.3'
     compile 'com.isseiaoki:simplecropview:1.1.4'
     compile 'net.cattaka:adapter-toolbox:0.5.2@aar'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+}
+repositories {
+    mavenCentral()
 }
