@@ -125,8 +125,8 @@ public class EditActivity extends BaseActivity {
 
                 Quest question;
 
-                if (editAdapter.filter) {
-                    question = realmController.getFilterQuestions(testId, editAdapter.searchWord).get(position);
+                if (editAdapter.getFilter()) {
+                    question = realmController.getFilterQuestions(testId, editAdapter.getSearchWord()).get(position);
                 } else {
                     question = realmController.getQuestion(testId, position);
 
@@ -455,9 +455,9 @@ public class EditActivity extends BaseActivity {
             @Override
             public boolean onQueryTextSubmit(String s) {
 
-                editAdapter.searchWord = s;
+                editAdapter.setSearchWord(s);
 
-                editAdapter.filter = true;
+                editAdapter.setFilter(true);
 
                 editAdapter.notifyDataSetChanged();
 
@@ -467,9 +467,9 @@ public class EditActivity extends BaseActivity {
             @Override
             public boolean onQueryTextChange(String s) {
 
-                editAdapter.searchWord = s;
+                editAdapter.setSearchWord(s);
 
-                editAdapter.filter = true;
+                editAdapter.setFilter(true);
 
                 editAdapter.notifyDataSetChanged();
 
@@ -479,9 +479,9 @@ public class EditActivity extends BaseActivity {
 
         searchView.setOnCloseListener(() -> {
 
-            editAdapter.searchWord = "";
+            editAdapter.setSearchWord("");
 
-            editAdapter.filter = false;
+            editAdapter.setFilter(false);
 
             editAdapter.notifyDataSetChanged();
 

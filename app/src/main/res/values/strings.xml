@@ -25,7 +25,7 @@
     <string name="add_question">add problem</string>
     <string name="add_question_choose">add problem</string>
     <string name="add_question_write">add problem</string>
-    <string name="answer">A.</string>
+    <string name="answer">A. %1$s</string>
     <string name="app_name">TestMaker</string>
     <string name="auto">make selection auto</string>
     <string name="cancel">cancel</string>
@@ -84,7 +84,7 @@
     <string name="old_category">existing category</string>
     <string name="open">open</string>
     <string name="play">study</string>
-    <string name="question">Q.</string>
+    <string name="question">Q. %1$s</string>
     <string name="result">result</string>
     <string name="retry">retry</string>
     <string name="save_question">save</string>

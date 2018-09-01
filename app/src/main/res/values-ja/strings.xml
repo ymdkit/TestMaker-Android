@@ -71,8 +71,8 @@
     <string name="message_null_wrongs">間違えた問題がありません</string>
     <string name="message_null_number">出題数を入力してください</string>
     <string name="message_ratio">正答率 %1$d / %2$d</string>
-    <string name="question">問題: </string>
-    <string name="answer">解答: </string>
+    <string name="question">問題: %1$s</string>
+    <string name="answer">正答: %1$s </string>
     <string name="explanation">解説:  %1$s</string>
     <string name="your_answer">解答:  %1$s</string>
     <string name="image">画像</string>

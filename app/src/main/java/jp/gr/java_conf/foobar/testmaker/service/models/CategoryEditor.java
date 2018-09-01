@@ -98,6 +98,7 @@ public class CategoryEditor{
 
             if (e.getText().toString().equals("")) {
                 Toast.makeText(context, context.getString(R.string.message_wrong), Toast.LENGTH_SHORT).show();
+
             } else {
 
                 String cate = e.getText().toString();
