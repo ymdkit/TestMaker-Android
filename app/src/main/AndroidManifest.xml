@@ -46,6 +46,8 @@
             android:label="@string/title_activity_edit_pro"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+        <activity android:name=".activities.ShowTestsActivity" />
+        <activity android:name=".activities.BaseActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
