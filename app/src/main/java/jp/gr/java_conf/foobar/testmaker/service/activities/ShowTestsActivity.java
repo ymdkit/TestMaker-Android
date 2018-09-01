@@ -103,19 +103,19 @@ public class ShowTestsActivity extends BaseActivity {
         editLimit.setText(String.valueOf(test.getLimit()));
 
         final CheckBox checkReverse = dialogLayout.findViewById(R.id.check_reverse);
-        checkReverse.setChecked(sharedPreferenceManager.isReverse());
+        checkReverse.setChecked(sharedPreferenceManager.getReverse());
         checkReverse.setOnCheckedChangeListener((buttonView, isChecked) -> sharedPreferenceManager.setReverse(isChecked));
 
         final CheckBox checkManual = dialogLayout.findViewById(R.id.check_manual);
-        checkManual.setChecked(sharedPreferenceManager.isManual());
+        checkManual.setChecked(sharedPreferenceManager.getManual());
         checkManual.setOnCheckedChangeListener((buttonView, isChecked) -> sharedPreferenceManager.setManual(isChecked));
 
         final CheckBox checkAudio = dialogLayout.findViewById(R.id.check_audio);
-        checkAudio.setChecked(sharedPreferenceManager.isAudio());
+        checkAudio.setChecked(sharedPreferenceManager.getAudio());
         checkAudio.setOnCheckedChangeListener((buttonView, isChecked) -> sharedPreferenceManager.setAudio(isChecked));
 
         final CheckBox checkRefine = dialogLayout.findViewById(R.id.check_refine);
-        checkRefine.setChecked(sharedPreferenceManager.isRefine());
+        checkRefine.setChecked(sharedPreferenceManager.getRefine());
         checkRefine.setOnCheckedChangeListener((buttonView, isChecked) -> sharedPreferenceManager.setRefine(isChecked));
 
         final Button actionNormal = dialogLayout.findViewById(R.id.action_normal);
@@ -167,7 +167,7 @@ public class ShowTestsActivity extends BaseActivity {
             }
         }
 
-        if (!incorrect && sharedPreferenceManager.isRefine()) {
+        if (!incorrect && sharedPreferenceManager.getRefine()) {
 
             Toast.makeText(ShowTestsActivity.this, getString(R.string.message_null_wrongs), Toast.LENGTH_SHORT).show();
 

@@ -87,7 +87,7 @@ class PlayCompleteView : LinearLayout {
                 editAnswers[i]!!.visibility = View.VISIBLE
                 editAnswers[i]!!.setText("")
 
-                if (sharedPreferenceManager.isManual) editAnswers[i]!!.visibility = View.GONE
+                if (sharedPreferenceManager.manual) editAnswers[i]!!.visibility = View.GONE
 
             } else {
 

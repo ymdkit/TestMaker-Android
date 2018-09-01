@@ -330,7 +330,7 @@ public class MainActivity extends ShowTestsActivity {
             }
         }
 
-        if (!incorrect && sharedPreferenceManager.isRefine()) {
+        if (!incorrect && sharedPreferenceManager.getRefine()) {
             Toast.makeText(MainActivity.this, getString(R.string.message_null_wrongs), Toast.LENGTH_SHORT).show();
         } else if (editLimit.getText().toString().equals("")) {
             Toast.makeText(MainActivity.this, getString(R.string.message_null_number), Toast.LENGTH_SHORT).show();

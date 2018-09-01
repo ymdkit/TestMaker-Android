@@ -1,6 +1,5 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import jp.gr.java_conf.foobar.testmaker.service.R

@@ -99,9 +99,9 @@ public class EditActivity extends BaseActivity {
         testId = getIntent().getLongExtra("testId", -1);
         questionId = -1;
 
-        auto = sharedPreferenceManager.isAuto();
+        auto = sharedPreferenceManager.getAuto();
 
-        explanation = sharedPreferenceManager.isExplanation();
+        explanation = sharedPreferenceManager.getExplanation();
 
         initAdapter();
 
@@ -186,7 +186,7 @@ public class EditActivity extends BaseActivity {
 
                         sharedPreferenceManager.setAuto(question.getAuto());
 
-                        if (sharedPreferenceManager.isAuto()) {
+                        if (sharedPreferenceManager.getAuto()) {
                             auto(sharedPreferenceManager.getNumChoose());
                         } else {
                             offAuto(sharedPreferenceManager.getNumChoose());
@@ -385,7 +385,7 @@ public class EditActivity extends BaseActivity {
                     }
 
                     StructQuestion p = new StructQuestion(textProblem.getText().toString(), String.valueOf(textAnswerChoose.getText()), strings);
-                    p.setAuto(sharedPreferenceManager.isAuto());
+                    p.setAuto(sharedPreferenceManager.getAuto());
                     p.setImagePath(imagePath);
                     p.setExplanation(textExplanation.getText().toString());
                     realmController.addQuestion(testId, p, questionId);
@@ -658,7 +658,7 @@ public class EditActivity extends BaseActivity {
             t.setText("");
         }
 
-        if (sharedPreferenceManager.isAuto()) {
+        if (sharedPreferenceManager.getAuto()) {
             auto(sharedPreferenceManager.getNumChoose());
         } else {
             offAuto(sharedPreferenceManager.getNumChoose());
@@ -753,10 +753,10 @@ public class EditActivity extends BaseActivity {
 
                 final SwitchCompat change_explanation = dialogLayout.findViewById(R.id.change_explanation);
 
-                change_explanation.setChecked(sharedPreferenceManager.isExplanation());
+                change_explanation.setChecked(sharedPreferenceManager.getExplanation());
                 change_explanation.setOnCheckedChangeListener((buttonView, isChecked) -> explanation = isChecked);
 
-                change_auto.setChecked(sharedPreferenceManager.isAuto());
+                change_auto.setChecked(sharedPreferenceManager.getAuto());
                 change_auto.setOnCheckedChangeListener((buttonView, isChecked) -> auto = isChecked);
 
                 switch (typeQuestion) {

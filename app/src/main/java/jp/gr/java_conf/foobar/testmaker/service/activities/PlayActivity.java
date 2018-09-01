@@ -99,7 +99,7 @@ public class PlayActivity extends BaseActivity {
 
         }
 
-        if (sharedPreferenceManager.isRefine()) {
+        if (sharedPreferenceManager.getRefine()) {
 
             if (getIntent().hasExtra("redo")) {
 
@@ -396,7 +396,7 @@ public class PlayActivity extends BaseActivity {
 
     private void showLayoutWrite() {
 
-        if(sharedPreferenceManager.isManual()){
+        if(sharedPreferenceManager.getManual()){
 
             buttonConfirm.setVisibility(View.VISIBLE);
 
@@ -417,7 +417,7 @@ public class PlayActivity extends BaseActivity {
 
     private void showLayoutComplete(Quest question) {
 
-        if(sharedPreferenceManager.isManual()){
+        if(sharedPreferenceManager.getManual()){
 
             buttonConfirm.setVisibility(View.VISIBLE);
 
@@ -425,7 +425,7 @@ public class PlayActivity extends BaseActivity {
 
         }
 
-        if (sharedPreferenceManager.isReverse()) {
+        if (sharedPreferenceManager.getReverse()) {
 
             playWriteView.show();
 
@@ -556,7 +556,7 @@ public class PlayActivity extends BaseActivity {
 
     public boolean isReverse(Quest question) {
 
-        return (question.getType() == Constants.WRITE || question.getType() == Constants.COMPLETE) && sharedPreferenceManager.isReverse();
+        return (question.getType() == Constants.WRITE || question.getType() == Constants.COMPLETE) && sharedPreferenceManager.getReverse();
 
     }
 }
