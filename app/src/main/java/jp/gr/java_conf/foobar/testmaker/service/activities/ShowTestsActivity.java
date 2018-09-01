@@ -46,7 +46,7 @@ public class ShowTestsActivity extends BaseActivity {
 
                 Test test = realmController.getTest(id);
 
-                if (test.getQuestion().size() == 0) {
+                if (test.getQuestions().size() == 0) {
 
                     Toast.makeText(ShowTestsActivity.this, getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show();
 
@@ -160,9 +160,9 @@ public class ShowTestsActivity extends BaseActivity {
     void startAnswer(Test test, EditText editLimit, boolean rand) {
         boolean incorrect = false;
 
-        for (int k = 0; k < test.getQuestion().size(); k++) {
+        for (int k = 0; k < test.getQuestions().size(); k++) {
 
-            if (!test.getQuestion().get(k).getCorrect()) {
+            if (!test.getQuestions().get(k).getCorrect()) {
                 incorrect = true;
             }
         }

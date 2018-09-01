@@ -27,7 +27,7 @@ import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton;
 
 public class TestAdapter extends ScrambleAdapter.AbsViewHolderFactory<TestAdapter.ViewHolder>  {
 
-    private Context mContext;
+    private Context context;
 
     public interface OnClickListener {
         void onClickPlayTest(long id);
@@ -43,14 +43,14 @@ public class TestAdapter extends ScrambleAdapter.AbsViewHolderFactory<TestAdapte
 
 
     public TestAdapter(Context context) {
-        mContext = context;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public TestAdapter.ViewHolder onCreateViewHolder(@NonNull ScrambleAdapter<?> adapter, @NonNull ViewGroup parent, @NonNull ForwardingListener<ScrambleAdapter<?>, RecyclerView.ViewHolder> forwardingListener) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_exam, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_test, parent, false);
 
         return new ViewHolder(view);
     }
@@ -63,7 +63,7 @@ public class TestAdapter extends ScrambleAdapter.AbsViewHolderFactory<TestAdapte
 
         holder.title.setText(data.getTitle());
 
-        holder.num.setText(mContext.getString(R.string.number_existing_questions,data.getQuestion().size()));
+        holder.num.setText(context.getString(R.string.number_existing_questions,data.getQuestionsCorrectCount(),data.getQuestions().size()));
 
         holder.play.setOnClickListener(view -> {
 
@@ -88,22 +88,22 @@ public class TestAdapter extends ScrambleAdapter.AbsViewHolderFactory<TestAdapte
 
         });
 
-        GradientDrawable drawable = (GradientDrawable) mContext.getResources().getDrawable(R.drawable.circle);
+        GradientDrawable drawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.circle);
 
         drawable.setColor(data.getColor());
 
         holder.cate.setBackgroundDrawable(drawable);
 
         holder.share.setOnClickListener(view -> {
-            Toast.makeText(mContext, mContext.getString(R.string.message_share_exam,data.getTitle()), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, context.getString(R.string.message_share_exam,data.getTitle()), Toast.LENGTH_LONG).show();
 
             try {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
                 intent.setType("text/plain");
 
-                intent.putExtra(Intent.EXTRA_TEXT, data.testToString(mContext));
-                mContext.startActivity(intent);
+                intent.putExtra(Intent.EXTRA_TEXT, data.testToString(context));
+                context.startActivity(intent);
 
             } catch (Exception e) {
                 Log.d("tag", "Error");

@@ -24,7 +24,7 @@
     <string name="number_answers">・解答の数(完答)</string>
     <string name="number_choosers">・選択肢の数</string>
     <string name="number_questions">出題数</string>
-    <string name="number_existing_questions">問題数: %1$d</string>
+    <string name="number_existing_questions">達成率: %1$d / %2$d</string>
     <string name="number_exams">問題集数 %1$d</string>
     <string name="confirm">確認</string>
     <string name="open">開く</string>

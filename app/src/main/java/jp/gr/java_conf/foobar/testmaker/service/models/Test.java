@@ -81,13 +81,30 @@ public class Test extends RealmObject {
         return category;
     }
 
-    public RealmList<Quest> getQuestion() {
+    public RealmList<Quest> getQuestions() {
 
-        if (questions == null) {
-            return new RealmList<>();
-        } else {
-            return questions;
+        if (questions == null) return new RealmList<>();
+
+        return questions;
+    }
+
+    public int getQuestionsCorrectCount() {
+
+        if (questions == null) return 0;
+
+        int count = 0;
+
+        for(Quest question: questions){
+
+            if(question.getCorrect()){
+
+                count++;
+
+            }
+
         }
+
+        return count;
     }
 
     public void setQuestions(RealmList<Quest> q) {
@@ -98,7 +115,7 @@ public class Test extends RealmObject {
 
         String backup = "";
 
-        RealmList<Quest> questions = getQuestion();
+        RealmList<Quest> questions = getQuestions();
 
         for (int i = 0; i < questions.size(); i++) {
             Quest q = questions.get(i);

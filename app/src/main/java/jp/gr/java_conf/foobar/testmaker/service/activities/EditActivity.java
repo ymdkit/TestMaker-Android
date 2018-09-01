@@ -73,7 +73,7 @@ public class EditActivity extends BaseActivity {
     EditText[] answers;
     EditText[] others;
     TextView textTitle;
-    SearchView mSearchView;
+    SearchView searchView;
     boolean auto;
     boolean explanation;
 
@@ -450,8 +450,8 @@ public class EditActivity extends BaseActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_edit, menu);
 
-        mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_search));
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_search));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
 
@@ -477,7 +477,7 @@ public class EditActivity extends BaseActivity {
             }
         });
 
-        mSearchView.setOnCloseListener(() -> {
+        searchView.setOnCloseListener(() -> {
 
             editAdapter.searchWord = "";
 

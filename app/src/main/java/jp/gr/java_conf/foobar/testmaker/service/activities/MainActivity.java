@@ -324,8 +324,8 @@ public class MainActivity extends ShowTestsActivity {
     void startAnswer(Test test, EditText editLimit, boolean rand) {
         boolean incorrect = false;
 
-        for (int k = 0; k < test.getQuestion().size(); k++) {
-            if (!test.getQuestion().get(k).getCorrect()) {
+        for (int k = 0; k < test.getQuestions().size(); k++) {
+            if (!test.getQuestions().get(k).getCorrect()) {
                 incorrect = true;
             }
         }

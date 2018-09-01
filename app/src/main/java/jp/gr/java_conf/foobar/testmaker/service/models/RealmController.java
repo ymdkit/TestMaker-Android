@@ -190,13 +190,13 @@ public class RealmController {
 
     public Quest getQuestion(long testId, int position) {
 
-        return realm.where(Test.class).equalTo("id", testId).findFirst().getQuestion().get(position);
+        return realm.where(Test.class).equalTo("id", testId).findFirst().getQuestions().get(position);
     }
 
 
     public ArrayList<Quest> getQuestions(long testId) {
 
-        final RealmList<Quest> realmArray = getTest(testId).getQuestion();
+        final RealmList<Quest> realmArray = getTest(testId).getQuestions();
 
         return new ArrayList<>(realmArray);
     }
@@ -205,7 +205,7 @@ public class RealmController {
 
         ArrayList<Quest> array = new ArrayList<>();
 
-        final RealmList<Quest> realmArray = getTest(testId).getQuestion();
+        final RealmList<Quest> realmArray = getTest(testId).getQuestions();
 
         for (Quest quest : realmArray) {
 
@@ -231,7 +231,7 @@ public class RealmController {
 
         ArrayList<Quest> array = new ArrayList<>();
 
-        final RealmList<Quest> realmArray = getTest(testId).getQuestion();
+        final RealmList<Quest> realmArray = getTest(testId).getQuestions();
 
         for (Quest quest : realmArray) {
 
@@ -273,7 +273,7 @@ public class RealmController {
             }
 
             question = realm.createObject(Quest.class, nextUserId);
-            test.getQuestion().add(question);
+            test.getQuestions().add(question);
         }
 
         question.setExplanation(problem.explanation);
@@ -396,7 +396,7 @@ public class RealmController {
             q.setExplanation(structTest.problems.get(j).explanation);
             q.setImagePath("");
 
-            test.getQuestion().add(q);
+            test.getQuestions().add(q);
         }
 
         realm.commitTransaction();

@@ -80,7 +80,6 @@
     <string name="number_answers">number answers</string>
     <string name="number_choosers">number choices</string>
     <string name="number_exams">%1$d tests</string>
-    <string name="number_existing_questions">%1$d problems</string>
     <string name="number_questions">quantity</string>
     <string name="old_category">existing category</string>
     <string name="open">open</string>
@@ -141,4 +140,5 @@
     <string name="ok">OK</string>
     <string name="number">No.%1$s</string>
     <string name="pass">I don\'t know</string>
+    <string name="number_existing_questions">%1$d / %2$d solved</string>
 </resources>
