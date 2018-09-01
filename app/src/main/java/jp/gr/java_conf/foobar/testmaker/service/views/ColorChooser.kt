@@ -2,7 +2,6 @@ package jp.gr.java_conf.foobar.testmaker.service.views
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AlertDialog
@@ -12,7 +11,6 @@ import android.view.LayoutInflater
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
-
 import jp.gr.java_conf.foobar.testmaker.service.R
 
 /**
@@ -63,18 +61,14 @@ class ColorChooser(internal var context: Context, attr: AttributeSet) : LinearLa
 
                     drawable.setColor(getColors()!![v.tag as Int])
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        button.background = drawable
-                    }else{
-                        button.setBackgroundDrawable(drawable)
-                    }
+                    button.background = drawable
 
                     dialog!!.dismiss()
                 }
             }
 
             colorImages[0]!!.setImageResource(R.drawable.ic_done_white)
-            colorId = resources.getColor(colorIds[0])
+            colorId = ContextCompat.getColor(context,colorIds[0])
             dialog = null
 
         }
@@ -86,7 +80,7 @@ class ColorChooser(internal var context: Context, attr: AttributeSet) : LinearLa
         colorId = id
 
         for (i in colorImages.indices) {
-            if (id == context.resources.getColor(colorIds[i])) {
+            if (id == ContextCompat.getColor(context,colorIds[i])) {
                 colorImages[i]!!.setImageResource(R.drawable.ic_done_white)
             } else {
                 colorImages[i]!!.setImageResource(R.drawable.white)

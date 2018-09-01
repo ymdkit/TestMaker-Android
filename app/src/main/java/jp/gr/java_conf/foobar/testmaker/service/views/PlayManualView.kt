@@ -39,7 +39,7 @@ class PlayManualView : LinearLayout {
 
     }
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init { LayoutInflater.from(context).inflate(R.layout.layout_play_manual, this) }
 
