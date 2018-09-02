@@ -27,6 +27,7 @@ class EditProActivity : BaseActivity() {
         if (Build.VERSION.SDK_INT >= 21) button_save.stateListAnimator = null
 
         button_save.setOnClickListener {
+
             val text = edit_test.text.toString()
 
             val loader = AsyncLoadTest(text.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), null, realmController, this@EditProActivity, intent.getLongExtra("testId", -1))

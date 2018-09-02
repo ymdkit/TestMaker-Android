@@ -16,7 +16,7 @@
             >
 
             <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/set_title"
+                android:id="@+id/edit_title"
                 android:hint="@string/hint_name"
                 style="@style/MyEditTextSingleLine"
                 />

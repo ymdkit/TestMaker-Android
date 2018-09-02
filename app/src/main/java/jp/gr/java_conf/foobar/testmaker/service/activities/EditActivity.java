@@ -503,7 +503,7 @@ public class EditActivity extends BaseActivity {
             final View dialogLayout = LayoutInflater.from(this).inflate(R.layout.dialog_edit_test,
                     findViewById(R.id.layout_dialog_edit_test));
 
-            final EditText name = dialogLayout.findViewById(R.id.set_title);
+            final EditText name = dialogLayout.findViewById(R.id.edit_title);
 
             final Button button_cate = dialogLayout.findViewById(R.id.button_category);
 
