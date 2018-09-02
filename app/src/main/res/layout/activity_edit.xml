@@ -376,7 +376,7 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/button_write"
+                        android:id="@+id/button_type"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_height_small"
                         android:layout_margin="@dimen/element_spacing_small"
@@ -388,7 +388,7 @@
                         android:textSize="@dimen/text_size_small" />
 
                     <Button
-                        android:id="@+id/button_choose"
+                        android:id="@+id/button_detail"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_height_small"
                         android:layout_margin="@dimen/element_spacing_small"
