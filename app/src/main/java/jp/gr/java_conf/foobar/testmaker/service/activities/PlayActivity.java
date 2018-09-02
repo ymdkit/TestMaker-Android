@@ -91,35 +91,35 @@ public class PlayActivity extends BaseActivity {
 
         if (getIntent().hasExtra("redo")) {
 
-            questions = realmController.getQuestionsSolved(testId);
+            questions = getRealmController().getQuestionsSolved(testId);
 
         } else {
 
-            questions = realmController.getQuestions(testId);
+            questions = getRealmController().getQuestions(testId);
 
         }
 
-        if (sharedPreferenceManager.getRefine()) {
+        if (getSharedPreferenceManager().getRefine()) {
 
             if (getIntent().hasExtra("redo")) {
 
                 questions = new ArrayList<>();
 
-                for (Quest question : realmController.getQuestionsSolved(testId)) {
+                for (Quest question : getRealmController().getQuestionsSolved(testId)) {
                     if (!question.getCorrect()) {
                         questions.add(question);
                     } else {
-                        realmController.updateSolving(question, false);
+                        getRealmController().updateSolving(question, false);
                     }
                 }
 
             } else {
 
-                realmController.updateSolving(questions, false);
+                getRealmController().updateSolving(questions, false);
 
                 questions = new ArrayList<>();
 
-                for (Quest question : realmController.getQuestions(testId)) {
+                for (Quest question : getRealmController().getQuestions(testId)) {
                     if (!question.getCorrect()) {
                         questions.add(question);
                     }
@@ -128,7 +128,7 @@ public class PlayActivity extends BaseActivity {
 
         } else {
 
-            realmController.updateSolving(questions, false);
+            getRealmController().updateSolving(questions, false);
 
         }
 
@@ -137,11 +137,11 @@ public class PlayActivity extends BaseActivity {
             Collections.shuffle(questions);
         }
 
-        if (realmController.getTest(testId).getLimit() < questions.size()) {
+        if (getRealmController().getTest(testId).getLimit() < questions.size()) {
 
             ArrayList<Quest> temp = new ArrayList<>();
 
-            for (int i = 0; i < realmController.getTest(testId).getLimit(); i++) {
+            for (int i = 0; i < getRealmController().getTest(testId).getLimit(); i++) {
                 temp.add(questions.get(i));
             }
 
@@ -149,7 +149,7 @@ public class PlayActivity extends BaseActivity {
 
         }
 
-        realmController.updateSolving(questions, true);
+        getRealmController().updateSolving(questions, true);
 
     }
 
@@ -260,7 +260,7 @@ public class PlayActivity extends BaseActivity {
 
         soundRight.playSe();
 
-        realmController.updateCorrect(questions.get(number), true);
+        getRealmController().updateCorrect(questions.get(number), true);
 
         showImageJudge(R.drawable.right);
 
@@ -270,7 +270,7 @@ public class PlayActivity extends BaseActivity {
 
     void actionMistake(String yourAnswer) {
 
-        realmController.updateCorrect(questions.get(number), false);
+        getRealmController().updateCorrect(questions.get(number), false);
 
         showLayoutMistake(yourAnswer);
 
@@ -396,7 +396,7 @@ public class PlayActivity extends BaseActivity {
 
     private void showLayoutWrite() {
 
-        if(sharedPreferenceManager.getManual()){
+        if(getSharedPreferenceManager().getManual()){
 
             buttonConfirm.setVisibility(View.VISIBLE);
 
@@ -417,7 +417,7 @@ public class PlayActivity extends BaseActivity {
 
     private void showLayoutComplete(Quest question) {
 
-        if(sharedPreferenceManager.getManual()){
+        if(getSharedPreferenceManager().getManual()){
 
             buttonConfirm.setVisibility(View.VISIBLE);
 
@@ -425,7 +425,7 @@ public class PlayActivity extends BaseActivity {
 
         }
 
-        if (sharedPreferenceManager.getReverse()) {
+        if (getSharedPreferenceManager().getReverse()) {
 
             playWriteView.show();
 
@@ -445,7 +445,7 @@ public class PlayActivity extends BaseActivity {
 
         ArrayList<String> answers = new ArrayList<>();
 
-        ArrayList<Quest> quests = realmController.getQuestions(testId);
+        ArrayList<Quest> quests = getRealmController().getQuestions(testId);
 
         for (int i = 0; i < quests.size(); i++) {
             if (quests.get(i).getType() != 2) {
@@ -504,7 +504,7 @@ public class PlayActivity extends BaseActivity {
             @Override
             public void onClickRight() {
 
-                realmController.updateCorrect(questions.get(number), true);
+                getRealmController().updateCorrect(questions.get(number), true);
 
                 loadNext(60);
             }
@@ -512,7 +512,7 @@ public class PlayActivity extends BaseActivity {
             @Override
             public void onClickMistake() {
 
-                realmController.updateCorrect(questions.get(number), false);
+                getRealmController().updateCorrect(questions.get(number), false);
 
                 loadNext(60);
 
@@ -556,7 +556,7 @@ public class PlayActivity extends BaseActivity {
 
     public boolean isReverse(Quest question) {
 
-        return (question.getType() == Constants.WRITE || question.getType() == Constants.COMPLETE) && sharedPreferenceManager.getReverse();
+        return (question.getType() == Constants.WRITE || question.getType() == Constants.COMPLETE) && getSharedPreferenceManager().getReverse();
 
     }
 }

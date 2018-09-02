@@ -99,9 +99,9 @@ public class EditActivity extends BaseActivity {
         testId = getIntent().getLongExtra("testId", -1);
         questionId = -1;
 
-        auto = sharedPreferenceManager.getAuto();
+        auto = getSharedPreferenceManager().getAuto();
 
-        explanation = sharedPreferenceManager.getExplanation();
+        explanation = getSharedPreferenceManager().getExplanation();
 
         initAdapter();
 
@@ -111,7 +111,7 @@ public class EditActivity extends BaseActivity {
 
     private void initAdapter() {
 
-        editAdapter = new EditAdapter(this, realmController, testId);
+        editAdapter = new EditAdapter(this, getRealmController(), testId);
 
         editAdapter.setOnClickListener(new EditAdapter.OnClickListener() {
             @Override
@@ -126,9 +126,9 @@ public class EditActivity extends BaseActivity {
                 Quest question;
 
                 if (editAdapter.getFilter()) {
-                    question = realmController.getFilterQuestions(testId, editAdapter.getSearchWord()).get(position);
+                    question = getRealmController().getFilterQuestions(testId, editAdapter.getSearchWord()).get(position);
                 } else {
-                    question = realmController.getQuestion(testId, position);
+                    question = getRealmController().getQuestion(testId, position);
 
                 }
 
@@ -164,7 +164,7 @@ public class EditActivity extends BaseActivity {
 
                         textAnswerWrite.setText(question.getAnswer());
 
-                        sharedPreferenceManager.setNumWrite(1);
+                        getSharedPreferenceManager().setNumWrite(1);
 
                         buttonType.setText(getString(R.string.action_choose));
 
@@ -174,7 +174,7 @@ public class EditActivity extends BaseActivity {
                         showLayoutSelect();
 
                         reload_others(question.getSelections().size());
-                        sharedPreferenceManager.setNumChoose(question.getSelections().size());
+                        getSharedPreferenceManager().setNumChoose(question.getSelections().size());
 
                         textAnswerChoose.setText(question.getAnswer());
 
@@ -184,12 +184,12 @@ public class EditActivity extends BaseActivity {
 
                         buttonType.setText(getString(R.string.action_write));
 
-                        sharedPreferenceManager.setAuto(question.getAuto());
+                        getSharedPreferenceManager().setAuto(question.getAuto());
 
-                        if (sharedPreferenceManager.getAuto()) {
-                            auto(sharedPreferenceManager.getNumChoose());
+                        if (getSharedPreferenceManager().getAuto()) {
+                            auto(getSharedPreferenceManager().getNumChoose());
                         } else {
-                            offAuto(sharedPreferenceManager.getNumChoose());
+                            offAuto(getSharedPreferenceManager().getNumChoose());
                         }
 
                         break;
@@ -197,7 +197,7 @@ public class EditActivity extends BaseActivity {
                         showLayoutWriteComplete();
                         reload_answers(question.getSelections().size());
 
-                        sharedPreferenceManager.setNumWrite(question.getSelections().size());
+                        getSharedPreferenceManager().setNumWrite(question.getSelections().size());
 
                         for (int i = 0; i < question.getSelections().size(); i++) {
                             answers[i].setText(question.getSelections().get(i).getSelection());
@@ -222,7 +222,7 @@ public class EditActivity extends BaseActivity {
                         deleteFile(question.getImagePath());
                     }
 
-                    realmController.deleteQuestion(question);
+                    getRealmController().deleteQuestion(question);
 
                     editAdapter.notifyDataSetChanged();
 
@@ -349,7 +349,7 @@ public class EditActivity extends BaseActivity {
 
                     p.setImagePath(imagePath);
                     p.setExplanation(textExplanation.getText().toString());
-                    realmController.addQuestion(testId, p, questionId);
+                    getRealmController().addQuestion(testId, p, questionId);
 
                     reset();
 
@@ -385,10 +385,10 @@ public class EditActivity extends BaseActivity {
                     }
 
                     StructQuestion p = new StructQuestion(textProblem.getText().toString(), String.valueOf(textAnswerChoose.getText()), strings);
-                    p.setAuto(sharedPreferenceManager.getAuto());
+                    p.setAuto(getSharedPreferenceManager().getAuto());
                     p.setImagePath(imagePath);
                     p.setExplanation(textExplanation.getText().toString());
-                    realmController.addQuestion(testId, p, questionId);
+                    getRealmController().addQuestion(testId, p, questionId);
 
                     reset();
 
@@ -427,7 +427,7 @@ public class EditActivity extends BaseActivity {
                     p.setImagePath(imagePath);
                     p.setExplanation(textExplanation.getText().toString());
 
-                    realmController.addQuestion(testId, p, questionId);
+                    getRealmController().addQuestion(testId, p, questionId);
 
                     reset();
                 }
@@ -513,17 +513,17 @@ public class EditActivity extends BaseActivity {
                 button_cate.setStateListAnimator(null);
             }
 
-            button_cate.setTag(realmController.getTest(testId).getCategory());
+            button_cate.setTag(getRealmController().getTest(testId).getCategory());
 
-            if (realmController.getTest(testId).getCategory().equals("")) {
+            if (getRealmController().getTest(testId).getCategory().equals("")) {
 
                 button_cate.setText(getString(R.string.category));
             } else {
-                button_cate.setText(realmController.getTest(testId).getCategory());
+                button_cate.setText(getRealmController().getTest(testId).getCategory());
             }
 
             button_cate.setOnClickListener(view -> {
-                CategoryEditor categoryEditor = new CategoryEditor(EditActivity.this, button_cate, realmController, null);
+                CategoryEditor categoryEditor = new CategoryEditor(EditActivity.this, button_cate, getRealmController(), null);
                 categoryEditor.setCategory();
             });
 
@@ -544,9 +544,9 @@ public class EditActivity extends BaseActivity {
                 return false;
             });
 
-            name.setText(realmController.getTest(testId).getTitle());
+            name.setText(getRealmController().getTest(testId).getTitle());
 
-            colorChooser.setColorId(realmController.getTest(testId).getColor());
+            colorChooser.setColorId(getRealmController().getTest(testId).getColor());
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
             builder.setView(dialogLayout);
@@ -567,7 +567,7 @@ public class EditActivity extends BaseActivity {
 
                 } else {
 
-                    realmController.updateTest(realmController.getTest(testId), sb.toString(), colorChooser.getColorId(), button_cate.getTag().toString());
+                    getRealmController().updateTest(getRealmController().getTest(testId), sb.toString(), colorChooser.getColorId(), button_cate.getTag().toString());
 
                     dialog.dismiss();
                 }
@@ -658,10 +658,10 @@ public class EditActivity extends BaseActivity {
             t.setText("");
         }
 
-        if (sharedPreferenceManager.getAuto()) {
-            auto(sharedPreferenceManager.getNumChoose());
+        if (getSharedPreferenceManager().getAuto()) {
+            auto(getSharedPreferenceManager().getNumChoose());
         } else {
-            offAuto(sharedPreferenceManager.getNumChoose());
+            offAuto(getSharedPreferenceManager().getNumChoose());
         }
     }
 
@@ -753,10 +753,10 @@ public class EditActivity extends BaseActivity {
 
                 final SwitchCompat change_explanation = dialogLayout.findViewById(R.id.change_explanation);
 
-                change_explanation.setChecked(sharedPreferenceManager.getExplanation());
+                change_explanation.setChecked(getSharedPreferenceManager().getExplanation());
                 change_explanation.setOnCheckedChangeListener((buttonView, isChecked) -> explanation = isChecked);
 
-                change_auto.setChecked(sharedPreferenceManager.getAuto());
+                change_auto.setChecked(getSharedPreferenceManager().getAuto());
                 change_auto.setOnCheckedChangeListener((buttonView, isChecked) -> auto = isChecked);
 
                 switch (typeQuestion) {
@@ -769,14 +769,14 @@ public class EditActivity extends BaseActivity {
                         final TextView t = dialogLayout.findViewById(R.id.textView);
                         t.setText(getString(R.string.number_answers));
 
-                        number.setText(String.valueOf(sharedPreferenceManager.getNumWrite()));
+                        number.setText(String.valueOf(getSharedPreferenceManager().getNumWrite()));
 
                         change_auto.setVisibility(View.GONE);
 
                         break;
                     case 1:
 
-                        number.setText(String.valueOf(sharedPreferenceManager.getNumChoose() + 1));
+                        number.setText(String.valueOf(getSharedPreferenceManager().getNumChoose() + 1));
 
                         break;
                 }
@@ -798,7 +798,7 @@ public class EditActivity extends BaseActivity {
                 button.setOnClickListener(v -> {
                     // 場合によっては自分で明示的に閉じる必要がある
 
-                    sharedPreferenceManager.setExplanation(explanation);
+                    getSharedPreferenceManager().setExplanation(explanation);
                     if (explanation) {
                         editExplanation.setVisibility(View.VISIBLE);
                     } else {
@@ -811,23 +811,23 @@ public class EditActivity extends BaseActivity {
                         case 2:
 
                             reload_answers(Integer.parseInt(String.valueOf(number.getText())));
-                            sharedPreferenceManager.setNumWrite(Integer.parseInt(String.valueOf(number.getText())));
+                            getSharedPreferenceManager().setNumWrite(Integer.parseInt(String.valueOf(number.getText())));
 
-                            if (sharedPreferenceManager.getNumWrite() > 1) {
+                            if (getSharedPreferenceManager().getNumWrite() > 1) {
                                 showLayoutWriteComplete();
                             } else {
                                 showLayoutWrite();
                             }
                             break;
                         case 1:
-                            sharedPreferenceManager.setAuto(auto);
+                            getSharedPreferenceManager().setAuto(auto);
                             reload_others(Integer.parseInt(String.valueOf(number.getText())) - 1);
-                            sharedPreferenceManager.setNumChoose(Integer.parseInt(String.valueOf(number.getText())) - 1);
+                            getSharedPreferenceManager().setNumChoose(Integer.parseInt(String.valueOf(number.getText())) - 1);
 
                             if (auto) {
-                                auto(sharedPreferenceManager.getNumChoose());
+                                auto(getSharedPreferenceManager().getNumChoose());
                             } else {
-                                offAuto(sharedPreferenceManager.getNumChoose());
+                                offAuto(getSharedPreferenceManager().getNumChoose());
                             }
 
                             break;
@@ -872,14 +872,14 @@ public class EditActivity extends BaseActivity {
             if (buttonType.getText().equals(getString(R.string.action_choose))) {
 
                 showLayoutSelect();
-                reload_others(sharedPreferenceManager.getNumChoose());
+                reload_others(getSharedPreferenceManager().getNumChoose());
 
                 buttonType.setText(getString(R.string.action_write));
                 textTitle.setText(getString(R.string.add_question_choose));
 
             } else {
 
-                if (sharedPreferenceManager.getNumWrite() > 1) {
+                if (getSharedPreferenceManager().getNumWrite() > 1) {
                     showLayoutWriteComplete();
                 } else {
                     showLayoutWrite();
