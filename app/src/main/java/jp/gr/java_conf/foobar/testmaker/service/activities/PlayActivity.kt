@@ -451,15 +451,16 @@ class PlayActivity : BaseActivity() {
             }
         })
 
-        play_complete_view.setOnClickListener (object : PlayCompleteView.OnClickListener{
+        play_complete_view.setOnClickListener(object : PlayCompleteView.OnClickListener {
             override fun onClick() {
-                checkAnswer(play_complete_view.getAnswers(questions[number].selections.size))            }
+                checkAnswer(play_complete_view.getAnswers(questions[number].selections.size))
+            }
         })
 
-        play_mistake_view.setOnClickListener ( object : PlayMistakeView.OnClickListener {
+        play_mistake_view.setOnClickListener(object : PlayMistakeView.OnClickListener {
 
             override fun onClick() {
-                    loadNext(0)
+                loadNext(0)
             }
 
         })

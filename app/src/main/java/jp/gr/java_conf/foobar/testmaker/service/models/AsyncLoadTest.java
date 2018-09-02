@@ -131,7 +131,7 @@ public class AsyncLoadTest extends AsyncTask<String, Integer, StructTest> {
                         }
 
                         q.setStructQuestion(backup[1], backup[2], other, resultNumber);
-                        q.problems.get(resultNumber).auto = true;
+                        q.getProblems().get(resultNumber).auto = true;
 
                         resultNumber += 1;
                     }
@@ -140,7 +140,7 @@ public class AsyncLoadTest extends AsyncTask<String, Integer, StructTest> {
 
                     if (backup[0].equals(context.getString(R.string.load_explanation))) {
                         if (resultNumber > 0) {
-                            q.problems.get(resultNumber - 1).setExplanation(backup[1]);
+                            q.getProblems().get(resultNumber - 1).setExplanation(backup[1]);
                         }
                     } else if (backup[0].equals(context.getString(R.string.load_title))) {
                         q.setTitle(backup[1]);

@@ -375,7 +375,7 @@ public class RealmController {
         test.setHistory(structTest.getHistory());
         test.setLimit(100);
 
-        for (int j = 0; j < structTest.problems.size(); j++) {
+        for (int j = 0; j < structTest.getProblems().size(); j++) {
 
             // 初期化
             Integer nextQuestId = 1;
@@ -388,12 +388,12 @@ public class RealmController {
 
             Quest q = realm.createObject(Quest.class, nextQuestId);
 
-            q.setProblem(structTest.problems.get(j).question);
-            q.setAnswer(structTest.problems.get(j).answer);
-            q.setAuto(structTest.problems.get(j).auto);
-            q.setType(structTest.problems.get(j).type);
-            q.setSelections(structTest.problems.get(j).others);
-            q.setExplanation(structTest.problems.get(j).explanation);
+            q.setProblem(structTest.getProblems().get(j).question);
+            q.setAnswer(structTest.getProblems().get(j).answer);
+            q.setAuto(structTest.getProblems().get(j).auto);
+            q.setType(structTest.getProblems().get(j).type);
+            q.setSelections(structTest.getProblems().get(j).others);
+            q.setExplanation(structTest.getProblems().get(j).explanation);
             q.setImagePath("");
 
             test.getQuestions().add(q);
