@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/layout_dialog_confirm">
+
+    <TextView
+        android:id="@+id/text_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/alert_save_text"
+        android:textSize="@dimen/text_size_large"
+        android:layout_margin="@dimen/element_spacing_normal"/>
+
+    <CheckBox
+        android:id="@+id/check_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/show_never"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/grey"
+        android:checked="false"
+        android:layout_margin="@dimen/element_spacing_normal"/>
+</LinearLayout>

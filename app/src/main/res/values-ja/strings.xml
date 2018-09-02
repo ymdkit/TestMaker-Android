@@ -143,4 +143,6 @@
     <string name="ok">OK</string>
     <string name="number">No.%1$s</string>
     <string name="help_url">https://banira0428.wixsite.com/testmaker/help</string>
+    <string name="show_never">次回からこのダイアログを表示しない</string>
+    <string name="alert_save_text">テキスト形式で保存した場合、画像データと達成率のデータは失われてしまいます。</string>
 </resources>

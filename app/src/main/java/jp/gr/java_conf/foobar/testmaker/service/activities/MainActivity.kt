@@ -25,6 +25,7 @@ import jp.gr.java_conf.foobar.testmaker.service.views.adapters.FolderAdapter
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.MyScrambleAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_edit_test.*
+import net.cattaka.android.adaptertoolbox.adapter.ScrambleAdapter
 import java.io.*
 
 class MainActivity : ShowTestsActivity() {
@@ -141,7 +142,7 @@ class MainActivity : ShowTestsActivity() {
 
                 Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
 
-                parentAdapter.notifyDataSetChanged()
+                parentAdapter?.notifyDataSetChanged()
 
                 edit_title.setText("")
                 button_category.tag = ""
@@ -249,7 +250,7 @@ class MainActivity : ShowTestsActivity() {
 
                         val paste = editPaste.text.toString()
 
-                        val loader = AsyncLoadTest(paste.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), parentAdapter, realmController, this@MainActivity)
+                        val loader = AsyncLoadTest(paste.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), parentAdapter as ScrambleAdapter<Any>?, realmController, this@MainActivity)
                         loader.execute()
 
                         dialog.dismiss()
@@ -275,37 +276,6 @@ class MainActivity : ShowTestsActivity() {
 
     }
 
-    internal override fun startAnswer(test: Test, editLimit: EditText, rand: Boolean) {
-        var incorrect = false
-
-        for (k in 0 until test.questions.size) {
-            if (!test.questions[k].correct) {
-                incorrect = true
-            }
-        }
-
-        if (!incorrect && sharedPreferenceManager.refine) {
-            Toast.makeText(this@MainActivity, getString(R.string.message_null_wrongs), Toast.LENGTH_SHORT).show()
-        } else if (editLimit.text.toString() == "") {
-            Toast.makeText(this@MainActivity, getString(R.string.message_null_number), Toast.LENGTH_SHORT).show()
-        } else {
-
-            val i = Intent(this@MainActivity, PlayActivity::class.java)
-            i.putExtra("testId", test.id)
-
-            if (rand) {
-                i.putExtra("random", 1)
-
-            }
-
-            realmController.updateLimit(test, Integer.parseInt(editLimit.text.toString()))
-
-            realmController.updateHistory(test)
-
-            startActivity(i)
-        }
-    }
-
     override fun onBackPressed() {
         moveTaskToBack(true)
         super.onBackPressed()
@@ -320,7 +290,7 @@ class MainActivity : ShowTestsActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         if (resultCode == Activity.RESULT_CANCELED) {
-            parentAdapter.notifyDataSetChanged()
+            parentAdapter?.notifyDataSetChanged()
         }
 
         super.onActivityResult(requestCode, resultCode, data)
@@ -352,7 +322,7 @@ class MainActivity : ShowTestsActivity() {
 
             val allText : String = inputStream.bufferedReader().use(BufferedReader::readText)
 
-            val loader = AsyncLoadTest(allText.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), parentAdapter, realmController, this@MainActivity)
+            val loader = AsyncLoadTest(allText.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), parentAdapter as ScrambleAdapter<Any>?, realmController, this@MainActivity)
             loader.execute()
 
         } catch (e: FileNotFoundException) {

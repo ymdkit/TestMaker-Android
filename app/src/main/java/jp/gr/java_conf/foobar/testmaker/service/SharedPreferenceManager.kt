@@ -47,6 +47,11 @@ class SharedPreferenceManager(context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("reverse", f)
                 .apply()
 
+    var confirmSave: Boolean
+        get() = sharedPreferences.getBoolean("confirmSave", false)
+        set(f) = sharedPreferences.edit().putBoolean("confirmSave", f)
+                .apply()
+
     var sort: Int
         get() = sharedPreferences.getInt("sort", -1)
         set(i) = sharedPreferences.edit().putInt("sort", i).apply()
