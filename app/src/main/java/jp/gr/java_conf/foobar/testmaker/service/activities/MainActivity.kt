@@ -20,7 +20,6 @@ import jp.gr.java_conf.foobar.testmaker.service.IOUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadTest
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
-import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.FolderAdapter
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.MyScrambleAdapter
 import kotlinx.android.synthetic.main.activity_main.*
