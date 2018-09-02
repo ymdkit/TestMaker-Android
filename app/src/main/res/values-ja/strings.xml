@@ -142,4 +142,5 @@
     <string name="incorrect">不正解</string>
     <string name="ok">OK</string>
     <string name="number">No.%1$s</string>
+    <string name="help_url">https://banira0428.wixsite.com/testmaker/help</string>
 </resources>

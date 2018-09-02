@@ -96,6 +96,7 @@
     <string name="unknown">unknown</string>
     <string name="way">option</string>
     <string name="your_answer">your answer is %1$s</string>
+    <string name="help_url">https://banira0428.wixsite.com/testmaker/help-en</string>
 
     <string-array name="sort_exam">
         <item>alphabetical(descending)</item>
