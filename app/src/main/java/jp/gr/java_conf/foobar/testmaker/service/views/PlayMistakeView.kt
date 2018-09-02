@@ -37,7 +37,9 @@ class PlayMistakeView : LinearLayout {
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    init { LayoutInflater.from(context).inflate(R.layout.layout_play_mistake, this) }
+    init {
+        LayoutInflater.from(context).inflate(R.layout.layout_play_mistake, this)
+    }
 
     private fun setTextYourAnswer(answer: String) {
 

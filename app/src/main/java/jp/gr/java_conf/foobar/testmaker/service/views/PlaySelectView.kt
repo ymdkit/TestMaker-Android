@@ -41,9 +41,7 @@ class PlaySelectView : LinearLayout {
 
         }
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            buttonPass.stateListAnimator = null
-        }
+        if (Build.VERSION.SDK_INT >= 21) buttonPass.stateListAnimator = null
 
         for (i in buttonChoices.indices) {
             val s = "button" + (i + 1).toString()
@@ -53,17 +51,11 @@ class PlaySelectView : LinearLayout {
             buttonChoices[i]!!.tag = i
             textChoices[i]!!.tag = i
 
-            if (Build.VERSION.SDK_INT >= 21) {
-                buttonChoices[i]!!.stateListAnimator = null
-            }
+            if (Build.VERSION.SDK_INT >= 21) buttonChoices[i]!!.stateListAnimator = null
 
             buttonChoices[i]!!.setOnClickListener { view ->
 
-                if (listener != null) {
-
-                    listener!!.onClick(textChoices[view.tag as Int]!!.text as String)
-
-                }
+                if (listener != null) listener!!.onClick(textChoices[view.tag as Int]!!.text as String)
 
             }
 
