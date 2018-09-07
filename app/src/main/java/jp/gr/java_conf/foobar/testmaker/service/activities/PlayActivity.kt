@@ -100,18 +100,13 @@ class PlayActivity : BaseActivity() {
 
         }
 
-        if (intent.hasExtra("random")) {
-
-            questions.shuffle()
-        }
+        if (intent.hasExtra("random")) questions.shuffle()
 
         if (realmController.getTest(testId).limit < questions.size) {
 
             val temp = ArrayList<Quest>()
 
-            for (i in 0 until realmController.getTest(testId).limit) {
-                temp.add(questions[i])
-            }
+            for (i in 0 until realmController.getTest(testId).limit) temp.add(questions[i])
 
             questions = temp
 
@@ -178,16 +173,9 @@ class PlayActivity : BaseActivity() {
         for (answer in answers) {
 
             loop = false
-            for (k in 0 until questions[number].selections.size) {
+            for (k in 0 until questions[number].selections.size) if (answer == questions[number].selections[k]?.selection) loop = true
 
-                if (answer == questions[number].selections[k]?.selection) {
-                    loop = true
-                }
-            }
-
-            if (!loop) {
-                break
-            }
+            if (!loop) break
 
         }
 
@@ -198,19 +186,14 @@ class PlayActivity : BaseActivity() {
         } else {
 
             val yourAnswer = StringBuilder()
-            for (your in answers) {
-                if (your != "") {
-                    yourAnswer.append(your).append(" ")
-                }
-            }
+
+            for (your in answers) if (your != "") yourAnswer.append(your).append(" ")
 
             actionMistake(yourAnswer.toString())
 
             val answer = StringBuilder()
 
-            for (i in 0 until questions[number].selections.size) {
-                answer.append(questions[number].selections[i]?.selection).append(" ")
-            }
+            for (i in 0 until questions[number].selections.size) answer.append(questions[number].selections[i]?.selection).append(" ")
 
             play_review_view.setTextAnswer(answer.toString())
 
@@ -340,9 +323,7 @@ class PlayActivity : BaseActivity() {
 
         val i = Intent(this@PlayActivity, ResultActivity::class.java)
 
-        if (intent.hasExtra("random")) {
-            i.putExtra("random", intent.getIntExtra("random", -1))
-        }
+        if (intent.hasExtra("random")) i.putExtra("random", intent.getIntExtra("random", -1))
 
         i.putExtra("testId", testId)
 
@@ -403,11 +384,9 @@ class PlayActivity : BaseActivity() {
 
         val quests = realmController.getQuestions(testId)
 
-        for (i in quests.indices) {
-            if (quests[i].type != 2) {
+        for (i in quests.indices)
+            if (quests[i].type == Constants.WRITE || quests[i].type == Constants.SELECT)
                 answers.add(quests[i].answer)
-            }
-        }
 
         var i = 0
 

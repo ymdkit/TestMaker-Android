@@ -176,7 +176,6 @@ open class ShowTestsActivity : BaseActivity() {
 
         if (resultCode == Activity.RESULT_CANCELED) if (parentAdapter != null) parentAdapter!!.notifyDataSetChanged()
 
-
         if (requestCode == REQUEST_EDIT) if (parentAdapter != null) parentAdapter!!.notifyDataSetChanged()
 
     }
