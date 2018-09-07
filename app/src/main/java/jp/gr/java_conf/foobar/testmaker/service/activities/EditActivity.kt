@@ -41,8 +41,6 @@ open class EditActivity : BaseActivity() {
 
     internal lateinit var editAdapter: EditAdapter
 
-    //internal var explanation: Boolean = false
-
     internal var others = arrayOfNulls<EditText>(5)
     internal var answers = arrayOfNulls<EditText>(4)
 
@@ -73,8 +71,6 @@ open class EditActivity : BaseActivity() {
         imagePath = ""
         testId = intent.getLongExtra("testId", -1)
         questionId = -1
-
-        //explanation = sharedPreferenceManager.explanation
 
         initAdapter()
 
@@ -110,6 +106,7 @@ open class EditActivity : BaseActivity() {
                 } else {
 
                     button_image.setImageResource(R.drawable.ic_photo_white)
+
                 }
 
                 if (question.explanation != "") {
@@ -144,9 +141,7 @@ open class EditActivity : BaseActivity() {
 
                         set_answer_choose.setText(question.answer)
 
-                        for (i in 0 until question.selections.size) {
-                            others[i]?.setText(question.selections[i]?.selection)
-                        }
+                        for (i in 0 until question.selections.size) others[i]?.setText(question.selections[i]?.selection)
 
                         button_type.text = getString(R.string.action_write)
 
@@ -165,9 +160,7 @@ open class EditActivity : BaseActivity() {
 
                         sharedPreferenceManager.numAnswers = question.selections.size
 
-                        for (i in 0 until question.selections.size) {
-                            answers[i]?.setText(question.selections[i]?.selection)
-                        }
+                        for (i in 0 until question.selections.size) answers[i]?.setText(question.selections[i]?.selection)
 
                         button_type.text = getString(R.string.action_choose)
                     }
@@ -238,7 +231,6 @@ open class EditActivity : BaseActivity() {
                     builder.setNegativeButton(android.R.string.cancel, null)
 
                     val dialog = builder.show()
-
 
                     val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                     positiveButton.setOnClickListener {
@@ -601,9 +593,7 @@ open class EditActivity : BaseActivity() {
 
         for (t in others) t?.setText("")
 
-
         for (t in answers) t?.setText("")
-
 
         if (sharedPreferenceManager.auto) {
             auto(sharedPreferenceManager.numChoose)
