@@ -599,13 +599,11 @@ open class EditActivity : BaseActivity() {
 
         button_add.text = getString(R.string.action_add)
 
-        for (t in others) {
-            t?.setText("")
-        }
+        for (t in others) t?.setText("")
 
-        for (t in answers) {
-            t?.setText("")
-        }
+
+        for (t in answers) t?.setText("")
+
 
         if (sharedPreferenceManager.auto) {
             auto(sharedPreferenceManager.numChoose)

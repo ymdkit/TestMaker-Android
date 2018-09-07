@@ -36,9 +36,6 @@ class ResultActivity : BaseActivity() {
         var count = 0
         for (i in questions.indices) if (questions[i].correct) count++
 
-
-
-
         result.text = getString(R.string.message_ratio, count, questions.size)
 
         top.setOnClickListener { startActivity(Intent(this@ResultActivity, MainActivity::class.java)) }
