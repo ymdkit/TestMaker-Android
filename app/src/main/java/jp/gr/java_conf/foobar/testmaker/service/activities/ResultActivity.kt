@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_result.*
 
 class ResultActivity : BaseActivity() {
     private lateinit var resultAdapter: ResultAdapter
-    internal var testId: Long = 0
+    private var testId: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +29,9 @@ class ResultActivity : BaseActivity() {
 
         resultAdapter = ResultAdapter(this, realmController, testId)
 
-        recyclerview.layoutManager = LinearLayoutManager(applicationContext)
-        recyclerview.setHasFixedSize(true) // アイテムは固定サイズ
-        recyclerview.adapter = resultAdapter
+        recycler_view.layoutManager = LinearLayoutManager(applicationContext)
+        recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
+        recycler_view.adapter = resultAdapter
 
         var count = 0
         for (i in questions.indices) if (questions[i].correct) count++
@@ -56,9 +56,12 @@ class ResultActivity : BaseActivity() {
                         i.putExtra("redo", 1)
 
                         when (which) {
-                            0 -> //全問やり直し
+                            0 -> {//全問やり直し
+
+                                sharedPreferenceManager.refine = false
 
                                 startActivity(i)
+                            }
 
                             1 -> { //不正解のみやり直し
 

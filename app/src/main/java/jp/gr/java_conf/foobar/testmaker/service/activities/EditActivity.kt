@@ -40,9 +40,8 @@ import java.util.*
 open class EditActivity : BaseActivity() {
 
     internal lateinit var editAdapter: EditAdapter
-    
-    internal var auto: Boolean = false
-    internal var explanation: Boolean = false
+
+    //internal var explanation: Boolean = false
 
     internal var others = arrayOfNulls<EditText>(5)
     internal var answers = arrayOfNulls<EditText>(4)
@@ -75,9 +74,7 @@ open class EditActivity : BaseActivity() {
         testId = intent.getLongExtra("testId", -1)
         questionId = -1
 
-        auto = sharedPreferenceManager.auto
-
-        explanation = sharedPreferenceManager.explanation
+        //explanation = sharedPreferenceManager.explanation
 
         initAdapter()
 
@@ -133,10 +130,11 @@ open class EditActivity : BaseActivity() {
 
                         set_answer_write.setText(question.answer)
 
-                        sharedPreferenceManager.numWrite = 1
+                        sharedPreferenceManager.numComplete = 1
 
                         button_type.text = getString(R.string.action_choose)
                     }
+
                     Constants.SELECT -> {
 
                         showLayoutSelect()
@@ -159,12 +157,13 @@ open class EditActivity : BaseActivity() {
                         } else {
                             offAuto(sharedPreferenceManager.numChoose)
                         }
+
                     }
                     Constants.COMPLETE -> {
                         showLayoutWriteComplete()
                         reloadAnswers(question.selections.size)
 
-                        sharedPreferenceManager.numWrite = question.selections.size
+                        sharedPreferenceManager.numComplete = question.selections.size
 
                         for (i in 0 until question.selections.size) {
                             answers[i]?.setText(question.selections[i].selection)
@@ -484,7 +483,7 @@ open class EditActivity : BaseActivity() {
                     builder.setPositiveButton(android.R.string.ok) { _, _ ->
                         buttonCate.tag = ""
                         buttonCate.text = getString(R.string.category)
-                        buttonCate.background = ResourcesCompat.getDrawable(resources,R.drawable.button_blue,null)
+                        buttonCate.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
                     }
                     builder.setNegativeButton(android.R.string.cancel, null)
                     builder.create().show()
@@ -548,21 +547,21 @@ open class EditActivity : BaseActivity() {
         typeQuestion = Constants.WRITE
         textInputLayout_answer_write.visibility = View.VISIBLE
         textInputLayout_answer_write.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
-        layout_answer_write_2.visibility = View.GONE
+        layout_edit_complete.visibility = View.GONE
         edit_choose.visibility = View.GONE
     }
 
     fun showLayoutWriteComplete() {
         typeQuestion = Constants.COMPLETE
-        layout_answer_write_2.visibility = View.VISIBLE
-        layout_answer_write_2.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
+        layout_edit_complete.visibility = View.VISIBLE
+        layout_edit_complete.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
         edit_choose.visibility = View.GONE
         textInputLayout_answer_write.visibility = View.GONE
     }
 
     fun showLayoutSelect() {
         typeQuestion = Constants.SELECT
-        layout_answer_write_2.visibility = View.GONE
+        layout_edit_complete.visibility = View.GONE
         textInputLayout_answer_write.visibility = View.GONE
         edit_choose.visibility = View.VISIBLE
         edit_choose.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
@@ -638,7 +637,7 @@ open class EditActivity : BaseActivity() {
     }
 
     private fun initViews() {
-        
+
         for (i in others.indices) {
             val s = "set_other" + (i + 1).toString()
             val strId = resources.getIdentifier(s, "id", packageName)
@@ -651,8 +650,8 @@ open class EditActivity : BaseActivity() {
             answers[i] = findViewById(strId)
         }
 
-        if (explanation) textInputLayout_explanation.visibility = View.VISIBLE
-        
+        if (sharedPreferenceManager.explanation) textInputLayout_explanation.visibility = View.VISIBLE
+
         ImageButton_expand.setOnClickListener {
 
             if (layout_body.visibility != View.GONE) {
@@ -663,11 +662,8 @@ open class EditActivity : BaseActivity() {
 
                 showLayoutEdit()
 
-                if (edit_choose.visibility == View.GONE) {
-                    text_title.text = getString(R.string.add_question_write)
-                } else {
-                    text_title.text = getString(R.string.add_question_choose)
-                }
+                text_title.text = if (edit_choose.visibility == View.VISIBLE) getString(R.string.add_question_write) else getString(R.string.add_question_choose)
+
             }
 
             reset()
@@ -688,10 +684,10 @@ open class EditActivity : BaseActivity() {
                 val changeExplanation = dialogLayout.findViewById<SwitchCompat>(R.id.change_explanation)
 
                 changeExplanation.isChecked = sharedPreferenceManager.explanation
-                changeExplanation.setOnCheckedChangeListener { _, isChecked -> explanation = isChecked }
+                changeExplanation.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.explanation = isChecked }
 
                 changeAuto.isChecked = sharedPreferenceManager.auto
-                changeAuto.setOnCheckedChangeListener { _, isChecked -> auto = isChecked }
+                changeAuto.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.auto = isChecked }
 
                 when (typeQuestion) {
                     Constants.WRITE, Constants.COMPLETE -> {
@@ -702,7 +698,7 @@ open class EditActivity : BaseActivity() {
                         val t = dialogLayout.findViewById<TextView>(R.id.textView)
                         t.text = getString(R.string.number_answers)
 
-                        number.text = sharedPreferenceManager.numWrite.toString()
+                        number.text = sharedPreferenceManager.numComplete.toString()
 
                         changeAuto.visibility = View.GONE
                     }
@@ -720,39 +716,34 @@ open class EditActivity : BaseActivity() {
                 builder.setTitle(getString(R.string.action_detail))
                 builder.setPositiveButton(android.R.string.ok, null)
                 builder.setNegativeButton(android.R.string.cancel, null)
-                
+
                 val dialog = builder.show()
 
                 val button = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
                 button.setOnClickListener {
                     // 場合によっては自分で明示的に閉じる必要がある
 
-                    sharedPreferenceManager.explanation = explanation
-                    if (explanation) {
-                        textInputLayout_explanation.visibility = View.VISIBLE
-                    } else {
-                        textInputLayout_explanation.visibility = View.GONE
-                    }
+                    textInputLayout_explanation.visibility = if (sharedPreferenceManager.explanation) View.VISIBLE else View.GONE
 
                     when (typeQuestion) {
 
                         Constants.WRITE, Constants.COMPLETE -> {
 
                             reloadAnswers(Integer.parseInt(number.text.toString()))
-                            sharedPreferenceManager.numWrite = Integer.parseInt(number.text.toString())
+                            sharedPreferenceManager.numComplete = Integer.parseInt(number.text.toString())
 
-                            if (sharedPreferenceManager.numWrite > 1) {
+                            if (sharedPreferenceManager.numComplete > 1) {
                                 showLayoutWriteComplete()
                             } else {
                                 showLayoutWrite()
                             }
                         }
                         Constants.SELECT -> {
-                            sharedPreferenceManager.auto = auto
+
                             reloadOthers(Integer.parseInt(number.text.toString()) - 1)
                             sharedPreferenceManager.numChoose = Integer.parseInt(number.text.toString()) - 1
 
-                            if (auto) {
+                            if (sharedPreferenceManager.auto) {
                                 auto(sharedPreferenceManager.numChoose)
                             } else {
                                 offAuto(sharedPreferenceManager.numChoose)
@@ -804,7 +795,7 @@ open class EditActivity : BaseActivity() {
 
             } else {
 
-                if (sharedPreferenceManager.numWrite > 1) {
+                if (sharedPreferenceManager.numComplete > 1) {
                     showLayoutWriteComplete()
                 } else {
                     showLayoutWrite()
@@ -872,9 +863,9 @@ open class EditActivity : BaseActivity() {
             button_detail.stateListAnimator = null
         }
 
-        recyclerview.layoutManager = LinearLayoutManager(applicationContext)
-        recyclerview.setHasFixedSize(true) // アイテムは固定サイズ
-        recyclerview.adapter = editAdapter
+        recycler_view.layoutManager = LinearLayoutManager(applicationContext)
+        recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
+        recycler_view.adapter = editAdapter
     }
 
     companion object {

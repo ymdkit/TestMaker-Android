@@ -257,6 +257,9 @@ public class RealmController {
 
             if (question == null) {
                 Toast.makeText(context, context.getString(R.string.msg_already_delete), Toast.LENGTH_SHORT).show();
+
+                realm.commitTransaction();
+
                 return;
             }
 

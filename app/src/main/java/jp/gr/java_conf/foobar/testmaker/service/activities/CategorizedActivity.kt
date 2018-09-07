@@ -28,9 +28,9 @@ class CategorizedActivity : ShowTestsActivity() {
 
         )
 
-        recyclerview.layoutManager = LinearLayoutManager(applicationContext)
-        recyclerview.setHasFixedSize(true) // アイテムは固定サイズ
-        recyclerview.adapter = parentAdapter
+        recycler_view.layoutManager = LinearLayoutManager(applicationContext)
+        recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
+        recycler_view.adapter = parentAdapter
 
     }
 

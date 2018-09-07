@@ -12,7 +12,7 @@ class SharedPreferenceManager(context: Context) {
         set(num) = sharedPreferences.edit().putInt("num_choose", num)
                 .apply()
 
-    var numWrite: Int
+    var numComplete: Int
         get() = sharedPreferences.getInt("num_write", 1)
         set(num) = sharedPreferences.edit().putInt("num_write", num)
                 .apply()

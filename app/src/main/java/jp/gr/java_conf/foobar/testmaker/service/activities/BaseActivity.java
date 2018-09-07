@@ -32,7 +32,7 @@ public class BaseActivity extends AppCompatActivity {
 
         TestMakerApplication app = (TestMakerApplication) getApplication();
 
-        realmController = new RealmController(getApplicationContext(), app.config);
+        realmController = new RealmController(getApplicationContext(), app.getConfig());
 
         sharedPreferenceManager = new SharedPreferenceManager(this);
     }
