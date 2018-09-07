@@ -180,7 +180,7 @@ class PlayActivity : BaseActivity() {
             loop = false
             for (k in 0 until questions[number].selections.size) {
 
-                if (answer == questions[number].selections[k].selection) {
+                if (answer == questions[number].selections[k]?.selection) {
                     loop = true
                 }
             }
@@ -209,7 +209,7 @@ class PlayActivity : BaseActivity() {
             val answer = StringBuilder()
 
             for (i in 0 until questions[number].selections.size) {
-                answer.append(questions[number].selections[i].selection).append(" ")
+                answer.append(questions[number].selections[i]?.selection).append(" ")
             }
 
             play_review_view.setTextAnswer(answer.toString())

@@ -92,7 +92,7 @@ class PlaySelectView : LinearLayout {
         } else {
 
             for (i in 0 until question.selections.size) {
-                choices.add(question.selections[i].selection)
+                choices.add(question.selections[i]!!.selection)
             }
         }
         choices.add(question.answer)

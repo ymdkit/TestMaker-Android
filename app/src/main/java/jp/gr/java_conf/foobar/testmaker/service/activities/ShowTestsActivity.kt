@@ -140,7 +140,7 @@ open class ShowTestsActivity : BaseActivity() {
 
         var incorrect = false
 
-        for (k in 0 until test.questions.size) if (!test.questions[k].correct) incorrect = true
+        for (k in 0 until test.questions.size) if (!(test.questions[k]!!.correct)) incorrect = true
 
         if (!incorrect && sharedPreferenceManager.refine) {
 

@@ -130,7 +130,7 @@ open class EditActivity : BaseActivity() {
 
                         set_answer_write.setText(question.answer)
 
-                        sharedPreferenceManager.numComplete = 1
+                        sharedPreferenceManager.numAnswers = 1
 
                         button_type.text = getString(R.string.action_choose)
                     }
@@ -145,7 +145,7 @@ open class EditActivity : BaseActivity() {
                         set_answer_choose.setText(question.answer)
 
                         for (i in 0 until question.selections.size) {
-                            others[i]?.setText(question.selections[i].selection)
+                            others[i]?.setText(question.selections[i]?.selection)
                         }
 
                         button_type.text = getString(R.string.action_write)
@@ -163,10 +163,10 @@ open class EditActivity : BaseActivity() {
                         showLayoutWriteComplete()
                         reloadAnswers(question.selections.size)
 
-                        sharedPreferenceManager.numComplete = question.selections.size
+                        sharedPreferenceManager.numAnswers = question.selections.size
 
                         for (i in 0 until question.selections.size) {
-                            answers[i]?.setText(question.selections[i].selection)
+                            answers[i]?.setText(question.selections[i]?.selection)
                         }
 
                         button_type.text = getString(R.string.action_choose)
@@ -613,23 +613,11 @@ open class EditActivity : BaseActivity() {
     }
 
     fun reloadOthers(num: Int) {
-        for (i in others.indices) {
-            if (i < num) {
-                others[i]?.visibility = View.VISIBLE
-            } else {
-                others[i]?.visibility = View.GONE
-            }
-        }
+        for (i in others.indices) others[i]?.visibility = if (i < num) View.VISIBLE else View.GONE
     }
 
     fun reloadAnswers(num: Int) {
-        for (i in answers.indices) {
-            if (i < num) {
-                answers[i]?.visibility = View.VISIBLE
-            } else {
-                answers[i]?.visibility = View.GONE
-            }
-        }
+        for (i in answers.indices) answers[i]?.visibility = if (i < num) View.VISIBLE else View.VISIBLE
     }
 
     private fun initViews() {
@@ -694,7 +682,7 @@ open class EditActivity : BaseActivity() {
                         val t = dialogLayout.findViewById<TextView>(R.id.textView)
                         t.text = getString(R.string.number_answers)
 
-                        number.text = sharedPreferenceManager.numComplete.toString()
+                        number.text = sharedPreferenceManager.numAnswers.toString()
 
                         changeAuto.visibility = View.GONE
                     }
@@ -726,11 +714,14 @@ open class EditActivity : BaseActivity() {
                         Constants.WRITE, Constants.COMPLETE -> {
 
                             reloadAnswers(Integer.parseInt(number.text.toString()))
-                            sharedPreferenceManager.numComplete = Integer.parseInt(number.text.toString())
+                            sharedPreferenceManager.numAnswers = Integer.parseInt(number.text.toString())
 
-                            if (sharedPreferenceManager.numComplete > 1) {
+                            if (sharedPreferenceManager.numAnswers > 1) {
+
                                 showLayoutWriteComplete()
+
                             } else {
+
                                 showLayoutWrite()
                             }
                         }
@@ -761,11 +752,11 @@ open class EditActivity : BaseActivity() {
                 var max = 0
 
                 when (typeQuestion) {
-                    0, 2 -> {
+                    Constants.WRITE, Constants.COMPLETE -> {
                         mini = 1
                         max = 4
                     }
-                    1 -> {
+                    Constants.SELECT -> {
                         mini = 2
                         max = 6
                     }
@@ -791,7 +782,7 @@ open class EditActivity : BaseActivity() {
 
             } else {
 
-                if (sharedPreferenceManager.numComplete > 1) {
+                if (sharedPreferenceManager.numAnswers > 1) {
                     showLayoutWriteComplete()
                 } else {
                     showLayoutWrite()
