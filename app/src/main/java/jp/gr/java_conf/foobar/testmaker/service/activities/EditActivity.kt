@@ -578,9 +578,7 @@ open class EditActivity : BaseActivity() {
     fun offAuto(limit: Int) {
 
         for (i in 0 until limit) {
-            if (others[i]?.text.toString() == getString(R.string.state_auto)) {
-                others[i]?.setText("")
-            }
+            if (others[i]?.text.toString() == getString(R.string.state_auto)) others[i]?.setText("")
 
             others[i]?.isEnabled = true
 
