@@ -1,9 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.models;
 
-import android.util.Log;
-
 import io.realm.DynamicRealm;
-import io.realm.DynamicRealmObject;
 import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
@@ -17,8 +14,6 @@ public class Migration implements RealmMigration {
     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
 
         RealmSchema schema = realm.getSchema();
-
-        Log.d("oldVersion", String.valueOf(oldVersion));
 
         if (oldVersion == 0) {
             RealmObjectSchema personSchema = schema.get("Quest");
@@ -63,8 +58,10 @@ public class Migration implements RealmMigration {
 
             oldVersion++;
 
-            RealmObjectSchema cateSchema = schema.create("Cate")
-                    .addField("category", String.class, FieldAttribute.REQUIRED)
+            RealmObjectSchema cateSchema = schema.create("Cate");
+
+
+            cateSchema.addField("category", String.class, FieldAttribute.REQUIRED)
                     .transform(obj -> obj.set("category", "カテゴリー"))
                     .addField("color", Integer.class, FieldAttribute.REQUIRED)
                     .transform(obj -> obj.set("color", 0));
@@ -75,11 +72,8 @@ public class Migration implements RealmMigration {
         if (oldVersion == 4) {
             oldVersion++;
 
-            Log.d("tag", "マイグレート");
-
             RealmObjectSchema personSchema = schema.get("Quest");
 
-            // Combine 'firstName' and 'lastName' in a new field called 'fullName'
             personSchema
                     .addField("explanation", String.class, FieldAttribute.REQUIRED)
                     .transform(obj -> obj.set("explanation", ""));
