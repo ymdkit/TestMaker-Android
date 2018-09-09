@@ -607,7 +607,8 @@ open class EditActivity : BaseActivity() {
     }
 
     fun reloadAnswers(num: Int) {
-        for (i in answers.indices) answers[i]?.visibility = if (i < num) View.VISIBLE else View.VISIBLE
+        for (i in answers.indices) answers[i]?.visibility = if (i < num) View.VISIBLE else View.GONE
+
     }
 
     private fun initViews() {
