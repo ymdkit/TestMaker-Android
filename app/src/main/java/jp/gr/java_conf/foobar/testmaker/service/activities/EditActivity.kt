@@ -206,6 +206,8 @@ open class EditActivity : BaseActivity() {
         // The ACTION_OPEN_DOCUMENT intent was sent with the request code
         // READ_REQUEST_CODE. If the request code seen here doesn't match, it's the
         // response to some other intent, and the code below shouldn't run at all.
+        editAdapter.notifyDataSetChanged()
+
         if (resultCode == Activity.RESULT_OK) {
             // The document selected by the user won't be returned in the intent.
             // Instead, a URI to that document will be contained in the return intent
@@ -526,7 +528,7 @@ open class EditActivity : BaseActivity() {
                 val i = Intent(this@EditActivity, EditProActivity::class.java)
 
                 i.putExtra("testId", testId)
-                startActivity(i)
+                startActivityForResult(i,0)
 
                 return true
             }

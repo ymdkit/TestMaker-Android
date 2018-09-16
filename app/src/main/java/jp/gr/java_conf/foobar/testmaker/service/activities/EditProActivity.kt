@@ -35,19 +35,21 @@ class EditProActivity : BaseActivity() {
 
             val checkBox = dialogLayout.findViewById<CheckBox>(R.id.check_alert)
 
-            if(sharedPreferenceManager.confirmSave) return@setOnClickListener
+            if (sharedPreferenceManager.confirmSave) {
+
+                saveText()
+
+                return@setOnClickListener
+            }
 
             val builder = AlertDialog.Builder(this@EditProActivity, R.style.MyAlertDialogStyle)
             builder.setView(dialogLayout)
             builder.setTitle(getString(R.string.confirm))
             builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
-                if(checkBox.isChecked) sharedPreferenceManager.confirmSave = true
+                if (checkBox.isChecked) sharedPreferenceManager.confirmSave = true
 
-                val text = edit_test.text.toString()
-
-                val loader = AsyncLoadTest(text.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), null, realmController, this@EditProActivity, intent.getLongExtra("testId", -1))
-                loader.execute()
+                saveText()
 
             }
 
@@ -58,6 +60,15 @@ class EditProActivity : BaseActivity() {
         }
 
         edit_test.setText(realmController.getTest(intent.getLongExtra("testId", -1)).testToString(this))
+
+    }
+
+    private fun saveText(){
+
+        val text = edit_test.text.toString()
+
+        val loader = AsyncLoadTest(text.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), null, realmController, this@EditProActivity, intent.getLongExtra("testId", -1))
+        loader.execute()
 
     }
 
