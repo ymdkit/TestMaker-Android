@@ -136,8 +136,9 @@ open class EditActivity : BaseActivity() {
 
                         showLayoutSelect()
 
-                        reloadOthers(question.selections.size)
                         sharedPreferenceManager.numChoose = question.selections.size
+
+                        reloadOthers(question.selections.size)
 
                         set_answer_choose.setText(question.answer)
 
@@ -155,10 +156,12 @@ open class EditActivity : BaseActivity() {
 
                     }
                     Constants.COMPLETE -> {
+
                         showLayoutWriteComplete()
-                        reloadAnswers(question.selections.size)
 
                         sharedPreferenceManager.numAnswers = question.selections.size
+
+                        reloadAnswers(question.selections.size)
 
                         for (i in 0 until question.selections.size) answers[i]?.setText(question.selections[i]?.selection)
 

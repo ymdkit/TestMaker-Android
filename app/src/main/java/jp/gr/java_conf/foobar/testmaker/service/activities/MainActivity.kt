@@ -249,7 +249,7 @@ class MainActivity : ShowTestsActivity() {
 
                         val paste = editPaste.text.toString()
 
-                        val loader = AsyncLoadTest(paste.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), parentAdapter as ScrambleAdapter<Any>?, realmController, this@MainActivity)
+                        val loader = AsyncLoadTest(paste.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), parentAdapter as ScrambleAdapter<Any>, realmController, this@MainActivity)
                         loader.execute()
 
                         dialog.dismiss()
@@ -321,7 +321,7 @@ class MainActivity : ShowTestsActivity() {
 
             val allText : String = inputStream.bufferedReader().use(BufferedReader::readText)
 
-            val loader = AsyncLoadTest(allText.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), parentAdapter as ScrambleAdapter<Any>?, realmController, this@MainActivity)
+            val loader = AsyncLoadTest(allText.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), parentAdapter as ScrambleAdapter<Any>, realmController, this@MainActivity)
             loader.execute()
 
         } catch (e: FileNotFoundException) {
