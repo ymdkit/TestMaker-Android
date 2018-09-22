@@ -13,6 +13,7 @@ public class StructQuestion implements Serializable {
     public String answer;
     public String question;
     public String[] others;
+    public String[] answers;
     public String imagePath;
     public String explanation;
     public boolean light;
@@ -24,6 +25,7 @@ public class StructQuestion implements Serializable {
         explanation = "";
         light = false;
         others = new String[3];
+        answers = new String[0];
         type = Constants.WRITE;
         auto = false;
     }
@@ -40,7 +42,8 @@ public class StructQuestion implements Serializable {
         explanation = "";
 
         light = false;
-        others = a;
+        answers = a;
+        others = new String[0];
         type = Constants.COMPLETE;
         auto = false;
     }
@@ -49,6 +52,7 @@ public class StructQuestion implements Serializable {
         question = q;
         answer = a;
         others = o;
+        answers = new String[0];
         type = Constants.SELECT;
         explanation = "";
         light = false;

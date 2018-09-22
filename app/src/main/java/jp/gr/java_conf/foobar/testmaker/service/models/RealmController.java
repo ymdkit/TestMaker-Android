@@ -284,6 +284,7 @@ public class RealmController {
         question.setProblem(problem.question);
         question.setAnswer(problem.answer);
         question.setSelections(problem.others);
+        question.setAnswers(problem.answers);
         question.setCorrect(false);
         question.setAuto(problem.auto);
 
@@ -396,6 +397,7 @@ public class RealmController {
             q.setAuto(structTest.getProblems().get(j).auto);
             q.setType(structTest.getProblems().get(j).type);
             q.setSelections(structTest.getProblems().get(j).others);
+            q.setAnswers(structTest.getProblems().get(j).answers);
             q.setExplanation(structTest.getProblems().get(j).explanation);
             q.setImagePath("");
 

@@ -1,10 +1,12 @@
 package jp.gr.java_conf.foobar.testmaker.service.models;
 
 import io.realm.DynamicRealm;
+import io.realm.DynamicRealmObject;
 import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
+import jp.gr.java_conf.foobar.testmaker.service.Constants;
 
 /**
  * Created by keita on 2017/02/08.
@@ -79,6 +81,34 @@ public class Migration implements RealmMigration {
                     .transform(obj -> obj.set("explanation", ""));
 
         }
+
+        if (oldVersion == 5) {
+
+            RealmObjectSchema personSchema = schema.get("Quest");
+
+            RealmObjectSchema selectSchema = schema.get("Select");
+
+
+            personSchema.addRealmListField("answers",selectSchema)
+                    .transform(obj -> {
+                        if (obj.getInt("type") == Constants.COMPLETE) {
+
+                            for(int i=0;i<obj.getList("selections").size();i++){
+                                DynamicRealmObject answer = realm.createObject("Select");
+                                answer.setString("select",obj.getList("selections").get(i).getString("select"));
+                                obj.getList("answers").add(answer);
+                            }
+
+
+                        }
+                    });
+
+
+            oldVersion++;
+
+        }
+
+
 
         //schemaVersion変えるの忘れるな(MyApplication内)
 

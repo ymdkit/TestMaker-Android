@@ -25,7 +25,7 @@ class TestMakerApplication : Application() {
         Realm.init(this)
 
         config = RealmConfiguration.Builder()
-                .schemaVersion(5)
+                .schemaVersion(6)
                 .build()
 
         try {

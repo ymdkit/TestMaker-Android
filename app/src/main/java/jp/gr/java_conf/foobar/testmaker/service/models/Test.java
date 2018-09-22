@@ -132,8 +132,8 @@ public class Test extends RealmObject {
 
                     write_line = new StringBuilder(context.getString(R.string.share_multiple_answers, q.getProblem()));
 
-                    for (int k = 0; k < q.getSelections().size(); k++) {
-                        write_line.append(q.getSelections().get(k).getSelection()).append(",");
+                    for (int k = 0; k < q.getAnswers().size(); k++) {
+                        write_line.append(q.getAnswers().get(k).getSelection()).append(",");
                     }
                     write_line = new StringBuilder(write_line.substring(0, write_line.length() - 1));
 

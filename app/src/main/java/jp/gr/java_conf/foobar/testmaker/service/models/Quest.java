@@ -19,6 +19,7 @@ public class Quest extends RealmObject {
     private boolean correct;
     private String imagePath;
     private RealmList<Select> selections;
+    private RealmList<Select> answers;
     private int type;
     private boolean auto;
     private boolean solving;
@@ -122,5 +123,23 @@ public class Quest extends RealmObject {
     public RealmList<Select> getSelections() {
         return selections;
     }
+
+    public void setAnswers(String[] strings) {
+
+        answers.clear();
+
+        for (int i = 0; i < strings.length; i++) {
+            Select select = new Select();
+            select.setSelection(strings[i]);
+            answers.add(select);
+        }
+
+    }
+
+    public RealmList<Select> getAnswers() {
+        return answers;
+    }
+
+
 
 }

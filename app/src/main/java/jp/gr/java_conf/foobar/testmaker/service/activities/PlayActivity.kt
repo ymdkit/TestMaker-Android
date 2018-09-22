@@ -173,7 +173,7 @@ class PlayActivity : BaseActivity() {
         for (answer in answers) {
 
             loop = false
-            for (k in 0 until questions[number].selections.size) if (answer == questions[number].selections[k]?.selection) loop = true
+            for (k in 0 until questions[number].answers.size) if (answer == questions[number].answers[k]?.selection) loop = true
 
             if (!loop) break
 
@@ -193,9 +193,9 @@ class PlayActivity : BaseActivity() {
 
             val answer = StringBuilder()
 
-            for (i in 0 until questions[number].selections.size) answer.append(questions[number].selections[i]?.selection).append(" ")
+            for (i in 0 until questions[number].answers.size) answer.append(questions[number].answers[i]?.selection).append(" ")
 
-            play_review_view.setTextAnswer(answer.toString())
+            play_review_view.setTextAnswer(questions[number].answer)
 
         }
 

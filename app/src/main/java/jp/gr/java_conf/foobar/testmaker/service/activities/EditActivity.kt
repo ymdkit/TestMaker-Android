@@ -159,11 +159,11 @@ open class EditActivity : BaseActivity() {
 
                         showLayoutWriteComplete()
 
-                        sharedPreferenceManager.numAnswers = question.selections.size
+                        sharedPreferenceManager.numAnswers = question.answers.size
 
-                        reloadAnswers(question.selections.size)
+                        reloadAnswers(question.answers.size)
 
-                        for (i in 0 until question.selections.size) answers[i]?.setText(question.selections[i]?.selection)
+                        for (i in 0 until question.answers.size) answers[i]?.setText(question.answers[i]?.selection)
 
                         button_type.text = getString(R.string.action_choose)
                     }

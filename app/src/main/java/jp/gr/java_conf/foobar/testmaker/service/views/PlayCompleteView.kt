@@ -82,7 +82,7 @@ class PlayCompleteView : LinearLayout {
 
         for (i in editAnswers.indices) {
 
-            if (i < question.selections.size) {
+            if (i < question.answers.size) {
 
                 editAnswers[i]!!.visibility = View.VISIBLE
                 editAnswers[i]!!.setText("")
