@@ -55,17 +55,6 @@ class PlaySelectCompleteView : LinearLayout {
 
     }
 
-    override fun invalidate() {
-
-        for (button in checkBoxes) {
-
-            button!!.isClickable = false
-
-            Handler().postDelayed({ button.isClickable = true }, 600)
-
-        }
-    }
-
     fun setTextChoices(question: Quest, autoChoices: ArrayList<String>) {
 
         var choices = ArrayList<String>()
@@ -97,12 +86,10 @@ class PlaySelectCompleteView : LinearLayout {
 
         visibility = View.VISIBLE
 
-        for (i in checkBoxes.indices) {
-            if (i < question.selections.size + question.answers.size) {
-                checkBoxes[i]!!.visibility = View.VISIBLE
-            } else {
-                checkBoxes[i]!!.visibility = View.GONE
-            }
+        checkBoxes.forEachIndexed { index, checkBox ->
+            checkBox?.visibility = if (index < question.selections.size + question.answers.size) View.VISIBLE else View.GONE
+
+            checkBox?.isChecked = false
         }
     }
 

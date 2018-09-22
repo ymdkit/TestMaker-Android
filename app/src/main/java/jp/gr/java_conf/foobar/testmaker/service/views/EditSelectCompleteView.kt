@@ -111,10 +111,9 @@ class EditSelectCompleteView : RelativeLayout {
 
         for((index,editText) in editSelectCompletes.withIndex()){
 
-            editText?.isEnabled = index < numAnswers
+            editText?.isEnabled = true
 
             if(editText?.isEnabled!! && editText.text.toString() == context.getString(R.string.state_auto))editText.setText("")
-
 
             editText.hint = if(index < numAnswers) context.getString(R.string.hint_answer) else context.getString(R.string.hint_other)
         }

@@ -185,7 +185,6 @@ open class EditActivity : BaseActivity() {
 
                     }
 
-
                 }
 
             }
@@ -607,6 +606,7 @@ open class EditActivity : BaseActivity() {
         edit_select_complete_view.reset()
 
         edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
+        edit_select_complete_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers +1)
     }
 
     private fun initViews() {
@@ -794,8 +794,20 @@ open class EditActivity : BaseActivity() {
 
             if (button_type.text == getString(R.string.action_choose)) {
 
-                showLayoutSelect()
-                edit_select_view.reloadOthers(sharedPreferenceManager.numOthers)
+                if (sharedPreferenceManager.numAnswersSelect > 1) {
+                    showLayoutSelectComplete()
+                    edit_select_complete_view.reloadSelects(sharedPreferenceManager.numOthers + 1)
+                    edit_select_complete_view.setAnswerNum(sharedPreferenceManager.numAnswersSelect)
+                    edit_select_complete_view.setAuto(sharedPreferenceManager.auto,sharedPreferenceManager.numOthers +1)
+
+                } else {
+                    showLayoutSelect()
+                    edit_select_view.reloadOthers(sharedPreferenceManager.numOthers)
+                    edit_select_view.setAuto(sharedPreferenceManager.auto,sharedPreferenceManager.numOthers)
+
+                }
+
+
 
                 button_type.text = getString(R.string.action_write)
                 text_title.text = getString(R.string.add_question_choose)
