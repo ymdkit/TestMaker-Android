@@ -5,6 +5,7 @@ object Constants {
     const val WRITE = 0
     const val SELECT = 1
     const val COMPLETE = 2
+    const val SELECT_COMPLTE = 3
 
     const val OTHER_SELECT_MAX = 5
     const val ANSWER_MAX = 4

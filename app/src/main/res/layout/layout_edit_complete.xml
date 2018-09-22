@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout_answer_write_1"
+        style="@style/MyTextInputLayoutStyle"
+        android:layout_alignEnd="@+id/center"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/center">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/set_answer_write_1"
+            style="@style/MyEditTextSingleLine"
+            android:hint="@string/hint_answer1" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout_answer_write_2"
+        style="@style/MyTextInputLayoutStyle"
+        android:layout_alignLeft="@+id/center"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignStart="@+id/center">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/set_answer_write_2"
+            style="@style/MyEditTextSingleLine"
+            android:hint="@string/hint_answer2" />
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout_answer_write_3"
+        style="@style/MyTextInputLayoutStyle"
+        android:layout_alignEnd="@+id/center"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/center"
+        android:layout_below="@+id/textInputLayout_answer_write_1">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/set_answer_write_3"
+            style="@style/MyEditTextSingleLine"
+            android:hint="@string/hint_answer3" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout_answer_4"
+        style="@style/MyTextInputLayoutStyle"
+        android:layout_alignLeft="@+id/center"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignStart="@+id/center"
+        android:layout_below="@+id/textInputLayout_answer_write_1">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/set_answer_write_4"
+            style="@style/MyEditTextSingleLine"
+            android:hint="@string/hint_answer4" />
+
+    </android.support.design.widget.TextInputLayout>
+
+</RelativeLayout>

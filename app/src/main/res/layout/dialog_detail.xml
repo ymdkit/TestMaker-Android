@@ -65,6 +65,66 @@
     </LinearLayout>
 
     <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/element_spacing_normal"
+        android:id="@+id/layout_number_answer_select"
+        >
+
+        <TextView
+            android:layout_marginBottom="@dimen/element_spacing_small"
+            android:layout_marginRight="@dimen/element_spacing_large"
+            android:layout_marginEnd="@dimen/element_spacing_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_large"
+            android:gravity="center_vertical"
+            android:text="@string/number_answers"
+            android:layout_weight="2.4"
+            />
+
+        <ImageButton
+            android:contentDescription="@string/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/element_spacing_small"
+            android:layout_marginStart="@dimen/element_spacing_small"
+            android:layout_marginRight="@dimen/element_spacing_small"
+            android:layout_marginEnd="@dimen/element_spacing_small"
+            android:layout_weight="5"
+            android:background="@drawable/button_blue"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_remove_white"
+            android:id="@+id/minus_answer_select"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_large"
+            android:gravity="center"
+            android:layout_weight="5"
+            android:id="@+id/size_answer_select" />
+
+        <ImageButton
+            android:contentDescription="@string/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:layout_marginLeft="@dimen/element_spacing_small"
+            android:layout_marginRight="@dimen/element_spacing_small"
+            android:id="@+id/add_answer_select"
+            android:background="@drawable/button_blue"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_add_white"
+            />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layout_switch"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -88,14 +148,6 @@
                 android:text="@string/auto"
                 android:id="@+id/textView2" />
 
-            <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-                <!--android:text="@string/message_auto"-->
-                <!--android:layout_marginLeft="@dimen/element_spacing_large"-->
-                <!--android:layout_marginStart="@dimen/element_spacing_large"-->
-                <!--android:id="@+id/explain" />-->
         </LinearLayout>
 
         <android.support.v7.widget.SwitchCompat

@@ -42,7 +42,6 @@ open class EditActivity : BaseActivity() {
     internal lateinit var editAdapter: EditAdapter
 
     internal var others = arrayOfNulls<EditText>(5)
-    internal var answers = arrayOfNulls<EditText>(4)
 
     internal var typeQuestion: Int = 0
 
@@ -75,6 +74,8 @@ open class EditActivity : BaseActivity() {
         initAdapter()
 
         initViews()
+
+        showLayoutWrite()
 
     }
 
@@ -157,13 +158,13 @@ open class EditActivity : BaseActivity() {
                     }
                     Constants.COMPLETE -> {
 
-                        showLayoutWriteComplete()
+                        showLayoutComplete()
 
                         sharedPreferenceManager.numAnswers = question.answers.size
 
-                        reloadAnswers(question.answers.size)
+                        edit_complete_view.reloadAnswers(question.answers.size)
 
-                        for (i in 0 until question.answers.size) answers[i]?.setText(question.answers[i]?.selection)
+                        edit_complete_view.setAnswers(question)
 
                         button_type.text = getString(R.string.action_choose)
                     }
@@ -287,11 +288,19 @@ open class EditActivity : BaseActivity() {
 
     private fun addQuestion() {
 
+        if (set_problem.text.toString() == "") {
+
+            Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
+
+            return
+
+        }
+
         when (typeQuestion) {
 
             Constants.WRITE ->
 
-                if (set_problem.text.toString() == "" || set_answer_write.text.toString() == "") {
+                if (set_answer_write.text.toString() == "") {
 
                     Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
 
@@ -311,7 +320,7 @@ open class EditActivity : BaseActivity() {
 
             Constants.SELECT ->
 
-                if (set_problem.text.toString() == "" || set_answer_choose.text.toString() == "") {
+                if (set_answer_choose.text.toString() == "") {
 
                     Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
 
@@ -348,39 +357,24 @@ open class EditActivity : BaseActivity() {
                 }
             Constants.COMPLETE ->
 
-                if (set_problem.text.toString() == "") {
+                if (edit_complete_view.isFilled()) {
 
-                    Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-
-                    return
-
-                } else {
-
-                    var k = 0
-
-                    for (answer in answers) {
-                        if (answer?.visibility == View.VISIBLE && answer.text.toString() == "") {
-                            Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-                            return
-                        } else if (answer?.visibility == View.VISIBLE) {
-                            k++
-                        }
-                    }
-
-                    val strings = arrayOfNulls<String>(k)
-
-                    for (i in strings.indices) {
-                        strings[i] = answers[i]?.text.toString()
-                    }
-
-                    val p = StructQuestion(set_problem.text.toString(), strings)
+                    val p = StructQuestion(set_problem.text.toString(), edit_complete_view.getAnswers())
                     p.setImagePath(imagePath)
                     p.setExplanation(set_explanation.text.toString())
 
                     realmController.addQuestion(testId, p, questionId)
 
                     reset()
+
+                } else {
+
+                    Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
+
+                    return
                 }
+
+
         }
 
         editAdapter.notifyDataSetChanged()
@@ -531,7 +525,7 @@ open class EditActivity : BaseActivity() {
                 val i = Intent(this@EditActivity, EditProActivity::class.java)
 
                 i.putExtra("testId", testId)
-                startActivityForResult(i,0)
+                startActivityForResult(i, 0)
 
                 return true
             }
@@ -544,21 +538,21 @@ open class EditActivity : BaseActivity() {
         typeQuestion = Constants.WRITE
         textInputLayout_answer_write.visibility = View.VISIBLE
         textInputLayout_answer_write.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
-        layout_edit_complete.visibility = View.GONE
+        edit_complete_view.visibility = View.GONE
         edit_choose.visibility = View.GONE
     }
 
-    fun showLayoutWriteComplete() {
+    fun showLayoutComplete() {
         typeQuestion = Constants.COMPLETE
-        layout_edit_complete.visibility = View.VISIBLE
-        layout_edit_complete.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
+        edit_complete_view.visibility = View.VISIBLE
+        edit_complete_view.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
         edit_choose.visibility = View.GONE
         textInputLayout_answer_write.visibility = View.GONE
     }
 
     fun showLayoutSelect() {
         typeQuestion = Constants.SELECT
-        layout_edit_complete.visibility = View.GONE
+        edit_complete_view.visibility = View.GONE
         textInputLayout_answer_write.visibility = View.GONE
         edit_choose.visibility = View.VISIBLE
         edit_choose.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
@@ -598,7 +592,7 @@ open class EditActivity : BaseActivity() {
 
         for (t in others) t?.setText("")
 
-        for (t in answers) t?.setText("")
+        edit_complete_view.reset()
 
         if (sharedPreferenceManager.auto) {
             auto(sharedPreferenceManager.numChoose)
@@ -611,11 +605,6 @@ open class EditActivity : BaseActivity() {
         for (i in others.indices) others[i]?.visibility = if (i < num) View.VISIBLE else View.GONE
     }
 
-    fun reloadAnswers(num: Int) {
-        for (i in answers.indices) answers[i]?.visibility = if (i < num) View.VISIBLE else View.GONE
-
-    }
-
     private fun initViews() {
 
         for (i in others.indices) {
@@ -624,17 +613,11 @@ open class EditActivity : BaseActivity() {
             others[i] = findViewById(strId)
         }
 
-        for (i in answers.indices) {
-            val s = "set_answer_write_" + (i + 1).toString()
-            val strId = resources.getIdentifier(s, "id", packageName)
-            answers[i] = findViewById(strId)
-        }
-
         if (sharedPreferenceManager.explanation) textInputLayout_explanation.visibility = View.VISIBLE
 
         ImageButton_expand.setOnClickListener {
 
-            if (layout_body.visibility != View.GONE) {
+            if (layout_body.visibility == View.VISIBLE) {
 
                 hideLayoutEdit()
 
@@ -642,7 +625,7 @@ open class EditActivity : BaseActivity() {
 
                 showLayoutEdit()
 
-                text_title.text = if (edit_choose.visibility == View.VISIBLE) getString(R.string.add_question_write) else getString(R.string.add_question_choose)
+                text_title.text = if (edit_choose.visibility == View.VISIBLE) getString(R.string.add_question_choose) else getString(R.string.add_question_write)
 
             }
 
@@ -657,6 +640,9 @@ open class EditActivity : BaseActivity() {
 
                 val add = dialogLayout.findViewById<ImageButton>(R.id.add)
                 val minus = dialogLayout.findViewById<ImageButton>(R.id.minus)
+
+                val addSelect = dialogLayout.findViewById<ImageButton>(R.id.add_answer_select)
+                val minusSelect = dialogLayout.findViewById<ImageButton>(R.id.minus_answer_select)
 
                 val number = dialogLayout.findViewById<TextView>(R.id.size_choose)
                 val changeAuto = dialogLayout.findViewById<SwitchCompat>(R.id.change_auto)
@@ -675,12 +661,16 @@ open class EditActivity : BaseActivity() {
                         val e = dialogLayout.findViewById<LinearLayout>(R.id.layout_switch)
                         e.visibility = View.GONE
 
+                        dialogLayout.findViewById<LinearLayout>(R.id.layout_number_answer_select).visibility = View.GONE
+
                         val t = dialogLayout.findViewById<TextView>(R.id.textView)
                         t.text = getString(R.string.number_answers)
 
                         number.text = sharedPreferenceManager.numAnswers.toString()
 
                         changeAuto.visibility = View.GONE
+
+
                     }
                     Constants.SELECT ->
 
@@ -709,12 +699,12 @@ open class EditActivity : BaseActivity() {
 
                         Constants.WRITE, Constants.COMPLETE -> {
 
-                            reloadAnswers(Integer.parseInt(number.text.toString()))
+                            edit_complete_view.reloadAnswers(Integer.parseInt(number.text.toString()))
                             sharedPreferenceManager.numAnswers = Integer.parseInt(number.text.toString())
 
                             if (sharedPreferenceManager.numAnswers > 1) {
 
-                                showLayoutWriteComplete()
+                                showLayoutComplete()
 
                             } else {
 
@@ -779,7 +769,7 @@ open class EditActivity : BaseActivity() {
             } else {
 
                 if (sharedPreferenceManager.numAnswers > 1) {
-                    showLayoutWriteComplete()
+                    showLayoutComplete()
                 } else {
                     showLayoutWrite()
                 }
