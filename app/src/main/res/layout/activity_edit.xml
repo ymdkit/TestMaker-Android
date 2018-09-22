@@ -140,138 +140,27 @@
                 </LinearLayout>
 
 
-                <FrameLayout
-                    android:id="@+id/edit_write"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/edit_write_view"
+                    style="@style/MyTextInputLayoutStyle">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/set_answer_write"
+                        style="@style/MyEditTextSingleLine"
+                        android:hint="@string/hint_answer" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <jp.gr.java_conf.foobar.testmaker.service.views.EditCompleteView
+                    android:id="@+id/edit_complete_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/textInputLayout_answer_write"
-                        style="@style/MyTextInputLayoutStyle">
-
-                        <android.support.v7.widget.AppCompatEditText
-                            android:id="@+id/set_answer_write"
-                            style="@style/MyEditTextSingleLine"
-                            android:hint="@string/hint_answer" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <jp.gr.java_conf.foobar.testmaker.service.views.EditCompleteView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/edit_complete_view"/>
-
-                </FrameLayout>
+                    android:layout_height="wrap_content" />
 
 
-                <RelativeLayout
-                    android:id="@+id/edit_choose"
+                <jp.gr.java_conf.foobar.testmaker.service.views.EditSelectView
+                    android:id="@+id/edit_select_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
-
-                    <View
-                        android:id="@+id/center_view"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_centerInParent="true" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/textInputLayout_answer_choose"
-                        style="@style/MyTextInputLayoutStyle"
-                        android:layout_alignEnd="@+id/center_view"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignRight="@+id/center_view">
-
-                        <android.support.v7.widget.AppCompatEditText
-                            android:id="@+id/set_answer_choose"
-                            style="@style/MyEditTextMultiLine"
-                            android:hint="@string/hint_answer" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/textInputLayout_other"
-                        style="@style/MyTextInputLayoutStyle"
-                        android:layout_alignLeft="@+id/center_view"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignStart="@+id/center_view">
-
-                        <android.support.v7.widget.AppCompatEditText
-                            android:id="@+id/set_other1"
-                            style="@style/MyEditTextMultiLine"
-                            android:hint="@string/hint_other" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/textInputLayout_other_2"
-                        style="@style/MyTextInputLayoutStyle"
-                        android:layout_alignEnd="@+id/center_view"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignRight="@+id/center_view"
-                        android:layout_below="@+id/textInputLayout_answer_choose">
-
-                        <android.support.v7.widget.AppCompatEditText
-                            android:id="@+id/set_other2"
-                            style="@style/MyEditTextMultiLine"
-                            android:hint="@string/hint_other" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/textInputLayout_other_3"
-                        style="@style/MyTextInputLayoutStyle"
-                        android:layout_alignLeft="@+id/center_view"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignStart="@+id/center_view"
-                        android:layout_below="@+id/textInputLayout_answer_choose">
-
-                        <android.support.v7.widget.AppCompatEditText
-                            android:id="@+id/set_other3"
-                            style="@style/MyEditTextMultiLine"
-                            android:hint="@string/hint_other" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/textInputLayout_other_4"
-                        style="@style/MyTextInputLayoutStyle"
-                        android:layout_alignEnd="@+id/center_view"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignRight="@id/center_view"
-                        android:layout_below="@+id/textInputLayout_other_2">
-
-                        <android.support.v7.widget.AppCompatEditText
-                            android:id="@+id/set_other4"
-                            style="@style/MyEditTextMultiLine"
-                            android:hint="@string/hint_other" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/textInputLayout_other_5"
-                        style="@style/MyTextInputLayoutStyle"
-                        android:layout_alignLeft="@+id/center_view"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignStart="@+id/center_view"
-                        android:layout_below="@+id/textInputLayout_other_3">
-
-                        <android.support.v7.widget.AppCompatEditText
-                            android:id="@+id/set_other5"
-                            style="@style/MyEditTextMultiLine"
-                            android:hint="@string/hint_other" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                </RelativeLayout>
+                    android:layout_height="wrap_content" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/textInputLayout_explanation"
@@ -298,13 +187,14 @@
                     android:textSize="@dimen/text_size_medium" />
 
                 <LinearLayout
+                    style="?android:attr/buttonBarStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    style="?android:attr/buttonBarStyle">
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/button_type"
+                        style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_height_small"
                         android:layout_margin="@dimen/element_spacing_small"
@@ -313,11 +203,11 @@
                         android:text="@string/action_choose"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        style="?android:attr/buttonBarButtonStyle"
                         android:textSize="@dimen/text_size_small" />
 
                     <Button
                         android:id="@+id/button_detail"
+                        style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_height_small"
                         android:layout_margin="@dimen/element_spacing_small"
@@ -326,8 +216,7 @@
                         android:text="@string/action_detail"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_small"
-                        style="?android:attr/buttonBarButtonStyle"/>
+                        android:textSize="@dimen/text_size_small" />
 
                 </LinearLayout>
 

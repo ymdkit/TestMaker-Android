@@ -17,6 +17,11 @@ class SharedPreferenceManager(context: Context) {
         set(num) = sharedPreferences.edit().putInt("num_write", num)
                 .apply()
 
+    var numAnswersSelect: Int
+        get() = sharedPreferences.getInt("num_answers_select", 1)
+        set(num) = sharedPreferences.edit().putInt("num_answers_select", num)
+                .apply()
+
     var auto: Boolean
         get() = sharedPreferences.getBoolean("auto", false)
         set(num) = sharedPreferences.edit().putBoolean("auto", num)

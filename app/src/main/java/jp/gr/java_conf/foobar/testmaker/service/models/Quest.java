@@ -112,9 +112,9 @@ public class Quest extends RealmObject {
 
         selections.clear();
 
-        for (int i = 0; i < strings.length; i++) {
+        for (String string : strings) {
             Select select = new Select();
-            select.setSelection(strings[i]);
+            select.setSelection(string);
             selections.add(select);
         }
 
@@ -128,9 +128,9 @@ public class Quest extends RealmObject {
 
         answers.clear();
 
-        for (int i = 0; i < strings.length; i++) {
+        for (String string : strings) {
             Select select = new Select();
-            select.setSelection(strings[i]);
+            select.setSelection(string);
             answers.add(select);
         }
 

@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.views
 
 import android.content.Context
+import android.support.design.widget.TextInputLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,8 @@ import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 
 class EditCompleteView: RelativeLayout{
 
+    private var layoutAnswers = arrayOfNulls<TextInputLayout>(Constants.ANSWER_MAX)
+
     var answers = arrayOfNulls<EditText>(Constants.ANSWER_MAX)
 
     constructor(context: Context) : super(context)
@@ -19,9 +22,12 @@ class EditCompleteView: RelativeLayout{
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
 
         for (i in answers.indices) {
-            val s = "set_answer_write_" + (i + 1).toString()
+            val s = "set_answer_write_${i+1}"
             val strId = resources.getIdentifier(s, "id", context.packageName)
             answers[i] = findViewById(strId)
+
+            layoutAnswers[i] = findViewById(resources.getIdentifier("textInputLayout_answer_complete_${i+1}", "id", context.packageName))
+
         }
 
 
@@ -32,7 +38,8 @@ class EditCompleteView: RelativeLayout{
     init { LayoutInflater.from(context).inflate(R.layout.layout_edit_complete, this) }
 
     fun reloadAnswers(num: Int) {
-        for (i in answers.indices) answers[i]?.visibility = if (i < num) View.VISIBLE else View.GONE
+
+        for (i in layoutAnswers.indices) layoutAnswers[i]?.visibility = if (i < num) View.VISIBLE else View.GONE
 
     }
 
@@ -44,18 +51,20 @@ class EditCompleteView: RelativeLayout{
 
     fun getAnswers(): Array<String?> {
 
-        return Array(answers.filter { visibility == View.VISIBLE }.size){ i -> answers[i]?.text.toString()}
+        return Array(layoutAnswers.filter { layout -> layout?.visibility == View.VISIBLE }.size){ i -> answers[i]?.text.toString()}
     }
 
     fun isFilled(): Boolean{
 
-        return !answers.any {answer -> visibility == View.VISIBLE && answer?.text.toString() == "" }
+        for (i in 0 until layoutAnswers.filter {layout -> layout?.visibility == View.VISIBLE }.size) if(answers[i]?.text.toString() == "") return false
+
+        return true
 
     }
 
     fun reset(){
 
-        for(answer in answers) answer?.setText("")
+        answers.forEach { it?.setText("") }
 
     }
 }

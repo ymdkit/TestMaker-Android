@@ -144,4 +144,5 @@
     <string name="number_existing_questions">%1$d / %2$d solved</string>
     <string name="show_never">never show again</string>
     <string name="alert_save_text">if you save this style, you lose image data and achievement data of this test</string>
+    <string name="message_answers_num">the number of answers is too many</string>
 </resources>

@@ -188,7 +188,7 @@ class MainActivity : ShowTestsActivity() {
 
                 R.id.nav_others -> {
 
-                    sendEvent("others")
+                    sendEvent("editOthers")
 
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse("http://play.google.com/store/apps/developer?id=banira")))
