@@ -60,6 +60,21 @@ public class StructQuestion implements Serializable {
 
     }
 
+    public StructQuestion(String problem,String[] answers,String[] others){
+        question = problem;
+        answer = "";
+        for (String answer: answers
+                ) {
+            this.answer += answer + " ";
+        }
+        this.others = others;
+        this.answers = answers;
+        type = Constants.SELECT_COMPLETE;
+        explanation = "";
+        light = false;
+        auto = false;
+    }
+
     public void setExplanation(String explanation) {
         this.explanation = explanation;
     }

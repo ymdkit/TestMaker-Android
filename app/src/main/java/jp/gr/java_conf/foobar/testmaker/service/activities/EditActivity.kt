@@ -135,7 +135,7 @@ open class EditActivity : BaseActivity() {
 
                         showLayoutSelect()
 
-                        sharedPreferenceManager.numChoose = question.selections.size
+                        sharedPreferenceManager.numOthers = question.selections.size
 
                         edit_select_view.reloadOthers(question.selections.size)
 
@@ -147,7 +147,7 @@ open class EditActivity : BaseActivity() {
 
                         sharedPreferenceManager.auto = question.auto
 
-                        edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numChoose)
+                        edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
 
                     }
                     Constants.COMPLETE -> {
@@ -160,8 +160,32 @@ open class EditActivity : BaseActivity() {
 
                         edit_complete_view.setAnswers(question)
 
-                        button_type.text = getString(R.string.action_choose)
+                        button_type.text = getString(R.string.action_write)
                     }
+
+                    Constants.SELECT_COMPLETE -> {
+
+                        showLayoutSelectComplete()
+
+                        sharedPreferenceManager.numAnswersSelect = question.answers.size
+
+                        sharedPreferenceManager.numOthers = question.selections.size + question.answers.size - 1
+
+                        edit_select_complete_view.setAnswerNum(question.answers.size)
+
+                        edit_select_complete_view.reloadSelects(question.answers.size + question.selections.size)
+
+                        edit_select_complete_view.setSelections(question.answers,question.selections)
+
+                        button_type.text = getString(R.string.action_choose)
+
+                        sharedPreferenceManager.auto = question.auto
+
+                        edit_select_complete_view.setAuto(sharedPreferenceManager.auto,sharedPreferenceManager.numOthers+1)
+
+                    }
+
+
                 }
 
             }
@@ -346,6 +370,27 @@ open class EditActivity : BaseActivity() {
                     return
                 }
 
+            Constants.SELECT_COMPLETE ->
+
+                if (edit_select_complete_view.isFilled()) {
+
+                    val p = StructQuestion(set_problem.text.toString(), edit_select_complete_view.getAnswers(),edit_select_complete_view.getOthers())
+                    p.setAuto(sharedPreferenceManager.auto)
+                    p.setImagePath(imagePath)
+                    p.setExplanation(set_explanation.text.toString())
+
+                    realmController.addQuestion(testId, p, questionId)
+
+                } else {
+
+                    Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
+
+                    return
+                }
+
+
+
+
         }
 
         reset()
@@ -510,6 +555,7 @@ open class EditActivity : BaseActivity() {
         edit_write_view.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
         edit_complete_view.visibility = View.GONE
         edit_select_view.visibility = View.GONE
+        edit_select_complete_view.visibility = View.GONE
     }
 
     fun showLayoutComplete() {
@@ -518,6 +564,8 @@ open class EditActivity : BaseActivity() {
         edit_complete_view.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
         edit_select_view.visibility = View.GONE
         edit_write_view.visibility = View.GONE
+        edit_select_complete_view.visibility = View.GONE
+
     }
 
     fun showLayoutSelect() {
@@ -526,6 +574,19 @@ open class EditActivity : BaseActivity() {
         edit_write_view.visibility = View.GONE
         edit_select_view.visibility = View.VISIBLE
         edit_select_view.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
+        edit_select_complete_view.visibility = View.GONE
+
+    }
+
+    fun showLayoutSelectComplete(){
+
+        typeQuestion = Constants.SELECT_COMPLETE
+        edit_complete_view.visibility = View.GONE
+        edit_write_view.visibility = View.GONE
+        edit_select_view.visibility = View.GONE
+        edit_select_complete_view.visibility = View.VISIBLE
+        edit_select_complete_view.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.alpha_appear))
+
     }
 
     private fun reset() {
@@ -543,8 +604,9 @@ open class EditActivity : BaseActivity() {
 
         edit_select_view.reset()
         edit_complete_view.reset()
+        edit_select_complete_view.reset()
 
-        edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numChoose)
+        edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
     }
 
     private fun initViews() {
@@ -610,9 +672,9 @@ open class EditActivity : BaseActivity() {
 
 
                     }
-                    Constants.SELECT -> {
+                    Constants.SELECT,Constants.SELECT_COMPLETE -> {
 
-                        number.text = (sharedPreferenceManager.numChoose + 1).toString()
+                        number.text = (sharedPreferenceManager.numOthers + 1).toString()
 
                         sizeAnswerSelect.text = "${sharedPreferenceManager.numAnswersSelect}"
                     }
@@ -663,7 +725,7 @@ open class EditActivity : BaseActivity() {
                                 showLayoutWrite()
                             }
                         }
-                        Constants.SELECT,Constants.SELECT_COMPLTE -> {
+                        Constants.SELECT,Constants.SELECT_COMPLETE -> {
 
                             if(Integer.parseInt(number.text.toString()) <= Integer.parseInt(sizeAnswerSelect.text.toString())){
 
@@ -672,21 +734,23 @@ open class EditActivity : BaseActivity() {
                                 return@setOnClickListener
                             }
 
-                            if (sharedPreferenceManager.numAnswers > 1) {
+                            if (Integer.parseInt(sizeAnswerSelect.text.toString()) > 1) {
 
-                                //todo
+                                showLayoutSelectComplete()
 
                             } else {
 
                                 showLayoutSelect()
                             }
 
-
+                            edit_select_complete_view.setAnswerNum(Integer.parseInt(sizeAnswerSelect.text.toString()))
+                            edit_select_complete_view.reloadSelects(Integer.parseInt(number.text.toString()))
                             edit_select_view.reloadOthers(Integer.parseInt(number.text.toString()) - 1)
-                            sharedPreferenceManager.numChoose = Integer.parseInt(number.text.toString()) - 1
+                            sharedPreferenceManager.numOthers = Integer.parseInt(number.text.toString()) - 1
                             sharedPreferenceManager.numAnswersSelect = Integer.parseInt(sizeAnswerSelect.text.toString())
 
-                            edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numChoose)
+                            edit_select_complete_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers+1)
+                            edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
 
                         }
                     }
@@ -711,7 +775,7 @@ open class EditActivity : BaseActivity() {
                         mini = 1
                         max = 4
                     }
-                    Constants.SELECT,Constants.SELECT_COMPLTE -> {
+                    Constants.SELECT,Constants.SELECT_COMPLETE -> {
                         mini = 2
                         max = 6
                     }
@@ -731,7 +795,7 @@ open class EditActivity : BaseActivity() {
             if (button_type.text == getString(R.string.action_choose)) {
 
                 showLayoutSelect()
-                edit_select_view.reloadOthers(sharedPreferenceManager.numChoose)
+                edit_select_view.reloadOthers(sharedPreferenceManager.numOthers)
 
                 button_type.text = getString(R.string.action_write)
                 text_title.text = getString(R.string.add_question_choose)

@@ -47,4 +47,12 @@ class StructTest internal constructor(var title: String?) : Serializable {
         }
     }
 
+    fun setStructQuestion(question: String, answers: Array<String>, others: Array<String>, position: Int) {
+        if (problems.size <= position) {
+            problems.add(StructQuestion(question, answers, others))
+        } else {
+            problems[position] = StructQuestion(question, answers, others)
+        }
+    }
+
 }

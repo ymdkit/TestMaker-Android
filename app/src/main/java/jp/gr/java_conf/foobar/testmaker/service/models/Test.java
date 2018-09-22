@@ -94,9 +94,9 @@ public class Test extends RealmObject {
 
         int count = 0;
 
-        for(Quest question: questions){
+        for (Quest question : questions) {
 
-            if(question.getCorrect()){
+            if (question.getCorrect()) {
 
                 count++;
 
@@ -144,6 +144,39 @@ public class Test extends RealmObject {
 
                     } else {
                         write_line = new StringBuilder(context.getString(R.string.share_selection_problems, q.getProblem(), q.getAnswer()));
+
+                        for (int k = 0; k < q.getSelections().size(); k++) {
+                            write_line.append(q.getSelections().get(k).getSelection()).append(",");
+                        }
+                        write_line = new StringBuilder(write_line.substring(0, write_line.length() - 1));
+
+                    }
+
+                    break;
+
+                case Constants.SELECT_COMPLETE:
+
+                    if (q.getAuto()) {
+                        write_line = new StringBuilder(context.getString(R.string.share_select_complete_auto_problem, q.getProblem()));
+
+                        write_line.append(String.valueOf(q.getSelections().size())).append(",");
+
+                        for (int k = 0; k < q.getAnswers().size(); k++) {
+                            write_line.append(q.getAnswers().get(k).getSelection()).append(",");
+                        }
+
+                        write_line = new StringBuilder(write_line.substring(0, write_line.length() - 1));
+
+                    }else{
+                        write_line = new StringBuilder(context.getString(R.string.share_select_complete_problem, q.getProblem()));
+
+                        write_line.append(String.valueOf(q.getAnswers().size())).append(",");
+
+                        write_line.append(String.valueOf(q.getSelections().size())).append(",");
+
+                        for (int k = 0; k < q.getAnswers().size(); k++) {
+                            write_line.append(q.getAnswers().get(k).getSelection()).append(",");
+                        }
 
                         for (int k = 0; k < q.getSelections().size(); k++) {
                             write_line.append(q.getSelections().get(k).getSelection()).append(",");

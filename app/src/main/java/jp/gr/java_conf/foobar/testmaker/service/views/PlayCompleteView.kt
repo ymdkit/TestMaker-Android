@@ -102,15 +102,13 @@ class PlayCompleteView : LinearLayout {
 
     }
 
-    fun getAnswers(size: Int): Array<String?> {
+    fun getAnswers(): ArrayList<String?> {
 
-        val strings = arrayOfNulls<String>(size)
-        for (i in strings.indices) {
-            strings[i] = editAnswers[i]!!.text.toString()
+        val array = ArrayList<String?>()
 
-        }
+        editAnswers.filter { text -> text?.visibility == View.VISIBLE }.forEach { array.add(it?.text.toString()) }
 
-        return strings
+        return array
 
     }
 

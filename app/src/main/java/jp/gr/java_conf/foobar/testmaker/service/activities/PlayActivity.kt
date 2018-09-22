@@ -166,7 +166,7 @@ class PlayActivity : BaseActivity() {
 
     }
 
-    fun checkAnswer(answers: Array<String?>) { //完答
+    fun checkAnswer(answers: ArrayList<String?>) { //完答
 
         var loop = false
 
@@ -178,6 +178,10 @@ class PlayActivity : BaseActivity() {
             if (!loop) break
 
         }
+
+        if(loop) loop = answers.size == questions[number].answers.size //必要条件だけ答えてもダメ
+
+        if(loop) loop = answers.distinct().size == answers.size //同じ解答を繰り返してもダメs
 
         if (loop) {
 
@@ -239,6 +243,7 @@ class PlayActivity : BaseActivity() {
         play_write_view.visibility = View.GONE
         play_complete_view.visibility = View.GONE
         play_select_view.visibility = View.GONE
+        play_select_complete_view.visibility = View.GONE
 
         play_review_view.visibility = View.VISIBLE
         play_review_view.setTextExplanation(questions[number].explanation)
@@ -271,6 +276,10 @@ class PlayActivity : BaseActivity() {
                     Constants.SELECT ->
 
                         showLayoutSelect(question)
+
+                    Constants.SELECT_COMPLETE ->
+
+                        showLayoutSelectComplete(question)
                 }
 
             } else { //全問終了後
@@ -282,6 +291,8 @@ class PlayActivity : BaseActivity() {
         }, second.toLong())
 
     }
+
+
 
     private fun showProblem(question: Quest) {
 
@@ -295,6 +306,7 @@ class PlayActivity : BaseActivity() {
         play_write_view.visibility = View.GONE
         play_complete_view.visibility = View.GONE
         play_select_view.visibility = View.GONE
+        play_select_complete_view.visibility = View.GONE
 
         showImageProblem(question)
 
@@ -376,6 +388,13 @@ class PlayActivity : BaseActivity() {
 
     }
 
+    private fun showLayoutSelectComplete(question: Quest) {
+
+        play_select_complete_view.show(question)
+        play_select_complete_view.setTextChoices(question, makeChoice(question.selections.size))
+
+    }
+
     private fun makeChoice(num: Int): ArrayList<String> {
 
         val other = ArrayList<String>()
@@ -432,7 +451,13 @@ class PlayActivity : BaseActivity() {
 
         play_complete_view.setOnClickListener(object : PlayCompleteView.OnClickListener {
             override fun onClick() {
-                checkAnswer(play_complete_view.getAnswers(questions[number].selections.size))
+                checkAnswer(play_complete_view.getAnswers())
+            }
+        })
+
+        play_select_complete_view.setOnClickListener(object : PlaySelectCompleteView.OnClickListener {
+            override fun onClick() {
+                checkAnswer(play_select_complete_view.getAnswers())
             }
         })
 

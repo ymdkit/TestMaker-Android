@@ -7,7 +7,7 @@ class SharedPreferenceManager(context: Context) {
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("question", Context.MODE_PRIVATE)
 
-    var numChoose: Int
+    var numOthers: Int
         get() = sharedPreferences.getInt("num_choose", 3)
         set(num) = sharedPreferences.edit().putInt("num_choose", num)
                 .apply()

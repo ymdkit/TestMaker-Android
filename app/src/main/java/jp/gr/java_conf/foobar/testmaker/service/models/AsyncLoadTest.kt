@@ -72,13 +72,7 @@ class AsyncLoadTest : AsyncTask<String, Int, StructTest> {
 
             try {
 
-                Log.d(i.toString(), backups!![i])
-
                 val backup = backups!![i].replace("<br>".toRegex(), "\n").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().filter { s: String -> s != "" }
-
-                for (k in backup.indices) {
-                    Log.d(k.toString(), backup[k])
-                }
 
                 if (backup.size > 2) {
 
@@ -109,7 +103,7 @@ class AsyncLoadTest : AsyncTask<String, Int, StructTest> {
 
                         if (otherNum <= Constants.OTHER_SELECT_MAX) {
 
-                            val other = Array(otherNum) {"自動生成"}
+                            val other = Array(otherNum) {context!!.getString(R.string.state_auto)}
 
                             q.setStructQuestion(backup[1], backup[2], other, resultNumber)
                             q.problems[resultNumber].auto = true
@@ -117,6 +111,40 @@ class AsyncLoadTest : AsyncTask<String, Int, StructTest> {
                             resultNumber += 1
 
                         }
+                    } else if (backup[0] == context!!.getString(R.string.load_select_complete_auto_problem)) {
+
+                        val otherNum = Integer.parseInt(backup[2].substring(0, 1))
+
+                        if (otherNum <= Constants.OTHER_SELECT_MAX) {
+
+                            val others = Array(otherNum) { context!!.getString(R.string.state_auto) }
+
+                            val answers = backup.drop(3).toTypedArray()
+
+                            if(others.size + answers.size > Constants.SELECT_COMPLETE_MAX) continue //要素数オーバー
+
+                            q.setStructQuestion(backup[1], answers, others, resultNumber)
+                            q.problems[resultNumber].auto = true
+
+                            resultNumber += 1
+
+                        }
+
+                    } else if (backup[0] == context!!.getString(R.string.load_select_complete_problem)) {
+
+                        val answerNum = Integer.parseInt(backup[2].substring(0, 1))
+
+                        val otherNum = Integer.parseInt(backup[3].substring(0, 1))
+
+                        if(otherNum + answerNum > Constants.SELECT_COMPLETE_MAX) continue //要素数オーバー
+
+                        val answers = backup.drop(4).take(answerNum).toTypedArray()
+
+                        val others = backup.drop(4 + answerNum).take(otherNum).toTypedArray()
+
+                        q.setStructQuestion(backup[1], answers, others, resultNumber)
+
+                        resultNumber += 1
                     }
 
                 } else if (backup.size == 2) {

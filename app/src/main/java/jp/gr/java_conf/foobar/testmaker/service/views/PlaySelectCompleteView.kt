@@ -11,7 +11,6 @@ import android.widget.LinearLayout
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 import kotlinx.android.synthetic.main.layout_play_select_complete.view.*
-import java.util.*
 
 class PlaySelectCompleteView : LinearLayout {
 
@@ -20,7 +19,7 @@ class PlaySelectCompleteView : LinearLayout {
     private var listener: OnClickListener? = null
 
     interface OnClickListener {
-        fun onClick(answer: String)
+        fun onClick()
     }
 
     fun setOnClickListener(listener: OnClickListener) {
@@ -33,7 +32,7 @@ class PlaySelectCompleteView : LinearLayout {
 
         button_ok.setOnClickListener {
 
-            if (listener != null) listener!!.onClick("")
+            if (listener != null) listener!!.onClick()
 
         }
 
@@ -45,8 +44,6 @@ class PlaySelectCompleteView : LinearLayout {
             checkBoxes[i] = findViewById(strId)
             checkBoxes[i]!!.tag = i
 
-            //if (Build.VERSION.SDK_INT >= 21) checkBoxes[i]!!.stateListAnimator = null
-
         }
     }
 
@@ -54,7 +51,7 @@ class PlaySelectCompleteView : LinearLayout {
 
     init{
 
-        LayoutInflater.from(context).inflate(R.layout.layout_play_select, this)
+        LayoutInflater.from(context).inflate(R.layout.layout_play_select_complete, this)
 
     }
 
@@ -79,13 +76,15 @@ class PlaySelectCompleteView : LinearLayout {
 
         } else {
 
-            for (i in 0 until question.selections.size) choices.add(question.selections[i]!!.selection)
+            question.selections.forEach{choices.add(it.selection)}
 
         }
-        choices.add(question.answer)
+
+        question.answers.forEach { choices.add(it.selection) }
+
         choices.shuffle()
 
-        for (i in 0 until question.selections.size + 1) {
+        for (i in 0 until question.selections.size + question.answers.size) {
 
             checkBoxes[i]!!.tag = i
             checkBoxes[i]!!.text = choices[i]
@@ -99,12 +98,21 @@ class PlaySelectCompleteView : LinearLayout {
         visibility = View.VISIBLE
 
         for (i in checkBoxes.indices) {
-            if (i < question.selections.size + 1) {
+            if (i < question.selections.size + question.answers.size) {
                 checkBoxes[i]!!.visibility = View.VISIBLE
             } else {
                 checkBoxes[i]!!.visibility = View.GONE
             }
         }
+    }
+
+    fun getAnswers() : ArrayList<String?>{
+
+        val array = ArrayList<String?>()
+
+        checkBoxes.filter { box -> box?.isChecked!! }.forEach { array.add(it?.text.toString()) }
+
+        return array
     }
 
 }

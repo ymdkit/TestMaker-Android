@@ -145,4 +145,11 @@
     <string name="show_never">never show again</string>
     <string name="alert_save_text">if you save this style, you lose image data and achievement data of this test</string>
     <string name="message_answers_num">the number of answers is too many</string>
+    <string name="share_select_complete_auto_problem">selection complete auto problem,%1$s,</string>
+    <string name="share_select_complete_problem">selection complete problem,%1$s,</string>
+    <string name="load_select_complete_problem">selection complete problem</string>
+    <string name="load_select_complete_auto_problem">selection complete auto problem</string>
+
+
+
 </resources>
