@@ -62,6 +62,12 @@ class EditCompleteView: RelativeLayout{
 
     }
 
+    fun isDuplicate () :Boolean{
+
+        return getAnswers().distinct().size != getAnswers().size
+
+    }
+
     fun reset(){
 
         answers.forEach { it?.setText("") }

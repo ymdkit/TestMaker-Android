@@ -160,7 +160,7 @@ open class EditActivity : BaseActivity() {
 
                         edit_complete_view.setAnswers(question)
 
-                        button_type.text = getString(R.string.action_write)
+                        button_type.text = getString(R.string.action_choose)
                     }
 
                     Constants.SELECT_COMPLETE -> {
@@ -354,7 +354,16 @@ open class EditActivity : BaseActivity() {
 
             Constants.COMPLETE ->
 
+
                 if (edit_complete_view.isFilled()) {
+
+                    if(edit_complete_view.isDuplicate()){
+
+                        Toast.makeText(applicationContext, getString(R.string.message_answer_duplicate), Toast.LENGTH_LONG).show()
+
+                        return
+
+                    }
 
                     val p = StructQuestion(set_problem.text.toString(), edit_complete_view.getAnswers())
                     p.setImagePath(imagePath)
