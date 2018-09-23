@@ -149,7 +149,7 @@
     <string name="share_select_complete_problem">selection complete problem,%1$s,</string>
     <string name="load_select_complete_problem">selection complete problem</string>
     <string name="load_select_complete_auto_problem">selection complete auto problem</string>
-
+    <string name="message_answer_duplicate">answers are duplicated</string>
 
 
 </resources>
