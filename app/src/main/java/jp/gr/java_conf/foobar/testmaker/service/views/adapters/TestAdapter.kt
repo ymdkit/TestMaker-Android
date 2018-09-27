@@ -50,7 +50,7 @@ class TestAdapter(private val context: Context) : ScrambleAdapter.AbsViewHolderF
 
         holder.title.text = data.title
 
-        holder.num.text = context.getString(R.string.number_existing_questions, data.questionsCorrectCount, data.questions.size)
+        holder.num.text = context.getString(R.string.number_existing_questions, data.questionsCorrectCount, data.getQuestions().size)
 
         holder.play.setOnClickListener {
 

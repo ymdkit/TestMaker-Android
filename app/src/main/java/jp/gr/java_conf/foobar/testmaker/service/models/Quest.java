@@ -23,6 +23,7 @@ public class Quest extends RealmObject {
     private int type;
     private boolean auto;
     private boolean solving;
+    private int order;
 
     public long getId() {
         return id;
@@ -140,6 +141,12 @@ public class Quest extends RealmObject {
         return answers;
     }
 
+    public void setOrder(int order){
+        this.order = order;
+    }
 
+    public int getOrder(){
+        return order;
+    }
 
 }

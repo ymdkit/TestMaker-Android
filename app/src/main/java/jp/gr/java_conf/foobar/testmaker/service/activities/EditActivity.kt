@@ -475,13 +475,13 @@ open class EditActivity : BaseActivity() {
 
                 if (Build.VERSION.SDK_INT >= 21) buttonCate.stateListAnimator = null
 
-                buttonCate.tag = realmController.getTest(testId).category
+                buttonCate.tag = realmController.getTest(testId).getCategory()
 
-                if (realmController.getTest(testId).category == "") {
+                if (realmController.getTest(testId).getCategory() == "") {
 
                     buttonCate.text = getString(R.string.category)
                 } else {
-                    buttonCate.text = realmController.getTest(testId).category
+                    buttonCate.text = realmController.getTest(testId).getCategory()
                 }
 
                 buttonCate.setOnClickListener {

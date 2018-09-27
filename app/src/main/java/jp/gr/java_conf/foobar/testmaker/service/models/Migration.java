@@ -108,6 +108,22 @@ public class Migration implements RealmMigration {
 
         }
 
+        if (oldVersion == 6) {
+
+            oldVersion++;
+
+            RealmObjectSchema personSchema = schema.get("Quest");
+
+            personSchema
+                    .addField("order", Integer.class, FieldAttribute.REQUIRED)
+                    .transform(obj -> obj.set("order", 0));
+
+
+
+            oldVersion++;
+
+        }
+
 
 
         //schemaVersion変えるの忘れるな(MyApplication内)
