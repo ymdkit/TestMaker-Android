@@ -108,22 +108,40 @@ public class Migration implements RealmMigration {
 
         }
 
-        if (oldVersion == 6) {
+        if (oldVersion == 7) {
 
             oldVersion++;
 
             RealmObjectSchema personSchema = schema.get("Quest");
 
+            // Change type from String to int
             personSchema
-                    .addField("order", Integer.class, FieldAttribute.REQUIRED)
-                    .transform(obj -> obj.set("order", 0));
-
+                    .addField("problem_temp", String.class,FieldAttribute.REQUIRED)
+                    .transform(obj -> {
+                        String oldProblem = obj.getString("problem");
+                        obj.setString("problem_temp",oldProblem);
+                    })
+                    .removeField("problem")
+                    .renameField("problem_temp", "problem")
+                    .addField("answer_temp", String.class,FieldAttribute.REQUIRED)
+                    .transform(obj -> {
+                        String oldProblem = obj.getString("answer");
+                        obj.setString("answer_temp",oldProblem);
+                    })
+                    .removeField("answer")
+                    .renameField("answer_temp", "answer")
+                    .addField("imagePath_temp", String.class,FieldAttribute.REQUIRED)
+                    .transform(obj -> {
+                        String oldProblem = obj.getString("imagePath");
+                        obj.setString("imagePath_temp",oldProblem);
+                    })
+                    .removeField("imagePath")
+                    .renameField("imagePath_temp", "imagePath");
 
 
             oldVersion++;
 
         }
-
 
 
         //schemaVersion変えるの忘れるな(MyApplication内)

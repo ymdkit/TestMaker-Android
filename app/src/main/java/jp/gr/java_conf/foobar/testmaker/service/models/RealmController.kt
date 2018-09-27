@@ -127,7 +127,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
         test.title = title
         test.color = color
-        test.setCategry(category)
+        test.setCategory(category)
         test.limit = 100
 
         realm.commitTransaction()
@@ -138,7 +138,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
         test.title = title
         test.color = color
-        test.setCategry(category)
+        test.setCategory(category)
 
         realm.commitTransaction()
     }
@@ -377,7 +377,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
         test!!.title = structTest.title
         test.color = structTest.color
-        test.setCategry(structTest.category?: "" )
+        test.setCategory(structTest.category?: "" )
         test.history = structTest.history
         test.limit = 100
 

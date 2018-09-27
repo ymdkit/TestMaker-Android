@@ -52,7 +52,7 @@ open class Test : RealmObject() {
         history = c.timeInMillis
     }
 
-    fun setCategry(c: String) {
+    fun setCategory(c: String) {
         category = c
     }
 
