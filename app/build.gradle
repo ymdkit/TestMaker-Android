@@ -12,8 +12,8 @@ android {
         applicationId "jp.gr.java_conf.foobar.testmaker.service"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 42
-        versionName "2.1"
+        versionCode 43
+        versionName "2.1.1"
     }
     buildTypes {
         release {
