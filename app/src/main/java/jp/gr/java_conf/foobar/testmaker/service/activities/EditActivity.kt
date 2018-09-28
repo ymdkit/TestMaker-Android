@@ -11,9 +11,12 @@ import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.SwitchCompat
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -45,7 +48,7 @@ open class EditActivity : BaseActivity() {
 
     internal var imagePath: String = ""
     internal var testId: Long = 0
-    internal var questionId: Long = 0
+    internal var questionId: Long = -1
 
     private lateinit var searchView: SearchView
 
@@ -65,9 +68,9 @@ open class EditActivity : BaseActivity() {
 
         initToolBar()
 
-        imagePath = ""
         testId = intent.getLongExtra("testId", -1)
-        questionId = -1
+
+        realmController.migrateOrder(testId)
 
         initAdapter()
 
@@ -82,16 +85,13 @@ open class EditActivity : BaseActivity() {
         editAdapter = EditAdapter(this, realmController, testId)
 
         editAdapter.setOnClickListener(object : EditAdapter.OnClickListener {
-            override fun onClickEditQuestion(position: Int) {
+            override fun onClickEditQuestion(question: Quest) {
 
                 showLayoutEdit()
 
                 text_title.text = getString(R.string.edit_question)
                 button_cancel.visibility = View.VISIBLE
                 button_add.text = getString(R.string.save_question)
-
-                val question: Quest = if (editAdapter.filter) realmController.getFilterQuestions(testId, editAdapter.searchWord)[position]
-                else realmController.getQuestion(testId, position)
 
                 set_problem.setText(question.problem)
                 questionId = question.id
@@ -894,6 +894,31 @@ open class EditActivity : BaseActivity() {
         recycler_view.layoutManager = LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
         recycler_view.adapter = editAdapter
+
+        val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
+            override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
+
+            }
+            // ここで指定した方向にのみドラッグ可能
+
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+
+                val from = viewHolder.adapterPosition
+                val to = target.adapterPosition
+
+                realmController.sortManual(from,to,testId)
+
+                editAdapter.notifyItemMoved(from,to)
+
+                return true
+            }
+
+
+        })
+
+        touchHelper.attachToRecyclerView(recycler_view)
+        recycler_view.addItemDecoration(touchHelper)
     }
 
     companion object {

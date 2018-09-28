@@ -25,7 +25,7 @@ class EditAdapter(private val context: Context, private val realmController: Rea
     private var listener: EditAdapter.OnClickListener? = null
 
     interface OnClickListener {
-        fun onClickEditQuestion(position: Int)
+        fun onClickEditQuestion(question: Quest)
         fun onClickDeleteQuestion(data: Quest)
     }
 
@@ -34,7 +34,7 @@ class EditAdapter(private val context: Context, private val realmController: Rea
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(layoutInflater.inflate(R.layout.card_problem, parent, false))
+        return ViewHolder(layoutInflater.inflate(R.layout.card_question, parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -48,11 +48,15 @@ class EditAdapter(private val context: Context, private val realmController: Rea
 
         val data = init(position)
 
-        holder.problem.text = context.getString(R.string.question, data.problem.toString())
-        holder.answer.text = context.getString(R.string.answer, data.answer.toString())
+        holder.itemView.setOnClickListener { }
+
+        holder.itemView.setOnLongClickListener{ true }
+
+        holder.problem.text = context.getString(R.string.question, data.problem)
+        holder.answer.text = context.getString(R.string.answer, data.answer)
 
         holder.edit.setOnClickListener {
-            if (listener != null) listener?.onClickEditQuestion(position)
+            if (listener != null) listener?.onClickEditQuestion(data)
         }
 
         holder.delete.setOnClickListener {

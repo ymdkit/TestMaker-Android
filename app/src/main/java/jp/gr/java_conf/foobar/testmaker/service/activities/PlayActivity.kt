@@ -48,6 +48,7 @@ class PlayActivity : BaseActivity() {
         initToolBar()
 
         testId = intent.getLongExtra("testId", -1)
+        //realmController.migrateOrder(testId)
 
         val container = findViewById<LinearLayout>(R.id.container)
         container.addView(createAd())
@@ -70,49 +71,13 @@ class PlayActivity : BaseActivity() {
         questions = if (intent.hasExtra("redo")) realmController.getQuestionsSolved(testId)
         else realmController.getQuestions(testId)
 
-        if (sharedPreferenceManager.refine) {
+        realmController.resetSolving(testId)
 
-            if (intent.hasExtra("redo")) {
-
-                questions = ArrayList()
-
-                for (question in realmController.getQuestionsSolved(testId)) {
-                    if (!question.correct) {
-                        questions.add(question)
-                    } else {
-                        realmController.updateSolving(question, false)
-                    }
-                }
-
-            } else {
-
-                realmController.updateSolving(questions, false)
-
-                questions = ArrayList()
-
-                for (question in realmController.getQuestions(testId))
-                    if (!question.correct) questions.add(question)
-            }
-
-        } else {
-
-            realmController.updateSolving(questions, false)
-
-        }
+        if (sharedPreferenceManager.refine) questions = questions.filter{ !it.correct } as ArrayList<Quest>
 
         if (intent.hasExtra("random")) questions.shuffle()
 
-        if (realmController.getTest(testId).limit < questions.size) {
-
-            val temp = ArrayList<Quest>()
-
-            for (i in 0 until realmController.getTest(testId).limit) temp.add(questions[i])
-
-            questions = temp
-
-        }
-
-        realmController.updateSolving(questions, true)
+        if (realmController.getTest(testId).limit < questions.size) questions = questions.take(realmController.getTest(testId).limit) as ArrayList<Quest>
 
     }
 
@@ -261,6 +226,8 @@ class PlayActivity : BaseActivity() {
             if (questions.size > number) {
 
                 val question = questions[number]
+
+                realmController.updateSolving(question.id,true)
 
                 showProblem(question)
 

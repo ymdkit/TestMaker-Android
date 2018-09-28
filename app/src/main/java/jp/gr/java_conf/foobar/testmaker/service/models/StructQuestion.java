@@ -18,6 +18,7 @@ public class StructQuestion implements Serializable {
     public String explanation;
     public boolean light;
     public boolean auto;
+    private int order;
 
     public StructQuestion(String q, String a) {
         question = q;
@@ -85,5 +86,9 @@ public class StructQuestion implements Serializable {
 
     public void setAuto(boolean auto) {
         this.auto = auto;
+    }
+
+    public void setOrder(int order){
+        this.order = order;
     }
 }

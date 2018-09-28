@@ -30,8 +30,8 @@ class ResultAdapter(context: Context, private val mRealmController: RealmControl
         val data = mRealmController.getQuestionsSolved(testId)[position]
 
         holder.number.text = (position + 1).toString()
-        holder.problem.text = data.problem.toString()
-        holder.answer.text = data.answer.toString()
+        holder.problem.text = data.problem
+        holder.answer.text = data.answer
 
         holder.mark.setImageResource(if (data.correct) R.drawable.right else R.drawable.mistake)
 

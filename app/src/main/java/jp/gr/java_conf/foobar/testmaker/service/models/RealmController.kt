@@ -107,7 +107,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     fun getTest(testId: Long): Test {
 
-        return realm.where(Test::class.java).equalTo("id", testId).findFirst()?: Test()
+        return realm.where(Test::class.java).equalTo("id", testId).findFirst() ?: Test()
     }
 
     fun addTest(title: String, color: Int, category: String) {
@@ -193,11 +193,6 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         realm.commitTransaction()
     }
 
-    fun getQuestion(testId: Long, position: Int): Quest {
-
-        return getTest(testId).getQuestions()[position] ?: Quest()
-    }
-
     fun getQuestions(testId: Long): ArrayList<Quest> {
 
         val realmArray = getTest(testId).getQuestions()
@@ -249,7 +244,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
         realm.beginTransaction()
 
-        val test = realm.where(Test::class.java).equalTo("id", testId).findFirst() ?:Test()
+        val test = getTest(testId)
 
         val question: Quest?
 
@@ -278,7 +273,8 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
             }
 
             question = realm.createObject(Quest::class.java, nextUserId) ?: Quest()
-            test.getQuestions().add(question)
+            question.order = test.getQuestions().size
+            test.addQuestion(question)
         }
 
         question.explanation = problem.explanation
@@ -290,10 +286,10 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         question.correct = false
         question.auto = problem.auto
 
-        if (question.imagePath != null) {
-            if (question.imagePath != problem.imagePath) {
-                context.deleteFile(question.imagePath)
-            }
+        if (question.imagePath != problem.imagePath) {
+
+            context.deleteFile(question.imagePath)
+
         }
         question.imagePath = problem.imagePath
 
@@ -323,21 +319,24 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     }
 
-    fun updateSolving(questions: ArrayList<Quest>, solving: Boolean) {
+    fun updateSolving(questionId: Long, solving: Boolean) {
         realm.beginTransaction()
 
-        for (question in questions) {
+        val question = realm.where(Quest::class.java).equalTo("id", questionId).findFirst()
+                ?: Quest()
 
-            question.solving = solving
-        }
+        question.solving = solving
 
         realm.commitTransaction()
     }
 
-    fun updateSolving(question: Quest, solving: Boolean) {
+    private fun updateOrder(questionId: Long, order: Int) {
         realm.beginTransaction()
 
-        question.solving = solving
+        val question = realm.where(Quest::class.java).equalTo("id", questionId).findFirst()
+                ?: Quest()
+
+        question.order = order
 
         realm.commitTransaction()
     }
@@ -362,7 +361,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
             nextUserId = maxUserId.toInt() + 1
         }
 
-        val test: Test? // Create managed objects directly
+        val test: Test // Create managed objects directly
 
         if (testId != -1L) {
 
@@ -375,9 +374,9 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
         }
 
-        test!!.title = structTest.title
+        test.title = structTest.title
         test.color = structTest.color
-        test.setCategory(structTest.category?: "" )
+        test.setCategory(structTest.category ?: "")
         test.history = structTest.history
         test.limit = 100
 
@@ -402,8 +401,9 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
             q.setAnswers(structTest.problems[j].answers)
             q.explanation = structTest.problems[j].explanation
             q.imagePath = ""
+            q.order = j
 
-            test.getQuestions().add(q)
+            test.addQuestion(q)
         }
 
         realm.commitTransaction()
@@ -441,6 +441,46 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         }
 
         return array
+
+    }
+
+    fun sortManual(from: Int, to: Int, testId: Long) {
+
+        val questions = getTest(testId).getQuestions()
+
+        val fromOrder = questions[from]?.order ?: 0
+        val toOrder = questions[to]?.order ?: 0
+
+        updateOrder(questions[from]?.id ?: -1L, toOrder)
+        updateOrder(questions[to]?.id ?: -1L, fromOrder)
+
+    }
+
+    fun migrateOrder(testId: Long) {
+
+        realm.beginTransaction()
+
+        val questions = getTest(testId).getQuestions()
+
+        if (questions.size < 2) return
+
+        if (questions[0]?.order == questions[1]?.order) {
+
+            getTest(testId).getQuestionsForEach().forEachIndexed { index, quest -> quest.order = index }
+
+        }
+
+        realm.commitTransaction()
+
+    }
+
+    fun resetSolving(testId: Long) {
+
+        realm.beginTransaction()
+
+        getTest(testId).getQuestionsForEach().forEach { it.solving = false }
+
+        realm.commitTransaction()
 
     }
 

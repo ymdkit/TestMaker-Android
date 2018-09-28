@@ -1,12 +1,15 @@
 package jp.gr.java_conf.foobar.testmaker.service.models
 
 import android.content.Context
+import android.util.Log
+import io.realm.Realm
 
 import java.util.Calendar
 
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import io.realm.log.RealmLog
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 
@@ -59,13 +62,28 @@ open class Test : RealmObject() {
     fun getCategory(): String {
         
         return category?: ""
-        
+
+    }
+
+    fun addQuestion(q:Quest){
+        questions?.add(q)
     }
 
     fun getQuestions(): RealmList<Quest> {
+
+        val questions = this.questions?: RealmList()
+
+        val results = RealmList<Quest>()
+        results.addAll(questions.sort("order").subList(0, questions.size))
+
+        return results
         
-        return questions ?: RealmList()
-        
+    }
+
+    fun getQuestionsForEach(): RealmList<Quest>{//順番はどうでもいいが全てにアクセスしたい時
+
+        return questions?: RealmList()
+
     }
 
     fun setQuestions(q: RealmList<Quest>) {
