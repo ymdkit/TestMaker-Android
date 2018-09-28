@@ -458,11 +458,11 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     fun migrateOrder(testId: Long) {
 
-        realm.beginTransaction()
-
         val questions = getTest(testId).getQuestions()
 
         if (questions.size < 2) return
+
+        realm.beginTransaction()
 
         if (questions[0]?.order == questions[1]?.order) {
 
