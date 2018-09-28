@@ -151,4 +151,5 @@
     <string name="load_select_complete_problem">選択完答</string>
     <string name="load_select_complete_auto_problem">選択完答A</string>
     <string name="message_answer_duplicate">答えが重複しています</string>
+    <string name="action_parchase">プレミアム版</string>
 </resources>
