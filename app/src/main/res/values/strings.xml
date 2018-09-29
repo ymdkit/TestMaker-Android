@@ -151,13 +151,30 @@
     <string name="load_select_complete_auto_problem">selection complete auto problem</string>
     <string name="message_answer_duplicate">answers are duplicated</string>
     <string name="action_parchase">paying</string>
-    <string name="action_online">online</string>
+    <string name="action_online">online tests</string>
     <string name="reload">reload</string>
     <string name="number_download">%1$d downloaded</string>
     <string name="upload_test">upload your test</string>
     <string name="info">info</string>
     <string name="title_activity_online_main">online</string>
     <string name="language">en</string>
+    <string name="hint_user_name">name</string>
+    <string name="login">log in</string>
+    <string name="create_account">new account</string>
+    <string name="hint_password">password</string>
+    <string name="error_user_name">input user name</string>
+    <string name="error_password">password length is 4 ~ 10</string>
+    <string name="login_failed">login failed</string>
+    <string name="login_successed">login success</string>
+    <string name="login_now">log in</string>
+    <string name="please_login">please login</string>
+    <string name="load_failed">load failed</string>
+    <string name="confirm_notes">notes</string>
+    <string name="alert_notes">Please kindly note that you cannot upload problems that has image and developer will delete improper tests</string>
+    <string name="message_upload_test">select test you will upload</string>
+    <string name="failed_upload">upload failed</string>
+    <string name="successed_upload">upload %1$s</string>
+    <string name="profile">profile</string>
 
 
 </resources>

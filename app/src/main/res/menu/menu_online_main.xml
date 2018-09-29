@@ -8,6 +8,11 @@
         android:id="@+id/action_reload"
         android:icon="@drawable/ic_sync_white"
         android:title="@string/reload"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_profile"
+        android:title="@string/profile"
+        app:showAsAction="never" />
 
 </menu>

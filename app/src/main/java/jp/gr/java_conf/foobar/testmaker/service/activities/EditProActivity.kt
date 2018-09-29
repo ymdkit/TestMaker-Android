@@ -59,7 +59,7 @@ class EditProActivity : BaseActivity() {
 
         }
 
-        edit_test.setText(realmController.getTest(intent.getLongExtra("testId", -1)).testToString(this))
+        edit_test.setText(realmController.getTest(intent.getLongExtra("testId", -1)).testToString(this,false))
 
     }
 

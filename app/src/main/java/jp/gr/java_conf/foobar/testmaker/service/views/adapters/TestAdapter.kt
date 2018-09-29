@@ -84,7 +84,7 @@ class TestAdapter(private val context: Context) : ScrambleAdapter.AbsViewHolderF
                 intent.action = Intent.ACTION_SEND
                 intent.type = "text/plain"
 
-                intent.putExtra(Intent.EXTRA_TEXT, data.testToString(context))
+                intent.putExtra(Intent.EXTRA_TEXT, data.testToString(context,false))
                 context.startActivity(intent)
 
             } catch (e: Exception) {

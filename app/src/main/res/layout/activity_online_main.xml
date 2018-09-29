@@ -51,10 +51,10 @@
                     android:id="@+id/expand"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/element_spacing_small"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/feedback"
                     android:contentDescription="@string/image"
+                    android:padding="@dimen/element_spacing_small"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_add_black" />
 
@@ -77,7 +77,16 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:layout_width="@dimen/view_width_normal"
+        android:layout_height="@dimen/view_height_large"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:id="@+id/loading" />
 
     <LinearLayout
         android:id="@+id/container"
@@ -86,7 +95,6 @@
         android:layout_gravity="center"
         android:layout_marginTop="3dp"
         android:orientation="vertical" />
-
 
 </LinearLayout>
 

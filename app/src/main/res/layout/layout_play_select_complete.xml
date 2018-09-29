@@ -6,33 +6,27 @@
 
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/check_select_1"
-        android:text="いうヴオオhウィオッヒオwg沸vにおゲオtネオテvんてぬtの上rん美終えrぬお家類のエブモエウイヴォ越ネオイブエオイビえrmヴェオtcねt見えrんテウtネオ，笑みぬおいんdぎlづっh"
         style="@style/MyCheckBoxStyle"
         />
 
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/check_select_2"
-        android:text="いうヴオオhウィオッヒオwg沸vにおゲオtネオテvんてぬtの上rん美終えrぬお家類のエブモエウイヴォ越ネオイブエオイビえrmヴェオtcねt見えrんテウtネオ，笑みぬおいんdぎlづっh"
         style="@style/MyCheckBoxStyle"
         />
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/check_select_3"
-        android:text="いうヴオオhウィオッヒオwg沸vにおゲオtネオテvんてぬtの上rん美終えrぬお家類のエブモエウイヴォ越ネオイブエオイビえrmヴェオtcねt見えrんテウtネオ，笑みぬおいんdぎlづっh"
         style="@style/MyCheckBoxStyle"
         />
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/check_select_4"
-        android:text="いうヴオオhウィオッヒオwg沸vにおゲオtネオテvんてぬtの上rん美終えrぬお家類のエブモエウイヴォ越ネオイブエオイビえrmヴェオtcねt見えrんテウtネオ，笑みぬおいんdぎlづっh"
         style="@style/MyCheckBoxStyle"
         />
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/check_select_5"
-        android:text="いうヴオオhウィオッヒオwg沸vにおゲオtネオテvんてぬtの上rん美終えrぬお家類のエブモエウイヴォ越ネオイブエオイビえrmヴェオtcねt見えrんテウtネオ，笑みぬおいんdぎlづっh"
         style="@style/MyCheckBoxStyle"
         />
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/check_select_6"
-        android:text="いうヴオオhウィオッヒオwg沸vにおゲオtネオテvんてぬtの上rん美終えrぬお家類のエブモエウイヴォ越ネオイブエオイビえrmヴェオtcねt見えrんテウtネオ，笑みぬおいんdぎlづっh"
         style="@style/MyCheckBoxStyle"
         />
 

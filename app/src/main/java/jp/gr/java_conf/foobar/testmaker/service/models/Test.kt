@@ -90,18 +90,20 @@ open class Test : RealmObject() {
         questions = q
     }
 
-    fun testToString(context: Context): String {
+    fun testToString(context: Context,upload: Boolean): String {
 
         var backup = ""
 
         val questions = getQuestions()
 
         for (i in questions.indices) {
-            val q = questions[i]
+            val q = questions[i] ?: Quest()
+
+            if(q.imagePath != "" && upload) continue //画像付き問題はスキップ
 
             var lineWrite = StringBuilder()
 
-            when (q!!.type) {
+            when (q.type) {
                 Constants.WRITE -> lineWrite = StringBuilder(context.getString(R.string.share_short_answers, q.problem, q.answer))
 
                 Constants.COMPLETE -> {

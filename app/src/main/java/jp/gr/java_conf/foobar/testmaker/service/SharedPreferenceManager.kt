@@ -57,6 +57,11 @@ class SharedPreferenceManager(context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("confirmSave", f)
                 .apply()
 
+    var confirmNotes: Boolean
+        get() = sharedPreferences.getBoolean("confirmNotes", false)
+        set(f) = sharedPreferences.edit().putBoolean("confirmNotes", f)
+                .apply()
+
     var sort: Int
         get() = sharedPreferences.getInt("sort", -1)
         set(i) = sharedPreferences.edit().putInt("sort", i).apply()

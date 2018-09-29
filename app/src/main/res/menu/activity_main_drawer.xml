@@ -24,20 +24,15 @@
             android:title="@string/action_paste" />
 
         <item
-            android:id="@+id/nav_cloud"
-            android:icon="@drawable/ic_cloud_download_white"
-            android:title="@string/action_cloud" />
+            android:id="@+id/nav_online"
+            android:icon="@drawable/ic_public_white"
+            android:title="@string/action_online"
+            />
 
         <item
             android:id="@+id/nav_license"
             android:icon="@drawable/ic_folder_open_white"
             android:title="@string/action_license" />
-
-        <item
-            android:id="@+id/nav_online"
-            android:icon="@drawable/ic_folder_open_white"
-            android:title="@string/action_online"
-            />
 
     </group>
 

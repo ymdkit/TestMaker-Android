@@ -5,6 +5,7 @@
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
+        android:layout_margin="@dimen/element_spacing_normal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/progressBar3" />

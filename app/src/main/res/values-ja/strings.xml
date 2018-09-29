@@ -152,11 +152,29 @@
     <string name="load_select_complete_auto_problem">選択完答A</string>
     <string name="message_answer_duplicate">答えが重複しています</string>
     <string name="action_parchase">プレミアム版</string>
-    <string name="action_online">オンライン</string>
+    <string name="action_online">みんなの問題集</string>
     <string name="reload">更新</string>
     <string name="number_download">ダウンロード数 %1$d</string>
     <string name="upload_test">問題集の投稿</string>
     <string name="info">詳細</string>
     <string name="title_activity_online_main">オンライン</string>
     <string name="language">jp</string>
+    <string name="hint_user_name">名前</string>
+    <string name="login">ログイン</string>
+    <string name="create_account">新規登録</string>
+    <string name="hint_password">パスワード</string>
+    <string name="error_user_name">名前を入力してください</string>
+    <string name="error_password">4から10文字以内にしてください</string>
+    <string name="login_failed">ログインできませんでした</string>
+    <string name="login_successed">ログインしました</string>
+    <string name="login_now">ログイン中</string>
+    <string name="please_login">投稿にはログインが必要です</string>
+    <string name="load_failed">読み込みに失敗しました</string>
+    <string name="confirm_notes">投稿時の注意</string>
+    <string name="alert_notes">画像付きの問題は投稿できないので予めご了承ください。\nまた、不適切な内容が含まれている問題集については管理者によって削除される場合があります。</string>
+    <string name="message_upload_test">投稿する問題集の選択</string>
+    <string name="failed_upload">通信に失敗しました</string>
+    <string name="successed_upload">%1$s を投稿しました</string>
+    <string name="profile">マイページ</string>
+
 </resources>

@@ -259,14 +259,6 @@ class MainActivity : ShowTestsActivity() {
                     }
                 }
 
-                R.id.nav_cloud -> {
-
-                    sendEvent("cloud")
-
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri
-                            .parse("https://drive.google.com/drive/folders/0BxTVsyahB5u9TGhxTUtkNGwwRlE")))
-                }
-
                 R.id.nav_online -> {
 
                     sendEvent("online")

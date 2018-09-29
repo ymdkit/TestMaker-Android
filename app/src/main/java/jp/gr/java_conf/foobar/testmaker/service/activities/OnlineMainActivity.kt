@@ -1,18 +1,24 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings.Secure
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import com.nifty.cloud.mb.core.NCMB
-import com.nifty.cloud.mb.core.NCMBObject
-import com.nifty.cloud.mb.core.NCMBQuery
+import android.view.View
+import android.widget.CheckBox
+import android.widget.TextView
+import android.widget.Toast
+import com.nifty.cloud.mb.core.*
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadTest
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.OnlineTestAdapter
 import kotlinx.android.synthetic.main.activity_online_main.*
+import java.util.*
 
 
 class OnlineMainActivity : BaseActivity() {
@@ -23,48 +29,144 @@ class OnlineMainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_online_main)
 
+        NCMB.initialize(this.applicationContext,"11a0bc05538273ecd8e5d6152a9379119f16115c19082eae88c101adeb963f15","afc1899b2ed65520fc935e8d680723828a09203347d18be035408491451262c8")
+
+        NCMBUser.logout()
+
         container.addView(createAd())
 
         initToolBar()
 
-        expand.setOnClickListener {
+        // UUIDを取得します
+        val uuid = Secure.getString(applicationContext.contentResolver,
+                Secure.ANDROID_ID)
 
-
-
-
-            val obj = NCMBObject("Test")
-            obj.put("content", realmController.list[0].testToString(this@OnlineMainActivity))
-            obj.put("title",realmController.list[0].title)
-            obj.put("color",realmController.list[0].color)
-            obj.put("language",getString(R.string.language))
-            obj.put("downloadedNum",0)
-            obj.put("questionsNum",realmController.list[0].getQuestionsForEach().size)
-            obj.saveInBackground { e ->
+        try {
+            NCMBUser.loginInBackground(uuid, uuid) { _, e ->
                 if (e != null) {
-                    //保存失敗
-                    AlertDialog.Builder(this@OnlineMainActivity)
-                            .setTitle("Notification from Nifty")
-                            .setMessage("Error:" + e.message)
-                            .setPositiveButton("OK", null)
-                            .show()
+                    //エラー時の処理
+                    if (e.code == "E401002") {
 
+                        //NCMBUserのインスタンスを作成
+                        val user = NCMBUser()
+                        //ユーザ名を設定
+                        user.userName = uuid
+                        //パスワードを設定
+                        user.setPassword(uuid)
+                        //設定したユーザ名とパスワードで会員登録を行う
+                        user.signUpInBackground { er ->
+                            if (er != null) {
+                                //会員登録時にエラーが発生した場合の処理
+                                Log.d("", "Signup error$er")
+                            } else {
+                                //lastLoginを更新します（ラストログインのタイミングを取得するために）
+                                try {
+                                    val curUser = NCMBUser.getCurrentUser()
+                                    val now = Date()
+                                    curUser.put("lastLoginDate", now)
+                                    curUser.save()
+                                } catch (e1: NCMBException) {
+                                    e1.printStackTrace()
+                                }
+
+                            }
+                        }
+                    }
                 } else {
-                    //保存成功
-                    AlertDialog.Builder(this@OnlineMainActivity)
-                            .setTitle("Notification from Nifty")
-                            .setMessage("Save successful! with ID:" + obj.objectId)
-                            .setPositiveButton("OK", null)
-                            .show()
+                    val curUser = NCMBUser.getCurrentUser()
 
-                    reload()
+                    //lastLoginを更新します（ラストログインのタイミングを取得するために）
+                    try {
+                        val now = Date()
+                        curUser.put("lastLoginDate", now)
+                        curUser.save()
+                    } catch (e1: NCMBException) {
+                        e1.printStackTrace()
+                    }
 
                 }
             }
+        } catch (e: NCMBException) {
+            e.printStackTrace()
         }
 
-        NCMB.initialize(this.applicationContext,"11a0bc05538273ecd8e5d6152a9379119f16115c19082eae88c101adeb963f15","afc1899b2ed65520fc935e8d680723828a09203347d18be035408491451262c8")
+
+        expand.setOnClickListener {
+
+            val dialogLayout = LayoutInflater.from(this@OnlineMainActivity).inflate(R.layout.dialog_alert_confirm, findViewById(R.id.layout_dialog_confirm))
+
+            dialogLayout.findViewById<TextView>(R.id.text_alert).text = getString(R.string.alert_notes)
+
+            val checkBox = dialogLayout.findViewById<CheckBox>(R.id.check_alert)
+
+            if (sharedPreferenceManager.confirmNotes) {
+
+                upload()
+
+                return@setOnClickListener
+            }
+
+            val builder = AlertDialog.Builder(this@OnlineMainActivity, R.style.MyAlertDialogStyle)
+            builder.setView(dialogLayout)
+            builder.setTitle(getString(R.string.confirm_notes))
+            builder.setPositiveButton(android.R.string.ok) { _, _ ->
+
+                if (checkBox.isChecked) sharedPreferenceManager.confirmNotes = true
+
+                upload()
+
+            }
+
+            builder.setNegativeButton(android.R.string.cancel, null)
+            builder.show()
+
+
+        }
 
         reload()
+    }
+
+    private fun upload(){
+
+        val array = Array(realmController.list.size){i ->  realmController.list[i].title}
+
+        val userId = NCMBUser.getCurrentUser().getString("objectId")
+
+
+        AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setTitle(getString(R.string.message_upload_test))
+                .setItems(array) { _, which ->
+
+                    val test = realmController.list[which]
+                    val obj = NCMBObject("Test")
+                    obj.put("content", test.testToString(this@OnlineMainActivity,true))
+                    obj.put("title",test.title)
+                    obj.put("color",test.color)
+                    obj.put("language",getString(R.string.language))
+                    obj.put("downloadedNum",0)
+                    obj.put("creatorId",userId)
+                    obj.put("questionsNum",test.getQuestions().count{ it.imagePath == "" } )
+                    obj.saveInBackground { e ->
+                        if (e != null) {
+                            //保存失敗
+                            AlertDialog.Builder(this@OnlineMainActivity)
+                                    .setMessage(getString(R.string.failed_upload))
+                                    .setPositiveButton("OK", null)
+                                    .show()
+
+                        } else {
+                            //保存成功
+                            AlertDialog.Builder(this@OnlineMainActivity)
+                                    .setMessage(getString(R.string.successed_upload,obj.getString("title")))
+                                    .setPositiveButton("OK", null)
+                                    .show()
+
+                            reload()
+
+                        }
+                    }
+                }.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -82,9 +184,14 @@ class OnlineMainActivity : BaseActivity() {
 
         when (actionId) {
             R.id.action_reload -> {
-
                 reload()
+            }
 
+            R.id.action_profile ->{
+
+                sendEvent("profile")
+
+                startActivityForResult(Intent(this@OnlineMainActivity, MyPageActivity::class.java),0)
 
             }
 
@@ -101,10 +208,13 @@ class OnlineMainActivity : BaseActivity() {
 
     private fun reload(){
 
+        loading.visibility = View.VISIBLE
+        recycler_view.visibility = View.GONE
+
         val query = NCMBQuery<NCMBObject>("Test")
 
         //検索件数を5件に設定
-        query.setLimit(5)
+        query.setLimit(15)
 
         query.whereEqualTo("language",getString(R.string.language))
 
@@ -113,6 +223,10 @@ class OnlineMainActivity : BaseActivity() {
             if (e != null) {
                 //エラー時の処理
                 Log.e("NCMB", "検索に失敗しました。エラー:" + e.message)
+
+                Toast.makeText(baseContext,getString(R.string.load_failed),Toast.LENGTH_SHORT).show()
+
+                loading.visibility = View.GONE
             } else {
                 //成功時の処理
                 Log.i("NCMB", "検索に成功しました。")
@@ -138,6 +252,9 @@ class OnlineMainActivity : BaseActivity() {
 
                 })
 
+                loading.visibility = View.GONE
+                recycler_view.visibility = View.VISIBLE
+
                 recycler_view.layoutManager = LinearLayoutManager(applicationContext)
                 recycler_view.setHasFixedSize(true)
                 recycler_view.adapter = this.adapter
@@ -145,4 +262,8 @@ class OnlineMainActivity : BaseActivity() {
         }
 
     }
+
+
+
+
 }
