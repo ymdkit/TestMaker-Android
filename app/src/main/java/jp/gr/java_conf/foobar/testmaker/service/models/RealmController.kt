@@ -23,7 +23,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     private val sharedPreferenceManager: SharedPreferenceManager = SharedPreferenceManager(context)
 
-    private val list: ArrayList<Test>
+    val list: ArrayList<Test>
         get() {
 
             val realmArray: RealmResults<Test>

@@ -152,6 +152,12 @@
     <string name="message_answer_duplicate">answers are duplicated</string>
     <string name="action_parchase">paying</string>
     <string name="action_online">online</string>
+    <string name="reload">reload</string>
+    <string name="number_download">%1$d downloaded</string>
+    <string name="upload_test">upload your test</string>
+    <string name="info">info</string>
+    <string name="title_activity_online_main">online</string>
+    <string name="language">en</string>
 
 
 </resources>

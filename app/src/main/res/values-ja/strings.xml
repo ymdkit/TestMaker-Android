@@ -153,4 +153,10 @@
     <string name="message_answer_duplicate">答えが重複しています</string>
     <string name="action_parchase">プレミアム版</string>
     <string name="action_online">オンライン</string>
+    <string name="reload">更新</string>
+    <string name="number_download">ダウンロード数 %1$d</string>
+    <string name="upload_test">問題集の投稿</string>
+    <string name="info">詳細</string>
+    <string name="title_activity_online_main">オンライン</string>
+    <string name="language">jp</string>
 </resources>

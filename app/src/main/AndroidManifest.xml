@@ -54,6 +54,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".activities.OnlineMainActivity"
+            android:label="@string/title_activity_online_main"
             android:screenOrientation="portrait"/>
     </application>
 

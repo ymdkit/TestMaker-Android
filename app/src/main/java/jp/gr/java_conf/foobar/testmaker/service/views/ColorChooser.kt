@@ -28,7 +28,7 @@ class ColorChooser(internal var context: Context, attr: AttributeSet) : LinearLa
     internal lateinit var button: ImageButton
 
     private var colorIds = intArrayOf(R.color.red, R.color.orange, R.color.yellow, R.color.green,
-            R.color.darkgreen, R.color.blue, R.color.navy, R.color.purple)
+            R.color.dark_green, R.color.blue, R.color.navy, R.color.purple)
 
     init {
 

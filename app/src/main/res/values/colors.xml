@@ -16,7 +16,7 @@
         <item>@color/orange</item>
         <item>@color/yellow</item>
         <item>@color/green</item>
-        <item>@color/darkgreen</item>
+        <item>@color/dark_green</item>
         <item>@color/blue</item>
         <item>@color/navy</item>
         <item>@color/purple</item>
@@ -26,7 +26,7 @@
     <color name="orange">#ffcc99</color>
     <color name="yellow">#ffff99</color>
     <color name="green">#99ff99</color>
-    <color name="darkgreen">#99ffcc</color>
+    <color name="dark_green">#99ffcc</color>
     <color name="blue">#99FFFF</color>
     <color name="navy">#9999ff</color>
     <color name="purple">#ff99ff</color>
