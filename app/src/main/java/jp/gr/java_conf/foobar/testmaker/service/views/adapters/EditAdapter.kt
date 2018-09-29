@@ -22,6 +22,8 @@ class EditAdapter(private val context: Context, private val realmController: Rea
     var filter: Boolean = false
     var searchWord: String = ""
 
+
+
     private var listener: EditAdapter.OnClickListener? = null
 
     interface OnClickListener {

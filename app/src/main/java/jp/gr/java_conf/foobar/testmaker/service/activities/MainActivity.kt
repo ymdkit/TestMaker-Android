@@ -26,10 +26,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_edit_test.*
 import net.cattaka.android.adaptertoolbox.adapter.ScrambleAdapter
 import java.io.*
-import com.nifty.cloud.mb.core.NCMB
-import com.nifty.cloud.mb.core.NCMBException
-import com.nifty.cloud.mb.core.DoneCallback
-import com.nifty.cloud.mb.core.NCMBObject
+
 
 
 
@@ -41,30 +38,6 @@ class MainActivity : ShowTestsActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-//        NCMB.initialize(this.applicationContext,"11a0bc05538273ecd8e5d6152a9379119f16115c19082eae88c101adeb963f15","afc1899b2ed65520fc935e8d680723828a09203347d18be035408491451262c8")
-//
-//        val obj = NCMBObject("TestClass")
-//        obj.put("message", "Hello, NCMB!")
-//        obj.saveInBackground { e ->
-//            if (e != null) {
-//                //保存失敗
-//                AlertDialog.Builder(this@MainActivity)
-//                        .setTitle("Notification from Nifty")
-//                        .setMessage("Error:" + e.message)
-//                        .setPositiveButton("OK", null)
-//                        .show()
-//
-//            } else {
-//                //保存成功
-//                AlertDialog.Builder(this@MainActivity)
-//                        .setTitle("Notification from Nifty")
-//                        .setMessage("Save successfull! with ID:" + obj.objectId)
-//                        .setPositiveButton("OK", null)
-//                        .show()
-//
-//            }
-//        }
 
         setContentView(R.layout.activity_main)
 
@@ -292,6 +265,15 @@ class MainActivity : ShowTestsActivity() {
 
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse("https://drive.google.com/drive/folders/0BxTVsyahB5u9TGhxTUtkNGwwRlE")))
+                }
+
+                R.id.nav_online -> {
+
+                    sendEvent("online")
+
+                    val licenseIntent = Intent(this@MainActivity, OnlineMainActivity::class.java)
+                    licenseIntent.putExtra("url", "file:///android_asset/licenses.html")
+                    startActivityForResult(licenseIntent,REQUEST_EDIT)
                 }
             }
             false
