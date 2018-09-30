@@ -13,23 +13,24 @@ import com.nifty.cloud.mb.core.NCMBObject
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
 
-open class OnlineTestAdapter(private val context: Context, private val array: MutableList<NCMBObject>) : RecyclerView.Adapter<OnlineTestAdapter.ViewHolder>() {
+class MyPageAdapter(private val context: Context, private val array: MutableList<NCMBObject>) : RecyclerView.Adapter<MyPageAdapter.ViewHolder>()  {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
-    private var listener: OnlineTestAdapter.OnClickListener? = null
+    private var listener: MyPageAdapter.OnClickListener? = null
 
     interface OnClickListener {
         fun onClickPlayTest(obj: NCMBObject)
+        fun onClickDeleteTest(obj: NCMBObject)
         fun onClickInfoTest(obj: NCMBObject)
     }
 
-    fun setOnClickListener(listener: OnlineTestAdapter.OnClickListener) {
+    fun setOnClickListener(listener: MyPageAdapter.OnClickListener) {
         this.listener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(layoutInflater.inflate(R.layout.card_test_online, parent, false))
+        return ViewHolder(layoutInflater.inflate(R.layout.card_online_my_page, parent, false))
 
     }
 
@@ -51,13 +52,19 @@ open class OnlineTestAdapter(private val context: Context, private val array: Mu
 
         }
 
+        holder.delete.setOnClickListener {
+
+            if (listener != null) listener!!.onClickDeleteTest(array[position])
+
+        }
+
         holder.information.setOnClickListener{
 
             if (listener != null) listener!!.onClickInfoTest(array[position])
 
         }
 
-        val drawable = ResourcesCompat.getDrawable(context.resources,R.drawable.circle,null) as GradientDrawable
+        val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle,null) as GradientDrawable
 
         drawable.setColor(array[position].getInt("color"))
 
@@ -72,6 +79,7 @@ open class OnlineTestAdapter(private val context: Context, private val array: Mu
         val num: TextView = v.findViewById(R.id.num_questions)
         val information: ImageTextButton = v.findViewById(R.id.open)
         val play: ImageTextButton = v.findViewById(R.id.play)
+        val delete: ImageTextButton = v.findViewById(R.id.delete)
 
     }
 

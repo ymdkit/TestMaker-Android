@@ -17,7 +17,7 @@
         android:minHeight="?attr/actionBarSize"
         app:popupTheme="@style/Theme.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="@string/app_name" />
+        app:title="@string/title_activity_online_main" />
 
     <View
         android:layout_width="match_parent"

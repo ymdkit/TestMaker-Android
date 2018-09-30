@@ -19,6 +19,11 @@ import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadTest
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.OnlineTestAdapter
 import kotlinx.android.synthetic.main.activity_online_main.*
 import java.util.*
+import com.nifty.cloud.mb.core.NCMBUser
+import com.nifty.cloud.mb.core.NCMBException
+import com.nifty.cloud.mb.core.NCMBObject
+import com.nifty.cloud.mb.core.FetchCallback
+import java.text.SimpleDateFormat
 
 
 class OnlineMainActivity : BaseActivity() {
@@ -28,6 +33,8 @@ class OnlineMainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_online_main)
+
+        sendScreen("OnlineMainActivity")
 
         NCMB.initialize(this.applicationContext,"11a0bc05538273ecd8e5d6152a9379119f16115c19082eae88c101adeb963f15","afc1899b2ed65520fc935e8d680723828a09203347d18be035408491451262c8")
 
@@ -53,6 +60,7 @@ class OnlineMainActivity : BaseActivity() {
                         user.userName = uuid
                         //パスワードを設定
                         user.setPassword(uuid)
+
                         //設定したユーザ名とパスワードで会員登録を行う
                         user.signUpInBackground { er ->
                             if (er != null) {
@@ -64,6 +72,7 @@ class OnlineMainActivity : BaseActivity() {
                                     val curUser = NCMBUser.getCurrentUser()
                                     val now = Date()
                                     curUser.put("lastLoginDate", now)
+                                    curUser.put("creatorName",getString(R.string.guest))
                                     curUser.save()
                                 } catch (e1: NCMBException) {
                                     e1.printStackTrace()
@@ -150,14 +159,14 @@ class OnlineMainActivity : BaseActivity() {
                     obj.saveInBackground { e ->
                         if (e != null) {
                             //保存失敗
-                            AlertDialog.Builder(this@OnlineMainActivity)
+                            AlertDialog.Builder(this@OnlineMainActivity,R.style.MyAlertDialogStyle)
                                     .setMessage(getString(R.string.failed_upload))
                                     .setPositiveButton("OK", null)
                                     .show()
 
                         } else {
                             //保存成功
-                            AlertDialog.Builder(this@OnlineMainActivity)
+                            AlertDialog.Builder(this@OnlineMainActivity,R.style.MyAlertDialogStyle)
                                     .setMessage(getString(R.string.successed_upload,obj.getString("title")))
                                     .setPositiveButton("OK", null)
                                     .show()
@@ -234,6 +243,40 @@ class OnlineMainActivity : BaseActivity() {
                 adapter = OnlineTestAdapter(this, objects)
 
                 adapter.setOnClickListener(object: OnlineTestAdapter.OnClickListener{
+                    override fun onClickInfoTest(obj: NCMBObject) {
+
+                        val date = obj.getString("createDate").take(10)
+
+                        val user = NCMBUser()
+
+                        user.objectId = obj.getString("creatorId")
+
+                        user.fetchInBackground { u, e ->
+                            if (e != null) {
+                                AlertDialog.Builder(this@OnlineMainActivity, R.style.MyAlertDialogStyle)
+                                        .setTitle(obj.getString("title"))
+                                        .setMessage(getString(R.string.info_test,getString(R.string.unknown_user),date,obj.getString("explanation")))
+                                        .setPositiveButton("OK", null)
+                                        .show()
+                                //エラー時の処理
+                            } else {
+                                //取得成功時の処理
+
+                                AlertDialog.Builder(this@OnlineMainActivity, R.style.MyAlertDialogStyle)
+                                        .setTitle(obj.getString("title"))
+                                        .setMessage(getString(R.string.info_test,u.getString("creatorName"),date,obj.getString("explanation")))
+                                        .setPositiveButton("OK", null)
+                                        .show()
+
+
+
+                            }
+                        }
+
+
+
+                    }
+
                     override fun onClickPlayTest(obj: NCMBObject) {
 
                         obj.put("downloadedNum",obj.getInt("downloadedNum")+1)
@@ -260,10 +303,11 @@ class OnlineMainActivity : BaseActivity() {
                 recycler_view.adapter = this.adapter
             }
         }
-
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
+        reload()
 
-
+    }
 }

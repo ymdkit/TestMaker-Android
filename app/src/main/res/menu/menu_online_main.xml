@@ -8,7 +8,7 @@
         android:id="@+id/action_reload"
         android:icon="@drawable/ic_sync_white"
         android:title="@string/reload"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_profile"

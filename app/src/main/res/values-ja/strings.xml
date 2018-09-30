@@ -157,7 +157,7 @@
     <string name="number_download">ダウンロード数 %1$d</string>
     <string name="upload_test">問題集の投稿</string>
     <string name="info">詳細</string>
-    <string name="title_activity_online_main">オンライン</string>
+    <string name="title_activity_online_main">みんなの問題集</string>
     <string name="language">jp</string>
     <string name="hint_user_name">名前</string>
     <string name="login">ログイン</string>
@@ -176,5 +176,10 @@
     <string name="failed_upload">通信に失敗しました</string>
     <string name="successed_upload">%1$s を投稿しました</string>
     <string name="profile">マイページ</string>
+    <string name="title_activity_online_my_page">マイページ</string>
+    <string name="successed_delete">%1$s を削除しました</string>
+    <string name="guest">ゲスト</string>
+    <string name="unknown_user">不明</string>
+    <string name="info_test">作者: %1$s\n投稿日: %2$s\n概要: %3$s</string>
 
 </resources>

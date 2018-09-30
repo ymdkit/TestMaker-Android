@@ -175,6 +175,11 @@
     <string name="failed_upload">upload failed</string>
     <string name="successed_upload">upload %1$s</string>
     <string name="profile">profile</string>
+    <string name="title_activity_online_my_page">myPage</string>
+    <string name="successed_delete">delete %1$s</string>
+    <string name="guest">guest</string>
+    <string name="unknown_user">unknown</string>
+    <string name="info_test">creator: %1$s\nupload: %2$s\noverview: %3$s</string>
 
 
 </resources>
