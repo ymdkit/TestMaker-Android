@@ -348,12 +348,12 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     }
 
-    fun convert(structTest: StructTest, testId: Long) {
+    fun convert(structTest: StructTest, testId: Long){
 
         realm.beginTransaction()
 
         // 初期化
-        var nextUserId: Int? = 1
+        var nextUserId = 1
         // userIdの最大値を取得
         val maxUserId = realm.where(Test::class.java).max("id")
         // 1度もデータが作成されていない場合はNULLが返ってくるため、NULLチェックをする

@@ -30,6 +30,15 @@ class AsyncLoadTest : AsyncTask<String, Int, StructTest> {
 
     private var testId: Long = 0
 
+    //Activiyへのコールバック用interface
+    interface AsyncTaskCallback {
+        fun preExecute()
+        fun onPostExecute(result: StructTest)
+        fun cancel()
+    }
+
+    private val callback: AsyncTaskCallback? = null
+
     constructor(text: Array<String>, recyclerAdapter: ScrambleAdapter<Any>, realm: RealmController, context: Context) {
 
         adapter = recyclerAdapter

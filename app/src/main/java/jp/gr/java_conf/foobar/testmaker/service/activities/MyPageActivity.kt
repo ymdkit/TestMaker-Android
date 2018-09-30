@@ -4,18 +4,20 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import com.nifty.cloud.mb.core.NCMBException
 import com.nifty.cloud.mb.core.NCMBObject
 import com.nifty.cloud.mb.core.NCMBQuery
 import com.nifty.cloud.mb.core.NCMBUser
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadTest
+import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
+import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.MyPageAdapter
 import kotlinx.android.synthetic.main.activity_my_page.*
-import java.util.*
 
 
 class MyPageActivity : BaseActivity() {
@@ -84,11 +86,21 @@ class MyPageActivity : BaseActivity() {
 
                         val date = obj.getString("createDate").take(10)
 
-                        AlertDialog.Builder(this@MyPageActivity, R.style.MyAlertDialogStyle)
-                                .setTitle(obj.getString("title"))
-                                .setMessage(getString(R.string.info_test,NCMBUser.getCurrentUser().getString("creatorName"),date,obj.getString("explanation")))
-                                .setPositiveButton("OK", null)
-                                .show()
+                        val dialogLayout = LayoutInflater.from(this@MyPageActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
+
+                        val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
+                        textInfo.text = getString(R.string.info_test, obj.getString("objectId"),NCMBUser.getCurrentUser().getString("creatorName"), date, obj.getString("explanation"))
+
+                        val builder = AlertDialog.Builder(this@MyPageActivity, R.style.MyAlertDialogStyle)
+                        builder.setView(dialogLayout)
+                        builder.setTitle(obj.getString("title"))
+                        builder.show()
+
+//                        AlertDialog.Builder(this@MyPageActivity, R.style.MyAlertDialogStyle)
+//                                .setTitle(obj.getString("title"))
+//                                .setMessage(getString(R.string.info_test,obj.getString("objectId"),NCMBUser.getCurrentUser().getString("creatorName"),date,obj.getString("explanation")))
+//                                .setPositiveButton("OK", null)
+//                                .show()
                     }
 
                     override fun onClickPlayTest(obj: NCMBObject) {
@@ -102,8 +114,33 @@ class MyPageActivity : BaseActivity() {
                             }
                         }
 
-                        val loader = AsyncLoadTest(obj.getString("content").replace("\\\n","\n").split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), null, realmController, this@MyPageActivity, -1)
+                        val loader = AsyncTaskLoadTest(obj.getString("content").replace("\\\n", "\n"),this@MyPageActivity)
+
+                        loader.setCallback(object: AsyncTaskLoadTest.AsyncTaskCallback{
+                            override fun preExecute() {
+
+                            }
+
+                            override fun postExecute(result: StructTest) {
+
+                                realmController.convert(result,-1L)
+
+                                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, result.title), Toast.LENGTH_LONG).show()
+
+                                finish()
+
+                            }
+
+                            override fun progressUpdate(progress: Int) {
+                            }
+
+                            override fun cancel() {
+                            }
+
+                        })
+
                         loader.execute()
+
 
                     }
 

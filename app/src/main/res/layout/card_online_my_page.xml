@@ -75,8 +75,8 @@
                 android:layout_marginRight="@dimen/element_spacing_small"
                 android:id="@+id/play"
                 android:layout_weight="1.2"
-                custom:text="@string/play"
-                custom:image="@drawable/ic_play_arrow_white"
+                custom:text="@string/download_test"
+                custom:image="@drawable/ic_file_download_white"
                 />
 
             <jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton

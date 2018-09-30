@@ -133,7 +133,12 @@
         <item>全部</item>
         <item>間違えた問題のみ</item>
     </string-array>
-    <string name="share_color">色,%1$s</string>
+
+    <string-array name="sort_online">
+        <item>ダウンロード数 (降順)</item>
+        <item>投稿が新しい順 </item>
+        <item>投稿が古い順 </item>
+    </string-array>    <string name="share_color">色,%1$s</string>
     <string name="title_activity_edit_pro">編集</string>
     <string name="load_color">色</string>
     <string name="message_success_update">保存しました</string>
@@ -180,11 +185,14 @@
     <string name="successed_delete">%1$s を削除しました</string>
     <string name="guest">ゲスト</string>
     <string name="unknown_user">不明</string>
-    <string name="info_test">作者: %1$s\n\n投稿日: %2$s\n\n概要: %3$s</string>
     <string name="hint_overview">概要(問題集についての説明)</string>
     <string name="tests_my_page">投稿した問題集</string>
     <string name="creator_name">ユーザー名: %1$s</string>
     <string name="online_num_questions">投稿問題数: %1$d / 300</string>
     <string name="message_limit">現在、投稿問題数の上限は１ユーザーに付き %1$d 問までです</string>
+    <string name="info_test">ID: %1$s\n\n作者: %2$s\n\n投稿日: %3$s\n\n概要: %4$s</string>
+    <string name="hint_search">IDやタイトル等を入力</string>
+    <string name="download_test">読込</string>
+    <string name="message_non_exist_test">問題集を一つ以上作成してください</string>
 
 </resources>

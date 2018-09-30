@@ -66,4 +66,9 @@ class SharedPreferenceManager(context: Context) {
         get() = sharedPreferences.getInt("sort", -1)
         set(i) = sharedPreferences.edit().putInt("sort", i).apply()
 
+    var sortOnline: Int
+        get() = sharedPreferences.getInt("sortOnline", 1)
+        set(i) = sharedPreferences.edit().putInt("sortOnline", i).apply()
+
+
 }

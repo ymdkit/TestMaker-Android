@@ -113,6 +113,11 @@
         <item>all</item>
         <item>wrong only</item>
     </string-array>
+    <string-array name="sort_online">
+        <item>number of downloaded (descending)</item>
+        <item>upload date (descending)</item>
+        <item>upload date (ascending)</item>
+    </string-array>
     <string name="share_explanation">explanation,%1$s</string>
     <string name="share_multiple_answers">multiple answers,%1$s,</string>
     <string name="share_selection_auto_problems">selection auto problem,%1$s,%2$s,%3$d,</string>
@@ -179,12 +184,15 @@
     <string name="successed_delete">delete %1$s</string>
     <string name="guest">guest</string>
     <string name="unknown_user">unknown</string>
-    <string name="info_test">creator: %1$s\n\nupload: %2$s\n\noverview: %3$s</string>
     <string name="hint_overview">overview</string>
     <string name="tests_my_page">my tests</string>
     <string name="creator_name">username: %1$s</string>
     <string name="online_num_questions">upload questions %1$d / 300</string>
     <string name="message_limit">you can upload %1$d questions</string>
+    <string name="info_test">ID: %1$s\n\ncreator: %2$s\n\nupload: %3$s\n\noverview: %4$s</string>
+    <string name="hint_search">input ID or title and so on</string>
+    <string name="download_test">load</string>
+    <string name="message_non_exist_test">create test yourself</string>
 
 
 </resources>

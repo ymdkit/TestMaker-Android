@@ -19,7 +19,9 @@ import android.widget.Toast
 import jp.gr.java_conf.foobar.testmaker.service.IOUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadTest
+import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
+import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.FolderAdapter
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.MyScrambleAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -80,14 +82,14 @@ class MainActivity : ShowTestsActivity() {
 
     private fun initViews() {
 
-        expand.setOnClickListener {
+        button_upload.setOnClickListener {
 
             if (body.visibility != View.GONE) {
                 body.visibility = View.GONE
-                expand.setImageResource(R.drawable.ic_expand_more_black)
+                button_upload.setImageResource(R.drawable.ic_expand_more_black)
             } else {
                 body.visibility = View.VISIBLE
-                expand.setImageResource(R.drawable.ic_expand_less_black)
+                button_upload.setImageResource(R.drawable.ic_expand_less_black)
                 edit_title.isFocusable = true
                 edit_title.requestFocus()
             }
@@ -153,7 +155,7 @@ class MainActivity : ShowTestsActivity() {
                 button_category.background = ResourcesCompat.getDrawable(resources,R.drawable.button_blue,null)
 
                 body.visibility = View.GONE
-                expand.setImageResource(R.drawable.ic_expand_more_black)
+                button_upload.setImageResource(R.drawable.ic_expand_more_black)
 
                 sendEvent("createTest")
 
@@ -230,18 +232,7 @@ class MainActivity : ShowTestsActivity() {
                     val builder = AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                     builder.setView(dialogLayout)
                     builder.setTitle(getString(R.string.action_paste))
-                    builder.setPositiveButton(android.R.string.ok, null)
-                    builder.setNegativeButton(android.R.string.cancel, null)
-
                     val dialog = builder.show()
-
-                    val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-
-                    if (positiveButton != null) positiveButton.visibility = View.GONE
-
-                    val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-
-                    if (negativeButton != null) negativeButton.visibility = View.GONE
 
                     val editPaste = dialogLayout.findViewById<EditText>(R.id.edit_paste)
                     val buttonImport = dialogLayout.findViewById<Button>(R.id.button_paste)
@@ -250,10 +241,7 @@ class MainActivity : ShowTestsActivity() {
 
                     buttonImport.setOnClickListener { _ ->
 
-                        val paste = editPaste.text.toString()
-
-                        val loader = AsyncLoadTest(paste.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), parentAdapter as ScrambleAdapter<Any>, realmController, this@MainActivity)
-                        loader.execute()
+                        loadText(editPaste.text.toString())
 
                         dialog.dismiss()
                     }
@@ -323,10 +311,7 @@ class MainActivity : ShowTestsActivity() {
 
             inputStream = contentResolver.openInputStream(uri)
 
-            val allText : String = inputStream.bufferedReader().use(BufferedReader::readText)
-
-            val loader = AsyncLoadTest(allText.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(), parentAdapter as ScrambleAdapter<Any>, realmController, this@MainActivity)
-            loader.execute()
+            loadText(inputStream.bufferedReader().use(BufferedReader::readText))
 
         } catch (e: FileNotFoundException) {
             throw RuntimeException(e)
@@ -337,6 +322,35 @@ class MainActivity : ShowTestsActivity() {
         } finally {
             IOUtil.forceClose(inputStream)
         }
+    }
+
+    private fun loadText(text: String) {
+
+        val loader = AsyncTaskLoadTest(text,baseContext)
+        loader.setCallback(object : AsyncTaskLoadTest.AsyncTaskCallback{
+            override fun postExecute(result: StructTest) {
+
+                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, result.title), Toast.LENGTH_LONG).show()
+
+                realmController.convert(result,-1)
+
+                parentAdapter?.notifyDataSetChanged()
+
+            }
+
+            override fun progressUpdate(progress: Int) {
+            }
+
+            override fun cancel() {
+            }
+
+            override fun preExecute() {
+            }
+
+        })
+
+        loader.execute()
+
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
