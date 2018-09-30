@@ -7,13 +7,15 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.nifty.cloud.mb.core.NCMBException
 import com.nifty.cloud.mb.core.NCMBObject
 import com.nifty.cloud.mb.core.NCMBQuery
 import com.nifty.cloud.mb.core.NCMBUser
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadTest
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.MyPageAdapter
-import kotlinx.android.synthetic.main.activity_online_main.*
+import kotlinx.android.synthetic.main.activity_my_page.*
+import java.util.*
 
 
 class MyPageActivity : BaseActivity() {
@@ -29,6 +31,8 @@ class MyPageActivity : BaseActivity() {
         initToolBar()
 
         container.addView(createAd())
+
+        text_user_name.text = getString(R.string.creator_name,NCMBUser.getCurrentUser().getString("creatorName"))
 
         reload()
 
@@ -62,6 +66,18 @@ class MyPageActivity : BaseActivity() {
                 Log.i("NCMB", "検索に成功しました。")
 
                 adapter = MyPageAdapter(this, objects)
+
+                val questionsNum = Array(objects.size){i ->  objects[i].getInt("questionsNum")}.sum()
+
+                try {
+                    val curUser = NCMBUser.getCurrentUser()
+                    curUser.put("questionsSum",questionsNum)
+                    curUser.save()
+                } catch (e1: NCMBException) {
+                    e1.printStackTrace()
+                }
+
+                text_num_tests.text = getString(R.string.online_num_questions,questionsNum)
 
                 adapter.setOnClickListener(object: MyPageAdapter.OnClickListener{
                     override fun onClickInfoTest(obj: NCMBObject) {
@@ -103,7 +119,7 @@ class MyPageActivity : BaseActivity() {
                             obj.deleteObjectInBackground { e ->
                                 if (e == null) {
 
-                                    AlertDialog.Builder(this@MyPageActivity)
+                                    AlertDialog.Builder(this@MyPageActivity,R.style.MyAlertDialogStyle)
                                             .setMessage(getString(R.string.successed_delete,title))
                                             .setPositiveButton("OK", null)
                                             .show()
@@ -115,10 +131,7 @@ class MyPageActivity : BaseActivity() {
                         }
                         builder.setNegativeButton(android.R.string.cancel, null)
                         builder.create().show()
-
                     }
-
-
                 })
 
                 loading.visibility = View.GONE

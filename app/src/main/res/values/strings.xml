@@ -179,7 +179,12 @@
     <string name="successed_delete">delete %1$s</string>
     <string name="guest">guest</string>
     <string name="unknown_user">unknown</string>
-    <string name="info_test">creator: %1$s\nupload: %2$s\noverview: %3$s</string>
+    <string name="info_test">creator: %1$s\n\nupload: %2$s\n\noverview: %3$s</string>
+    <string name="hint_overview">overview</string>
+    <string name="tests_my_page">my tests</string>
+    <string name="creator_name">username: %1$s</string>
+    <string name="online_num_questions">upload questions %1$d / 300</string>
+    <string name="message_limit">you can upload %1$d questions</string>
 
 
 </resources>

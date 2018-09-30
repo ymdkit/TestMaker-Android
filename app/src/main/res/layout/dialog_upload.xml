@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/layout_dialog_upload">
+
+    <Spinner
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_height_normal"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:id="@+id/textInputLayout_question_write"
+        android:layout_weight="1"
+        style="@style/MyTextInputLayoutStyle"
+        >
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/edit_overview"
+            android:hint="@string/hint_overview"
+            style="@style/MyEditTextMultiLine"
+            android:maxLength="140"
+            />
+
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

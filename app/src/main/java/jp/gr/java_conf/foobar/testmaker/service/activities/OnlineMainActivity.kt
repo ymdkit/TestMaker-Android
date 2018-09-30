@@ -5,25 +5,19 @@ import android.os.Bundle
 import android.provider.Settings.Secure
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.CheckBox
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.nifty.cloud.mb.core.*
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadTest
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.OnlineTestAdapter
 import kotlinx.android.synthetic.main.activity_online_main.*
 import java.util.*
-import com.nifty.cloud.mb.core.NCMBUser
-import com.nifty.cloud.mb.core.NCMBException
-import com.nifty.cloud.mb.core.NCMBObject
-import com.nifty.cloud.mb.core.FetchCallback
-import java.text.SimpleDateFormat
 
 
 class OnlineMainActivity : BaseActivity() {
@@ -38,7 +32,12 @@ class OnlineMainActivity : BaseActivity() {
 
         NCMB.initialize(this.applicationContext,"11a0bc05538273ecd8e5d6152a9379119f16115c19082eae88c101adeb963f15","afc1899b2ed65520fc935e8d680723828a09203347d18be035408491451262c8")
 
-        NCMBUser.logout()
+        try {
+            NCMBUser.logout()
+        }catch(e: NCMBException){
+            e.printStackTrace()
+
+        }
 
         container.addView(createAd())
 
@@ -132,55 +131,138 @@ class OnlineMainActivity : BaseActivity() {
 
         }
 
-        reload()
+        reload("")
     }
 
     private fun upload(){
 
+        var position = 0
+
+        val dialogLayout = LayoutInflater.from(this@OnlineMainActivity).inflate(R.layout.dialog_upload, findViewById(R.id.layout_dialog_upload))
+
         val array = Array(realmController.list.size){i ->  realmController.list[i].title}
 
-        val userId = NCMBUser.getCurrentUser().getString("objectId")
+        val spinner = dialogLayout.findViewById<Spinner>(R.id.spinner)
+        val editOverView = dialogLayout.findViewById<EditText>(R.id.edit_overview)
+        // ArrayAdapter
+        val adapter = ArrayAdapter(applicationContext,
+                android.R.layout.simple_spinner_item, array)
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // spinner に adapter をセット
+        spinner.adapter = adapter
+
+        // リスナーを登録
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            //　アイテムが選択された時
+            override fun onItemSelected(parent: AdapterView<*>?,
+                                        view: View?, positionSpinner: Int, id: Long) {
+                position = positionSpinner
+            }
+
+            //　アイテムが選択されなかった
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //
+            }
+        }
+
+        val builder = AlertDialog.Builder(this@OnlineMainActivity, R.style.MyAlertDialogStyle)
+        builder.setView(dialogLayout)
+        builder.setTitle(getString(R.string.message_upload_test))
+        builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
 
-        AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                .setNegativeButton(android.R.string.cancel, null)
-                .setTitle(getString(R.string.message_upload_test))
-                .setItems(array) { _, which ->
+            val user = NCMBUser.getCurrentUser()
 
-                    val test = realmController.list[which]
-                    val obj = NCMBObject("Test")
-                    obj.put("content", test.testToString(this@OnlineMainActivity,true))
-                    obj.put("title",test.title)
-                    obj.put("color",test.color)
-                    obj.put("language",getString(R.string.language))
-                    obj.put("downloadedNum",0)
-                    obj.put("creatorId",userId)
-                    obj.put("questionsNum",test.getQuestions().count{ it.imagePath == "" } )
-                    obj.saveInBackground { e ->
-                        if (e != null) {
-                            //保存失敗
-                            AlertDialog.Builder(this@OnlineMainActivity,R.style.MyAlertDialogStyle)
-                                    .setMessage(getString(R.string.failed_upload))
-                                    .setPositiveButton("OK", null)
-                                    .show()
+            val userId = user.getString("objectId")
 
-                        } else {
-                            //保存成功
-                            AlertDialog.Builder(this@OnlineMainActivity,R.style.MyAlertDialogStyle)
-                                    .setMessage(getString(R.string.successed_upload,obj.getString("title")))
-                                    .setPositiveButton("OK", null)
-                                    .show()
+            val test = realmController.list[position]
 
-                            reload()
+            val questionsSum = test.getQuestions().count{ it.imagePath == "" } + user.getInt("questionsSum")
 
-                        }
-                    }
-                }.show()
+            if(questionsSum > 300 ){
+
+                Toast.makeText(baseContext,getString(R.string.message_limit,300),Toast.LENGTH_SHORT).show()
+
+                return@setPositiveButton
+
+            }else{
+                try {
+                    val curUser = NCMBUser.getCurrentUser()
+                    curUser.put("questionsSum",questionsSum)
+                    curUser.save()
+                } catch (e1: NCMBException) {
+                    e1.printStackTrace()
+                }
+            }
+
+            val obj = NCMBObject("Test")
+            obj.put("content", test.testToString(this@OnlineMainActivity,true))
+            obj.put("title",test.title)
+            obj.put("color",test.color)
+            obj.put("language",getString(R.string.language))
+            obj.put("downloadedNum",0)
+            obj.put("explanation",editOverView.text.toString())
+            obj.put("creatorId",userId)
+            obj.put("questionsNum",test.getQuestions().count{ it.imagePath == "" } )
+            obj.saveInBackground { e ->
+                if (e != null) {
+                    //保存失敗
+                    AlertDialog.Builder(this@OnlineMainActivity,R.style.MyAlertDialogStyle)
+                            .setMessage(getString(R.string.failed_upload))
+                            .setPositiveButton("OK", null)
+                            .show()
+
+                } else {
+                    //保存成功
+                    AlertDialog.Builder(this@OnlineMainActivity,R.style.MyAlertDialogStyle)
+                            .setMessage(getString(R.string.successed_upload,obj.getString("title")))
+                            .setPositiveButton("OK", null)
+                            .show()
+
+                    reload("")
+
+                }
+            }
+
+        }
+
+        builder.setNegativeButton(android.R.string.cancel, null)
+        builder.show()
+
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_online_main, menu)
+
+        val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(s: String): Boolean {
+
+
+                reload(s)
+
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+
+                reload(s)
+
+                return false
+            }
+        })
+
+        searchView.setOnCloseListener {
+
+
+            false
+        }
 
         return true
     }
@@ -193,7 +275,7 @@ class OnlineMainActivity : BaseActivity() {
 
         when (actionId) {
             R.id.action_reload -> {
-                reload()
+                reload("")
             }
 
             R.id.action_profile ->{
@@ -215,7 +297,7 @@ class OnlineMainActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun reload(){
+    private fun reload(searchword: String){
 
         loading.visibility = View.VISIBLE
         recycler_view.visibility = View.GONE
@@ -240,7 +322,9 @@ class OnlineMainActivity : BaseActivity() {
                 //成功時の処理
                 Log.i("NCMB", "検索に成功しました。")
 
-                adapter = OnlineTestAdapter(this, objects)
+                val localObjects:MutableList<NCMBObject> = objects.filter { it.getString("title").contains(searchword) || it.getString("explanation").contains(searchword)} as MutableList<NCMBObject>
+
+                adapter = OnlineTestAdapter(this, localObjects)
 
                 adapter.setOnClickListener(object: OnlineTestAdapter.OnClickListener{
                     override fun onClickInfoTest(obj: NCMBObject) {
@@ -267,14 +351,8 @@ class OnlineMainActivity : BaseActivity() {
                                         .setMessage(getString(R.string.info_test,u.getString("creatorName"),date,obj.getString("explanation")))
                                         .setPositiveButton("OK", null)
                                         .show()
-
-
-
                             }
                         }
-
-
-
                     }
 
                     override fun onClickPlayTest(obj: NCMBObject) {
@@ -284,7 +362,7 @@ class OnlineMainActivity : BaseActivity() {
                             if (e != null) {
 
                             } else {
-                                reload()
+                                reload("")
                             }
                         }
 
@@ -307,7 +385,7 @@ class OnlineMainActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        reload()
+        reload("")
 
     }
 }

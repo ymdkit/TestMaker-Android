@@ -180,6 +180,11 @@
     <string name="successed_delete">%1$s を削除しました</string>
     <string name="guest">ゲスト</string>
     <string name="unknown_user">不明</string>
-    <string name="info_test">作者: %1$s\n投稿日: %2$s\n概要: %3$s</string>
+    <string name="info_test">作者: %1$s\n\n投稿日: %2$s\n\n概要: %3$s</string>
+    <string name="hint_overview">概要(問題集についての説明)</string>
+    <string name="tests_my_page">投稿した問題集</string>
+    <string name="creator_name">ユーザー名: %1$s</string>
+    <string name="online_num_questions">投稿問題数: %1$d / 300</string>
+    <string name="message_limit">現在、投稿問題数の上限は１ユーザーに付き %1$d 問までです</string>
 
 </resources>
