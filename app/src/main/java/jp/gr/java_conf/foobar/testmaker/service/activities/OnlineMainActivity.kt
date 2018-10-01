@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.nifty.cloud.mb.core.*
+import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
 import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
@@ -268,7 +269,6 @@ class OnlineMainActivity : BaseActivity() {
 
         searchView.setOnCloseListener {
 
-
             false
         }
 
@@ -332,11 +332,11 @@ class OnlineMainActivity : BaseActivity() {
 
         when (sharedPreferenceManager.sortOnline) {
 
-            0 -> query.addOrderByDescending("downloadedNum")
+            Constants.SORT_DOWNLOAD -> query.addOrderByDescending("downloadedNum")
 
-            1 -> query.addOrderByAscending("createDate")
+            Constants.SORT_DATE_DESCENDING -> query.addOrderByDescending("createDate")
 
-            2 -> query.addOrderByDescending("createDate")
+            Constants.SORT_DATE_ASCENDING -> query.addOrderByAscending("createDate")
 
         }
 

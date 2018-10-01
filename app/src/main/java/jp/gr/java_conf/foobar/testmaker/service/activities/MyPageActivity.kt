@@ -1,10 +1,14 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -38,6 +42,13 @@ class MyPageActivity : BaseActivity() {
 
         reload()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_my_page, menu)
+
+        return true
     }
 
     private fun reload(){
@@ -95,12 +106,6 @@ class MyPageActivity : BaseActivity() {
                         builder.setView(dialogLayout)
                         builder.setTitle(obj.getString("title"))
                         builder.show()
-
-//                        AlertDialog.Builder(this@MyPageActivity, R.style.MyAlertDialogStyle)
-//                                .setTitle(obj.getString("title"))
-//                                .setMessage(getString(R.string.info_test,obj.getString("objectId"),NCMBUser.getCurrentUser().getString("creatorName"),date,obj.getString("explanation")))
-//                                .setPositiveButton("OK", null)
-//                                .show()
                     }
 
                     override fun onClickPlayTest(obj: NCMBObject) {
@@ -127,8 +132,10 @@ class MyPageActivity : BaseActivity() {
 
                                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, result.title), Toast.LENGTH_LONG).show()
 
-                                finish()
-
+                                val intent = Intent(this@MyPageActivity, MainActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                                startActivity(intent)
                             }
 
                             override fun progressUpdate(progress: Int) {
@@ -188,6 +195,12 @@ class MyPageActivity : BaseActivity() {
         val actionId = item.itemId
 
         when (actionId) {
+            R.id.nav_help -> {
+
+                startActivity(Intent(Intent.ACTION_VIEW, Uri
+                        .parse(getString(R.string.help_url))))
+
+            }
 
             android.R.id.home -> {
 
