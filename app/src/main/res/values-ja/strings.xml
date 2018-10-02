@@ -164,7 +164,7 @@
     <string name="info">詳細</string>
     <string name="title_activity_online_main">みんなの問題集</string>
     <string name="language">jp</string>
-    <string name="hint_user_name">名前</string>
+    <string name="hint_user_name">ユーザー名</string>
     <string name="login">ログイン</string>
     <string name="create_account">新規登録</string>
     <string name="hint_password">パスワード</string>
@@ -194,5 +194,7 @@
     <string name="hint_search">IDやタイトル等を入力</string>
     <string name="download_test">読込</string>
     <string name="message_non_exist_test">問題集を一つ以上作成してください</string>
+    <string name="message_edit_profile">プロフィールの編集</string>
+    <string name="successed_edit_profile">保存しました</string>
 
 </resources>

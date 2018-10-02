@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.MyPageActivity">
 
     <android.support.v7.widget.Toolbar
@@ -27,7 +28,7 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/view_height_large"
         android:layout_marginBottom="@dimen/element_spacing_small"
         android:layout_marginLeft="@dimen/element_spacing_small"
         android:layout_marginRight="@dimen/element_spacing_small"
@@ -40,28 +41,104 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:splitMotionEvents="false"
+            android:layout_marginStart="@dimen/element_spacing_normal"
+            android:layout_marginLeft="@dimen/element_spacing_normal"
+            android:orientation="horizontal">
 
-            <android.support.v7.widget.AppCompatTextView
-                android:paddingLeft="@dimen/element_spacing_normal"
-                android:paddingRight="@dimen/element_spacing_normal"
-                android:paddingTop="@dimen/element_spacing_normal"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/text_user_name"
-                />
+                android:layout_height="match_parent"
+                android:layout_weight="0.7">
 
-            <android.support.v7.widget.AppCompatTextView
-                android:paddingLeft="@dimen/element_spacing_normal"
-                android:paddingRight="@dimen/element_spacing_normal"
-                android:paddingTop="@dimen/element_spacing_small"
-                android:paddingBottom="@dimen/element_spacing_normal"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="@dimen/text_size_medium"
+                    android:id="@+id/text_user_name"
+                    android:gravity="center_vertical"
+                    android:maxLines="2"
+                    android:layout_marginTop="@dimen/element_spacing_small"
+                    android:layout_weight="1"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/info"
+                    android:orientation="horizontal"
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="start"
+                        android:layout_marginRight="@dimen/element_spacing_small"
+                        android:layout_marginEnd="@dimen/element_spacing_small"
+                        android:textSize="@dimen/text_size_small"
+                        android:id="@+id/text_num_tests" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/text_num_tests"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/element_spacing_small"
+                android:layout_marginLeft="@dimen/element_spacing_small"
+                android:layout_marginRight="@dimen/element_spacing_small"
+                android:id="@+id/edit_profile"
+                android:layout_weight="4"
+                custom:text="@string/edit"
+                custom:image="@drawable/ic_edit_white"
                 />
 
         </LinearLayout>
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical">-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<android.support.v7.widget.AppCompatTextView-->
+                    <!--android:paddingLeft="@dimen/element_spacing_normal"-->
+                    <!--android:paddingRight="@dimen/element_spacing_normal"-->
+                    <!--android:paddingTop="@dimen/element_spacing_normal"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:id="@+id/text_user_name"-->
+                    <!--/>-->
+
+                <!--<Button-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="@dimen/view_height_tiny"-->
+                    <!--style="@style/button_choose_normal"-->
+                    <!--android:text="@string/save"/>-->
+
+            <!--</LinearLayout>-->
+
+
+
+            <!--<android.support.v7.widget.AppCompatTextView-->
+                <!--android:paddingLeft="@dimen/element_spacing_normal"-->
+                <!--android:paddingRight="@dimen/element_spacing_normal"-->
+                <!--android:paddingTop="@dimen/element_spacing_small"-->
+                <!--android:paddingBottom="@dimen/element_spacing_normal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/text_num_tests"-->
+                <!--/>-->
+
+        <!--</LinearLayout>-->
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"

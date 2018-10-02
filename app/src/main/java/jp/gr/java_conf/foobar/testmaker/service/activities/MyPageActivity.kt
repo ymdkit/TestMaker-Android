@@ -5,12 +5,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.nifty.cloud.mb.core.NCMBException
@@ -38,9 +39,60 @@ class MyPageActivity : BaseActivity() {
 
         container.addView(createAd())
 
-        text_user_name.text = getString(R.string.creator_name,NCMBUser.getCurrentUser().getString("creatorName"))
+        edit_profile.setOnClickListener {
 
-        reload()
+            val dialogLayout = LayoutInflater.from(this@MyPageActivity).inflate(R.layout.dialog_edit_user_name, findViewById(R.id.layout_dialog_edit_user))
+
+            val editUsername = dialogLayout.findViewById<EditText>(R.id.edit_user_name)
+
+            val buttonSaveProfile = dialogLayout.findViewById<Button>(R.id.button_save_profile)
+
+            val builder = AlertDialog.Builder(this@MyPageActivity, R.style.MyAlertDialogStyle)
+            builder.setView(dialogLayout)
+            builder.setTitle(getString(R.string.message_edit_profile))
+            val dialog = builder.show()
+
+            buttonSaveProfile.setOnClickListener{
+
+                if(editUsername.text.toString() == ""){
+                    Toast.makeText(baseContext,getString(R.string.message_shortage),Toast.LENGTH_SHORT).show()
+
+                    return@setOnClickListener
+                }
+
+                val user = NCMBUser.getCurrentUser()
+
+                user.put("creatorName",editUsername.text.toString())
+                user.saveInBackground { e ->
+
+                    if (e != null) {
+
+                        //保存失敗
+                        AlertDialog.Builder(this@MyPageActivity, R.style.MyAlertDialogStyle)
+                                .setMessage(getString(R.string.failed_upload))
+                                .setPositiveButton("OK", null)
+                                .show()
+
+                    } else {
+                        //保存成功
+                        AlertDialog.Builder(this@MyPageActivity, R.style.MyAlertDialogStyle)
+                                .setMessage(getString(R.string.successed_edit_profile))
+                                .setPositiveButton("OK", null)
+                                .show()
+
+                        reloadUserProfile()
+
+                    }
+
+                }
+
+                dialog.dismiss()
+            }
+
+        }
+
+        reloadTests()
+        reloadUserProfile()
 
     }
 
@@ -51,7 +103,7 @@ class MyPageActivity : BaseActivity() {
         return true
     }
 
-    private fun reload(){
+    private fun reloadTests(){
 
         loading.visibility = View.VISIBLE
         recycler_view.visibility = View.GONE
@@ -115,7 +167,7 @@ class MyPageActivity : BaseActivity() {
                             if (e != null) {
 
                             } else {
-                                reload()
+                                reloadTests()
                             }
                         }
 
@@ -168,7 +220,7 @@ class MyPageActivity : BaseActivity() {
                                             .setPositiveButton("OK", null)
                                             .show()
 
-                                    reload()
+                                    reloadTests()
                                 }
                             }
 
@@ -186,6 +238,12 @@ class MyPageActivity : BaseActivity() {
                 recycler_view.adapter = this.adapter
             }
         }
+    }
+
+    fun reloadUserProfile(){
+
+        text_user_name.text = getString(R.string.creator_name,NCMBUser.getCurrentUser().getString("creatorName"))
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

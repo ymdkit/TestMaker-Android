@@ -88,7 +88,7 @@
                 android:id="@+id/edit"
                 android:layout_weight="0.9"
                 custom:text="@string/edit"
-                custom:image="@drawable/ic_create_white"
+                custom:image="@drawable/ic_edit_white"
                 />
 
             <jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton

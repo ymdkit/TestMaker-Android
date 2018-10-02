@@ -193,6 +193,8 @@
     <string name="hint_search">input ID or title and so on</string>
     <string name="download_test">load</string>
     <string name="message_non_exist_test">create test yourself</string>
+    <string name="message_edit_profile">edit profile</string>
+    <string name="successed_edit_profile">saved</string>
 
 
 </resources>
