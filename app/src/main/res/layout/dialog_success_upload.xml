@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/element_spacing_large"
+    android:id="@+id/layout_dialog_success_upload">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_success_upload"
+        android:textSize="@dimen/text_size_large"
+        android:text="@string/edit"/>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/element_spacing_normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <ImageButton
+            android:contentDescription="@string/image"
+            android:layout_width="@dimen/view_height_small"
+            android:layout_height="@dimen/view_height_small"
+            android:id="@+id/button_tweet"
+            style="@style/button_choose_normal"
+            android:scaleType="fitCenter"
+            android:background="@drawable/button_blue"
+            android:src="@drawable/ic_twitter_white"
+            />
+
+        <ImageButton
+            android:layout_marginLeft="@dimen/element_spacing_normal"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:contentDescription="@string/image"
+            android:layout_width="@dimen/view_height_small"
+            android:layout_height="@dimen/view_height_small"
+            android:scaleType="fitCenter"
+            android:id="@+id/button_line"
+            android:background="@drawable/ic_line"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

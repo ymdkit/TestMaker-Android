@@ -18,6 +18,7 @@ import com.nifty.cloud.mb.core.NCMBException
 import com.nifty.cloud.mb.core.NCMBObject
 import com.nifty.cloud.mb.core.NCMBQuery
 import com.nifty.cloud.mb.core.NCMBUser
+import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
 import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
@@ -39,11 +40,13 @@ class MyPageActivity : BaseActivity() {
 
         container.addView(createAd())
 
-        edit_profile.setOnClickListener {
+        edit_profile.setOnClickListener { _ ->
 
             val dialogLayout = LayoutInflater.from(this@MyPageActivity).inflate(R.layout.dialog_edit_user_name, findViewById(R.id.layout_dialog_edit_user))
 
             val editUsername = dialogLayout.findViewById<EditText>(R.id.edit_user_name)
+
+            editUsername.setText(NCMBUser.getCurrentUser().getString("creatorName"))
 
             val buttonSaveProfile = dialogLayout.findViewById<Button>(R.id.button_save_profile)
 
@@ -134,6 +137,8 @@ class MyPageActivity : BaseActivity() {
 
                 val questionsNum = Array(objects.size){i ->  objects[i].getInt("questionsNum")}.sum()
 
+                val limit = if (NCMBUser.getCurrentUser().getBoolean("expert") ) Constants.ONLINE_QUESTIONS_LIMIT_EXPERT else Constants.ONLINE_QUESTIONS_LIMIT_NORMAL
+
                 try {
                     val curUser = NCMBUser.getCurrentUser()
                     curUser.put("questionsSum",questionsNum)
@@ -142,7 +147,7 @@ class MyPageActivity : BaseActivity() {
                     e1.printStackTrace()
                 }
 
-                text_num_tests.text = getString(R.string.online_num_questions,questionsNum)
+                text_num_tests.text = getString(R.string.online_num_questions,questionsNum,limit)
 
                 adapter.setOnClickListener(object: MyPageAdapter.OnClickListener{
                     override fun onClickInfoTest(obj: NCMBObject) {

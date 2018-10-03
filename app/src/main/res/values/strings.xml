@@ -187,7 +187,7 @@
     <string name="hint_overview">overview</string>
     <string name="tests_my_page">my tests</string>
     <string name="creator_name">username: %1$s</string>
-    <string name="online_num_questions">upload questions %1$d / 300</string>
+    <string name="online_num_questions">upload questions %1$d / %2$d</string>
     <string name="message_limit">you can upload %1$d questions</string>
     <string name="info_test">ID: %1$s\n\ncreator: %2$s\n\nupload: %3$s\n\noverview: %4$s</string>
     <string name="hint_search">input ID or title and so on</string>
@@ -195,6 +195,12 @@
     <string name="message_non_exist_test">create test yourself</string>
     <string name="message_edit_profile">edit profile</string>
     <string name="successed_edit_profile">saved</string>
+    <string name="num_questions">%1$d questions</string>
+    <string name="tweet">upload %1$s in TestMaker. \nIt\'s id for search is %2$s #TestMaker</string>
+    <string name="line">line://msg/text/upload %1$s in TestMaker. \nIt\'s id for search is %2$s</string>
+    <string name="message_finish_upload">finish upload</string>
+    <string name="not_installed_line">not install line</string>
+    <string name="not_installed_twitter">not installed twitter</string>
 
 
 </resources>

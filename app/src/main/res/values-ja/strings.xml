@@ -188,13 +188,19 @@
     <string name="hint_overview">概要(問題集についての説明)</string>
     <string name="tests_my_page">投稿した問題集</string>
     <string name="creator_name">ユーザー名: %1$s</string>
-    <string name="online_num_questions">投稿問題数: %1$d / 300</string>
-    <string name="message_limit">現在、投稿問題数の上限は１ユーザーに付き %1$d 問までです</string>
+    <string name="online_num_questions">投稿問題数: %1$d / %2$d</string>
+    <string name="message_limit">現在、投稿問題数の上限は１ユーザーに付き合計 %1$d 問までです</string>
     <string name="info_test">ID: %1$s\n\n作者: %2$s\n\n投稿日: %3$s\n\n概要: %4$s</string>
     <string name="hint_search">IDやタイトル等を入力</string>
     <string name="download_test">読込</string>
-    <string name="message_non_exist_test">問題集を一つ以上作成してください</string>
+    <string name="message_non_exist_test">問題を一つ以上作成してください</string>
     <string name="message_edit_profile">プロフィールの編集</string>
     <string name="successed_edit_profile">保存しました</string>
+    <string name="num_questions">問題数 %1$d</string>
+    <string name="tweet">暗記メーカーで「%1$s」 を投稿しました！　\n検索用ID： %2$s \nAndroid版 bit.ly/2L8gL7X  \n #暗記メーカー #暗記</string>
+    <string name="line">暗記メーカーで「%1$s」を投稿しました！ \n検索用ID： %2$s \nAndroid版 bit.ly/2L8gL7X</string>
+    <string name="message_finish_upload">投稿完了</string>
+    <string name="not_installed_line">LINEアプリがインストールされていません</string>
+    <string name="not_installed_twitter">twitterアプリがインストールされていません</string>
 
 </resources>

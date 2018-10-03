@@ -48,6 +48,12 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
             return ArrayList(realmArray)
         }
 
+    val listNotEmpty: ArrayList<Test>
+    get() {
+        return  ArrayList(list.filter { it.getQuestionsForEach().size > 0 })
+
+    }
+
     val cateList: ArrayList<Cate>
         get() {
 

@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.nifty.cloud.mb.core.NCMBObject
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
+import org.w3c.dom.Text
 
 open class OnlineTestAdapter(private val context: Context, private val array: MutableList<NCMBObject>) : RecyclerView.Adapter<OnlineTestAdapter.ViewHolder>() {
 
@@ -43,7 +44,9 @@ open class OnlineTestAdapter(private val context: Context, private val array: Mu
 
         holder.title.text = array[position].getString("title")
 
-        holder.num.text = context.getString(R.string.number_download,array[position].getInt("downloadedNum"))
+        holder.num.text = context.getString(R.string.num_questions,array[position].getInt("questionsNum"))
+
+        holder.num_download.text = context.getString(R.string.number_download,array[position].getInt("downloadedNum"))
 
         holder.play.setOnClickListener {
 
@@ -70,6 +73,7 @@ open class OnlineTestAdapter(private val context: Context, private val array: Mu
         val cate: ImageButton = v.findViewById(R.id.cate)
         val title: TextView = v.findViewById(R.id.title_questions)
         val num: TextView = v.findViewById(R.id.num_questions)
+        val num_download: TextView = v.findViewById(R.id.num_download)
         val information: ImageTextButton = v.findViewById(R.id.open)
         val play: ImageTextButton = v.findViewById(R.id.play)
 
