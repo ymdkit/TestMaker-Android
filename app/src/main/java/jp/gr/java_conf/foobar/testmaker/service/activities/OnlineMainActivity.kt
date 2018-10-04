@@ -497,6 +497,7 @@ class OnlineMainActivity : BaseActivity() {
                                 val acl = NCMBAcl()
 
                                 acl.publicReadAccess = true
+                                acl.publicWriteAccess = true
 
                                 try {
                                     val curUser = NCMBUser.getCurrentUser()
@@ -504,6 +505,7 @@ class OnlineMainActivity : BaseActivity() {
                                     curUser.put("lastLoginDate", now)
                                     curUser.put("creatorName", getString(R.string.guest))
                                     curUser.put("downloadedIds", arrayListOf(""))
+                                    curUser.put("expert",false)
                                     curUser.acl = acl    // 追加する
                                     curUser.save()
                                 } catch (e1: NCMBException) {
