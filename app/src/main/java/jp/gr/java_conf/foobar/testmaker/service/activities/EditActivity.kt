@@ -200,7 +200,7 @@ open class EditActivity : BaseActivity() {
                         deleteFile(data.imagePath)
                     }
 
-                    realmController.deleteQuestion(data)
+                    realmController.deleteQuestion(data,testId)
 
                     editAdapter.notifyDataSetChanged()
 

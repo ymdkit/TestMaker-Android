@@ -24,6 +24,9 @@ class CheckBoxQuestionAdapter(private val context: Context, private val array: A
         return array.size
     }
 
+    fun getItems(): Array<Quest>{
+        return array
+    }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val checkBox = holder.checkBox

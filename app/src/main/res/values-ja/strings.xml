@@ -212,8 +212,10 @@
     <string name="not_installed_twitter">twitterアプリがインストールされていません</string>
     <string name="always_review">正解時も解説を表示する</string>
     <string name="target">対象</string>
-    <string name="action_move">別の問題集に問題を移動</string>
+    <string name="action_move">問題の移動,複製</string>
     <string name="check_all_questions">全てチェック</string>
+    <string name="new_test">新しい問題集</string>
+    <string name="test">問題集</string>
 
 
 </resources>

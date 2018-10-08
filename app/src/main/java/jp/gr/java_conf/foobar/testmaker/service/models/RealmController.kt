@@ -49,10 +49,10 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         }
 
     val listNotEmpty: ArrayList<Test>
-    get() {
-        return  ArrayList(list.filter { it.getQuestionsForEach().size > 0 })
+        get() {
+            return ArrayList(list.filter { it.getQuestionsForEach().size > 0 })
 
-    }
+        }
 
     val cateList: ArrayList<Cate>
         get() {
@@ -116,7 +116,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         return realm.where(Test::class.java).equalTo("id", testId).findFirst() ?: Test()
     }
 
-    fun addTest(title: String, color: Int, category: String) {
+    fun addTest(title: String, color: Int, category: String): Long {
 
         realm.beginTransaction()
 
@@ -137,7 +137,10 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         test.limit = 100
 
         realm.commitTransaction()
+
+        return nextUserId
     }
+
 
     fun updateTest(test: Test, title: String, color: Int, category: String) {
         realm.beginTransaction()
@@ -246,6 +249,43 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         return array
     }
 
+    fun addQuestions(testId: Long, questions: Array<Quest>) {
+
+        val test = getTest(testId)
+
+        realm.beginTransaction()
+
+        questions.forEach {
+            // 初期化
+            var nextUserId: Long
+            nextUserId = 1
+            // userIdの最大値を取得
+            val maxUserId = realm.where(Quest::class.java).max("id")
+            // 1度もデータが作成されていない場合はNULLが返ってくるため、NULLチェックをする
+            if (maxUserId != null) {
+                nextUserId = (maxUserId.toInt() + 1).toLong()
+            }
+
+            val question = realm.createObject(Quest::class.java, nextUserId) ?: Quest()
+
+            question.explanation = it.explanation
+            question.type = it.type
+            question.problem = it.problem
+            question.answer = it.answer
+            question.selections = it.selections
+            question.answers = it.answers
+            question.correct = false
+            question.auto = it.auto
+            question.imagePath = it.imagePath
+            question.order = test.getQuestions().size
+
+            test.addQuestion(question)
+        }
+
+        realm.commitTransaction()
+
+    }
+
     fun addQuestion(testId: Long, problem: StructQuestion, questionId: Long) {
 
         realm.beginTransaction()
@@ -305,7 +345,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     }
 
-    fun deleteQuestion(question: Quest) {
+    fun deleteQuestion(question: Quest, testId: Long) {
 
         realm.beginTransaction()
 
@@ -354,7 +394,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     }
 
-    fun convert(structTest: StructTest, testId: Long){
+    fun convert(structTest: StructTest, testId: Long) {
 
         realm.beginTransaction()
 
@@ -485,6 +525,22 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         realm.beginTransaction()
 
         getTest(testId).getQuestionsForEach().forEach { it.solving = false }
+
+        realm.commitTransaction()
+
+    }
+
+    fun removeQuestions(id: Long, checkBoxStates: Array<Boolean>) { //移動後に元の問題集からは取り除く
+
+        val test = getTest(id)
+
+        realm.beginTransaction()
+
+        val list = RealmList<Quest>()
+
+        test.getQuestions().filterIndexed { index, quest -> !checkBoxStates[index] }.forEach { list.add(it) }
+
+        test.setQuestions(list)
 
         realm.commitTransaction()
 

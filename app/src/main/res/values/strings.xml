@@ -213,6 +213,8 @@
     <string name="target">target</string>
     <string name="action_move">move questions</string>
     <string name="check_all_questions">check all</string>
+    <string name="new_test">new test</string>
+    <string name="test">test</string>
 
 
 </resources>
