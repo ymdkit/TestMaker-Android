@@ -251,6 +251,15 @@ class MainActivity : ShowTestsActivity() {
                     licenseIntent.putExtra("url", "file:///android_asset/licenses.html")
                     startActivityForResult(licenseIntent,REQUEST_EDIT)
                 }
+
+                R.id.nav_move_questions -> {
+
+                    sendEvent("move questions")
+
+                    val intent = Intent(this@MainActivity, MoveQuestionsActivity::class.java)
+                    startActivityForResult(intent,REQUEST_EDIT)
+
+                }
             }
             false
         }

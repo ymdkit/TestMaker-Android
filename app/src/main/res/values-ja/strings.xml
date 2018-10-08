@@ -138,7 +138,15 @@
         <item>ダウンロード数 (降順)</item>
         <item>投稿が新しい順 </item>
         <item>投稿が古い順 </item>
-    </string-array>    <string name="share_color">色,%1$s</string>
+    </string-array>
+
+    <string-array name="actions_question">
+        <item>移動先</item>
+        <item>複製先</item>
+    </string-array>
+
+
+    <string name="share_color">色,%1$s</string>
     <string name="title_activity_edit_pro">編集</string>
     <string name="load_color">色</string>
     <string name="message_success_update">保存しました</string>
@@ -203,5 +211,9 @@
     <string name="not_installed_line">LINEアプリがインストールされていません</string>
     <string name="not_installed_twitter">twitterアプリがインストールされていません</string>
     <string name="always_review">正解時も解説を表示する</string>
+    <string name="target">対象</string>
+    <string name="action_move">別の問題集に問題を移動</string>
+    <string name="check_all_questions">全てチェック</string>
+
 
 </resources>

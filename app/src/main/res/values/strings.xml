@@ -118,6 +118,13 @@
         <item>upload date (descending)</item>
         <item>upload date (ascending)</item>
     </string-array>
+
+    <string-array name="actions_question">
+        <item>move to</item>
+        <item>copy to</item>
+    </string-array>
+
+
     <string name="share_explanation">explanation,%1$s</string>
     <string name="share_multiple_answers">multiple answers,%1$s,</string>
     <string name="share_selection_auto_problems">selection auto problem,%1$s,%2$s,%3$d,</string>
@@ -202,6 +209,10 @@
     <string name="not_installed_line">not install line</string>
     <string name="not_installed_twitter">not installed twitter</string>
     <string name="always_review">show explanation when you correct</string>
+    <string name="title_activity_move_questions">MoveQuestionsActivity</string>
+    <string name="target">target</string>
+    <string name="action_move">move questions</string>
+    <string name="check_all_questions">check all</string>
 
 
 </resources>
