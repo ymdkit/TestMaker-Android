@@ -90,6 +90,16 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/check_always_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:background="@drawable/button_red"
+            android:text="@string/always_review"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/check_audio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

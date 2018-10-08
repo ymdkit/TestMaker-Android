@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.res.ResourcesCompat
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -178,8 +179,15 @@ class PlayActivity : BaseActivity() {
 
         showImageJudge(R.drawable.right)
 
-        loadNext(600)
+        if(sharedPreferenceManager.alwaysReview && questions[number].explanation != ""){//正解時も解説を表示
 
+            showLayoutMistake("")
+
+        }else{
+
+            loadNext(600)
+
+        }
     }
 
     private fun actionMistake(yourAnswer: String) {

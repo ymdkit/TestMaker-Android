@@ -102,6 +102,10 @@ open class ShowTestsActivity : BaseActivity() {
         checkRefine.isChecked = sharedPreferenceManager.refine
         checkRefine.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.refine = isChecked }
 
+        val checkAlwaysReview = dialogLayout.findViewById<CheckBox>(R.id.check_always_review)
+        checkAlwaysReview.isChecked = sharedPreferenceManager.alwaysReview
+        checkAlwaysReview.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.alwaysReview = isChecked }
+
         val actionNormal = dialogLayout.findViewById<Button>(R.id.action_normal)
         actionNormal.setOnClickListener { startAnswer(test, editLimit, false) }
 

@@ -52,6 +52,11 @@ class SharedPreferenceManager(context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("reverse", f)
                 .apply()
 
+    var alwaysReview: Boolean
+        get() = sharedPreferences.getBoolean("alwaysReview", false)
+        set(f) = sharedPreferences.edit().putBoolean("alwaysReview", f)
+                .apply()
+
     var confirmSave: Boolean
         get() = sharedPreferences.getBoolean("confirmSave", false)
         set(f) = sharedPreferences.edit().putBoolean("confirmSave", f)

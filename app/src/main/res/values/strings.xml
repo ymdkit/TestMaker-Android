@@ -201,6 +201,7 @@
     <string name="message_finish_upload">finish upload</string>
     <string name="not_installed_line">not install line</string>
     <string name="not_installed_twitter">not installed twitter</string>
+    <string name="always_review">show explanation when you correct</string>
 
 
 </resources>

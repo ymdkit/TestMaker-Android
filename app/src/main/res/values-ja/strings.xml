@@ -202,5 +202,6 @@
     <string name="message_finish_upload">投稿完了</string>
     <string name="not_installed_line">LINEアプリがインストールされていません</string>
     <string name="not_installed_twitter">twitterアプリがインストールされていません</string>
+    <string name="always_review">正解時も解説を表示する</string>
 
 </resources>
