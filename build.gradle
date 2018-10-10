@@ -2,7 +2,7 @@
 
 buildscript {
     ext.kotlin_version = '1.2.61'
-    ext.kotlin_version = '1.2.50'
+    ext.kotlin_version = '1.2.51'
     repositories {
         maven {
             url "http://dl.bintray.com/cattaka/maven"
@@ -15,7 +15,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.2.0'
         classpath "io.realm:realm-gradle-plugin:5.4.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
