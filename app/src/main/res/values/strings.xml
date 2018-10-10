@@ -215,6 +215,7 @@
     <string name="check_all_questions">check all</string>
     <string name="new_test">new test</string>
     <string name="test">test</string>
+    <string name="msg_same_test">don\'t select same test</string>
 
 
 </resources>
