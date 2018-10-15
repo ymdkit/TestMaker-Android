@@ -121,10 +121,13 @@ class ResultActivity : BaseActivity() {
                 object : Studyplus.Companion.OnPostRecordListener {
                     override fun onResult(success: Boolean, recordId: Long?, throwable: Throwable?) {
                         if (success) {
+
+                            sendEvent("upload studyplus")
+
                             Toast.makeText(baseContext, getString(R.string.msg_upload_study_plus), Toast.LENGTH_LONG).show()
                         } else {
                             throwable?.apply {
-                                Toast.makeText(baseContext, "error!!", Toast.LENGTH_LONG).show()
+                                Toast.makeText(baseContext, getString(R.string.msg_failed_upload_study_plus), Toast.LENGTH_LONG).show()
                                 printStackTrace()
                             }
                         }

@@ -75,7 +75,6 @@ open class ShowTestsActivity : BaseActivity() {
 
             }
         })
-
     }
 
     private fun initDialogPlayStart(test: Test) {

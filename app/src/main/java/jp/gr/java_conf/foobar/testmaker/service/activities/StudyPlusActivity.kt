@@ -23,8 +23,6 @@ class StudyPlusActivity : BaseActivity() {
 
         connect_study_plus.setOnClickListener {
 
-
-
             try {
                 Studyplus.instance.startAuth(this@StudyPlusActivity, REQUEST_CODE_AUTH)
             } catch (e: ActivityNotFoundException) {
@@ -47,7 +45,7 @@ class StudyPlusActivity : BaseActivity() {
 
             AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                     .setNegativeButton(android.R.string.cancel, null)
-                    .setTitle(getString(R.string.sort))
+                    .setTitle(getString(R.string.setting_study_plus_dialog))
                     .setItems(resources.getStringArray(R.array.upload_setting_study_plus)) { _, which ->
 
                         sharedPreferenceManager.uploadStudyPlus = which
@@ -86,6 +84,9 @@ class StudyPlusActivity : BaseActivity() {
                     Toast.makeText(this@StudyPlusActivity, getString(R.string.msg_connect_success), Toast.LENGTH_LONG).show()
 
                     text_state_study_plus.text = getString(R.string.connected)
+
+                    card_setting_study_plus.visibility = View.VISIBLE
+
                 }
             }
         }

@@ -224,7 +224,7 @@
     <string name="msg_same_test">移動元と移動先が同じ問題集になっています</string>
     <string name="action_study_plus">Studyplus連携</string>
     <string name="msg_download_study_plus">最新版の Studyplus をストアからダウンロードしてください</string>
-    <string name="study_plus">StudyPlus連携</string>
+    <string name="study_plus">Studylus連携</string>
     <string name="state_study_plus">未連携</string>
     <string name="connect">連携</string>
     <string name="title_activity_study_plus">StudyPlus との連携</string>
@@ -238,5 +238,7 @@
     <string name="msg_connect_success">連携しました</string>
     <string name="msg_upload_study_plus">勉強結果を Studyplus に投稿しました</string>
     <string name="action_remove_ad">広告の削除</string>
+    <string name="msg_failed_upload_study_plus">スタディプラスへの投稿に失敗しました</string>
+    <string name="setting_study_plus_dialog">投稿設定</string>
 
 </resources>
