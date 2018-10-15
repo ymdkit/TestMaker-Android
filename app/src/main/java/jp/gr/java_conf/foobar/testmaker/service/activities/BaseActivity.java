@@ -15,6 +15,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R;
 import jp.gr.java_conf.foobar.testmaker.service.SharedPreferenceManager;
 import jp.gr.java_conf.foobar.testmaker.service.TestMakerApplication;
 import jp.gr.java_conf.foobar.testmaker.service.models.RealmController;
+import jp.studyplus.android.sdk.Studyplus;
 
 /**
  * Created by keita on 2016/08/19.
@@ -26,6 +27,8 @@ public class BaseActivity extends AppCompatActivity {
 
     SharedPreferenceManager sharedPreferenceManager;
 
+    final static int REQUEST_CODE_AUTH = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +38,9 @@ public class BaseActivity extends AppCompatActivity {
         realmController = new RealmController(getApplicationContext(), app.getConfig());
 
         sharedPreferenceManager = new SharedPreferenceManager(this);
+
+        Studyplus.getInstance().setup("U6867w2Zt2tT2CRjJRteaMAUCvnEDfXZ", "d9cCv8aZCDaUL56bhZY5HBnzktpzpYefVAn3hV5hjjqmWhF97j985wyuMjLExLvQ");
+
     }
 
     protected void sendScreen(String screenName) {

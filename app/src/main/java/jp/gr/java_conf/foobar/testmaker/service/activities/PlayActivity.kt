@@ -38,6 +38,8 @@ class PlayActivity : BaseActivity() {
 
     private lateinit var inputMethodManager: InputMethodManager
 
+    private var startTime: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
@@ -62,6 +64,8 @@ class PlayActivity : BaseActivity() {
         initQuestions()
 
         number = -1
+
+        startTime = System.currentTimeMillis()
 
         loadNext(0)
 
@@ -183,6 +187,8 @@ class PlayActivity : BaseActivity() {
 
             showLayoutMistake("")
 
+            play_review_view.setTextAnswer(questions[number].answer)
+
         }else{
 
             loadNext(600)
@@ -223,7 +229,6 @@ class PlayActivity : BaseActivity() {
         play_mistake_view.show(yourAnswer)
 
     }
-
 
     fun loadNext(second: Int) {
 
@@ -266,8 +271,6 @@ class PlayActivity : BaseActivity() {
         }, second.toLong())
 
     }
-
-
 
     private fun showProblem(question: Quest) {
 
@@ -312,6 +315,7 @@ class PlayActivity : BaseActivity() {
 
         if (intent.hasExtra("random")) i.putExtra("random", intent.getIntExtra("random", -1))
 
+        i.putExtra("duration",System.currentTimeMillis() - startTime)
         i.putExtra("testId", testId)
 
         startActivity(i)
@@ -460,7 +464,6 @@ class PlayActivity : BaseActivity() {
 
             }
         })
-
 
         button_confirm.setOnClickListener {
 

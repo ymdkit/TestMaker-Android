@@ -61,6 +61,10 @@
         <activity
             android:name=".activities.MoveQuestionsActivity"
             android:label="@string/title_activity_move_questions"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.StudyPlusActivity"
+            android:label="@string/title_activity_study_plus"
             android:theme="@style/AppTheme"></activity>
     </application>
 

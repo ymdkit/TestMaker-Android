@@ -18,4 +18,8 @@ object Constants {
     const val ONLINE_QUESTIONS_LIMIT_NORMAL = 300
     const val ONLINE_QUESTIONS_LIMIT_EXPERT = 10000
 
+    const val NOT_UPLOAD_STUDY_PLUS = 0
+    const val UPLOAD_AUTOMATICALLY_STUDY_PLUS = 1
+    const val UPLOAD_MANUALLY_STUDY_PLUS = 2
+
 }

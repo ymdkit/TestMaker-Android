@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service
 
 import android.app.Application
+import android.support.multidex.MultiDexApplication
 
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
@@ -14,7 +15,7 @@ import jp.gr.java_conf.foobar.testmaker.service.models.Migration
 /**
  * Created by keita on 2016/07/17.
  */
-class TestMakerApplication : Application() {
+class TestMakerApplication : MultiDexApplication() {
 
     private var tracker: Tracker? = null
 

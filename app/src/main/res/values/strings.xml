@@ -124,6 +124,12 @@
         <item>copy to</item>
     </string-array>
 
+    <string-array name="upload_setting_study_plus">
+        <item>not upload</item>
+        <item>auto upload</item>
+        <item>manual upload</item>
+    </string-array>
+
 
     <string name="share_explanation">explanation,%1$s</string>
     <string name="share_multiple_answers">multiple answers,%1$s,</string>
@@ -216,6 +222,22 @@
     <string name="new_test">new test</string>
     <string name="test">test</string>
     <string name="msg_same_test">Don\'t select same test</string>
+    <string name="action_study_plus">study plus</string>
+    <string name="msg_download_study_plus">download latest studyplus from Play store</string>
+    <string name="title_activity_study_plus">StudyPlusActivity</string>
+    <string name="study_plus">StudyPlus</string>
+    <string name="state_study_plus">state: unconnect</string>
+    <string name="connect">connect</string>
+    <string name="connected">connected</string>
+    <string name="msg_already_connected">already connected</string>
+    <string name="setting_study_plus">upload setting</string>
+    <string name="button_setting_upload_study_plus">edit</string>
+    <string name="not_upload_study_plus">not upload</string>
+    <string name="upload_automatically_study_plus">auto upload</string>
+    <string name="upload_manually_study_plus">manual upload</string>
+    <string name="msg_connect_success">success</string>
+    <string name="msg_upload_study_plus">success upload to Studyplus</string>
+    <string name="action_remove_ad">remove ad</string>
 
 
 </resources>

@@ -196,11 +196,9 @@ open class EditActivity : BaseActivity() {
                 builder.setMessage(getString(R.string.message_delete, data.problem))
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
-                    if (data.imagePath != "") {
-                        deleteFile(data.imagePath)
-                    }
+                    if (data.imagePath != "") deleteFile(data.imagePath)
 
-                    realmController.deleteQuestion(data,testId)
+                    realmController.deleteQuestion(data)
 
                     editAdapter.notifyDataSetChanged()
 

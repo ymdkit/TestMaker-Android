@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.dialog_edit_test.*
 import java.io.*
 
 
-class MainActivity : ShowTestsActivity() {
+class MainActivity : ShowTestsActivity(){
 
     private lateinit var inputMethodManager: InputMethodManager
 
@@ -58,7 +58,7 @@ class MainActivity : ShowTestsActivity() {
                 folderAdapter
         )
 
-        folderAdapter.setOnClickListener(object: FolderAdapter.OnClickListener{
+        folderAdapter.setOnClickListener(object : FolderAdapter.OnClickListener {
             override fun onClick(category: String) {
 
                 val i = Intent(this@MainActivity, CategorizedActivity::class.java)
@@ -118,7 +118,7 @@ class MainActivity : ShowTestsActivity() {
 
                 button_category.tag = ""
                 button_category.text = getString(R.string.category)
-                button_category.background = ResourcesCompat.getDrawable(resources,R.drawable.button_blue,null)
+                button_category.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
 
             }
 
@@ -148,7 +148,7 @@ class MainActivity : ShowTestsActivity() {
                 button_category.tag = ""
                 button_category.text = getString(R.string.category)
 
-                button_category.background = ResourcesCompat.getDrawable(resources,R.drawable.button_blue,null)
+                button_category.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
 
                 body.visibility = View.GONE
                 button_upload.setImageResource(R.drawable.ic_expand_more_black)
@@ -249,7 +249,7 @@ class MainActivity : ShowTestsActivity() {
 
                     val licenseIntent = Intent(this@MainActivity, OnlineMainActivity::class.java)
                     licenseIntent.putExtra("url", "file:///android_asset/licenses.html")
-                    startActivityForResult(licenseIntent,REQUEST_EDIT)
+                    startActivityForResult(licenseIntent, REQUEST_EDIT)
                 }
 
                 R.id.nav_move_questions -> {
@@ -257,7 +257,16 @@ class MainActivity : ShowTestsActivity() {
                     sendEvent("move questions")
 
                     val intent = Intent(this@MainActivity, MoveQuestionsActivity::class.java)
-                    startActivityForResult(intent,REQUEST_EDIT)
+                    startActivityForResult(intent, REQUEST_EDIT)
+
+                }
+
+                R.id.nav_study_plus -> {
+
+                    sendEvent("study plus")
+
+                    val intent = Intent(this@MainActivity, StudyPlusActivity::class.java)
+                    startActivityForResult(intent, REQUEST_EDIT)
 
                 }
             }
@@ -297,16 +306,14 @@ class MainActivity : ShowTestsActivity() {
 
         if (requestCode == 12345) {
 
-            launchEditorActivity( data!!.data)
+            launchEditorActivity(data!!.data)
 
         } else if (requestCode == 12346) {
 
             launchEditorActivity(data!!.data)
 
         }
-
     }
-
 
     private fun launchEditorActivity(uri: Uri?) {
 
@@ -333,13 +340,13 @@ class MainActivity : ShowTestsActivity() {
 
     private fun loadText(text: String) {
 
-        val loader = AsyncTaskLoadTest(text,baseContext)
-        loader.setCallback(object : AsyncTaskLoadTest.AsyncTaskCallback{
+        val loader = AsyncTaskLoadTest(text, baseContext)
+        loader.setCallback(object : AsyncTaskLoadTest.AsyncTaskCallback {
             override fun postExecute(result: StructTest) {
 
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, result.title), Toast.LENGTH_LONG).show()
 
-                realmController.convert(result,-1)
+                realmController.convert(result, -1)
 
                 parentAdapter?.notifyDataSetChanged()
 
@@ -365,5 +372,4 @@ class MainActivity : ShowTestsActivity() {
         drawerToggle.syncState()
 
     }
-
 }

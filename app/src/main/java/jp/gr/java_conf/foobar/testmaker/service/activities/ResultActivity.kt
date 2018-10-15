@@ -4,9 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import android.widget.Toast
+import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.ResultAdapter
+import jp.studyplus.android.sdk.Studyplus
+import jp.studyplus.android.sdk.record.StudyRecord
+import jp.studyplus.android.sdk.record.StudyRecordBuilder
 import kotlinx.android.synthetic.main.activity_result.*
 
 class ResultActivity : BaseActivity() {
@@ -83,6 +88,48 @@ class ResultActivity : BaseActivity() {
                     }.show()
         }
 
+
+        val record = StudyRecordBuilder()
+                .setComment("${realmController.getTest(testId).title} で勉強しました")
+                .setAmountTotal(questions.size)
+                .setDurationSeconds((intent.getLongExtra("duration",0)/ 1000).toInt())
+                .build()
+
+
+        when(sharedPreferenceManager.uploadStudyPlus){
+            Constants.UPLOAD_AUTOMATICALLY_STUDY_PLUS ->
+                uploadStudyPlus(record)
+
+            Constants.UPLOAD_MANUALLY_STUDY_PLUS -> {
+
+                upload_study_plus.visibility = View.VISIBLE
+
+
+            }
+
+        }
+
+        upload_study_plus.setOnClickListener {
+
+            uploadStudyPlus(record)
+        }
+    }
+
+    private fun uploadStudyPlus(record: StudyRecord){
+
+        Studyplus.instance.postRecord(this@ResultActivity, record,
+                object : Studyplus.Companion.OnPostRecordListener {
+                    override fun onResult(success: Boolean, recordId: Long?, throwable: Throwable?) {
+                        if (success) {
+                            Toast.makeText(baseContext, getString(R.string.msg_upload_study_plus), Toast.LENGTH_LONG).show()
+                        } else {
+                            throwable?.apply {
+                                Toast.makeText(baseContext, "error!!", Toast.LENGTH_LONG).show()
+                                printStackTrace()
+                            }
+                        }
+                    }
+                })
     }
 
     override fun onBackPressed() {

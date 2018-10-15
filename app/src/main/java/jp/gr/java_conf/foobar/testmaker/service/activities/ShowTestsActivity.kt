@@ -45,7 +45,6 @@ open class ShowTestsActivity : BaseActivity() {
                     initDialogPlayStart(test)
 
                 }
-
             }
 
             override fun onClickEditTest(id: Long) {

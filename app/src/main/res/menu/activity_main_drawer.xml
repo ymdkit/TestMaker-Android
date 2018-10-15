@@ -35,6 +35,11 @@
             android:title="@string/action_move"
             />
 
+        <item
+            android:id="@+id/nav_study_plus"
+            android:icon="@drawable/ic_studyplus"
+            android:title="@string/action_study_plus"
+            />
 
         <item
             android:id="@+id/nav_license"

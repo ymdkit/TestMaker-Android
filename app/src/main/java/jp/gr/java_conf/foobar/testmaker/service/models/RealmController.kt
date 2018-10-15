@@ -56,27 +56,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     val cateList: ArrayList<Cate>
         get() {
-
-            val realmArray: RealmResults<Cate>
-
-            when (sharedPreferenceManager.sort) {
-                -1 ->
-
-                    realmArray = realm.where(Cate::class.java).findAll().sort("category")
-                0 ->
-
-                    realmArray = realm.where(Cate::class.java).findAll().sort("category")
-                1 ->
-
-                    realmArray = realm.where(Cate::class.java).findAll().sort("category", Sort.DESCENDING)
-                2 ->
-
-                    realmArray = realm.where(Cate::class.java).findAll().sort("category")
-
-                else -> realmArray = realm.where(Cate::class.java).findAll().sort("category")
-            }
-
-            return ArrayList(realmArray)
+            return ArrayList(realm.where(Cate::class.java).findAll().sort("category"))
         }
 
     val mixedList: List<Any>
@@ -345,7 +325,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     }
 
-    fun deleteQuestion(question: Quest, testId: Long) {
+    fun deleteQuestion(question: Quest) {
 
         realm.beginTransaction()
 

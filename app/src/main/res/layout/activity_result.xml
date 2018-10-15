@@ -75,6 +75,19 @@
                     android:id="@+id/retry"
                      />
 
+                <ImageButton
+                    android:contentDescription="@string/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_height_normal"
+                    android:layout_margin="@dimen/element_spacing_small"
+                    android:layout_weight="1.5"
+                    android:scaleType="fitCenter"
+                    android:background="@drawable/button_blue"
+                    android:src="@drawable/ic_studyplus"
+                    android:id="@+id/upload_study_plus"
+                    android:visibility="gone"
+                    />
+
             </LinearLayout>
 
         </LinearLayout>

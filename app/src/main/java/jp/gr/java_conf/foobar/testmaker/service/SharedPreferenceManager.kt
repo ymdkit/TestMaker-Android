@@ -67,6 +67,11 @@ class SharedPreferenceManager(context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("confirmNotes", f)
                 .apply()
 
+    var uploadStudyPlus: Int
+        get() = sharedPreferences.getInt("study_plus", 1)
+        set(i) = sharedPreferences.edit().putInt("study_plus", i).apply()
+
+
     var sort: Int
         get() = sharedPreferences.getInt("sort", -1)
         set(i) = sharedPreferences.edit().putInt("sort", i).apply()
@@ -74,6 +79,8 @@ class SharedPreferenceManager(context: Context) {
     var sortOnline: Int
         get() = sharedPreferences.getInt("sortOnline", 1)
         set(i) = sharedPreferences.edit().putInt("sortOnline", i).apply()
+
+
 
 
 }
