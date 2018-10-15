@@ -117,6 +117,8 @@ class ResultActivity : BaseActivity() {
 
     private fun uploadStudyPlus(record: StudyRecord){
 
+        if(!Studyplus.instance.isAuthenticated(baseContext)) return
+
         Studyplus.instance.postRecord(this@ResultActivity, record,
                 object : Studyplus.Companion.OnPostRecordListener {
                     override fun onResult(success: Boolean, recordId: Long?, throwable: Throwable?) {
