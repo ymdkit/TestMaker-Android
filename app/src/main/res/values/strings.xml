@@ -242,6 +242,7 @@
     <string name="setting_study_plus_dialog">setting</string>
     <string name="header_inapp">one time deal</string>
     <string name="alrady_removed_ad">already parchased</string>
+    <string name="error">loading error</string>
 
 
 </resources>

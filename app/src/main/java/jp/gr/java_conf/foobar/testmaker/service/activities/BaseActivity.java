@@ -76,6 +76,21 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    protected AdView createAd(){
+
+        AdView adView = new AdView(this);
+        adView.setAdUnitId("ca-app-pub-8942090726462263/8420884238");
+        adView.setAdSize(AdSize.BANNER);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("DA539D38B08126EBEF7E059DCA26831C")
+                .addTestDevice("BDB57B5078A79B87345E711A52F0F995")
+                .build();
+        adView.loadAd(adRequest);
+
+        return adView;
+    }
+
     protected void createAd(LinearLayout container){
 
         if(sharedPreferenceManager.isRemovedAd()){

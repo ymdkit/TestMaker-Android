@@ -242,5 +242,6 @@
     <string name="setting_study_plus_dialog">投稿設定</string>
     <string name="header_inapp">one time deal</string>
     <string name="alrady_removed_ad">購入済みです</string>
+    <string name="error">読み込み中にエラーが発生しました</string>
 
 </resources>

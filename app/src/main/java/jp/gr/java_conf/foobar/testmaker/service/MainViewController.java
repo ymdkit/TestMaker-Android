@@ -50,26 +50,6 @@ public class MainViewController {
     private class UpdateListener implements BillingManager.BillingUpdatesListener {
         @Override
         public void onBillingClientSetupFinished() {
-            //mActivity.onBillingManagerSetupFinished();
-        }
-
-        @Override
-        public void onConsumeFinished(String token, @BillingResponse int result) {
-            Log.d(TAG, "Consumption finished. Purchase token: " + token + ", result: " + result);
-
-            // Note: We know this is the SKU_GAS, because it's the only one we consume, so we don't
-            // check if token corresponding to the expected sku was consumed.
-            // If you have more than one sku, you probably need to validate that the token matches
-            // the SKU you expect.
-            // It could be done by maintaining a map (updating it every time you call consumeAsync)
-            // of all tokens into SKUs which were scheduled to be consumed and then looking through
-            // it here to check which SKU corresponds to a consumed token.
-            if (result == BillingResponse.OK) {
-                // Successfully consumed, so we apply the effects of the item in our
-                // game world's logic, which in our case means filling the gas tank a bit
-                Log.d(TAG, "Consumption successful. Provisioning.");
-                saveData();
-            }
 
         }
 
@@ -86,13 +66,6 @@ public class MainViewController {
                         break;
                 }
             }
-
-            //レイアウトの更新
         }
-    }
-
-    private void saveData() {
-        SharedPreferences.Editor spe = mActivity.getPreferences(MODE_PRIVATE).edit();
-        spe.apply();
     }
 }

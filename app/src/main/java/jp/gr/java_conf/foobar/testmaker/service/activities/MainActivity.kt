@@ -293,8 +293,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                     sendEvent("remove ad")
 
-                    Log.d("", "Purchase button clicked.")
-
                     if (billingManager.billingClientResponseCode > BILLING_MANAGER_NOT_INITIALIZED) {
 
                         if (!isFinishing) {
@@ -303,7 +301,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                                     SkuDetailsResponseListener { responseCode, skuDetailsList ->
                                         if (responseCode != BillingClient.BillingResponse.OK) {
 
-                                            //エラー
+                                            Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
 
                                         } else if (skuDetailsList != null && skuDetailsList.size > 0) {
                                             // If we successfully got SKUs, add a header in front of the row
@@ -312,9 +310,10 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                                                 if (isPremiumPurchased) {
 
-                                                    Toast.makeText(baseContext,getString(R.string.alrady_removed_ad),Toast.LENGTH_SHORT).show()
-                                                    //購入済み
+                                                    Toast.makeText(baseContext, getString(R.string.alrady_removed_ad), Toast.LENGTH_SHORT).show()
+
                                                 } else {
+
                                                     getBillingManager().initiatePurchaseFlow(details.sku,
                                                             BillingClient.SkuType.INAPP)
                                                 }
@@ -322,12 +321,10 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                                         } else {
                                             // Handle empty state
-                                            //エラー
+                                            Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
 
                                         }
                                     })
-
-
                         }
                     }
 
@@ -436,7 +433,14 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     }
 
-    public fun removeAd() {
+    public override fun onDestroy() {
+
+        billingManager.destroy()
+
+        super.onDestroy()
+    }
+
+    fun removeAd() {
         container.visibility = View.GONE
     }
 }
