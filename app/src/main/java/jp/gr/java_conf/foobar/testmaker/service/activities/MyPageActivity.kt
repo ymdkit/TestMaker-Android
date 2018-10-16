@@ -113,7 +113,6 @@ class MyPageActivity : BaseActivity() {
 
         val query = NCMBQuery<NCMBObject>("Test")
 
-        //検索件数を5件に設定
         query.setLimit(15)
 
         query.whereEqualTo("language",getString(R.string.language))
@@ -245,7 +244,7 @@ class MyPageActivity : BaseActivity() {
         }
     }
 
-    fun reloadUserProfile(){
+    private fun reloadUserProfile(){
 
         text_user_name.text = getString(R.string.creator_name,NCMBUser.getCurrentUser().getString("creatorName"))
 
