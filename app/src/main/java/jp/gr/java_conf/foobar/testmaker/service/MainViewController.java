@@ -16,33 +16,24 @@
 
 package jp.gr.java_conf.foobar.testmaker.service;
 
-import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.android.billingclient.api.BillingClient.BillingResponse;
 import com.android.billingclient.api.Purchase;
 
 import java.util.List;
 
 import jp.gr.java_conf.foobar.testmaker.service.activities.MainActivity;
 
-import static android.content.Context.MODE_PRIVATE;
-
-/**
- * Handles control logic of the BaseGamePlayActivity
- */
 public class MainViewController {
     private static final String TAG = "MainViewController";
 
     public final UpdateListener mUpdateListener;
     private MainActivity mActivity;
 
-    // Tracks if we currently own a premium car
     public MainViewController(MainActivity activity) {
         mUpdateListener = new UpdateListener();
         mActivity = activity;
     }
-
 
     /**
      * Handler to billing updates

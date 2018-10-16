@@ -240,7 +240,6 @@
     <string name="action_remove_ad">remove ad</string>
     <string name="msg_failed_upload_study_plus">failed to upload studyplus</string>
     <string name="setting_study_plus_dialog">setting</string>
-    <string name="header_inapp">one time deal</string>
     <string name="alrady_removed_ad">already parchased</string>
     <string name="error">loading error</string>
 

@@ -11,14 +11,12 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.SkuDetailsResponseListener
 import jp.gr.java_conf.foobar.testmaker.service.*
 import jp.gr.java_conf.foobar.testmaker.service.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
@@ -297,34 +295,34 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                         if (!isFinishing) {
 
-                            getBillingManager().querySkuDetailsAsync(BillingClient.SkuType.INAPP, listOf("removead"),
-                                    SkuDetailsResponseListener { responseCode, skuDetailsList ->
-                                        if (responseCode != BillingClient.BillingResponse.OK) {
+                            getBillingManager().querySkuDetailsAsync(BillingClient.SkuType.INAPP, listOf("removead")
+                            ) { responseCode, skuDetailsList ->
+                                if (responseCode != BillingClient.BillingResponse.OK) {
 
-                                            Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
 
-                                        } else if (skuDetailsList != null && skuDetailsList.size > 0) {
-                                            // If we successfully got SKUs, add a header in front of the row
-                                            // Then fill all the other rows
-                                            for (details in skuDetailsList) {
+                                } else if (skuDetailsList != null && skuDetailsList.size > 0) {
+                                    // If we successfully got SKUs, add a header in front of the row
+                                    // Then fill all the other rows
+                                    for (details in skuDetailsList) {
 
-                                                if (isPremiumPurchased) {
+                                        if (isPremiumPurchased) {
 
-                                                    Toast.makeText(baseContext, getString(R.string.alrady_removed_ad), Toast.LENGTH_SHORT).show()
-
-                                                } else {
-
-                                                    getBillingManager().initiatePurchaseFlow(details.sku,
-                                                            BillingClient.SkuType.INAPP)
-                                                }
-                                            }
+                                            Toast.makeText(baseContext, getString(R.string.alrady_removed_ad), Toast.LENGTH_SHORT).show()
 
                                         } else {
-                                            // Handle empty state
-                                            Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
 
+                                            getBillingManager().initiatePurchaseFlow(details.sku,
+                                                    BillingClient.SkuType.INAPP)
                                         }
-                                    })
+                                    }
+
+                                } else {
+                                    // Handle empty state
+                                    Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
+
+                                }
+                            }
                         }
                     }
 
@@ -357,7 +355,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         if (resultCode == Activity.RESULT_CANCELED) {
             parentAdapter?.notifyDataSetChanged()
 
-            drawer_layout.closeDrawers();
+            drawer_layout.closeDrawers()
         }
 
         super.onActivityResult(requestCode, resultCode, data)

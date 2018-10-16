@@ -49,7 +49,6 @@ class MoveQuestionsActivity : BaseActivity() {
 
         spinner_to_test.adapter = toAdapter
 
-
         spinner_from_test.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
