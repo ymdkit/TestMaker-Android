@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.StringRes
 import android.support.design.widget.NavigationView
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -19,7 +18,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.SkuDetails
 import com.android.billingclient.api.SkuDetailsResponseListener
 import jp.gr.java_conf.foobar.testmaker.service.*
 import jp.gr.java_conf.foobar.testmaker.service.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
@@ -31,18 +29,16 @@ import jp.gr.java_conf.foobar.testmaker.service.views.adapters.MyScrambleAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_edit_test.*
 import java.io.*
-import java.security.AccessController.getContext
-import java.util.ArrayList
 
 
 class MainActivity : ShowTestsActivity(), BillingProvider {
 
     override fun getBillingManager(): BillingManager {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return billingManager
     }
 
     override fun isPremiumPurchased(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return sharedPreferenceManager.isRemovedAd
     }
 
     private lateinit var inputMethodManager: InputMethodManager
@@ -57,8 +53,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-
-        sharedPreferenceManager.isRemovedAd = false
 
         sendScreen("MainActivity")
 
@@ -317,6 +311,8 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                                             for (details in skuDetailsList) {
 
                                                 if (isPremiumPurchased) {
+
+                                                    Toast.makeText(baseContext,getString(R.string.alrady_removed_ad),Toast.LENGTH_SHORT).show()
                                                     //購入済み
                                                 } else {
                                                     getBillingManager().initiatePurchaseFlow(details.sku,
@@ -330,7 +326,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                                         }
                                     })
-
 
 
                         }
@@ -441,7 +436,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     }
 
-    public fun removeAd(){
+    public fun removeAd() {
         container.visibility = View.GONE
     }
 }

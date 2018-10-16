@@ -43,7 +43,7 @@
 
         <item
             android:id="@+id/nav_remove_ad"
-            android:icon="@drawable/ic_folder_open_white"
+            android:icon="@drawable/ic_remove_ad_white"
             android:title="@string/action_remove_ad" />
 
         <item

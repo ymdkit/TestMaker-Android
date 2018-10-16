@@ -38,22 +38,11 @@ public class MainViewController {
     private MainActivity mActivity;
 
     // Tracks if we currently own a premium car
-    private boolean mIsRemovedAd;
-
     public MainViewController(MainActivity activity) {
         mUpdateListener = new UpdateListener();
         mActivity = activity;
-        loadData();
     }
 
-
-    public UpdateListener getUpdateListener() {
-        return mUpdateListener;
-    }
-
-    public boolean isPremiumPurchased() {
-        return mIsRemovedAd;
-    }
 
     /**
      * Handler to billing updates
@@ -91,7 +80,6 @@ public class MainViewController {
                 switch (purchase.getSku()) {
                     case "removead":
                         Log.d(TAG, "You remove ad! Congratulations!!!");
-                        mIsRemovedAd = true;
                         mActivity.sharedPreferenceManager.setRemovedAd(true);
 
                         mActivity.removeAd();
@@ -106,9 +94,5 @@ public class MainViewController {
     private void saveData() {
         SharedPreferences.Editor spe = mActivity.getPreferences(MODE_PRIVATE).edit();
         spe.apply();
-    }
-
-    private void loadData() {
-        SharedPreferences sp = mActivity.getPreferences(MODE_PRIVATE);
     }
 }

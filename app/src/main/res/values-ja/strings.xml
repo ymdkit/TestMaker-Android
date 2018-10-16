@@ -241,5 +241,6 @@
     <string name="msg_failed_upload_study_plus">スタディプラスへの投稿に失敗しました</string>
     <string name="setting_study_plus_dialog">投稿設定</string>
     <string name="header_inapp">one time deal</string>
+    <string name="alrady_removed_ad">購入済みです</string>
 
 </resources>

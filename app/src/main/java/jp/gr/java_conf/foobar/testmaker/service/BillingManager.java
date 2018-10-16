@@ -78,7 +78,7 @@ public class BillingManager implements PurchasesUpdatedListener {
      * want to make it easy for an attacker to replace the public key with one
      * of their own and then fake messages from the server.
      */
-    private static final String BASE_64_ENCODED_PUBLIC_KEY = "CONSTRUCT_YOUR_KEY_AND_PLACE_IT_HERE";
+    private static final String BASE_64_ENCODED_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgSyQPEh35NRskuktkfIFIMiPTk/8Zb3RvwISWouO9uBHwah5SjM8YJNb8Z0Li83QuAvSn+itDOQgwccAcO9LLlYx+TIsHRexwXMdr4HLgq2pRT0EEXo90aC6enBgrxYCMyQAi46GFSiW9CqwIFDEJzIU/fe40gwYdMwiYE7ZsbNvC4ia6lNRO35jUezTdAcqg9giA3puLdZ6oY1j24X0iw/7NfYPbhSfvDjxEQbDdAg4VQnjzZ2jG6NqjphbhKsXZbkyz3T25viqEc96JPlPX3OYoAK7u4j+XMBiAut8GOzeMh47SpdpaKqznSZSBCPouhQ2RjPTNH6eXGyLeMoPDwIDAQAB";
 
     /**
      * Listener to the updates that happen when purchases list was updated or consumption of the
@@ -108,15 +108,12 @@ public class BillingManager implements PurchasesUpdatedListener {
         // Start setup. This is asynchronous and the specified listener will be called
         // once setup completes.
         // It also starts to report all the new purchases through onPurchasesUpdated() callback.
-        startServiceConnection(new Runnable() {
-            @Override
-            public void run() {
-                // Notifying the listener that billing client is ready
-                mBillingUpdatesListener.onBillingClientSetupFinished();
-                // IAB is fully set up. Now, let's get an inventory of stuff we own.
-                Log.d(TAG, "Setup successful. Querying inventory.");
-                queryPurchases();
-            }
+        startServiceConnection(() -> {
+            // Notifying the listener that billing client is ready
+            mBillingUpdatesListener.onBillingClientSetupFinished();
+            // IAB is fully set up. Now, let's get an inventory of stuff we own.
+            Log.d(TAG, "Setup successful. Querying inventory.");
+            queryPurchases();
         });
     }
 
