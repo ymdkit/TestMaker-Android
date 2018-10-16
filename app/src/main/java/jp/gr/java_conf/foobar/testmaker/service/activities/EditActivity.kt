@@ -64,7 +64,7 @@ open class EditActivity : BaseActivity() {
 
         sendScreen("EditActivity")
 
-        container.addView(createAd())
+        createAd(container)
 
         initToolBar()
 

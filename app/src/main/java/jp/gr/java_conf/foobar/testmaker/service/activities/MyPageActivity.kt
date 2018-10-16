@@ -38,7 +38,7 @@ class MyPageActivity : BaseActivity() {
 
         initToolBar()
 
-        container.addView(createAd())
+        createAd(container)
 
         edit_profile.setOnClickListener { _ ->
 

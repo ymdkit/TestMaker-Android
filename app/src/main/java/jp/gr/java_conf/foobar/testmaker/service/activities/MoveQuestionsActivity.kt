@@ -25,7 +25,7 @@ class MoveQuestionsActivity : BaseActivity() {
 
         initToolBar()
 
-        container.addView(createAd())
+        createAd(container)
 
         val tests = realmController.list
 

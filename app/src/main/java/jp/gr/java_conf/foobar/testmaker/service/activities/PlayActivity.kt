@@ -54,7 +54,7 @@ class PlayActivity : BaseActivity() {
         //realmController.migrateOrder(testId)
 
         val container = findViewById<LinearLayout>(R.id.container)
-        container.addView(createAd())
+        createAd(container)
 
         soundMistake = SePlayer(applicationContext, R.raw.mistake)
         soundRight = SePlayer(applicationContext, R.raw.correct)

@@ -16,7 +16,7 @@ class CategorizedActivity : ShowTestsActivity() {
 
         sendScreen("CategorizedActivity")
 
-        container.addView(createAd())
+        createAd(container)
 
         initToolBar()
 

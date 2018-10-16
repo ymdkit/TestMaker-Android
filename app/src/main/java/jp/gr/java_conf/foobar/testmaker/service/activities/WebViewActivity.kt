@@ -11,7 +11,7 @@ class WebViewActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_help)
 
-        container.addView(createAd())
+        createAd(container)
 
         sendScreen("WebViewActivity")
 

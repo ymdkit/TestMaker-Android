@@ -26,7 +26,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
 }
 
 dependencies {
@@ -45,6 +44,7 @@ dependencies {
     api 'net.cattaka:adapter-toolbox:0.5.2@aar'
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api 'com.android.support:multidex:1.0.3'
+    api 'com.android.billingclient:billing:1.1'
 
 }
 repositories {

@@ -28,7 +28,7 @@ class ResultActivity : BaseActivity() {
 
         setSupportActionBar(toolbar)
 
-        container.addView(createAd())
+        createAd(container)
 
         val questions = realmController.getQuestionsSolved(testId)
 

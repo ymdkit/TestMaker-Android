@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -25,7 +27,7 @@ public class BaseActivity extends AppCompatActivity {
 
     RealmController realmController;
 
-    SharedPreferenceManager sharedPreferenceManager;
+    public SharedPreferenceManager sharedPreferenceManager;
 
     final static int REQUEST_CODE_AUTH = 1;
 
@@ -74,7 +76,13 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected AdView createAd() {
+    protected void createAd(LinearLayout container){
+
+        if(sharedPreferenceManager.isRemovedAd()){
+            container.setVisibility(View.GONE);
+            return;
+        }
+
         AdView adView = new AdView(this);
         adView.setAdUnitId("ca-app-pub-8942090726462263/8420884238");
         adView.setAdSize(AdSize.BANNER);
@@ -85,7 +93,8 @@ public class BaseActivity extends AppCompatActivity {
                 .build();
         adView.loadAd(adRequest);
 
-        return adView;
+        container.addView(adView);
+
     }
 
     @Override

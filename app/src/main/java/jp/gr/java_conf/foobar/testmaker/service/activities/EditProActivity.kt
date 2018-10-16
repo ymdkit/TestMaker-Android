@@ -27,7 +27,7 @@ class EditProActivity : BaseActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        container.addView(createAd())
+        createAd(container)
 
         if (Build.VERSION.SDK_INT >= 21) button_save.stateListAnimator = null
 

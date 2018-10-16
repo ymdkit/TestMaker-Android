@@ -42,6 +42,11 @@
             />
 
         <item
+            android:id="@+id/nav_remove_ad"
+            android:icon="@drawable/ic_folder_open_white"
+            android:title="@string/action_remove_ad" />
+
+        <item
             android:id="@+id/nav_license"
             android:icon="@drawable/ic_folder_open_white"
             android:title="@string/action_license" />

@@ -71,6 +71,10 @@ class SharedPreferenceManager(context: Context) {
         get() = sharedPreferences.getInt("study_plus", 1)
         set(i) = sharedPreferences.edit().putInt("study_plus", i).apply()
 
+    var isRemovedAd: Boolean
+        get() = sharedPreferences.getBoolean("isRemovedAd", false)
+        set(i) = sharedPreferences.edit().putBoolean("isRemovedAd", i).apply()
+
 
     var sort: Int
         get() = sharedPreferences.getInt("sort", -1)

@@ -6,18 +6,23 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.design.widget.NavigationView
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import jp.gr.java_conf.foobar.testmaker.service.IOUtil
-import jp.gr.java_conf.foobar.testmaker.service.R
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.SkuDetailsResponseListener
+import jp.gr.java_conf.foobar.testmaker.service.*
+import jp.gr.java_conf.foobar.testmaker.service.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
@@ -26,24 +31,44 @@ import jp.gr.java_conf.foobar.testmaker.service.views.adapters.MyScrambleAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_edit_test.*
 import java.io.*
+import java.security.AccessController.getContext
+import java.util.ArrayList
 
 
-class MainActivity : ShowTestsActivity(){
+class MainActivity : ShowTestsActivity(), BillingProvider {
+
+    override fun getBillingManager(): BillingManager {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun isPremiumPurchased(): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private lateinit var inputMethodManager: InputMethodManager
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
+
+    private lateinit var billingManager: BillingManager
+
+    private lateinit var viewController: MainViewController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
+        sharedPreferenceManager.isRemovedAd = false
+
         sendScreen("MainActivity")
 
-        container.addView(createAd())
+        createAd(container)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        viewController = MainViewController(this)
+
+        billingManager = BillingManager(this, viewController.mUpdateListener)
 
         initNavigationView()
 
@@ -269,6 +294,49 @@ class MainActivity : ShowTestsActivity(){
                     startActivityForResult(intent, REQUEST_EDIT)
 
                 }
+
+                R.id.nav_remove_ad -> {
+
+                    sendEvent("remove ad")
+
+                    Log.d("", "Purchase button clicked.")
+
+                    if (billingManager.billingClientResponseCode > BILLING_MANAGER_NOT_INITIALIZED) {
+
+                        if (!isFinishing) {
+
+                            getBillingManager().querySkuDetailsAsync(BillingClient.SkuType.INAPP, listOf("removead"),
+                                    SkuDetailsResponseListener { responseCode, skuDetailsList ->
+                                        if (responseCode != BillingClient.BillingResponse.OK) {
+
+                                            //エラー
+
+                                        } else if (skuDetailsList != null && skuDetailsList.size > 0) {
+                                            // If we successfully got SKUs, add a header in front of the row
+                                            // Then fill all the other rows
+                                            for (details in skuDetailsList) {
+
+                                                if (isPremiumPurchased) {
+                                                    //購入済み
+                                                } else {
+                                                    getBillingManager().initiatePurchaseFlow(details.sku,
+                                                            BillingClient.SkuType.INAPP)
+                                                }
+                                            }
+
+                                        } else {
+                                            // Handle empty state
+                                            //エラー
+
+                                        }
+                                    })
+
+
+
+                        }
+                    }
+
+                }
             }
             false
         }
@@ -371,5 +439,9 @@ class MainActivity : ShowTestsActivity(){
         super.onPostCreate(savedInstanceState)
         drawerToggle.syncState()
 
+    }
+
+    public fun removeAd(){
+        container.visibility = View.GONE
     }
 }

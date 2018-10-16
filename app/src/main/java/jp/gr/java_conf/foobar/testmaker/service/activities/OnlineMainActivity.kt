@@ -40,7 +40,7 @@ class OnlineMainActivity : BaseActivity() {
 
         NCMB.initialize(this.applicationContext, "11a0bc05538273ecd8e5d6152a9379119f16115c19082eae88c101adeb963f15", "afc1899b2ed65520fc935e8d680723828a09203347d18be035408491451262c8")
 
-        container.addView(createAd())
+        createAd(container)
 
         initToolBar()
 

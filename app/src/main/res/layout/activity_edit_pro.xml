@@ -26,13 +26,13 @@
         android:background="@null"/>
 
     <Button
+        style="@style/button_choose_normal"
         android:layout_weight="3.5"
         android:textAllCaps="false"
         android:text="@string/save"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="@dimen/text_size_medium"
-        style="@style/button_choose_normal"
         android:textColor="@color/white"
         android:id="@+id/button_save" />
 
