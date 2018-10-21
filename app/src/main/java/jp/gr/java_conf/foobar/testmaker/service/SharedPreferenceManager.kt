@@ -75,6 +75,9 @@ class SharedPreferenceManager(context: Context) {
         get() = sharedPreferences.getBoolean("isRemovedAd", false)
         set(i) = sharedPreferences.edit().putBoolean("isRemovedAd", i).apply()
 
+    var isCaseInsensitive:Boolean
+        get() = sharedPreferences.getBoolean("isCaseInsensitive", false)
+        set(i) = sharedPreferences.edit().putBoolean("isCaseInsensitive", i).apply()
 
     var sort: Int
         get() = sharedPreferences.getInt("sort", -1)

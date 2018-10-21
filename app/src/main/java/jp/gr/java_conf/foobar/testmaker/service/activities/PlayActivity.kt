@@ -7,12 +7,12 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.res.ResourcesCompat
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
+import android.widget.Toast
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadImage
@@ -21,6 +21,7 @@ import jp.gr.java_conf.foobar.testmaker.service.models.SePlayer
 import jp.gr.java_conf.foobar.testmaker.service.views.*
 import kotlinx.android.synthetic.main.activity_play.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by keita on 2016/07/17.
@@ -78,11 +79,15 @@ class PlayActivity : BaseActivity() {
 
         realmController.resetSolving(testId)
 
+        if(!intent.hasExtra("redo")) questions = ArrayList(questions.drop(realmController.getTest(testId).startPosition))
+
         if (sharedPreferenceManager.refine) questions = questions.filter{ !it.correct } as ArrayList<Quest>
 
         if (intent.hasExtra("random")) questions.shuffle()
 
-        if (realmController.getTest(testId).limit < questions.size) questions = questions.take(realmController.getTest(testId).limit) as ArrayList<Quest>
+        if (realmController.getTest(testId).limit < questions.size) questions = ArrayList(questions.take(realmController.getTest(testId).limit))
+
+        if(questions.size < 1) Toast.makeText(baseContext,getString(R.string.msg_null_questions),Toast.LENGTH_LONG).show()
 
     }
 
@@ -116,24 +121,30 @@ class PlayActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun checkAnswer(answer: String) {
+    fun checkAnswer(yourAnswer: String) {
 
         play_select_view.invalidate()
 
-        val question = questions[number]
+        val answer = questions[number].getAnswer(isReverse(questions[number]))
 
-        if (answer == question.getAnswer(isReverse(question))) {
+        if (isEqual(yourAnswer,answer)) {
 
             actionCorrect()
 
         } else {
 
-            actionMistake(answer)
+            actionMistake(yourAnswer)
 
-            play_review_view.setTextAnswer(question.getAnswer(isReverse(question)))
+            play_review_view.setTextAnswer(answer)
 
         }
+    }
 
+    private fun isEqual(yourAnswer:String, answer:String):Boolean{
+
+        if(sharedPreferenceManager.isCaseInsensitive) return yourAnswer.toLowerCase() == answer.toLowerCase()
+
+        return yourAnswer == answer
     }
 
     fun checkAnswer(answers: ArrayList<String?>) { //完答
@@ -143,7 +154,8 @@ class PlayActivity : BaseActivity() {
         for (answer in answers) {
 
             loop = false
-            for (k in 0 until questions[number].answers.size) if (answer == questions[number].answers[k]?.selection) loop = true
+
+            for (k in 0 until questions[number].answers.size) if (isEqual(answer?:"0",questions[number].answers[k]?.selection?:"1")) loop = true
 
             if (!loop) break
 

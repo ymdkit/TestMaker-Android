@@ -150,6 +150,15 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         realm.commitTransaction()
     }
 
+    fun updateStart(test: Test, start: Int) {
+
+        realm.beginTransaction()
+
+        test.startPosition = start
+
+        realm.commitTransaction()
+    }
+
     fun updateLimit(test: Test, limit: Int) {
 
         realm.beginTransaction()
@@ -525,5 +534,17 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         realm.commitTransaction()
 
     }
+
+    fun resetAchievement(testId: Long) {
+
+        realm.beginTransaction()
+
+        getTest(testId).resetAchievement()
+
+        realm.commitTransaction()
+
+
+    }
+
 
 }

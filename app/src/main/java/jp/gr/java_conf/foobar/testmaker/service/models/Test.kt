@@ -23,6 +23,7 @@ open class Test : RealmObject() {
     var id: Long = 0
     var color: Int = 0
     var limit: Int = 0
+    var startPosition: Int = 0
     var title: String? = null
     private var category: String? = null
 
@@ -39,11 +40,7 @@ open class Test : RealmObject() {
 
             for (question in questions!!) {
 
-                if (question.correct) {
-
-                    count++
-
-                }
+                if (question.correct) count++
 
             }
 
@@ -60,9 +57,7 @@ open class Test : RealmObject() {
     }
 
     fun getCategory(): String {
-        
         return category?: ""
-
     }
 
     fun addQuestion(q:Quest){
@@ -182,6 +177,12 @@ open class Test : RealmObject() {
         backup += context.getString(R.string.share_color, color.toString())
 
         return backup
+
+    }
+
+    fun resetAchievement() {
+
+        questions!!.forEach { it.correct = false }
 
     }
 }

@@ -26,10 +26,9 @@
         android:id="@+id/layout_option"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:orientation="vertical"
-        >
+        android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_normal"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,20 +38,41 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="@string/number_questions"
                 android:layout_marginLeft="@dimen/element_spacing_normal"
                 android:layout_marginStart="@dimen/element_spacing_normal"
-                android:textColor="@android:color/background_dark"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:gravity="start"
+                android:text="@string/number_questions"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/background_dark" />
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/set_limit"
                 android:layout_width="@dimen/view_width_normal"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:layout_marginLeft="@dimen/element_spacing_small"
                 android:layout_marginStart="@dimen/element_spacing_small"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLength="4"
+                android:maxLines="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/element_spacing_normal"
+                android:layout_marginStart="@dimen/element_spacing_normal"
+                android:gravity="start"
+                android:text="@string/position_start"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/background_dark" />
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/set_start_position"
+                android:layout_width="@dimen/view_width_normal"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/element_spacing_small"
+                android:layout_marginStart="@dimen/element_spacing_small"
+                android:ems="10"
                 android:inputType="number"
                 android:maxLength="4"
                 android:maxLines="1" />
@@ -61,53 +81,33 @@
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/check_refine"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginTop="@dimen/element_spacing_small"
-            android:background="@drawable/button_red"
-            android:text="@string/message_wrong_only"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/MyStartCheckBoxStyle"
+            android:text="@string/message_wrong_only" />
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/check_reverse"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginTop="@dimen/element_spacing_small"
-            android:background="@drawable/button_red"
-            android:text="@string/message_switch_question"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/MyStartCheckBoxStyle"
+            android:text="@string/message_switch_question" />
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/check_manual"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginTop="@dimen/element_spacing_small"
-            android:background="@drawable/button_red"
-            android:text="@string/message_self"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/MyStartCheckBoxStyle"
+            android:text="@string/message_self" />
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/check_always_review"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginTop="@dimen/element_spacing_small"
-            android:background="@drawable/button_red"
-            android:text="@string/always_review"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/MyStartCheckBoxStyle"
+            android:text="@string/always_review" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/check_case_insensitive"
+            style="@style/MyStartCheckBoxStyle"
+            android:text="@string/case_insensitive" />
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/check_audio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginTop="@dimen/element_spacing_small"
-            android:background="@drawable/button_red"
-            android:text="@string/message_delete_sound"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/MyStartCheckBoxStyle"
+            android:text="@string/message_delete_sound" />
 
 
     </LinearLayout>

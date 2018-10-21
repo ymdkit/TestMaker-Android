@@ -155,6 +155,19 @@ public class Migration implements RealmMigration {
 
         }
 
+        if(oldVersion == 8){
+
+            RealmObjectSchema testSchema = schema.get("Test");
+
+            testSchema
+                    .addField("startPosition", Integer.class, FieldAttribute.REQUIRED)
+                    .transform(obj -> obj.set("startPosition", 0));
+
+
+            oldVersion++;
+
+        }
+
 
         //schemaVersion変えるの忘れるな(MyApplication内)
 

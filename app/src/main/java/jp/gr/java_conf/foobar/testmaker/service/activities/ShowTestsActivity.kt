@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -16,6 +17,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.TestAdapter
 import net.cattaka.android.adaptertoolbox.adapter.ScrambleAdapter
+import java.util.*
 
 open class ShowTestsActivity : BaseActivity() {
 
@@ -30,7 +32,6 @@ open class ShowTestsActivity : BaseActivity() {
         testAdapter = TestAdapter(this)
 
         testAdapter.setOnClickListener(object : TestAdapter.OnClickListener {
-
 
             override fun onClickPlayTest(id: Long) {
 
@@ -84,6 +85,9 @@ open class ShowTestsActivity : BaseActivity() {
         val editLimit = dialogLayout.findViewById<EditText>(R.id.set_limit)
         editLimit.setText(test.limit.toString())
 
+        val editStart = dialogLayout.findViewById<EditText>(R.id.set_start_position)
+        editStart.setText((test.startPosition + 1 ).toString())
+
         val checkReverse = dialogLayout.findViewById<CheckBox>(R.id.check_reverse)
         checkReverse.isChecked = sharedPreferenceManager.reverse
         checkReverse.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.reverse = isChecked }
@@ -104,11 +108,16 @@ open class ShowTestsActivity : BaseActivity() {
         checkAlwaysReview.isChecked = sharedPreferenceManager.alwaysReview
         checkAlwaysReview.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.alwaysReview = isChecked }
 
+        val checkCaseInsensitive = dialogLayout.findViewById<CheckBox>(R.id.check_case_insensitive)
+        checkCaseInsensitive.isChecked = sharedPreferenceManager.isCaseInsensitive
+        checkCaseInsensitive.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.isCaseInsensitive = isChecked }
+        if(Locale.getDefault().language == "ja")checkCaseInsensitive.visibility = View.GONE
+
         val actionNormal = dialogLayout.findViewById<Button>(R.id.action_normal)
-        actionNormal.setOnClickListener { startAnswer(test, editLimit, false) }
+        actionNormal.setOnClickListener { startAnswer(test, editStart.text.toString(),editLimit.text.toString(), false) }
 
         val actionRandom = dialogLayout.findViewById<Button>(R.id.action_random)
-        actionRandom.setOnClickListener { startAnswer(test, editLimit, true) }
+        actionRandom.setOnClickListener { startAnswer(test, editStart.text.toString(),editLimit.text.toString(), true) }
 
         if (Build.VERSION.SDK_INT >= 21) {
             actionNormal.stateListAnimator = null
@@ -138,7 +147,7 @@ open class ShowTestsActivity : BaseActivity() {
 
     }
 
-    private fun startAnswer(test: Test, editLimit: EditText, rand: Boolean) {
+    private fun startAnswer(test: Test, start:String,limit: String, rand: Boolean) {
 
         var incorrect = false
 
@@ -148,9 +157,13 @@ open class ShowTestsActivity : BaseActivity() {
 
             Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_wrongs), Toast.LENGTH_SHORT).show()
 
-        } else if (editLimit.text.toString() == "") {
+        } else if (limit == "") {
 
             Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_number), Toast.LENGTH_SHORT).show()
+
+        }else if (start == "" || start.toInt() > test.getQuestions().size || start.toInt() < 1) {
+
+            Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_start), Toast.LENGTH_SHORT).show()
 
         } else {
 
@@ -159,8 +172,8 @@ open class ShowTestsActivity : BaseActivity() {
 
             if (rand) i.putExtra("random", 1)
 
-            realmController.updateLimit(test, Integer.parseInt(editLimit.text.toString()))
-
+            realmController.updateLimit(test, Integer.parseInt(limit))
+            realmController.updateStart(test,Integer.parseInt(start) - 1)
             realmController.updateHistory(test)
 
             startActivityForResult(i, REQUEST_EDIT)

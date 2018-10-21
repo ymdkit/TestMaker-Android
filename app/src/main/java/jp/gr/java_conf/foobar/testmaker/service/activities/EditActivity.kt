@@ -550,6 +550,15 @@ open class EditActivity : BaseActivity() {
 
                 return true
             }
+
+            item.itemId == R.id.action_reset_achievement -> {
+
+                realmController.resetAchievement(testId)
+
+                Toast.makeText(baseContext,getString(R.string.msg_reset_achievement),Toast.LENGTH_SHORT).show()
+
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)

@@ -242,5 +242,11 @@
     <string name="setting_study_plus_dialog">投稿設定</string>
     <string name="alrady_removed_ad">購入済みです</string>
     <string name="error">読み込み中にエラーが発生しました</string>
+    <string name="case_insensitive">case-insensitive</string>
+    <string name="position_start">開始位置</string>
+    <string name="message_null_start">有効な開始位置を入力してください</string>
+    <string name="msg_null_questions">出題できる問題がありません。出題設定を変更してください</string>
+    <string name="reset_achievement">達成率のリセット</string>
+    <string name="msg_reset_achievement">達成率をリセットしました</string>
 
 </resources>

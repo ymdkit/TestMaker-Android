@@ -15,6 +15,12 @@
         />
 
     <item
+        android:id="@+id/action_reset_achievement"
+        android:title="@string/reset_achievement"
+        app:showAsAction="never"
+        />
+
+    <item
         android:id="@+id/menu_search"
         android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"

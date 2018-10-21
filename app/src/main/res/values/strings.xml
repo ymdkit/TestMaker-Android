@@ -242,6 +242,12 @@
     <string name="setting_study_plus_dialog">setting</string>
     <string name="alrady_removed_ad">already parchased</string>
     <string name="error">loading error</string>
+    <string name="case_insensitive">case-insensitive</string>
+    <string name="position_start">start</string>
+    <string name="message_null_start">input start position</string>
+    <string name="msg_null_questions">non exist available questions</string>
+    <string name="reset_achievement">reset achievement</string>
+    <string name="msg_reset_achievement">reset achievement</string>
 
 
 </resources>

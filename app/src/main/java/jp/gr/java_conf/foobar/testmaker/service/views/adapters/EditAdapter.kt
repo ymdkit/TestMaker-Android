@@ -22,8 +22,6 @@ class EditAdapter(private val context: Context, private val realmController: Rea
     var filter: Boolean = false
     var searchWord: String = ""
 
-
-
     private var listener: EditAdapter.OnClickListener? = null
 
     interface OnClickListener {
@@ -54,6 +52,7 @@ class EditAdapter(private val context: Context, private val realmController: Rea
 
         holder.itemView.setOnLongClickListener{ true }
 
+        holder.order.text = (data.order + 1).toString()
         holder.problem.text = context.getString(R.string.question, data.problem)
         holder.answer.text = context.getString(R.string.answer, data.answer)
 
@@ -76,6 +75,7 @@ class EditAdapter(private val context: Context, private val realmController: Rea
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
+        val order: TextView = v.findViewById(R.id.order)
         val problem: TextView = v.findViewById(R.id.problem)
         val answer: TextView = v.findViewById(R.id.answer)
         val edit: ImageTextButton = v.findViewById(R.id.edit)
