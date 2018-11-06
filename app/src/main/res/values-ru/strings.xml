@@ -1,0 +1,245 @@
+<resources>
+    <string name="app_name">тест студия</string>
+    <string name="add_exam">прибавление тест</string>
+    <string name="edit_exam">редактирование тест</string>
+    <string name="delete_exam">делеция тест</string>
+    <string name="message_delete_exam">делеция: %1$s ?</string>
+    <string name="message_share_exam">Преобразование текста「 %1$s 」</string>
+    <string name="edit_color">цвет</string>
+    <string name="category">классификация</string>
+    <string name="action_add">+ прибавление</string>
+    <string name="action_choose">выбор вопрос</string>
+    <string name="action_write">Один вопрос ответа</string>
+    <string name="action_detail">настройки</string>
+    <string name="action_paste">Загрузить текст</string>
+    <string name="action_next">следующий</string>
+    <string name="action_right">Правильный ответ</string>
+    <string name="action_wrong">Неверный ответ</string>
+    <string name="add_question">прибавление вопрос</string>
+    <string name="edit_question">редактирование вопрос</string>
+    <string name="delete_question">делеция вопрос</string>
+    <string name="save_question">Сохранить</string>
+    <string name="add_question_write">прибавление вопрос</string>
+    <string name="add_question_choose">прибавление вопрос</string>
+    <string name="number_answers">Количество ответов</string>
+    <string name="number_choosers">сумма выбор</string>
+    <string name="number_questions">сумма</string>
+    <string name="number_existing_questions">%1$d / %2$d</string>
+    <string name="number_exams">сумма %1$d</string>
+    <string name="confirm">подтверждение</string>
+    <string name="open">Открыть</string>
+    <string name="play">Изучить</string>
+    <string name="auto">автоматически</string>
+    <string name="state_auto">автоматически</string>
+    <string name="share">доля</string>
+    <string name="help">помощь</string>
+    <string name="menu">меню</string>
+    <string name="result">Результат</string>
+    <string name="retry">Еще раз</string>
+    <string name="edit">редактирование</string>
+    <string name="delete">делеция</string>
+    <string name="loading">погрузка</string>
+    <string name="way">настройки</string>
+    <string name="load">погрузка</string>
+    <string name="unknown">неизвестный</string>
+    <string name="limit">%1$d ~ %2$d</string>
+    <string name="trim">Порезы</string>
+    <string name="cancel">отмена</string>
+    <string name="new_category">Новый</string>
+    <string name="old_category">существующий</string>
+    <string name="edit_category">настройки</string>
+    <string name="cancel_category">отмена?</string>
+    <string name="sort">сортировать</string>
+    <string name="message_add">добавленной тест</string>
+    <string name="message_wrong">недобор ввод</string>
+    <string name="message_shortage">недобор ввод</string>
+    <string name="message_delete">делеция %1$s ?</string>
+    <string name="message_answer">ответ:  %1$s</string>
+    <string name="message_auto">Использовать другое ответ</string>
+    <string name="message_not_auto">недобор вопрос</string>
+    <string name="message_explanation">комментарий</string>
+    <string name="message_paste">клейстер текст</string>
+    <string name="message_order">обычно</string>
+    <string name="message_random">случайный</string>
+    <string name="message_wrong_only">только Неверный ответ</string>
+    <string name="message_switch_question">замена вопрос и ответ</string>
+    <string name="message_self">профилирование сам</string>
+    <string name="message_delete_sound">безгласный</string>
+    <string name="message_wrong_load">Ряд %1$s ненормальность</string>
+    <string name="message_success_load">загрузка %1$s</string>
+    <string name="message_null_questions">ноль вопрос</string>
+    <string name="message_null_wrongs">ноль Неверный ответ</string>
+    <string name="message_null_number">ноль сумма</string>
+    <string name="message_ratio">%1$d / %2$d</string>
+    <string name="question">вопрос: %1$s</string>
+    <string name="answer">ответа: %1$s </string>
+    <string name="explanation">комментарий:  %1$s</string>
+    <string name="your_answer">вы:  %1$s</string>
+    <string name="image">изображение</string>
+    <string name="title_activity_edit">редактирование</string>
+    <string name="title_activity_set">SetActivity</string>
+    <string name="add">прибавление</string>
+    <string name="hint_name">титульный</string>
+    <string name="hint_explanation">комментарий</string>
+    <string name="action_settings">Как использовать</string>
+    <string name="create">прибавление тест</string>
+    <string name="hint_answer">ответа</string>
+    <string name="hint_answer1">ответа</string>
+    <string name="hint_answer2">ответа</string>
+    <string name="hint_answer3">ответа</string>
+    <string name="hint_answer4">ответа</string>
+    <string name="hint_question">вопрос</string>
+    <string name="next">следующий</string>
+    <string name="finish">конец</string>
+    <string name="hint_other">другое Выбор</string>
+    <string name="action_rev">обзор</string>
+    <string name="action_other">другое приложение</string>
+    <string name="action_import">Импортировать</string>
+    <string name="action_cloud">Интернет</string>
+    <string name="action_license">лицензия</string>
+    <string name="share_explanation">explanation,%1$s</string>
+    <string name="share_multiple_answers">multiple answers,%1$s,</string>
+    <string name="share_selection_auto_problems">selection auto problem,%1$s,%2$s,%3$d,</string>
+    <string name="share_selection_problems">selection problem,%1$s,%2$s,</string>
+    <string name="share_short_answers">short problem,%1$s,%2$s</string>
+    <string name="share_title">title,%1$s</string>
+    <string name="share_category">category,%1$s</string>
+    <string name="share_color">color,%1$s</string>
+    <string name="load_category">category</string>
+    <string name="load_explanation">explanation</string>
+    <string name="load_multiple_answers">multiple answers</string>
+    <string name="load_selection_problems">selection problem</string>
+    <string name="load_selection_auto_problems">selection auto problem</string>
+    <string name="load_short_answers">short problem</string>
+    <string name="load_title">title</string>
+    <string name="load_color">color</string>
+    <string name="msg_save">Сохранить</string>
+    <string name="msg_already_delete">уже делеция</string>
+    <string name="save">Сохранить</string>
+    <string name="edit_pro">Текстовый редактор</string>
+    <string name="pass">Я не знаю</string>
+
+
+    <string-array name="sort_exam">
+        <item>Алфавитный порядок(По убыванию)</item>
+        <item>Алфавитный порядок(По возрастанию)</item>
+        <item>последний</item>
+    </string-array>
+
+    <string-array name="action_image">
+        <item>изменение</item>
+        <item>делеция</item>
+    </string-array>
+
+    <string-array name="action_reload">
+        <item>все</item>
+        <item>только Неверный ответ</item>
+    </string-array>
+
+    <string-array name="sort_online">
+        <item>Количество скачиваний</item>
+        <item>Новый </item>
+        <item>старый </item>
+    </string-array>
+
+    <string-array name="actions_question">
+        <item>Перейдите к</item>
+        <item>Назначение копирования</item>
+    </string-array>
+
+    <string-array name="upload_setting_study_plus">
+        <item>Не публикуйте</item>
+        <item>автоматический</item>
+        <item>сам</item>
+    </string-array>
+
+    <string name="title_activity_edit_pro">редактирование</string>
+    <string name="message_success_update">Сохранить</string>
+    <string name="config">настройки</string>
+    <string name="search">поиск</string>
+    <string name="incorrect">Неверный ответ</string>
+    <string name="ok">оК</string>
+    <string name="number">%1$s</string>
+    <string name="help_url">https://banira0428.wixsite.com/testmaker/help-en</string>
+    <string name="show_never">никогда не показывать снова</string>
+    <string name="alert_save_text">Поддержание этого стиля приведет к потере данных и данных изображения по результатам этого теста</string>
+    <string name="message_answers_num">Слишком много ответов</string>
+    <string name="share_select_complete_auto_problem">selection complete auto problem,%1$s,</string>
+    <string name="share_select_complete_problem">selection complete problem,%1$s,</string>
+    <string name="load_select_complete_problem">selection complete problem</string>
+    <string name="load_select_complete_auto_problem">selection complete auto problem</string>
+    <string name="message_answer_duplicate">дупликация</string>
+    <string name="action_online">Интернет</string>
+    <string name="reload">обновление</string>
+    <string name="number_download">%1$d скачать</string>
+    <string name="upload_test">вклад</string>
+    <string name="info">информация</string>
+    <string name="title_activity_online_main">Интернет</string>
+    <string name="language">en</string>
+    <string name="hint_user_name">Имя пользователя</string>
+    <string name="login">Войти</string>
+    <string name="create_account">Новая регистрация</string>
+    <string name="error_user_name">имя</string>
+    <string name="load_failed">ошибка</string>
+    <string name="confirm_notes">предупреждение</string>
+    <string name="alert_notes">Имейте в виду, что проблемы с картинкой не могут быть загружены, и разработчики удаляют неприемлемые тесты</string>
+    <string name="message_upload_test">Выбрать</string>
+    <string name="failed_upload">ошибка</string>
+    <string name="successed_upload">вкла　%1$s </string>
+    <string name="profile">профиль</string>
+    <string name="title_activity_online_my_page">профиль</string>
+    <string name="successed_delete">делеция %1$s</string>
+    <string name="guest">Гость</string>
+    <string name="unknown_user">неизвестный</string>
+    <string name="hint_overview">комментарий</string>
+    <string name="tests_my_page">Ваши тест</string>
+    <string name="creator_name">имя: %1$s</string>
+    <string name="online_num_questions">вопрос проблем: %1$d / %2$d</string>
+    <string name="message_limit">Верхний предел %1$d вопрос</string>
+    <string name="info_test">ID: %1$s\n\nимя: %2$s\n\nдата: %3$s\n\nкомментарий: %4$s</string>
+    <string name="hint_search">титульный или</string>
+    <string name="download_test">скачать</string>
+    <string name="message_non_exist_test">0 вопрос</string>
+    <string name="message_edit_profile">プロフィールの編集</string>
+    <string name="successed_edit_profile">保存しました</string>
+    <string name="num_questions">問題数 %1$d</string>
+    <string name="tweet">暗記メーカーで「%1$s」 を投稿しました！　\n検索用ID： %2$s \nAndroid版 bit.ly/2L8gL7X  \n #暗記メーカー #暗記</string>
+    <string name="line">暗記メーカーで「%1$s」を投稿しました！ \n検索用ID： %2$s \nAndroid版 bit.ly/2L8gL7X</string>
+    <string name="message_finish_upload">投稿完了</string>
+    <string name="not_installed_line">LINEアプリがインストールされていません</string>
+    <string name="not_installed_twitter">twitterアプリがインストールされていません</string>
+    <string name="always_review">正解時も解説を表示する</string>
+    <string name="target">対象</string>
+    <string name="action_move">問題の移動,複製</string>
+    <string name="check_all_questions">全てチェック</string>
+    <string name="new_test">新しい問題集</string>
+    <string name="test">問題集</string>
+    <string name="msg_same_test">移動元と移動先が同じ問題集になっています</string>
+    <string name="action_study_plus">Studyplus連携</string>
+    <string name="msg_download_study_plus">最新版の Studyplus をストアからダウンロードしてください</string>
+    <string name="study_plus">Studylus連携</string>
+    <string name="state_study_plus">未連携</string>
+    <string name="connect">連携</string>
+    <string name="title_activity_study_plus">StudyPlus との連携</string>
+    <string name="connected">連携中</string>
+    <string name="msg_already_connected">すでに連携済みです</string>
+    <string name="setting_study_plus">投稿設定</string>
+    <string name="button_setting_upload_study_plus">変更</string>
+    <string name="not_upload_study_plus">投稿しない</string>
+    <string name="upload_automatically_study_plus">自動投稿</string>
+    <string name="upload_manually_study_plus">手動投稿</string>
+    <string name="msg_connect_success">連携しました</string>
+    <string name="msg_upload_study_plus">勉強結果を Studyplus に投稿しました</string>
+    <string name="action_remove_ad">広告の削除</string>
+    <string name="msg_failed_upload_study_plus">スタディプラスへの投稿に失敗しました</string>
+    <string name="setting_study_plus_dialog">投稿設定</string>
+    <string name="alrady_removed_ad">購入済みです</string>
+    <string name="error">読み込み中にエラーが発生しました</string>
+    <string name="case_insensitive">case-insensitive</string>
+    <string name="position_start">開始位置</string>
+    <string name="message_null_start">有効な開始位置を入力してください</string>
+    <string name="msg_null_questions">出題できる問題がありません。出題設定を変更してください</string>
+    <string name="reset_achievement">達成率のリセット</string>
+    <string name="msg_reset_achievement">達成率をリセットしました</string>
+
+</resources>

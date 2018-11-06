@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.activity_categorized.*
 
 class CategorizedActivity : ShowTestsActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_categorized)
