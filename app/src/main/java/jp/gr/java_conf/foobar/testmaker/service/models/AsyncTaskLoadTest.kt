@@ -37,7 +37,9 @@ open class AsyncTaskLoadTest(private var text: String,private var context: Conte
 
             try {
 
-                val backup = backups[i].replace("<br>".toRegex(), "\n").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().filter { s: String -> s != "" }
+                var backup = backups[i].replace("<br>".toRegex(), "\n").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().filter { s: String -> s != "" }
+
+                backup = backup.map { it.replace("<comma>",",") }
 
                 if (backup.size > 2) {
 

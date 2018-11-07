@@ -99,25 +99,25 @@ open class Test : RealmObject() {
             var lineWrite = StringBuilder()
 
             when (q.type) {
-                Constants.WRITE -> lineWrite = StringBuilder(context.getString(R.string.share_short_answers, q.problem, q.answer))
+                Constants.WRITE -> lineWrite = StringBuilder(context.getString(R.string.share_short_answers, q.problem.replace(",","<comma>"), q.answer.replace(",","<comma>")))
 
                 Constants.COMPLETE -> {
 
-                    lineWrite = StringBuilder(context.getString(R.string.share_multiple_answers, q.problem))
+                    lineWrite = StringBuilder(context.getString(R.string.share_multiple_answers, q.problem.replace(",","<comma>")))
 
                     for (k in 0 until q.answers.size) {
-                        lineWrite.append(q.answers[k]!!.selection).append(",")
+                        lineWrite.append(q.answers[k]!!.selection.replace(",","<comma>")).append(",")
                     }
                     lineWrite = StringBuilder(lineWrite.substring(0, lineWrite.length - 1))
                 }
                 Constants.SELECT -> if (q.auto) {
-                    lineWrite = StringBuilder(context.getString(R.string.share_selection_auto_problems, q.problem, q.answer, q.selections.size))
+                    lineWrite = StringBuilder(context.getString(R.string.share_selection_auto_problems, q.problem.replace(",","<comma>"), q.answer.replace(",","<comma>"), q.selections.size))
 
                 } else {
-                    lineWrite = StringBuilder(context.getString(R.string.share_selection_problems, q.problem, q.answer))
+                    lineWrite = StringBuilder(context.getString(R.string.share_selection_problems, q.problem.replace(",","<comma>"), q.answer.replace(",","<comma>")))
 
                     for (k in 0 until q.selections.size) {
-                        lineWrite.append(q.selections[k]!!.selection).append(",")
+                        lineWrite.append(q.selections[k]!!.selection.replace(",","<comma>")).append(",")
                     }
                     lineWrite = StringBuilder(lineWrite.substring(0, lineWrite.length - 1))
 
@@ -126,29 +126,29 @@ open class Test : RealmObject() {
                 Constants.SELECT_COMPLETE ->
 
                     if (q.auto) {
-                        lineWrite = StringBuilder(context.getString(R.string.share_select_complete_auto_problem, q.problem))
+                        lineWrite = StringBuilder(context.getString(R.string.share_select_complete_auto_problem, q.problem.replace(",","<comma>")))
 
                         lineWrite.append(q.selections.size.toString()).append(",")
 
                         for (k in 0 until q.answers.size) {
-                            lineWrite.append(q.answers[k]!!.selection).append(",")
+                            lineWrite.append(q.answers[k]!!.selection.replace(",","<comma>")).append(",")
                         }
 
                         lineWrite = StringBuilder(lineWrite.substring(0, lineWrite.length - 1))
 
                     } else {
-                        lineWrite = StringBuilder(context.getString(R.string.share_select_complete_problem, q.problem))
+                        lineWrite = StringBuilder(context.getString(R.string.share_select_complete_problem, q.problem.replace(",","<comma>")))
 
                         lineWrite.append(q.answers.size.toString()).append(",")
 
                         lineWrite.append(q.selections.size.toString()).append(",")
 
                         for (k in 0 until q.answers.size) {
-                            lineWrite.append(q.answers[k]!!.selection).append(",")
+                            lineWrite.append(q.answers[k]!!.selection.replace(",","<comma>")).append(",")
                         }
 
                         for (k in 0 until q.selections.size) {
-                            lineWrite.append(q.selections[k]!!.selection).append(",")
+                            lineWrite.append(q.selections[k]!!.selection.replace(",","<comma>")).append(",")
                         }
                         lineWrite = StringBuilder(lineWrite.substring(0, lineWrite.length - 1))
 

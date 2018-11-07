@@ -236,10 +236,10 @@
     <string name="alrady_removed_ad">купленный</string>
     <string name="error">ошибка</string>
     <string name="case_insensitive">case-insensitive</string>
-    <string name="position_start">開始位置</string>
-    <string name="message_null_start">有効な開始位置を入力してください</string>
-    <string name="msg_null_questions">出題できる問題がありません。出題設定を変更してください</string>
-    <string name="reset_achievement">達成率のリセット</string>
-    <string name="msg_reset_achievement">達成率をリセットしました</string>
+    <string name="position_start">Начальная позиция</string>
+    <string name="message_null_start">Недопустимая стартовая позиция</string>
+    <string name="msg_null_questions">Измените настройки</string>
+    <string name="reset_achievement">сброс Уровень достижения</string>
+    <string name="msg_reset_achievement">сброс Уровень достижения</string>
 
 </resources>
