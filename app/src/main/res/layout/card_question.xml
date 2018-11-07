@@ -29,6 +29,7 @@
                 android:layout_weight="1"
                 android:layout_marginLeft="@dimen/element_spacing_small"
                 android:layout_marginStart="@dimen/element_spacing_small"
+                android:textSize="@dimen/text_size_ssmall"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 />

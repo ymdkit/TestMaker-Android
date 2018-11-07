@@ -111,7 +111,7 @@ open class ShowTestsActivity : BaseActivity() {
         val checkCaseInsensitive = dialogLayout.findViewById<CheckBox>(R.id.check_case_insensitive)
         checkCaseInsensitive.isChecked = sharedPreferenceManager.isCaseInsensitive
         checkCaseInsensitive.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.isCaseInsensitive = isChecked }
-        if(Locale.getDefault().language == "ja")checkCaseInsensitive.visibility = View.GONE
+        if(Locale.getDefault().language != "en")checkCaseInsensitive.visibility = View.GONE
 
         val actionNormal = dialogLayout.findViewById<Button>(R.id.action_normal)
         actionNormal.setOnClickListener { startAnswer(test, editStart.text.toString(),editLimit.text.toString(), false) }
