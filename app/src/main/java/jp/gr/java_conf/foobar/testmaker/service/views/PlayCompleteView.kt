@@ -55,6 +55,7 @@ class PlayCompleteView : LinearLayout {
                     inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
                 }// フォーカスが外れたとき
             }
+
         }
 
         button_judge.setOnClickListener {

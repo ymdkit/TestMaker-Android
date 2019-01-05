@@ -156,6 +156,8 @@ open class EditActivity : BaseActivity() {
 
                         sharedPreferenceManager.numAnswers = question.answers.size
 
+                        sharedPreferenceManager.isCheckOrder = question.isCheckOrder
+
                         edit_complete_view.reloadAnswers(question.answers.size)
 
                         edit_complete_view.setAnswers(question)
@@ -355,7 +357,7 @@ open class EditActivity : BaseActivity() {
 
                 if (edit_complete_view.isFilled()) {
 
-                    if(edit_complete_view.isDuplicate()){
+                    if(edit_complete_view.isDuplicate() && !sharedPreferenceManager.isCheckOrder){
 
                         Toast.makeText(applicationContext, getString(R.string.message_answer_duplicate), Toast.LENGTH_LONG).show()
 
@@ -365,6 +367,7 @@ open class EditActivity : BaseActivity() {
 
                     val p = StructQuestion(set_problem.text.toString(), edit_complete_view.getAnswers())
                     p.setImagePath(imagePath)
+                    p.isCheckOrder = sharedPreferenceManager.isCheckOrder
                     p.setExplanation(set_explanation.text.toString())
 
                     realmController.addQuestion(testId, p, questionId)
@@ -382,6 +385,7 @@ open class EditActivity : BaseActivity() {
 
                     val p = StructQuestion(set_problem.text.toString(), edit_select_complete_view.getAnswers(),edit_select_complete_view.getOthers())
                     p.setAuto(sharedPreferenceManager.auto)
+                    p.isCheckOrder = false //todo 後に実装
                     p.setImagePath(imagePath)
                     p.setExplanation(set_explanation.text.toString())
 
@@ -665,6 +669,11 @@ open class EditActivity : BaseActivity() {
 
                 val changeExplanation = dialogLayout.findViewById<SwitchCompat>(R.id.change_explanation)
 
+                val changeIsCheckOrder = dialogLayout.findViewById<SwitchCompat>(R.id.switch_is_check_order)
+
+                changeIsCheckOrder.isChecked = sharedPreferenceManager.isCheckOrder
+                changeIsCheckOrder.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.isCheckOrder = isChecked }
+
                 changeExplanation.isChecked = sharedPreferenceManager.explanation
                 changeExplanation.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.explanation = isChecked }
 
@@ -686,19 +695,20 @@ open class EditActivity : BaseActivity() {
 
                         changeAuto.visibility = View.GONE
 
-
                     }
                     Constants.SELECT,Constants.SELECT_COMPLETE -> {
 
                         number.text = (sharedPreferenceManager.numOthers + 1).toString()
 
                         sizeAnswerSelect.text = "${sharedPreferenceManager.numAnswersSelect}"
+
+                        dialogLayout.findViewById<LinearLayout>(R.id.layout_is_check_order).visibility = View.GONE
                     }
 
                 }
 
                 addSelect.setOnClickListener {
-                    if(Integer.parseInt(sizeAnswerSelect.text.toString())+1 < Integer.parseInt(number.text.toString())){
+                    if(Integer.parseInt(sizeAnswerSelect.text.toString()) < Integer.parseInt(number.text.toString())){
                         sizeAnswerSelect.text = "${Integer.parseInt(sizeAnswerSelect.text.toString())+1}"
                     }
                 }
@@ -743,7 +753,7 @@ open class EditActivity : BaseActivity() {
                         }
                         Constants.SELECT,Constants.SELECT_COMPLETE -> {
 
-                            if(Integer.parseInt(number.text.toString()) <= Integer.parseInt(sizeAnswerSelect.text.toString())){
+                            if(Integer.parseInt(number.text.toString()) < Integer.parseInt(sizeAnswerSelect.text.toString())){
 
                                 Toast.makeText(applicationContext, getString(R.string.message_answers_num), Toast.LENGTH_SHORT).show()
 
@@ -822,7 +832,6 @@ open class EditActivity : BaseActivity() {
                     edit_select_view.setAuto(sharedPreferenceManager.auto,sharedPreferenceManager.numOthers)
 
                 }
-
 
 
                 button_type.text = getString(R.string.action_write)

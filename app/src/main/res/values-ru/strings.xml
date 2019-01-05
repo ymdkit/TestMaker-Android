@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">тест студия</string>
-    <string name="add_exam">прибавление тест</string>
+    <string name="app_name">ТестМейкер</string>
+    <string name="add_exam">Добавить новый тест</string>
     <string name="edit_exam">редактирование тест</string>
     <string name="delete_exam">делеция тест</string>
     <string name="message_delete_exam">делеция: %1$s ?</string>
     <string name="message_share_exam">Преобразование текста「 %1$s 」</string>
     <string name="edit_color">цвет</string>
     <string name="category">классификация</string>
-    <string name="action_add">+ прибавление</string>
+    <string name="action_add">+ Добавить новый</string>
     <string name="action_choose">выбор вопрос</string>
     <string name="action_write">Один вопрос ответа</string>
     <string name="action_detail">настройки</string>
@@ -15,7 +15,7 @@
     <string name="action_next">следующий</string>
     <string name="action_right">Правильный ответ</string>
     <string name="action_wrong">Неверный ответ</string>
-    <string name="add_question">прибавление вопрос</string>
+    <string name="add_question">Добавить новый вопрос</string>
     <string name="edit_question">редактирование вопрос</string>
     <string name="delete_question">делеция вопрос</string>
     <string name="save_question">Сохранить</string>
@@ -241,5 +241,8 @@
     <string name="msg_null_questions">Измените настройки</string>
     <string name="reset_achievement">сброс Уровень достижения</string>
     <string name="msg_reset_achievement">сброс Уровень достижения</string>
+    <string name="is_check_order">проверить заказ ответа</string>
+    <string name="share_multiple_answers_order">multiple answers order</string>
+    <string name="load_multiple_answers_order">multiple answers order</string>
 
 </resources>

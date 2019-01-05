@@ -55,6 +55,15 @@ open class AsyncTaskLoadTest(private var text: String,private var context: Conte
 
                         }
 
+                    } else if (backup[0] == context.getString(R.string.load_multiple_answers_order)) {
+                        if (backup.size - 2 <= Constants.ANSWER_MAX) {
+
+                            q.setStructQuestion(backup[1], backup.drop(2).toTypedArray(), resultNumber)
+                            q.problems[resultNumber].isCheckOrder = true
+                            resultNumber += 1
+
+                        }
+
                     } else if (backup[0] == context.getString(R.string.load_selection_problems)) {
 
                         if (backup.size - 3 <= Constants.OTHER_SELECT_MAX) {

@@ -320,6 +320,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         question.setAnswers(problem.answers)
         question.correct = false
         question.auto = problem.auto
+        question.isCheckOrder = problem.isCheckOrder
 
         if (question.imagePath != problem.imagePath) {
 
@@ -383,7 +384,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     }
 
-    fun convert(structTest: StructTest, testId: Long) {
+    fun convert(structTest: StructTest, testId: Long) { //structTest を　Test に変換
 
         realm.beginTransaction()
 
@@ -431,6 +432,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
             q.problem = structTest.problems[j].question
             q.answer = structTest.problems[j].answer
             q.auto = structTest.problems[j].auto
+            q.isCheckOrder = structTest.problems[j].isCheckOrder
             q.type = structTest.problems[j].type
             q.setSelections(structTest.problems[j].others)
             q.setAnswers(structTest.problems[j].answers)

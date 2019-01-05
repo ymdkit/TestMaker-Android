@@ -25,7 +25,7 @@
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/set_answer_1"
-            android:hint="@string/hint_answer"
+            android:hint="@string/hint_answer1"
             style="@style/MyEditTextSingleLine"
             />
 
@@ -42,7 +42,7 @@
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/set_answer_2"
-            android:hint="@string/hint_answer"
+            android:hint="@string/hint_answer2"
             style="@style/MyEditTextSingleLine"
             />
 
@@ -61,7 +61,7 @@
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/set_answer_3"
-            android:hint="@string/hint_answer"
+            android:hint="@string/hint_answer3"
             style="@style/MyEditTextSingleLine"
             />
 
@@ -79,7 +79,7 @@
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/set_answer_4"
-            android:hint="@string/hint_answer"
+            android:hint="@string/hint_answer4"
             style="@style/MyEditTextSingleLine"
             />
 

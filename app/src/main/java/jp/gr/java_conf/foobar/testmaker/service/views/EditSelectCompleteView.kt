@@ -55,12 +55,12 @@ class EditSelectCompleteView : RelativeLayout {
     }
 
     private fun getNumAnswers(): Int{
-        return editSelectCompletes.filter { editText -> editText?.hint == context.getString(R.string.hint_answer)}.size
+        return editSelectCompletes.filter { editText -> editText?.hint?.contains(context.getString(R.string.hint_answer)) == true}.size
     }
 
     fun setSelections(answers: RealmList<Select>,others: RealmList<Select>){
 
-        editSelectCompletes.filter { editText -> editText?.hint == context.getString(R.string.hint_answer) }
+        editSelectCompletes.filter { editText -> editText?.hint?.contains(context.getString(R.string.hint_answer)) == true }
                 .forEachIndexed { index, editText -> editText?.setText(answers[index]?.selection) }
 
         editSelectCompletes.filterIndexed { index, editText -> editText?.hint == context.getString(R.string.hint_other) && textInputLayouts[index]?.visibility == View.VISIBLE }
@@ -86,7 +86,7 @@ class EditSelectCompleteView : RelativeLayout {
 
         for (i in 0 until limit) {
 
-            if(editSelectCompletes[i]?.hint == context.getString(R.string.hint_answer))continue
+            if(editSelectCompletes[i]?.hint?.contains(context.getString(R.string.hint_answer)) == true)continue
 
             editSelectCompletes[i]?.setText(context.getString(R.string.state_auto))
             editSelectCompletes[i]?.isEnabled = false
@@ -97,7 +97,7 @@ class EditSelectCompleteView : RelativeLayout {
     private fun disableAuto(limit: Int){
 
         for (i in 0 until limit) {
-            if(editSelectCompletes[i]?.hint == context.getString(R.string.hint_answer))continue
+            if(editSelectCompletes[i]?.hint?.contains(context.getString(R.string.hint_answer)) == true)continue
 
             if (editSelectCompletes[i]?.text.toString() == context.getString(R.string.state_auto)) editSelectCompletes[i]?.setText("")
 
@@ -115,7 +115,7 @@ class EditSelectCompleteView : RelativeLayout {
 
             if(editText?.isEnabled!! && editText.text.toString() == context.getString(R.string.state_auto))editText.setText("")
 
-            editText.hint = if(index < numAnswers) context.getString(R.string.hint_answer) else context.getString(R.string.hint_other)
+            editText.hint = if(index < numAnswers) context.getString(R.string.hint_answer) + (index+1).toString() else context.getString(R.string.hint_other)
         }
 
     }

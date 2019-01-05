@@ -186,4 +186,31 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/layout_is_check_order"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/element_spacing_very_large"
+        >
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="center_vertical"
+            android:text="@string/is_check_order"
+            />
+
+
+        <android.support.v7.widget.SwitchCompat
+            android:layout_weight="3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:id="@+id/switch_is_check_order" />
+
+    </LinearLayout>
+
 </LinearLayout>

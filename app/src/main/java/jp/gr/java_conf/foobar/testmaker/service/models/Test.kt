@@ -103,7 +103,7 @@ open class Test : RealmObject() {
 
                 Constants.COMPLETE -> {
 
-                    lineWrite = StringBuilder(context.getString(R.string.share_multiple_answers, q.problem.replace(",","<comma>")))
+                    lineWrite = StringBuilder(context.getString(if(q.isCheckOrder) R.string.share_multiple_answers_order else R.string.share_multiple_answers, q.problem.replace(",","<comma>")))
 
                     for (k in 0 until q.answers.size) {
                         lineWrite.append(q.answers[k]!!.selection.replace(",","<comma>")).append(",")

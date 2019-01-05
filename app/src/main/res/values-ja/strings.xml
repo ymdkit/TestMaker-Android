@@ -58,6 +58,7 @@
     <string name="message_auto">他の問題の答えが選択肢になります</string>
     <string name="message_not_auto">問題数不足で自動生成できません</string>
     <string name="message_explanation">・解説文を入れる</string>
+    <string name="is_check_order">・解答順を正誤判定に含める</string>
     <string name="message_paste">共有機能で作成したテキストを\nここに貼り付けてください</string>
     <string name="message_order">順番通りに出題</string>
     <string name="message_random">ランダムに出題</string>
@@ -163,7 +164,7 @@
     <string name="help_url">https://banira0428.wixsite.com/testmaker/help</string>
     <string name="show_never">次回からこのダイアログを表示しない</string>
     <string name="alert_save_text">テキスト形式で保存した場合、画像データと達成率のデータは失われてしまいます。</string>
-    <string name="message_answers_num">解答の数を選択肢の数未満にしてください</string>
+    <string name="message_answers_num">解答の数を選択肢の数以下にしてください</string>
     <string name="share_select_complete_auto_problem">選択完答A,%1$s,</string>
     <string name="share_select_complete_problem">選択完答,%1$s,</string>
     <string name="load_select_complete_problem">選択完答</string>
@@ -248,5 +249,7 @@
     <string name="msg_null_questions">出題できる問題がありません。出題設定を変更してください</string>
     <string name="reset_achievement">達成率のリセット</string>
     <string name="msg_reset_achievement">達成率をリセットしました</string>
+    <string name="share_multiple_answers_order">記述B,%1$s,</string>
+    <string name="load_multiple_answers_order">記述B</string>
 
 </resources>

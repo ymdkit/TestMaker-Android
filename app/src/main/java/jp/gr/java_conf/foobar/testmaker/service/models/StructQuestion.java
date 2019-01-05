@@ -19,6 +19,7 @@ public class StructQuestion implements Serializable {
     public boolean light;
     public boolean auto;
     private int order;
+    public boolean isCheckOrder = false;
 
     public StructQuestion(String q, String a) {
         question = q;

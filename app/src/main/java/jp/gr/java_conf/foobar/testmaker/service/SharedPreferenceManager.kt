@@ -32,6 +32,11 @@ class SharedPreferenceManager(context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("explanation", f)
                 .apply()
 
+    var isCheckOrder: Boolean
+        get() = sharedPreferences.getBoolean("isCheckOrder", false)
+        set(f) = sharedPreferences.edit().putBoolean("isCheckOrder", f)
+                .apply()
+
     var manual: Boolean
         get() = sharedPreferences.getBoolean("manual", false)
         set(f) = sharedPreferences.edit().putBoolean("manual", f)

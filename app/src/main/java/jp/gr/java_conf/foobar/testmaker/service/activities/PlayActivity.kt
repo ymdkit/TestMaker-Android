@@ -163,7 +163,21 @@ class PlayActivity : BaseActivity() {
 
         if(loop) loop = answers.size == questions[number].answers.size //必要条件だけ答えてもダメ
 
-        if(loop) loop = answers.distinct().size == answers.size //同じ解答を繰り返してもダメs
+        if(questions[number].isCheckOrder){
+
+            for((index,answer) in answers.withIndex()){
+
+                if(answer != questions[number].answers[index]?.selection){
+                    loop = false
+                    break
+                }
+
+            }
+
+        }else{
+            if(loop) loop = answers.distinct().size == answers.size //同じ解答を繰り返してもダメ
+
+        }
 
         if (loop) {
 

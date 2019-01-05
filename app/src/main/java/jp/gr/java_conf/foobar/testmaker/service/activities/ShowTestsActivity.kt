@@ -35,6 +35,8 @@ open class ShowTestsActivity : BaseActivity() {
 
             override fun onClickPlayTest(id: Long) {
 
+                sendFirebaseEvent("play")
+
                 val test = realmController.getTest(id)
 
                 if (test.getQuestions().size == 0) {
@@ -50,6 +52,8 @@ open class ShowTestsActivity : BaseActivity() {
 
             override fun onClickEditTest(id: Long) {
 
+                sendFirebaseEvent("edit")
+
                 val i = Intent(this@ShowTestsActivity, EditActivity::class.java)
 
                 i.putExtra("testId", id)
@@ -58,6 +62,8 @@ open class ShowTestsActivity : BaseActivity() {
             }
 
             override fun onClickDeleteTest(id: Long) {
+
+                sendFirebaseEvent("delete")
 
                 val test = realmController.getTest(id)
 

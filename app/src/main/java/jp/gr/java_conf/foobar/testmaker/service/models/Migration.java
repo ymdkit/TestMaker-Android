@@ -168,6 +168,19 @@ public class Migration implements RealmMigration {
 
         }
 
+        if(oldVersion == 9){
+
+            RealmObjectSchema testSchema = schema.get("Quest");
+
+            testSchema
+                    .addField("isCheckOrder", Boolean.class, FieldAttribute.REQUIRED)
+                    .transform(obj -> obj.set("isCheckOrder", false));
+
+
+            oldVersion++;
+
+        }
+
 
         //schemaVersion変えるの忘れるな(MyApplication内)
 

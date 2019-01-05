@@ -171,6 +171,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 button_upload.setImageResource(R.drawable.ic_expand_more_black)
 
                 sendEvent("createTest")
+                sendFirebaseEvent("add-test")
 
             }
 

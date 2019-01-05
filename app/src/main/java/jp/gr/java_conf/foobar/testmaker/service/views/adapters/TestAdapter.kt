@@ -77,6 +77,8 @@ class TestAdapter(private val context: Context) : ScrambleAdapter.AbsViewHolderF
 
         holder.share.setOnClickListener {
 
+
+
             Toast.makeText(context, context.getString(R.string.message_share_exam, data.title), Toast.LENGTH_LONG).show()
 
             try {

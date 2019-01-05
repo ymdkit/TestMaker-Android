@@ -248,6 +248,9 @@
     <string name="msg_null_questions">non exist available questions</string>
     <string name="reset_achievement">reset achievement</string>
     <string name="msg_reset_achievement">reset achievement</string>
+    <string name="is_check_order">check answer order</string>
+    <string name="share_multiple_answers_order">multiple answers order,%1$s,</string>
+    <string name="load_multiple_answers_order">multiple answers order</string>
 
 
 </resources>

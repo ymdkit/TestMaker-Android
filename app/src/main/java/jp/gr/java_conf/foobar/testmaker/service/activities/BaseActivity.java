@@ -12,6 +12,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import jp.gr.java_conf.foobar.testmaker.service.R;
 import jp.gr.java_conf.foobar.testmaker.service.SharedPreferenceManager;
@@ -29,6 +30,8 @@ public class BaseActivity extends AppCompatActivity {
 
     public SharedPreferenceManager sharedPreferenceManager;
 
+    protected FirebaseAnalytics firebaseAnalytic;
+
     final static int REQUEST_CODE_AUTH = 1;
 
     @Override
@@ -40,6 +43,8 @@ public class BaseActivity extends AppCompatActivity {
         realmController = new RealmController(getApplicationContext(), app.getConfig());
 
         sharedPreferenceManager = new SharedPreferenceManager(this);
+
+        firebaseAnalytic = FirebaseAnalytics.getInstance(this);
 
         Studyplus.getInstance().setup("U6867w2Zt2tT2CRjJRteaMAUCvnEDfXZ", "d9cCv8aZCDaUL56bhZY5HBnzktpzpYefVAn3hV5hjjqmWhF97j985wyuMjLExLvQ");
 
@@ -64,6 +69,12 @@ public class BaseActivity extends AppCompatActivity {
                 .setAction(action)
                 .build());
 
+
+    }
+
+    protected void sendFirebaseEvent(String event){
+
+        firebaseAnalytic.logEvent(event, new Bundle());
 
     }
 
