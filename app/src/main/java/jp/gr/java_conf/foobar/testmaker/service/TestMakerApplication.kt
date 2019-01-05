@@ -26,7 +26,7 @@ class TestMakerApplication : MultiDexApplication() {
         Realm.init(this)
 
         config = RealmConfiguration.Builder()
-                .schemaVersion(9)
+                .schemaVersion(10)
                 .build()
 
         try {
