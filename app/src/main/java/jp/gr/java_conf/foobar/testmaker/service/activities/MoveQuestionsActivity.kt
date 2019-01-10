@@ -3,6 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.activities
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -75,8 +76,6 @@ class MoveQuestionsActivity : BaseActivity() {
 
         button_save.setOnClickListener { _ ->
 
-            //todo 同じ問題集が選択された時の処理
-
             if(spinner_to_test.selectedItemPosition -1 == spinner_from_test.selectedItemPosition){
 
                 Toast.makeText(baseContext,getString(R.string.msg_same_test),Toast.LENGTH_SHORT).show()
@@ -86,7 +85,11 @@ class MoveQuestionsActivity : BaseActivity() {
 
             if(realmController.list.size < 1) return@setOnClickListener
 
+
+
             val selectedQuestions = questionAdapter.getItems().filterIndexed { index, _ ->  questionAdapter.checkBoxStates[index]}
+
+            Log.d("questionsnum","${questionAdapter.getItems().size}")
 
             if(spinner_to_test.selectedItemPosition == 0){
 
@@ -103,6 +106,8 @@ class MoveQuestionsActivity : BaseActivity() {
             if(spinner_actions.selectedItemPosition == 0){//「移動先」の時
 
                 realmController.removeQuestions(fromTest.id,questionAdapter.checkBoxStates)
+
+                //todo resetorder
 
             }
 

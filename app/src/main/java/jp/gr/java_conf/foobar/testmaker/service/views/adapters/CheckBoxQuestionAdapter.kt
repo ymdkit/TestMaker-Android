@@ -43,6 +43,11 @@ class CheckBoxQuestionAdapter(private val context: Context, private val array: A
 
         }
 
+        checkBox.setOnCheckedChangeListener { _, _ ->
+
+            checkBoxStates[position] = checkBox.isChecked
+        }
+
     }
 
     class ViewHolder(v: View): RecyclerView.ViewHolder(v) {

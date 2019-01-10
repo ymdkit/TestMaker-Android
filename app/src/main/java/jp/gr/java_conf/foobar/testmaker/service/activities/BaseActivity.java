@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -44,7 +45,10 @@ public class BaseActivity extends AppCompatActivity {
 
         sharedPreferenceManager = new SharedPreferenceManager(this);
 
-        firebaseAnalytic = FirebaseAnalytics.getInstance(this);
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            firebaseAnalytic = FirebaseAnalytics.getInstance(this);
+        }
+
 
         Studyplus.getInstance().setup("U6867w2Zt2tT2CRjJRteaMAUCvnEDfXZ", "d9cCv8aZCDaUL56bhZY5HBnzktpzpYefVAn3hV5hjjqmWhF97j985wyuMjLExLvQ");
 
@@ -74,8 +78,9 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void sendFirebaseEvent(String event){
 
-        firebaseAnalytic.logEvent(event, new Bundle());
-
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            firebaseAnalytic.logEvent(event, new Bundle());
+        }
     }
 
     protected void initToolBar(){
