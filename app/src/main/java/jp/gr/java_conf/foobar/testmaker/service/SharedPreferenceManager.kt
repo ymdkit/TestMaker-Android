@@ -67,7 +67,7 @@ class SharedPreferenceManager(context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("confirmSave", f)
                 .apply()
 
-    var confirmNotes: Boolean
+    var confirmNotes: Boolean //投稿前の確認
         get() = sharedPreferences.getBoolean("confirmNotes", false)
         set(f) = sharedPreferences.edit().putBoolean("confirmNotes", f)
                 .apply()
