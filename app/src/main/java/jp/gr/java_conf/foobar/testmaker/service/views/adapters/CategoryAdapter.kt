@@ -38,7 +38,6 @@ class CategoryAdapter(private val context: Context, private val mRealmController
         return ViewHolder(layoutInflater.inflate(R.layout.list_cate, parent, false))
     }
 
-    // 4
     override fun getItemCount(): Int {
         return mRealmController.cateList.size
     }

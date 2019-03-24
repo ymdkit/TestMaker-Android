@@ -5,9 +5,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.CategorizedAdapter
+import jp.gr.java_conf.foobar.testmaker.service.views.adapters.TestAndFolderAdapter
 import kotlinx.android.synthetic.main.activity_categorized.*
 
 class CategorizedActivity : ShowTestsActivity() {
+
+    private lateinit var adapter: TestAndFolderAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,9 +30,11 @@ class CategorizedActivity : ShowTestsActivity() {
 
         )
 
+        initTestAndFolderAdapter(realmController.getCategorizedList(intent.getStringExtra("category")),ArrayList())
+
         recycler_view.layoutManager = LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
-        recycler_view.adapter = parentAdapter
+        recycler_view.adapter = testAndFolderAdapter
 
     }
 

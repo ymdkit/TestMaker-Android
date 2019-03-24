@@ -14,14 +14,19 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.models.Cate
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.TestAdapter
+import jp.gr.java_conf.foobar.testmaker.service.views.adapters.TestAndFolderAdapter
 import net.cattaka.android.adaptertoolbox.adapter.ScrambleAdapter
 import java.util.*
+import kotlin.collections.ArrayList
 
 open class ShowTestsActivity : BaseActivity() {
 
     internal lateinit var testAdapter: TestAdapter
+
+    internal lateinit var testAndFolderAdapter: TestAndFolderAdapter
 
     internal var parentAdapter: ScrambleAdapter<*>? = null
 
@@ -82,6 +87,94 @@ open class ShowTestsActivity : BaseActivity() {
 
             }
         })
+    }
+
+    protected fun initTestAndFolderAdapter(tests: ArrayList<Test>,categories: ArrayList<Cate>){
+
+        testAndFolderAdapter = TestAndFolderAdapter(this)
+
+        testAndFolderAdapter.tests = tests
+        testAndFolderAdapter.categories = categories
+
+        testAndFolderAdapter.setOnClickListener(object :TestAndFolderAdapter.OnClickListener{
+
+            override fun onClickPlayTest(id: Long) {
+
+                sendFirebaseEvent("play")
+
+                val test = realmController.getTest(id)
+
+                if (test.getQuestions().size == 0) {
+
+                    Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
+
+                } else {
+
+                    initDialogPlayStart(test)
+
+                }
+            }
+
+            override fun onClickEditTest(id: Long) {
+
+                sendFirebaseEvent("edit")
+
+                val i = Intent(this@ShowTestsActivity, EditActivity::class.java)
+
+                i.putExtra("testId", id)
+
+                startActivityForResult(i, REQUEST_EDIT)
+            }
+
+            override fun onClickDeleteTest(id: Long) {
+
+                sendFirebaseEvent("delete")
+
+                val test = realmController.getTest(id)
+
+                val builder = AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
+                builder.setTitle(getString(R.string.delete_exam))
+                builder.setMessage(getString(R.string.message_delete_exam, test.title))
+                builder.setPositiveButton(android.R.string.ok) { _, _ ->
+
+                    realmController.deleteTest(test)
+
+                    testAndFolderAdapter.notifyDataSetChanged()
+
+                }
+                builder.setNegativeButton(android.R.string.cancel, null)
+                builder.create().show()
+
+            }
+
+            override fun onClickShareTest(id: Long) {
+                val test = realmController.getTest(id)
+
+                Toast.makeText(baseContext, getString(R.string.message_share_exam, test.title), Toast.LENGTH_LONG).show()
+
+                try {
+                    val intent = Intent()
+                    intent.action = Intent.ACTION_SEND
+                    intent.type = "text/plain"
+
+                    intent.putExtra(Intent.EXTRA_TEXT, test.testToString(baseContext, false))
+                    startActivity(intent)
+
+                } catch (e: Exception) {
+                    Log.d("tag", "Error")
+                }
+
+            }
+
+            override fun onClickOpen(category: String) {
+                val i = Intent(this@ShowTestsActivity, CategorizedActivity::class.java)
+                i.putExtra("category", category)
+
+                startActivityForResult(i, REQUEST_EDIT)
+            }
+        })
+
+
     }
 
     private fun initDialogPlayStart(test: Test) {
