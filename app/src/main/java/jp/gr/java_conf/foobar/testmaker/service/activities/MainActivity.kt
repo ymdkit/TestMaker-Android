@@ -22,8 +22,6 @@ import jp.gr.java_conf.foobar.testmaker.service.BillingManager.BILLING_MANAGER_N
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
-import jp.gr.java_conf.foobar.testmaker.service.views.adapters.FolderAdapter
-import jp.gr.java_conf.foobar.testmaker.service.views.adapters.MyScrambleAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_edit_test.*
 import java.io.*
@@ -66,30 +64,14 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
         initViews()
 
-        initTestAdapter()
-
-        val folderAdapter = FolderAdapter(this, realmController)
-
-        parentAdapter = MyScrambleAdapter(this, realmController.mixedList, null, realmController,
-                testAdapter,
-                folderAdapter
-        )
-
-        folderAdapter.setOnClickListener(object : FolderAdapter.OnClickListener {
-            override fun onClick(category: String) {
-
-                val i = Intent(this@MainActivity, CategorizedActivity::class.java)
-                i.putExtra("category", category)
-
-                startActivityForResult(i, REQUEST_EDIT)
-
-            }
-
+        initTestAndFolderAdapter(setValue = {
+            testAndFolderAdapter.tests = realmController.nonCategorizedTests
+            testAndFolderAdapter.categories = realmController.existingCateList
         })
 
         recycler_view.layoutManager = LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
-        recycler_view.adapter = parentAdapter
+        recycler_view.adapter = testAndFolderAdapter
 
     }
 
@@ -121,7 +103,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         button_category.tag = ""
         button_category.setOnClickListener {
             inputMethodManager.hideSoftInputFromWindow(edit_title.windowToken, 0)
-            val categoryEditor = CategoryEditor(this@MainActivity, button_category, realmController, parentAdapter)
+            val categoryEditor = CategoryEditor(this@MainActivity, button_category, realmController, testAndFolderAdapter)
             categoryEditor.setCategory()
         }
 
@@ -159,7 +141,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                 Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
 
-                parentAdapter?.notifyDataSetChanged()
+                testAndFolderAdapter.setValue()
 
                 edit_title.setText("")
                 button_category.tag = ""
@@ -354,7 +336,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         if (resultCode == Activity.RESULT_CANCELED) {
-            parentAdapter?.notifyDataSetChanged()
+            testAndFolderAdapter.setValue()
 
             drawer_layout.closeDrawers()
         }
@@ -407,7 +389,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                 realmController.convert(result, -1)
 
-                parentAdapter?.notifyDataSetChanged()
+                testAndFolderAdapter.setValue()
 
             }
 
@@ -433,9 +415,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     }
 
     public override fun onDestroy() {
-
         billingManager.destroy()
-
         super.onDestroy()
     }
 

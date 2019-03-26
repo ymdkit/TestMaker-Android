@@ -13,18 +13,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-
-import net.cattaka.android.adaptertoolbox.adapter.ScrambleAdapter
-
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.views.ColorChooser
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.CategoryAdapter
+import jp.gr.java_conf.foobar.testmaker.service.views.adapters.TestAndFolderAdapter
 
 /**
  * Created by keita on 2017/05/20.
  */
 
-class CategoryEditor(private val context: Context, private val buttonCate: Button, private val realmController: RealmController, private val categoryAdapter: ScrambleAdapter<*>?) {
+class CategoryEditor(private val context: Context, private val buttonCate: Button, private val realmController: RealmController, private val categoryAdapter: TestAndFolderAdapter?) {
     private var buttonColor: ImageButton? = null
     private var colorChooser: ColorChooser? = null
 

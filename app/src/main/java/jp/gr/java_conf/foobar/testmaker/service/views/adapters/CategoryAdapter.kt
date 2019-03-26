@@ -10,16 +10,13 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-
-import net.cattaka.android.adaptertoolbox.adapter.ScrambleAdapter
-
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.RealmController
 
 /**
  * Created by keita on 2016/06/19.
  */
-class CategoryAdapter(private val context: Context, private val mRealmController: RealmController, private val mainAdapter: ScrambleAdapter<*>?) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryAdapter(private val context: Context, private val mRealmController: RealmController, private val mainAdapter: TestAndFolderAdapter?) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -67,7 +64,9 @@ class CategoryAdapter(private val context: Context, private val mRealmController
 
             notifyDataSetChanged()
 
-            mainAdapter?.notifyDataSetChanged()
+            mainAdapter?.let{
+                it.setValue()
+            }
 
         }
 

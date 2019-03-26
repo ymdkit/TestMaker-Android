@@ -21,7 +21,7 @@ import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
  * Created by keita on 2017/05/21.
  */
 
-class TestAndFolderAdapter(private val context: Context) : RecyclerView.Adapter<TestAndFolderAdapter.ViewHolder>() {
+class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit) : RecyclerView.Adapter<TestAndFolderAdapter.ViewHolder>() {
 
     private var listener: OnClickListener? = null
 

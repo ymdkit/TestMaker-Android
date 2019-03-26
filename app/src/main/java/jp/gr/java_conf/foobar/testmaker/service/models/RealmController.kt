@@ -59,10 +59,9 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
             return ArrayList(realm.where(Cate::class.java).findAll().sort("category"))
         }
 
-    val mixedList: List<Any>
+    val existingCateList: ArrayList<Cate>
         get() {
-
-            val items = ArrayList<Any>()
+            val items = ArrayList<Cate>()
 
             for (cate in cateList) {
                 for (test in list) {
@@ -72,21 +71,23 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
                     }
                 }
             }
+            return items
+        }
+
+    val nonCategorizedTests: ArrayList<Test>
+        get() {
+
+            val items = ArrayList<Test>()
 
             outside@ for (test in list) {
 
                 for (cate in cateList) {
                     if (cate.category == test.getCategory()) {
-
                         continue@outside
-
                     }
                 }
-
                 items.add(test)
-
             }
-
             return items
         }
 

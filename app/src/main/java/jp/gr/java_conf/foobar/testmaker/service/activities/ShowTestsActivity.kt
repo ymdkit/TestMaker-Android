@@ -1,6 +1,5 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.support.v7.app.AlertDialog
@@ -14,87 +13,19 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.models.Cate
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
-import jp.gr.java_conf.foobar.testmaker.service.views.adapters.TestAdapter
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.TestAndFolderAdapter
-import net.cattaka.android.adaptertoolbox.adapter.ScrambleAdapter
 import java.util.*
-import kotlin.collections.ArrayList
 
 open class ShowTestsActivity : BaseActivity() {
 
-    internal lateinit var testAdapter: TestAdapter
-
     internal lateinit var testAndFolderAdapter: TestAndFolderAdapter
 
-    internal var parentAdapter: ScrambleAdapter<*>? = null
+    protected fun initTestAndFolderAdapter(setValue: () -> Unit){
 
-    internal val REQUEST_EDIT = 11111
+        testAndFolderAdapter = TestAndFolderAdapter(this,setValue)
 
-    protected fun initTestAdapter() {
-
-        testAdapter = TestAdapter(this)
-
-        testAdapter.setOnClickListener(object : TestAdapter.OnClickListener {
-
-            override fun onClickPlayTest(id: Long) {
-
-                sendFirebaseEvent("play")
-
-                val test = realmController.getTest(id)
-
-                if (test.getQuestions().size == 0) {
-
-                    Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
-
-                } else {
-
-                    initDialogPlayStart(test)
-
-                }
-            }
-
-            override fun onClickEditTest(id: Long) {
-
-                sendFirebaseEvent("edit")
-
-                val i = Intent(this@ShowTestsActivity, EditActivity::class.java)
-
-                i.putExtra("testId", id)
-
-                startActivityForResult(i, REQUEST_EDIT)
-            }
-
-            override fun onClickDeleteTest(id: Long) {
-
-                sendFirebaseEvent("delete")
-
-                val test = realmController.getTest(id)
-
-                val builder = AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
-                builder.setTitle(getString(R.string.delete_exam))
-                builder.setMessage(getString(R.string.message_delete_exam, test.title))
-                builder.setPositiveButton(android.R.string.ok) { _, _ ->
-
-                    realmController.deleteTest(test)
-
-                    if (parentAdapter != null) parentAdapter!!.notifyDataSetChanged()
-
-                }
-                builder.setNegativeButton(android.R.string.cancel, null)
-                builder.create().show()
-
-            }
-        })
-    }
-
-    protected fun initTestAndFolderAdapter(tests: ArrayList<Test>,categories: ArrayList<Cate>){
-
-        testAndFolderAdapter = TestAndFolderAdapter(this)
-
-        testAndFolderAdapter.tests = tests
-        testAndFolderAdapter.categories = categories
+        testAndFolderAdapter.setValue()
 
         testAndFolderAdapter.setOnClickListener(object :TestAndFolderAdapter.OnClickListener{
 
@@ -138,8 +69,7 @@ open class ShowTestsActivity : BaseActivity() {
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
                     realmController.deleteTest(test)
-
-                    testAndFolderAdapter.notifyDataSetChanged()
+                    testAndFolderAdapter.setValue()
 
                 }
                 builder.setNegativeButton(android.R.string.cancel, null)
@@ -288,9 +218,7 @@ open class ShowTestsActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == Activity.RESULT_CANCELED) if (parentAdapter != null) parentAdapter!!.notifyDataSetChanged()
-
-        if (requestCode == REQUEST_EDIT) if (parentAdapter != null) parentAdapter!!.notifyDataSetChanged()
+        testAndFolderAdapter.setValue()
 
     }
 
@@ -308,13 +236,17 @@ open class ShowTestsActivity : BaseActivity() {
 
                         sharedPreferenceManager.sort = which
 
-                        if (parentAdapter != null) parentAdapter!!.notifyDataSetChanged()
+                        testAndFolderAdapter.setValue()
 
                     }.show()
 
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        const val REQUEST_EDIT = 11111
     }
 
 }
