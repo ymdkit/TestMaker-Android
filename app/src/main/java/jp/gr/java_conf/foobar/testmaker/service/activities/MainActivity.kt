@@ -29,14 +29,6 @@ import java.io.*
 
 class MainActivity : ShowTestsActivity(), BillingProvider {
 
-    override fun getBillingManager(): BillingManager {
-        return billingManager
-    }
-
-    override fun isPremiumPurchased(): Boolean {
-        return sharedPreferenceManager.isRemovedAd
-    }
-
     private lateinit var inputMethodManager: InputMethodManager
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
@@ -417,6 +409,14 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     public override fun onDestroy() {
         billingManager.destroy()
         super.onDestroy()
+    }
+
+    override fun getBillingManager(): BillingManager {
+        return billingManager
+    }
+
+    override fun isPremiumPurchased(): Boolean {
+        return sharedPreferenceManager.isRemovedAd
     }
 
     fun removeAd() {
