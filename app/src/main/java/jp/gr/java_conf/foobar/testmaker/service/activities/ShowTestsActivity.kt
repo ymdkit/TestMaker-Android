@@ -91,7 +91,9 @@ open class ShowTestsActivity : BaseActivity() {
                     startActivity(intent)
 
                 } catch (e: Exception) {
-                    Log.d("tag", "Error")
+
+                    sendFirebaseEvent("export error: $e")
+
                 }
 
             }
