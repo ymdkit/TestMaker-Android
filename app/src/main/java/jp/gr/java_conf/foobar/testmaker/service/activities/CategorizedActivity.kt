@@ -23,6 +23,7 @@ class CategorizedActivity : ShowTestsActivity() {
 
             testAndFolderAdapter.tests = realmController.getCategorizedList(intent.getStringExtra("category"))
             testAndFolderAdapter.categories = ArrayList()
+            testAndFolderAdapter.allTests = realmController.list
 
         })
 

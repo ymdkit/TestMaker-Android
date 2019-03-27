@@ -35,6 +35,12 @@ class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit
             notifyDataSetChanged()
         }
 
+    var allTests: ArrayList<Test> = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
 
     interface OnClickListener {
         fun onClickPlayTest(id: Long)
@@ -108,7 +114,7 @@ class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit
 
             holder.title.text = data.category
 
-            holder.num.text = context.getString(R.string.number_exams, tests.getTestsWithCategory(data.category))
+            holder.num.text = context.getString(R.string.number_exams, allTests.getTestsWithCategory(data.category))
 
             val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle, null) as GradientDrawable
 

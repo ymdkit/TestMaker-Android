@@ -59,6 +59,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         initTestAndFolderAdapter(setValue = {
             testAndFolderAdapter.tests = realmController.nonCategorizedTests
             testAndFolderAdapter.categories = realmController.existingCateList
+            testAndFolderAdapter.allTests = realmController.list
         })
 
         recycler_view.layoutManager = LinearLayoutManager(applicationContext)

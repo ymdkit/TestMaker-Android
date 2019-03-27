@@ -111,6 +111,7 @@ public class BaseActivity extends AppCompatActivity {
 
         container.addView(adView);
 
+
     }
 
     @Override
