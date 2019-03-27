@@ -29,4 +29,6 @@
     <dimen name="text_size_caption">@dimen/text_size_small</dimen>
     <dimen name="text_size_button">@dimen/text_size_large</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="margin_bottom">64dp</dimen>
 </resources>
