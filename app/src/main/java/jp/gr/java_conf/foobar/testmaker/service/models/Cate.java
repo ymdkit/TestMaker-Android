@@ -27,6 +27,5 @@ public class Cate extends RealmObject {
     public int getColor() {
         return color;
     }
-
-
+    
 }

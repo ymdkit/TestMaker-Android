@@ -1,18 +1,16 @@
 package jp.gr.java_conf.foobar.testmaker.service.views.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.getTestsWithCategory
 import jp.gr.java_conf.foobar.testmaker.service.models.Cate
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
@@ -110,7 +108,7 @@ class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit
 
             holder.title.text = data.category
 
-            holder.num.text = context.getString(R.string.number_exams, 10000000)//todo 引数の修正
+            holder.num.text = context.getString(R.string.number_exams, tests.getTestsWithCategory(data.category))
 
             val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle, null) as GradientDrawable
 
