@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.views.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,8 +44,7 @@ class CheckBoxQuestionAdapter(private val context: Context, private val array: A
 
         }
 
-        checkBox.setOnCheckedChangeListener { _, _ ->
-
+        checkBox.setOnClickListener {
             checkBoxStates[position] = checkBox.isChecked
         }
 

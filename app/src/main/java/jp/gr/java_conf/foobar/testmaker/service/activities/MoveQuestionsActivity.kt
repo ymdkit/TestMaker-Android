@@ -89,7 +89,7 @@ class MoveQuestionsActivity : BaseActivity() {
 
             val selectedQuestions = questionAdapter.getItems().filterIndexed { index, _ ->  questionAdapter.checkBoxStates[index]}
 
-            Log.d("questionsnum","${questionAdapter.getItems().size}")
+            Log.d("selected","${questionAdapter.checkBoxStates.filter { it }.size}")
 
             if(spinner_to_test.selectedItemPosition == 0){
 
