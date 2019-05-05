@@ -15,7 +15,7 @@ object Constants {
     const val SORT_DATE_DESCENDING = 1
     const val SORT_DATE_ASCENDING = 2
 
-    const val ONLINE_QUESTIONS_LIMIT_NORMAL = 300
+    const val ONLINE_QUESTIONS_LIMIT_NORMAL = 1000
     const val ONLINE_QUESTIONS_LIMIT_EXPERT = 10000
 
     const val NOT_UPLOAD_STUDY_PLUS = 0

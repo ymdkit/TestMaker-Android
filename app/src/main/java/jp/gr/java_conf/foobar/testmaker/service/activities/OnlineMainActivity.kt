@@ -327,8 +327,8 @@ class OnlineMainActivity : BaseActivity() {
 
         val query = NCMBQuery<NCMBObject>("Test")
 
-        //検索件数を30件に設定
-        query.setLimit(30)
+        //検索件数を50件に設定
+        query.setLimit(50)
 
         query.whereEqualTo("language", getString(R.string.language))
 
