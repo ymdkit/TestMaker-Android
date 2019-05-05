@@ -15,7 +15,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import com.nifty.cloud.mb.core.*
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
@@ -24,6 +23,7 @@ import jp.gr.java_conf.foobar.testmaker.service.views.adapters.OnlineTestAdapter
 import kotlinx.android.synthetic.main.activity_online_main.*
 import java.util.*
 import android.widget.Toast
+import com.nifcloud.mbaas.core.*
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 

@@ -14,10 +14,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import com.nifty.cloud.mb.core.NCMBException
-import com.nifty.cloud.mb.core.NCMBObject
-import com.nifty.cloud.mb.core.NCMBQuery
-import com.nifty.cloud.mb.core.NCMBUser
+import com.nifcloud.mbaas.core.NCMBException
+import com.nifcloud.mbaas.core.NCMBObject
+import com.nifcloud.mbaas.core.NCMBQuery
+import com.nifcloud.mbaas.core.NCMBUser
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest

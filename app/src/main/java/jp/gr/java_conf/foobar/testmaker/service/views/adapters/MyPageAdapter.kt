@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import com.nifty.cloud.mb.core.NCMBObject
+import com.nifcloud.mbaas.core.NCMBObject
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
 
