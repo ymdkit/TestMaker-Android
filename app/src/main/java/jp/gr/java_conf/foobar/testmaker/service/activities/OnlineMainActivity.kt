@@ -84,6 +84,10 @@ class OnlineMainActivity : BaseActivity() {
 
         }
 
+        swipe_refresh.setOnRefreshListener {
+            reload("")
+        }
+
         reload("")
     }
 
@@ -123,21 +127,21 @@ class OnlineMainActivity : BaseActivity() {
         val builder = AlertDialog.Builder(this@OnlineMainActivity, R.style.MyAlertDialogStyle)
         builder.setView(dialogLayout)
         builder.setTitle(getString(R.string.message_upload_test))
-        builder.setPositiveButton(android.R.string.ok,null)
+        builder.setPositiveButton(android.R.string.ok, null)
 
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.show()
 
         val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-        positiveButton.setOnClickListener{
+        positiveButton.setOnClickListener {
 
-            if(upload(position,editOverView.text.toString())) dialog.dismiss()
+            if (upload(position, editOverView.text.toString())) dialog.dismiss()
 
         }
 
     }
 
-    private fun upload(position :Int,overView :String) : Boolean{
+    private fun upload(position: Int, overView: String): Boolean {
         val user = NCMBUser.getCurrentUser()
 
         val userId = user.getString("objectId")
@@ -284,10 +288,6 @@ class OnlineMainActivity : BaseActivity() {
         val actionId = item.itemId
 
         when (actionId) {
-            R.id.action_reload -> {
-                reload("")
-            }
-
             R.id.action_sort -> {
 
                 AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
@@ -322,7 +322,7 @@ class OnlineMainActivity : BaseActivity() {
 
     private fun reload(searchWord: String) {
 
-        loading.visibility = View.VISIBLE
+        swipe_refresh.isRefreshing = true
         recycler_view.visibility = View.GONE
 
         val query = NCMBQuery<NCMBObject>("Test")
@@ -350,7 +350,6 @@ class OnlineMainActivity : BaseActivity() {
 
                 Toast.makeText(baseContext, getString(R.string.load_failed), Toast.LENGTH_SHORT).show()
 
-                loading.visibility = View.GONE
             } else {
                 //成功時の処理
                 Log.i("NCMB", "検索に成功しました。")
@@ -445,8 +444,8 @@ class OnlineMainActivity : BaseActivity() {
                     }
                 })
 
-                loading.visibility = View.GONE
                 recycler_view.visibility = View.VISIBLE
+                swipe_refresh.isRefreshing = false
 
                 recycler_view.layoutManager = LinearLayoutManager(applicationContext)
                 recycler_view.setHasFixedSize(true)
@@ -505,7 +504,7 @@ class OnlineMainActivity : BaseActivity() {
                                     curUser.put("lastLoginDate", now)
                                     curUser.put("creatorName", getString(R.string.guest))
                                     curUser.put("downloadedIds", arrayListOf(""))
-                                    curUser.put("expert",false)
+                                    curUser.put("expert", false)
                                     curUser.acl = acl    // 追加する
                                     curUser.save()
                                 } catch (e1: NCMBException) {
