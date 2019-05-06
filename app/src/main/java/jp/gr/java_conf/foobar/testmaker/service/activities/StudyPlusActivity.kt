@@ -32,10 +32,9 @@ class StudyPlusActivity : BaseActivity() {
 
         }
 
-        if(Studyplus.instance.isAuthenticated(baseContext)){
+        if (Studyplus.instance.isAuthenticated(baseContext)) {
             text_state_study_plus.text = getString(R.string.connected)
-
-        }else{
+        } else {
             card_setting_study_plus.visibility = View.GONE
         }
 
@@ -51,50 +50,39 @@ class StudyPlusActivity : BaseActivity() {
                         sharedPreferenceManager.uploadStudyPlus = which
 
                         text_state_upload_study_plus.text = resources.getStringArray(R.array.upload_setting_study_plus)[sharedPreferenceManager.uploadStudyPlus]
-
-
                     }.show()
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        val actionId = item.itemId
-
-        when (actionId) {
+        when (item.itemId) {
             android.R.id.home -> {
-
                 finish()
-
                 return true
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode != Activity.RESULT_OK) return
 
         when (requestCode) {
             REQUEST_CODE_AUTH -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Studyplus.instance.setAuthResult(this, data)
-                    Toast.makeText(this@StudyPlusActivity, getString(R.string.msg_connect_success), Toast.LENGTH_LONG).show()
 
-                    text_state_study_plus.text = getString(R.string.connected)
+                Studyplus.instance.setAuthResult(this, data)
+                Toast.makeText(this@StudyPlusActivity, getString(R.string.msg_connect_success), Toast.LENGTH_LONG).show()
 
-                    card_setting_study_plus.visibility = View.VISIBLE
+                text_state_study_plus.text = getString(R.string.connected)
+                card_setting_study_plus.visibility = View.VISIBLE
 
-                }
             }
         }
-
-
-
-        super.onActivityResult(requestCode, resultCode, data)
-
     }
 
+    companion object {
+        const val REQUEST_CODE_AUTH = 1
+    }
 }

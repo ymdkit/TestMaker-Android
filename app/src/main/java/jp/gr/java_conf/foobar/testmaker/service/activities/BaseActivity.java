@@ -33,8 +33,6 @@ public class BaseActivity extends AppCompatActivity {
 
     protected FirebaseAnalytics firebaseAnalytic;
 
-    final static int REQUEST_CODE_AUTH = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +46,6 @@ public class BaseActivity extends AppCompatActivity {
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             firebaseAnalytic = FirebaseAnalytics.getInstance(this);
         }
-
 
         Studyplus.getInstance().setup("U6867w2Zt2tT2CRjJRteaMAUCvnEDfXZ", "d9cCv8aZCDaUL56bhZY5HBnzktpzpYefVAn3hV5hjjqmWhF97j985wyuMjLExLvQ");
 
