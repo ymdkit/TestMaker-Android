@@ -5,10 +5,6 @@ buildscript {
     repositories {
         jcenter()
         google()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.0'
@@ -36,9 +32,7 @@ clean.dependsOn customClean
 repositories {
     mavenCentral()
 }
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-}
+
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"

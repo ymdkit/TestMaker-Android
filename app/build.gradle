@@ -48,7 +48,6 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.5'
     api files('libs/NCMB2.jar')
     api 'com.isseiaoki:simplecropview:1.1.4'
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api 'com.android.support:multidex:1.0.3'
     api 'com.android.billingclient:billing:1.1'
 
