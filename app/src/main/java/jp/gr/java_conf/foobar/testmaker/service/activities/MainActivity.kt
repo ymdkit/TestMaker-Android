@@ -3,6 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.activities
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -19,6 +20,7 @@ import android.widget.Toast
 import com.android.billingclient.api.BillingClient
 import jp.gr.java_conf.foobar.testmaker.service.*
 import jp.gr.java_conf.foobar.testmaker.service.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
+import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
@@ -42,6 +44,8 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
         setContentView(R.layout.activity_main)
 
+        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this,R.layout.activity_main)
+
         sendScreen("MainActivity")
 
         createAd(container)
@@ -62,9 +66,8 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             testAndFolderAdapter.allTests = realmController.list
         })
 
-        recycler_view.layoutManager = LinearLayoutManager(applicationContext)
-        recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
-        recycler_view.adapter = testAndFolderAdapter
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.adapter = testAndFolderAdapter
 
     }
 
@@ -404,7 +407,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         drawerToggle.syncState()
-
     }
 
     public override fun onDestroy() {

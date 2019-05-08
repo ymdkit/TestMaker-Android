@@ -52,7 +52,6 @@ class PlayActivity : BaseActivity() {
         initToolBar()
 
         testId = intent.getLongExtra("testId", -1)
-        //realmController.migrateOrder(testId)
 
         val container = findViewById<LinearLayout>(R.id.container)
         createAd(container)
@@ -301,7 +300,6 @@ class PlayActivity : BaseActivity() {
     private fun showProblem(question: Quest) {
 
         play_problem_view.setTextProblem(question.getProblem(isReverse(question)))
-
         play_problem_view.setTextNumber(getString(R.string.number, (number + 1).toString()))
 
         play_review_view.visibility = View.GONE

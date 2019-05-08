@@ -1,132 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background"
-        android:orientation="vertical"
-        tools:context="jp.gr.java_conf.foobar.testmaker.service.activities.MainActivity">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:popupTheme="@style/Theme.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="@string/app_name" />
+            android:layout_height="match_parent"
+            android:background="@color/background"
+            android:orientation="vertical"
+            tools:context="jp.gr.java_conf.foobar.testmaker.service.activities.MainActivity">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#999" />
-
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/cardView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/element_spacing_small"
-            android:layout_marginLeft="@dimen/element_spacing_small"
-            android:layout_marginRight="@dimen/element_spacing_small"
-            android:layout_marginTop="@dimen/element_spacing_small"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            card_view:cardCornerRadius="@dimen/element_spacing_small"
-            card_view:cardUseCompatPadding="true">
-
-            <LinearLayout
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                app:popupTheme="@style/Theme.AppCompat.Light"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:title="@string/app_name" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_height_small">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#999" />
 
-                    <ImageButton
-                        android:id="@+id/button_upload"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/feedback"
-                        android:contentDescription="@string/image"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_expand_more_black" />
-
-                    <TextView
-                        android:id="@+id/text_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/element_spacing_small"
-                        android:layout_marginStart="@dimen/element_spacing_small"
-                        android:gravity="center_vertical"
-                        android:text="@string/add_exam"
-                        android:textSize="@dimen/text_size_medium" />
-
-                </FrameLayout>
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/element_spacing_small"
+                android:layout_marginTop="@dimen/element_spacing_small"
+                android:layout_marginRight="@dimen/element_spacing_small"
+                android:layout_marginBottom="@dimen/element_spacing_small"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                card_view:cardCornerRadius="@dimen/element_spacing_small"
+                card_view:cardUseCompatPadding="true">
 
                 <LinearLayout
-                    android:id="@+id/body"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
-                    <include layout="@layout/dialog_edit_test" />
-
-                    <Button
-                        android:id="@+id/button_add"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/element_spacing_small"
-                        android:layout_marginLeft="@dimen/element_spacing_small"
-                        android:layout_marginRight="@dimen/element_spacing_small"
-                        android:background="@drawable/button_add"
-                        android:text="@string/action_add"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:layout_height="@dimen/view_height_small">
+
+                        <ImageButton
+                            android:id="@+id/button_upload"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/feedback"
+                            android:contentDescription="@string/image"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_expand_more_black" />
+
+                        <TextView
+                            android:id="@+id/text_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/element_spacing_small"
+                            android:layout_marginLeft="@dimen/element_spacing_small"
+                            android:gravity="center_vertical"
+                            android:text="@string/add_exam"
+                            android:textSize="@dimen/text_size_medium" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:id="@+id/body"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <include layout="@layout/dialog_edit_test" />
+
+                        <Button
+                            android:id="@+id/button_add"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/element_spacing_small"
+                            android:layout_marginRight="@dimen/element_spacing_small"
+                            android:layout_marginBottom="@dimen/element_spacing_small"
+                            android:background="@drawable/button_add"
+                            android:text="@string/action_add"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_medium" />
+                    </LinearLayout>
+
+
                 </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                />
+
+            <LinearLayout
+                android:id="@+id/container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="3dp"
+                android:orientation="vertical" />
+
+        </LinearLayout>
 
 
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <LinearLayout
-            android:id="@+id/container"
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="3dp"
-            android:orientation="vertical" />
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/nav_header_main"
+            app:menu="@menu/activity_main_drawer" />
 
+    </android.support.v4.widget.DrawerLayout>
 
-    </LinearLayout>
-
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer" />
-
-</android.support.v4.widget.DrawerLayout>
+</layout>
 

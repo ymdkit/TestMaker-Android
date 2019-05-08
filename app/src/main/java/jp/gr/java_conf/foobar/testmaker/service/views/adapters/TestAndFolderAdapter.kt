@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.getTestsWithCategory
+import jp.gr.java_conf.foobar.testmaker.service.extensions.getTestsWithCategory
 import jp.gr.java_conf.foobar.testmaker.service.models.Cate
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton

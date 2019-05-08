@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service
+package jp.gr.java_conf.foobar.testmaker.service.extensions
 
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 

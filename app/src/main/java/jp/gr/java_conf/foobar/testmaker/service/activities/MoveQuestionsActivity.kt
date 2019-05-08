@@ -85,8 +85,6 @@ class MoveQuestionsActivity : BaseActivity() {
 
             if(realmController.list.size < 1) return@setOnClickListener
 
-
-
             val selectedQuestions = questionAdapter.getItems().filterIndexed { index, _ ->  questionAdapter.checkBoxStates[index]}
 
             Log.d("selected","${questionAdapter.checkBoxStates.filter { it }.size}")

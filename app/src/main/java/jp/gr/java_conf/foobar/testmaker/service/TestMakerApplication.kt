@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service
 
 import android.app.Application
 import android.support.multidex.MultiDexApplication
+import com.google.android.gms.ads.MobileAds
 
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker

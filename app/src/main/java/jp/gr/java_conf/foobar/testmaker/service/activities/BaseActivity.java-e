@@ -40,7 +40,7 @@ public class BaseActivity extends AppCompatActivity {
 
         TestMakerApplication app = (TestMakerApplication) getApplication();
 
-        MobileAds.initialize(this, "hogehoge");
+        MobileAds.initialize(this, "ca-app-pub-8942090726462263~6944151034");
 
         realmController = new RealmController(getApplicationContext(), app.getConfig());
 
