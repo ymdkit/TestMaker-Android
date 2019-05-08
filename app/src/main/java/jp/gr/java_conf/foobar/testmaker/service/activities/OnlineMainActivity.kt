@@ -17,13 +17,16 @@ import android.view.View
 import android.widget.*
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
-import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.OnlineTestAdapter
 import kotlinx.android.synthetic.main.activity_online_main.*
 import java.util.*
 import android.widget.Toast
 import com.nifcloud.mbaas.core.*
+import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
@@ -418,29 +421,16 @@ class OnlineMainActivity : BaseActivity() {
                             }
                         }
 
-                        val loader = AsyncTaskLoadTest(obj.getString("content").replace("\\\n", "\n"), this@OnlineMainActivity)
+                        GlobalScope.launch(Dispatchers.Main) {
+                            withContext(Dispatchers.Default) { obj.getString("content").replace("\\\n", "\n").toTest(baseContext) }.let{
+                                realmController.convert(it, -1L)
 
-                        loader.setCallback(object : AsyncTaskLoadTest.AsyncTaskCallback {
-                            override fun preExecute() {}
-
-                            override fun postExecute(result: StructTest) {
-
-                                realmController.convert(result, -1L)
-
-                                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, result.title), Toast.LENGTH_LONG).show()
+                                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
 
                                 finish()
 
                             }
-
-                            override fun progressUpdate(progress: Int) {}
-
-                            override fun cancel() {}
-
-                        })
-
-                        loader.execute()
-
+                        }
                     }
                 })
 

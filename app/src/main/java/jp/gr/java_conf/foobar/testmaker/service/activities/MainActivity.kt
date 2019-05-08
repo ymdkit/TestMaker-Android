@@ -11,7 +11,6 @@ import android.support.design.widget.NavigationView
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -21,11 +20,14 @@ import com.android.billingclient.api.BillingClient
 import jp.gr.java_conf.foobar.testmaker.service.*
 import jp.gr.java_conf.foobar.testmaker.service.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
-import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
+import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
-import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_edit_test.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.*
 
 
@@ -41,7 +43,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
 
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this,R.layout.activity_main)
@@ -377,31 +378,14 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     private fun loadText(text: String) {
 
-        val loader = AsyncTaskLoadTest(text, baseContext)
-        loader.setCallback(object : AsyncTaskLoadTest.AsyncTaskCallback {
-            override fun postExecute(result: StructTest) {
-
-                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, result.title), Toast.LENGTH_LONG).show()
-
-                realmController.convert(result, -1)
-
+        GlobalScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.Default) { text.toTest(baseContext) }.let{
+                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
+                realmController.convert(it, -1)
                 testAndFolderAdapter.setValue()
 
             }
-
-            override fun progressUpdate(progress: Int) {
-            }
-
-            override fun cancel() {
-            }
-
-            override fun preExecute() {
-            }
-
-        })
-
-        loader.execute()
-
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

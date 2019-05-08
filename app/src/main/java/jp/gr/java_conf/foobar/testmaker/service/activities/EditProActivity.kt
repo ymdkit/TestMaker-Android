@@ -11,9 +11,12 @@ import android.view.MenuItem
 import android.widget.CheckBox
 import android.widget.Toast
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
-import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
+import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import kotlinx.android.synthetic.main.activity_edit_pro.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class EditProActivity : BaseActivity() {
 
@@ -69,28 +72,14 @@ class EditProActivity : BaseActivity() {
 
         val text = edit_test.text.toString()
 
-        val loader = AsyncTaskLoadTest(text,baseContext)
-        loader.setCallback(object :AsyncTaskLoadTest.AsyncTaskCallback{
-            override fun postExecute(result: StructTest) {
-
+        GlobalScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.Default) { text.toTest(baseContext) }.let{
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_update), Toast.LENGTH_LONG).show()
 
-                realmController.convert(result,intent.getLongExtra("testId", -1))
+                realmController.convert(it,intent.getLongExtra("testId", -1))
 
             }
-
-            override fun progressUpdate(progress: Int) {
-            }
-
-            override fun cancel() {
-            }
-
-            override fun preExecute() {
-            }
-
-        })
-
-        loader.execute()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
