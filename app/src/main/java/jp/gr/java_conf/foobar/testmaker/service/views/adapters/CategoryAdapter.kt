@@ -64,7 +64,7 @@ class CategoryAdapter(private val context: Context, private val mRealmController
 
             notifyDataSetChanged()
 
-            mainAdapter?.let{
+            mainAdapter?.also{
                 it.setValue()
             }
 
@@ -74,7 +74,7 @@ class CategoryAdapter(private val context: Context, private val mRealmController
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
-        var cate: TextView = v.findViewById(R.id.color)
+        var cate: TextView = v.findViewById(R.id.text_category)
         var color: ImageView = v.findViewById(R.id.color)
         var delete: ImageButton = v.findViewById(R.id.delete)
 

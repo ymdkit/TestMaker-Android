@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical"
-    tools:context="jp.gr.java_conf.foobar.testmaker.service.activities.EditActivity">
 
-    <FrameLayout
-        android:id="@+id/toolbar_container"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:orientation="vertical"
+        tools:context="jp.gr.java_conf.foobar.testmaker.service.activities.EditActivity">
+
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -19,88 +18,79 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
+            app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/Theme.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:title="@string/title_activity_edit" />
 
-    </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#999" />
-
-    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cardView"
-        style="@style/MyCardViewStyle"
-        android:layout_height="wrap_content"
-        android:foreground="?android:attr/selectableItemBackground"
-        card_view:cardCornerRadius="@dimen/element_spacing_small"
-        card_view:cardUseCompatPadding="true">
-
-        <LinearLayout
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cardView"
+            style="@style/MyCardViewStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:foreground="?android:attr/selectableItemBackground"
+            card_view:cardCornerRadius="@dimen/element_spacing_small"
+            card_view:cardUseCompatPadding="true"
+            card_view:layout_constraintTop_toBottomOf="@id/toolbar">
 
-
-            <FrameLayout
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/view_height_small">
+                android:layout_height="match_parent">
 
                 <ImageButton
-                    android:id="@+id/ImageButton_expand"
+                    android:id="@+id/button_expand"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/view_height_small"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/feedback"
                     android:contentDescription="@string/open"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_expand_more_black" />
+                    android:src="@drawable/ic_expand_more_black"
+                    card_view:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/text_title"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/element_spacing_small"
                     android:layout_marginStart="@dimen/element_spacing_small"
                     android:gravity="center_vertical"
                     android:text="@string/add_question"
-                    android:textSize="@dimen/text_size_medium" />
+                    android:textSize="@dimen/text_size_medium"
+                    card_view:layout_constraintBottom_toBottomOf="@id/button_expand"
+                    card_view:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/button_cancel"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
+                    android:layout_height="0dp"
                     android:layout_margin="@dimen/element_spacing_small"
                     android:background="@drawable/button_blue"
                     android:text="@string/cancel"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_small"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    card_view:layout_constraintBottom_toBottomOf="@id/button_expand"
+                    card_view:layout_constraintRight_toRightOf="parent"
+                    card_view:layout_constraintTop_toTopOf="parent" />
 
-            </FrameLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_body"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <LinearLayout
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/layout_body"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    card_view:layout_constraintTop_toBottomOf="@id/button_expand">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/textInputLayout_question_write"
                         style="@style/MyTextInputLayoutStyle"
-                        android:layout_weight="1">
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        card_view:layout_constraintLeft_toLeftOf="parent"
+                        card_view:layout_constraintRight_toLeftOf="@id/button_image"
+                        card_view:layout_constraintTop_toTopOf="parent">
 
                         <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/set_problem"
@@ -109,143 +99,138 @@
 
                     </android.support.design.widget.TextInputLayout>
 
-                    <FrameLayout
+                    <ImageButton
+                        android:id="@+id/button_image"
+                        android:layout_width="@dimen/view_height_normal"
+                        android:layout_height="@dimen/view_height_normal"
+                        android:background="@drawable/button_blue"
+                        android:contentDescription="@string/image"
+                        android:padding="@dimen/element_spacing_small"
+                        android:layout_margin="@dimen/element_spacing_normal"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_photo_white"
+                        card_view:layout_constraintRight_toRightOf="parent"
+                        card_view:layout_constraintTop_toTopOf="parent" />
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/edit_write_view"
+                        style="@style/MyTextInputLayoutStyle"
+                        android:layout_width="match_parent"
+                        card_view:layout_constraintTop_toBottomOf="@id/button_image">
+
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/set_answer_write"
+                            style="@style/MyEditTextSingleLine"
+                            android:hint="@string/hint_answer" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <jp.gr.java_conf.foobar.testmaker.service.views.EditCompleteView
+                        android:id="@+id/edit_complete_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/element_spacing_small"
-                        android:layout_weight="4">
-
-                        <ProgressBar
-                            android:id="@+id/progressBar"
-                            style="?android:attr/progressBarStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <ImageButton
-                            android:id="@+id/button_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/view_height_normal"
-                            android:background="@drawable/button_blue"
-                            android:contentDescription="@string/image"
-                            android:padding="@dimen/element_spacing_small"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_photo_white"
-                            android:text="@string/image"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="@color/white" />
+                        card_view:layout_constraintTop_toBottomOf="@id/edit_write_view" />
 
 
-                    </FrameLayout>
+                    <jp.gr.java_conf.foobar.testmaker.service.views.EditSelectView
+                        android:id="@+id/edit_select_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        card_view:layout_constraintTop_toBottomOf="@id/edit_complete_view" />
 
-                </LinearLayout>
+                    <jp.gr.java_conf.foobar.testmaker.service.views.EditSelectCompleteView
+                        android:id="@+id/edit_select_complete_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        card_view:layout_constraintTop_toBottomOf="@id/edit_select_view" />
 
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/textInputLayout_explanation"
+                        style="@style/MyTextInputLayoutStyle"
+                        android:layout_width="match_parent"
+                        android:visibility="gone"
+                        card_view:layout_constraintTop_toBottomOf="@id/edit_select_complete_view">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/edit_write_view"
-                    style="@style/MyTextInputLayoutStyle">
+                        <android.support.v7.widget.AppCompatEditText
+                            android:id="@+id/set_explanation"
+                            style="@style/MyEditTextMultiLine"
+                            android:hint="@string/hint_explanation" />
+                    </android.support.design.widget.TextInputLayout>
 
-                    <android.support.v7.widget.AppCompatEditText
-                        android:id="@+id/set_answer_write"
-                        style="@style/MyEditTextSingleLine"
-                        android:hint="@string/hint_answer" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <jp.gr.java_conf.foobar.testmaker.service.views.EditCompleteView
-                    android:id="@+id/edit_complete_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-
-                <jp.gr.java_conf.foobar.testmaker.service.views.EditSelectView
-                    android:id="@+id/edit_select_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <jp.gr.java_conf.foobar.testmaker.service.views.EditSelectCompleteView
-                    android:id="@+id/edit_select_complete_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/textInputLayout_explanation"
-                    style="@style/MyTextInputLayoutStyle"
-                    android:visibility="gone">
-
-                    <android.support.v7.widget.AppCompatEditText
-                        android:id="@+id/set_explanation"
-                        style="@style/MyEditTextMultiLine"
-                        android:hint="@string/hint_explanation" />
-                </android.support.design.widget.TextInputLayout>
-
-                <Button
-                    android:id="@+id/button_add"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/element_spacing_small"
-                    android:layout_marginLeft="@dimen/element_spacing_small"
-                    android:layout_marginRight="@dimen/element_spacing_small"
-                    android:background="@drawable/button_add"
-                    android:text="@string/action_add"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_medium" />
-
-                <LinearLayout
-                    style="?android:attr/buttonBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/button_add"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/element_spacing_small"
+                        android:layout_marginRight="@dimen/element_spacing_small"
+                        android:layout_marginBottom="@dimen/element_spacing_small"
+                        android:background="@drawable/button_add"
+                        android:text="@string/action_add"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_medium"
+                        card_view:layout_constraintTop_toBottomOf="@id/textInputLayout_explanation" />
 
                     <Button
                         android:id="@+id/button_type"
                         style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="@dimen/view_height_small"
                         android:layout_margin="@dimen/element_spacing_small"
-                        android:layout_weight="1"
                         android:background="@drawable/button_blue"
                         android:text="@string/action_choose"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_small" />
+                        android:textSize="@dimen/text_size_small"
+                        card_view:layout_constraintLeft_toLeftOf="parent"
+                        card_view:layout_constraintRight_toLeftOf="@id/button_detail"
+                        card_view:layout_constraintTop_toBottomOf="@id/button_add"
+                        card_view:layout_constraintBottom_toBottomOf="parent"/>
 
                     <Button
                         android:id="@+id/button_detail"
                         style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="@dimen/view_height_small"
                         android:layout_margin="@dimen/element_spacing_small"
-                        android:layout_weight="1"
                         android:background="@drawable/button_blue"
                         android:text="@string/action_detail"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_small" />
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
+                        android:textSize="@dimen/text_size_small"
+                        card_view:layout_constraintLeft_toRightOf="@id/button_type"
+                        card_view:layout_constraintRight_toRightOf="parent"
+                        card_view:layout_constraintTop_toBottomOf="@id/button_add"
+                        card_view:layout_constraintBottom_toBottomOf="parent"/>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+                </android.support.constraint.ConstraintLayout>
 
-    <LinearLayout
-        android:id="@+id/container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/element_spacing_small"
-        android:orientation="vertical" />
 
-</LinearLayout>
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/container"
+            app:layout_constraintTop_toBottomOf="@id/cardView" />
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

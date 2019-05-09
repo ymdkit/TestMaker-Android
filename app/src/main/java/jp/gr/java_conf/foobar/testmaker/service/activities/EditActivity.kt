@@ -16,7 +16,6 @@ import android.support.v7.widget.SearchView
 import android.support.v7.widget.SwitchCompat
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.SpannableStringBuilder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -216,7 +215,7 @@ open class EditActivity : BaseActivity() {
     private fun showLayoutEdit() {
 
         layout_body.visibility = View.VISIBLE
-        ImageButton_expand.setImageResource(R.drawable.ic_expand_less_black)
+        button_expand.setImageResource(R.drawable.ic_expand_less_black)
         set_problem.isFocusable = true
         set_problem.requestFocus()
         button_add.visibility = View.VISIBLE
@@ -298,7 +297,7 @@ open class EditActivity : BaseActivity() {
         layout_body.visibility = View.GONE
         button_cancel.visibility = View.GONE
 
-        ImageButton_expand.setImageResource(R.drawable.ic_expand_more_black)
+        button_expand.setImageResource(R.drawable.ic_expand_more_black)
         text_title.text = getString(R.string.add_question)
 
     }
@@ -633,7 +632,7 @@ open class EditActivity : BaseActivity() {
 
         if (sharedPreferenceManager.explanation) textInputLayout_explanation.visibility = View.VISIBLE
 
-        ImageButton_expand.setOnClickListener {
+        button_expand.setOnClickListener {
 
             if (layout_body.visibility == View.VISIBLE) {
 
