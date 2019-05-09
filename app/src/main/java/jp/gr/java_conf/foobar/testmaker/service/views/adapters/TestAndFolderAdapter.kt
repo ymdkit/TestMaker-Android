@@ -145,20 +145,20 @@ class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit
     class TestViewHolder(v: View) : ViewHolder(v) {
 
         var cate: ImageButton = v.findViewById(R.id.cate)
-        var title: TextView = v.findViewById(R.id.title_questions)
+        var title: TextView = v.findViewById(R.id.text_title_test)
         var num: TextView = v.findViewById(R.id.num_questions)
         var play: ImageTextButton = v.findViewById(R.id.play)
         var edit: ImageTextButton = v.findViewById(R.id.edit)
         var delete: ImageTextButton = v.findViewById(R.id.delete)
-        var share: ImageTextButton = v.findViewById(R.id.open)
+        var share: ImageTextButton = v.findViewById(R.id.share)
 
     }
 
     class FolderViewHolder(v: View) : ViewHolder(v) {
 
-        var title: TextView = v.findViewById(R.id.title_questions)
+        var title: TextView = v.findViewById(R.id.text_title_test)
         var num: TextView = v.findViewById(R.id.num_questions)
-        var open: ImageTextButton = v.findViewById(R.id.open)
+        var open: ImageTextButton = v.findViewById(R.id.share)
         var cate: ImageButton = v.findViewById(R.id.cate)
 
     }

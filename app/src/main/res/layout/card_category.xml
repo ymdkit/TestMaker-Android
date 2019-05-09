@@ -41,7 +41,7 @@
                     android:textSize="@dimen/text_size_medium"
                     android:text="Large Text"
                     android:gravity="center_vertical"
-                    android:id="@+id/title_questions"
+                    android:id="@+id/text_title_test"
                     android:singleLine="true"
                     android:layout_weight="1"
                     />
@@ -75,7 +75,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:id="@+id/open"
+                android:id="@+id/share"
                 android:layout_weight="0.9"
                 custom:text="@string/open"
                 custom:image="@drawable/ic_folder_open_white"

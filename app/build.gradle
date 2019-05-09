@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "jp.gr.java_conf.foobar.testmaker.service"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 64

@@ -12,6 +12,7 @@
     <dimen name="view_height_small">36dp</dimen>
     <dimen name="view_height_tiny">24dp</dimen>
 
+    <dimen name="view_width_small">44dp</dimen>
     <dimen name="view_width_normal">64dp</dimen>
 
     <dimen name="text_size_sssmall">8sp</dimen>

@@ -75,9 +75,9 @@ class MyPageAdapter(private val context: Context, private val array: MutableList
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         val cate: ImageButton = v.findViewById(R.id.cate)
-        val title: TextView = v.findViewById(R.id.title_questions)
+        val title: TextView = v.findViewById(R.id.text_title_test)
         val num: TextView = v.findViewById(R.id.num_questions)
-        val information: ImageTextButton = v.findViewById(R.id.open)
+        val information: ImageTextButton = v.findViewById(R.id.share)
         val play: ImageTextButton = v.findViewById(R.id.play)
         val delete: ImageTextButton = v.findViewById(R.id.delete)
 

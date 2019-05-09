@@ -316,7 +316,10 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         if (resultCode != Activity.RESULT_OK) return
 
         if (requestCode == REQUEST_IMPORT) {
-            launchEditorActivity(data!!.data)
+
+            data?.also {
+                launchEditorActivity(it.data)
+            }
         }
     }
 
