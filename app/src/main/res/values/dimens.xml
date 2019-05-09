@@ -32,4 +32,5 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="margin_bottom">64dp</dimen>
+    <dimen name="width_order">24dp</dimen>
 </resources>
