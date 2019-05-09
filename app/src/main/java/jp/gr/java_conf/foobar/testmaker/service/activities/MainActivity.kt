@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
 import android.app.Activity
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
@@ -45,7 +46,14 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val viewModel = MainViewModel()
+
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        binding.model = viewModel
+
+        viewModel.title.observe(this, Observer {
+            button_add.isEnabled = it?.isNotEmpty() ?: false
+        })
 
         sendScreen("MainActivity")
 
@@ -127,12 +135,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         if (Build.VERSION.SDK_INT >= 21) button_add.stateListAnimator = null
 
         button_add.setOnClickListener {
-
-            if (edit_title.text.toString().isEmpty()) {
-
-                Toast.makeText(this@MainActivity, getString(R.string.message_wrong), Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
 
             realmController.addTest(edit_title.text.toString(), color_chooser.getColorId(), button_category.tag.toString())
 

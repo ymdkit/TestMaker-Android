@@ -3,14 +3,18 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="model"
+            type="jp.gr.java_conf.foobar.testmaker.service.activities.MainViewModel" />
+    </data>
+
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+        <android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/background"
@@ -23,17 +27,12 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
                 android:minHeight="?attr/actionBarSize"
+                app:layout_constraintTop_toTopOf="parent"
                 app:popupTheme="@style/Theme.AppCompat.Light"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:title="@string/app_name" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#999" />
-
-            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,6 +42,7 @@
                 android:layout_marginBottom="@dimen/element_spacing_small"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
+                card_view:layout_constraintTop_toBottomOf="@id/toolbar"
                 card_view:cardCornerRadius="@dimen/element_spacing_small"
                 card_view:cardUseCompatPadding="true">
 
@@ -84,7 +84,8 @@
                         android:orientation="vertical"
                         android:visibility="gone">
 
-                        <include layout="@layout/dialog_edit_test" />
+                        <include layout="@layout/dialog_edit_test"
+                            app:title="@={model.title}"/>
 
                         <Button
                             android:id="@+id/button_add"
@@ -94,6 +95,7 @@
                             android:layout_marginRight="@dimen/element_spacing_small"
                             android:layout_marginBottom="@dimen/element_spacing_small"
                             android:background="@drawable/button_add"
+                            android:enabled="false"
                             android:text="@string/action_add"
                             android:textAllCaps="false"
                             android:textColor="@color/white"
@@ -109,8 +111,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                />
+                app:layout_constraintTop_toBottomOf="@id/cardView"
+                app:layout_constraintBottom_toTopOf="@id/container"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
             <LinearLayout
                 android:id="@+id/container"
@@ -118,10 +121,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="3dp"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
 
-        </LinearLayout>
-
+        </android.support.constraint.ConstraintLayout>
 
         <android.support.design.widget.NavigationView
             android:id="@+id/nav_view"
