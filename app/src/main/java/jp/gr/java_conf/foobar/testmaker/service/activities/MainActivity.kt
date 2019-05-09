@@ -45,7 +45,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this,R.layout.activity_main)
+        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
         sendScreen("MainActivity")
 
@@ -128,31 +128,28 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
         button_add.setOnClickListener {
 
-            if (edit_title.text.toString() == "") {
+            if (edit_title.text.toString().isEmpty()) {
 
                 Toast.makeText(this@MainActivity, getString(R.string.message_wrong), Toast.LENGTH_LONG).show()
-
-            } else {
-
-                realmController.addTest(edit_title.text.toString(), color_chooser.getColorId(), button_category.tag.toString())
-
-                Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
-
-                testAndFolderAdapter.setValue()
-
-                edit_title.setText("")
-                button_category.tag = ""
-                button_category.text = getString(R.string.category)
-
-                button_category.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
-
-                body.visibility = View.GONE
-                button_upload.setImageResource(R.drawable.ic_expand_more_black)
-
-                sendEvent("createTest")
-                sendFirebaseEvent("add-test")
-
+                return@setOnClickListener
             }
+
+            realmController.addTest(edit_title.text.toString(), color_chooser.getColorId(), button_category.tag.toString())
+
+            Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
+
+            testAndFolderAdapter.setValue()
+
+            edit_title.setText("")
+            button_category.tag = ""
+            button_category.text = getString(R.string.category)
+            button_category.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
+            body.visibility = View.GONE
+            button_upload.setImageResource(R.drawable.ic_expand_more_black)
+
+            sendEvent("createTest")
+            sendFirebaseEvent("add-test")
+
 
         }
 
@@ -170,7 +167,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 -> {
 
                     sendEvent("help")
-
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse(getString(R.string.help_url))))
 
@@ -179,7 +175,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 R.id.nav_review -> {
 
                     sendEvent("review")
-
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse("https://play.google.com/store/apps/details?id=jp.gr.java_conf.foobar.testmaker.service&amp;hl=ja")))
                 }
@@ -187,7 +182,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 R.id.nav_others -> {
 
                     sendEvent("editOthers")
-
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse("http://play.google.com/store/apps/developer?id=banira")))
                 }
@@ -197,16 +191,13 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                     sendEvent("import")
 
                     if (Build.VERSION.SDK_INT <= 18) {
-                        //APIレベル18以前の機種の場合の処理
                         val intent = Intent(Intent.ACTION_PICK)
                         intent.type = "text/*"
-                        startActivityForResult(intent, 12346)
+                        startActivityForResult(intent, REQUEST_IMPORT)
                     } else if (Build.VERSION.SDK_INT >= 19) {
-                        //APIレベル19以降の機種の場合の処理
                         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                         intent.type = "text/*"
-                        startActivityForResult(intent, 12345)
-
+                        startActivityForResult(intent, REQUEST_IMPORT)
                     }
                 }
 
@@ -234,7 +225,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                     buttonImport.setOnClickListener { _ ->
 
-                        loadText(editPaste.text.toString())
+                        loadTestByText(editPaste.text.toString())
 
                         dialog.dismiss()
                     }
@@ -243,27 +234,20 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 R.id.nav_online -> {
 
                     sendEvent("online")
-
-                    val licenseIntent = Intent(this@MainActivity, OnlineMainActivity::class.java)
-                    licenseIntent.putExtra("url", "file:///android_asset/licenses.html")
-                    startActivityForResult(licenseIntent, REQUEST_EDIT)
+                    startActivityForResult(Intent(this@MainActivity, OnlineMainActivity::class.java), REQUEST_EDIT)
                 }
 
                 R.id.nav_move_questions -> {
 
                     sendEvent("move questions")
-
-                    val intent = Intent(this@MainActivity, MoveQuestionsActivity::class.java)
-                    startActivityForResult(intent, REQUEST_EDIT)
+                    startActivityForResult(Intent(this@MainActivity, MoveQuestionsActivity::class.java), REQUEST_EDIT)
 
                 }
 
                 R.id.nav_study_plus -> {
 
                     sendEvent("study plus")
-
-                    val intent = Intent(this@MainActivity, StudyPlusActivity::class.java)
-                    startActivityForResult(intent, REQUEST_EDIT)
+                    startActivityForResult(Intent(this@MainActivity, StudyPlusActivity::class.java), REQUEST_EDIT)
 
                 }
 
@@ -271,41 +255,37 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                     sendEvent("remove ad")
 
-                    if (billingManager.billingClientResponseCode > BILLING_MANAGER_NOT_INITIALIZED) {
+                    if (billingManager.billingClientResponseCode <= BILLING_MANAGER_NOT_INITIALIZED) return@setNavigationItemSelectedListener false
+                    if (isFinishing) return@setNavigationItemSelectedListener false
 
-                        if (!isFinishing) {
+                    getBillingManager().querySkuDetailsAsync(BillingClient.SkuType.INAPP, listOf("removead")
+                    ) { responseCode, skuDetailsList ->
+                        if (responseCode != BillingClient.BillingResponse.OK) {
 
-                            getBillingManager().querySkuDetailsAsync(BillingClient.SkuType.INAPP, listOf("removead")
-                            ) { responseCode, skuDetailsList ->
-                                if (responseCode != BillingClient.BillingResponse.OK) {
+                            Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
 
-                                    Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
+                        } else if (skuDetailsList != null && skuDetailsList.size > 0) {
+                            // If we successfully got SKUs, add a header in front of the row
+                            // Then fill all the other rows
+                            for (details in skuDetailsList) {
 
-                                } else if (skuDetailsList != null && skuDetailsList.size > 0) {
-                                    // If we successfully got SKUs, add a header in front of the row
-                                    // Then fill all the other rows
-                                    for (details in skuDetailsList) {
+                                if (isPremiumPurchased) {
 
-                                        if (isPremiumPurchased) {
-
-                                            Toast.makeText(baseContext, getString(R.string.alrady_removed_ad), Toast.LENGTH_SHORT).show()
-
-                                        } else {
-
-                                            getBillingManager().initiatePurchaseFlow(details.sku,
-                                                    BillingClient.SkuType.INAPP)
-                                        }
-                                    }
+                                    Toast.makeText(baseContext, getString(R.string.alrady_removed_ad), Toast.LENGTH_SHORT).show()
 
                                 } else {
-                                    // Handle empty state
-                                    Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
 
+                                    getBillingManager().initiatePurchaseFlow(details.sku,
+                                            BillingClient.SkuType.INAPP)
                                 }
                             }
+
+                        } else {
+                            // Handle empty state
+                            Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
+
                         }
                     }
-
                 }
             }
             false
@@ -326,44 +306,35 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     override fun onPause() {
         inputMethodManager.hideSoftInputFromWindow(edit_title.windowToken, 0)
-
         super.onPause()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_CANCELED) {
             testAndFolderAdapter.setValue()
-
             drawer_layout.closeDrawers()
         }
 
-        super.onActivityResult(requestCode, resultCode, data)
-
         if (resultCode != Activity.RESULT_OK) return
 
-        if (requestCode == 12345) {
-
+        if (requestCode == REQUEST_IMPORT) {
             launchEditorActivity(data!!.data)
-
-        } else if (requestCode == 12346) {
-
-            launchEditorActivity(data!!.data)
-
         }
     }
 
     private fun launchEditorActivity(uri: Uri?) {
 
         if (uri == null) return
-
         var inputStream: InputStream? = null
 
         try {
 
             inputStream = contentResolver.openInputStream(uri)
-
-            loadText(inputStream.bufferedReader().use(BufferedReader::readText))
+            inputStream?.also {
+                loadTestByText(it.bufferedReader().use(BufferedReader::readText))
+            }
 
         } catch (e: FileNotFoundException) {
             throw RuntimeException(e)
@@ -376,10 +347,10 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         }
     }
 
-    private fun loadText(text: String) {
+    private fun loadTestByText(text: String) {
 
         GlobalScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.Default) { text.toTest(baseContext) }.let{
+            withContext(Dispatchers.Default) { text.toTest(baseContext) }.let {
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
                 realmController.convert(it, -1)
                 testAndFolderAdapter.setValue()
@@ -408,5 +379,9 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     fun removeAd() {
         container.visibility = View.GONE
+    }
+
+    companion object {
+        const val REQUEST_IMPORT = 12345
     }
 }
