@@ -74,7 +74,7 @@ class CategoryAdapter(private val context: Context, private val mRealmController
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
-        var cate: TextView = v.findViewById(R.id.cate)
+        var cate: TextView = v.findViewById(R.id.color)
         var color: ImageView = v.findViewById(R.id.color)
         var delete: ImageButton = v.findViewById(R.id.delete)
 

@@ -69,11 +69,11 @@ open class OnlineTestAdapter(private val context: Context, private val array: Mu
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
-        val cate: ImageButton = v.findViewById(R.id.cate)
-        val title: TextView = v.findViewById(R.id.text_title_test)
+        val cate: ImageButton = v.findViewById(R.id.color)
+        val title: TextView = v.findViewById(R.id.text_title_category)
         val num: TextView = v.findViewById(R.id.num_questions)
         val num_download: TextView = v.findViewById(R.id.num_download)
-        val information: ImageTextButton = v.findViewById(R.id.share)
+        val information: ImageTextButton = v.findViewById(R.id.open)
         val play: ImageTextButton = v.findViewById(R.id.play)
 
     }
