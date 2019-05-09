@@ -6,5 +6,6 @@ import android.arch.lifecycle.ViewModel
 class MainViewModel: ViewModel() {
 
     val title: MutableLiveData<String> = MutableLiveData()
+    var isEditing: MutableLiveData<Boolean> = MutableLiveData()
 
 }

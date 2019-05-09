@@ -23,8 +23,6 @@ import jp.gr.java_conf.foobar.testmaker.service.BillingManager.BILLING_MANAGER_N
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_edit_test.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -42,27 +40,28 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     private lateinit var viewController: MainViewController
 
+    private lateinit var binding: ActivityMainBinding
+
+    private lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val viewModel = MainViewModel()
-
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        viewModel = MainViewModel()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
         binding.model = viewModel
 
         viewModel.title.observe(this, Observer {
-            button_add.isEnabled = it?.isNotEmpty() ?: false
+            binding.buttonAdd.isEnabled = it?.isNotEmpty() ?: false
         })
 
         sendScreen("MainActivity")
-
-        createAd(container)
+        createAd(binding.container)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
         viewController = MainViewController(this)
-
         billingManager = BillingManager(this, viewController.mUpdateListener)
 
         initNavigationView()
@@ -82,20 +81,16 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     private fun initViews() {
 
-        button_upload.setOnClickListener {
+        binding.buttonUpload.setOnClickListener {
 
-            if (body.visibility != View.GONE) {
-                body.visibility = View.GONE
-                button_upload.setImageResource(R.drawable.ic_expand_more_black)
-            } else {
-                body.visibility = View.VISIBLE
-                button_upload.setImageResource(R.drawable.ic_expand_less_black)
-                edit_title.isFocusable = true
-                edit_title.requestFocus()
+            if (binding.body.visibility == View.GONE) {
+                binding.test.editTitle.requestFocus()
             }
+
+            viewModel.isEditing.postValue(!(viewModel.isEditing.value ?: false))
         }
 
-        edit_title.setOnFocusChangeListener { v, hasFocus ->
+        binding.test.editTitle.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 // ソフトキーボードを表示する
                 inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED)
@@ -105,24 +100,24 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             }// フォーカスが外れたとき
         }
 
-        button_category.tag = ""
-        button_category.setOnClickListener {
-            inputMethodManager.hideSoftInputFromWindow(edit_title.windowToken, 0)
-            val categoryEditor = CategoryEditor(this@MainActivity, button_category, realmController, testAndFolderAdapter)
+        binding.test.buttonCategory.tag = ""
+        binding.test.buttonCategory.setOnClickListener {
+            inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
+            val categoryEditor = CategoryEditor(this@MainActivity, binding.test.buttonCategory, realmController, testAndFolderAdapter)
             categoryEditor.setCategory()
         }
 
-        if (Build.VERSION.SDK_INT >= 21) button_category.stateListAnimator = null
+        if (Build.VERSION.SDK_INT >= 21) binding.test.buttonCategory.stateListAnimator = null
 
-        button_category.setOnLongClickListener {
+        binding.test.buttonCategory.setOnLongClickListener {
 
             val builder = AlertDialog.Builder(this@MainActivity, R.style.MyAlertDialogStyle)
             builder.setMessage(getString(R.string.cancel_category))
             builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
-                button_category.tag = ""
-                button_category.text = getString(R.string.category)
-                button_category.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
+                binding.test.buttonCategory.tag = ""
+                binding.test.buttonCategory.text = getString(R.string.category)
+                binding.test.buttonCategory.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
 
             }
 
@@ -132,22 +127,22 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             false
         }
 
-        if (Build.VERSION.SDK_INT >= 21) button_add.stateListAnimator = null
+        if (Build.VERSION.SDK_INT >= 21) binding.buttonAdd.stateListAnimator = null
 
-        button_add.setOnClickListener {
+        binding.buttonAdd.setOnClickListener {
 
-            realmController.addTest(edit_title.text.toString(), color_chooser.getColorId(), button_category.tag.toString())
+            realmController.addTest(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
 
             Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
 
             testAndFolderAdapter.setValue()
 
-            edit_title.setText("")
-            button_category.tag = ""
-            button_category.text = getString(R.string.category)
-            button_category.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
-            body.visibility = View.GONE
-            button_upload.setImageResource(R.drawable.ic_expand_more_black)
+            viewModel.isEditing.postValue(false)
+
+            binding.test.editTitle.setText("")
+            binding.test.buttonCategory.tag = ""
+            binding.test.buttonCategory.text = getString(R.string.category)
+            binding.test.buttonCategory.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
 
             sendEvent("createTest")
             sendFirebaseEvent("add-test")
@@ -158,7 +153,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     private fun initNavigationView() {
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -292,11 +287,11 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             false
         }
 
-        drawerToggle = ActionBarDrawerToggle(this, drawer_layout,
-                toolbar, R.string.add,
+        drawerToggle = ActionBarDrawerToggle(this, binding.drawerLayout,
+                binding.toolbar, R.string.add,
                 R.string.add)
 
-        drawer_layout.addDrawerListener(drawerToggle)
+        binding.drawerLayout.addDrawerListener(drawerToggle)
 
     }
 
@@ -306,7 +301,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     }
 
     override fun onPause() {
-        inputMethodManager.hideSoftInputFromWindow(edit_title.windowToken, 0)
+        inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
         super.onPause()
     }
 
@@ -315,7 +310,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
         if (resultCode == Activity.RESULT_CANCELED) {
             testAndFolderAdapter.setValue()
-            drawer_layout.closeDrawers()
+            binding.drawerLayout.closeDrawers()
         }
 
         if (resultCode != Activity.RESULT_OK) return
@@ -379,7 +374,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     }
 
     fun removeAd() {
-        container.visibility = View.GONE
+        binding.container.visibility = View.GONE
     }
 
     companion object {
