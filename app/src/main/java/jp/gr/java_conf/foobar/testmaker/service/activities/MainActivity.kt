@@ -150,7 +150,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             sendEvent("createTest")
             sendFirebaseEvent("add-test")
 
-
         }
 
     }
