@@ -251,6 +251,11 @@
     <string name="is_check_order">check answer order</string>
     <string name="share_multiple_answers_order">multiple answers order,%1$s,</string>
     <string name="load_multiple_answers_order">multiple answers order</string>
+    <string name="format_question">type</string>
+    <string name="normal">normal</string>
+    <string name="select">選択</string>
+    <string name="complete">multi answer</string>
+    <string name="select_complete">multi answer select</string>
 
 
 </resources>

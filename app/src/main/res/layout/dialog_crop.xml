@@ -15,7 +15,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        custom:scv_crop_mode="ratio_4_3"
+        custom:scv_crop_mode="free"
         custom:scv_handle_color="@color/blue_holo"
         custom:scv_guide_color="@color/blue_holo"
         custom:scv_frame_color="@color/blue_holo"

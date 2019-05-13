@@ -33,4 +33,5 @@
 
     <dimen name="margin_bottom">64dp</dimen>
     <dimen name="width_order">24dp</dimen>
+    <dimen name="view_width_large">128dp</dimen>
 </resources>

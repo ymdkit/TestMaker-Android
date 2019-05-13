@@ -1,0 +1,27 @@
+package jp.gr.java_conf.foobar.testmaker.service.activities
+
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
+import jp.gr.java_conf.foobar.testmaker.service.Constants
+
+class EditViewModel: ViewModel() {
+
+    val formatQuestion: MutableLiveData<Int> = MutableLiveData()
+    val stateEditing: MutableLiveData<Int> = MutableLiveData()
+    val spinnerAnswersPosition: MutableLiveData<Int> = MutableLiveData()
+    val isEditingExplanation: MutableLiveData<Boolean> = MutableLiveData()
+
+    init {
+        formatQuestion.value = Constants.WRITE
+        stateEditing.value = Constants.NOT_EDITING
+        isEditingExplanation.value = false
+
+    }
+
+    fun editQuestion(){
+        stateEditing.value = Constants.EDIT_QUESTION
+    }
+
+
+
+}

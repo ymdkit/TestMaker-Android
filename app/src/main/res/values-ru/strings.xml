@@ -243,5 +243,7 @@
     <string name="msg_reset_achievement">сброс Уровень достижения</string>
     <string name="is_check_order">проверить заказ ответа</string>
     <string name="share_multiple_answers_order">multiple answers order</string>
+    <string name="format_question">type</string>
+    <string name="select">選択</string>
 
 </resources>
