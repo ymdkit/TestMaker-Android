@@ -82,7 +82,7 @@ class PlayActivity : BaseActivity() {
 
         if (sharedPreferenceManager.refine) questions = questions.filter{ !it.correct } as ArrayList<Quest>
 
-        if (intent.hasExtra("random")) questions.shuffle()
+        if (sharedPreferenceManager.random) questions.shuffle()
 
         if (realmController.getTest(testId).limit < questions.size) questions = ArrayList(questions.take(realmController.getTest(testId).limit))
 
@@ -336,8 +336,6 @@ class PlayActivity : BaseActivity() {
         play_problem_view.initImage()
 
         val i = Intent(this@PlayActivity, ResultActivity::class.java)
-
-        if (intent.hasExtra("random")) i.putExtra("random", intent.getIntExtra("random", -1))
 
         i.putExtra("duration",System.currentTimeMillis() - startTime)
         i.putExtra("testId", testId)

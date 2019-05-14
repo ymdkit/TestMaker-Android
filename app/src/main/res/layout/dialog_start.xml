@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/button_red"
+        android:visibility="gone"
         android:text="@string/message_order"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:background="@drawable/button_red"
+        android:visibility="gone"
         android:text="@string/message_random"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -80,6 +82,11 @@
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/check_random"
+            style="@style/MyStartCheckBoxStyle"
+            android:text="@string/is_random" />
+
+        <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/check_refine"
             style="@style/MyStartCheckBoxStyle"
             android:text="@string/message_wrong_only" />
@@ -108,6 +115,19 @@
             android:id="@+id/check_audio"
             style="@style/MyStartCheckBoxStyle"
             android:text="@string/message_delete_sound" />
+
+        <Button
+            android:id="@+id/button_start"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_height_normal"
+            android:layout_margin="@dimen/element_spacing_small"
+            android:background="@drawable/button_blue"
+            android:text="@string/start"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_small"
+            />
 
 
     </LinearLayout>

@@ -256,6 +256,8 @@
     <string name="select">選択</string>
     <string name="complete">multi answer</string>
     <string name="select_complete">multi answer select</string>
+    <string name="start">start</string>
+    <string name="is_random">random order</string>
 
 
 </resources>

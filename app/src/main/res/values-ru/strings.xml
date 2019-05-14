@@ -245,5 +245,7 @@
     <string name="share_multiple_answers_order">multiple answers order</string>
     <string name="format_question">type</string>
     <string name="select">選択</string>
+    <string name="start">start</string>
+    <string name="is_random">random order</string>
 
 </resources>

@@ -53,8 +53,6 @@ class ResultActivity : BaseActivity() {
                         val i = Intent(this@ResultActivity, PlayActivity::class.java)
                         i.putExtra("testId", testId)
 
-                        if (intent.hasExtra("random")) i.putExtra("random", intent.getIntExtra("random", -1))
-
                         i.putExtra("redo", 1)
 
                         when (which) {

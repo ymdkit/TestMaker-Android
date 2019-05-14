@@ -256,5 +256,7 @@
     <string name="normal">記述</string>
     <string name="complete">完答</string>
     <string name="select_complete">選択完答</string>
+    <string name="start">スタート</string>
+    <string name="is_random">ランダムに出題</string>
 
 </resources>

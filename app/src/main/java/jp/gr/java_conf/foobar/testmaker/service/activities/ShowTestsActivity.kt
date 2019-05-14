@@ -119,6 +119,10 @@ open class ShowTestsActivity : BaseActivity() {
         val editStart = dialogLayout.findViewById<EditText>(R.id.set_start_position)
         editStart.setText((test.startPosition + 1 ).toString())
 
+        val checkRandom = dialogLayout.findViewById<CheckBox>(R.id.check_random)
+        checkRandom.isChecked = sharedPreferenceManager.random
+        checkRandom.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.random = isChecked }
+
         val checkReverse = dialogLayout.findViewById<CheckBox>(R.id.check_reverse)
         checkReverse.isChecked = sharedPreferenceManager.reverse
         checkReverse.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.reverse = isChecked }
@@ -144,15 +148,9 @@ open class ShowTestsActivity : BaseActivity() {
         checkCaseInsensitive.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.isCaseInsensitive = isChecked }
         if(Locale.getDefault().language != "en")checkCaseInsensitive.visibility = View.GONE
 
-        val actionNormal = dialogLayout.findViewById<Button>(R.id.action_normal)
-        actionNormal.setOnClickListener { startAnswer(test, editStart.text.toString(),editLimit.text.toString(), false) }
-
-        val actionRandom = dialogLayout.findViewById<Button>(R.id.action_random)
-        actionRandom.setOnClickListener { startAnswer(test, editStart.text.toString(),editLimit.text.toString(), true) }
-
-        if (Build.VERSION.SDK_INT >= 21) {
-            actionNormal.stateListAnimator = null
-            actionRandom.stateListAnimator = null
+        val buttonStart = dialogLayout.findViewById<Button>(R.id.button_start)
+        buttonStart.setOnClickListener {
+            startAnswer(test, editStart.text.toString(),editLimit.text.toString())
         }
 
         val builder = AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
@@ -178,7 +176,7 @@ open class ShowTestsActivity : BaseActivity() {
 
     }
 
-    private fun startAnswer(test: Test, start:String,limit: String, rand: Boolean) {
+    private fun startAnswer(test: Test, start:String,limit: String) {
 
         var incorrect = false
 
@@ -200,8 +198,6 @@ open class ShowTestsActivity : BaseActivity() {
 
             val i = Intent(this@ShowTestsActivity, PlayActivity::class.java)
             i.putExtra("testId", test.id)
-
-            if (rand) i.putExtra("random", 1)
 
             realmController.updateLimit(test, Integer.parseInt(limit))
             realmController.updateStart(test,Integer.parseInt(start) - 1)
