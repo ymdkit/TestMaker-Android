@@ -57,7 +57,7 @@
                     android:background="@drawable/feedback"
                     android:contentDescription="@string/open"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_expand_more_black"
+                    android:src="@{model.stateEditing == Constants.NOT_EDITING ? @drawable/ic_expand_more_black : @drawable/ic_expand_less_black}"
                     card_view:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -173,7 +173,7 @@
                         android:layout_height="wrap_content"
                         android:paddingStart="@dimen/view_width_small"
                         android:visibility="@{model.formatQuestion == Constants.COMPLETE || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
-                        android:entries="@array/spinner_answers"
+                        android:entries="@{model.formatQuestion == Constants.COMPLETE ? @stringArray/spinner_answers_complete : @stringArray/spinner_answers_select_complete}"
                         android:gravity="end"
                         android:selectedItemPosition="@={model.spinnerAnswersPosition}"
                         card_view:layout_constraintRight_toRightOf="parent"
@@ -198,8 +198,9 @@
                         android:layout_height="wrap_content"
                         android:paddingStart="@dimen/view_width_small"
                         android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
-                        android:entries="@array/spinner_selects"
+                        android:entries="@{model.formatQuestion == Constants.SELECT ? @stringArray/spinner_selects : @stringArray/spinner_selects_complete}"
                         android:gravity="end"
+                        android:selectedItemPosition="@={model.spinnerSelectsPosition}"
                         card_view:layout_constraintRight_toRightOf="parent"
                         card_view:layout_constraintTop_toTopOf="@id/text_size_select" />
 
@@ -223,9 +224,34 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|end"
                         android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
+                        android:checked="@={model.isAuto}"
                         card_view:layout_constraintLeft_toRightOf="@id/text_auto"
                         card_view:layout_constraintRight_toRightOf="parent"
                         card_view:layout_constraintTop_toTopOf="@id/text_auto" />
+
+                    <TextView
+                        android:id="@+id/text_check_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/is_check_order"
+                        android:textSize="@dimen/text_size_medium"
+                        android:visibility="@{model.formatQuestion == Constants.COMPLETE ? View.VISIBLE : View.GONE}"
+                        android:layout_marginTop="@dimen/element_spacing_small"
+                        card_view:layout_constraintBottom_toBottomOf="@id/change_check_order"
+                        card_view:layout_constraintLeft_toLeftOf="parent"
+                        card_view:layout_constraintTop_toBottomOf="@id/change_auto" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/change_check_order"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|end"
+                        android:checked="@={model.isCheckOrder}"
+                        android:visibility="@{model.formatQuestion == Constants.COMPLETE ? View.VISIBLE : View.GONE}"
+                        card_view:layout_constraintLeft_toRightOf="@id/text_check_order"
+                        card_view:layout_constraintRight_toRightOf="parent"
+                        card_view:layout_constraintTop_toTopOf="@id/text_check_order" />
 
                     <TextView
                         android:id="@+id/text_explanation"
@@ -237,7 +263,7 @@
                         android:layout_marginTop="@dimen/element_spacing_small"
                         card_view:layout_constraintBottom_toBottomOf="@id/change_explanation"
                         card_view:layout_constraintLeft_toLeftOf="parent"
-                        card_view:layout_constraintTop_toBottomOf="@id/change_auto" />
+                        card_view:layout_constraintTop_toBottomOf="@id/change_check_order" />
 
                     <android.support.v7.widget.SwitchCompat
                         android:id="@+id/change_explanation"

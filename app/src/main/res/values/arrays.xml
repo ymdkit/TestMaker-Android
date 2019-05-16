@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="spinner_answers">
+    <string-array name="spinner_answers_complete">
         <item>2</item>
         <item>3</item>
         <item>4</item>
     </string-array>
 
+    <string-array name="spinner_answers_select_complete">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
     <string-array name="spinner_selects">
         <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+
+    <string-array name="spinner_selects_complete">
         <item>3</item>
         <item>4</item>
         <item>5</item>

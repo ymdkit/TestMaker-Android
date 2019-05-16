@@ -90,13 +90,52 @@ open class EditActivity : BaseActivity() {
         showLayoutWrite()
 
         viewModel.spinnerAnswersPosition.observe(this, Observer { position ->
-
             position?.let {
-                binding.editCompleteView.reloadAnswers(baseContext.resources.getStringArray(R.array.spinner_answers)[it].toInt())
-                binding.editSelectCompleteView.setAnswerNum(baseContext.resources.getStringArray(R.array.spinner_answers)[it].toInt())
+
+                when (viewModel.formatQuestion.value) {
+                    Constants.COMPLETE -> {
+                        binding.editCompleteView.reloadAnswers(baseContext.resources.getStringArray(R.array.spinner_answers_complete)[it].toInt())
+                    }
+                    Constants.SELECT_COMPLETE -> {
+                        binding.editSelectCompleteView.setAnswerNum(baseContext.resources.getStringArray(R.array.spinner_answers_select_complete)[it].toInt())
+                    }
+                }
             }
         })
 
+        viewModel.spinnerSelectsPosition.observe(this, Observer { position ->
+            position?.let {
+
+                when (viewModel.formatQuestion.value) {
+                    Constants.SELECT -> {
+                        binding.editSelectView.reloadOthers(baseContext.resources.getStringArray(R.array.spinner_selects)[it].toInt() - 1)
+                    }
+                    Constants.SELECT_COMPLETE -> {
+                        binding.editSelectCompleteView.reloadSelects(baseContext.resources.getStringArray(R.array.spinner_selects_complete)[it].toInt())
+                    }
+                }
+            }
+        })
+
+        viewModel.isAuto.observe(this, Observer {
+            sharedPreferenceManager.auto = it ?: false
+            when (viewModel.formatQuestion.value) {
+                Constants.SELECT -> {
+                    binding.editSelectView.setAuto(it
+                            ?: false, baseContext.resources.getStringArray(R.array.spinner_selects)[viewModel.spinnerSelectsPosition.value
+                            ?: 0].toInt() - 1)
+                }
+                Constants.SELECT_COMPLETE -> {
+                    binding.editSelectCompleteView.setAuto(it
+                            ?: false, baseContext.resources.getStringArray(R.array.spinner_selects_complete)[viewModel.spinnerSelectsPosition.value
+                            ?: 0].toInt())
+                }
+            }
+        })
+
+        viewModel.isCheckOrder.observe(this, Observer {
+            sharedPreferenceManager.isCheckOrder = it ?: false
+        })
     }
 
     private fun initAdapter() {
@@ -107,12 +146,11 @@ open class EditActivity : BaseActivity() {
             override fun onClickEditQuestion(question: Quest) {
 
                 showLayoutEdit()
-
                 text_title.text = getString(R.string.edit_question)
                 button_cancel.visibility = View.VISIBLE
                 button_add.text = getString(R.string.save_question)
-
                 set_problem.setText(question.problem)
+
                 questionId = question.id
 
                 if (question.imagePath != "") {
@@ -142,13 +180,10 @@ open class EditActivity : BaseActivity() {
                         }
                     }
                 } else {
-
                     button_image.setImageResource(R.drawable.ic_photo_white)
-
                 }
 
-                textInputLayout_explanation.visibility = if (question.explanation.isNotEmpty()) View.VISIBLE else View.GONE
-                set_explanation.setText(question.explanation)
+                viewModel.isEditingExplanation.value = question.explanation.isNotEmpty()
 
                 when (question.type) {
 
@@ -167,13 +202,11 @@ open class EditActivity : BaseActivity() {
                         showLayoutSelect()
 
                         sharedPreferenceManager.numOthers = question.selections.size
-
                         edit_select_view.reloadOthers(question.selections.size)
                         edit_select_view.setAnswer(question.answer)
                         edit_select_view.setOthers(question.selections)
                         button_type.text = getString(R.string.action_write)
-
-                        sharedPreferenceManager.auto = question.auto
+                        viewModel.isAuto.value = question.auto
 
                         edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
 
@@ -181,42 +214,27 @@ open class EditActivity : BaseActivity() {
                     Constants.COMPLETE -> {
 
                         showLayoutComplete()
-
                         sharedPreferenceManager.numAnswers = question.answers.size
-
                         sharedPreferenceManager.isCheckOrder = question.isCheckOrder
-
                         edit_complete_view.reloadAnswers(question.answers.size)
-
                         edit_complete_view.setAnswers(question)
-
                         button_type.text = getString(R.string.action_choose)
                     }
 
                     Constants.SELECT_COMPLETE -> {
 
                         showLayoutSelectComplete()
-
                         sharedPreferenceManager.numAnswersSelect = question.answers.size
-
                         sharedPreferenceManager.numOthers = question.selections.size + question.answers.size - 1
-
                         edit_select_complete_view.setAnswerNum(question.answers.size)
-
                         edit_select_complete_view.reloadSelects(question.answers.size + question.selections.size)
-
                         edit_select_complete_view.setSelections(question.answers, question.selections)
-
                         button_type.text = getString(R.string.action_choose)
-
-                        sharedPreferenceManager.auto = question.auto
-
+                        viewModel.isAuto.value = question.auto
                         edit_select_complete_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers + 1)
 
                     }
-
                 }
-
             }
 
             override fun onClickDeleteQuestion(data: Quest) {
@@ -227,24 +245,18 @@ open class EditActivity : BaseActivity() {
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
                     if (data.imagePath != "") deleteFile(data.imagePath)
-
                     realmController.deleteQuestion(data)
-
                     editAdapter.notifyDataSetChanged()
-
                 }
                 builder.setNegativeButton(android.R.string.cancel, null)
                 builder.create().show()
-
             }
         })
-
     }
 
     private fun showLayoutEdit() {
 
         viewModel.stateEditing.value = Constants.EDIT_QUESTION
-        button_expand.setImageResource(R.drawable.ic_expand_less_black)
         set_problem.isFocusable = true
         set_problem.requestFocus()
         button_add.visibility = View.VISIBLE
@@ -284,7 +296,6 @@ open class EditActivity : BaseActivity() {
                     withContext(Dispatchers.Default) {
                         val imageOptions = BitmapFactory.Options()
                         imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-
                         try {
 
                             val outStream = baseContext.openFileOutput(imagePath, MODE_PRIVATE)
@@ -328,8 +339,6 @@ open class EditActivity : BaseActivity() {
 
         viewModel.stateEditing.value = Constants.NOT_EDITING
         button_cancel.visibility = View.GONE
-
-        button_expand.setImageResource(R.drawable.ic_expand_more_black)
         text_title.text = getString(R.string.add_question)
 
     }
@@ -337,99 +346,80 @@ open class EditActivity : BaseActivity() {
     private fun addQuestion() {
 
         if (set_problem.text.toString() == "") {
-
             Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-
             return
-
         }
 
         when (viewModel.formatQuestion.value ?: 0) {
 
-            Constants.WRITE ->
+            Constants.WRITE -> {
 
-                if (set_answer_write.text.toString() == "") {
-
+                if (set_answer_write.text.toString().isEmpty()) {
                     Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-
-                    return
-
-                } else {
-
-                    val p = StructQuestion(set_problem.text.toString(), set_answer_write.text.toString())
-
-                    p.setImagePath(imagePath)
-                    p.setExplanation(set_explanation.text.toString())
-                    realmController.addQuestion(testId, p, questionId)
-
-                }
-
-            Constants.SELECT ->
-
-                if (edit_select_view.isFilled()) {
-
-                    val p = StructQuestion(set_problem.text.toString(), edit_select_view.getAnswer(), edit_select_view.getOthers())
-                    p.setAuto(sharedPreferenceManager.auto)
-                    p.setImagePath(imagePath)
-                    p.setExplanation(set_explanation.text.toString())
-                    realmController.addQuestion(testId, p, questionId)
-
-                } else {
-
-                    Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-
-                    return
-
-                }
-
-
-            Constants.COMPLETE ->
-
-
-                if (edit_complete_view.isFilled()) {
-
-                    if (edit_complete_view.isDuplicate() && !sharedPreferenceManager.isCheckOrder) {
-
-                        Toast.makeText(applicationContext, getString(R.string.message_answer_duplicate), Toast.LENGTH_LONG).show()
-
-                        return
-
-                    }
-
-                    val p = StructQuestion(set_problem.text.toString(), edit_complete_view.getAnswers())
-                    p.setImagePath(imagePath)
-                    p.isCheckOrder = sharedPreferenceManager.isCheckOrder
-                    p.setExplanation(set_explanation.text.toString())
-
-                    realmController.addQuestion(testId, p, questionId)
-
-                } else {
-
-                    Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-
                     return
                 }
 
-            Constants.SELECT_COMPLETE ->
+                val p = StructQuestion(set_problem.text.toString(), set_answer_write.text.toString())
+                p.setImagePath(imagePath)
+                p.setExplanation(set_explanation.text.toString())
+                realmController.addQuestion(testId, p, questionId)
+            }
+            Constants.SELECT -> {
 
-                if (edit_select_complete_view.isFilled()) {
-
-                    val p = StructQuestion(set_problem.text.toString(), edit_select_complete_view.getAnswers(), edit_select_complete_view.getOthers())
-                    p.setAuto(sharedPreferenceManager.auto)
-                    p.isCheckOrder = false //todo 後に実装
-                    p.setImagePath(imagePath)
-                    p.setExplanation(set_explanation.text.toString())
-
-                    realmController.addQuestion(testId, p, questionId)
-
-                } else {
-
+                if (!edit_select_view.isFilled()) {
                     Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-
                     return
                 }
 
+                val p = StructQuestion(set_problem.text.toString(), edit_select_view.getAnswer(), edit_select_view.getOthers())
+                p.setAuto(sharedPreferenceManager.auto)
+                p.setImagePath(imagePath)
+                p.setExplanation(set_explanation.text.toString())
+                realmController.addQuestion(testId, p, questionId)
 
+            }
+
+            Constants.COMPLETE -> {
+
+                if (!edit_complete_view.isFilled()) {
+                    Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                if (edit_complete_view.isDuplicate() && !sharedPreferenceManager.isCheckOrder) {
+                    Toast.makeText(applicationContext, getString(R.string.message_answer_duplicate), Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                val p = StructQuestion(set_problem.text.toString(), edit_complete_view.getAnswers())
+                p.setImagePath(imagePath)
+                p.isCheckOrder = sharedPreferenceManager.isCheckOrder
+                p.setExplanation(set_explanation.text.toString())
+                realmController.addQuestion(testId, p, questionId)
+
+            }
+            Constants.SELECT_COMPLETE -> {
+
+                if (baseContext.resources.getStringArray(R.array.spinner_answers_select_complete)[viewModel.spinnerSelectsPosition.value
+                                ?: 0].toInt() <= baseContext.resources.getStringArray(R.array.spinner_answers_select_complete)[viewModel.spinnerAnswersPosition.value
+                                ?: 0].toInt()) {
+                    Toast.makeText(applicationContext, getString(R.string.message_answers_num), Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                if (!edit_select_complete_view.isFilled()) {
+                    Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                val p = StructQuestion(set_problem.text.toString(), edit_select_complete_view.getAnswers(), edit_select_complete_view.getOthers())
+                p.setAuto(sharedPreferenceManager.auto)
+                p.isCheckOrder = false //todo 後に実装
+                p.setImagePath(imagePath)
+                p.setExplanation(set_explanation.text.toString())
+
+                realmController.addQuestion(testId, p, questionId)
+            }
         }
 
         reset()
@@ -452,22 +442,16 @@ open class EditActivity : BaseActivity() {
             override fun onQueryTextSubmit(s: String): Boolean {
 
                 editAdapter.searchWord = s
-
                 editAdapter.filter = true
-
                 editAdapter.notifyDataSetChanged()
-
                 return false
             }
 
             override fun onQueryTextChange(s: String): Boolean {
 
                 editAdapter.searchWord = s
-
                 editAdapter.filter = true
-
                 editAdapter.notifyDataSetChanged()
-
                 return false
             }
         })
@@ -475,11 +459,8 @@ open class EditActivity : BaseActivity() {
         searchView.setOnCloseListener {
 
             editAdapter.searchWord = ""
-
             editAdapter.filter = false
-
             editAdapter.notifyDataSetChanged()
-
             false
         }
 
@@ -666,170 +647,6 @@ open class EditActivity : BaseActivity() {
 
         }
 
-//        button_detail.setOnClickListener(object : View.OnClickListener {
-//            override fun onClick(view: View) {
-//
-//                val dialogLayout = LayoutInflater.from(this@EditActivity).inflate(R.layout.dialog_detail,
-//                        findViewById(R.id.layout_dialog_detail))
-//
-//                val add = dialogLayout.findViewById<ImageButton>(R.id.add)
-//                val minus = dialogLayout.findViewById<ImageButton>(R.id.minus)
-//
-//                val addSelect = dialogLayout.findViewById<ImageButton>(R.id.add_answer_select)
-//                val minusSelect = dialogLayout.findViewById<ImageButton>(R.id.minus_answer_select)
-//
-//                val sizeAnswerSelect = dialogLayout.findViewById<TextView>(R.id.size_answer_select)
-//
-//                val number = dialogLayout.findViewById<TextView>(R.id.size_choose)
-//                val changeAuto = dialogLayout.findViewById<SwitchCompat>(R.id.change_auto)
-//                val changeExplanation = dialogLayout.findViewById<SwitchCompat>(R.id.change_explanation)
-//                val changeIsCheckOrder = dialogLayout.findViewById<SwitchCompat>(R.id.switch_is_check_order)
-//
-//                changeIsCheckOrder.isChecked = sharedPreferenceManager.isCheckOrder
-//                changeIsCheckOrder.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.isCheckOrder = isChecked }
-//
-//                changeExplanation.isChecked = sharedPreferenceManager.explanation
-//                changeExplanation.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.explanation = isChecked }
-//
-//                changeAuto.isChecked = sharedPreferenceManager.auto
-//                changeAuto.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.auto = isChecked }
-//
-//                when (viewModel.formatQuestion.value ?: 0) {
-//                    Constants.WRITE, Constants.COMPLETE -> {
-//
-//                        val e = dialogLayout.findViewById<LinearLayout>(R.id.layout_switch)
-//                        e.visibility = View.GONE
-//
-//                        dialogLayout.findViewById<LinearLayout>(R.id.layout_number_answer_select).visibility = View.GONE
-//
-//                        val t = dialogLayout.findViewById<TextView>(R.id.textView)
-//                        t.text = getString(R.string.number_answers)
-//
-//                        number.text = sharedPreferenceManager.numAnswers.toString()
-//
-//                        changeAuto.visibility = View.GONE
-//
-//                    }
-//                    Constants.SELECT, Constants.SELECT_COMPLETE -> {
-//
-//                        number.text = (sharedPreferenceManager.numOthers + 1).toString()
-//
-//                        sizeAnswerSelect.text = "${sharedPreferenceManager.numAnswersSelect}"
-//
-//                        dialogLayout.findViewById<LinearLayout>(R.id.layout_is_check_order).visibility = View.GONE
-//                    }
-//
-//                }
-//
-//                addSelect.setOnClickListener {
-//                    if (Integer.parseInt(sizeAnswerSelect.text.toString()) < Integer.parseInt(number.text.toString())) {
-//                        sizeAnswerSelect.text = "${Integer.parseInt(sizeAnswerSelect.text.toString()) + 1}"
-//                    }
-//                }
-//
-//                minusSelect.setOnClickListener {
-//                    if (Integer.parseInt(sizeAnswerSelect.text.toString()) - 1 > 0) {
-//                        sizeAnswerSelect.text = "${Integer.parseInt(sizeAnswerSelect.text.toString()) - 1}"
-//                    }
-//                }
-//
-//                add.setOnClickListener { checkCount(number, 1) }
-//
-//                minus.setOnClickListener { checkCount(number, -1) }
-//
-//                val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
-//                builder.setView(dialogLayout)
-//                builder.setTitle(getString(R.string.action_detail))
-//                builder.setPositiveButton(android.R.string.ok, null)
-//                builder.setNegativeButton(android.R.string.cancel, null)
-//
-//                val dialog = builder.show()
-//
-//                val button = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-//                button.setOnClickListener {
-//                    // 場合によっては自分で明示的に閉じる必要がある
-//
-//                    when (viewModel.formatQuestion.value ?: 0) {
-//
-//                        Constants.WRITE, Constants.COMPLETE -> {
-//
-//                            edit_complete_view.reloadAnswers(Integer.parseInt(number.text.toString()))
-//                            sharedPreferenceManager.numAnswers = Integer.parseInt(number.text.toString())
-//
-//                            if (sharedPreferenceManager.numAnswers > 1) {
-//
-//                                showLayoutComplete()
-//
-//                            } else {
-//
-//                                showLayoutWrite()
-//                            }
-//                        }
-//                        Constants.SELECT, Constants.SELECT_COMPLETE -> {
-//
-//                            if (Integer.parseInt(number.text.toString()) < Integer.parseInt(sizeAnswerSelect.text.toString())) {
-//
-//                                Toast.makeText(applicationContext, getString(R.string.message_answers_num), Toast.LENGTH_SHORT).show()
-//
-//                                return@setOnClickListener
-//                            }
-//
-//                            if (Integer.parseInt(sizeAnswerSelect.text.toString()) > 1) {
-//
-//                                showLayoutSelectComplete()
-//
-//                            } else {
-//
-//                                showLayoutSelect()
-//                            }
-//
-//                            edit_select_complete_view.setAnswerNum(Integer.parseInt(sizeAnswerSelect.text.toString()))
-//                            edit_select_complete_view.reloadSelects(Integer.parseInt(number.text.toString()))
-//                            edit_select_view.reloadOthers(Integer.parseInt(number.text.toString()) - 1)
-//                            sharedPreferenceManager.numOthers = Integer.parseInt(number.text.toString()) - 1
-//                            sharedPreferenceManager.numAnswersSelect = Integer.parseInt(sizeAnswerSelect.text.toString())
-//
-//                            edit_select_complete_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers + 1)
-//                            edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
-//
-//                        }
-//                    }
-//
-//                    textInputLayout_explanation.visibility = if (sharedPreferenceManager.explanation) View.VISIBLE else View.GONE
-//
-//                    dialog.dismiss()
-//
-//                }
-//
-//                dialog.show()
-//            }
-//
-//            fun checkCount(number: TextView, i: Int) {
-//                val num = Integer.parseInt(number.text.toString())
-//
-//                var mini = 0
-//                var max = 0
-//
-//                when (viewModel.formatQuestion.value ?: 0) {
-//                    Constants.WRITE, Constants.COMPLETE -> {
-//                        mini = 1
-//                        max = 4
-//                    }
-//                    Constants.SELECT, Constants.SELECT_COMPLETE -> {
-//                        mini = 2
-//                        max = 6
-//                    }
-//                }
-//
-//                if (num + i in mini..max) {
-//                    number.text = (num + i).toString()
-//
-//                } else {
-//                    Toast.makeText(applicationContext, getString(R.string.limit, mini, max), Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        })
-
         button_type.setOnClickListener {
 
             if (button_type.text == getString(R.string.action_choose)) {
@@ -895,8 +712,6 @@ open class EditActivity : BaseActivity() {
                 } else {
                     openImage()
                 }
-
-
             }
 
             fun openImage() {
@@ -942,8 +757,6 @@ open class EditActivity : BaseActivity() {
 
                 return true
             }
-
-
         })
 
         touchHelper.attachToRecyclerView(recycler_view)

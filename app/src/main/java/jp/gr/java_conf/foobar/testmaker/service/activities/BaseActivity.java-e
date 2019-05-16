@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -12,6 +13,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -99,10 +102,10 @@ public class BaseActivity extends AppCompatActivity {
             return;
         }
 
-        AdView adView = new AdView(this);
+        PublisherAdView adView = new PublisherAdView(this);
         adView.setAdUnitId("ca-app-pub-8942090726462263/8420884238");
-        adView.setAdSize(AdSize.BANNER);
-        AdRequest adRequest = new AdRequest.Builder()
+        adView.setAdSizes(AdSize.BANNER);
+        PublisherAdRequest adRequest = new PublisherAdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice("DA539D38B08126EBEF7E059DCA26831C")
                 .addTestDevice("BDB57B5078A79B87345E711A52F0F995")
@@ -110,8 +113,6 @@ public class BaseActivity extends AppCompatActivity {
         adView.loadAd(adRequest);
 
         container.addView(adView);
-
-
     }
 
     @Override

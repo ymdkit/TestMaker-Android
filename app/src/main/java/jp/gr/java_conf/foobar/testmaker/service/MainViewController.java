@@ -48,11 +48,11 @@ public class MainViewController {
         public void onPurchasesUpdated(List<Purchase> purchaseList) {
 
             for (Purchase purchase : purchaseList) {
+
                 switch (purchase.getSku()) {
                     case "removead":
                         Log.d(TAG, "You remove ad! Congratulations!!!");
                         mActivity.sharedPreferenceManager.setRemovedAd(true);
-
                         mActivity.removeAd();
                         break;
                 }
