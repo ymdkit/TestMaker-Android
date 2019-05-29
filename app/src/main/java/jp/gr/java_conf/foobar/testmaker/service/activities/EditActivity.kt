@@ -163,6 +163,7 @@ open class EditActivity : BaseActivity() {
                 button_cancel.visibility = View.VISIBLE
                 button_add.text = getString(R.string.save_question)
                 set_problem.setText(question.problem)
+                set_explanation.setText(question.explanation)
 
                 questionId = question.id
 
