@@ -5,84 +5,72 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         style="@style/MyCardViewStyle"
         android:focusable="true"
-        custom:cardUseCompatPadding="true"
         android:foreground="?android:attr/selectableItemBackground"
-        custom:cardCornerRadius="@dimen/element_spacing_small">
+        custom:cardCornerRadius="@dimen/element_spacing_small"
+        custom:cardUseCompatPadding="true">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:splitMotionEvents="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:splitMotionEvents="false">
 
             <ImageButton
-                android:id="@+id/cate"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/white"
-                android:layout_width="match_parent"
+                android:id="@+id/color"
+                android:layout_width="@dimen/element_spacing_small"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/element_spacing_normal"
                 android:background="@drawable/circle"
-                android:layout_weight="1.07" />
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textSize="@dimen/text_size_medium"
-                    android:text="Large Text"
-                    android:gravity="center_vertical"
-                    android:id="@+id/title_questions"
-                    android:singleLine="true"
-                    android:layout_weight="1"
-                    />
-
-                <LinearLayout
-                    android:id="@+id/info"
-                    android:orientation="horizontal"
-                    android:layout_weight="2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:gravity="start"
-                        android:layout_marginRight="@dimen/element_spacing_small"
-                        android:layout_marginEnd="@dimen/element_spacing_small"
-                        android:textSize="@dimen/text_size_small"
-                        android:id="@+id/num_questions" />
-
-                </LinearLayout>
+                android:contentDescription="@null"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white"
+                custom:layout_constraintLeft_toLeftOf="parent" />
 
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/text_title_category"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/element_spacing_small"
+                android:layout_marginTop="@dimen/element_spacing_large"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="Large Text"
+                android:textSize="@dimen/text_size_medium"
+                custom:layout_constraintTop_toTopOf="parent"
+                custom:layout_constraintLeft_toRightOf="@id/color"
+                custom:layout_constraintRight_toLeftOf="@id/open"/>
 
 
-            <jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:id="@+id/open"
-                android:layout_weight="0.9"
-                custom:text="@string/open"
-                custom:image="@drawable/ic_folder_open_white"
+            <TextView
+                android:id="@+id/num_questions"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="start"
+                android:textSize="@dimen/text_size_small"
+                android:layout_marginStart="@dimen/element_spacing_small"
+                android:layout_marginTop="@dimen/element_spacing_normal"
+                custom:layout_constraintTop_toBottomOf="@id/text_title_category"
+                custom:layout_constraintLeft_toRightOf="@id/color"
+                custom:layout_constraintRight_toLeftOf="@id/open"
                 />
 
-        </LinearLayout>
+            <jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
+                android:id="@+id/open"
+                android:layout_width="@dimen/view_width_normal"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/element_spacing_small"
+                custom:image="@drawable/ic_folder_open_white"
+                custom:layout_constraintRight_toRightOf="parent"
+                custom:text="@string/open" />
 
-    </android.support.v7.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

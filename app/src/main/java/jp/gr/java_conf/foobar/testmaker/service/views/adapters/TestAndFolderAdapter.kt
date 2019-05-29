@@ -2,15 +2,15 @@ package jp.gr.java_conf.foobar.testmaker.service.views.adapters
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.getTestsWithCategory
+import jp.gr.java_conf.foobar.testmaker.service.extensions.getTestsWithCategory
 import jp.gr.java_conf.foobar.testmaker.service.models.Cate
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
@@ -19,7 +19,7 @@ import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
  * Created by keita on 2017/05/21.
  */
 
-class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit) : RecyclerView.Adapter<TestAndFolderAdapter.ViewHolder>() {
+class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit) : androidx.recyclerview.widget.RecyclerView.Adapter<TestAndFolderAdapter.ViewHolder>() {
 
     private var listener: OnClickListener? = null
 
@@ -140,12 +140,12 @@ class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit
         return VIEW_TYPE_TEST
     }
 
-    abstract class ViewHolder(v: View) : RecyclerView.ViewHolder(v)
+    abstract class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v)
 
     class TestViewHolder(v: View) : ViewHolder(v) {
 
-        var cate: ImageButton = v.findViewById(R.id.cate)
-        var title: TextView = v.findViewById(R.id.title_questions)
+        var cate: ImageButton = v.findViewById(R.id.color)
+        var title: TextView = v.findViewById(R.id.text_title_test)
         var num: TextView = v.findViewById(R.id.num_questions)
         var play: ImageTextButton = v.findViewById(R.id.play)
         var edit: ImageTextButton = v.findViewById(R.id.edit)
@@ -156,10 +156,10 @@ class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit
 
     class FolderViewHolder(v: View) : ViewHolder(v) {
 
-        var title: TextView = v.findViewById(R.id.title_questions)
+        var title: TextView = v.findViewById(R.id.text_title_category)
         var num: TextView = v.findViewById(R.id.num_questions)
         var open: ImageTextButton = v.findViewById(R.id.open)
-        var cate: ImageButton = v.findViewById(R.id.cate)
+        var cate: ImageButton = v.findViewById(R.id.color)
 
     }
 

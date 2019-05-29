@@ -3,10 +3,10 @@ package jp.gr.java_conf.foobar.testmaker.service.models
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.res.ResourcesCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -51,8 +51,8 @@ class CategoryEditor(private val context: Context, private val buttonCate: Butto
             }
         })
 
-        val recyclerView = dialogLayout.findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        val recyclerView = dialogLayout.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true) // アイテムは固定サイズ
         recyclerView.adapter = adapter
 

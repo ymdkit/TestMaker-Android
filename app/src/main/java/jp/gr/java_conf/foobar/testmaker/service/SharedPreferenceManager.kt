@@ -52,6 +52,11 @@ class SharedPreferenceManager(context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("audio", f)
                 .apply()
 
+    var random: Boolean
+        get() = sharedPreferences.getBoolean("random", false)
+        set(f) = sharedPreferences.edit().putBoolean("random", f)
+                .apply()
+
     var reverse: Boolean
         get() = sharedPreferences.getBoolean("reverse", false)
         set(f) = sharedPreferences.edit().putBoolean("reverse", f)

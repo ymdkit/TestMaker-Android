@@ -1,7 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.MenuItem
 import jp.gr.java_conf.foobar.testmaker.service.R
 import kotlinx.android.synthetic.main.activity_categorized.*
@@ -27,7 +27,7 @@ class CategorizedActivity : ShowTestsActivity() {
 
         })
 
-        recycler_view.layoutManager = LinearLayoutManager(applicationContext)
+        recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
         recycler_view.adapter = testAndFolderAdapter
 

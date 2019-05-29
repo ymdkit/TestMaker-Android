@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
@@ -15,9 +16,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data android:name="studyplus_comsumer_key" android:value="${studyplus_consumer_key}"/>
+        <meta-data android:name="secret_studyplus_comsumer_key" android:value="${secret_studyplus_consumer_key}"/>
+        <meta-data android:name="testmaker_admob_key" android:value="${testmaker_admob_key}"/>
+        <meta-data android:name="ncbm_app_key" android:value="${ncbm_app_key}"/>
+        <meta-data android:name="ncbm_client_key" android:value="${ncbm_client_key}"/>
+
         <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:name="com.google.android.gms.ads.jp.gr.java_conf.foobar.testmaker.service"
             android:value="hogehoge"/>
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true"/>
 
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
 

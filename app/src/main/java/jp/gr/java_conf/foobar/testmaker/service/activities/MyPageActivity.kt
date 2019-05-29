@@ -3,8 +3,8 @@ package jp.gr.java_conf.foobar.testmaker.service.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -20,10 +20,13 @@ import com.nifcloud.mbaas.core.NCMBQuery
 import com.nifcloud.mbaas.core.NCMBUser
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
-import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
+import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.MyPageAdapter
 import kotlinx.android.synthetic.main.activity_my_page.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class MyPageActivity : BaseActivity() {
@@ -175,36 +178,19 @@ class MyPageActivity : BaseActivity() {
                             }
                         }
 
-                        val loader = AsyncTaskLoadTest(obj.getString("content").replace("\\\n", "\n"),this@MyPageActivity)
+                        GlobalScope.launch(Dispatchers.Main) {
+                            withContext(Dispatchers.Default) { obj.getString("content").replace("\\\n", "\n").toTest(baseContext) }.let{
+                                realmController.convert(it,-1L)
 
-                        loader.setCallback(object: AsyncTaskLoadTest.AsyncTaskCallback{
-                            override fun preExecute() {
-
-                            }
-
-                            override fun postExecute(result: StructTest) {
-
-                                realmController.convert(result,-1L)
-
-                                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, result.title), Toast.LENGTH_LONG).show()
+                                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
 
                                 val intent = Intent(this@MyPageActivity, MainActivity::class.java)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                                 startActivity(intent)
+
                             }
-
-                            override fun progressUpdate(progress: Int) {
-                            }
-
-                            override fun cancel() {
-                            }
-
-                        })
-
-                        loader.execute()
-
-
+                        }
                     }
 
                     override fun onClickDeleteTest(obj: NCMBObject) {
@@ -237,7 +223,7 @@ class MyPageActivity : BaseActivity() {
                 loading.visibility = View.GONE
                 recycler_view.visibility = View.VISIBLE
 
-                recycler_view.layoutManager = LinearLayoutManager(applicationContext)
+                recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
                 recycler_view.setHasFixedSize(true)
                 recycler_view.adapter = this.adapter
             }

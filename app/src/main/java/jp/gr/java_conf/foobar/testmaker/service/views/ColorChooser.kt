@@ -2,9 +2,9 @@ package jp.gr.java_conf.foobar.testmaker.service.views
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.appcompat.app.AlertDialog
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater

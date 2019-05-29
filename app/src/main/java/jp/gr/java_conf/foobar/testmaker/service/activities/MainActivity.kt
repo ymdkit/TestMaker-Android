@@ -1,16 +1,17 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
 import android.app.Activity
+import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
+import androidx.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
+import androidx.core.content.res.ResourcesCompat
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -19,11 +20,14 @@ import android.widget.Toast
 import com.android.billingclient.api.BillingClient
 import jp.gr.java_conf.foobar.testmaker.service.*
 import jp.gr.java_conf.foobar.testmaker.service.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
-import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
+import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
+import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
-import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_edit_test.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.*
 
 
@@ -37,19 +41,28 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     private lateinit var viewController: MainViewController
 
+    private lateinit var binding: ActivityMainBinding
+
+    private val viewModel: MainViewModel by viewModel()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
 
-        sendScreen("MainActivity")
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
+        binding.model = viewModel
 
-        createAd(container)
+        viewModel.title.observe(this, Observer {
+            binding.buttonAdd.isEnabled = it?.isNotEmpty() ?: false
+        })
+
+        sendScreen("MainActivity")
+        createAd(binding.container)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
         viewController = MainViewController(this)
-
         billingManager = BillingManager(this, viewController.mUpdateListener)
 
         initNavigationView()
@@ -62,28 +75,23 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             testAndFolderAdapter.allTests = realmController.list
         })
 
-        recycler_view.layoutManager = LinearLayoutManager(applicationContext)
-        recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
-        recycler_view.adapter = testAndFolderAdapter
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.adapter = testAndFolderAdapter
 
     }
 
     private fun initViews() {
 
-        button_upload.setOnClickListener {
+        binding.buttonUpload.setOnClickListener {
 
-            if (body.visibility != View.GONE) {
-                body.visibility = View.GONE
-                button_upload.setImageResource(R.drawable.ic_expand_more_black)
-            } else {
-                body.visibility = View.VISIBLE
-                button_upload.setImageResource(R.drawable.ic_expand_less_black)
-                edit_title.isFocusable = true
-                edit_title.requestFocus()
+            if (binding.body.visibility == View.GONE) {
+                binding.test.editTitle.requestFocus()
             }
+
+            viewModel.isEditing.postValue(!(viewModel.isEditing.value ?: false))
         }
 
-        edit_title.setOnFocusChangeListener { v, hasFocus ->
+        binding.test.editTitle.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 // ソフトキーボードを表示する
                 inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED)
@@ -93,24 +101,24 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             }// フォーカスが外れたとき
         }
 
-        button_category.tag = ""
-        button_category.setOnClickListener {
-            inputMethodManager.hideSoftInputFromWindow(edit_title.windowToken, 0)
-            val categoryEditor = CategoryEditor(this@MainActivity, button_category, realmController, testAndFolderAdapter)
+        binding.test.buttonCategory.tag = ""
+        binding.test.buttonCategory.setOnClickListener {
+            inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
+            val categoryEditor = CategoryEditor(this@MainActivity, binding.test.buttonCategory, realmController, testAndFolderAdapter)
             categoryEditor.setCategory()
         }
 
-        if (Build.VERSION.SDK_INT >= 21) button_category.stateListAnimator = null
+        if (Build.VERSION.SDK_INT >= 21) binding.test.buttonCategory.stateListAnimator = null
 
-        button_category.setOnLongClickListener {
+        binding.test.buttonCategory.setOnLongClickListener {
 
             val builder = AlertDialog.Builder(this@MainActivity, R.style.MyAlertDialogStyle)
             builder.setMessage(getString(R.string.cancel_category))
             builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
-                button_category.tag = ""
-                button_category.text = getString(R.string.category)
-                button_category.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
+                binding.test.buttonCategory.tag = ""
+                binding.test.buttonCategory.text = getString(R.string.category)
+                binding.test.buttonCategory.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
 
             }
 
@@ -120,35 +128,25 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             false
         }
 
-        if (Build.VERSION.SDK_INT >= 21) button_add.stateListAnimator = null
+        if (Build.VERSION.SDK_INT >= 21) binding.buttonAdd.stateListAnimator = null
 
-        button_add.setOnClickListener {
+        binding.buttonAdd.setOnClickListener {
 
-            if (edit_title.text.toString() == "") {
+            realmController.addTest(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
 
-                Toast.makeText(this@MainActivity, getString(R.string.message_wrong), Toast.LENGTH_LONG).show()
+            Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
 
-            } else {
+            testAndFolderAdapter.setValue()
 
-                realmController.addTest(edit_title.text.toString(), color_chooser.getColorId(), button_category.tag.toString())
+            viewModel.isEditing.postValue(false)
 
-                Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
+            binding.test.editTitle.setText("")
+            binding.test.buttonCategory.tag = ""
+            binding.test.buttonCategory.text = getString(R.string.category)
+            binding.test.buttonCategory.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
 
-                testAndFolderAdapter.setValue()
-
-                edit_title.setText("")
-                button_category.tag = ""
-                button_category.text = getString(R.string.category)
-
-                button_category.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
-
-                body.visibility = View.GONE
-                button_upload.setImageResource(R.drawable.ic_expand_more_black)
-
-                sendEvent("createTest")
-                sendFirebaseEvent("add-test")
-
-            }
+            sendEvent("createTest")
+            sendFirebaseEvent("add-test")
 
         }
 
@@ -156,7 +154,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     private fun initNavigationView() {
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -166,7 +164,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 -> {
 
                     sendEvent("help")
-
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse(getString(R.string.help_url))))
 
@@ -175,7 +172,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 R.id.nav_review -> {
 
                     sendEvent("review")
-
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse("https://play.google.com/store/apps/details?id=jp.gr.java_conf.foobar.testmaker.service&amp;hl=ja")))
                 }
@@ -183,7 +179,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 R.id.nav_others -> {
 
                     sendEvent("editOthers")
-
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse("http://play.google.com/store/apps/developer?id=banira")))
                 }
@@ -193,16 +188,13 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                     sendEvent("import")
 
                     if (Build.VERSION.SDK_INT <= 18) {
-                        //APIレベル18以前の機種の場合の処理
                         val intent = Intent(Intent.ACTION_PICK)
                         intent.type = "text/*"
-                        startActivityForResult(intent, 12346)
+                        startActivityForResult(intent, REQUEST_IMPORT)
                     } else if (Build.VERSION.SDK_INT >= 19) {
-                        //APIレベル19以降の機種の場合の処理
                         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                         intent.type = "text/*"
-                        startActivityForResult(intent, 12345)
-
+                        startActivityForResult(intent, REQUEST_IMPORT)
                     }
                 }
 
@@ -230,7 +222,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                     buttonImport.setOnClickListener { _ ->
 
-                        loadText(editPaste.text.toString())
+                        loadTestByText(editPaste.text.toString())
 
                         dialog.dismiss()
                     }
@@ -239,27 +231,20 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 R.id.nav_online -> {
 
                     sendEvent("online")
-
-                    val licenseIntent = Intent(this@MainActivity, OnlineMainActivity::class.java)
-                    licenseIntent.putExtra("url", "file:///android_asset/licenses.html")
-                    startActivityForResult(licenseIntent, REQUEST_EDIT)
+                    startActivityForResult(Intent(this@MainActivity, OnlineMainActivity::class.java), REQUEST_EDIT)
                 }
 
                 R.id.nav_move_questions -> {
 
                     sendEvent("move questions")
-
-                    val intent = Intent(this@MainActivity, MoveQuestionsActivity::class.java)
-                    startActivityForResult(intent, REQUEST_EDIT)
+                    startActivityForResult(Intent(this@MainActivity, MoveQuestionsActivity::class.java), REQUEST_EDIT)
 
                 }
 
                 R.id.nav_study_plus -> {
 
                     sendEvent("study plus")
-
-                    val intent = Intent(this@MainActivity, StudyPlusActivity::class.java)
-                    startActivityForResult(intent, REQUEST_EDIT)
+                    startActivityForResult(Intent(this@MainActivity, StudyPlusActivity::class.java), REQUEST_EDIT)
 
                 }
 
@@ -267,51 +252,47 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                     sendEvent("remove ad")
 
-                    if (billingManager.billingClientResponseCode > BILLING_MANAGER_NOT_INITIALIZED) {
+                    if (billingManager.billingClientResponseCode <= BILLING_MANAGER_NOT_INITIALIZED) return@setNavigationItemSelectedListener false
+                    if (isFinishing) return@setNavigationItemSelectedListener false
 
-                        if (!isFinishing) {
+                    getBillingManager().querySkuDetailsAsync(BillingClient.SkuType.INAPP, listOf("removead")
+                    ) { responseCode, skuDetailsList ->
+                        if (responseCode != BillingClient.BillingResponse.OK) {
 
-                            getBillingManager().querySkuDetailsAsync(BillingClient.SkuType.INAPP, listOf("removead")
-                            ) { responseCode, skuDetailsList ->
-                                if (responseCode != BillingClient.BillingResponse.OK) {
+                            Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
 
-                                    Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
+                        } else if (skuDetailsList != null && skuDetailsList.size > 0) {
+                            // If we successfully got SKUs, add a header in front of the row
+                            // Then fill all the other rows
+                            for (details in skuDetailsList) {
 
-                                } else if (skuDetailsList != null && skuDetailsList.size > 0) {
-                                    // If we successfully got SKUs, add a header in front of the row
-                                    // Then fill all the other rows
-                                    for (details in skuDetailsList) {
+                                if (isPremiumPurchased) {
 
-                                        if (isPremiumPurchased) {
-
-                                            Toast.makeText(baseContext, getString(R.string.alrady_removed_ad), Toast.LENGTH_SHORT).show()
-
-                                        } else {
-
-                                            getBillingManager().initiatePurchaseFlow(details.sku,
-                                                    BillingClient.SkuType.INAPP)
-                                        }
-                                    }
+                                    Toast.makeText(baseContext, getString(R.string.alrady_removed_ad), Toast.LENGTH_SHORT).show()
 
                                 } else {
-                                    // Handle empty state
-                                    Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
 
+                                    getBillingManager().initiatePurchaseFlow(details.sku,
+                                            BillingClient.SkuType.INAPP)
                                 }
                             }
+
+                        } else {
+                            // Handle empty state
+                            Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
+
                         }
                     }
-
                 }
             }
             false
         }
 
-        drawerToggle = ActionBarDrawerToggle(this, drawer_layout,
-                toolbar, R.string.add,
+        drawerToggle = ActionBarDrawerToggle(this, binding.drawerLayout,
+                binding.toolbar, R.string.add,
                 R.string.add)
 
-        drawer_layout.addDrawerListener(drawerToggle)
+        binding.drawerLayout.addDrawerListener(drawerToggle)
 
     }
 
@@ -321,45 +302,39 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     }
 
     override fun onPause() {
-        inputMethodManager.hideSoftInputFromWindow(edit_title.windowToken, 0)
-
+        inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
         super.onPause()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_CANCELED) {
             testAndFolderAdapter.setValue()
-
-            drawer_layout.closeDrawers()
+            binding.drawerLayout.closeDrawers()
         }
-
-        super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode != Activity.RESULT_OK) return
 
-        if (requestCode == 12345) {
+        if (requestCode == REQUEST_IMPORT) {
 
-            launchEditorActivity(data!!.data)
-
-        } else if (requestCode == 12346) {
-
-            launchEditorActivity(data!!.data)
-
+            data?.also {
+                launchEditorActivity(it.data)
+            }
         }
     }
 
     private fun launchEditorActivity(uri: Uri?) {
 
         if (uri == null) return
-
         var inputStream: InputStream? = null
 
         try {
 
             inputStream = contentResolver.openInputStream(uri)
-
-            loadText(inputStream.bufferedReader().use(BufferedReader::readText))
+            inputStream?.also {
+                loadTestByText(it.bufferedReader().use(BufferedReader::readText))
+            }
 
         } catch (e: FileNotFoundException) {
             throw RuntimeException(e)
@@ -372,39 +347,21 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         }
     }
 
-    private fun loadText(text: String) {
+    private fun loadTestByText(text: String) {
 
-        val loader = AsyncTaskLoadTest(text, baseContext)
-        loader.setCallback(object : AsyncTaskLoadTest.AsyncTaskCallback {
-            override fun postExecute(result: StructTest) {
-
-                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, result.title), Toast.LENGTH_LONG).show()
-
-                realmController.convert(result, -1)
-
+        GlobalScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.Default) { text.toTest(baseContext) }.let {
+                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
+                realmController.convert(it, -1)
                 testAndFolderAdapter.setValue()
 
             }
-
-            override fun progressUpdate(progress: Int) {
-            }
-
-            override fun cancel() {
-            }
-
-            override fun preExecute() {
-            }
-
-        })
-
-        loader.execute()
-
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         drawerToggle.syncState()
-
     }
 
     public override fun onDestroy() {
@@ -421,6 +378,10 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     }
 
     fun removeAd() {
-        container.visibility = View.GONE
+        binding.container.visibility = View.GONE
+    }
+
+    companion object {
+        const val REQUEST_IMPORT = 12345
     }
 }

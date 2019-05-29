@@ -5,20 +5,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/action_normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/button_red"
+        android:visibility="gone"
         android:text="@string/message_order"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/action_random"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:background="@drawable/button_red"
+        android:visibility="gone"
         android:text="@string/message_random"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -45,7 +47,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/background_dark" />
 
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/set_limit"
                 android:layout_width="@dimen/view_width_normal"
                 android:layout_height="wrap_content"
@@ -66,7 +68,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/background_dark" />
 
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/set_start_position"
                 android:layout_width="@dimen/view_width_normal"
                 android:layout_height="wrap_content"
@@ -79,35 +81,53 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_random"
+            style="@style/MyStartCheckBoxStyle"
+            android:text="@string/is_random" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/check_refine"
             style="@style/MyStartCheckBoxStyle"
             android:text="@string/message_wrong_only" />
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/check_reverse"
             style="@style/MyStartCheckBoxStyle"
             android:text="@string/message_switch_question" />
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/check_manual"
             style="@style/MyStartCheckBoxStyle"
             android:text="@string/message_self" />
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/check_always_review"
             style="@style/MyStartCheckBoxStyle"
             android:text="@string/always_review" />
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/check_case_insensitive"
             style="@style/MyStartCheckBoxStyle"
             android:text="@string/case_insensitive" />
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/check_audio"
             style="@style/MyStartCheckBoxStyle"
             android:text="@string/message_delete_sound" />
+
+        <Button
+            android:id="@+id/button_start"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_height_normal"
+            android:layout_margin="@dimen/element_spacing_small"
+            android:background="@drawable/button_blue"
+            android:text="@string/start"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_small"
+            />
 
 
     </LinearLayout>

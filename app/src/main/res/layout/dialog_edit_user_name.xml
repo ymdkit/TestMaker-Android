@@ -12,19 +12,19 @@
         android:id="@+id/login"
         >
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_user_name"
             android:layout_weight="1"
             style="@style/MyTextInputLayoutStyle"
             >
 
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edit_user_name"
                 android:hint="@string/hint_user_name"
                 style="@style/MyEditTextSingleLine"
                 />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:layout_width="match_parent"

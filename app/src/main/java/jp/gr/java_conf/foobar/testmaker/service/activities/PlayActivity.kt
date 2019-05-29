@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -52,7 +52,6 @@ class PlayActivity : BaseActivity() {
         initToolBar()
 
         testId = intent.getLongExtra("testId", -1)
-        //realmController.migrateOrder(testId)
 
         val container = findViewById<LinearLayout>(R.id.container)
         createAd(container)
@@ -83,7 +82,7 @@ class PlayActivity : BaseActivity() {
 
         if (sharedPreferenceManager.refine) questions = questions.filter{ !it.correct } as ArrayList<Quest>
 
-        if (intent.hasExtra("random")) questions.shuffle()
+        if (sharedPreferenceManager.random) questions.shuffle()
 
         if (realmController.getTest(testId).limit < questions.size) questions = ArrayList(questions.take(realmController.getTest(testId).limit))
 
@@ -301,7 +300,6 @@ class PlayActivity : BaseActivity() {
     private fun showProblem(question: Quest) {
 
         play_problem_view.setTextProblem(question.getProblem(isReverse(question)))
-
         play_problem_view.setTextNumber(getString(R.string.number, (number + 1).toString()))
 
         play_review_view.visibility = View.GONE
@@ -338,8 +336,6 @@ class PlayActivity : BaseActivity() {
         play_problem_view.initImage()
 
         val i = Intent(this@PlayActivity, ResultActivity::class.java)
-
-        if (intent.hasExtra("random")) i.putExtra("random", intent.getIntExtra("random", -1))
 
         i.putExtra("duration",System.currentTimeMillis() - startTime)
         i.putExtra("testId", testId)

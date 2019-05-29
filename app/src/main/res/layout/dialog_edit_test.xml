@@ -1,58 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:id="@+id/layout_dialog_edit_test"
-    android:layout_height="match_parent">
 
-    <LinearLayout
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="title"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_dialog_edit_test"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout_question_write"
-            android:layout_weight="1"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout_title"
             style="@style/MyTextInputLayoutStyle"
-            >
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/button_category"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edit_title"
-                android:hint="@string/hint_name"
-                android:imeOptions="actionDone"
                 style="@style/MyEditTextSingleLine"
-                />
+                android:hint="@string/hint_name"
+                android:text="@={title}"
+                android:imeOptions="actionDone" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
+            android:id="@+id/button_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/element_spacing_small"
+            android:layout_weight="3"
+            android:background="@drawable/button_blue"
+            android:maxLength="5"
             android:text="@string/category"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:layout_margin="@dimen/element_spacing_small"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/button_blue"
-            android:id="@+id/button_category"
-            android:maxLength="5"
-            android:layout_weight="3" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="@dimen/element_spacing_small"
-        android:layout_marginRight="@dimen/element_spacing_small"
-        android:layout_height="@dimen/view_height_normal">
 
         <jp.gr.java_conf.foobar.testmaker.service.views.ColorChooser
+            android:id="@+id/color_chooser"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:id="@+id/color_chooser"
-
+            app:layout_constraintTop_toBottomOf="@id/textInputLayout_title"
             />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</LinearLayout>
+</layout>

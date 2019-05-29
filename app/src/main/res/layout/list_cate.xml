@@ -16,7 +16,7 @@
         android:background="@drawable/circle" />
 
     <TextView
-        android:id="@+id/cate"
+        android:id="@+id/text_category"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/element_spacing_small"

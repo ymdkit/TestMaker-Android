@@ -3,12 +3,14 @@ package jp.gr.java_conf.foobar.testmaker.service.activities
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings.Secure
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.SearchView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -17,13 +19,16 @@ import android.view.View
 import android.widget.*
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.models.AsyncTaskLoadTest
-import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.OnlineTestAdapter
 import kotlinx.android.synthetic.main.activity_online_main.*
 import java.util.*
 import android.widget.Toast
 import com.nifcloud.mbaas.core.*
+import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
@@ -38,7 +43,15 @@ class OnlineMainActivity : BaseActivity() {
 
         sendScreen("OnlineMainActivity")
 
-        NCMB.initialize(this.applicationContext, "11a0bc05538273ecd8e5d6152a9379119f16115c19082eae88c101adeb963f15", "afc1899b2ed65520fc935e8d680723828a09203347d18be035408491451262c8")
+        var info: ApplicationInfo? = null
+        try {
+            info = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+
+
+        NCMB.initialize(this.applicationContext, info?.metaData?.getString("ncbm_app_key") , info?.metaData?.getString("ncbm_client_key"))
 
         createAd(container)
 
@@ -418,36 +431,23 @@ class OnlineMainActivity : BaseActivity() {
                             }
                         }
 
-                        val loader = AsyncTaskLoadTest(obj.getString("content").replace("\\\n", "\n"), this@OnlineMainActivity)
+                        GlobalScope.launch(Dispatchers.Main) {
+                            withContext(Dispatchers.Default) { obj.getString("content").replace("\\\n", "\n").toTest(baseContext) }.let {
+                                realmController.convert(it, -1L)
 
-                        loader.setCallback(object : AsyncTaskLoadTest.AsyncTaskCallback {
-                            override fun preExecute() {}
-
-                            override fun postExecute(result: StructTest) {
-
-                                realmController.convert(result, -1L)
-
-                                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, result.title), Toast.LENGTH_LONG).show()
+                                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
 
                                 finish()
 
                             }
-
-                            override fun progressUpdate(progress: Int) {}
-
-                            override fun cancel() {}
-
-                        })
-
-                        loader.execute()
-
+                        }
                     }
                 })
 
                 recycler_view.visibility = View.VISIBLE
                 swipe_refresh.isRefreshing = false
 
-                recycler_view.layoutManager = LinearLayoutManager(applicationContext)
+                recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
                 recycler_view.setHasFixedSize(true)
                 recycler_view.adapter = this.adapter
             }

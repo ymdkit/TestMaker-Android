@@ -1,16 +1,22 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -33,13 +39,12 @@ public class BaseActivity extends AppCompatActivity {
 
     protected FirebaseAnalytics firebaseAnalytic;
 
-    final static int REQUEST_CODE_AUTH = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         TestMakerApplication app = (TestMakerApplication) getApplication();
+
 
         realmController = new RealmController(getApplicationContext(), app.getConfig());
 
@@ -49,8 +54,17 @@ public class BaseActivity extends AppCompatActivity {
             firebaseAnalytic = FirebaseAnalytics.getInstance(this);
         }
 
+        ApplicationInfo info
+                = null;
+        try {
+            info = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
-        Studyplus.getInstance().setup("U6867w2Zt2tT2CRjJRteaMAUCvnEDfXZ", "d9cCv8aZCDaUL56bhZY5HBnzktpzpYefVAn3hV5hjjqmWhF97j985wyuMjLExLvQ");
+        MobileAds.initialize(this, info.metaData.getString("testmaker_admob_key"));
+
+        Studyplus.getInstance().setup(info.metaData.getString("studyplus_comsumer_key"), info.metaData.getString("secret_studyplus_comsumer_key"));
 
     }
 
@@ -72,7 +86,6 @@ public class BaseActivity extends AppCompatActivity {
                 .setCategory("event")
                 .setAction(action)
                 .build());
-
 
     }
 
@@ -99,10 +112,10 @@ public class BaseActivity extends AppCompatActivity {
             return;
         }
 
-        AdView adView = new AdView(this);
+        PublisherAdView adView = new PublisherAdView(this);
         adView.setAdUnitId("ca-app-pub-8942090726462263/8420884238");
-        adView.setAdSize(AdSize.BANNER);
-        AdRequest adRequest = new AdRequest.Builder()
+        adView.setAdSizes(AdSize.BANNER);
+        PublisherAdRequest adRequest = new PublisherAdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice("DA539D38B08126EBEF7E059DCA26831C")
                 .addTestDevice("BDB57B5078A79B87345E711A52F0F995")
@@ -110,8 +123,6 @@ public class BaseActivity extends AppCompatActivity {
         adView.loadAd(adRequest);
 
         container.addView(adView);
-
-
     }
 
     @Override
