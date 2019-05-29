@@ -191,9 +191,7 @@ open class EditActivity : BaseActivity() {
                         showLayoutWrite()
 
                         set_answer_write.setText(question.answer)
-
                         sharedPreferenceManager.numAnswers = 1
-
                         button_type.text = getString(R.string.action_choose)
                     }
 
