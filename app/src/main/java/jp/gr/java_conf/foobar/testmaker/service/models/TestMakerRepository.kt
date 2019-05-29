@@ -27,14 +27,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     private fun fetchTests() {
         GlobalScope.launch(Dispatchers.Main) {
             tests?.postValue(local.getTests())
-
-//            remote.fetchUsers(local.userIds)?.let {
-//                local.users = it
-//                users?.postValue(it)
-//                dirty = false
-//            } ?: {
-//                error.postValue(UserNotFoundException())
-//            }()
         }
     }
 
