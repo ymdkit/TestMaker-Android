@@ -2,8 +2,8 @@ package jp.gr.java_conf.foobar.testmaker.service.views.adapters
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ import jp.gr.java_conf.foobar.testmaker.service.models.RealmController
 /**
  * Created by keita on 2016/06/19.
  */
-class CategoryAdapter(private val context: Context, private val mRealmController: RealmController, private val mainAdapter: TestAndFolderAdapter?) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryAdapter(private val context: Context, private val mRealmController: RealmController, private val mainAdapter: TestAndFolderAdapter?) : androidx.recyclerview.widget.RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -72,7 +72,7 @@ class CategoryAdapter(private val context: Context, private val mRealmController
 
     }
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+    class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
 
         var cate: TextView = v.findViewById(R.id.text_category)
         var color: ImageView = v.findViewById(R.id.color)

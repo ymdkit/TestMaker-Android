@@ -1,21 +1,21 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.DialogInterface
 import android.content.Intent
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SearchView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.core.content.res.ResourcesCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.Menu
@@ -109,9 +109,15 @@ open class EditActivity : BaseActivity() {
                 when (viewModel.formatQuestion.value) {
                     Constants.SELECT -> {
                         binding.editSelectView.reloadOthers(baseContext.resources.getStringArray(R.array.spinner_selects)[it].toInt() - 1)
+                        binding.editSelectView.setAuto(sharedPreferenceManager.auto
+                                , baseContext.resources.getStringArray(R.array.spinner_selects)[viewModel.spinnerSelectsPosition.value
+                                ?: 0].toInt() - 1)
                     }
                     Constants.SELECT_COMPLETE -> {
                         binding.editSelectCompleteView.reloadSelects(baseContext.resources.getStringArray(R.array.spinner_selects_complete)[it].toInt())
+                        binding.editSelectCompleteView.setAuto(sharedPreferenceManager.auto
+                                , baseContext.resources.getStringArray(R.array.spinner_selects_complete)[viewModel.spinnerSelectsPosition.value
+                                ?: 0].toInt())
                     }
                 }
             }
@@ -426,8 +432,6 @@ open class EditActivity : BaseActivity() {
 
         button_cancel.visibility = View.GONE
 
-        text_title.text = if (edit_select_view.visibility == View.GONE) getString(R.string.add_question_write) else getString(R.string.add_question_choose)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -733,18 +737,18 @@ open class EditActivity : BaseActivity() {
             button_detail.stateListAnimator = null
         }
 
-        recycler_view.layoutManager = LinearLayoutManager(applicationContext)
+        recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
         recycler_view.adapter = editAdapter
 
         val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
-            override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
+            override fun onSwiped(p0: androidx.recyclerview.widget.RecyclerView.ViewHolder, p1: Int) {
 
             }
             // ここで指定した方向にのみドラッグ可能
 
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            override fun onMove(recyclerView: androidx.recyclerview.widget.RecyclerView, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, target: androidx.recyclerview.widget.RecyclerView.ViewHolder): Boolean {
 
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition

@@ -32,20 +32,20 @@
 
         </ImageButton>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_answer"
             style="@style/MyTextInputLayoutStyle"
             android:layout_weight="0.5"
             >
 
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/set_cate"
                 android:hint="@string/new_category"
                 style="@style/MyEditTextSingleLine"
                 android:imeOptions="actionDone"
                 android:maxLength="20" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
             android:contentDescription="@string/image"
@@ -90,7 +90,7 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"

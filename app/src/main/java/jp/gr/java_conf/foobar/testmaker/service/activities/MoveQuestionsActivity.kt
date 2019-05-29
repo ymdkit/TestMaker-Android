@@ -1,8 +1,8 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -57,7 +57,7 @@ class MoveQuestionsActivity : BaseActivity() {
 
                 questionAdapter = CheckBoxQuestionAdapter(baseContext, tests[position].getQuestions().toTypedArray())
 
-                list_questions.layoutManager = LinearLayoutManager(applicationContext)
+                list_questions.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
                 list_questions.setHasFixedSize(true)
                 list_questions.adapter = questionAdapter
 

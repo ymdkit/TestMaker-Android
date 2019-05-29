@@ -10,20 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/view_height_normal"/>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_margin="@dimen/element_spacing_normal"
         android:id="@+id/textInputLayout_question_write"
         android:layout_weight="1"
         style="@style/MyTextInputLayoutStyle"
         >
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/edit_overview"
             android:hint="@string/hint_overview"
             style="@style/MyEditTextMultiLine"
             android:maxLength="140"
             />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>

@@ -1,7 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.views.adapters
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +13,7 @@ import jp.gr.java_conf.foobar.testmaker.service.models.RealmController
 /**
  * Created by keita on 2016/05/29.
  */
-class ResultAdapter(context: Context, private val mRealmController: RealmController, private val testId: Long) : RecyclerView.Adapter<ResultAdapter.ViewHolder>() {
+class ResultAdapter(context: Context, private val mRealmController: RealmController, private val testId: Long) : androidx.recyclerview.widget.RecyclerView.Adapter<ResultAdapter.ViewHolder>() {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -37,7 +37,7 @@ class ResultAdapter(context: Context, private val mRealmController: RealmControl
 
     }
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+    class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
 
         val number: TextView = v.findViewById(R.id.number)
         val problem: TextView = v.findViewById(R.id.problem)

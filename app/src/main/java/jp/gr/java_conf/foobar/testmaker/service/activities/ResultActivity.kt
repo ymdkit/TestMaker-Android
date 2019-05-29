@@ -2,8 +2,8 @@ package jp.gr.java_conf.foobar.testmaker.service.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
 import jp.gr.java_conf.foobar.testmaker.service.Constants
@@ -34,7 +34,7 @@ class ResultActivity : BaseActivity() {
 
         resultAdapter = ResultAdapter(this, realmController, testId)
 
-        recycler_view.layoutManager = LinearLayoutManager(applicationContext)
+        recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
         recycler_view.adapter = resultAdapter
 

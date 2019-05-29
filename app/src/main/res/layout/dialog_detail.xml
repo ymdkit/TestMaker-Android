@@ -150,7 +150,7 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.SwitchCompat
+        <androidx.appcompat.widget.SwitchCompat
             android:layout_weight="3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -177,7 +177,7 @@
             />
 
 
-        <android.support.v7.widget.SwitchCompat
+        <androidx.appcompat.widget.SwitchCompat
             android:layout_weight="3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
             />
 
 
-        <android.support.v7.widget.SwitchCompat
+        <androidx.appcompat.widget.SwitchCompat
             android:layout_weight="3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

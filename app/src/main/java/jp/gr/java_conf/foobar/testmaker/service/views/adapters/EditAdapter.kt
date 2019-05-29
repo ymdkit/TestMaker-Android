@@ -1,7 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.views.adapters
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
 /**
  * Created by keita on 2016/05/29.
  */
-class EditAdapter(private val context: Context, private val realmController: RealmController, private val testId: Long) : RecyclerView.Adapter<EditAdapter.ViewHolder>() {
+class EditAdapter(private val context: Context, private val realmController: RealmController, private val testId: Long) : androidx.recyclerview.widget.RecyclerView.Adapter<EditAdapter.ViewHolder>() {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -73,7 +73,7 @@ class EditAdapter(private val context: Context, private val realmController: Rea
 
     }
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+    class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
 
         val order: TextView = v.findViewById(R.id.order)
         val problem: TextView = v.findViewById(R.id.problem)

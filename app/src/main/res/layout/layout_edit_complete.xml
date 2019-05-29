@@ -9,7 +9,7 @@
         android:layout_height="0dp"
         android:layout_centerInParent="true" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_answer_complete_1"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignEnd="@+id/center"
@@ -17,14 +17,14 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/center">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_answer_write_1"
             style="@style/MyEditTextSingleLine"
             android:hint="@string/hint_answer1" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_answer_complete_2"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignLeft="@+id/center"
@@ -32,15 +32,15 @@
         android:layout_alignParentRight="true"
         android:layout_alignStart="@+id/center">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_answer_write_2"
             style="@style/MyEditTextSingleLine"
             android:hint="@string/hint_answer2" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_answer_complete_3"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignEnd="@+id/center"
@@ -49,14 +49,14 @@
         android:layout_alignRight="@+id/center"
         android:layout_below="@+id/textInputLayout_answer_complete_1">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_answer_write_3"
             style="@style/MyEditTextSingleLine"
             android:hint="@string/hint_answer3" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_answer_complete_4"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignLeft="@+id/center"
@@ -65,11 +65,11 @@
         android:layout_alignStart="@+id/center"
         android:layout_below="@+id/textInputLayout_answer_complete_1">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_answer_write_4"
             style="@style/MyEditTextSingleLine"
             android:hint="@string/hint_answer4" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 </RelativeLayout>

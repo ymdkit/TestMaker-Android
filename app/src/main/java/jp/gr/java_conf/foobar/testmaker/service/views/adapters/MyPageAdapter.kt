@@ -2,8 +2,8 @@ package jp.gr.java_conf.foobar.testmaker.service.views.adapters
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +13,7 @@ import com.nifcloud.mbaas.core.NCMBObject
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
 
-class MyPageAdapter(private val context: Context, private val array: MutableList<NCMBObject>) : RecyclerView.Adapter<MyPageAdapter.ViewHolder>()  {
+class MyPageAdapter(private val context: Context, private val array: MutableList<NCMBObject>) : androidx.recyclerview.widget.RecyclerView.Adapter<MyPageAdapter.ViewHolder>()  {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -72,7 +72,7 @@ class MyPageAdapter(private val context: Context, private val array: MutableList
 
     }
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+    class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
 
         val cate: ImageButton = v.findViewById(R.id.color)
         val title: TextView = v.findViewById(R.id.text_title_category)

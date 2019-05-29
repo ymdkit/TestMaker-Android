@@ -1,7 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.views.adapters
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,7 @@ import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 
-class CheckBoxQuestionAdapter(private val context: Context, private val array: Array<Quest>): RecyclerView.Adapter<CheckBoxQuestionAdapter.ViewHolder>() {
+class CheckBoxQuestionAdapter(private val context: Context, private val array: Array<Quest>): androidx.recyclerview.widget.RecyclerView.Adapter<CheckBoxQuestionAdapter.ViewHolder>() {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -50,7 +50,7 @@ class CheckBoxQuestionAdapter(private val context: Context, private val array: A
 
     }
 
-    class ViewHolder(v: View): RecyclerView.ViewHolder(v) {
+    class ViewHolder(v: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
 
         val checkBox = v.findViewById<CheckBox>(R.id.check_move)
         val problem = v.findViewById<TextView>(R.id.problem)

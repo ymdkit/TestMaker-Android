@@ -1,7 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 
 class EditViewModel: ViewModel() {

@@ -8,7 +8,7 @@
         android:layout_height="0dp"
         android:layout_centerInParent="true" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_select_complete_1"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignEnd="@+id/center_view"
@@ -16,14 +16,14 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/center_view">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_select_complete_1"
             style="@style/MyEditTextMultiLine"
             />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_select_complete_2"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignLeft="@+id/center_view"
@@ -31,15 +31,15 @@
         android:layout_alignParentRight="true"
         android:layout_alignStart="@+id/center_view">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_select_complete_2"
             style="@style/MyEditTextMultiLine"
              />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_select_complete_3"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignEnd="@+id/center_view"
@@ -48,14 +48,14 @@
         android:layout_alignRight="@+id/center_view"
         android:layout_below="@+id/textInputLayout_select_complete_1">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_select_complete_3"
             style="@style/MyEditTextMultiLine"
              />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_select_complete_4"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignLeft="@+id/center_view"
@@ -64,14 +64,14 @@
         android:layout_alignStart="@+id/center_view"
         android:layout_below="@+id/textInputLayout_select_complete_2">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_select_complete_4"
             style="@style/MyEditTextMultiLine"
              />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_select_complete_5"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignEnd="@+id/center_view"
@@ -80,14 +80,14 @@
         android:layout_alignRight="@id/center_view"
         android:layout_below="@+id/textInputLayout_select_complete_3">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_select_complete_5"
             style="@style/MyEditTextMultiLine"
              />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_select_complete_6"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignLeft="@+id/center_view"
@@ -96,12 +96,12 @@
         android:layout_alignStart="@+id/center_view"
         android:layout_below="@+id/textInputLayout_select_complete_4">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_select_complete_6"
             style="@style/MyEditTextMultiLine"
             />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 
 </RelativeLayout>

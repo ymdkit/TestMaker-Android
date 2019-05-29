@@ -2,8 +2,8 @@ package jp.gr.java_conf.foobar.testmaker.service.views.adapters
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +19,7 @@ import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
  * Created by keita on 2017/05/21.
  */
 
-class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit) : RecyclerView.Adapter<TestAndFolderAdapter.ViewHolder>() {
+class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit) : androidx.recyclerview.widget.RecyclerView.Adapter<TestAndFolderAdapter.ViewHolder>() {
 
     private var listener: OnClickListener? = null
 
@@ -140,7 +140,7 @@ class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit
         return VIEW_TYPE_TEST
     }
 
-    abstract class ViewHolder(v: View) : RecyclerView.ViewHolder(v)
+    abstract class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v)
 
     class TestViewHolder(v: View) : ViewHolder(v) {
 

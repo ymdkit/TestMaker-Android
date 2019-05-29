@@ -4,33 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/check_select_1"
         style="@style/MyCheckBoxStyle"
         />
 
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/check_select_2"
         style="@style/MyCheckBoxStyle"
         />
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/check_select_3"
         style="@style/MyCheckBoxStyle"
         />
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/check_select_4"
         style="@style/MyCheckBoxStyle"
         />
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/check_select_5"
         style="@style/MyCheckBoxStyle"
         />
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/check_select_6"
         style="@style/MyCheckBoxStyle"
         />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

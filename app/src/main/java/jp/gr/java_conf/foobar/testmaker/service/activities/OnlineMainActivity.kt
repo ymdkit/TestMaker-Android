@@ -6,9 +6,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings.Secure
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.SearchView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -437,7 +437,7 @@ class OnlineMainActivity : BaseActivity() {
                 recycler_view.visibility = View.VISIBLE
                 swipe_refresh.isRefreshing = false
 
-                recycler_view.layoutManager = LinearLayoutManager(applicationContext)
+                recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
                 recycler_view.setHasFixedSize(true)
                 recycler_view.adapter = this.adapter
             }

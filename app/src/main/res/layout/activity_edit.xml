@@ -15,7 +15,7 @@
         <import type="jp.gr.java_conf.foobar.testmaker.service.Constants" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -23,7 +23,7 @@
         tools:context="jp.gr.java_conf.foobar.testmaker.service.activities.EditActivity">
 
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             app:title="@string/title_activity_edit" />
 
 
-        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/cardView"
             style="@style/MyCardViewStyle"
             android:layout_width="match_parent"
@@ -45,7 +45,7 @@
             card_view:cardUseCompatPadding="true"
             card_view:layout_constraintTop_toBottomOf="@id/toolbar">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -86,7 +86,7 @@
                     card_view:layout_constraintRight_toRightOf="parent"
                     card_view:layout_constraintTop_toTopOf="parent" />
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_config"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -218,7 +218,7 @@
                         card_view:layout_constraintTop_toBottomOf="@id/spinner_size_select" />
 
 
-                    <android.support.v7.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/change_auto"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -242,7 +242,7 @@
                         card_view:layout_constraintLeft_toLeftOf="parent"
                         card_view:layout_constraintTop_toBottomOf="@id/change_auto" />
 
-                    <android.support.v7.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/change_check_order"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -265,7 +265,7 @@
                         card_view:layout_constraintLeft_toLeftOf="parent"
                         card_view:layout_constraintTop_toBottomOf="@id/change_check_order" />
 
-                    <android.support.v7.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/change_explanation"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -290,9 +290,9 @@
                         card_view:layout_constraintTop_toBottomOf="@id/change_explanation"
                          />
 
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -300,7 +300,7 @@
                     android:visibility="@{model.stateEditing == Constants.EDIT_QUESTION ? View.VISIBLE : View.GONE}"
                     card_view:layout_constraintTop_toBottomOf="@id/layout_config">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputLayout_question_write"
                         style="@style/MyTextInputLayoutStyle"
                         android:layout_width="0dp"
@@ -309,12 +309,12 @@
                         card_view:layout_constraintRight_toLeftOf="@id/button_image"
                         card_view:layout_constraintTop_toTopOf="parent">
 
-                        <android.support.v7.widget.AppCompatEditText
+                        <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/set_problem"
                             style="@style/MyEditTextMultiLine"
                             android:hint="@string/hint_question" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <ImageButton
                         android:id="@+id/button_image"
@@ -329,19 +329,19 @@
                         card_view:layout_constraintTop_toTopOf="parent" />
 
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/edit_write_view"
                         style="@style/MyTextInputLayoutStyle"
                         android:layout_width="match_parent"
                         android:visibility="@{model.formatQuestion == Constants.WRITE ? View.VISIBLE : View.GONE}"
                         card_view:layout_constraintTop_toBottomOf="@id/textInputLayout_question_write">
 
-                        <android.support.v7.widget.AppCompatEditText
+                        <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/set_answer_write"
                             style="@style/MyEditTextSingleLine"
                             android:hint="@string/hint_answer" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <jp.gr.java_conf.foobar.testmaker.service.views.EditCompleteView
                         android:id="@+id/edit_complete_view"
@@ -365,18 +365,18 @@
                         android:visibility="@{model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
                         card_view:layout_constraintTop_toBottomOf="@id/edit_select_view" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputLayout_explanation"
                         style="@style/MyTextInputLayoutStyle"
                         android:layout_width="match_parent"
                         android:visibility="@{model.isEditingExplanation ? View.VISIBLE : View.GONE}"
                         card_view:layout_constraintTop_toBottomOf="@id/edit_select_complete_view">
 
-                        <android.support.v7.widget.AppCompatEditText
+                        <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/set_explanation"
                             style="@style/MyEditTextMultiLine"
                             android:hint="@string/hint_explanation" />
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <Button
                         android:id="@+id/button_add"
@@ -425,15 +425,15 @@
                         card_view:layout_constraintTop_toBottomOf="@id/button_add" />
 
 
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -451,6 +451,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

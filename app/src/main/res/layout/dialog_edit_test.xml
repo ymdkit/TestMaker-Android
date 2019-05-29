@@ -9,13 +9,13 @@
             type="String" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_dialog_edit_test"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_title"
             style="@style/MyTextInputLayoutStyle"
             android:layout_width="0dp"
@@ -24,14 +24,14 @@
             app:layout_constraintRight_toLeftOf="@id/button_category"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edit_title"
                 style="@style/MyEditTextSingleLine"
                 android:hint="@string/hint_name"
                 android:text="@={title}"
                 android:imeOptions="actionDone" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/button_category"
@@ -56,6 +56,6 @@
             app:layout_constraintTop_toBottomOf="@id/textInputLayout_title"
             />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
