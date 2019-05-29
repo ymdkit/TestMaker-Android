@@ -1,22 +1,15 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
 import android.app.Activity
-import androidx.lifecycle.Observer
 import android.content.DialogInterface
 import android.content.Intent
-import androidx.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.core.content.res.ResourcesCompat
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.SearchView
-import androidx.recyclerview.widget.ItemTouchHelper
 import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -25,10 +18,17 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.isseiaoki.simplecropview.CropImageView
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditBinding
+import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
@@ -40,6 +40,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
@@ -56,7 +57,7 @@ open class EditActivity : BaseActivity() {
     internal var testId: Long = 0
     internal var questionId: Long = -1
 
-    private lateinit var viewModel: EditViewModel
+    private val viewModel: EditViewModel by viewModel()
 
     private val fileName: String
         get() {
@@ -68,7 +69,6 @@ open class EditActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
 
-        viewModel = EditViewModel()
         val binding = DataBindingUtil.setContentView<ActivityEditBinding>(this, R.layout.activity_edit)
         binding.lifecycleOwner = this
         binding.model = viewModel
@@ -142,11 +142,18 @@ open class EditActivity : BaseActivity() {
         viewModel.isCheckOrder.observe(this, Observer {
             sharedPreferenceManager.isCheckOrder = it ?: false
         })
+
+        viewModel.clearQuestions()
+        viewModel.getQuestions(testId).observeNonNull(this) {
+            editAdapter.questions = it
+        }
+
+
     }
 
     private fun initAdapter() {
 
-        editAdapter = EditAdapter(this, realmController, testId)
+        editAdapter = EditAdapter(this)
 
         editAdapter.setOnClickListener(object : EditAdapter.OnClickListener {
             override fun onClickEditQuestion(question: Quest) {

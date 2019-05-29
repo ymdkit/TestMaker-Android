@@ -21,6 +21,18 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [studyplus_consumer_key: System.getenv("STUDYPLUS_CONSUMER_KEY"),
+                                    secret_studyplus_consumer_key: System.getenv("SECRET_STUDYPLUS_CONSUMER_KEY"),
+                                    testmaker_admob_key: System.getenv("TESTMAKER_ADMOB_KEY"),
+                                    ncbm_app_key: System.getenv("NCMB_APP_KEY"),
+                                    ncbm_client_key: System.getenv("NCMB_CLIENT_KEY")]
+        }
+        debug {
+            manifestPlaceholders = [studyplus_consumer_key: System.getenv("STUDYPLUS_CONSUMER_KEY"),
+                                    secret_studyplus_consumer_key: System.getenv("SECRET_STUDYPLUS_CONSUMER_KEY"),
+                                    testmaker_admob_key: System.getenv("TESTMAKER_ADMOB_KEY"),
+                                    ncbm_app_key: System.getenv("NCMB_APP_KEY"),
+                                    ncbm_client_key: System.getenv("NCMB_CLIENT_KEY")]
         }
     }
     compileOptions {

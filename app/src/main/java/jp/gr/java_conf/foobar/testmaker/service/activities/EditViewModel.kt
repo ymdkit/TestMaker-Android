@@ -1,10 +1,14 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
+import jp.gr.java_conf.foobar.testmaker.service.models.Quest
+import jp.gr.java_conf.foobar.testmaker.service.models.Test
+import jp.gr.java_conf.foobar.testmaker.service.models.TestMakerRepository
 
-class EditViewModel: ViewModel() {
+class EditViewModel(private val repository: TestMakerRepository): ViewModel() {
 
     val formatQuestion: MutableLiveData<Int> = MutableLiveData()
     val stateEditing: MutableLiveData<Int> = MutableLiveData()
@@ -13,8 +17,6 @@ class EditViewModel: ViewModel() {
     val isEditingExplanation: MutableLiveData<Boolean> = MutableLiveData()
     val isAuto: MutableLiveData<Boolean> = MutableLiveData()
     val isCheckOrder: MutableLiveData<Boolean> = MutableLiveData()
-
-
 
     init {
         formatQuestion.value = Constants.WRITE
@@ -26,5 +28,13 @@ class EditViewModel: ViewModel() {
 
     fun editQuestion(){
         stateEditing.value = Constants.EDIT_QUESTION
+    }
+
+    fun getQuestions(testId: Long): LiveData<ArrayList<Quest>> {
+        return repository.getQuestions(testId)
+    }
+
+    fun clearQuestions() {
+        repository.clearQuestions()
     }
 }

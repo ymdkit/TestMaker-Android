@@ -1,10 +1,14 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -41,7 +45,6 @@ public class BaseActivity extends AppCompatActivity {
 
         TestMakerApplication app = (TestMakerApplication) getApplication();
 
-        MobileAds.initialize(this, "hogehoge");
 
         realmController = new RealmController(getApplicationContext(), app.getConfig());
 
@@ -51,7 +54,17 @@ public class BaseActivity extends AppCompatActivity {
             firebaseAnalytic = FirebaseAnalytics.getInstance(this);
         }
 
-        Studyplus.getInstance().setup("U6867w2Zt2tT2CRjJRteaMAUCvnEDfXZ", "d9cCv8aZCDaUL56bhZY5HBnzktpzpYefVAn3hV5hjjqmWhF97j985wyuMjLExLvQ");
+        ApplicationInfo info
+                = null;
+        try {
+            info = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        MobileAds.initialize(this, info.metaData.getString("testmaker_admob_key"));
+
+        Studyplus.getInstance().setup(info.metaData.getString("studyplus_comsumer_key"), info.metaData.getString("secret_studyplus_comsumer_key"));
 
     }
 

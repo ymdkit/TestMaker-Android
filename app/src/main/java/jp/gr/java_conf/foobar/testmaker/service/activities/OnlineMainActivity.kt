@@ -3,6 +3,8 @@ package jp.gr.java_conf.foobar.testmaker.service.activities
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings.Secure
@@ -41,7 +43,15 @@ class OnlineMainActivity : BaseActivity() {
 
         sendScreen("OnlineMainActivity")
 
-        NCMB.initialize(this.applicationContext, "11a0bc05538273ecd8e5d6152a9379119f16115c19082eae88c101adeb963f15", "afc1899b2ed65520fc935e8d680723828a09203347d18be035408491451262c8")
+        var info: ApplicationInfo? = null
+        try {
+            info = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+
+
+        NCMB.initialize(this.applicationContext, info?.metaData?.getString("ncbm_app_key") , info?.metaData?.getString("ncbm_client_key"))
 
         createAd(container)
 
@@ -422,7 +432,7 @@ class OnlineMainActivity : BaseActivity() {
                         }
 
                         GlobalScope.launch(Dispatchers.Main) {
-                            withContext(Dispatchers.Default) { obj.getString("content").replace("\\\n", "\n").toTest(baseContext) }.let{
+                            withContext(Dispatchers.Default) { obj.getString("content").replace("\\\n", "\n").toTest(baseContext) }.let {
                                 realmController.convert(it, -1L)
 
                                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()

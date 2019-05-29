@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.extensions.filteredList
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 import jp.gr.java_conf.foobar.testmaker.service.models.RealmController
 import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
@@ -15,9 +16,15 @@ import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
 /**
  * Created by keita on 2016/05/29.
  */
-class EditAdapter(private val context: Context, private val realmController: RealmController, private val testId: Long) : androidx.recyclerview.widget.RecyclerView.Adapter<EditAdapter.ViewHolder>() {
+class EditAdapter(private val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<EditAdapter.ViewHolder>() {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
+
+    var questions: ArrayList<Quest> = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     var filter: Boolean = false
     var searchWord: String = ""
@@ -39,18 +46,16 @@ class EditAdapter(private val context: Context, private val realmController: Rea
 
     override fun getItemCount(): Int {
 
-        return if (filter) realmController.getFilterQuestions(testId, searchWord).size
-        else realmController.getQuestions(testId).size
-
+        return if(searchWord.isEmpty()) questions.size else questions.filteredList(searchWord).size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val data = init(position)
+        val data = init(holder.adapterPosition)
 
         holder.itemView.setOnClickListener { }
 
-        holder.itemView.setOnLongClickListener{ true }
+        holder.itemView.setOnLongClickListener { true }
 
         holder.order.text = (data.order + 1).toString()
         holder.problem.text = context.getString(R.string.question, data.problem)
@@ -67,9 +72,7 @@ class EditAdapter(private val context: Context, private val realmController: Rea
     }
 
     private fun init(position: Int): Quest {
-
-        return if (filter) realmController.getFilterQuestions(testId, searchWord)[position]
-        else realmController.getQuestions(testId)[position]
+        return if(searchWord.isEmpty()) questions[position] else questions.filteredList(searchWord)[position]
 
     }
 

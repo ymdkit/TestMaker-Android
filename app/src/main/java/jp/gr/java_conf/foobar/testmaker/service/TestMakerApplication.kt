@@ -22,9 +22,7 @@ class TestMakerApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
-        startKoin(this, listOf(
-                getTestMakerModules()
-        ))
+
 
         Realm.init(this)
 
@@ -37,6 +35,10 @@ class TestMakerApplication : MultiDexApplication() {
         } catch (ignored: FileNotFoundException) {
             // If the Realm file doesn't exist, just ignore.
         }
+
+        startKoin(this, listOf(
+                getTestMakerModules(Realm.getInstance(config))
+        ))
 
 
     }

@@ -49,11 +49,8 @@ open class ShowTestsActivity : BaseActivity() {
             override fun onClickEditTest(id: Long) {
 
                 sendFirebaseEvent("edit")
-
                 val i = Intent(this@ShowTestsActivity, EditActivity::class.java)
-
                 i.putExtra("testId", id)
-
                 startActivityForResult(i, REQUEST_EDIT)
             }
 
