@@ -23,17 +23,6 @@
             android:padding="@dimen/element_spacing_small">
 
             <TextView
-                android:id="@+id/order"
-                android:layout_width="@dimen/width_order"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:textSize="@dimen/text_size_ssmall"
-                app:layout_constraintLeft_toLeftOf="parent"
-                />
-
-
-            <TextView
                 android:id="@+id/problem"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -44,7 +33,7 @@
                 android:scrollHorizontally="true"
                 android:textSize="@dimen/text_size_medium"
                 app:layout_constraintRight_toLeftOf="@id/edit"
-                app:layout_constraintLeft_toRightOf="@id/order"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/answer"/>
 
@@ -60,7 +49,7 @@
                 android:singleLine="true"
                 android:textSize="@dimen/text_size_medium"
                 app:layout_constraintRight_toLeftOf="@id/edit"
-                app:layout_constraintLeft_toRightOf="@id/order"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/problem"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 

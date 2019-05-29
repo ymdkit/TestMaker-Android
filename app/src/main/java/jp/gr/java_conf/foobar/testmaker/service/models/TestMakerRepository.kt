@@ -48,4 +48,8 @@ class TestMakerRepository(private val local: LocalDataSource,
         questions = null
     }
 
+    fun deleteQuestion(question: Quest) {
+        local.deleteQuestion(question)
+    }
+
 }

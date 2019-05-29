@@ -30,6 +30,10 @@ class EditViewModel(private val repository: TestMakerRepository): ViewModel() {
         stateEditing.value = Constants.EDIT_QUESTION
     }
 
+    fun deleteQuestion(question: Quest){
+        repository.deleteQuestion(question)
+    }
+
     fun getQuestions(testId: Long): LiveData<ArrayList<Quest>> {
         return repository.getQuestions(testId)
     }

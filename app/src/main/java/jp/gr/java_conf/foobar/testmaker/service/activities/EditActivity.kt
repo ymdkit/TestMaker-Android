@@ -245,7 +245,7 @@ open class EditActivity : BaseActivity() {
                 }
             }
 
-            override fun onClickDeleteQuestion(data: Quest) {
+            override fun onClickDeleteQuestion(data: Quest,position: Int) {
 
                 val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
                 builder.setTitle(getString(R.string.delete_question))
@@ -253,8 +253,10 @@ open class EditActivity : BaseActivity() {
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
                     if (data.imagePath != "") deleteFile(data.imagePath)
-                    realmController.deleteQuestion(data)
-                    viewModel.fetchQuestions(testId)
+
+                    viewModel.deleteQuestion(data)
+                    editAdapter.questions.removeAt(position)
+                    editAdapter.notifyItemRemoved(position)
                 }
                 builder.setNegativeButton(android.R.string.cancel, null)
                 builder.create().show()
@@ -707,19 +709,21 @@ open class EditActivity : BaseActivity() {
         recycler_view.adapter = editAdapter
 
         val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
-            override fun onSwiped(p0: androidx.recyclerview.widget.RecyclerView.ViewHolder, p1: Int) {
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onSwiped(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
+
+                viewModel.deleteQuestion(editAdapter.questions[holder.adapterPosition])
+                editAdapter.questions.removeAt(holder.adapterPosition)
+                editAdapter.notifyItemRemoved(holder.adapterPosition)
 
             }
             // ここで指定した方向にのみドラッグ可能
-
             override fun onMove(recyclerView: androidx.recyclerview.widget.RecyclerView, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, target: androidx.recyclerview.widget.RecyclerView.ViewHolder): Boolean {
 
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
 
                 realmController.sortManual(from, to, testId)
-
                 editAdapter.notifyItemMoved(from, to)
 
                 return true
