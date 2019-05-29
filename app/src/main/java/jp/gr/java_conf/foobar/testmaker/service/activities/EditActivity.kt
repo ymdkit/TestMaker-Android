@@ -205,7 +205,6 @@ open class EditActivity : BaseActivity() {
 
                         set_answer_write.setText(question.answer)
                         sharedPreferenceManager.numAnswers = 1
-                        button_type.text = getString(R.string.action_choose)
                     }
 
                     Constants.SELECT -> {
@@ -216,7 +215,6 @@ open class EditActivity : BaseActivity() {
                         edit_select_view.reloadOthers(question.selections.size)
                         edit_select_view.setAnswer(question.answer)
                         edit_select_view.setOthers(question.selections)
-                        button_type.text = getString(R.string.action_write)
                         viewModel.isAuto.value = question.auto
 
                         edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
@@ -229,7 +227,6 @@ open class EditActivity : BaseActivity() {
                         sharedPreferenceManager.isCheckOrder = question.isCheckOrder
                         edit_complete_view.reloadAnswers(question.answers.size)
                         edit_complete_view.setAnswers(question)
-                        button_type.text = getString(R.string.action_choose)
                     }
 
                     Constants.SELECT_COMPLETE -> {
@@ -240,7 +237,6 @@ open class EditActivity : BaseActivity() {
                         edit_select_complete_view.setAnswerNum(question.answers.size)
                         edit_select_complete_view.reloadSelects(question.answers.size + question.selections.size)
                         edit_select_complete_view.setSelections(question.answers, question.selections)
-                        button_type.text = getString(R.string.action_choose)
                         viewModel.isAuto.value = question.auto
                         edit_select_complete_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers + 1)
 
@@ -257,7 +253,7 @@ open class EditActivity : BaseActivity() {
 
                     if (data.imagePath != "") deleteFile(data.imagePath)
                     realmController.deleteQuestion(data)
-                    editAdapter.notifyDataSetChanged()
+                    viewModel.fetchQuestions(testId)
                 }
                 builder.setNegativeButton(android.R.string.cancel, null)
                 builder.create().show()
@@ -435,14 +431,12 @@ open class EditActivity : BaseActivity() {
 
         reset()
 
-        editAdapter.notifyDataSetChanged()
-
+        viewModel.fetchQuestions(testId)
         button_cancel.visibility = View.GONE
 
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_edit, menu)
 
         val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
@@ -637,7 +631,6 @@ open class EditActivity : BaseActivity() {
             } else {
 
                 showLayoutEdit()
-                text_title.text = if (edit_select_view.visibility == View.VISIBLE) getString(R.string.add_question_choose) else getString(R.string.add_question_write)
 
             }
 
@@ -653,41 +646,6 @@ open class EditActivity : BaseActivity() {
 
             val tag = radio.tag
             if (tag is Int) viewModel.formatQuestion.value = tag
-
-        }
-
-        button_type.setOnClickListener {
-
-            if (button_type.text == getString(R.string.action_choose)) {
-
-                if (sharedPreferenceManager.numAnswersSelect > 1) {
-                    showLayoutSelectComplete()
-                    edit_select_complete_view.reloadSelects(sharedPreferenceManager.numOthers + 1)
-                    edit_select_complete_view.setAnswerNum(sharedPreferenceManager.numAnswersSelect)
-                    edit_select_complete_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers + 1)
-
-                } else {
-                    showLayoutSelect()
-                    edit_select_view.reloadOthers(sharedPreferenceManager.numOthers)
-                    edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
-
-                }
-
-                button_type.text = getString(R.string.action_write)
-                text_title.text = getString(R.string.add_question_choose)
-
-            } else {
-
-                if (sharedPreferenceManager.numAnswers > 1) {
-                    showLayoutComplete()
-                } else {
-                    showLayoutWrite()
-                }
-
-                button_type.text = getString(R.string.action_choose)
-                text_title.text = getString(R.string.add_question_write)
-
-            }
 
         }
 
@@ -740,7 +698,6 @@ open class EditActivity : BaseActivity() {
         if (Build.VERSION.SDK_INT >= 21) {
             button_add.stateListAnimator = null
             button_cancel.stateListAnimator = null
-            button_type.stateListAnimator = null
             button_detail.stateListAnimator = null
         }
 

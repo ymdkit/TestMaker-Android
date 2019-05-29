@@ -46,7 +46,7 @@ class TestMakerRepository(private val local: LocalDataSource,
         return questions as LiveData<ArrayList<Quest>>
     }
 
-    private fun fetchQuestions(testId: Long) {
+    fun fetchQuestions(testId: Long) {
         GlobalScope.launch(Dispatchers.Main) {
                 questions?.postValue(local.getQuestions(testId))
         }

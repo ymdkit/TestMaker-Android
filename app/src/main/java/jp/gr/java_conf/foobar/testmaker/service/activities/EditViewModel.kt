@@ -34,6 +34,10 @@ class EditViewModel(private val repository: TestMakerRepository): ViewModel() {
         return repository.getQuestions(testId)
     }
 
+    fun fetchQuestions(testId: Long){
+        repository.fetchQuestions(testId)
+    }
+
     fun clearQuestions() {
         repository.clearQuestions()
     }

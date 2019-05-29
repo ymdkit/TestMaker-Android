@@ -22,8 +22,6 @@ class TestMakerApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
-
-
         Realm.init(this)
 
         config = RealmConfiguration.Builder()
@@ -39,8 +37,6 @@ class TestMakerApplication : MultiDexApplication() {
         startKoin(this, listOf(
                 getTestMakerModules(Realm.getInstance(config))
         ))
-
-
     }
 
     @Synchronized

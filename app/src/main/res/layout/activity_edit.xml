@@ -110,9 +110,9 @@
                         android:id="@+id/radio_question"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="end"
                         android:layout_marginEnd="@dimen/element_spacing_small"
+                        android:gravity="end"
+                        android:orientation="horizontal"
                         card_view:layout_constraintLeft_toRightOf="@id/text_format_question"
                         card_view:layout_constraintRight_toRightOf="parent"
                         card_view:layout_constraintTop_toTopOf="@id/text_format_question">
@@ -121,37 +121,37 @@
                             android:id="@+id/radio_write"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:tag="@{Constants.WRITE}"
                             android:checked="@{model.formatQuestion == Constants.WRITE}"
-                            android:textColor="@android:color/tab_indicator_text"
-                            android:text="@string/normal" />
+                            android:tag="@{Constants.WRITE}"
+                            android:text="@string/normal"
+                            android:textColor="@android:color/tab_indicator_text" />
 
                         <RadioButton
                             android:id="@+id/radio_select"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:tag="@{Constants.SELECT}"
                             android:checked="@{model.formatQuestion == Constants.SELECT}"
-                            android:textColor="@android:color/tab_indicator_text"
-                            android:text="@string/select" />
+                            android:tag="@{Constants.SELECT}"
+                            android:text="@string/select"
+                            android:textColor="@android:color/tab_indicator_text" />
 
                         <RadioButton
                             android:id="@+id/radio_complete"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:tag="@{Constants.COMPLETE}"
                             android:checked="@{model.formatQuestion == Constants.COMPLETE}"
-                            android:textColor="@android:color/tab_indicator_text"
-                            android:text="@string/complete" />
+                            android:tag="@{Constants.COMPLETE}"
+                            android:text="@string/complete"
+                            android:textColor="@android:color/tab_indicator_text" />
 
                         <RadioButton
                             android:id="@+id/radio_select_complete"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:tag="@{Constants.SELECT_COMPLETE}"
                             android:checked="@{model.formatQuestion == Constants.SELECT_COMPLETE}"
-                            android:textColor="@android:color/tab_indicator_text"
-                            android:text="@string/select_complete" />
+                            android:tag="@{Constants.SELECT_COMPLETE}"
+                            android:text="@string/select_complete"
+                            android:textColor="@android:color/tab_indicator_text" />
                     </RadioGroup>
 
                     <TextView
@@ -171,11 +171,11 @@
                         android:id="@+id/spinner_size_answer"
                         android:layout_width="@dimen/view_width_large"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/view_width_small"
-                        android:visibility="@{model.formatQuestion == Constants.COMPLETE || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
                         android:entries="@{model.formatQuestion == Constants.COMPLETE ? @stringArray/spinner_answers_complete : @stringArray/spinner_answers_select_complete}"
                         android:gravity="end"
+                        android:paddingStart="@dimen/view_width_small"
                         android:selectedItemPosition="@={model.spinnerAnswersPosition}"
+                        android:visibility="@{model.formatQuestion == Constants.COMPLETE || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
                         card_view:layout_constraintRight_toRightOf="parent"
                         card_view:layout_constraintTop_toTopOf="@id/text_size_answer" />
 
@@ -183,10 +183,10 @@
                         android:id="@+id/text_size_select"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/element_spacing_small"
                         android:gravity="center_vertical"
                         android:text="@string/number_choosers"
                         android:textSize="@dimen/text_size_medium"
-                        android:layout_marginTop="@dimen/element_spacing_small"
                         android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
                         card_view:layout_constraintBottom_toBottomOf="@id/spinner_size_select"
                         card_view:layout_constraintLeft_toLeftOf="parent"
@@ -196,11 +196,11 @@
                         android:id="@+id/spinner_size_select"
                         android:layout_width="@dimen/view_width_large"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/view_width_small"
-                        android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
                         android:entries="@{model.formatQuestion == Constants.SELECT ? @stringArray/spinner_selects : @stringArray/spinner_selects_complete}"
                         android:gravity="end"
+                        android:paddingStart="@dimen/view_width_small"
                         android:selectedItemPosition="@={model.spinnerSelectsPosition}"
+                        android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
                         card_view:layout_constraintRight_toRightOf="parent"
                         card_view:layout_constraintTop_toTopOf="@id/text_size_select" />
 
@@ -208,10 +208,10 @@
                         android:id="@+id/text_auto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/element_spacing_small"
                         android:gravity="center_vertical"
                         android:text="@string/auto"
                         android:textSize="@dimen/text_size_medium"
-                        android:layout_marginTop="@dimen/element_spacing_small"
                         android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
                         card_view:layout_constraintBottom_toBottomOf="@id/change_auto"
                         card_view:layout_constraintLeft_toLeftOf="parent"
@@ -223,8 +223,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|end"
-                        android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
                         android:checked="@={model.isAuto}"
+                        android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
                         card_view:layout_constraintLeft_toRightOf="@id/text_auto"
                         card_view:layout_constraintRight_toRightOf="parent"
                         card_view:layout_constraintTop_toTopOf="@id/text_auto" />
@@ -233,11 +233,11 @@
                         android:id="@+id/text_check_order"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/element_spacing_small"
                         android:gravity="center_vertical"
                         android:text="@string/is_check_order"
                         android:textSize="@dimen/text_size_medium"
                         android:visibility="@{model.formatQuestion == Constants.COMPLETE ? View.VISIBLE : View.GONE}"
-                        android:layout_marginTop="@dimen/element_spacing_small"
                         card_view:layout_constraintBottom_toBottomOf="@id/change_check_order"
                         card_view:layout_constraintLeft_toLeftOf="parent"
                         card_view:layout_constraintTop_toBottomOf="@id/change_auto" />
@@ -257,10 +257,10 @@
                         android:id="@+id/text_explanation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/element_spacing_small"
                         android:gravity="center_vertical"
                         android:text="@string/message_explanation"
                         android:textSize="@dimen/text_size_medium"
-                        android:layout_marginTop="@dimen/element_spacing_small"
                         card_view:layout_constraintBottom_toBottomOf="@id/change_explanation"
                         card_view:layout_constraintLeft_toLeftOf="parent"
                         card_view:layout_constraintTop_toBottomOf="@id/change_check_order" />
@@ -280,15 +280,14 @@
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_height_small"
-                        android:background="@drawable/button_blue"
                         android:layout_marginTop="@dimen/element_spacing_small"
+                        android:background="@drawable/button_blue"
+                        android:onClick="@{() -> model.editQuestion()}"
                         android:text="@string/ok"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_small"
-                        android:onClick="@{() -> model.editQuestion()}"
-                        card_view:layout_constraintTop_toBottomOf="@id/change_explanation"
-                         />
+                        card_view:layout_constraintTop_toBottomOf="@id/change_explanation" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -323,7 +322,8 @@
                         android:layout_margin="@dimen/element_spacing_normal"
                         android:background="@drawable/button_blue"
                         android:contentDescription="@string/image"
-                        android:scaleType="centerCrop"
+                        android:scaleType="fitCenter"
+                        android:padding="@dimen/element_spacing_normal"
                         android:src="@drawable/ic_photo_white"
                         card_view:layout_constraintRight_toRightOf="parent"
                         card_view:layout_constraintTop_toTopOf="parent" />
@@ -380,7 +380,7 @@
 
                     <Button
                         android:id="@+id/button_add"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/element_spacing_small"
                         android:layout_marginRight="@dimen/element_spacing_small"
@@ -390,39 +390,29 @@
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_medium"
-                        card_view:layout_constraintTop_toBottomOf="@id/textInputLayout_explanation" />
-
-                    <Button
-                        android:id="@+id/button_type"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/view_height_small"
-                        android:layout_margin="@dimen/element_spacing_small"
-                        android:background="@drawable/button_blue"
-                        android:text="@string/action_choose"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_small"
                         card_view:layout_constraintBottom_toBottomOf="parent"
                         card_view:layout_constraintLeft_toLeftOf="parent"
                         card_view:layout_constraintRight_toLeftOf="@id/button_detail"
-                        card_view:layout_constraintTop_toBottomOf="@id/button_add" />
+                        card_view:layout_constraintTop_toBottomOf="@id/textInputLayout_explanation" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/button_detail"
                         style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/view_height_small"
-                        android:layout_margin="@dimen/element_spacing_small"
+                        android:layout_width="48dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="@dimen/element_spacing_small"
+                        android:layout_marginBottom="@dimen/element_spacing_small"
                         android:background="@drawable/button_blue"
+                        android:padding="@dimen/element_spacing_normal"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_settings_white_16dp"
                         android:text="@string/action_detail"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_small"
                         card_view:layout_constraintBottom_toBottomOf="parent"
-                        card_view:layout_constraintLeft_toRightOf="@id/button_type"
                         card_view:layout_constraintRight_toRightOf="parent"
-                        card_view:layout_constraintTop_toBottomOf="@id/button_add" />
+                        card_view:layout_constraintTop_toTopOf="@id/button_add" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
