@@ -152,6 +152,7 @@
                             android:checked="@{model.formatQuestion == Constants.SELECT_COMPLETE}"
                             android:tag="@{Constants.SELECT_COMPLETE}"
                             android:text="@string/select_complete"
+                            android:singleLine="true"
                             android:textColor="@android:color/tab_indicator_text" />
                     </RadioGroup>
 

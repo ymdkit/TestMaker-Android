@@ -341,11 +341,9 @@ open class EditActivity : BaseActivity() {
     }
 
     private fun hideLayoutEdit() {
-
         viewModel.stateEditing.value = Constants.NOT_EDITING
         button_cancel.visibility = View.GONE
         text_title.text = getString(R.string.add_question)
-
     }
 
     private fun addQuestion() {
