@@ -61,7 +61,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:layout_marginEnd="@dimen/element_spacing_small"
-                custom:image="@drawable/ic_play_arrow_white"
+                custom:image="@drawable/ic_play_arrow_white_24dp"
                 custom:layout_constraintRight_toLeftOf="@id/edit"
                 custom:text="@string/play" />
 

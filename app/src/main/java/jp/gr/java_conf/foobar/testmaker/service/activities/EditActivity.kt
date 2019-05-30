@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -164,11 +163,11 @@ open class EditActivity : BaseActivity() {
 
                 if (question.imagePath != "") {
                     imagePath = question.imagePath
-                    viewModel.loadImage(imagePath){
+                    viewModel.loadImage(imagePath) {
                         button_image.setImageWithGlide(baseContext, it)
                     }
                 } else {
-                    button_image.setImageResource(R.drawable.ic_photo_white)
+                    button_image.setImageResource(R.drawable.ic_play_arrow_white_24dp)
                 }
 
                 viewModel.isEditingExplanation.value = question.explanation.isNotEmpty()
@@ -275,26 +274,8 @@ open class EditActivity : BaseActivity() {
             positiveButton.setOnClickListener {
 
                 imagePath = fileName
-
-                GlobalScope.launch(Dispatchers.Main) {
-                    withContext(Dispatchers.Default) {
-                        val imageOptions = BitmapFactory.Options()
-                        imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-                        try {
-
-                            val outStream = baseContext.openFileOutput(imagePath, MODE_PRIVATE)
-                            cropView.croppedBitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream)
-                            outStream.close()
-
-                        } catch (e: FileNotFoundException) {
-                            e.printStackTrace()
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
-                    }.let {
-                        button_image.setImageWithGlide(baseContext, cropView.croppedBitmap)
-                    }
-                }
+                button_image.setImageWithGlide(baseContext, cropView.croppedBitmap)
+                viewModel.saveImage(imagePath, cropView.croppedBitmap)
 
                 dialog.dismiss()
             }
@@ -415,29 +396,22 @@ open class EditActivity : BaseActivity() {
         menuInflater.inflate(R.menu.menu_edit, menu)
 
         val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
-
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String): Boolean {
-
                 editAdapter.searchWord = s
-                editAdapter.filter = true
                 editAdapter.notifyDataSetChanged()
                 return false
             }
 
             override fun onQueryTextChange(s: String): Boolean {
-
                 editAdapter.searchWord = s
-                editAdapter.filter = true
                 editAdapter.notifyDataSetChanged()
                 return false
             }
         })
 
         searchView.setOnCloseListener {
-
             editAdapter.searchWord = ""
-            editAdapter.filter = false
             editAdapter.notifyDataSetChanged()
             false
         }
@@ -580,7 +554,7 @@ open class EditActivity : BaseActivity() {
         set_explanation.setText("")
         questionId = -1
         imagePath = ""
-        button_image.setImageResource(R.drawable.ic_photo_white)
+        button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
         button_image.setBackgroundResource(R.drawable.button_blue)
 
         button_add.text = getString(R.string.action_add)
@@ -616,9 +590,8 @@ open class EditActivity : BaseActivity() {
             viewModel.stateEditing.value = Constants.EDIT_CONFIG
         }
 
-        radio_question.setOnCheckedChangeListener { group, checkedId ->
+        radio_question.setOnCheckedChangeListener { _, checkedId ->
             val radio = findViewById<RadioButton>(checkedId)
-
             val tag = radio.tag
             if (tag is Int) viewModel.formatQuestion.value = tag
 
@@ -643,7 +616,7 @@ open class EditActivity : BaseActivity() {
                             0 -> openImage() //差し替え
                             1 -> { //取り消し
                                 imagePath = ""
-                                button_image.setImageResource(R.drawable.ic_photo_white)
+                                button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
                                 button_image.setBackgroundResource(R.drawable.button_blue)
                             }
                         }

@@ -26,7 +26,6 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
             notifyDataSetChanged()
         }
 
-    var filter: Boolean = false
     var searchWord: String = ""
 
     private var listener: EditAdapter.OnClickListener? = null
@@ -45,7 +44,6 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
     }
 
     override fun getItemCount(): Int {
-
         return if(searchWord.isEmpty()) questions.size else questions.filteredList(searchWord).size
     }
 
@@ -72,7 +70,6 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
     private fun init(position: Int): Quest {
         return if(searchWord.isEmpty()) questions[position] else questions.filteredList(searchWord)[position]
-
     }
 
     class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {

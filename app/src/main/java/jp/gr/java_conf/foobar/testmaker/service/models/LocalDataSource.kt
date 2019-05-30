@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import io.realm.Realm
+import jp.gr.java_conf.foobar.testmaker.service.activities.BaseActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -56,6 +57,26 @@ class LocalDataSource(private val realm: Realm, private val context: Context) {
                 }
             }.let {
                 if (it is Bitmap) setImage(it)
+            }
+        }
+    }
+
+    fun saveImage(fileName: String,bitmap: Bitmap) {
+        GlobalScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.Default) {
+                val imageOptions = BitmapFactory.Options()
+                imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
+                try {
+
+                    val outStream = context.openFileOutput(fileName, BaseActivity.MODE_PRIVATE)
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream)
+                    outStream.close()
+
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
         }
     }

@@ -63,4 +63,8 @@ class TestMakerRepository(private val local: LocalDataSource,
         local.loadImage(imagePath,setImage)
     }
 
+    fun saveImage(fileName: String,bitmap: Bitmap) {
+        local.saveImage(fileName,bitmap)
+    }
+
 }

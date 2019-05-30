@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
-import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.models.TestMakerRepository
 
 class EditViewModel(private val repository: TestMakerRepository): ViewModel() {
@@ -49,5 +48,9 @@ class EditViewModel(private val repository: TestMakerRepository): ViewModel() {
 
     fun loadImage(imagePath: String, setImage: (Bitmap) -> Unit) {
         repository.loadImage(imagePath,setImage)
+    }
+
+    fun saveImage(fileName: String,bitmap: Bitmap) {
+        repository.saveImage(fileName,bitmap)
     }
 }
