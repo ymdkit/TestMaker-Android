@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -44,5 +45,9 @@ class EditViewModel(private val repository: TestMakerRepository): ViewModel() {
 
     fun clearQuestions() {
         repository.clearQuestions()
+    }
+
+    fun loadImage(imagePath: String, setImage: (Bitmap) -> Unit) {
+        repository.loadImage(imagePath,setImage)
     }
 }

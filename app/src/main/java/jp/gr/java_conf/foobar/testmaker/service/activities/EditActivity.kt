@@ -163,30 +163,9 @@ open class EditActivity : BaseActivity() {
                 questionId = question.id
 
                 if (question.imagePath != "") {
-
                     imagePath = question.imagePath
-
-                    GlobalScope.launch(Dispatchers.Main) {
-                        withContext(Dispatchers.Default) {
-                            val imageOptions = BitmapFactory.Options()
-                            imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-                            try {
-
-                                val input = baseContext.openFileInput(imagePath)
-                                val bm = BitmapFactory.decodeStream(input, null, imageOptions)
-
-                                input.close()
-
-                                return@withContext bm
-
-                            } catch (e: FileNotFoundException) {
-                                e.printStackTrace()
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                            }
-                        }.let {
-                            if (it is Bitmap) button_image.setImageWithGlide(baseContext, it)
-                        }
+                    viewModel.loadImage(imagePath){
+                        button_image.setImageWithGlide(baseContext, it)
                     }
                 } else {
                     button_image.setImageResource(R.drawable.ic_photo_white)
