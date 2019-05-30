@@ -45,8 +45,6 @@ class PlayActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
 
-        sendScreen("PlayActivity")
-
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         initToolBar()

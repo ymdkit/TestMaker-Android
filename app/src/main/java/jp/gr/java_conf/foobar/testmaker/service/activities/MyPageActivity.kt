@@ -37,8 +37,6 @@ class MyPageActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_page)
 
-        sendScreen("MyPageActivity")
-
         initToolBar()
 
         createAd(container)

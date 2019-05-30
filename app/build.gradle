@@ -53,7 +53,6 @@ dependencies {
     implementation('com.google.android.material:material:1.0.0')
     implementation('androidx.cardview:cardview:1.0.0')
     implementation 'com.google.android.gms:play-services-ads:17.2.1'
-    implementation 'com.google.android.gms:play-services-analytics:16.0.8'
     implementation 'jp.studyplus.android.sdk:studyplus-android-sdk2:2.0.2'
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'

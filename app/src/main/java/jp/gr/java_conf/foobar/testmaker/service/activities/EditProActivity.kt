@@ -24,8 +24,6 @@ class EditProActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_pro)
 
-        sendScreen("EditProActivity")
-
         setSupportActionBar(pro_toolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

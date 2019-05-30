@@ -73,8 +73,6 @@ open class EditActivity : BaseActivity() {
         binding.lifecycleOwner = this
         binding.model = viewModel
 
-        sendScreen("EditActivity")
-
         createAd(container)
 
         initToolBar()
@@ -89,39 +87,36 @@ open class EditActivity : BaseActivity() {
 
         showLayoutWrite()
 
-        viewModel.spinnerAnswersPosition.observe(this, Observer { position ->
-            position?.let {
+        viewModel.spinnerAnswersPosition.observeNonNull(this) {
 
-                when (viewModel.formatQuestion.value) {
-                    Constants.COMPLETE -> {
-                        binding.editCompleteView.reloadAnswers(baseContext.resources.getStringArray(R.array.spinner_answers_complete)[it].toInt())
-                    }
-                    Constants.SELECT_COMPLETE -> {
-                        binding.editSelectCompleteView.setAnswerNum(baseContext.resources.getStringArray(R.array.spinner_answers_select_complete)[it].toInt())
-                    }
+            when (viewModel.formatQuestion.value) {
+                Constants.COMPLETE -> {
+                    binding.editCompleteView.reloadAnswers(baseContext.resources.getStringArray(R.array.spinner_answers_complete)[it].toInt())
+                }
+                Constants.SELECT_COMPLETE -> {
+                    binding.editSelectCompleteView.setAnswerNum(baseContext.resources.getStringArray(R.array.spinner_answers_select_complete)[it].toInt())
                 }
             }
-        })
 
-        viewModel.spinnerSelectsPosition.observe(this, Observer { position ->
-            position?.let {
+        }
 
-                when (viewModel.formatQuestion.value) {
-                    Constants.SELECT -> {
-                        binding.editSelectView.reloadOthers(baseContext.resources.getStringArray(R.array.spinner_selects)[it].toInt() - 1)
-                        binding.editSelectView.setAuto(sharedPreferenceManager.auto
-                                , baseContext.resources.getStringArray(R.array.spinner_selects)[viewModel.spinnerSelectsPosition.value
-                                ?: 0].toInt() - 1)
-                    }
-                    Constants.SELECT_COMPLETE -> {
-                        binding.editSelectCompleteView.reloadSelects(baseContext.resources.getStringArray(R.array.spinner_selects_complete)[it].toInt())
-                        binding.editSelectCompleteView.setAuto(sharedPreferenceManager.auto
-                                , baseContext.resources.getStringArray(R.array.spinner_selects_complete)[viewModel.spinnerSelectsPosition.value
-                                ?: 0].toInt())
-                    }
+        viewModel.spinnerSelectsPosition.observeNonNull(this) {
+            when (viewModel.formatQuestion.value) {
+                Constants.SELECT -> {
+                    binding.editSelectView.reloadOthers(baseContext.resources.getStringArray(R.array.spinner_selects)[it].toInt() - 1)
+                    binding.editSelectView.setAuto(sharedPreferenceManager.auto
+                            , baseContext.resources.getStringArray(R.array.spinner_selects)[viewModel.spinnerSelectsPosition.value
+                            ?: 0].toInt() - 1)
+                }
+                Constants.SELECT_COMPLETE -> {
+                    binding.editSelectCompleteView.reloadSelects(baseContext.resources.getStringArray(R.array.spinner_selects_complete)[it].toInt())
+                    binding.editSelectCompleteView.setAuto(sharedPreferenceManager.auto
+                            , baseContext.resources.getStringArray(R.array.spinner_selects_complete)[viewModel.spinnerSelectsPosition.value
+                            ?: 0].toInt())
                 }
             }
-        })
+
+        }
 
         viewModel.isAuto.observe(this, Observer {
             sharedPreferenceManager.auto = it ?: false
@@ -245,7 +240,7 @@ open class EditActivity : BaseActivity() {
                 }
             }
 
-            override fun onClickDeleteQuestion(data: Quest,position: Int) {
+            override fun onClickDeleteQuestion(data: Quest, position: Int) {
 
                 val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
                 builder.setTitle(getString(R.string.delete_question))
@@ -355,7 +350,7 @@ open class EditActivity : BaseActivity() {
 
     private fun addQuestion() {
 
-        if (set_problem.text.toString() == "") {
+        if (set_problem.text.toString().isEmpty()) {
             Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
             return
         }
@@ -717,6 +712,7 @@ open class EditActivity : BaseActivity() {
                 editAdapter.notifyItemRemoved(holder.adapterPosition)
 
             }
+
             // ここで指定した方向にのみドラッグ可能
             override fun onMove(recyclerView: androidx.recyclerview.widget.RecyclerView, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, target: androidx.recyclerview.widget.RecyclerView.ViewHolder): Boolean {
 

@@ -58,7 +58,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             binding.buttonAdd.isEnabled = it?.isNotEmpty() ?: false
         })
 
-        sendScreen("MainActivity")
         createAd(binding.container)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -145,7 +144,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             binding.test.buttonCategory.text = getString(R.string.category)
             binding.test.buttonCategory.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
 
-            sendEvent("createTest")
             sendFirebaseEvent("add-test")
 
         }
@@ -163,7 +161,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 R.id.nav_help //editProActivityにも同様の記述
                 -> {
 
-                    sendEvent("help")
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse(getString(R.string.help_url))))
 
@@ -171,21 +168,17 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                 R.id.nav_review -> {
 
-                    sendEvent("review")
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse("https://play.google.com/store/apps/details?id=jp.gr.java_conf.foobar.testmaker.service&amp;hl=ja")))
                 }
 
                 R.id.nav_others -> {
 
-                    sendEvent("editOthers")
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse("http://play.google.com/store/apps/developer?id=banira")))
                 }
 
                 R.id.nav_import -> {
-
-                    sendEvent("import")
 
                     if (Build.VERSION.SDK_INT <= 18) {
                         val intent = Intent(Intent.ACTION_PICK)
@@ -206,7 +199,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 }
                 R.id.nav_paste -> {
 
-                    sendEvent("paste")
 
                     val dialogLayout = layoutInflater.inflate(R.layout.dialog_paste, findViewById(R.id.layout_dialog_paste))
 
@@ -230,27 +222,23 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                 R.id.nav_online -> {
 
-                    sendEvent("online")
                     startActivityForResult(Intent(this@MainActivity, OnlineMainActivity::class.java), REQUEST_EDIT)
                 }
 
                 R.id.nav_move_questions -> {
 
-                    sendEvent("move questions")
                     startActivityForResult(Intent(this@MainActivity, MoveQuestionsActivity::class.java), REQUEST_EDIT)
 
                 }
 
                 R.id.nav_study_plus -> {
 
-                    sendEvent("study plus")
                     startActivityForResult(Intent(this@MainActivity, StudyPlusActivity::class.java), REQUEST_EDIT)
 
                 }
 
                 R.id.nav_remove_ad -> {
 
-                    sendEvent("remove ad")
 
                     if (billingManager.billingClientResponseCode <= BILLING_MANAGER_NOT_INITIALIZED) return@setNavigationItemSelectedListener false
                     if (isFinishing) return@setNavigationItemSelectedListener false

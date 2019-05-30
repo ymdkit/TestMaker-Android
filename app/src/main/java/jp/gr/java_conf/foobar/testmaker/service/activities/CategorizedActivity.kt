@@ -13,8 +13,6 @@ class CategorizedActivity : ShowTestsActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_categorized)
 
-        sendScreen("CategorizedActivity")
-
         createAd(container)
 
         initToolBar()

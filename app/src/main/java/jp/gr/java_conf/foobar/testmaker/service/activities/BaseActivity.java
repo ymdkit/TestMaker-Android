@@ -4,21 +4,18 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import jp.gr.java_conf.foobar.testmaker.service.R;
@@ -65,27 +62,6 @@ public class BaseActivity extends AppCompatActivity {
         MobileAds.initialize(this, info.metaData.getString("testmaker_admob_key"));
 
         Studyplus.getInstance().setup(info.metaData.getString("studyplus_comsumer_key"), info.metaData.getString("secret_studyplus_comsumer_key"));
-
-    }
-
-    protected void sendScreen(String screenName) {
-
-        TestMakerApplication app = (TestMakerApplication) getApplication();
-        Tracker t = app.getTracker();
-        t.setScreenName(screenName);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
-
-    }
-
-    protected void sendEvent(String action) {
-
-        TestMakerApplication app = (TestMakerApplication) getApplication();
-        Tracker t = app.getTracker();
-
-        t.send(new HitBuilders.EventBuilder()
-                .setCategory("event")
-                .setAction(action)
-                .build());
 
     }
 

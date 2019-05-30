@@ -41,8 +41,6 @@ class OnlineMainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_online_main)
 
-        sendScreen("OnlineMainActivity")
-
         var info: ApplicationInfo? = null
         try {
             info = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
@@ -315,8 +313,6 @@ class OnlineMainActivity : BaseActivity() {
             }
 
             R.id.action_profile -> {
-
-                sendEvent("profile")
 
                 startActivityForResult(Intent(this@OnlineMainActivity, MyPageActivity::class.java), 0)
 

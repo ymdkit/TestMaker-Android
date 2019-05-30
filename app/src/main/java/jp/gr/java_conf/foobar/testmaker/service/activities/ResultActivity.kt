@@ -2,10 +2,9 @@ package jp.gr.java_conf.foobar.testmaker.service.activities
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.ResultAdapter
@@ -21,8 +20,6 @@ class ResultActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
-
-        sendScreen("ResultActivity")
 
         testId = intent.getLongExtra("testId", -1)
 
@@ -121,8 +118,6 @@ class ResultActivity : BaseActivity() {
                 object : Studyplus.Companion.OnPostRecordListener {
                     override fun onResult(success: Boolean, recordId: Long?, throwable: Throwable?) {
                         if (success) {
-
-                            sendEvent("upload studyplus")
 
                             Toast.makeText(baseContext, getString(R.string.msg_upload_study_plus), Toast.LENGTH_LONG).show()
                         } else {
