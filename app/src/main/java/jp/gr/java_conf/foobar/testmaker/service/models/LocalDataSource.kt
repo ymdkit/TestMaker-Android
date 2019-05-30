@@ -20,4 +20,10 @@ class LocalDataSource(private val realm: Realm) {
 
     }
 
+    fun deleteQuestion(question: Quest) {
+        realm.beginTransaction()
+        question.deleteFromRealm()
+        realm.commitTransaction()
+    }
+
 }

@@ -13,8 +13,6 @@ class WebViewActivity : BaseActivity() {
 
         createAd(container)
 
-        sendScreen("WebViewActivity")
-
         setSupportActionBar(toolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

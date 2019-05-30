@@ -109,7 +109,7 @@
                     <RadioGroup
                         android:id="@+id/radio_question"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="24dp"
                         android:layout_marginEnd="@dimen/element_spacing_small"
                         android:gravity="end"
                         android:orientation="horizontal"
@@ -120,7 +120,7 @@
                         <RadioButton
                             android:id="@+id/radio_write"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:checked="@{model.formatQuestion == Constants.WRITE}"
                             android:tag="@{Constants.WRITE}"
                             android:text="@string/normal"
@@ -129,7 +129,7 @@
                         <RadioButton
                             android:id="@+id/radio_select"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:checked="@{model.formatQuestion == Constants.SELECT}"
                             android:tag="@{Constants.SELECT}"
                             android:text="@string/select"
@@ -138,7 +138,7 @@
                         <RadioButton
                             android:id="@+id/radio_complete"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:checked="@{model.formatQuestion == Constants.COMPLETE}"
                             android:tag="@{Constants.COMPLETE}"
                             android:text="@string/complete"
@@ -147,7 +147,7 @@
                         <RadioButton
                             android:id="@+id/radio_select_complete"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:checked="@{model.formatQuestion == Constants.SELECT_COMPLETE}"
                             android:tag="@{Constants.SELECT_COMPLETE}"
                             android:text="@string/select_complete"

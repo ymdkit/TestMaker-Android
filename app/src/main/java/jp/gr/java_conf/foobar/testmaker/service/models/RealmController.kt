@@ -199,30 +199,6 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         return ArrayList(realmArray)
     }
 
-    fun getFilterQuestions(testId: Long, filter: String): ArrayList<Quest> {
-
-        val array = ArrayList<Quest>()
-
-        val realmArray = getTest(testId).getQuestions()
-
-        for (quest in realmArray) {
-
-            when {
-                quest.problem.contains(filter) -> {
-                    Log.d(quest.problem, "")
-                    array.add(quest)
-
-                }
-                quest.answer.contains(filter) -> array.add(quest)
-                quest.explanation.contains(filter) -> array.add(quest)
-            }
-
-        }
-
-        return array
-
-    }
-
     fun getQuestionsSolved(testId: Long): ArrayList<Quest> {
 
         val array = ArrayList<Quest>()
@@ -333,16 +309,6 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         realm.commitTransaction()
 
         Toast.makeText(context, context.getString(R.string.msg_save), Toast.LENGTH_LONG).show()
-
-    }
-
-    fun deleteQuestion(question: Quest) {
-
-        realm.beginTransaction()
-
-        question.deleteFromRealm()
-
-        realm.commitTransaction()
 
     }
 

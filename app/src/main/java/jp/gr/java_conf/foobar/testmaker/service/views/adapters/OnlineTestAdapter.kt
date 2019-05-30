@@ -34,9 +34,7 @@ open class OnlineTestAdapter(private val context: Context, private val array: Mu
     }
 
     override fun getItemCount(): Int {
-
         return array.size
-
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

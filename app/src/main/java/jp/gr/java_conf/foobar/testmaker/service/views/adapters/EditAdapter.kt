@@ -33,7 +33,7 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
     interface OnClickListener {
         fun onClickEditQuestion(question: Quest)
-        fun onClickDeleteQuestion(data: Quest)
+        fun onClickDeleteQuestion(data: Quest,position: Int)
     }
 
     fun setOnClickListener(listener: EditAdapter.OnClickListener) {
@@ -57,7 +57,6 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
         holder.itemView.setOnLongClickListener { true }
 
-        holder.order.text = (data.order + 1).toString()
         holder.problem.text = context.getString(R.string.question, data.problem)
         holder.answer.text = context.getString(R.string.answer, data.answer)
 
@@ -66,7 +65,7 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
         }
 
         holder.delete.setOnClickListener {
-            if (listener != null) listener?.onClickDeleteQuestion(data)
+            if (listener != null) listener?.onClickDeleteQuestion(data,holder.adapterPosition)
         }
 
     }
@@ -78,7 +77,6 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
     class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
 
-        val order: TextView = v.findViewById(R.id.order)
         val problem: TextView = v.findViewById(R.id.problem)
         val answer: TextView = v.findViewById(R.id.answer)
         val edit: ImageTextButton = v.findViewById(R.id.edit)
