@@ -32,7 +32,7 @@ class EditProActivity : BaseActivity() {
 
         if (Build.VERSION.SDK_INT >= 21) button_save.stateListAnimator = null
 
-        button_save.setOnClickListener { _ ->
+        button_save.setOnClickListener {
 
             val dialogLayout = LayoutInflater.from(this@EditProActivity).inflate(R.layout.dialog_alert_confirm, findViewById(R.id.layout_dialog_confirm))
 

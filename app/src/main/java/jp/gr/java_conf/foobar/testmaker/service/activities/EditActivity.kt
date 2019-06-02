@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -24,24 +23,22 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.isseiaoki.simplecropview.CropImageView
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
+import jp.gr.java_conf.foobar.testmaker.service.extensions.swap
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 import jp.gr.java_conf.foobar.testmaker.service.models.StructQuestion
 import jp.gr.java_conf.foobar.testmaker.service.views.ColorChooser
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.EditAdapter
 import kotlinx.android.synthetic.main.activity_edit.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 
@@ -142,8 +139,6 @@ open class EditActivity : BaseActivity() {
         viewModel.getQuestions(testId).observeNonNull(this) {
             editAdapter.questions = it
         }
-
-
     }
 
     private fun initAdapter() {
@@ -163,33 +158,12 @@ open class EditActivity : BaseActivity() {
                 questionId = question.id
 
                 if (question.imagePath != "") {
-
                     imagePath = question.imagePath
-
-                    GlobalScope.launch(Dispatchers.Main) {
-                        withContext(Dispatchers.Default) {
-                            val imageOptions = BitmapFactory.Options()
-                            imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-                            try {
-
-                                val input = baseContext.openFileInput(imagePath)
-                                val bm = BitmapFactory.decodeStream(input, null, imageOptions)
-
-                                input.close()
-
-                                return@withContext bm
-
-                            } catch (e: FileNotFoundException) {
-                                e.printStackTrace()
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                            }
-                        }.let {
-                            if (it is Bitmap) button_image.setImageWithGlide(baseContext, it)
-                        }
+                    viewModel.loadImage(imagePath) {
+                        button_image.setImageWithGlide(baseContext, it)
                     }
                 } else {
-                    button_image.setImageResource(R.drawable.ic_photo_white)
+                    button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
                 }
 
                 viewModel.isEditingExplanation.value = question.explanation.isNotEmpty()
@@ -296,26 +270,8 @@ open class EditActivity : BaseActivity() {
             positiveButton.setOnClickListener {
 
                 imagePath = fileName
-
-                GlobalScope.launch(Dispatchers.Main) {
-                    withContext(Dispatchers.Default) {
-                        val imageOptions = BitmapFactory.Options()
-                        imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-                        try {
-
-                            val outStream = baseContext.openFileOutput(imagePath, MODE_PRIVATE)
-                            cropView.croppedBitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream)
-                            outStream.close()
-
-                        } catch (e: FileNotFoundException) {
-                            e.printStackTrace()
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
-                    }.let {
-                        button_image.setImageWithGlide(baseContext, cropView.croppedBitmap)
-                    }
-                }
+                button_image.setImageWithGlide(baseContext, cropView.croppedBitmap)
+                viewModel.saveImage(imagePath, cropView.croppedBitmap)
 
                 dialog.dismiss()
             }
@@ -436,29 +392,22 @@ open class EditActivity : BaseActivity() {
         menuInflater.inflate(R.menu.menu_edit, menu)
 
         val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
-
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String): Boolean {
-
                 editAdapter.searchWord = s
-                editAdapter.filter = true
                 editAdapter.notifyDataSetChanged()
                 return false
             }
 
             override fun onQueryTextChange(s: String): Boolean {
-
                 editAdapter.searchWord = s
-                editAdapter.filter = true
                 editAdapter.notifyDataSetChanged()
                 return false
             }
         })
 
         searchView.setOnCloseListener {
-
             editAdapter.searchWord = ""
-            editAdapter.filter = false
             editAdapter.notifyDataSetChanged()
             false
         }
@@ -601,7 +550,7 @@ open class EditActivity : BaseActivity() {
         set_explanation.setText("")
         questionId = -1
         imagePath = ""
-        button_image.setImageResource(R.drawable.ic_photo_white)
+        button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
         button_image.setBackgroundResource(R.drawable.button_blue)
 
         button_add.text = getString(R.string.action_add)
@@ -637,9 +586,8 @@ open class EditActivity : BaseActivity() {
             viewModel.stateEditing.value = Constants.EDIT_CONFIG
         }
 
-        radio_question.setOnCheckedChangeListener { group, checkedId ->
+        radio_question.setOnCheckedChangeListener { _, checkedId ->
             val radio = findViewById<RadioButton>(checkedId)
-
             val tag = radio.tag
             if (tag is Int) viewModel.formatQuestion.value = tag
 
@@ -664,7 +612,7 @@ open class EditActivity : BaseActivity() {
                             0 -> openImage() //差し替え
                             1 -> { //取り消し
                                 imagePath = ""
-                                button_image.setImageResource(R.drawable.ic_photo_white)
+                                button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
                                 button_image.setBackgroundResource(R.drawable.button_blue)
                             }
                         }
@@ -697,27 +645,23 @@ open class EditActivity : BaseActivity() {
             button_detail.stateListAnimator = null
         }
 
-        recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
+        recycler_view.layoutManager = LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
         recycler_view.adapter = editAdapter
 
         val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onSwiped(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-
-                viewModel.deleteQuestion(editAdapter.questions[holder.adapterPosition])
-                editAdapter.questions.removeAt(holder.adapterPosition)
-                editAdapter.notifyItemRemoved(holder.adapterPosition)
-
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
+            override fun onSwiped(holder: RecyclerView.ViewHolder, position: Int) {
             }
 
             // ここで指定した方向にのみドラッグ可能
-            override fun onMove(recyclerView: androidx.recyclerview.widget.RecyclerView, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, target: androidx.recyclerview.widget.RecyclerView.ViewHolder): Boolean {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
 
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
 
                 realmController.sortManual(from, to, testId)
+                editAdapter.questions.swap(from,to)
                 editAdapter.notifyItemMoved(from, to)
 
                 return true
@@ -734,3 +678,5 @@ open class EditActivity : BaseActivity() {
 
     }
 }
+
+

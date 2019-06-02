@@ -11,7 +11,7 @@ import org.koin.dsl.module.module
 
 fun getTestMakerModules(realm:Realm) = module {
     single { TestMakerRepository(get(), get()) }
-    single { LocalDataSource(realm) }
+    single { LocalDataSource(realm,get()) }
     single { RemoteDataSource() }
     viewModel { MainViewModel(get()) }
     viewModel { EditViewModel(get()) }

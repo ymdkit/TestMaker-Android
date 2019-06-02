@@ -32,10 +32,10 @@
                 android:id="@+id/text_title_test"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/element_spacing_large"
+                android:layout_marginTop="@dimen/element_spacing_normal"
                 android:layout_marginStart="@dimen/element_spacing_normal"
-                android:gravity="center_vertical"
-                android:maxLines="1"
+                android:maxLines="2"
+                android:text="あ"
                 android:textSize="@dimen/text_size_medium"
                 custom:layout_constraintLeft_toRightOf="@id/color"
                 custom:layout_constraintRight_toLeftOf="@id/play"
@@ -47,10 +47,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="start"
+                android:text="ああ"
                 android:textSize="@dimen/text_size_small"
                 android:layout_marginStart="@dimen/element_spacing_normal"
-                android:layout_marginTop="@dimen/element_spacing_normal"
-                custom:layout_constraintTop_toBottomOf="@id/text_title_test"
+                android:layout_marginBottom="@dimen/element_spacing_small"
+                custom:layout_constraintBottom_toBottomOf="parent"
                 custom:layout_constraintRight_toLeftOf="@id/play"
                 custom:layout_constraintLeft_toRightOf="@id/color"/>
 
@@ -61,7 +62,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:layout_marginEnd="@dimen/element_spacing_small"
-                custom:image="@drawable/ic_play_arrow_white"
+                custom:image="@drawable/ic_play_arrow_white_24dp"
                 custom:layout_constraintRight_toLeftOf="@id/edit"
                 custom:text="@string/play" />
 

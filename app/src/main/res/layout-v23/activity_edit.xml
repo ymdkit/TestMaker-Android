@@ -326,7 +326,7 @@
                         android:contentDescription="@string/image"
                         android:scaleType="fitCenter"
                         android:padding="@dimen/element_spacing_normal"
-                        android:src="@drawable/ic_photo_white"
+                        android:src="@drawable/ic_insert_photo_white_24dp"
                         card_view:layout_constraintRight_toRightOf="parent"
                         card_view:layout_constraintTop_toTopOf="parent" />
 

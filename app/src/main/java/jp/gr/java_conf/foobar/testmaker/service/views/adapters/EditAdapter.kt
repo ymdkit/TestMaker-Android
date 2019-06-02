@@ -1,16 +1,13 @@
 package jp.gr.java_conf.foobar.testmaker.service.views.adapters
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.filteredList
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
-import jp.gr.java_conf.foobar.testmaker.service.models.RealmController
 import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
 
 /**
@@ -26,7 +23,6 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
             notifyDataSetChanged()
         }
 
-    var filter: Boolean = false
     var searchWord: String = ""
 
     private var listener: EditAdapter.OnClickListener? = null
@@ -45,17 +41,14 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
     }
 
     override fun getItemCount(): Int {
-
         return if(searchWord.isEmpty()) questions.size else questions.filteredList(searchWord).size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
+        holder.index.text = holder.adapterPosition.toString()
+
         val data = init(holder.adapterPosition)
-
-        holder.itemView.setOnClickListener { }
-
-        holder.itemView.setOnLongClickListener { true }
 
         holder.problem.text = context.getString(R.string.question, data.problem)
         holder.answer.text = context.getString(R.string.answer, data.answer)
@@ -72,11 +65,11 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
     private fun init(position: Int): Quest {
         return if(searchWord.isEmpty()) questions[position] else questions.filteredList(searchWord)[position]
-
     }
 
     class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
 
+        var index: TextView = v.findViewById(R.id.order)
         val problem: TextView = v.findViewById(R.id.problem)
         val answer: TextView = v.findViewById(R.id.answer)
         val edit: ImageTextButton = v.findViewById(R.id.edit)
