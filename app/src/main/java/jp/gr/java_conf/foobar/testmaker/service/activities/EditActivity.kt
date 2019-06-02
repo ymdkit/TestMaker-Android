@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -23,24 +24,22 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.isseiaoki.simplecropview.CropImageView
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
+import jp.gr.java_conf.foobar.testmaker.service.extensions.swap
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 import jp.gr.java_conf.foobar.testmaker.service.models.StructQuestion
 import jp.gr.java_conf.foobar.testmaker.service.views.ColorChooser
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.EditAdapter
 import kotlinx.android.synthetic.main.activity_edit.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 
@@ -141,8 +140,6 @@ open class EditActivity : BaseActivity() {
         viewModel.getQuestions(testId).observeNonNull(this) {
             editAdapter.questions = it
         }
-
-
     }
 
     private fun initAdapter() {
@@ -167,7 +164,7 @@ open class EditActivity : BaseActivity() {
                         button_image.setImageWithGlide(baseContext, it)
                     }
                 } else {
-                    button_image.setImageResource(R.drawable.ic_play_arrow_white_24dp)
+                    button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
                 }
 
                 viewModel.isEditingExplanation.value = question.explanation.isNotEmpty()
@@ -226,6 +223,10 @@ open class EditActivity : BaseActivity() {
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
                     if (data.imagePath != "") deleteFile(data.imagePath)
+
+                    Log.d("keita", "${data.problem}")
+
+
 
                     viewModel.deleteQuestion(data)
                     editAdapter.questions.removeAt(position)
@@ -649,27 +650,23 @@ open class EditActivity : BaseActivity() {
             button_detail.stateListAnimator = null
         }
 
-        recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
+        recycler_view.layoutManager = LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
         recycler_view.adapter = editAdapter
 
         val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onSwiped(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-
-                viewModel.deleteQuestion(editAdapter.questions[holder.adapterPosition])
-                editAdapter.questions.removeAt(holder.adapterPosition)
-                editAdapter.notifyItemRemoved(holder.adapterPosition)
-
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
+            override fun onSwiped(holder: RecyclerView.ViewHolder, position: Int) {
             }
 
             // ここで指定した方向にのみドラッグ可能
-            override fun onMove(recyclerView: androidx.recyclerview.widget.RecyclerView, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, target: androidx.recyclerview.widget.RecyclerView.ViewHolder): Boolean {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
 
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
 
                 realmController.sortManual(from, to, testId)
+                editAdapter.questions.swap(from,to)
                 editAdapter.notifyItemMoved(from, to)
 
                 return true
@@ -686,3 +683,5 @@ open class EditActivity : BaseActivity() {
 
     }
 }
+
+

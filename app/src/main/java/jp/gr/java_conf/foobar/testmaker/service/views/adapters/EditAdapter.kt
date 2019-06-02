@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.views.adapters
 
 import android.content.Context
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -49,11 +50,9 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
+        holder.index.text = holder.adapterPosition.toString()
+
         val data = init(holder.adapterPosition)
-
-        holder.itemView.setOnClickListener { }
-
-        holder.itemView.setOnLongClickListener { true }
 
         holder.problem.text = context.getString(R.string.question, data.problem)
         holder.answer.text = context.getString(R.string.answer, data.answer)
@@ -74,6 +73,7 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
     class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
 
+        var index: TextView = v.findViewById(R.id.order)
         val problem: TextView = v.findViewById(R.id.problem)
         val answer: TextView = v.findViewById(R.id.answer)
         val edit: ImageTextButton = v.findViewById(R.id.edit)
