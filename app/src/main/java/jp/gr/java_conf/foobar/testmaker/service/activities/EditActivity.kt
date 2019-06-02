@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -223,10 +222,6 @@ open class EditActivity : BaseActivity() {
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
                     if (data.imagePath != "") deleteFile(data.imagePath)
-
-                    Log.d("keita", "${data.problem}")
-
-
 
                     viewModel.deleteQuestion(data)
                     editAdapter.questions.removeAt(position)

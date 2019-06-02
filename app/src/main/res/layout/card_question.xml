@@ -9,6 +9,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
+        android:foreground="?android:attr/selectableItemBackground"
         android:layout_height="@dimen/view_height_very_large"
         android:layout_marginLeft="@dimen/element_spacing_small"
         android:layout_marginTop="@dimen/element_spacing_small"
