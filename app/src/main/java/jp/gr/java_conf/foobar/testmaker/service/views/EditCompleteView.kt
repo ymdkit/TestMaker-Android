@@ -49,7 +49,7 @@ class EditCompleteView: RelativeLayout{
 
     }
 
-    fun getAnswers(): Array<String?> {
+    fun getAnswers(): Array<String> {
 
         return Array(layoutAnswers.filter { layout -> layout?.visibility == View.VISIBLE }.size){ i -> answers[i]?.text.toString()}
     }

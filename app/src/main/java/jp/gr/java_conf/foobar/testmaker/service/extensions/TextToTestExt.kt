@@ -107,7 +107,7 @@ fun String.toTest(context: Context): StructTest {
 
                 if (backup[0] == context.getString(R.string.load_explanation)) {
                     if (resultNumber > 0) {
-                        test.problems[resultNumber - 1].setExplanation(backup[1])
+                        test.problems[resultNumber - 1].explanation = (backup[1])
                     }
                 } else if (backup[0] == context.getString(R.string.load_title)) {
                     test.title = backup[1]

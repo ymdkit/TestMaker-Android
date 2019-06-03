@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -33,8 +34,8 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.extensions.swap
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
+import jp.gr.java_conf.foobar.testmaker.service.models.LocalQuestion
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
-import jp.gr.java_conf.foobar.testmaker.service.models.StructQuestion
 import jp.gr.java_conf.foobar.testmaker.service.views.ColorChooser
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.EditAdapter
 import kotlinx.android.synthetic.main.activity_edit.*
@@ -156,6 +157,9 @@ open class EditActivity : BaseActivity() {
                 set_explanation.setText(question.explanation)
 
                 questionId = question.id
+
+                Log.d("keita","$questionId")
+
 
                 if (question.imagePath != "") {
                     imagePath = question.imagePath
@@ -309,6 +313,8 @@ open class EditActivity : BaseActivity() {
             return
         }
 
+        val question = LocalQuestion(type = viewModel.formatQuestion.value ?: 0,question = set_problem.text.toString(), imagePath = imagePath, explanation = set_explanation.text.toString())
+
         when (viewModel.formatQuestion.value ?: 0) {
 
             Constants.WRITE -> {
@@ -317,11 +323,8 @@ open class EditActivity : BaseActivity() {
                     Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
                     return
                 }
+                question.answer = set_answer_write.text.toString()
 
-                val p = StructQuestion(set_problem.text.toString(), set_answer_write.text.toString())
-                p.setImagePath(imagePath)
-                p.setExplanation(set_explanation.text.toString())
-                realmController.addQuestion(testId, p, questionId)
             }
             Constants.SELECT -> {
 
@@ -330,11 +333,9 @@ open class EditActivity : BaseActivity() {
                     return
                 }
 
-                val p = StructQuestion(set_problem.text.toString(), edit_select_view.getAnswer(), edit_select_view.getOthers())
-                p.setAuto(sharedPreferenceManager.auto)
-                p.setImagePath(imagePath)
-                p.setExplanation(set_explanation.text.toString())
-                realmController.addQuestion(testId, p, questionId)
+                question.answer = edit_select_view.getAnswer()
+                question.others = edit_select_view.getOthers()
+                question.isAuto = sharedPreferenceManager.auto
 
             }
 
@@ -350,11 +351,9 @@ open class EditActivity : BaseActivity() {
                     return
                 }
 
-                val p = StructQuestion(set_problem.text.toString(), edit_complete_view.getAnswers())
-                p.setImagePath(imagePath)
-                p.isCheckOrder = sharedPreferenceManager.isCheckOrder
-                p.setExplanation(set_explanation.text.toString())
-                realmController.addQuestion(testId, p, questionId)
+                question.answers = edit_complete_view.getAnswers()
+                question.answers.forEach { question.answer += "$it " }
+                question.isCheckOrder = sharedPreferenceManager.isCheckOrder
 
             }
             Constants.SELECT_COMPLETE -> {
@@ -371,21 +370,19 @@ open class EditActivity : BaseActivity() {
                     return
                 }
 
-                val p = StructQuestion(set_problem.text.toString(), edit_select_complete_view.getAnswers(), edit_select_complete_view.getOthers())
-                p.setAuto(sharedPreferenceManager.auto)
-                p.isCheckOrder = false //todo 後に実装
-                p.setImagePath(imagePath)
-                p.setExplanation(set_explanation.text.toString())
+                question.answers = edit_select_complete_view.getAnswers()
+                question.others = edit_select_complete_view.getOthers()
+                question.isAuto = sharedPreferenceManager.auto
+                question.isCheckOrder = false //todo 後に実装
 
-                realmController.addQuestion(testId, p, questionId)
             }
         }
 
-        reset()
-
+        realmController.addQuestion(testId, question, questionId)
         viewModel.fetchQuestions(testId)
         button_cancel.visibility = View.GONE
 
+        reset()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -661,7 +658,7 @@ open class EditActivity : BaseActivity() {
                 val to = target.adapterPosition
 
                 realmController.sortManual(from, to, testId)
-                editAdapter.questions.swap(from,to)
+                editAdapter.questions.swap(from, to)
                 editAdapter.notifyItemMoved(from, to)
 
                 return true
