@@ -51,10 +51,6 @@ open class EditActivity : BaseActivity() {
 
     internal lateinit var editAdapter: EditAdapter
 
-    internal var imagePath: String = ""
-    internal var testId: Long = 0
-    internal var questionId: Long = -1
-
     private val viewModel: EditViewModel by viewModel()
 
     private val fileName: String
@@ -75,9 +71,9 @@ open class EditActivity : BaseActivity() {
 
         initToolBar()
 
-        testId = intent.getLongExtra("testId", -1)
+        viewModel.testId = intent.getLongExtra("testId", -1)
 
-        realmController.migrateOrder(testId)
+        realmController.migrateOrder(viewModel.testId)
 
         initAdapter()
 
@@ -136,8 +132,27 @@ open class EditActivity : BaseActivity() {
             sharedPreferenceManager.isCheckOrder = it ?: false
         })
 
+        viewModel.formatQuestion.observeNonNull(this) {
+            when (it) {
+                Constants.WRITE -> {
+                    viewModel.editingView = null
+                }
+                Constants.SELECT -> {
+                    viewModel.editingView = edit_select_view
+                }
+                Constants.COMPLETE -> {
+                    viewModel.editingView = edit_complete_view
+                }
+
+                Constants.SELECT_COMPLETE -> {
+                    viewModel.editingView = edit_select_complete_view
+                }
+            }
+        }
+
+
         viewModel.clearQuestions()
-        viewModel.getQuestions(testId).observeNonNull(this) {
+        viewModel.getQuestions().observeNonNull(this) {
             editAdapter.questions = it
         }
     }
@@ -156,14 +171,11 @@ open class EditActivity : BaseActivity() {
                 set_problem.setText(question.problem)
                 set_explanation.setText(question.explanation)
 
-                questionId = question.id
-
-                Log.d("keita","$questionId")
-
+                viewModel.questionId = question.id
 
                 if (question.imagePath != "") {
-                    imagePath = question.imagePath
-                    viewModel.loadImage(imagePath) {
+                    viewModel.imagePath = question.imagePath
+                    viewModel.loadImage {
                         button_image.setImageWithGlide(baseContext, it)
                     }
                 } else {
@@ -273,9 +285,9 @@ open class EditActivity : BaseActivity() {
             val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             positiveButton.setOnClickListener {
 
-                imagePath = fileName
+                viewModel.imagePath = fileName
                 button_image.setImageWithGlide(baseContext, cropView.croppedBitmap)
-                viewModel.saveImage(imagePath, cropView.croppedBitmap)
+                viewModel.saveImage(cropView.croppedBitmap)
 
                 dialog.dismiss()
             }
@@ -307,82 +319,14 @@ open class EditActivity : BaseActivity() {
     }
 
     private fun addQuestion() {
-
-        if (set_problem.text.toString().isEmpty()) {
-            Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-            return
-        }
-
-        val question = LocalQuestion(type = viewModel.formatQuestion.value ?: 0,question = set_problem.text.toString(), imagePath = imagePath, explanation = set_explanation.text.toString())
-
-        when (viewModel.formatQuestion.value ?: 0) {
-
-            Constants.WRITE -> {
-
-                if (set_answer_write.text.toString().isEmpty()) {
-                    Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-                    return
-                }
-                question.answer = set_answer_write.text.toString()
-
-            }
-            Constants.SELECT -> {
-
-                if (!edit_select_view.isFilled()) {
-                    Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-                    return
-                }
-
-                question.answer = edit_select_view.getAnswer()
-                question.others = edit_select_view.getOthers()
-                question.isAuto = sharedPreferenceManager.auto
-
-            }
-
-            Constants.COMPLETE -> {
-
-                if (!edit_complete_view.isFilled()) {
-                    Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-                    return
-                }
-
-                if (edit_complete_view.isDuplicate() && !sharedPreferenceManager.isCheckOrder) {
-                    Toast.makeText(applicationContext, getString(R.string.message_answer_duplicate), Toast.LENGTH_LONG).show()
-                    return
-                }
-
-                question.answers = edit_complete_view.getAnswers()
-                question.answers.forEach { question.answer += "$it " }
-                question.isCheckOrder = sharedPreferenceManager.isCheckOrder
-
-            }
-            Constants.SELECT_COMPLETE -> {
-
-                if (baseContext.resources.getStringArray(R.array.spinner_answers_select_complete)[viewModel.spinnerSelectsPosition.value
-                                ?: 0].toInt() <= baseContext.resources.getStringArray(R.array.spinner_answers_select_complete)[viewModel.spinnerAnswersPosition.value
-                                ?: 0].toInt()) {
-                    Toast.makeText(applicationContext, getString(R.string.message_answers_num), Toast.LENGTH_LONG).show()
-                    return
-                }
-
-                if (!edit_select_complete_view.isFilled()) {
-                    Toast.makeText(applicationContext, getString(R.string.message_shortage), Toast.LENGTH_LONG).show()
-                    return
-                }
-
-                question.answers = edit_select_complete_view.getAnswers()
-                question.others = edit_select_complete_view.getOthers()
-                question.isAuto = sharedPreferenceManager.auto
-                question.isCheckOrder = false //todo 後に実装
-
-            }
-        }
-
-        realmController.addQuestion(testId, question, questionId)
-        viewModel.fetchQuestions(testId)
-        button_cancel.visibility = View.GONE
-
-        reset()
+        viewModel.addQuestion(
+                onSuccess = {
+                    reset()
+                    Toast.makeText(baseContext, getString(R.string.msg_save), Toast.LENGTH_LONG).show()
+                },
+                onFailure = {
+                    Toast.makeText(baseContext, it, Toast.LENGTH_LONG).show()
+                })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -432,13 +376,13 @@ open class EditActivity : BaseActivity() {
 
                 if (Build.VERSION.SDK_INT >= 21) buttonCate.stateListAnimator = null
 
-                buttonCate.tag = realmController.getTest(testId).getCategory()
+                buttonCate.tag = realmController.getTest(viewModel.testId).getCategory()
 
-                if (realmController.getTest(testId).getCategory() == "") {
+                if (realmController.getTest(viewModel.testId).getCategory() == "") {
 
                     buttonCate.text = getString(R.string.category)
                 } else {
-                    buttonCate.text = realmController.getTest(testId).getCategory()
+                    buttonCate.text = realmController.getTest(viewModel.testId).getCategory()
                 }
 
                 buttonCate.setOnClickListener {
@@ -462,9 +406,9 @@ open class EditActivity : BaseActivity() {
                     false
                 }
 
-                name.setText(realmController.getTest(testId).title)
+                name.setText(realmController.getTest(viewModel.testId).title)
 
-                colorChooser.setColorId(realmController.getTest(testId).color)
+                colorChooser.setColorId(realmController.getTest(viewModel.testId).color)
 
                 val builder = AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 builder.setView(dialogLayout)
@@ -485,7 +429,7 @@ open class EditActivity : BaseActivity() {
 
                     } else {
 
-                        realmController.updateTest(realmController.getTest(testId), sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
+                        realmController.updateTest(realmController.getTest(viewModel.testId), sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
 
                         dialog.dismiss()
                     }
@@ -504,7 +448,7 @@ open class EditActivity : BaseActivity() {
 
                 val i = Intent(this@EditActivity, EditProActivity::class.java)
 
-                i.putExtra("testId", testId)
+                i.putExtra("testId", viewModel.testId)
                 startActivityForResult(i, 0)
 
                 return true
@@ -512,7 +456,7 @@ open class EditActivity : BaseActivity() {
 
             item.itemId == R.id.action_reset_achievement -> {
 
-                realmController.resetAchievement(testId)
+                realmController.resetAchievement(viewModel.testId)
 
                 Toast.makeText(baseContext, getString(R.string.msg_reset_achievement), Toast.LENGTH_SHORT).show()
 
@@ -545,10 +489,11 @@ open class EditActivity : BaseActivity() {
         set_problem.requestFocus()
         set_answer_write.setText("")
         set_explanation.setText("")
-        questionId = -1
-        imagePath = ""
+        viewModel.questionId = -1
+        viewModel.imagePath = ""
         button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
         button_image.setBackgroundResource(R.drawable.button_blue)
+        button_cancel.visibility = View.GONE
 
         button_add.text = getString(R.string.action_add)
 
@@ -588,6 +533,7 @@ open class EditActivity : BaseActivity() {
             val tag = radio.tag
             if (tag is Int) viewModel.formatQuestion.value = tag
 
+
         }
 
         button_add.setOnClickListener { addQuestion() }
@@ -597,7 +543,7 @@ open class EditActivity : BaseActivity() {
         button_image.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
 
-                if (imagePath != "") {
+                if (viewModel.imagePath != "") {
 
                     // リスト表示用のアラートダイアログ
                     val listDlg = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
@@ -608,7 +554,7 @@ open class EditActivity : BaseActivity() {
                         when (which) {
                             0 -> openImage() //差し替え
                             1 -> { //取り消し
-                                imagePath = ""
+                                viewModel.imagePath = ""
                                 button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
                                 button_image.setBackgroundResource(R.drawable.button_blue)
                             }
@@ -657,7 +603,7 @@ open class EditActivity : BaseActivity() {
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
 
-                realmController.sortManual(from, to, testId)
+                realmController.sortManual(from, to, viewModel.testId)
                 editAdapter.questions.swap(from, to)
                 editAdapter.notifyItemMoved(from, to)
 

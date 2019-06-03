@@ -11,3 +11,7 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (T) -> Unit)
         }
     })
 }
+
+fun LiveData<String>.valueNonNull() = value ?: ""
+
+fun LiveData<Int>.valueNonNull() = value ?: -1

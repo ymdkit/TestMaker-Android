@@ -67,4 +67,16 @@ class TestMakerRepository(private val local: LocalDataSource,
         local.saveImage(fileName,bitmap)
     }
 
+    fun isAuto(): Boolean {
+        return local.isAuto()
+    }
+
+    fun isCheckOrder(): Boolean {
+        return local.isCheckOrder()
+    }
+
+    fun addQuestion(testId: Long, question: LocalQuestion, questionId: Long) {
+        local.addQuestion(testId,question,questionId)
+    }
+
 }
