@@ -23,6 +23,8 @@ import jp.gr.java_conf.foobar.testmaker.service.BillingManager.BILLING_MANAGER_N
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
+import kotlinx.android.synthetic.main.activity_edit.*
+import kotlinx.android.synthetic.main.dialog_edit_test.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -127,7 +129,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             false
         }
 
-        if (Build.VERSION.SDK_INT >= 21) binding.buttonAdd.stateListAnimator = null
+        //if (Build.VERSION.SDK_INT >= 21) binding.buttonAdd.stateListAnimator = null // Android 5.0.x だと アプリが落ちる
 
         binding.buttonAdd.setOnClickListener {
 
