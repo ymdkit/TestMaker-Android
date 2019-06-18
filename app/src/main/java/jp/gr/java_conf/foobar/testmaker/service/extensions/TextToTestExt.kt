@@ -19,7 +19,9 @@ fun String.toTest(context: Context): StructTest {
 
             var backup = backups[i].replace("<br>".toRegex(), "\n").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().filter { s: String -> s != "" }
 
-            backup = backup.map { it.replace("<comma>",",") }
+            backup = backup.map {
+                it.replace("<comma>", ",").replace("\r", "")
+            }
 
             if (backup.size > 2) {
 
@@ -59,7 +61,7 @@ fun String.toTest(context: Context): StructTest {
 
                     if (otherNum <= Constants.OTHER_SELECT_MAX) {
 
-                        val other = Array(otherNum) {context.getString(R.string.state_auto)}
+                        val other = Array(otherNum) { context.getString(R.string.state_auto) }
 
                         test.setStructQuestion(backup[1], backup[2], other, resultNumber)
                         test.problems[resultNumber].auto = true
@@ -77,7 +79,7 @@ fun String.toTest(context: Context): StructTest {
 
                         val answers = backup.drop(3).toTypedArray()
 
-                        if(others.size + answers.size > Constants.SELECT_COMPLETE_MAX) continue //要素数オーバー
+                        if (others.size + answers.size > Constants.SELECT_COMPLETE_MAX) continue //要素数オーバー
 
                         test.setStructQuestion(backup[1], answers, others, resultNumber)
                         test.problems[resultNumber].auto = true
@@ -92,7 +94,7 @@ fun String.toTest(context: Context): StructTest {
 
                     val otherNum = Integer.parseInt(backup[3].substring(0, 1))
 
-                    if(otherNum + answerNum > Constants.SELECT_COMPLETE_MAX) continue //要素数オーバー
+                    if (otherNum + answerNum > Constants.SELECT_COMPLETE_MAX) continue //要素数オーバー
 
                     val answers = backup.drop(4).take(answerNum).toTypedArray()
 

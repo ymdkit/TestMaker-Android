@@ -6,13 +6,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import androidx.core.content.res.ResourcesCompat
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadImage
@@ -76,15 +76,15 @@ class PlayActivity : BaseActivity() {
 
         realmController.resetSolving(testId)
 
-        if(!intent.hasExtra("redo")) questions = ArrayList(questions.drop(realmController.getTest(testId).startPosition))
+        if (!intent.hasExtra("redo")) questions = ArrayList(questions.drop(realmController.getTest(testId).startPosition))
 
-        if (sharedPreferenceManager.refine) questions = questions.filter{ !it.correct } as ArrayList<Quest>
+        if (sharedPreferenceManager.refine) questions = questions.filter { !it.correct } as ArrayList<Quest>
 
         if (sharedPreferenceManager.random) questions.shuffle()
 
         if (realmController.getTest(testId).limit < questions.size) questions = ArrayList(questions.take(realmController.getTest(testId).limit))
 
-        if(questions.size < 1) Toast.makeText(baseContext,getString(R.string.msg_null_questions),Toast.LENGTH_LONG).show()
+        if (questions.size < 1) Toast.makeText(baseContext, getString(R.string.msg_null_questions), Toast.LENGTH_LONG).show()
 
     }
 
@@ -124,7 +124,7 @@ class PlayActivity : BaseActivity() {
 
         val answer = questions[number].getAnswer(isReverse(questions[number]))
 
-        if (isEqual(yourAnswer,answer)) {
+        if (isEqual(yourAnswer, answer)) {
 
             actionCorrect()
 
@@ -137,9 +137,9 @@ class PlayActivity : BaseActivity() {
         }
     }
 
-    private fun isEqual(yourAnswer:String, answer:String):Boolean{
+    private fun isEqual(yourAnswer: String, answer: String): Boolean {
 
-        if(sharedPreferenceManager.isCaseInsensitive) return yourAnswer.toLowerCase() == answer.toLowerCase()
+        if (sharedPreferenceManager.isCaseInsensitive) return yourAnswer.toLowerCase() == answer.toLowerCase()
 
         return yourAnswer == answer
     }
@@ -152,27 +152,28 @@ class PlayActivity : BaseActivity() {
 
             loop = false
 
-            for (k in 0 until questions[number].answers.size) if (isEqual(answer?:"0",questions[number].answers[k]?.selection?:"1")) loop = true
+            for (k in 0 until questions[number].answers.size) if (isEqual(answer
+                            ?: "0", questions[number].answers[k]?.selection ?: "1")) loop = true
 
             if (!loop) break
 
         }
 
-        if(loop) loop = answers.size == questions[number].answers.size //必要条件だけ答えてもダメ
+        if (loop) loop = answers.size == questions[number].answers.size //必要条件だけ答えてもダメ
 
-        if(questions[number].isCheckOrder){
+        if (questions[number].isCheckOrder) {
 
-            for((index,answer) in answers.withIndex()){
+            for ((index, answer) in answers.withIndex()) {
 
-                if(answer != questions[number].answers[index]?.selection){
+                if (answer != questions[number].answers[index]?.selection) {
                     loop = false
                     break
                 }
 
             }
 
-        }else{
-            if(loop) loop = answers.distinct().size == answers.size //同じ解答を繰り返してもダメ
+        } else {
+            if (loop) loop = answers.distinct().size == answers.size //同じ解答を繰り返してもダメ
 
         }
 
@@ -206,13 +207,13 @@ class PlayActivity : BaseActivity() {
 
         showImageJudge(R.drawable.right)
 
-        if(sharedPreferenceManager.alwaysReview && questions[number].explanation != ""){//正解時も解説を表示
+        if (sharedPreferenceManager.alwaysReview && questions[number].explanation != "") {//正解時も解説を表示
 
             showLayoutMistake("")
 
             play_review_view.setTextAnswer(questions[number].answer)
 
-        }else{
+        } else {
 
             loadNext(600)
 
@@ -263,7 +264,7 @@ class PlayActivity : BaseActivity() {
 
                 val question = questions[number]
 
-                realmController.updateSolving(question.id,true)
+                realmController.updateSolving(question.id, true)
 
                 showProblem(question)
 
@@ -335,7 +336,7 @@ class PlayActivity : BaseActivity() {
 
         val i = Intent(this@PlayActivity, ResultActivity::class.java)
 
-        i.putExtra("duration",System.currentTimeMillis() - startTime)
+        i.putExtra("duration", System.currentTimeMillis() - startTime)
         i.putExtra("testId", testId)
 
         startActivity(i)
