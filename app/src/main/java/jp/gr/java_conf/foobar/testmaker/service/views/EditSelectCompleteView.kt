@@ -44,11 +44,11 @@ class EditSelectCompleteView : RelativeLayout {
         return true
     }
 
-    fun getAnswers():Array<String?>{
+    fun getAnswers():Array<String>{
         return Array(getNumAnswers()){i -> editSelectCompletes[i]?.text.toString()}
     }
 
-    fun getOthers(): Array<String?> {
+    fun getOthers(): Array<String> {
 
         return Array(textInputLayouts.filter { layout -> layout?.visibility == View.VISIBLE }.size - getNumAnswers()){ i -> editSelectCompletes[i + getNumAnswers()]?.text.toString()}
 

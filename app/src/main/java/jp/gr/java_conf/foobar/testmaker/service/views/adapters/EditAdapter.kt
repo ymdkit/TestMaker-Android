@@ -29,7 +29,7 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
     interface OnClickListener {
         fun onClickEditQuestion(question: Quest)
-        fun onClickDeleteQuestion(data: Quest,position: Int)
+        fun onClickDeleteQuestion(data: Quest, position: Int)
     }
 
     fun setOnClickListener(listener: EditAdapter.OnClickListener) {
@@ -41,12 +41,12 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
     }
 
     override fun getItemCount(): Int {
-        return if(searchWord.isEmpty()) questions.size else questions.filteredList(searchWord).size
+        return if (searchWord.isEmpty()) questions.size else questions.filteredList(searchWord).size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        holder.index.text = holder.adapterPosition.toString()
+        holder.index.text = (holder.adapterPosition + 1).toString()
 
         val data = init(holder.adapterPosition)
 
@@ -58,13 +58,13 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
         }
 
         holder.delete.setOnClickListener {
-            if (listener != null) listener?.onClickDeleteQuestion(data,holder.adapterPosition)
+            if (listener != null) listener?.onClickDeleteQuestion(data, holder.adapterPosition)
         }
 
     }
 
     private fun init(position: Int): Quest {
-        return if(searchWord.isEmpty()) questions[position] else questions.filteredList(searchWord)[position]
+        return if (searchWord.isEmpty()) questions[position] else questions.filteredList(searchWord)[position]
     }
 
     class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
