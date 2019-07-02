@@ -177,7 +177,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 R.id.nav_others -> {
 
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
-                            .parse("http://play.google.com/store/apps/developer?id=banira")))
+                            .parse("http://play.google.com/store/apps/developer?id=ke-ta")))
                 }
 
                 R.id.nav_import -> {
