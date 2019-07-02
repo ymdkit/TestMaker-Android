@@ -148,7 +148,7 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
                     }
 
                     if (context.resources.getStringArray(R.array.spinner_selects_complete)[spinnerSelectsPosition.valueNonNull()].toInt()
-                            <= context.resources.getStringArray(R.array.spinner_answers_select_complete)[spinnerAnswersPosition.valueNonNull()].toInt()) {
+                            < context.resources.getStringArray(R.array.spinner_answers_select_complete)[spinnerAnswersPosition.valueNonNull()].toInt()) {
                         onFailure(context.getString(R.string.message_answers_num))
                         return
                     }

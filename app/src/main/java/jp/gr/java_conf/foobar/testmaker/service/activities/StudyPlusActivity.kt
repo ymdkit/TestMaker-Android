@@ -67,8 +67,6 @@ class StudyPlusActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode != Activity.RESULT_OK) return
-
         when (requestCode) {
             REQUEST_CODE_AUTH -> {
 
