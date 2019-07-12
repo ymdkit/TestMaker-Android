@@ -48,7 +48,6 @@ class OnlineMainActivity : BaseActivity() {
             e.printStackTrace()
         }
 
-
         NCMB.initialize(this.applicationContext, info?.metaData?.getString("ncbm_app_key") , info?.metaData?.getString("ncbm_client_key"))
 
         createAd(container)

@@ -49,6 +49,7 @@ public class MainViewController {
 
             for (Purchase purchase : purchaseList) {
 
+
                 switch (purchase.getSku()) {
                     case "removead":
                         Log.d(TAG, "You remove ad! Congratulations!!!");

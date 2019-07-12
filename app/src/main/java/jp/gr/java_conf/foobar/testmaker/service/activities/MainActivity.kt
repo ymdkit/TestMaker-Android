@@ -224,7 +224,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                 R.id.nav_online -> {
 
-                    startActivityForResult(Intent(this@MainActivity, OnlineMainActivity::class.java), REQUEST_EDIT)
+                    startActivityForResult(Intent(this@MainActivity, FirebaseActivity::class.java), REQUEST_EDIT)
                 }
 
                 R.id.nav_move_questions -> {

@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service
 
 import androidx.multidex.MultiDexApplication
+import com.google.firebase.FirebaseApp
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import jp.gr.java_conf.foobar.testmaker.service.models.Migration

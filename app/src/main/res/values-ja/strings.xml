@@ -258,5 +258,6 @@
     <string name="select_complete">選択完答</string>
     <string name="start">スタート</string>
     <string name="is_random">ランダムに出題</string>
+    <string name="info_firebase_test" >作者: %1$s\n\n投稿日: %2$s\n\n概要: %3$s</string>
 
 </resources>

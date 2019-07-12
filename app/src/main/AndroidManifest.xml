@@ -15,21 +15,33 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.FirebaseActivity"></activity>
 
-        <meta-data android:name="studyplus_comsumer_key" android:value="${studyplus_consumer_key}"/>
-        <meta-data android:name="secret_studyplus_comsumer_key" android:value="${secret_studyplus_consumer_key}"/>
-        <meta-data android:name="testmaker_admob_key" android:value="${testmaker_admob_key}"/>
-        <meta-data android:name="ncbm_app_key" android:value="${ncbm_app_key}"/>
-        <meta-data android:name="ncbm_client_key" android:value="${ncbm_client_key}"/>
-
+        <meta-data
+            android:name="studyplus_comsumer_key"
+            android:value="${studyplus_consumer_key}" />
+        <meta-data
+            android:name="secret_studyplus_comsumer_key"
+            android:value="${secret_studyplus_consumer_key}" />
+        <meta-data
+            android:name="testmaker_admob_key"
+            android:value="${testmaker_admob_key}" />
+        <meta-data
+            android:name="ncbm_app_key"
+            android:value="${ncbm_app_key}" />
+        <meta-data
+            android:name="ncbm_client_key"
+            android:value="${ncbm_client_key}" />
         <meta-data
             android:name="com.google.android.gms.ads.jp.gr.java_conf.foobar.testmaker.service"
-            android:value="hogehoge"/>
+            android:value="hogehoge" />
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-            android:value="true"/>
+            android:value="true" />
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <activity
             android:name=".activities.MainActivity"
@@ -83,7 +95,7 @@
         <activity
             android:name=".activities.StudyPlusActivity"
             android:label="@string/title_activity_study_plus"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

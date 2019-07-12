@@ -67,9 +67,12 @@ dependencies {
     api 'com.isseiaoki:simplecropview:1.1.4'
     api 'androidx.multidex:multidex:2.0.1'
     api 'com.android.billingclient:billing:1.1'
+    implementation 'com.google.firebase:firebase-firestore:20.1.0'
 
 }
 repositories {
     mavenCentral()
 }
+
+apply plugin: 'com.google.gms.google-services'
 
