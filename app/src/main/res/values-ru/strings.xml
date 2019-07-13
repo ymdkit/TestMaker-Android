@@ -250,5 +250,7 @@
     <string name="select_complete">много выбор</string>
     <string name="normal">нормальный</string>
     <string name="info_firebase_test" >имя: %1$s\n\nдата: %2$s\n\nкомментарий: %3$s</string>
+    <string name="msg_not_login">Пожалуйста, войдите</string>
+    <string name="old_online">Прошлая версия</string>
 
 </resources>

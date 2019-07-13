@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import kotlinx.android.synthetic.main.activity_edit.*
@@ -91,15 +92,23 @@ class TestMakerRepository(private val local: LocalDataSource,
         return remote.getDownloadQuestions()
     }
 
-    fun convert(structTest: StructTest,testId: Long) {
-        local.convert(structTest,testId)
+    fun convert(structTest: StructTest, testId: Long) {
+        local.convert(structTest, testId)
     }
 
     fun resetDownloadTest() {
         remote.resetDownloadTest()
     }
 
-    fun fetchOnlineTests(){
+    fun fetchOnlineTests() {
         remote.fetchTests()
+    }
+
+    fun createUser(user: FirebaseUser?) {
+        remote.createUser(user)
+    }
+
+    fun createTest(test: Test, overview: String, success: () -> Unit) {
+        remote.createTest(test, overview, success)
     }
 }

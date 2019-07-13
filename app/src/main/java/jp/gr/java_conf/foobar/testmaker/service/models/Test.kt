@@ -57,27 +57,27 @@ open class Test : RealmObject() {
     }
 
     fun getCategory(): String {
-        return category?: ""
+        return category ?: ""
     }
 
-    fun addQuestion(q:Quest){
+    fun addQuestion(q: Quest) {
         questions?.add(q)
     }
 
     fun getQuestions(): RealmList<Quest> {
 
-        val questions = this.questions?: RealmList()
+        val questions = this.questions ?: RealmList()
 
         val results = RealmList<Quest>()
         results.addAll(questions.sort("order").subList(0, questions.size))
 
         return results
-        
+
     }
 
-    fun getQuestionsForEach(): RealmList<Quest>{//順番はどうでもいいが全てにアクセスしたい時
+    fun getQuestionsForEach(): RealmList<Quest> {//順番はどうでもいいが全てにアクセスしたい時
 
-        return questions?: RealmList()
+        return questions ?: RealmList()
 
     }
 
@@ -85,7 +85,7 @@ open class Test : RealmObject() {
         questions = q
     }
 
-    fun testToString(context: Context,upload: Boolean): String {
+    fun testToString(context: Context, upload: Boolean): String {
 
         var backup = ""
 
@@ -94,30 +94,30 @@ open class Test : RealmObject() {
         for (i in questions.indices) {
             val q = questions[i] ?: Quest()
 
-            if(q.imagePath != "" && upload) continue //画像付き問題はスキップ
+            if (q.imagePath != "" && upload) continue //画像付き問題はスキップ
 
             var lineWrite = StringBuilder()
 
             when (q.type) {
-                Constants.WRITE -> lineWrite = StringBuilder(context.getString(R.string.share_short_answers, q.problem.replace(",","<comma>"), q.answer.replace(",","<comma>")))
+                Constants.WRITE -> lineWrite = StringBuilder(context.getString(R.string.share_short_answers, q.problem.replace(",", "<comma>"), q.answer.replace(",", "<comma>")))
 
                 Constants.COMPLETE -> {
 
-                    lineWrite = StringBuilder(context.getString(if(q.isCheckOrder) R.string.share_multiple_answers_order else R.string.share_multiple_answers, q.problem.replace(",","<comma>")))
+                    lineWrite = StringBuilder(context.getString(if (q.isCheckOrder) R.string.share_multiple_answers_order else R.string.share_multiple_answers, q.problem.replace(",", "<comma>")))
 
                     for (k in 0 until q.answers.size) {
-                        lineWrite.append(q.answers[k]!!.selection.replace(",","<comma>")).append(",")
+                        lineWrite.append(q.answers[k]!!.selection.replace(",", "<comma>")).append(",")
                     }
                     lineWrite = StringBuilder(lineWrite.substring(0, lineWrite.length - 1))
                 }
                 Constants.SELECT -> if (q.auto) {
-                    lineWrite = StringBuilder(context.getString(R.string.share_selection_auto_problems, q.problem.replace(",","<comma>"), q.answer.replace(",","<comma>"), q.selections.size))
+                    lineWrite = StringBuilder(context.getString(R.string.share_selection_auto_problems, q.problem.replace(",", "<comma>"), q.answer.replace(",", "<comma>"), q.selections.size))
 
                 } else {
-                    lineWrite = StringBuilder(context.getString(R.string.share_selection_problems, q.problem.replace(",","<comma>"), q.answer.replace(",","<comma>")))
+                    lineWrite = StringBuilder(context.getString(R.string.share_selection_problems, q.problem.replace(",", "<comma>"), q.answer.replace(",", "<comma>")))
 
                     for (k in 0 until q.selections.size) {
-                        lineWrite.append(q.selections[k]!!.selection.replace(",","<comma>")).append(",")
+                        lineWrite.append(q.selections[k]!!.selection.replace(",", "<comma>")).append(",")
                     }
                     lineWrite = StringBuilder(lineWrite.substring(0, lineWrite.length - 1))
 
@@ -126,29 +126,29 @@ open class Test : RealmObject() {
                 Constants.SELECT_COMPLETE ->
 
                     if (q.auto) {
-                        lineWrite = StringBuilder(context.getString(R.string.share_select_complete_auto_problem, q.problem.replace(",","<comma>")))
+                        lineWrite = StringBuilder(context.getString(R.string.share_select_complete_auto_problem, q.problem.replace(",", "<comma>")))
 
                         lineWrite.append(q.selections.size.toString()).append(",")
 
                         for (k in 0 until q.answers.size) {
-                            lineWrite.append(q.answers[k]!!.selection.replace(",","<comma>")).append(",")
+                            lineWrite.append(q.answers[k]!!.selection.replace(",", "<comma>")).append(",")
                         }
 
                         lineWrite = StringBuilder(lineWrite.substring(0, lineWrite.length - 1))
 
                     } else {
-                        lineWrite = StringBuilder(context.getString(R.string.share_select_complete_problem, q.problem.replace(",","<comma>")))
+                        lineWrite = StringBuilder(context.getString(R.string.share_select_complete_problem, q.problem.replace(",", "<comma>")))
 
                         lineWrite.append(q.answers.size.toString()).append(",")
 
                         lineWrite.append(q.selections.size.toString()).append(",")
 
                         for (k in 0 until q.answers.size) {
-                            lineWrite.append(q.answers[k]!!.selection.replace(",","<comma>")).append(",")
+                            lineWrite.append(q.answers[k]!!.selection.replace(",", "<comma>")).append(",")
                         }
 
                         for (k in 0 until q.selections.size) {
-                            lineWrite.append(q.selections[k]!!.selection.replace(",","<comma>")).append(",")
+                            lineWrite.append(q.selections[k]!!.selection.replace(",", "<comma>")).append(",")
                         }
                         lineWrite = StringBuilder(lineWrite.substring(0, lineWrite.length - 1))
 
@@ -184,5 +184,16 @@ open class Test : RealmObject() {
 
         questions!!.forEach { it.correct = false }
 
+    }
+
+    fun toFirebaseTest(context: Context): FirebaseTest {
+
+        var firebaseColor = 0
+
+        context.resources.getIntArray(R.array.color_list).forEachIndexed { index, it ->
+            if( color == it) firebaseColor = index
+        }
+
+        return FirebaseTest(name = title ?: "no title", color = firebaseColor)
     }
 }

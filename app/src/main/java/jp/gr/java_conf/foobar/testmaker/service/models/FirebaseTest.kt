@@ -6,10 +6,9 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-data class FirebaseTest(var id: String = "",
-                        var name: String = "",
+data class FirebaseTest(var name: String = "",
                         var color: Int = 0,
-                        var creatorId: String = "",
+                        var userId: String = "",
                         var userName: String = "",
                         var overview: String = "",
                         var size: Int = 0,

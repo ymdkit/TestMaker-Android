@@ -52,9 +52,11 @@ dependencies {
     implementation('androidx.appcompat:appcompat:1.0.0')
     implementation('com.google.android.material:material:1.0.0')
     implementation('androidx.cardview:cardview:1.0.0')
-    implementation 'com.google.android.gms:play-services-ads:17.2.1'
+    implementation 'com.google.android.gms:play-services-ads:18.0.0'
     implementation 'jp.studyplus.android.sdk:studyplus-android-sdk2:2.0.2'
-    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-core:17.0.0'
+    implementation 'com.google.firebase:firebase-auth:18.0.0'
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
     implementation 'com.github.bumptech.glide:glide:4.9.0'

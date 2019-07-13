@@ -259,5 +259,7 @@
     <string name="start">スタート</string>
     <string name="is_random">ランダムに出題</string>
     <string name="info_firebase_test" >作者: %1$s\n\n投稿日: %2$s\n\n概要: %3$s</string>
+    <string name="msg_not_login">問題集の投稿、マイページの閲覧にはログインが必要です</string>
+    <string name="old_online">旧みんなの問題集</string>
 
 </resources>

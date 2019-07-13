@@ -1,10 +1,16 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
+import android.app.Activity
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.IdpResponse
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
@@ -12,7 +18,7 @@ import jp.gr.java_conf.foobar.testmaker.service.models.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.FirebaseTestAdapter
 import kotlinx.android.synthetic.main.activity_online_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
+
 
 class FirebaseActivity : BaseActivity() {
 
@@ -64,5 +70,127 @@ class FirebaseActivity : BaseActivity() {
             viewModel.fetchTests()
         }
 
+        button_upload.setOnClickListener {
+
+            FirebaseAuth.getInstance().currentUser?.let {
+
+                if (realmController.list.size < 1 || realmController.list.all { it.getQuestionsForEach().size < 1 }) {
+
+                    Toast.makeText(baseContext, getString(R.string.message_non_exist_test), Toast.LENGTH_SHORT).show()
+
+                    return@setOnClickListener
+                }
+
+                showDialogUpload()
+
+            } ?: run {
+
+                AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.login))
+                        .setMessage(getString(R.string.msg_not_login))
+                        .setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                            val providers = arrayListOf(
+                                    AuthUI.IdpConfig.EmailBuilder().build(),
+                                    AuthUI.IdpConfig.GoogleBuilder().build())
+
+                            // Create and launch sign-in intent
+                            startActivityForResult(
+                                    AuthUI.getInstance()
+                                            .createSignInIntentBuilder()
+                                            .setAvailableProviders(providers)
+                                            .build(),
+                                    RC_SIGN_IN)
+                        }
+                        .setNegativeButton(getString(R.string.cancel), null)
+                        .show()
+
+
+            }
+        }
+
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != Activity.RESULT_OK) return
+
+        if (requestCode == RC_SIGN_IN) {
+            val response = IdpResponse.fromResultIntent(data)
+
+            if (resultCode == Activity.RESULT_OK) {
+                // Successfully signed in
+                val user = FirebaseAuth.getInstance().currentUser
+                viewModel.createUser(user)
+
+                Toast.makeText(this, "login success!", Toast.LENGTH_SHORT).show()
+                // ...
+            } else {
+                // Sign in failed. If response is null the user canceled the
+                // sign-in flow using the back button. Otherwise check
+                response?.error?.errorCode
+                // ...
+            }
+        }
+    }
+
+
+    private fun showDialogUpload() {
+
+        var position = 0
+
+        val dialogLayout = LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_upload, findViewById(R.id.layout_dialog_upload))
+
+        val tests = realmController.listNotEmpty
+
+        val array = Array(tests.size) { i -> tests[i].title }
+
+        val spinner = dialogLayout.findViewById<Spinner>(R.id.spinner)
+        val editOverView = dialogLayout.findViewById<EditText>(R.id.edit_overview)
+        // ArrayAdapter
+        val adapter = ArrayAdapter(baseContext,
+                android.R.layout.simple_spinner_item, array)
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // spinner に adapter をセット
+        spinner.adapter = adapter
+
+        // リスナーを登録
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            //　アイテムが選択された時
+            override fun onItemSelected(parent: AdapterView<*>?,
+                                        view: View?, positionSpinner: Int, id: Long) {
+                position = positionSpinner
+            }
+
+            //　アイテムが選択されなかった
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        val builder = AlertDialog.Builder(this@FirebaseActivity, R.style.MyAlertDialogStyle)
+        builder.setView(dialogLayout)
+        builder.setTitle(getString(R.string.message_upload_test))
+        builder.setPositiveButton(android.R.string.ok, null)
+
+        builder.setNegativeButton(android.R.string.cancel, null)
+        val dialog = builder.show()
+
+        val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+        positiveButton.setOnClickListener {
+
+            viewModel.uploadTest(tests[position],editOverView.text.toString(),success = {
+                Toast.makeText(this, "upload success!", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+                viewModel.fetchTests()
+            })
+
+        }
+
+    }
+
+    companion object {
+        const val RC_SIGN_IN = 54321
+    }
+
 }

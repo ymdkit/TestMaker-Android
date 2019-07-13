@@ -3,6 +3,8 @@ package jp.gr.java_conf.foobar.testmaker.service.models
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -44,14 +46,15 @@ class RemoteDataSource(val context: Context) {
 
         collectionTest.document(testId).get().addOnSuccessListener {
 
-            val test = it.toObject(FirebaseTest::class.java)?.toStructTest(context) ?: StructTest("")
+            val test = it.toObject(FirebaseTest::class.java)?.toStructTest(context)
+                    ?: StructTest("")
 
             collectionTest.document(testId)
                     .collection("questions")
                     .get()
                     .addOnSuccessListener {
 
-                        it.toObjects(FirebaseQuestion::class.java).forEach {question ->
+                        it.toObjects(FirebaseQuestion::class.java).forEach { question ->
                             test.problems.add(question.toStructQuestion())
                         }
 
@@ -75,6 +78,41 @@ class RemoteDataSource(val context: Context) {
 
     fun resetDownloadTest() {
         downloadTest = null
+    }
+
+    fun createUser(user: FirebaseUser?) {
+
+        user ?: return
+
+        val myUser = MyFirebaseUser(name = user.displayName ?: "guest", id = user.uid)
+
+        db.collection("users")
+                .document(user.uid)
+                .set(myUser)
+
+    }
+
+    fun createTest(test: Test, overview: String,success: () -> Unit) {
+
+        val firebaseTest = test.toFirebaseTest(context)
+        val user = FirebaseAuth.getInstance().currentUser
+
+        user ?: return
+
+        firebaseTest.userId = user.uid
+        firebaseTest.userName = user.displayName ?: "guest"
+        firebaseTest.overview = overview
+        firebaseTest.size = test.getQuestions().size
+
+        db.collection("tests")
+                .document()
+                .set(firebaseTest)
+                .addOnSuccessListener {
+                    success()
+                }.addOnFailureListener {
+
+                }
+
     }
 
 }

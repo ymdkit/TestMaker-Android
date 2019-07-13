@@ -47,7 +47,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:text="ああ"
                 android:textSize="@dimen/text_size_small"
                 android:layout_marginStart="@dimen/element_spacing_normal"
                 android:layout_marginBottom="@dimen/element_spacing_small"
