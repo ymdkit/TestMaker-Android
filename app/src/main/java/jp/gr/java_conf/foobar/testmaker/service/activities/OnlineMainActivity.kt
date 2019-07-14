@@ -53,209 +53,16 @@ class OnlineMainActivity : BaseActivity() {
         createAd(container)
 
         initToolBar()
+        toolbar.title = getString(R.string.old_online_main)
+        cardView.visibility = View.GONE
 
         login()
-
-        button_upload.setOnClickListener { _ ->
-
-            if (realmController.list.size < 1 || realmController.list.all { it.getQuestionsForEach().size < 1 }) {
-
-                Toast.makeText(baseContext, getString(R.string.message_non_exist_test), Toast.LENGTH_SHORT).show()
-
-                return@setOnClickListener
-            }
-
-            val dialogLayout = LayoutInflater.from(this@OnlineMainActivity).inflate(R.layout.dialog_alert_confirm, findViewById(R.id.layout_dialog_confirm))
-
-            dialogLayout.findViewById<TextView>(R.id.text_alert).text = getString(R.string.alert_notes)
-
-            val checkBox = dialogLayout.findViewById<CheckBox>(R.id.check_alert)
-
-            if (sharedPreferenceManager.confirmNotes) {
-
-                showDialogUpload()
-
-                return@setOnClickListener
-            }
-
-            val builder = AlertDialog.Builder(this@OnlineMainActivity, R.style.MyAlertDialogStyle)
-            builder.setView(dialogLayout)
-            builder.setTitle(getString(R.string.confirm_notes))
-            builder.setPositiveButton(android.R.string.ok) { _, _ ->
-
-                if (checkBox.isChecked) sharedPreferenceManager.confirmNotes = true
-
-                showDialogUpload()
-
-            }
-
-            builder.setNegativeButton(android.R.string.cancel, null)
-            builder.show()
-
-        }
 
         swipe_refresh.setOnRefreshListener {
             reload("")
         }
 
         reload("")
-    }
-
-    private fun showDialogUpload() {
-
-        var position = 0
-
-        val dialogLayout = LayoutInflater.from(this@OnlineMainActivity).inflate(R.layout.dialog_upload, findViewById(R.id.layout_dialog_upload))
-
-        val tests = realmController.listNotEmpty
-
-        val array = Array(tests.size) { i -> tests[i].title }
-
-        val spinner = dialogLayout.findViewById<Spinner>(R.id.spinner)
-        val editOverView = dialogLayout.findViewById<EditText>(R.id.edit_overview)
-        // ArrayAdapter
-        val adapter = ArrayAdapter(baseContext,
-                android.R.layout.simple_spinner_item, array)
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        // spinner に adapter をセット
-        spinner.adapter = adapter
-
-        // リスナーを登録
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            //　アイテムが選択された時
-            override fun onItemSelected(parent: AdapterView<*>?,
-                                        view: View?, positionSpinner: Int, id: Long) {
-                position = positionSpinner
-            }
-
-            //　アイテムが選択されなかった
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-
-        val builder = AlertDialog.Builder(this@OnlineMainActivity, R.style.MyAlertDialogStyle)
-        builder.setView(dialogLayout)
-        builder.setTitle(getString(R.string.message_upload_test))
-        builder.setPositiveButton(android.R.string.ok, null)
-
-        builder.setNegativeButton(android.R.string.cancel, null)
-        val dialog = builder.show()
-
-        val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-        positiveButton.setOnClickListener {
-
-            if (upload(position, editOverView.text.toString())) dialog.dismiss()
-
-        }
-
-    }
-
-    private fun upload(position: Int, overView: String): Boolean {
-        val user = NCMBUser.getCurrentUser()
-
-        val userId = user.getString("objectId")
-
-        val test = realmController.listNotEmpty[position]
-
-        val questionsSum = test.getQuestions().count { it.imagePath == "" } + user.getInt("questionsSum")
-
-        val limit = if (user.getBoolean("expert")) Constants.ONLINE_QUESTIONS_LIMIT_EXPERT else Constants.ONLINE_QUESTIONS_LIMIT_NORMAL
-
-        if (questionsSum > limit) {
-
-            Toast.makeText(baseContext, getString(R.string.message_limit, limit), Toast.LENGTH_LONG).show()
-
-            return false
-
-        } else {
-            try {
-                val curUser = NCMBUser.getCurrentUser()
-                curUser.put("questionsSum", questionsSum)
-                curUser.save()
-            } catch (e1: NCMBException) {
-                e1.printStackTrace()
-            }
-        }
-
-        val obj = NCMBObject("Test")
-        obj.put("content", test.testToString(this@OnlineMainActivity, true))
-        obj.put("title", test.title)
-        obj.put("color", test.color)
-        obj.put("language", getString(R.string.language))
-        obj.put("downloadedNum", 0)
-        obj.put("explanation", overView)
-        obj.put("creatorId", userId)
-        obj.put("questionsNum", test.getQuestions().count { it.imagePath == "" })
-        obj.saveInBackground { e ->
-            if (e != null) {
-
-                //保存失敗
-                AlertDialog.Builder(this@OnlineMainActivity, R.style.MyAlertDialogStyle)
-                        .setMessage(getString(R.string.failed_upload))
-                        .setPositiveButton("OK", null)
-                        .show()
-
-            } else {
-                //保存成功
-                val dialogSuccessLayout = LayoutInflater.from(this@OnlineMainActivity).inflate(R.layout.dialog_success_upload, findViewById(R.id.layout_dialog_success_upload))
-
-                val textSuccess = dialogSuccessLayout.findViewById<TextView>(R.id.text_success_upload)
-
-                textSuccess.text = (getString(R.string.successed_upload, obj.getString("title")))
-
-                val buttonTweet = dialogSuccessLayout.findViewById<ImageButton>(R.id.button_tweet)
-                val buttonLine = dialogSuccessLayout.findViewById<ImageButton>(R.id.button_line)
-
-                val builderSuccess = AlertDialog.Builder(this@OnlineMainActivity, R.style.MyAlertDialogStyle)
-                builderSuccess.setView(dialogSuccessLayout)
-                builderSuccess.setTitle(getString(R.string.message_finish_upload))
-                builderSuccess.setPositiveButton(android.R.string.ok, null)
-                builderSuccess.show()
-
-                buttonTweet.setOnClickListener {
-
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    val messsage = Uri.encode(getString(R.string.tweet, obj.getString("title"), obj.getString("objectId")))
-                    intent.data = Uri.parse("twitter://post?message=$messsage")
-                    try {
-                        startActivity(intent)
-                    } catch (e: Exception) {
-                        Toast.makeText(applicationContext, getString(R.string.not_installed_twitter), Toast.LENGTH_LONG)
-                                .show()
-                    }
-
-                }
-
-                buttonLine.setOnClickListener {
-
-                    // URL Scheme
-                    val urlScheme = "line://msg/text"
-                    // メッセージ
-                    // メッセージをURLエンコード
-                    var encodedMsg: String? = null
-                    try {
-                        encodedMsg = URLEncoder.encode(getString(R.string.line, obj.getString("title"), obj.getString("objectId")), "UTF-8")
-                    } catch (e: UnsupportedEncodingException) {
-                        e.printStackTrace()
-                    }
-
-                    if (encodedMsg != null) {
-                        val uri = Uri.parse("$urlScheme/$encodedMsg")
-                        val i = Intent(Intent.ACTION_VIEW, uri)
-                        try {
-                            startActivity(i)
-                        } catch (e: Exception) {
-                            Toast.makeText(applicationContext, getString(R.string.not_installed_line), Toast.LENGTH_LONG)
-                                    .show()
-                        }
-                    }
-                }
-                reload("")
-            }
-        }
-
-        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -317,6 +124,8 @@ class OnlineMainActivity : BaseActivity() {
 
             }
 
+
+
             android.R.id.home -> {
 
                 finish()
@@ -352,6 +161,8 @@ class OnlineMainActivity : BaseActivity() {
 
         //データストアでの検索を行う
         query.findInBackground { objects, e ->
+            swipe_refresh.isRefreshing = false
+
             if (e != null) {
                 //エラー時の処理
                 Log.e("NCMB", "検索に失敗しました。エラー:" + e.message)
@@ -440,7 +251,6 @@ class OnlineMainActivity : BaseActivity() {
                 })
 
                 recycler_view.visibility = View.VISIBLE
-                swipe_refresh.isRefreshing = false
 
                 recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
                 recycler_view.setHasFixedSize(true)

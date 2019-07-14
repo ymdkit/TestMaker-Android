@@ -15,7 +15,8 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.FirebaseActivity"></activity>
+        <activity android:name=".activities.FirebaseMyPageActivity"></activity>
+        <activity android:name=".activities.FirebaseActivity" />
 
         <meta-data
             android:name="studyplus_comsumer_key"

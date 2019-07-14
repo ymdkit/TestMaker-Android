@@ -252,5 +252,12 @@
     <string name="info_firebase_test" >имя: %1$s\n\nдата: %2$s\n\nкомментарий: %3$s</string>
     <string name="msg_not_login">Пожалуйста, войдите</string>
     <string name="old_online">Прошлая версия</string>
+    <string name="old_online_main">Прошлая версия</string>
+    <string name="logout">выйти</string>
+    <string name="msg_logout">выйти?</string>
+    <string name="report">отчет</string>
+    <string name="report_subject">Отчет о сборе проблем</string>
+    <string name="report_body"></string>
+
 
 </resources>

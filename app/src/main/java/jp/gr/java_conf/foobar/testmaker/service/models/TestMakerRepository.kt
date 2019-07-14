@@ -1,19 +1,13 @@
 package jp.gr.java_conf.foobar.testmaker.service.models
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
-import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
-import kotlinx.android.synthetic.main.activity_edit.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.FileNotFoundException
-import java.io.IOException
 
 
 class TestMakerRepository(private val local: LocalDataSource,
@@ -104,11 +98,27 @@ class TestMakerRepository(private val local: LocalDataSource,
         remote.fetchTests()
     }
 
-    fun createUser(user: FirebaseUser?) {
-        remote.createUser(user)
+    fun updateProfile(userName: String, completion: () -> Unit) {
+        remote.updateProfile(userName, completion)
     }
 
     fun createTest(test: Test, overview: String, success: () -> Unit) {
         remote.createTest(test, overview, success)
+    }
+
+    fun getMyTests(): LiveData<List<DocumentSnapshot>> {
+        return remote.getMyTests()
+    }
+
+    fun fetchMyTests() {
+        remote.fetchMyTests()
+    }
+
+    fun deleteTest(id: String) {
+        remote.deleteTest(id)
+    }
+
+    fun setUser(user: FirebaseUser?) {
+        remote.setUser(user)
     }
 }

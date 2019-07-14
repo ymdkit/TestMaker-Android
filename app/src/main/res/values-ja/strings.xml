@@ -261,5 +261,12 @@
     <string name="info_firebase_test" >作者: %1$s\n\n投稿日: %2$s\n\n概要: %3$s</string>
     <string name="msg_not_login">問題集の投稿、マイページの閲覧にはログインが必要です</string>
     <string name="old_online">旧みんなの問題集</string>
+    <string name="old_online_main">旧みんなの問題集</string>
+    <string name="logout">ログアウト</string>
+    <string name="msg_logout">ログアウトしますか？</string>
+    <string name="report">報告</string>
+    <string name="report_subject">問題集の報告</string>
+    <string name="report_body">以下に報告する理由を記載してください</string>
+
 
 </resources>

@@ -35,7 +35,7 @@ class FirebaseViewModel(private val repository: TestMakerRepository) : ViewModel
     }
 
     fun createUser(user: FirebaseUser?) {
-        repository.createUser(user)
+        repository.setUser(user)
     }
 
     fun uploadTest(test: Test, overview: String, success: () -> Unit) {

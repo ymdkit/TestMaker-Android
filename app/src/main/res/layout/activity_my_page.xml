@@ -43,7 +43,6 @@
             android:layout_height="match_parent"
             android:splitMotionEvents="false"
             android:layout_marginStart="@dimen/element_spacing_normal"
-            android:layout_marginLeft="@dimen/element_spacing_normal"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -98,51 +97,9 @@
                 />
 
         </LinearLayout>
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="horizontal">-->
-
-                <!--<android.support.v7.widget.AppCompatTextView-->
-                    <!--android:paddingLeft="@dimen/element_spacing_normal"-->
-                    <!--android:paddingRight="@dimen/element_spacing_normal"-->
-                    <!--android:paddingTop="@dimen/element_spacing_normal"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:id="@+id/text_user_name"-->
-                    <!--/>-->
-
-                <!--<Button-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="@dimen/view_height_tiny"-->
-                    <!--style="@style/button_choose_normal"-->
-                    <!--android:text="@string/save"/>-->
-
-            <!--</LinearLayout>-->
-
-
-
-            <!--<android.support.v7.widget.AppCompatTextView-->
-                <!--android:paddingLeft="@dimen/element_spacing_normal"-->
-                <!--android:paddingRight="@dimen/element_spacing_normal"-->
-                <!--android:paddingTop="@dimen/element_spacing_small"-->
-                <!--android:paddingBottom="@dimen/element_spacing_normal"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/text_num_tests"-->
-                <!--/>-->
-
-        <!--</LinearLayout>-->
     </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/element_spacing_small"
@@ -172,20 +129,19 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_margin="@dimen/element_spacing_normal"
-        android:layout_width="@dimen/view_width_normal"
-        android:layout_height="@dimen/view_height_large"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:id="@+id/loading" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/container"

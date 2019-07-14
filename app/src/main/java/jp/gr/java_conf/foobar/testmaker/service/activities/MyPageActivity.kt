@@ -109,7 +109,6 @@ class MyPageActivity : BaseActivity() {
 
     private fun reloadTests(){
 
-        loading.visibility = View.VISIBLE
         recycler_view.visibility = View.GONE
 
         val query = NCMBQuery<NCMBObject>("Test")
@@ -122,13 +121,14 @@ class MyPageActivity : BaseActivity() {
 
         //データストアでの検索を行う
         query.findInBackground { objects, e ->
+            swipe_refresh.isRefreshing = false
+
             if (e != null) {
                 //エラー時の処理
                 Log.e("NCMB", "検索に失敗しました。エラー:" + e.message)
 
                 Toast.makeText(baseContext,getString(R.string.load_failed), Toast.LENGTH_SHORT).show()
 
-                loading.visibility = View.GONE
             } else {
                 //成功時の処理
                 Log.i("NCMB", "検索に成功しました。")
@@ -218,7 +218,6 @@ class MyPageActivity : BaseActivity() {
                     }
                 })
 
-                loading.visibility = View.GONE
                 recycler_view.visibility = View.VISIBLE
 
                 recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)

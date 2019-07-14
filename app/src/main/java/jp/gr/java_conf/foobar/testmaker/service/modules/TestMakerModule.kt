@@ -3,6 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.modules
 import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.activities.EditViewModel
+import jp.gr.java_conf.foobar.testmaker.service.activities.FirebaseMyPageViewModel
 import jp.gr.java_conf.foobar.testmaker.service.activities.FirebaseViewModel
 import jp.gr.java_conf.foobar.testmaker.service.activities.MainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.models.LocalDataSource
@@ -19,5 +20,6 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { MainViewModel(get()) }
     viewModel { EditViewModel(get(), get()) }
     viewModel { FirebaseViewModel(get()) }
+    viewModel { FirebaseMyPageViewModel(get()) }
 
 }

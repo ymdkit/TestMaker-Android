@@ -1,16 +1,21 @@
 package jp.gr.java_conf.foobar.testmaker.service.models
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.UserProfileChangeRequest
+
 
 class RemoteDataSource(val context: Context) {
 
     private var onlineTests: MutableLiveData<List<DocumentSnapshot>>? = null
+
+    private var myTests: MutableLiveData<List<DocumentSnapshot>>? = null
 
     private var downloadTest: MutableLiveData<StructTest>? = null
 
@@ -28,7 +33,7 @@ class RemoteDataSource(val context: Context) {
 
     fun fetchTests() {
 
-        db.collection("tests").get()
+        db.collection("tests").limit(50).get()
                 .addOnSuccessListener { query ->
 
                     onlineTests?.postValue(query.documents)
@@ -80,7 +85,7 @@ class RemoteDataSource(val context: Context) {
         downloadTest = null
     }
 
-    fun createUser(user: FirebaseUser?) {
+    fun setUser(user: FirebaseUser?) {
 
         user ?: return
 
@@ -92,12 +97,10 @@ class RemoteDataSource(val context: Context) {
 
     }
 
-    fun createTest(test: Test, overview: String,success: () -> Unit) {
+    fun createTest(test: Test, overview: String, success: () -> Unit) {
 
         val firebaseTest = test.toFirebaseTest(context)
-        val user = FirebaseAuth.getInstance().currentUser
-
-        user ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return
 
         firebaseTest.userId = user.uid
         firebaseTest.userName = user.displayName ?: "guest"
@@ -112,6 +115,55 @@ class RemoteDataSource(val context: Context) {
                 }.addOnFailureListener {
 
                 }
+
+    }
+
+    fun getMyTests(): LiveData<List<DocumentSnapshot>> {
+        if (myTests == null) {
+            myTests = MutableLiveData()
+            fetchMyTests()
+        }
+        return myTests as LiveData<List<DocumentSnapshot>>
+    }
+
+    fun fetchMyTests() {
+
+        val user = FirebaseAuth.getInstance().currentUser ?: return
+
+        db.collection("tests").whereEqualTo("userId", user.uid).get()
+                .addOnSuccessListener { query ->
+
+                    myTests?.postValue(query.documents)
+
+                }
+                .addOnFailureListener {
+                    Log.d("Debug", "fetch myTests failure: $it")
+                }
+    }
+
+    fun deleteTest(id: String) {
+        db.collection("tests").document(id).delete()
+                .addOnSuccessListener {
+                    fetchMyTests()
+                    fetchTests()
+                    Log.d("Debug", "delete success")
+                }
+                .addOnFailureListener {
+                    Log.d("Debug", "delete failure: $it")
+                }
+    }
+
+    fun updateProfile(userName: String, completion: () -> Unit) {
+
+        val user = FirebaseAuth.getInstance().currentUser ?: return
+
+        val profileUpdates = UserProfileChangeRequest.Builder()
+                .setDisplayName(userName).build()
+
+        user.updateProfile(profileUpdates).addOnSuccessListener {
+            completion()
+        }
+        setUser(user)
 
     }
 

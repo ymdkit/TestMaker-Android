@@ -3,8 +3,11 @@ package jp.gr.java_conf.foobar.testmaker.service.activities
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -20,6 +23,8 @@ import kotlinx.android.synthetic.main.activity_online_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
+
+
 class FirebaseActivity : BaseActivity() {
 
     private val viewModel: FirebaseViewModel by viewModel()
@@ -33,6 +38,8 @@ class FirebaseActivity : BaseActivity() {
 
         createAd(container)
 
+        initToolBar()
+
         adapter = FirebaseTestAdapter(baseContext)
         adapter.download = { data: DocumentSnapshot ->
             viewModel.downloadTest(data.id)
@@ -42,6 +49,16 @@ class FirebaseActivity : BaseActivity() {
 
             val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
             textInfo.text = getString(R.string.info_firebase_test, data.userName, data.getDate(), data.overview)
+
+            val buttonReport = dialogLayout.findViewById<Button>(R.id.button_report)
+            buttonReport.setOnClickListener {
+
+                val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "testmaker.contact@gmail.com", null))
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_subject))
+                emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_body))
+                startActivity(Intent.createChooser(emailIntent, null))
+            }
 
             val builder = AlertDialog.Builder(this@FirebaseActivity, R.style.MyAlertDialogStyle)
             builder.setView(dialogLayout)
@@ -85,29 +102,51 @@ class FirebaseActivity : BaseActivity() {
 
             } ?: run {
 
-                AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.login))
-                        .setMessage(getString(R.string.msg_not_login))
-                        .setPositiveButton(getString(R.string.ok)) { dialog, which ->
-                            val providers = arrayListOf(
-                                    AuthUI.IdpConfig.EmailBuilder().build(),
-                                    AuthUI.IdpConfig.GoogleBuilder().build())
+                login()
+            }
+        }
+    }
 
-                            // Create and launch sign-in intent
-                            startActivityForResult(
-                                    AuthUI.getInstance()
-                                            .createSignInIntentBuilder()
-                                            .setAvailableProviders(providers)
-                                            .build(),
-                                    RC_SIGN_IN)
-                        }
-                        .setNegativeButton(getString(R.string.cancel), null)
-                        .show()
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_firebase, menu)
+        return true
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        val actionId = item.itemId
 
+        when (actionId) {
+            R.id.action_profile -> {
+
+                FirebaseAuth.getInstance().currentUser?.let {
+
+                    startActivityForResult(Intent(this@FirebaseActivity, FirebaseMyPageActivity::class.java), 0)
+
+                } ?: run {
+
+                    login()
+                }
+            }
+
+            R.id.old -> {
+
+                startActivityForResult(Intent(this@FirebaseActivity, OnlineMainActivity::class.java), 0)
+
+            }
+
+            android.R.id.home -> {
+
+                finish()
+
+                return true
             }
         }
 
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -134,6 +173,30 @@ class FirebaseActivity : BaseActivity() {
         }
     }
 
+    private fun login() {
+
+        AlertDialog.Builder(this)
+                .setTitle(getString(R.string.login))
+                .setMessage(getString(R.string.msg_not_login))
+                .setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                    val providers = arrayListOf(
+                            AuthUI.IdpConfig.EmailBuilder().build(),
+                            AuthUI.IdpConfig.GoogleBuilder().build())
+
+                    // Create and launch sign-in intent
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setAvailableProviders(providers)
+                                    .setTosAndPrivacyPolicyUrls(
+                                            "https://keita-developer.hatenablog.com/entry/2019/07/01/103627",
+                                            "https://keita-developer.hatenablog.com/entry/2019/07/01/103627")
+                                    .build(),
+                            RC_SIGN_IN)
+                }
+                .setNegativeButton(getString(R.string.cancel), null)
+                .show()
+    }
 
     private fun showDialogUpload() {
 
@@ -179,7 +242,7 @@ class FirebaseActivity : BaseActivity() {
         val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
         positiveButton.setOnClickListener {
 
-            viewModel.uploadTest(tests[position],editOverView.text.toString(),success = {
+            viewModel.uploadTest(tests[position], editOverView.text.toString(), success = {
                 Toast.makeText(this, "upload success!", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
                 viewModel.fetchTests()
