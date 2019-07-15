@@ -267,6 +267,8 @@
     <string name="report">報告</string>
     <string name="report_subject">問題集の報告</string>
     <string name="report_body">以下に報告する理由を記載してください</string>
+    <string name="notes">「みんなの問題集」機能のリニューアル</string>
+    <string name="msg_notice_firebase">・画像付き問題集の投稿が可能になりました\n・iOS版とデータベースを統合しました\n・投稿できる問題数の上限を撤廃しました\n\nこれまでに投稿した問題集については右メニューの「旧みんなの問題集」より確認できます</string>
 
 
 </resources>

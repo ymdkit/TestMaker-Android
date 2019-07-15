@@ -105,6 +105,16 @@ class FirebaseActivity : BaseActivity() {
                 login()
             }
         }
+
+        if(!sharedPreferenceManager.firebaseNotes){
+            AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                    .setTitle(getString(R.string.notes))
+                    .setMessage(getString(R.string.msg_notice_firebase))
+                    .setPositiveButton(getString(R.string.show_never)) { _, _ ->
+                        sharedPreferenceManager.firebaseNotes = true
+                    }
+                    .show()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

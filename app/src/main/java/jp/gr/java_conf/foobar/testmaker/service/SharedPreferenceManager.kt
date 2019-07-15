@@ -97,6 +97,11 @@ class SharedPreferenceManager(context: Context) {
         get() = sharedPreferences.getInt("sortOnline", 1)
         set(i) = sharedPreferences.edit().putInt("sortOnline", i).apply()
 
+    var firebaseNotes: Boolean //投稿前の確認
+        get() = sharedPreferences.getBoolean("first_firebase", false)
+        set(f) = sharedPreferences.edit().putBoolean("first_firebase", f)
+                .apply()
+
 
 
 

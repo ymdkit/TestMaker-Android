@@ -267,6 +267,8 @@
     <string name="report">report</string>
     <string name="report_subject">report of test</string>
     <string name="report_body"></string>
+    <string name="notes">online function is updated!</string>
+    <string name="msg_notice_firebase">1. you can upload image\n2. share with iOS version\n if you see old version, please use [old online] in side menu</string>
 
 
 </resources>

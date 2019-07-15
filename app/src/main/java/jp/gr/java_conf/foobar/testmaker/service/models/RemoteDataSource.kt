@@ -9,6 +9,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.auth.UserProfileChangeRequest
+import android.icu.util.ULocale.getLanguage
+import java.util.*
 
 
 class RemoteDataSource(val context: Context) {
@@ -33,10 +35,13 @@ class RemoteDataSource(val context: Context) {
 
     fun fetchTests() {
 
-        db.collection("tests").limit(50).get()
+        val locale = Locale.getDefault()
+        val language = locale.language
+
+        db.collection("tests").whereEqualTo("locale", language).limit(50).get()
                 .addOnSuccessListener { query ->
 
-                    onlineTests?.postValue(query.documents)
+                    onlineTests?.postValue(query.documents.sortedByDescending { it.toObject(FirebaseTest::class.java)?.created_at })
 
                 }
                 .addOnFailureListener {
@@ -106,11 +111,17 @@ class RemoteDataSource(val context: Context) {
         firebaseTest.userName = user.displayName ?: "guest"
         firebaseTest.overview = overview
         firebaseTest.size = test.getQuestions().size
+        firebaseTest.locale = Locale.getDefault().language
 
-        db.collection("tests")
-                .document()
-                .set(firebaseTest)
+
+        val ref = db.collection("tests").document()
+
+        ref.set(firebaseTest)
                 .addOnSuccessListener {
+
+                    ref.collection("questions")
+
+
                     success()
                 }.addOnFailureListener {
 

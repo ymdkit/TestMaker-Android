@@ -3,8 +3,6 @@ package jp.gr.java_conf.foobar.testmaker.service.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -14,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.nifcloud.mbaas.core.NCMBException
 import com.nifcloud.mbaas.core.NCMBObject
 import com.nifcloud.mbaas.core.NCMBQuery
@@ -97,6 +96,10 @@ class MyPageActivity : BaseActivity() {
 
         reloadTests()
         reloadUserProfile()
+
+        swipe_refresh.setOnRefreshListener {
+            reloadTests()
+        }
 
     }
 

@@ -258,6 +258,10 @@
     <string name="report">отчет</string>
     <string name="report_subject">Отчет о сборе проблем</string>
     <string name="report_body"></string>
+    <string name="notes">уведомление</string>
+    <string name="msg_notice_firebase">онлайн функция обновлена\n1. Вы можете загрузить изображение\n2. Вы можете загрузить изображение
+
+</string>
 
 
 </resources>

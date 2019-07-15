@@ -11,6 +11,7 @@ data class FirebaseTest(var name: String = "",
                         var userId: String = "",
                         var userName: String = "",
                         var overview: String = "",
+                        var locale: String = "",
                         var size: Int = 0,
                         var created_at: Timestamp = Timestamp(Date())
 ) {
