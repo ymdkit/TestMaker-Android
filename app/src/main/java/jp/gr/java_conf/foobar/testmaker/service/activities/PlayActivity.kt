@@ -399,13 +399,20 @@ class PlayActivity : BaseActivity() {
 
         val other = ArrayList<String>()
 
-        val answers = ArrayList<String>()
+        var answers = ArrayList<String>()
 
         val quests = realmController.getQuestions(testId)
 
-        for (i in quests.indices)
-            if (quests[i].type == Constants.WRITE || quests[i].type == Constants.SELECT)
-                answers.add(quests[i].answer)
+        quests.forEach { q ->
+            when (q.type) {
+                Constants.WRITE -> answers.add(q.answer)
+                Constants.SELECT -> answers.add(q.answer)
+                Constants.COMPLETE -> answers = ArrayList(answers.plus(q.answers.map { it.selection }))
+                Constants.SELECT_COMPLETE -> answers = ArrayList(answers.plus(q.answers.map { it.selection }))
+            }
+        }
+
+        answers = ArrayList(answers.distinct())
 
         var i = 0
 
@@ -418,12 +425,18 @@ class PlayActivity : BaseActivity() {
 
                 if (answers[ran] == questions[number].answer) {
                     answers.removeAt(ran)
-
-                } else {
-                    other.add(answers[ran])
-                    answers.removeAt(ran)
-                    i++
+                    continue
                 }
+
+                if (questions[number].answers.map { it.selection }.contains(answers[ran])) {
+                    answers.removeAt(ran)
+                    continue
+                }
+
+                other.add(answers[ran])
+                answers.removeAt(ran)
+                i++
+
 
             } else {
                 other.add(i, getString(R.string.message_not_auto))
