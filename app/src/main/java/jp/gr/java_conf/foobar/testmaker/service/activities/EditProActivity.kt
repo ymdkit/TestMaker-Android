@@ -92,11 +92,7 @@ class EditProActivity : BaseActivity() {
 
         if (actionId == android.R.id.home) {
 
-            val i = Intent(this@EditProActivity, EditActivity::class.java)
-
-            i.putExtra("testId", intent.getLongExtra("testId", -1))
-
-            startActivity(i)
+            finish()
 
             return true
 
