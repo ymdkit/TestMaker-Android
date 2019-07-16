@@ -203,6 +203,8 @@ open class EditActivity : BaseActivity() {
                         edit_select_view.setOthers(question.selections)
                         viewModel.isAuto.value = question.auto
 
+                        viewModel.spinnerSelectsPosition.value = question.selections.size - 2
+
                         edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
 
                     }
@@ -213,6 +215,9 @@ open class EditActivity : BaseActivity() {
                         sharedPreferenceManager.isCheckOrder = question.isCheckOrder
                         edit_complete_view.reloadAnswers(question.answers.size)
                         edit_complete_view.setAnswers(question)
+
+                        viewModel.spinnerAnswersPosition.value = question.answers.size - 2
+
                     }
 
                     Constants.SELECT_COMPLETE -> {
@@ -225,6 +230,11 @@ open class EditActivity : BaseActivity() {
                         edit_select_complete_view.setSelections(question.answers, question.selections)
                         viewModel.isAuto.value = question.auto
                         edit_select_complete_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers + 1)
+
+                        viewModel.spinnerAnswersPosition.value = question.answers.size - 2
+                        viewModel.spinnerSelectsPosition.value = question.selections.size + question.answers.size - 2
+
+
 
                     }
                 }
