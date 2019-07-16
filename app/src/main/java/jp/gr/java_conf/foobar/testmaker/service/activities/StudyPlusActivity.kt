@@ -1,14 +1,12 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
-import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import jp.gr.java_conf.foobar.testmaker.service.Constants
+import androidx.appcompat.app.AlertDialog
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.studyplus.android.sdk.Studyplus
 import kotlinx.android.synthetic.main.activity_study_plus.*

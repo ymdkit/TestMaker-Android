@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.extensions
 
 import android.content.Context
+import android.util.Log
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.StructTest

@@ -41,6 +41,8 @@ class PlayActivity : BaseActivity() {
 
     private var startTime: Long = 0
 
+    private var allAnswers: ArrayList<String> = arrayListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
@@ -84,8 +86,10 @@ class PlayActivity : BaseActivity() {
 
         if (realmController.getTest(testId).limit < questions.size) questions = ArrayList(questions.take(realmController.getTest(testId).limit))
 
-        if (questions.size < 1) Toast.makeText(baseContext, getString(R.string.msg_null_questions), Toast.LENGTH_LONG).show()
-
+        if (questions.size < 1) {
+            Toast.makeText(baseContext, getString(R.string.msg_null_questions), Toast.LENGTH_LONG).show()
+            return
+        }
     }
 
     override fun onPause() {
@@ -397,18 +401,22 @@ class PlayActivity : BaseActivity() {
 
     private fun makeChoice(num: Int): ArrayList<String> {
 
+        if(allAnswers.isEmpty()){
+            questions.forEach { q ->
+                when (q.type) {
+                    Constants.WRITE -> allAnswers.add(q.answer)
+                    Constants.SELECT -> allAnswers.add(q.answer)
+                    Constants.COMPLETE -> allAnswers = ArrayList(allAnswers.plus(q.answers.map { it.selection }))
+                    Constants.SELECT_COMPLETE -> allAnswers = ArrayList(allAnswers.plus(q.answers.map { it.selection }))
+                }
+            }
+            allAnswers = ArrayList(allAnswers.distinct())
+        }
+
         val other = ArrayList<String>()
-
-        val answers = ArrayList<String>()
-
-        val quests = realmController.getQuestions(testId)
-
-        for (i in quests.indices)
-            if (quests[i].type == Constants.WRITE || quests[i].type == Constants.SELECT)
-                answers.add(quests[i].answer)
+        val answers = ArrayList(allAnswers.map { it })
 
         var i = 0
-
         while (i < num) {
 
             if (answers.size > 0) {
@@ -418,12 +426,18 @@ class PlayActivity : BaseActivity() {
 
                 if (answers[ran] == questions[number].answer) {
                     answers.removeAt(ran)
-
-                } else {
-                    other.add(answers[ran])
-                    answers.removeAt(ran)
-                    i++
+                    continue
                 }
+
+                if (questions[number].answers.map { it.selection }.contains(answers[ran])) {
+                    answers.removeAt(ran)
+                    continue
+                }
+
+                other.add(answers[ran])
+                answers.removeAt(ran)
+                i++
+
 
             } else {
                 other.add(i, getString(R.string.message_not_auto))
