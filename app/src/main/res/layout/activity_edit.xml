@@ -310,6 +310,7 @@
 
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/set_problem"
+                            android:text="@={model.question}"
                             style="@style/MyEditTextMultiLine"
                             android:hint="@string/hint_question" />
 
@@ -338,6 +339,7 @@
 
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/set_answer_write"
+                            android:text="@={model.answer}"
                             style="@style/MyEditTextSingleLine"
                             android:hint="@string/hint_answer" />
 
@@ -375,6 +377,7 @@
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/set_explanation"
                             style="@style/MyEditTextMultiLine"
+                            android:text="@={model.explanation}"
                             android:hint="@string/hint_explanation" />
                     </com.google.android.material.textfield.TextInputLayout>
 

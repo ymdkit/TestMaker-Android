@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.navigation.NavigationView
 import androidx.core.content.res.ResourcesCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -323,7 +324,14 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
             inputStream = contentResolver.openInputStream(uri)
             inputStream?.also {
-                loadTestByText(it.bufferedReader().use(BufferedReader::readText))
+
+                var text = it.bufferedReader().use(BufferedReader::readText)
+
+                if(text[0].toString() == "\uFEFF"){
+                    text = text.substring(1)
+                }
+
+                loadTestByText(text)
             }
 
         } catch (e: FileNotFoundException) {
@@ -342,6 +350,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         GlobalScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.Default) { text.toTest(baseContext) }.let {
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
+
                 realmController.convert(it, -1)
                 testAndFolderAdapter.setValue()
 

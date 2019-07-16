@@ -3,16 +3,10 @@ package jp.gr.java_conf.foobar.testmaker.service.models
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-
-import java.util.ArrayList
-
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import io.realm.RealmList
-import io.realm.RealmResults
-import io.realm.Sort
+import io.realm.*
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.SharedPreferenceManager
+import java.util.*
 
 /**
  * Created by keita on 2017/02/08.
@@ -252,7 +246,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     }
 
-    fun addQuestion(testId: Long, problem: StructQuestion, questionId: Long) {
+    fun addQuestion(testId: Long, problem: LocalQuestion, questionId: Long) {
 
         realm.beginTransaction()
 
@@ -296,7 +290,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         question.setSelections(problem.others)
         question.setAnswers(problem.answers)
         question.correct = false
-        question.auto = problem.auto
+        question.auto = problem.isAuto
         question.isCheckOrder = problem.isCheckOrder
 
         if (question.imagePath != problem.imagePath) {

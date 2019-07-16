@@ -51,7 +51,7 @@ class EditSelectView : RelativeLayout{
         return set_answer_choose.text.toString()
     }
 
-    fun getOthers(): Array<String?> {
+    fun getOthers(): Array<String> {
 
         return Array(layoutOthers.filter { layout -> layout?.visibility == View.VISIBLE }.size){ i -> editOthers[i]?.text.toString()}
 
