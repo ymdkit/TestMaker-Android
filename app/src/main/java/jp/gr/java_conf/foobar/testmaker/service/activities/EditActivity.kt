@@ -203,7 +203,7 @@ open class EditActivity : BaseActivity() {
                         edit_select_view.setOthers(question.selections)
                         viewModel.isAuto.value = question.auto
 
-                        viewModel.spinnerSelectsPosition.value = question.selections.size - 2
+                        viewModel.spinnerSelectsPosition.value = question.selections.size - 1
 
                         edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
 
