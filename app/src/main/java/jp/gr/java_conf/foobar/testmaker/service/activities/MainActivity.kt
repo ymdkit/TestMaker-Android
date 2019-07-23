@@ -184,7 +184,13 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                     if (Build.VERSION.SDK_INT <= 18) {
                         val intent = Intent(Intent.ACTION_PICK)
                         intent.type = "text/*"
-                        startActivityForResult(intent, REQUEST_IMPORT)
+
+                        if (intent.resolveActivity(packageManager) != null) {
+                            startActivityForResult(intent, REQUEST_IMPORT)
+                        } else {
+                            Toast.makeText(baseContext, getString(R.string.not_exist_ext), Toast.LENGTH_SHORT).show()
+                        }
+
                     } else if (Build.VERSION.SDK_INT >= 19) {
                         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                         intent.type = "text/*"
@@ -325,7 +331,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                 var text = it.bufferedReader().use(BufferedReader::readText)
 
-                if(text[0].toString() == "\uFEFF"){
+                if (text[0].toString() == "\uFEFF") {
                     text = text.substring(1)
                 }
 

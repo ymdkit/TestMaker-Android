@@ -249,7 +249,7 @@
     <string name="complete">много</string>
     <string name="select_complete">много выбор</string>
     <string name="normal">нормальный</string>
-    <string name="info_firebase_test" >имя: %1$s\n\nдата: %2$s\n\nкомментарий: %3$s</string>
+    <string name="info_firebase_test">имя: %1$s\n\nдата: %2$s\n\nкомментарий: %3$s</string>
     <string name="msg_not_login">Пожалуйста, войдите</string>
     <string name="old_online">Прошлая версия</string>
     <string name="old_online_main">Прошлая версия</string>
@@ -259,9 +259,7 @@
     <string name="report_subject">Отчет о сборе проблем</string>
     <string name="report_body"></string>
     <string name="notes">уведомление</string>
-    <string name="msg_notice_firebase">онлайн функция обновлена\n1. Вы можете загрузить изображение\n2. Вы можете загрузить изображение
-
-</string>
-
+    <string name="msg_notice_firebase">онлайн функция обновлена\n1. Вы можете загрузить изображение\n2. Вы можете загрузить изображение</string>
+    <string name="not_exist_ext">not exist available apps</string>
 
 </resources>
