@@ -258,6 +258,7 @@
     <string name="select_complete">select answers</string>
     <string name="start">start</string>
     <string name="is_random">random order</string>
+    <string name="not_exist_ext">not exist available apps</string>
 
 
 </resources>
