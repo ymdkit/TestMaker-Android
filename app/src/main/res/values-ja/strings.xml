@@ -258,5 +258,6 @@
     <string name="select_complete">選択完答</string>
     <string name="start">スタート</string>
     <string name="is_random">ランダムに出題</string>
+    <string name="not_exist_ext">ファイルを開くためのアプリがインストールされていません</string>
 
 </resources>
