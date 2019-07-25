@@ -35,7 +35,7 @@ open class ShowTestsActivity : BaseActivity() {
 
                 val test = realmController.getTest(id)
 
-                if (test.getQuestions().size == 0) {
+                if (test.questionsNonNull().size == 0) {
 
                     Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
 
@@ -177,7 +177,7 @@ open class ShowTestsActivity : BaseActivity() {
 
         var incorrect = false
 
-        for (k in 0 until test.getQuestions().size) if (!(test.getQuestions()[k]!!.correct)) incorrect = true
+        for (k in 0 until test.questionsNonNull().size) if (!(test.questionsNonNull()[k]!!.correct)) incorrect = true
 
         if (!incorrect && sharedPreferenceManager.refine) {
 
@@ -187,7 +187,7 @@ open class ShowTestsActivity : BaseActivity() {
 
             Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_number), Toast.LENGTH_SHORT).show()
 
-        }else if (start == "" || start.toInt() > test.getQuestions().size || start.toInt() < 1) {
+        }else if (start == "" || start.toInt() > test.questionsNonNull().size || start.toInt() < 1) {
 
             Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_start), Toast.LENGTH_SHORT).show()
 

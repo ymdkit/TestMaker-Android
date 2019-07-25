@@ -113,7 +113,7 @@ class RemoteDataSource(val context: Context) {
         firebaseTest.userId = user.uid
         firebaseTest.userName = user.displayName ?: "guest"
         firebaseTest.overview = overview
-        firebaseTest.size = test.getQuestions().size
+        firebaseTest.size = test.questionsNonNull().size
         firebaseTest.locale = Locale.getDefault().language
 
 
@@ -124,7 +124,7 @@ class RemoteDataSource(val context: Context) {
 
                     val batch = db.batch()
 
-                    val firebaseQuestions = test.getQuestions()
+                    val firebaseQuestions = test.questionsNonNull()
 
                     firebaseQuestions.forEach {
                         batch.set(ref.collection("questions").document(),it.toFirebaseQuestions(user))

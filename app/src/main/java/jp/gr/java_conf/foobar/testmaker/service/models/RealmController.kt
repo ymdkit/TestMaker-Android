@@ -188,7 +188,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     fun getQuestions(testId: Long): ArrayList<Quest> {
 
-        val realmArray = getTest(testId).getQuestions()
+        val realmArray = getTest(testId).questionsNonNull()
 
         return ArrayList(realmArray)
     }
@@ -197,9 +197,9 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
         val array = ArrayList<Quest>()
 
-        val realmArray = getTest(testId).getQuestions()
+        val realmArray = getTest(testId).questionsNonNull()
 
-        for (quest in realmArray) {
+        for (quest in realmArray.iterator()) {
 
             if (quest.solving) {
                 array.add(quest)
@@ -237,7 +237,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
             question.correct = false
             question.auto = it.auto
             question.imagePath = it.imagePath
-            question.order = test.getQuestions().size
+            question.order = test.questionsNonNull().size
 
             test.addQuestion(question)
         }
@@ -279,7 +279,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
             }
 
             question = realm.createObject(Quest::class.java, nextUserId) ?: Quest()
-            question.order = test.getQuestions().size
+            question.order = test.questionsNonNull().size
             test.addQuestion(question)
         }
 
@@ -444,7 +444,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     fun sortManual(from: Int, to: Int, testId: Long) {
 
-        val questions = getTest(testId).getQuestions()
+        val questions = getTest(testId).questionsNonNull()
 
         val fromOrder = questions[from]?.order ?: 0
         val toOrder = questions[to]?.order ?: 0
@@ -456,7 +456,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     fun migrateOrder(testId: Long) {
 
-        val questions = getTest(testId).getQuestions()
+        val questions = getTest(testId).questionsNonNull()
 
         if (questions.size < 2) return
 
@@ -490,7 +490,7 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
         val list = RealmList<Quest>()
 
-        test.getQuestions().filterIndexed { index, quest -> !checkBoxStates[index] }.forEach { list.add(it) }
+        test.questionsNonNull().filterIndexed { index, quest -> !checkBoxStates[index] }?.forEach { list.add(it) }
 
         test.setQuestions(list)
 
@@ -506,6 +506,20 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
         realm.commitTransaction()
 
+
+    }
+
+    fun copyToRealm(it: Test) {
+        realm.beginTransaction()
+        realm.copyToRealmOrUpdate(it)
+
+        it.questionsNonNull().forEach {
+
+            it.id = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 1
+            realm.copyToRealmOrUpdate(it)
+        }
+
+        realm.commitTransaction()
 
     }
 

@@ -355,7 +355,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             withContext(Dispatchers.Default) { text.toTest(baseContext) }.let {
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
 
-                realmController.convert(it, -1)
+                //todo realmController.convert(it, -1)
                 testAndFolderAdapter.setValue()
 
             }

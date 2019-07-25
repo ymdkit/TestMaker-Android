@@ -74,7 +74,10 @@ class EditProActivity : BaseActivity() {
             withContext(Dispatchers.Default) { text.toTest(baseContext) }.let{
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_update), Toast.LENGTH_LONG).show()
 
-                realmController.convert(it,intent.getLongExtra("testId", -1))
+                it.id = intent.getLongExtra("testId", -1)
+                realmController.copyToRealm(it)
+
+                //realmController.convert(it,intent.getLongExtra("testId", -1))
 
             }
         }

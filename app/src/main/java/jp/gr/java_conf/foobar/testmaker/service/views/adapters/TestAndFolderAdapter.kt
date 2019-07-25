@@ -83,7 +83,7 @@ class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit
 
             holder.title.text = data.title
 
-            holder.num.text = context.getString(R.string.number_existing_questions, data.questionsCorrectCount, data.getQuestions().size)
+            holder.num.text = context.getString(R.string.number_existing_questions, data.questionsCorrectCount, data.questionsNonNull().size)
 
             holder.play.setOnClickListener {
 

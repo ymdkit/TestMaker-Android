@@ -61,19 +61,24 @@ open class Test : RealmObject() {
     }
 
     fun addQuestion(q: Quest) {
+
+        questions ?: run { questions = RealmList() }
+
         questions?.add(q)
     }
 
-    fun getQuestions(): RealmList<Quest> {
+    fun questionsNonNull(): RealmList<Quest> = questions ?: RealmList()
 
-        val questions = this.questions ?: RealmList()
-
-        val results = RealmList<Quest>()
-        results.addAll(questions.sort("order").subList(0, questions.size))
-
-        return results
-
-    }
+//    fun getQuestions(): RealmList<Quest> {
+//
+//        val questions = this.questions ?: RealmList()
+//
+//        val results = RealmList<Quest>()
+//        results.addAll(questions.sort("order").subList(0, questions.size))
+//
+//        return results
+//
+//    }
 
     fun getQuestionsForEach(): RealmList<Quest> {//順番はどうでもいいが全てにアクセスしたい時
 
@@ -89,7 +94,7 @@ open class Test : RealmObject() {
 
         var backup = ""
 
-        val questions = getQuestions()
+        val questions = this.questions ?: return ""
 
         for (i in questions.indices) {
             val q = questions[i] ?: Quest()
@@ -191,7 +196,7 @@ open class Test : RealmObject() {
         var firebaseColor = 0
 
         context.resources.getIntArray(R.array.color_list).forEachIndexed { index, it ->
-            if( color == it) firebaseColor = index
+            if (color == it) firebaseColor = index
         }
 
         return FirebaseTest(name = title ?: "no title", color = firebaseColor)

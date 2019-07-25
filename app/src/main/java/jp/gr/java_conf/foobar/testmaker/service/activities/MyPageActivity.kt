@@ -181,7 +181,7 @@ class MyPageActivity : BaseActivity() {
 
                         GlobalScope.launch(Dispatchers.Main) {
                             withContext(Dispatchers.Default) { obj.getString("content").replace("\\\n", "\n").toTest(baseContext) }.let{
-                                realmController.convert(it,-1L)
+                                //todo realmController.convert(it,-1L)
 
                                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
 

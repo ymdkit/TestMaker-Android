@@ -1,16 +1,19 @@
 package jp.gr.java_conf.foobar.testmaker.service.extensions
 
 import android.content.Context
-import android.util.Log
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
+import jp.gr.java_conf.foobar.testmaker.service.models.Test
 
-fun String.toTest(context: Context): StructTest {
+fun String.toTest(context: Context): Test {
 
     val backups = split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
     val test = StructTest(context.getString(R.string.unknown))
+
+    val t = Test()
 
     var resultNumber = 0
 
@@ -27,11 +30,19 @@ fun String.toTest(context: Context): StructTest {
             if (backup.size > 2) {
 
                 if (backup[0] == context.getString(R.string.load_short_answers)) {
-                    test.setStructQuestion(backup[1], backup[2], resultNumber)
+
+                    val q = Quest()
+                    q.problem = backup[1]
+                    q.answer = backup[2]
+                    t.addQuestion(q)
+
+                    //test.setStructQuestion(backup[1], backup[2], resultNumber)
                     resultNumber += 1
 
                 } else if (backup[0] == context.getString(R.string.load_multiple_answers)) {
                     if (backup.size - 2 <= Constants.ANSWER_MAX) {
+
+
 
                         test.setStructQuestion(backup[1], backup.drop(2).toTypedArray(), resultNumber)
                         resultNumber += 1
@@ -113,6 +124,7 @@ fun String.toTest(context: Context): StructTest {
                         test.problems[resultNumber - 1].explanation = (backup[1])
                     }
                 } else if (backup[0] == context.getString(R.string.load_title)) {
+                    t.title = backup[1]
                     test.title = backup[1]
                 } else if (backup[0] == context.getString(R.string.load_category)) {
                     test.category = backup[1]
@@ -121,10 +133,9 @@ fun String.toTest(context: Context): StructTest {
                 }
             }
 
-        } catch (e: NumberFormatException) {
         } catch (e: ArrayIndexOutOfBoundsException) {
         }
     }
-    return test
+    return t
 
 }

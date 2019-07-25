@@ -30,7 +30,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
 
     fun getQuestions(testId: Long): ArrayList<Quest>? {
 
-        val realmArray = getTest(testId).getQuestions()
+        val realmArray = getTest(testId).questionsNonNull()
         return ArrayList(realmArray)
     }
 
@@ -59,7 +59,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
             }
 
             question = realm.createObject(Quest::class.java, nextUserId) ?: Quest()
-            question.order = test.getQuestions().size
+            question.order = test.questionsNonNull().size
             test.addQuestion(question)
         }
 

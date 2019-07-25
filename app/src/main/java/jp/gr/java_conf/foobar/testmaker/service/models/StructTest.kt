@@ -12,7 +12,6 @@ class StructTest internal constructor(var title: String?) : Serializable {
     var color: Int = 0
     var category: String? = null
     val history: Long
-
     var problems: ArrayList<StructQuestion>
 
     init {
