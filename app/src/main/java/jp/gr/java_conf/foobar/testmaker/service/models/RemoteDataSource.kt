@@ -1,15 +1,18 @@
 package jp.gr.java_conf.foobar.testmaker.service.models
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.auth.UserProfileChangeRequest
-import android.icu.util.ULocale.getLanguage
+import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 
@@ -119,12 +122,38 @@ class RemoteDataSource(val context: Context) {
         ref.set(firebaseTest)
                 .addOnSuccessListener {
 
-                    ref.collection("questions")
+                    val batch = db.batch()
 
+                    val firebaseQuestions = test.getQuestions()
 
-                    success()
+                    firebaseQuestions.forEach {
+                        batch.set(ref.collection("questions").document(),it.toFirebaseQuestions(user))
+
+                        if(it.imagePath.isNotEmpty()){
+                            val storage = FirebaseStorage.getInstance()
+
+                            val storageRef = storage.reference.child("${user.uid}/${it.imagePath}")
+
+                            val baos = ByteArrayOutputStream()
+                            val imageOptions = BitmapFactory.Options()
+                            imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
+                            val input = context.openFileInput(it.imagePath)
+                            val bitmap = BitmapFactory.decodeStream(input, null, imageOptions)
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                            val data = baos.toByteArray()
+
+                            storageRef.putBytes(data)
+                        }
+                    }
+
+                    batch.commit().addOnSuccessListener {
+                        success()
+                    }.addOnFailureListener {
+                        Log.d("Debug", "question upload failed")
+                    }
+
                 }.addOnFailureListener {
-
+                    Log.d("Debug", "test upload failed")
                 }
 
     }

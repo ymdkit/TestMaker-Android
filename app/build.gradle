@@ -52,11 +52,13 @@ dependencies {
     implementation('androidx.appcompat:appcompat:1.0.0')
     implementation('com.google.android.material:material:1.0.0')
     implementation('androidx.cardview:cardview:1.0.0')
-    implementation 'com.google.android.gms:play-services-ads:18.0.0'
+    implementation 'com.google.android.gms:play-services-ads:18.1.0'
     implementation 'jp.studyplus.android.sdk:studyplus-android-sdk2:2.0.2'
-    implementation 'com.google.firebase:firebase-core:17.0.0'
-    implementation 'com.google.firebase:firebase-auth:18.0.0'
+    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'com.google.firebase:firebase-auth:18.1.0'
+    implementation 'com.google.firebase:firebase-storage:18.1.0'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -64,6 +66,8 @@ dependencies {
     implementation 'org.koin:koin-android:1.0.2'
     implementation 'org.koin:koin-java:1.0.2'
     implementation 'org.koin:koin-androidx-viewmodel:1.0.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    kapt 'com.github.bumptech.glide:compiler:4.9.0'
     api 'com.google.code.gson:gson:2.8.5'
     api files('libs/NCMB2.jar')
     api 'com.isseiaoki:simplecropview:1.1.4'

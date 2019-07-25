@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.models
 
+import com.google.firebase.auth.FirebaseUser
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -59,6 +60,22 @@ open class Quest : RealmObject() {
             select.selection = string
             answers.add(select)
         }
+
+    }
+
+    fun toFirebaseQuestions(user: FirebaseUser): FirebaseQuestion {
+
+        return FirebaseQuestion(
+                question = problem,
+                answer = answer,
+                answers = answers.map { it.selection },
+                others = selections.map { it.selection },
+                explanation = explanation,
+                imageRef = if(imagePath.isEmpty()) "" else "${user.uid}/$imagePath",
+                type = type,
+                isAuto = auto,
+                isCheckOrder = isCheckOrder
+                )
 
     }
 

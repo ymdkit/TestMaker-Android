@@ -1,9 +1,15 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -13,13 +19,6 @@ import jp.gr.java_conf.foobar.testmaker.service.models.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.FirebaseMyPageAdapter
 import kotlinx.android.synthetic.main.activity_my_page.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import android.content.Intent
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
-import com.firebase.ui.auth.AuthUI
 
 
 class FirebaseMyPageActivity : BaseActivity() {

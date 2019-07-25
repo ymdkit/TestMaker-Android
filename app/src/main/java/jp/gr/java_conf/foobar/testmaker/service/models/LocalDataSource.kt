@@ -189,7 +189,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
             q.setSelections(structTest.problems[j].others)
             q.setAnswers(structTest.problems[j].answers)
             q.explanation = structTest.problems[j].explanation
-            q.imagePath = ""
+            q.imagePath = structTest.problems[j].imagePath
             q.order = j
 
             test.addQuestion(q)
