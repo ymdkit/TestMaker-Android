@@ -185,7 +185,7 @@ class FirebaseActivity : BaseActivity() {
 
     private fun login() {
 
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(this,R.style.MyAlertDialogStyle)
                 .setTitle(getString(R.string.login))
                 .setMessage(getString(R.string.msg_not_login))
                 .setPositiveButton(getString(R.string.ok)) { dialog, which ->
