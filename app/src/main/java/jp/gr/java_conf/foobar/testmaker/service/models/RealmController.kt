@@ -28,10 +28,10 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
                     realmArray = realm.where(Test::class.java).findAll().sort("title")
                 0 ->
 
-                    realmArray = realm.where(Test::class.java).findAll().sort("title")
+                    realmArray = realm.where(Test::class.java).findAll().sort("title", Sort.DESCENDING)
                 1 ->
 
-                    realmArray = realm.where(Test::class.java).findAll().sort("title", Sort.DESCENDING)
+                    realmArray = realm.where(Test::class.java).findAll().sort("title")
                 2 ->
 
                     realmArray = realm.where(Test::class.java).findAll().sort("history", Sort.DESCENDING)
