@@ -29,12 +29,13 @@ fun String.toTest(context: Context): Test {
 
             if (backup.size > 2) {
 
+                val question = Quest()
+                question.problem = backup[1]
+
                 if (backup[0] == context.getString(R.string.load_short_answers)) {
 
-                    val q = Quest()
-                    q.problem = backup[1]
-                    q.answer = backup[2]
-                    t.addQuestion(q)
+
+                    question.answer = backup[2]
 
                     //test.setStructQuestion(backup[1], backup[2], resultNumber)
                     resultNumber += 1
@@ -42,9 +43,9 @@ fun String.toTest(context: Context): Test {
                 } else if (backup[0] == context.getString(R.string.load_multiple_answers)) {
                     if (backup.size - 2 <= Constants.ANSWER_MAX) {
 
+                        question.setAnswers(backup.drop(2).toTypedArray())
 
-
-                        test.setStructQuestion(backup[1], backup.drop(2).toTypedArray(), resultNumber)
+                        //test.setStructQuestion(backup[1], backup.drop(2).toTypedArray(), resultNumber)
                         resultNumber += 1
 
                     }
@@ -116,6 +117,9 @@ fun String.toTest(context: Context): Test {
 
                     resultNumber += 1
                 }
+
+                t.addQuestion(question)
+
 
             } else if (backup.size == 2) {
 
