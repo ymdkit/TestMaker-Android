@@ -168,7 +168,7 @@ open class Test : RealmObject() {
 
             if (q.explanation != "") {
                 backup += "\n"
-                backup += context.getString(R.string.share_explanation, q.explanation)
+                backup += context.getString(R.string.share_explanation, q.explanation).replace("\n".toRegex(), "<br>")
             }
 
             backup += "\n"
