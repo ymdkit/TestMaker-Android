@@ -65,9 +65,9 @@ class RemoteDataSource(val context: Context) {
             collectionTest.document(testId)
                     .collection("questions")
                     .get()
-                    .addOnSuccessListener {
+                    .addOnSuccessListener { query ->
 
-                        it.toObjects(FirebaseQuestion::class.java).forEach { question ->
+                        query.toObjects(FirebaseQuestion::class.java).sortedBy { it.order }.forEach { question ->
                             test.problems.add(question.toStructQuestion())
                         }
 
@@ -127,9 +127,9 @@ class RemoteDataSource(val context: Context) {
                     val firebaseQuestions = test.getQuestions()
 
                     firebaseQuestions.forEach {
-                        batch.set(ref.collection("questions").document(),it.toFirebaseQuestions(user))
+                        batch.set(ref.collection("questions").document(), it.toFirebaseQuestions(user))
 
-                        if(it.imagePath.isNotEmpty()){
+                        if (it.imagePath.isNotEmpty()) {
                             val storage = FirebaseStorage.getInstance()
 
                             val storageRef = storage.reference.child("${user.uid}/${it.imagePath}")

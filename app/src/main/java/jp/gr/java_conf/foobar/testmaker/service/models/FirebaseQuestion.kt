@@ -1,6 +1,5 @@
 package jp.gr.java_conf.foobar.testmaker.service.models
 
-import android.util.Log
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 
 data class FirebaseQuestion(val question: String = "",
@@ -11,7 +10,8 @@ data class FirebaseQuestion(val question: String = "",
                             val imageRef: String = "",
                             val type: Int = 0,
                             val isAuto: Boolean = false,
-                            val isCheckOrder: Boolean = false
+                            val isCheckOrder: Boolean = false,
+                            val order: Int = 0
 ) {
 
     fun toStructQuestion(): StructQuestion {
