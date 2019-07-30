@@ -4,16 +4,13 @@ import android.content.Context
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
-import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 
 fun String.toTest(context: Context): Test {
 
     val backups = split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
-    val test = StructTest(context.getString(R.string.unknown))
-
-    val t = Test()
+    val test = Test()
 
     var resultNumber = 0
 
@@ -34,18 +31,18 @@ fun String.toTest(context: Context): Test {
 
                 if (backup[0] == context.getString(R.string.load_short_answers)) {
 
-
                     question.answer = backup[2]
+                    question.type = Constants.WRITE
 
-                    //test.setStructQuestion(backup[1], backup[2], resultNumber)
                     resultNumber += 1
 
                 } else if (backup[0] == context.getString(R.string.load_multiple_answers)) {
                     if (backup.size - 2 <= Constants.ANSWER_MAX) {
 
                         question.setAnswers(backup.drop(2).toTypedArray())
+                        backup.drop(2).toTypedArray().forEach { question.answer += "$it " }
+                        question.type = Constants.COMPLETE
 
-                        //test.setStructQuestion(backup[1], backup.drop(2).toTypedArray(), resultNumber)
                         resultNumber += 1
 
                     }
@@ -53,8 +50,10 @@ fun String.toTest(context: Context): Test {
                 } else if (backup[0] == context.getString(R.string.load_multiple_answers_order)) {
                     if (backup.size - 2 <= Constants.ANSWER_MAX) {
 
-                        test.setStructQuestion(backup[1], backup.drop(2).toTypedArray(), resultNumber)
-                        test.problems[resultNumber].isCheckOrder = true
+                        question.setAnswers(backup.drop(2).toTypedArray())
+                        question.isCheckOrder = true
+                        question.type = Constants.COMPLETE
+
                         resultNumber += 1
 
                     }
@@ -63,7 +62,11 @@ fun String.toTest(context: Context): Test {
 
                     if (backup.size - 3 <= Constants.OTHER_SELECT_MAX) {
 
-                        test.setStructQuestion(backup[1], backup[2], backup.drop(3).toTypedArray(), resultNumber)
+
+                        question.answer = backup[2]
+                        question.setSelections(backup.drop(3).toTypedArray())
+                        question.type = Constants.SELECT
+
                         resultNumber += 1
 
                     }
@@ -74,10 +77,10 @@ fun String.toTest(context: Context): Test {
 
                     if (otherNum <= Constants.OTHER_SELECT_MAX) {
 
-                        val other = Array(otherNum) { context.getString(R.string.state_auto) }
-
-                        test.setStructQuestion(backup[1], backup[2], other, resultNumber)
-                        test.problems[resultNumber].auto = true
+                        question.answer = backup[2]
+                        question.auto = true
+                        question.type = Constants.SELECT
+                        question.setSelections(Array(otherNum) { context.getString(R.string.state_auto) })
 
                         resultNumber += 1
 
@@ -94,14 +97,20 @@ fun String.toTest(context: Context): Test {
 
                         if (others.size + answers.size > Constants.SELECT_COMPLETE_MAX) continue //要素数オーバー
 
-                        test.setStructQuestion(backup[1], answers, others, resultNumber)
-                        test.problems[resultNumber].auto = true
+                        question.type = Constants.SELECT_COMPLETE
+                        answers.forEach { question.answer += "$it " }
+                        question.setAnswers(answers)
+                        question.setSelections(others)
+                        question.auto = true
 
                         resultNumber += 1
 
                     }
 
                 } else if (backup[0] == context.getString(R.string.load_select_complete_problem)) {
+
+                    question.type = Constants.SELECT_COMPLETE
+
 
                     val answerNum = Integer.parseInt(backup[2].substring(0, 1))
 
@@ -113,25 +122,27 @@ fun String.toTest(context: Context): Test {
 
                     val others = backup.drop(4 + answerNum).take(otherNum).toTypedArray()
 
-                    test.setStructQuestion(backup[1], answers, others, resultNumber)
+                    question.type = Constants.SELECT_COMPLETE
+                    answers.forEach { question.answer += "$it " }
+                    question.setAnswers(answers)
+                    question.setSelections(others)
 
                     resultNumber += 1
                 }
 
-                t.addQuestion(question)
+                test.addQuestion(question)
 
 
             } else if (backup.size == 2) {
 
                 if (backup[0] == context.getString(R.string.load_explanation)) {
                     if (resultNumber > 0) {
-                        test.problems[resultNumber - 1].explanation = (backup[1])
+                        test.questionsNonNull()[resultNumber - 1]?.explanation = backup[1]
                     }
                 } else if (backup[0] == context.getString(R.string.load_title)) {
-                    t.title = backup[1]
                     test.title = backup[1]
                 } else if (backup[0] == context.getString(R.string.load_category)) {
-                    test.category = backup[1]
+                    test.setCategory(backup[1])
                 } else if (backup[0] == context.getString(R.string.load_color)) {
                     test.color = Integer.parseInt(backup[1])
                 }
@@ -140,6 +151,6 @@ fun String.toTest(context: Context): Test {
         } catch (e: ArrayIndexOutOfBoundsException) {
         }
     }
-    return t
+    return test
 
 }
