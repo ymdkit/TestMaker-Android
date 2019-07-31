@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -41,10 +42,10 @@ class RemoteDataSource(val context: Context) {
         val locale = Locale.getDefault()
         val language = locale.language
 
-        db.collection("tests").whereEqualTo("locale", language).limit(50).get()
+        db.collection("tests").orderBy("created_at", Query.Direction.DESCENDING).limit(50).get()
                 .addOnSuccessListener { query ->
 
-                    onlineTests?.postValue(query.documents.sortedByDescending { it.toObject(FirebaseTest::class.java)?.created_at })
+                    onlineTests?.postValue(query.documents.filter { it.toObject(FirebaseTest::class.java)?.locale == language })
 
                 }
                 .addOnFailureListener {
