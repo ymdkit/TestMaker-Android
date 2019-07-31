@@ -237,13 +237,18 @@ class OnlineMainActivity : BaseActivity() {
                             }
                         }
 
-                        GlobalScope.launch(Dispatchers.Main) {
-                            withContext(Dispatchers.Default) { obj.getString("content").replace("\\\n", "\n").toTest(baseContext) }.let {
-                                //todo realmController.convert(it, -1L)
+                        val questionId = realmController.maxQuestionId
 
+                        GlobalScope.launch(Dispatchers.Main) {
+                            withContext(Dispatchers.Default) { obj.getString("content").replace("\\\n", "\n").toTest(baseContext,questionId) }.let {
+
+                                realmController.copyToRealm(it)
                                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
 
-                                finish()
+                                val intent = Intent(this@OnlineMainActivity, MainActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                                startActivity(intent)
 
                             }
                         }

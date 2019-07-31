@@ -22,7 +22,7 @@ class RemoteDataSource(val context: Context) {
 
     private var myTests: MutableLiveData<List<DocumentSnapshot>>? = null
 
-    private var downloadTest: MutableLiveData<StructTest>? = null
+    private var downloadTest: MutableLiveData<FirebaseTest>? = null
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -59,18 +59,14 @@ class RemoteDataSource(val context: Context) {
 
         collectionTest.document(testId).get().addOnSuccessListener {
 
-            val test = it.toObject(FirebaseTest::class.java)?.toStructTest(context)
-                    ?: StructTest("")
+            val test = it.toObject(FirebaseTest::class.java) ?: return@addOnSuccessListener
 
             collectionTest.document(testId)
                     .collection("questions")
                     .get()
                     .addOnSuccessListener { query ->
 
-                        query.toObjects(FirebaseQuestion::class.java).sortedBy { it.order }.forEach { question ->
-                            test.problems.add(question.toStructQuestion())
-                        }
-
+                        test.questions = query.toObjects(FirebaseQuestion::class.java).sortedBy { q -> q.order }
 
                         downloadTest?.postValue(test)
                     }
@@ -80,12 +76,12 @@ class RemoteDataSource(val context: Context) {
         }
     }
 
-    fun getDownloadQuestions(): LiveData<StructTest> {
+    fun getDownloadQuestions(): LiveData<FirebaseTest> {
 
         if (downloadTest == null) {
             downloadTest = MutableLiveData()
         }
-        return downloadTest as LiveData<StructTest>
+        return downloadTest as LiveData<FirebaseTest>
 
     }
 

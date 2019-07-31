@@ -6,7 +6,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 
-fun String.toTest(context: Context): Test {
+fun String.toTest(context: Context,questionId: Long): Test {
 
     val backups = split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
@@ -28,6 +28,7 @@ fun String.toTest(context: Context): Test {
 
                 val question = Quest()
                 question.problem = backup[1]
+                question.id = questionId + resultNumber
 
                 if (backup[0] == context.getString(R.string.load_short_answers)) {
 

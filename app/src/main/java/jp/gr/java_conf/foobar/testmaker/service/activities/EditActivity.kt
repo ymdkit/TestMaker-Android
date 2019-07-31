@@ -157,6 +157,11 @@ open class EditActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchQuestions()
+    }
+
     private fun initAdapter() {
 
         editAdapter = EditAdapter(this)

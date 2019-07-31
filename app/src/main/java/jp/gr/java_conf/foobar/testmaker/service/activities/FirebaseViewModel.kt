@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
-import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
+import jp.gr.java_conf.foobar.testmaker.service.models.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.models.TestMakerRepository
 
@@ -26,12 +26,12 @@ class FirebaseViewModel(private val repository: TestMakerRepository) : ViewModel
         return repository.downloadQuestions(testId)
     }
 
-    fun getDownloadTest(): LiveData<StructTest> {
+    fun getDownloadTest(): LiveData<FirebaseTest> {
         return repository.getDownloadQuestions()
     }
 
-    fun convert(structTest: StructTest) {
-        repository.convert(structTest, -1)
+    fun convert(test: FirebaseTest) {
+        repository.createObjectFromFirebase(test)
     }
 
     fun createUser(user: FirebaseUser?) {

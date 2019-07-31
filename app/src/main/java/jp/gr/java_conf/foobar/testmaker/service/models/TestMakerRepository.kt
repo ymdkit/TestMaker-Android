@@ -82,12 +82,12 @@ class TestMakerRepository(private val local: LocalDataSource,
         remote.downloadQuestions(testId)
     }
 
-    fun getDownloadQuestions(): LiveData<StructTest> {
+    fun getDownloadQuestions(): LiveData<FirebaseTest> {
         return remote.getDownloadQuestions()
     }
 
-    fun convert(structTest: StructTest, testId: Long) {
-        local.convert(structTest, testId)
+    fun createObjectFromFirebase(test: FirebaseTest) {
+        local.createObjectFromFirebase(test)
     }
 
     fun resetDownloadTest() {

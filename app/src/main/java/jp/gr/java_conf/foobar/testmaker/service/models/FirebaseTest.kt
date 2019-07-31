@@ -16,13 +16,17 @@ data class FirebaseTest(var name: String = "",
                         var created_at: Timestamp = Timestamp(Date())
 ) {
 
-    fun toStructTest(context: Context): StructTest {
-        val test = StructTest(title = name)
+    var questions: List<FirebaseQuestion> = listOf()
+
+    fun toTest(context: Context): Test {
+        val test = Test()
+        test.limit = 100
+        test.title = name
         test.color = context.resources.getIntArray(R.array.color_list)[Math.min(Math.abs(color), 7)]
         return test
     }
 
-    fun getDate(): String{
+    fun getDate(): String {
 
         val date = Date(created_at.seconds * 1000)
         val df = SimpleDateFormat("yyyy-MM-dd")

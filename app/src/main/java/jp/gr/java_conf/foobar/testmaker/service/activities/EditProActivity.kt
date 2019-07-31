@@ -62,22 +62,22 @@ class EditProActivity : BaseActivity() {
 
         }
 
-        edit_test.setText(realmController.getTest(intent.getLongExtra("testId", -1)).testToString(this,false))
+        edit_test.setText(realmController.getTest(intent.getLongExtra("testId", -1)).testToString(this, false))
 
     }
 
-    private fun saveText(){
+    private fun saveText() {
 
         val text = edit_test.text.toString()
 
+        val questionId = realmController.maxQuestionId
+
         GlobalScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.Default) { text.toTest(baseContext) }.let{
+            withContext(Dispatchers.Default) { text.toTest(baseContext, questionId) }.let {
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_update), Toast.LENGTH_LONG).show()
 
                 it.id = intent.getLongExtra("testId", -1)
                 realmController.copyToRealm(it)
-
-                //realmController.convert(it,intent.getLongExtra("testId", -1))
 
             }
         }

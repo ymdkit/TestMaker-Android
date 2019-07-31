@@ -3,7 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.activities
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.DocumentSnapshot
-import jp.gr.java_conf.foobar.testmaker.service.models.StructTest
+import jp.gr.java_conf.foobar.testmaker.service.models.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.models.TestMakerRepository
 
 class FirebaseMyPageViewModel(private val repository: TestMakerRepository) : ViewModel() {
@@ -24,12 +24,12 @@ class FirebaseMyPageViewModel(private val repository: TestMakerRepository) : Vie
         repository.downloadQuestions(id)
     }
 
-    fun getDownloadTest(): LiveData<StructTest> {
+    fun getDownloadTest(): LiveData<FirebaseTest> {
         return repository.getDownloadQuestions()
     }
 
-    fun convert(structTest: StructTest) {
-        repository.convert(structTest, -1)
+    fun convert(test: FirebaseTest) {
+        repository.createObjectFromFirebase(test)
     }
 
     fun updateProfile(userName: String, completion: () -> Unit) {

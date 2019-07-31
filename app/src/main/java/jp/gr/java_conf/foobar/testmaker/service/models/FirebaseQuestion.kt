@@ -1,7 +1,5 @@
 package jp.gr.java_conf.foobar.testmaker.service.models
 
-import jp.gr.java_conf.foobar.testmaker.service.Constants
-
 data class FirebaseQuestion(val question: String = "",
                             val answer: String = "",
                             val answers: List<String> = emptyList(),
@@ -14,35 +12,25 @@ data class FirebaseQuestion(val question: String = "",
                             val order: Int = 0
 ) {
 
-    fun toStructQuestion(): StructQuestion {
+    fun toQuest(): Quest {
 
-        var q: StructQuestion? = null
+        val quest = Quest()
+        quest.problem = question
 
-        when (type) {
-            Constants.WRITE -> {
-                q = StructQuestion(question, answer)
-            }
-            Constants.SELECT -> {
-                q = StructQuestion(question, answer, others.toTypedArray())
-            }
-            Constants.COMPLETE -> {
-                q = StructQuestion(question, answers.toTypedArray())
-            }
-            Constants.SELECT_COMPLETE -> {
-                q = StructQuestion(question, answers.toTypedArray(), others.toTypedArray())
-            }
+        if (answer.isNotEmpty()) {
+            quest.answer = answer
+        } else {
+            answers.toTypedArray().forEach { quest.answer += "$it " }
         }
+        quest.setAnswers(answers.toTypedArray())
+        quest.setSelections(others.toTypedArray())
+        quest.auto = isAuto
+        quest.isCheckOrder = isCheckOrder
+        quest.imagePath = imageRef
+        quest.explanation = explanation
+        quest.type = type
 
-        q?.let {
-            q.auto = isAuto
-            q.imagePath = imageRef
-            q.explanation = explanation
-            q.isCheckOrder = q.isCheckOrder
-
-            return q
-        }
-
-        return StructQuestion("", "")
+        return quest
     }
 
 }

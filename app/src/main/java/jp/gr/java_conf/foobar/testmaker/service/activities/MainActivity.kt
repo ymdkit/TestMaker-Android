@@ -351,13 +351,15 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     private fun loadTestByText(text: String) {
 
+        val questionId = realmController.maxQuestionId
+
         GlobalScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.Default) { text.toTest(baseContext) }.let {
+            withContext(Dispatchers.Default) { text.toTest(baseContext,questionId) }.let {
+
+                realmController.copyToRealm(it)
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
 
-                //todo realmController.convert(it, -1)
                 testAndFolderAdapter.setValue()
-
             }
         }
     }

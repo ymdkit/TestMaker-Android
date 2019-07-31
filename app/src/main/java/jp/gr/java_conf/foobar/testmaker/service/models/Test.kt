@@ -67,18 +67,7 @@ open class Test : RealmObject() {
         questions?.add(q)
     }
 
-    fun questionsNonNull(): RealmList<Quest> = questions ?: RealmList()
-
-//    fun getQuestions(): RealmList<Quest> {
-//
-//        val questions = this.questions ?: RealmList()
-//
-//        val results = RealmList<Quest>()
-//        results.addAll(questions.sort("order").subList(0, questions.size))
-//
-//        return results
-//
-//    }
+    fun questionsNonNull(): List<Quest> = questions?.sortedBy { it.order } ?: listOf()
 
     fun getQuestionsForEach(): RealmList<Quest> {//順番はどうでもいいが全てにアクセスしたい時
 
