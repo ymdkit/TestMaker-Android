@@ -270,5 +270,6 @@
     <string name="notes">online function is updated!</string>
     <string name="msg_notice_firebase">1. you can upload image\n2. share with iOS version\n if you see old version, please use [old online] in side menu</string>
     <string name="not_exist_ext">not exist available apps</string>
+    <string name="msg_test_upload">upload success</string>
 
 </resources>

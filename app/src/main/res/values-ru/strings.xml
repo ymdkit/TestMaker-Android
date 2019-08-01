@@ -261,5 +261,6 @@
     <string name="notes">уведомление</string>
     <string name="msg_notice_firebase">онлайн функция обновлена\n1. Вы можете загрузить изображение\n2. Вы можете загрузить изображение</string>
     <string name="not_exist_ext">not exist available apps</string>
+    <string name="msg_test_upload">upload success</string>
 
 </resources>

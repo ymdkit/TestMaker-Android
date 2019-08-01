@@ -253,7 +253,7 @@ class FirebaseActivity : BaseActivity() {
         positiveButton.setOnClickListener {
 
             viewModel.uploadTest(tests[position], editOverView.text.toString(), success = {
-                Toast.makeText(this, "upload success!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
                 viewModel.fetchTests()
             })
