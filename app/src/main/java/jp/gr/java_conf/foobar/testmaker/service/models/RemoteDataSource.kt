@@ -136,7 +136,7 @@ class RemoteDataSource(val context: Context) {
                             imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
                             val input = context.openFileInput(it.imagePath)
                             val bitmap = BitmapFactory.decodeStream(input, null, imageOptions)
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos)
                             val data = baos.toByteArray()
 
                             storageRef.putBytes(data)
