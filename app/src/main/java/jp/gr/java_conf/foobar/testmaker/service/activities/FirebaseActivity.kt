@@ -219,6 +219,7 @@ class FirebaseActivity : BaseActivity() {
         val array = Array(tests.size) { i -> tests[i].title }
 
         val spinner = dialogLayout.findViewById<Spinner>(R.id.spinner)
+        val progressBar = dialogLayout.findViewById<ProgressBar>(R.id.progressBar)
         val editOverView = dialogLayout.findViewById<EditText>(R.id.edit_overview)
         // ArrayAdapter
         val adapter = ArrayAdapter(baseContext,
@@ -251,6 +252,9 @@ class FirebaseActivity : BaseActivity() {
 
         val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
         positiveButton.setOnClickListener {
+
+            progressBar.visibility = View.VISIBLE
+            it.isEnabled = false
 
             viewModel.uploadTest(tests[position], editOverView.text.toString(), success = {
                 Toast.makeText(this, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()

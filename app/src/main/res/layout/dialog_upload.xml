@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:id="@+id/layout_dialog_upload"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layout_dialog_upload">
+    android:orientation="vertical">
 
     <Spinner
-        android:layout_margin="@dimen/element_spacing_normal"
         android:id="@+id/spinner"
         android:layout_width="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="@dimen/view_height_normal"/>
+        android:layout_height="@dimen/view_height_normal"
+        android:layout_margin="@dimen/element_spacing_normal"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        app:layout_constraintTop_toBottomOf="@id/spinner"
+        android:id="@+id/input_overview"
+        style="@style/MyTextInputLayoutStyle"
         android:layout_width="match_parent"
         android:layout_margin="@dimen/element_spacing_normal"
-        android:id="@+id/textInputLayout_question_write"
         android:layout_weight="1"
-        style="@style/MyTextInputLayoutStyle"
-        >
+        app:layout_constraintTop_toBottomOf="@id/spinner">
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/edit_overview"
-            android:hint="@string/hint_overview"
             style="@style/MyEditTextMultiLine"
-            android:maxLength="140"
-            />
+            android:hint="@string/hint_overview"
+            android:maxLength="140" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        style="@android:style/Widget.ProgressBar.Small"
+        app:layout_constraintBottom_toBottomOf="@id/input_overview"
+        app:layout_constraintTop_toTopOf="@id/spinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
