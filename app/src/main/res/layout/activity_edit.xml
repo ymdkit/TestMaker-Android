@@ -63,7 +63,7 @@
                 <TextView
                     android:id="@+id/text_title"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginStart="@dimen/element_spacing_small"
                     android:gravity="center_vertical"
                     android:text="@string/add_question"
