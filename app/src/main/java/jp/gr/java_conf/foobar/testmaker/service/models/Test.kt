@@ -22,7 +22,7 @@ open class Test : RealmObject() {
     @PrimaryKey
     var id: Long = 0
     var color: Int = 0
-    var limit: Int = 0
+    var limit: Int = 100
     var startPosition: Int = 0
     var title: String? = null
     private var category: String? = null
