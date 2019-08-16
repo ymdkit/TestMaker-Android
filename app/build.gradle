@@ -17,6 +17,10 @@ android {
         versionName "3.0.4"
     }
 
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -65,8 +69,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:18.1.1'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
     implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'org.koin:koin-core:1.0.2'
     implementation 'org.koin:koin-android:1.0.2'
@@ -79,7 +83,7 @@ dependencies {
     api 'com.isseiaoki:simplecropview:1.1.4'
     api 'androidx.multidex:multidex:2.0.1'
     api 'com.android.billingclient:billing:1.1'
-    implementation 'com.google.firebase:firebase-firestore:20.1.0'
+    implementation 'com.google.firebase:firebase-firestore:20.2.0'
     testImplementation "org.robolectric:robolectric:4.0"
     testImplementation 'junit:junit:4.12'
 
