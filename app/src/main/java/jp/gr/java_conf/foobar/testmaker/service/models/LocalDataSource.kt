@@ -34,51 +34,21 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         return ArrayList(realmArray)
     }
 
-    fun addQuestion(testId: Long, localQuestion: LocalQuestion, questionId: Long) {
+    fun addQuestion(testId: Long, question: Quest, questionId: Long) {
         realm.beginTransaction()
 
         val test = getTest(testId)
-        val question: Quest?
 
         if (questionId != -1L) {
-            question = realm.where(Quest::class.java).equalTo("id", questionId).findFirst()
-            if (question == null) {
-                Toast.makeText(context, context.getString(R.string.msg_already_delete), Toast.LENGTH_SHORT).show()
-                realm.commitTransaction()
-                return
-            }
-        } else {
-            // 初期化
-            var nextUserId: Long
-            nextUserId = 1
-            // userIdの最大値を取得
-            val maxUserId = realm.where(Quest::class.java).max("id")
-            // 1度もデータが作成されていない場合はNULLが返ってくるため、NULLチェックをする
-            if (maxUserId != null) {
-                nextUserId = (maxUserId.toInt() + 1).toLong()
-            }
+            question.id = questionId
+            realm.copyToRealmOrUpdate(question)
 
-            question = realm.createObject(Quest::class.java, nextUserId) ?: Quest()
-            question.order = test.questionsNonNull().size
+        } else {
+
+            question.id = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 1
+            realm.copyToRealmOrUpdate(question)
             test.addQuestion(question)
         }
-
-        question.explanation = localQuestion.explanation
-        question.type = localQuestion.type
-        question.problem = localQuestion.question
-        question.answer = localQuestion.answer
-        question.setSelections(localQuestion.others)
-        question.setAnswers(localQuestion.answers)
-        question.correct = false
-        question.auto = localQuestion.isAuto
-        question.isCheckOrder = localQuestion.isCheckOrder
-
-        if (question.imagePath != localQuestion.imagePath) {
-
-            context.deleteFile(question.imagePath)
-
-        }
-        question.imagePath = localQuestion.imagePath
 
         realm.commitTransaction()
     }

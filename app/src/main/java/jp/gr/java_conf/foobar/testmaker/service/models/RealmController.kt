@@ -247,66 +247,6 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
     }
 
-    fun addQuestion(testId: Long, problem: LocalQuestion, questionId: Long) {
-
-        realm.beginTransaction()
-
-        val test = getTest(testId)
-
-        val question: Quest?
-
-        if (questionId != -1L) {
-
-            question = realm.where(Quest::class.java).equalTo("id", questionId).findFirst()
-
-            if (question == null) {
-                Toast.makeText(context, context.getString(R.string.msg_already_delete), Toast.LENGTH_SHORT).show()
-
-                realm.commitTransaction()
-
-                return
-            }
-
-
-        } else {
-            // 初期化
-            var nextUserId: Long
-            nextUserId = 1
-            // userIdの最大値を取得
-            val maxUserId = realm.where(Quest::class.java).max("id")
-            // 1度もデータが作成されていない場合はNULLが返ってくるため、NULLチェックをする
-            if (maxUserId != null) {
-                nextUserId = (maxUserId.toInt() + 1).toLong()
-            }
-
-            question = realm.createObject(Quest::class.java, nextUserId) ?: Quest()
-            question.order = test.questionsNonNull().size
-            test.addQuestion(question)
-        }
-
-        question.explanation = problem.explanation
-        question.type = problem.type
-        question.problem = problem.question
-        question.answer = problem.answer
-        question.setSelections(problem.others)
-        question.setAnswers(problem.answers)
-        question.correct = false
-        question.auto = problem.isAuto
-        question.isCheckOrder = problem.isCheckOrder
-
-        if (question.imagePath != problem.imagePath) {
-
-            context.deleteFile(question.imagePath)
-
-        }
-        question.imagePath = problem.imagePath
-
-        realm.commitTransaction()
-
-        Toast.makeText(context, context.getString(R.string.msg_save), Toast.LENGTH_LONG).show()
-
-    }
-
     fun updateCorrect(quest: Quest, correct: Boolean) {
 
         realm.beginTransaction()
@@ -447,11 +387,11 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
 
         val questions = getTest(testId).questionsNonNull()
 
-        val fromOrder = questions[from]?.order ?: 0
-        val toOrder = questions[to]?.order ?: 0
+        val fromOrder = questions[from].order
+        val toOrder = questions[to].order
 
-        updateOrder(questions[from]?.id ?: -1L, toOrder)
-        updateOrder(questions[to]?.id ?: -1L, fromOrder)
+        updateOrder(questions[from].id , toOrder)
+        updateOrder(questions[to].id , fromOrder)
 
     }
 

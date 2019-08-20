@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.valueNonNull
-import jp.gr.java_conf.foobar.testmaker.service.models.LocalQuestion
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 import jp.gr.java_conf.foobar.testmaker.service.models.TestMakerRepository
 import jp.gr.java_conf.foobar.testmaker.service.views.EditCompleteView
@@ -80,11 +79,12 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
 
         if (question.valueNonNull().isEmpty()) onFailure(context.getString(R.string.message_shortage))
 
-        val question = LocalQuestion(
-                type = formatQuestion.valueNonNull(),
-                question = question.valueNonNull(),
-                imagePath = imagePath,
-                explanation = explanation.valueNonNull())
+        val quest = Quest()
+
+        quest.type = formatQuestion.valueNonNull()
+        quest.problem = question.valueNonNull()
+        quest.imagePath = imagePath
+        quest.explanation = explanation.valueNonNull()
 
         val form = editingView
 
@@ -98,12 +98,12 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
 
                     return
                 }
-                question.answer = answer.valueNonNull()
+                quest.answer = answer.valueNonNull()
 
             }
             Constants.SELECT -> {
 
-                if(form is EditSelectView){
+                if (form is EditSelectView) {
                     if (!form.isFilled()) {
 
                         onFailure(context.getString(R.string.message_shortage))
@@ -111,17 +111,17 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
                         return
                     }
 
-                    question.answer = form.getAnswer()
-                    question.others = form.getOthers()
-                    question.isAuto = repository.isAuto()
-                }else{
+                    quest.answer = form.getAnswer()
+                    quest.setSelections(form.getOthers())
+                    quest.auto = repository.isAuto()
+                } else {
                     return
                 }
             }
 
             Constants.COMPLETE -> {
 
-                if(form is EditCompleteView){
+                if (form is EditCompleteView) {
                     if (!form.isFilled()) {
                         onFailure(context.getString(R.string.message_shortage))
                         return
@@ -132,16 +132,16 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
                         return
                     }
 
-                    question.answers = form.getAnswers()
-                    question.answers.forEach { question.answer += "$it " }
-                    question.isCheckOrder = repository.isCheckOrder()
-                }else{
+                    quest.setAnswers(form.getAnswers())
+                    form.getAnswers().forEach { quest.answer += "$it " }
+                    quest.isCheckOrder = repository.isCheckOrder()
+                } else {
                     return
                 }
             }
             Constants.SELECT_COMPLETE -> {
 
-                if(form is EditSelectCompleteView){
+                if (form is EditSelectCompleteView) {
                     if (!form.isFilled()) {
                         onFailure(context.getString(R.string.message_shortage))
                         return
@@ -153,18 +153,18 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
                         return
                     }
 
-                    question.answers = form.getAnswers()
-                    question.answers.forEach { question.answer += "$it " }
-                    question.others = form.getOthers()
-                    question.isAuto = repository.isAuto()
-                    question.isCheckOrder = false //todo 後に実装
-                }else{
+                    quest.setAnswers(form.getAnswers())
+                    form.getAnswers().forEach { quest.answer += "$it " }
+                    quest.setSelections(form.getOthers())
+                    quest.auto = repository.isAuto()
+                    quest.isCheckOrder = false //todo 後に実装
+                } else {
                     return
                 }
             }
         }
 
-        repository.addQuestion(testId,question,questionId)
+        repository.addQuestion(testId, quest, questionId)
         fetchQuestions()
         onSuccess()
     }

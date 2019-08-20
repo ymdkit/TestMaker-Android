@@ -56,7 +56,7 @@ class TestMakerRepository(private val local: LocalDataSource,
         return local.isCheckOrder()
     }
 
-    fun addQuestion(testId: Long, question: LocalQuestion, questionId: Long) {
+    fun addQuestion(testId: Long, question: Quest, questionId: Long) {
         local.addQuestion(testId, question, questionId)
     }
 

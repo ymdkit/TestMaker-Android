@@ -128,8 +128,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             false
         }
 
-        //if (Build.VERSION.SDK_INT >= 21) binding.buttonAdd.stateListAnimator = null // Android 5.0.x だと アプリが落ちる
-
         binding.buttonAdd.setOnClickListener {
 
             realmController.addTest(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())

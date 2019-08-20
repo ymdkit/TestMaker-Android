@@ -211,7 +211,7 @@ class FirebaseActivity : BaseActivity() {
         AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 .setTitle(getString(R.string.login))
                 .setMessage(getString(R.string.msg_not_login))
-                .setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
                     val providers = arrayListOf(
                             AuthUI.IdpConfig.EmailBuilder().build(),
                             AuthUI.IdpConfig.GoogleBuilder().build())
