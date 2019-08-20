@@ -69,13 +69,16 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:18.1.1'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
     implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
+    implementation 'com.firebaseui:firebase-ui-firestore:5.0.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.2.0"
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'org.koin:koin-core:1.0.2'
     implementation 'org.koin:koin-android:1.0.2'
     implementation 'org.koin:koin-java:1.0.2'
     implementation 'org.koin:koin-androidx-viewmodel:1.0.2'
+    implementation "androidx.paging:paging-runtime:2.1.0"
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
     api 'com.google.code.gson:gson:2.8.5'

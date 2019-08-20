@@ -11,8 +11,4 @@ class MainViewModel(private val repository: TestMakerRepository): ViewModel() {
     val title: MutableLiveData<String> = MutableLiveData()
     var isEditing: MutableLiveData<Boolean> = MutableLiveData()
 
-    fun getTests(): LiveData<List<Test>> {
-        return repository.getTests()
-    }
-
 }

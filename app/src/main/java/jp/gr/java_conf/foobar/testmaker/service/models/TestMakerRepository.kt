@@ -13,24 +13,10 @@ import kotlinx.coroutines.launch
 class TestMakerRepository(private val local: LocalDataSource,
                           private val remote: RemoteDataSource) {
 
-    private var tests: MutableLiveData<List<Test>>? = null
-
     var questions: MutableLiveData<ArrayList<Quest>>? = null
         private set
 
-    fun getTests(): LiveData<List<Test>> {
-        if (tests == null) {
-            tests = MutableLiveData()
-            fetchTests()
-        }
-        return tests as LiveData<List<Test>>
-    }
-
-    private fun fetchTests() {
-        GlobalScope.launch(Dispatchers.Main) {
-            tests?.postValue(local.getTests())
-        }
-    }
+    fun getTests(): List<Test> = local.getTests()
 
     fun getQuestions(testId: Long): LiveData<ArrayList<Quest>> {
         if (questions == null) {
@@ -74,10 +60,6 @@ class TestMakerRepository(private val local: LocalDataSource,
         local.addQuestion(testId, question, questionId)
     }
 
-    fun getOnlineTests(): LiveData<List<DocumentSnapshot>> {
-        return remote.getTests()
-    }
-
     fun downloadQuestions(testId: String) {
         remote.downloadQuestions(testId)
     }
@@ -94,16 +76,12 @@ class TestMakerRepository(private val local: LocalDataSource,
         remote.resetDownloadTest()
     }
 
-    fun fetchOnlineTests() {
-        remote.fetchTests()
-    }
-
     fun updateProfile(userName: String, completion: () -> Unit) {
         remote.updateProfile(userName, completion)
     }
 
-    fun createTest(test: Test, overview: String, success: () -> Unit) {
-        remote.createTest(test, overview, success)
+    suspend fun createTest(test: Test, overview: String) {
+        remote.createTest(test, overview)
     }
 
     fun getMyTests(): LiveData<List<DocumentSnapshot>> {
@@ -121,4 +99,7 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun setUser(user: FirebaseUser?) {
         remote.setUser(user)
     }
+
+    fun getTestsQuery() = remote.getTestsQuery()
+
 }

@@ -16,6 +16,8 @@ data class FirebaseTest(var name: String = "",
                         var created_at: Timestamp = Timestamp(Date())
 ) {
 
+    var documentId: String = ""
+
     var questions: List<FirebaseQuestion> = listOf()
 
     fun toTest(context: Context): Test {

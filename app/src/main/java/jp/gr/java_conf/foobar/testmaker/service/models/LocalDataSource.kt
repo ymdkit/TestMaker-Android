@@ -20,13 +20,12 @@ import java.io.IOException
 class LocalDataSource(private val realm: Realm, private val preference: SharedPreferenceManager, private val context: Context) {
 
 
-    fun getTests(): List<Test>? {
-        return emptyList()
+    fun getTests(): List<Test> {
+        return realm.copyFromRealm(realm.where(Test::class.java).findAll())
     }
 
     private fun getTest(testId: Long): Test {
         return realm.where(Test::class.java).equalTo("id", testId).findFirst() ?: Test()
-
     }
 
     fun getQuestions(testId: Long): ArrayList<Quest>? {

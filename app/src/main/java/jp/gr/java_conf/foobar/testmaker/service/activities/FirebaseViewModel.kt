@@ -3,7 +3,6 @@ package jp.gr.java_conf.foobar.testmaker.service.activities
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.models.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.models.TestMakerRepository
@@ -14,13 +13,9 @@ class FirebaseViewModel(private val repository: TestMakerRepository) : ViewModel
         repository.resetDownloadTest()
     }
 
-    fun fetchTests() {
-        return repository.fetchOnlineTests()
-    }
+    fun getLocalTests() = repository.getTests()
 
-    fun getTests(): LiveData<List<DocumentSnapshot>> {
-        return repository.getOnlineTests()
-    }
+    fun getTestsQuery() = repository.getTestsQuery()
 
     fun downloadTest(testId: String) {
         return repository.downloadQuestions(testId)
@@ -38,8 +33,8 @@ class FirebaseViewModel(private val repository: TestMakerRepository) : ViewModel
         repository.setUser(user)
     }
 
-    fun uploadTest(test: Test, overview: String, success: () -> Unit) {
-        repository.createTest(test, overview, success)
+    suspend fun uploadTest(test: Test, overview: String) {
+        repository.createTest(test, overview)
     }
 
 }

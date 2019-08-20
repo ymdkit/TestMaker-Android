@@ -13,13 +13,12 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 import java.util.*
 
 
 class RemoteDataSource(val context: Context) {
-
-    private var onlineTests: MutableLiveData<List<DocumentSnapshot>>? = null
 
     private var myTests: MutableLiveData<List<DocumentSnapshot>>? = null
 
@@ -27,36 +26,9 @@ class RemoteDataSource(val context: Context) {
 
     private val db = FirebaseFirestore.getInstance()
 
-    fun getTests(): LiveData<List<DocumentSnapshot>> {
-
-        if (onlineTests == null) {
-            onlineTests = MutableLiveData()
-            fetchTests()
-        }
-        return onlineTests as LiveData<List<DocumentSnapshot>>
-
-    }
-
-    fun fetchTests() {
-
-        val locale = Locale.getDefault()
-        val language = locale.language
-
-        db.collection("tests").orderBy("created_at", Query.Direction.DESCENDING).limit(50).get()
-                .addOnSuccessListener { query ->
-
-                    onlineTests?.postValue(query.documents.filter { it.toObject(FirebaseTest::class.java)?.locale == language })
-
-                }
-                .addOnFailureListener {
-
-                }
-    }
-
     fun downloadQuestions(testId: String) {
 
         val collectionTest = db.collection("tests")
-
 
         collectionTest.document(testId).get().addOnSuccessListener {
 
@@ -102,7 +74,7 @@ class RemoteDataSource(val context: Context) {
 
     }
 
-    fun createTest(test: Test, overview: String, success: () -> Unit) {
+    suspend fun createTest(test: Test, overview: String) {
 
         val firebaseTest = test.toFirebaseTest(context)
         val user = FirebaseAuth.getInstance().currentUser ?: return
@@ -113,46 +85,34 @@ class RemoteDataSource(val context: Context) {
         firebaseTest.size = test.questionsNonNull().size
         firebaseTest.locale = Locale.getDefault().language
 
-
         val ref = db.collection("tests").document()
 
-        ref.set(firebaseTest)
-                .addOnSuccessListener {
+        val firebaseQuestions = test.questionsNonNull()
 
-                    val batch = db.batch()
+        ref.set(firebaseTest).await()
 
-                    val firebaseQuestions = test.questionsNonNull()
+        val batch = db.batch()
+        firebaseQuestions.forEach {
+            batch.set(ref.collection("questions").document(), it.toFirebaseQuestions(user))
 
-                    firebaseQuestions.forEach {
-                        batch.set(ref.collection("questions").document(), it.toFirebaseQuestions(user))
+            if (it.imagePath.isNotEmpty()) {
+                val storage = FirebaseStorage.getInstance()
 
-                        if (it.imagePath.isNotEmpty()) {
-                            val storage = FirebaseStorage.getInstance()
+                val storageRef = storage.reference.child("${user.uid}/${it.imagePath}")
 
-                            val storageRef = storage.reference.child("${user.uid}/${it.imagePath}")
+                val baos = ByteArrayOutputStream()
+                val imageOptions = BitmapFactory.Options()
+                imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
+                val input = context.openFileInput(it.imagePath)
+                val bitmap = BitmapFactory.decodeStream(input, null, imageOptions)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos)
+                val data = baos.toByteArray()
 
-                            val baos = ByteArrayOutputStream()
-                            val imageOptions = BitmapFactory.Options()
-                            imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-                            val input = context.openFileInput(it.imagePath)
-                            val bitmap = BitmapFactory.decodeStream(input, null, imageOptions)
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos)
-                            val data = baos.toByteArray()
+                storageRef.putBytes(data)
+            }
+        }
 
-                            storageRef.putBytes(data)
-                        }
-                    }
-
-                    batch.commit().addOnSuccessListener {
-                        success()
-                    }.addOnFailureListener {
-                        Log.d("Debug", "question upload failed")
-                    }
-
-                }.addOnFailureListener {
-                    Log.d("Debug", "test upload failed")
-                }
-
+        batch.commit().await()
     }
 
     fun getMyTests(): LiveData<List<DocumentSnapshot>> {
@@ -182,7 +142,6 @@ class RemoteDataSource(val context: Context) {
         db.collection("tests").document(id).delete()
                 .addOnSuccessListener {
                     fetchMyTests()
-                    fetchTests()
                     Log.d("Debug", "delete success")
                 }
                 .addOnFailureListener {
@@ -203,5 +162,7 @@ class RemoteDataSource(val context: Context) {
         setUser(user)
 
     }
+
+    fun getTestsQuery() = db.collection("tests").orderBy("created_at", Query.Direction.DESCENDING)
 
 }

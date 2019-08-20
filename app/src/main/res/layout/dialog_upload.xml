@@ -34,7 +34,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="gone"
-        style="@android:style/Widget.ProgressBar.Small"
         app:layout_constraintBottom_toBottomOf="@id/input_overview"
         app:layout_constraintTop_toTopOf="@id/spinner" />
 

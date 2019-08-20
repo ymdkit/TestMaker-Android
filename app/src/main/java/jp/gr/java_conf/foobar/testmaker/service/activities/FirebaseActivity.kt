@@ -11,25 +11,28 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.paging.PagedList
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
+import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.models.FirebaseTest
-import jp.gr.java_conf.foobar.testmaker.service.views.adapters.FirebaseTestAdapter
+import jp.gr.java_conf.foobar.testmaker.service.views.adapters.FirebaseTestPagingAdapter
 import kotlinx.android.synthetic.main.activity_online_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
-
 
 
 class FirebaseActivity : BaseActivity() {
 
     private val viewModel: FirebaseViewModel by viewModel()
 
-    private lateinit var adapter: FirebaseTestAdapter
+    private lateinit var pagingAdapter: FirebaseTestPagingAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +43,26 @@ class FirebaseActivity : BaseActivity() {
 
         initToolBar()
 
-        adapter = FirebaseTestAdapter(baseContext)
-        adapter.download = { data: DocumentSnapshot ->
-            viewModel.downloadTest(data.id)
+        val config = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setPrefetchDistance(10)
+                .setPageSize(20)
+                .build()
+
+        val options = FirestorePagingOptions.Builder<FirebaseTest>()
+                .setLifecycleOwner(this)
+                .setQuery(viewModel.getTestsQuery(), config) {
+                    val test = it.toObject(FirebaseTest::class.java) ?: FirebaseTest()
+                    test.documentId = it.id
+                    test
+                }
+                .build()
+
+        pagingAdapter = FirebaseTestPagingAdapter(baseContext, options)
+        pagingAdapter.download = { id: String ->
+            viewModel.downloadTest(id)
         }
-        adapter.showInfo = { data: FirebaseTest ->
+        pagingAdapter.showInfo = { data: FirebaseTest ->
             val dialogLayout = LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
 
             val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
@@ -66,14 +84,14 @@ class FirebaseActivity : BaseActivity() {
             builder.show()
         }
 
-        viewModel.getTests().observeNonNull(this) {
-            recycler_view.visibility = View.VISIBLE
+        recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
+        recycler_view.setHasFixedSize(true)
+        recycler_view.adapter = pagingAdapter
+        pagingAdapter.startLoading = {
+            swipe_refresh.isRefreshing = true
+        }
+        pagingAdapter.finishLoading = {
             swipe_refresh.isRefreshing = false
-
-            recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
-            recycler_view.setHasFixedSize(true)
-            recycler_view.adapter = this.adapter
-            adapter.array = it
         }
 
         viewModel.getDownloadTest().observeNonNull(this) {
@@ -84,7 +102,7 @@ class FirebaseActivity : BaseActivity() {
         }
 
         swipe_refresh.setOnRefreshListener {
-            viewModel.fetchTests()
+            pagingAdapter.refresh()
         }
 
         button_upload.setOnClickListener {
@@ -106,7 +124,7 @@ class FirebaseActivity : BaseActivity() {
             }
         }
 
-        if(!sharedPreferenceManager.firebaseNotes){
+        if (!sharedPreferenceManager.firebaseNotes) {
             AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                     .setTitle(getString(R.string.notes))
                     .setMessage(getString(R.string.msg_notice_firebase))
@@ -115,6 +133,11 @@ class FirebaseActivity : BaseActivity() {
                     }
                     .show()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        pagingAdapter.refresh()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -172,7 +195,7 @@ class FirebaseActivity : BaseActivity() {
                 val user = FirebaseAuth.getInstance().currentUser
                 viewModel.createUser(user)
 
-                Toast.makeText(this, "login success!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
                 // ...
             } else {
                 // Sign in failed. If response is null the user canceled the
@@ -185,7 +208,7 @@ class FirebaseActivity : BaseActivity() {
 
     private fun login() {
 
-        AlertDialog.Builder(this,R.style.MyAlertDialogStyle)
+        AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 .setTitle(getString(R.string.login))
                 .setMessage(getString(R.string.msg_not_login))
                 .setPositiveButton(getString(R.string.ok)) { dialog, which ->
@@ -214,7 +237,7 @@ class FirebaseActivity : BaseActivity() {
 
         val dialogLayout = LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_upload, findViewById(R.id.layout_dialog_upload))
 
-        val tests = realmController.listNotEmpty
+        val tests = viewModel.getLocalTests()
 
         val array = Array(tests.size) { i -> tests[i].title }
 
@@ -256,14 +279,17 @@ class FirebaseActivity : BaseActivity() {
             progressBar.visibility = View.VISIBLE
             it.isEnabled = false
 
-            viewModel.uploadTest(tests[position], editOverView.text.toString(), success = {
-                Toast.makeText(this, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-                viewModel.fetchTests()
-            })
+            GlobalScope.launch(Dispatchers.Default) {
 
+                viewModel.uploadTest(tests[position], editOverView.text.toString())
+
+                withContext(Dispatchers.Main){
+                    Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                    pagingAdapter.refresh()
+                }
+            }
         }
-
     }
 
     companion object {
