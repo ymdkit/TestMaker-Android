@@ -11,16 +11,25 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.models.RealmController
+import jp.gr.java_conf.foobar.testmaker.service.models.Cate
 
 /**
  * Created by keita on 2016/06/19.
  */
-class CategoryAdapter(private val context: Context, private val mRealmController: RealmController, private val mainAdapter: TestAndFolderAdapter?) : androidx.recyclerview.widget.RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryAdapter(private val context: Context, private val mainAdapter: TestAndFolderAdapter?) : androidx.recyclerview.widget.RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+
+    var categories: List<Cate> = emptyList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     private var listener: OnClickListener? = null
+
+    var deleteCategory: (Cate) -> Unit = {}
 
     interface OnClickListener {
         fun onClickCategory(position: Int)
@@ -36,12 +45,12 @@ class CategoryAdapter(private val context: Context, private val mRealmController
     }
 
     override fun getItemCount(): Int {
-        return mRealmController.cateList.size
+        return categories.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val data = mRealmController.cateList[position]
+        val data = categories[holder.adapterPosition]
 
         holder.cate.text = data.category
 
@@ -60,11 +69,13 @@ class CategoryAdapter(private val context: Context, private val mRealmController
 
         holder.delete.setOnClickListener {
 
-            mRealmController.deleteCate(data)
+            deleteCategory(data)
+
+            //mRealmController.deleteCate(data)
 
             notifyDataSetChanged()
 
-            mainAdapter?.also{
+            mainAdapter?.also {
                 it.setValue()
             }
 

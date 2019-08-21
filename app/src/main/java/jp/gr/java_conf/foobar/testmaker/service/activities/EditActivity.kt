@@ -186,7 +186,7 @@ open class EditActivity : BaseActivity() {
                         val storage = FirebaseStorage.getInstance()
                         val storageRef = storage.reference.child(question.imagePath)
 
-                        button_image.setImageWithGlide(baseContext,storageRef)
+                        button_image.setImageWithGlide(baseContext, storageRef)
 
                     } else {
                         viewModel.loadImage {
@@ -411,7 +411,15 @@ open class EditActivity : BaseActivity() {
                 }
 
                 buttonCate.setOnClickListener {
-                    val categoryEditor = CategoryEditor(this@EditActivity, buttonCate, realmController, null)
+                    val categoryEditor = CategoryEditor(this@EditActivity, buttonCate, null,
+                            getCategories = { viewModel.getCategories() }
+                            ,
+                            addCategory = {
+                                viewModel.addCategory(it)
+                            },
+                            deleteCategory = {
+                                viewModel.deleteCategory(it)
+                            })
                     categoryEditor.setCategory()
                 }
 

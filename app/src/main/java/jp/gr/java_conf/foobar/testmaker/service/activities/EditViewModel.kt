@@ -169,4 +169,8 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         fetchQuestions()
         onSuccess()
     }
+
+    fun getCategories(): List<Cate> = repository.getCategories()
+    fun addCategory(category: Cate) = repository.addCategory(category)
+    fun deleteCategory(category: Cate) = repository.deleteCategory(category)
 }

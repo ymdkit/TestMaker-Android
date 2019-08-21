@@ -22,7 +22,12 @@ import jp.gr.java_conf.foobar.testmaker.service.views.adapters.TestAndFolderAdap
  * Created by keita on 2017/05/20.
  */
 
-class CategoryEditor(private val context: Context, private val buttonCate: Button, private val realmController: RealmController, private val categoryAdapter: TestAndFolderAdapter?) {
+class CategoryEditor(private val context: Context,
+                     private val buttonCate: Button,
+                     private val categoryAdapter: TestAndFolderAdapter?,
+                     private val getCategories: () -> List<Cate>,
+                     private val addCategory: (Cate) -> Unit,
+                     private val deleteCategory: (Cate) -> Unit) {
     private var buttonColor: ImageButton? = null
     private var colorChooser: ColorChooser? = null
 
@@ -32,20 +37,25 @@ class CategoryEditor(private val context: Context, private val buttonCate: Butto
 
         val dialogLayout = LayoutInflater.from(context).inflate(R.layout.dialog_category, null)
 
-        val adapter = CategoryAdapter(context, realmController, categoryAdapter)
+        val adapter = CategoryAdapter(context, categoryAdapter)
+        adapter.deleteCategory = {
+            deleteCategory(it)
+            adapter.categories = getCategories()
+        }
+        adapter.categories = getCategories()
 
-        adapter.setOnClickListener(object : CategoryAdapter.OnClickListener{
+        adapter.setOnClickListener(object : CategoryAdapter.OnClickListener {
             override fun onClickCategory(position: Int) {
-                buttonCate.text = realmController.cateList[position].category
+                buttonCate.text = getCategories()[position].category
 
-                val drawable = ResourcesCompat.getDrawable(context.resources,R.drawable.circle,null) as GradientDrawable
+                val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle, null) as GradientDrawable
 
-                drawable.setColor(realmController.cateList[position].color)
+                drawable.setColor(getCategories()[position].color)
 
                 buttonCate.background = drawable
                 buttonColor!!.background = context.resources.getDrawable(R.drawable.button_blue)
 
-                buttonCate.tag = realmController.cateList[position].category
+                buttonCate.tag = getCategories()[position].category
 
                 dialogCate!!.dismiss()
             }
@@ -59,7 +69,7 @@ class CategoryEditor(private val context: Context, private val buttonCate: Butto
         colorChooser = LayoutInflater.from(context).inflate(R.layout.dialog_color, null).findViewById(R.id.color_chooser)
 
         buttonColor = dialogLayout.findViewById(R.id.color)
-        buttonColor!!.setBackgroundDrawable(ResourcesCompat.getDrawable(context.resources,R.drawable.button_blue,null))
+        buttonColor!!.setBackgroundDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.button_blue, null))
         buttonColor!!.setOnClickListener {
 
             val layoutColor = LayoutInflater.from(context).inflate(R.layout.dialog_color, null)
@@ -89,15 +99,22 @@ class CategoryEditor(private val context: Context, private val buttonCate: Butto
 
                 buttonCate.text = cate
 
-                val drawable = ResourcesCompat.getDrawable(context.resources,R.drawable.circle,null) as GradientDrawable
+                val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle, null) as GradientDrawable
 
                 drawable.setColor(colorChooser!!.getColorId())
 
                 buttonCate.background = drawable
-                buttonColor!!.background =ResourcesCompat.getDrawable(context.resources,R.drawable.button_blue,null)
+                buttonColor!!.background = ResourcesCompat.getDrawable(context.resources, R.drawable.button_blue, null)
 
-                realmController.addCate(e.text.toString(), colorChooser!!.getColorId())
-                adapter.notifyDataSetChanged()
+                //realmController.addCate(e.text.toString(), colorChooser!!.getColorId())
+
+                val category = Cate()
+                category.category = e.text.toString()
+                category.color = colorChooser!!.getColorId()
+
+                addCategory(category)
+
+                adapter.categories = getCategories()
 
                 dialogCate!!.dismiss()
 

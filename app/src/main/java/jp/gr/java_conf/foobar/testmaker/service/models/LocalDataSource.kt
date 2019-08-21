@@ -137,4 +137,16 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
             ?: emptyList()
 
     fun getExistingCategories(): List<Cate> = getCategories().filter { getTests().map { test -> test.getCategory() }.contains(it.category) }
+
+    fun addCategory(category: Cate) {
+        realm.beginTransaction()
+        realm.copyToRealm(category)
+        realm.commitTransaction()
+    }
+
+    fun deleteCategory(category: Cate){
+        realm.beginTransaction()
+        realm.where(Cate::class.java).equalTo("category",category.category).findFirst()?.deleteFromRealm()
+        realm.commitTransaction()
+    }
 }

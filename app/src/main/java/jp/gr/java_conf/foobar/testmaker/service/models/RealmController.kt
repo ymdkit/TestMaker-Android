@@ -17,11 +17,6 @@ class RealmController(context: Context, config: RealmConfiguration) {
 
     private val sharedPreferenceManager: SharedPreferenceManager = SharedPreferenceManager(context)
 
-    val cateList: ArrayList<Cate>
-        get() {
-            return ArrayList(realm.where(Cate::class.java).findAll().sort("category"))
-        }
-
     fun getTest(testId: Long): Test {
 
         return realm.where(Test::class.java).equalTo("id", testId).findFirst() ?: Test()
@@ -98,28 +93,6 @@ class RealmController(context: Context, config: RealmConfiguration) {
 
         realm.commitTransaction()
 
-    }
-
-    fun addCate(category: String, color: Int) {
-
-        realm.beginTransaction()
-
-        val cate = realm.createObject(Cate::class.java)
-
-        cate.category = category
-        cate.color = color
-
-        realm.commitTransaction()
-
-    }
-
-    fun deleteCate(cate: Cate) {
-
-        realm.beginTransaction()
-
-        cate.deleteFromRealm()
-
-        realm.commitTransaction()
     }
 
     fun getQuestions(testId: Long): ArrayList<Quest> {

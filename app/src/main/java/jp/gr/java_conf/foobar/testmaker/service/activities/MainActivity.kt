@@ -105,7 +105,17 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         binding.test.buttonCategory.tag = ""
         binding.test.buttonCategory.setOnClickListener {
             inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
-            val categoryEditor = CategoryEditor(this@MainActivity, binding.test.buttonCategory, realmController, testAndFolderAdapter)
+            val categoryEditor = CategoryEditor(this@MainActivity,
+                    binding.test.buttonCategory,
+                    testAndFolderAdapter,
+                    getCategories = { viewModel.getCategories() }
+                    ,
+                    addCategory = {
+                        viewModel.addCategory(it)
+                    },
+                    deleteCategory = {
+                        viewModel.deleteCategory(it)
+                    })
             categoryEditor.setCategory()
         }
 
@@ -353,7 +363,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         val questionId = realmController.maxQuestionId
 
         GlobalScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.Default) { text.toTest(baseContext,questionId) }.let {
+            withContext(Dispatchers.Default) { text.toTest(baseContext, questionId) }.let {
 
                 realmController.copyToRealm(it)
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
