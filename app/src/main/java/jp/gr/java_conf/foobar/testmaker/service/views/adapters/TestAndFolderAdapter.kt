@@ -23,19 +23,19 @@ class TestAndFolderAdapter(private val context: Context,val setValue: () -> Unit
 
     private var listener: OnClickListener? = null
 
-    var tests: ArrayList<Test> = ArrayList()
+    var tests: List<Test> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
-    var categories: ArrayList<Cate> = ArrayList()
+    var categories: List<Cate> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
-    var allTests: ArrayList<Test> = ArrayList()
+    var allTests: List<Test> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()

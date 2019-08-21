@@ -70,9 +70,10 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         initViews()
 
         initTestAndFolderAdapter(setValue = {
-            testAndFolderAdapter.tests = realmController.nonCategorizedTests
-            testAndFolderAdapter.categories = realmController.existingCateList
-            testAndFolderAdapter.allTests = realmController.list
+            testAndFolderAdapter.categories = viewModel.getExistingCategoryList()
+            testAndFolderAdapter.tests = viewModel.getNonCategorizedTests()
+            testAndFolderAdapter.allTests = viewModel.getTests()
+
         })
 
         binding.recyclerView.setHasFixedSize(true)

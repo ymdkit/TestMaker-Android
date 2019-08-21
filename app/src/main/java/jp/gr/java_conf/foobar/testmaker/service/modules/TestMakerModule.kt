@@ -2,10 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.modules
 
 import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.activities.EditViewModel
-import jp.gr.java_conf.foobar.testmaker.service.activities.FirebaseMyPageViewModel
-import jp.gr.java_conf.foobar.testmaker.service.activities.FirebaseViewModel
-import jp.gr.java_conf.foobar.testmaker.service.activities.MainViewModel
+import jp.gr.java_conf.foobar.testmaker.service.activities.*
 import jp.gr.java_conf.foobar.testmaker.service.models.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.models.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.models.TestMakerRepository
@@ -19,6 +16,8 @@ fun getTestMakerModules(realm: Realm) = module {
     single { SharedPreferenceManager(get()) }
     viewModel { MainViewModel(get()) }
     viewModel { EditViewModel(get(), get()) }
+    viewModel { CategorizedViewModel(get()) }
+    viewModel { MoveQuestionViewModel(get()) }
     viewModel { FirebaseViewModel(get()) }
     viewModel { FirebaseMyPageViewModel(get()) }
 

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.valueNonNull
+import jp.gr.java_conf.foobar.testmaker.service.models.Cate
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 import jp.gr.java_conf.foobar.testmaker.service.models.TestMakerRepository
 import jp.gr.java_conf.foobar.testmaker.service.views.EditCompleteView

@@ -1,13 +1,15 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.MenuItem
 import jp.gr.java_conf.foobar.testmaker.service.R
 import kotlinx.android.synthetic.main.activity_categorized.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class CategorizedActivity : ShowTestsActivity() {
+
+    private val viewModel: CategorizedViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +23,7 @@ class CategorizedActivity : ShowTestsActivity() {
 
             testAndFolderAdapter.tests = realmController.getCategorizedList(intent.getStringExtra("category"))
             testAndFolderAdapter.categories = ArrayList()
-            testAndFolderAdapter.allTests = realmController.list
+            testAndFolderAdapter.allTests = viewModel.getTests()
 
         })
 

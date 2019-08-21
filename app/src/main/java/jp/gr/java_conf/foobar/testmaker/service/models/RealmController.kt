@@ -12,80 +12,15 @@ import java.util.*
  * Created by keita on 2017/02/08.
  */
 
-class RealmController(private val context: Context, config: RealmConfiguration) {
+class RealmController(context: Context, config: RealmConfiguration) {
     private val realm: Realm = Realm.getInstance(config)
 
     private val sharedPreferenceManager: SharedPreferenceManager = SharedPreferenceManager(context)
-
-
-    val list: ArrayList<Test>
-        get() {
-
-            val realmArray: RealmResults<Test>
-
-            when (sharedPreferenceManager.sort) {
-                -1 ->
-
-                    realmArray = realm.where(Test::class.java).findAll().sort("title")
-                0 ->
-
-                    realmArray = realm.where(Test::class.java).findAll().sort("title", Sort.DESCENDING)
-                1 ->
-
-                    realmArray = realm.where(Test::class.java).findAll().sort("title")
-                2 ->
-
-                    realmArray = realm.where(Test::class.java).findAll().sort("history", Sort.DESCENDING)
-
-                else -> realmArray = realm.where(Test::class.java).findAll().sort("title")
-            }
-
-            return ArrayList(realmArray)
-        }
-
-    val listNotEmpty: ArrayList<Test>
-        get() {
-            return ArrayList(list.filter { it.getQuestionsForEach().size > 0 })
-
-        }
 
     val cateList: ArrayList<Cate>
         get() {
             return ArrayList(realm.where(Cate::class.java).findAll().sort("category"))
         }
-
-    val existingCateList: ArrayList<Cate>
-        get() {
-            val items = ArrayList<Cate>()
-
-            for (cate in cateList) {
-                for (test in list) {
-                    if (cate.category == test.getCategory()) {
-                        items.add(cate)
-                        break
-                    }
-                }
-            }
-            return items
-        }
-
-    val nonCategorizedTests: ArrayList<Test>
-        get() {
-
-            val items = ArrayList<Test>()
-
-            outside@ for (test in list) {
-
-                for (cate in cateList) {
-                    if (cate.category == test.getCategory()) {
-                        continue@outside
-                    }
-                }
-                items.add(test)
-            }
-            return items
-        }
-
 
     fun getTest(testId: Long): Test {
 
@@ -285,70 +220,6 @@ class RealmController(private val context: Context, config: RealmConfiguration) 
         realm.close()
 
     }
-
-//    fun convert(structTest: StructTest, testId: Long) { //structTest を　Test に変換
-//
-//        realm.beginTransaction()
-//
-//        // 初期化
-//        var nextUserId = 1
-//        // userIdの最大値を取得
-//        val maxUserId = realm.where(Test::class.java).max("id")
-//        // 1度もデータが作成されていない場合はNULLが返ってくるため、NULLチェックをする
-//        if (maxUserId != null) {
-//            nextUserId = maxUserId.toInt() + 1
-//        }
-//
-//        val test: Test // Create managed objects directly
-//
-//        if (testId != -1L) {
-//
-//            test = getTest(testId)
-//            test.setQuestions(RealmList())
-//
-//        } else {
-//
-//            test = realm.createObject(Test::class.java, nextUserId) // Create managed objects directly
-//
-//        }
-//
-//        test.title = structTest.title
-//        test.color = structTest.color
-//        test.setCategory(structTest.category ?: "")
-//        test.history = structTest.history
-//        test.limit = 100
-//
-//        for (j in 0 until structTest.problems.size) {
-//
-//            // 初期化
-//            var nextQuestId: Int? = 1
-//            // userIdの最大値を取得
-//            val maxQuestId = realm.where(Quest::class.java).max("id")
-//            // 1度もデータが作成されていない場合はNULLが返ってくるため、NULLチェックをする
-//            if (maxQuestId != null) {
-//                nextQuestId = maxQuestId.toInt() + 1
-//            }
-//
-//            val q = realm.createObject(Quest::class.java, nextQuestId)
-//
-//            q.problem = structTest.problems[j].question
-//            q.answer = structTest.problems[j].answer
-//            q.auto = structTest.problems[j].auto
-//            q.isCheckOrder = structTest.problems[j].isCheckOrder
-//            q.type = structTest.problems[j].type
-//            q.setSelections(structTest.problems[j].others)
-//            q.setAnswers(structTest.problems[j].answers)
-//            q.explanation = structTest.problems[j].explanation
-//            q.imagePath = structTest.problems[j].imagePath
-//            q.order = j
-//
-//            test.addQuestion(q)
-//        }
-//
-//        realm.commitTransaction()
-//
-//    }
-
 
     fun getCategorizedList(category: String): ArrayList<Test> {
 

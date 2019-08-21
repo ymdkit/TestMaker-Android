@@ -26,4 +26,8 @@ object Constants {
     const val UPLOAD_AUTOMATICALLY_STUDY_PLUS = 1
     const val UPLOAD_MANUALLY_STUDY_PLUS = 2
 
+    const val TITLE_DESCENDING = 0
+    const val TITLE_ASCENDING = 1
+    const val HISTORY = 2
+
 }

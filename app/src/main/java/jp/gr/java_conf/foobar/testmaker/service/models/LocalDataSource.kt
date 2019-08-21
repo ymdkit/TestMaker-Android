@@ -3,11 +3,9 @@ package jp.gr.java_conf.foobar.testmaker.service.models
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
-import android.widget.Toast
 import io.realm.Realm
-import io.realm.RealmList
-import jp.gr.java_conf.foobar.testmaker.service.R
+import io.realm.Sort
+import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.activities.BaseActivity
 import kotlinx.coroutines.Dispatchers
@@ -19,10 +17,17 @@ import java.io.IOException
 
 class LocalDataSource(private val realm: Realm, private val preference: SharedPreferenceManager, private val context: Context) {
 
+    fun getTests(): List<Test> = realm.copyFromRealm(when (preference.sort) {
+        Constants.TITLE_DESCENDING ->
+            realm.where(Test::class.java).findAll().sort("title", Sort.DESCENDING)
+        Constants.TITLE_ASCENDING ->
+            realm.where(Test::class.java).findAll().sort("title")
+        Constants.HISTORY ->
+            realm.where(Test::class.java).findAll().sort("history", Sort.DESCENDING)
+        else ->
+            realm.where(Test::class.java).findAll().sort("title")
+    })
 
-    fun getTests(): List<Test> {
-        return realm.copyFromRealm(realm.where(Test::class.java).findAll())
-    }
 
     private fun getTest(testId: Long): Test {
         return realm.where(Test::class.java).equalTo("id", testId).findFirst() ?: Test()
@@ -125,4 +130,11 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
 
         realm.commitTransaction()
     }
+
+    fun getNonCategorizedTests(): List<Test> = getTests().filter { !getCategories().map { cate -> cate.category }.contains(it.getCategory()) }
+
+    fun getCategories(): List<Cate> = realm.copyFromRealm(realm.where(Cate::class.java).findAll().sort("category"))
+            ?: emptyList()
+
+    fun getExistingCategories(): List<Cate> = getCategories().filter { getTests().map { test -> test.getCategory() }.contains(it.category) }
 }

@@ -13,8 +13,11 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.CheckBoxQuestionAdapter
 import kotlinx.android.synthetic.main.activity_move_questions.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MoveQuestionsActivity : BaseActivity() {
+
+    private val viewModel: MoveQuestionViewModel by viewModel()
 
     lateinit var questionAdapter: CheckBoxQuestionAdapter
 
@@ -28,7 +31,7 @@ class MoveQuestionsActivity : BaseActivity() {
 
         createAd(container)
 
-        val tests = realmController.list
+        val tests = viewModel.getTests()
 
         val fromArray = Array(tests.size) { i -> tests[i].title }
 
@@ -74,7 +77,7 @@ class MoveQuestionsActivity : BaseActivity() {
             }
         }
 
-        button_save.setOnClickListener { _ ->
+        button_save.setOnClickListener {
 
             if(spinner_to_test.selectedItemPosition -1 == spinner_from_test.selectedItemPosition){
 
@@ -83,11 +86,9 @@ class MoveQuestionsActivity : BaseActivity() {
                 return@setOnClickListener
             }
 
-            if(realmController.list.size < 1) return@setOnClickListener
+            if(viewModel.getTests().isEmpty()) return@setOnClickListener
 
             val selectedQuestions = questionAdapter.getItems().filterIndexed { index, _ ->  questionAdapter.checkBoxStates[index]}
-
-            Log.d("selected","${questionAdapter.checkBoxStates.filter { it }.size}")
 
             if(spinner_to_test.selectedItemPosition == 0){
 
@@ -97,7 +98,7 @@ class MoveQuestionsActivity : BaseActivity() {
 
             }else{
 
-                realmController.addQuestions(realmController.list[spinner_to_test.selectedItemPosition -1].id,selectedQuestions.toTypedArray())
+                realmController.addQuestions(viewModel.getTests()[spinner_to_test.selectedItemPosition -1].id,selectedQuestions.toTypedArray())
 
             }
 

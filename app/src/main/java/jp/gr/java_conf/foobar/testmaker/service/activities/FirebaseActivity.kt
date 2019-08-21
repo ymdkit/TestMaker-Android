@@ -109,7 +109,7 @@ class FirebaseActivity : BaseActivity() {
 
             FirebaseAuth.getInstance().currentUser?.let {
 
-                if (realmController.list.size < 1 || realmController.list.all { it.getQuestionsForEach().size < 1 }) {
+                if (viewModel.getLocalTests().isEmpty() || viewModel.getLocalTests().all { it.getQuestionsForEach().size < 1 }) {
 
                     Toast.makeText(baseContext, getString(R.string.message_non_exist_test), Toast.LENGTH_SHORT).show()
 
