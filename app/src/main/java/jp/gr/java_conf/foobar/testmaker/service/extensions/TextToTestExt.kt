@@ -14,9 +14,6 @@ fun String.toTest(context: Context, questionId: Long): Test {
     test.title = context.getString(R.string.unknown)
     test.color = context.resources.getIntArray(R.array.color_list)[0]
 
-
-    var resultNumber = 0
-
     for (i in backups.indices) {
 
         try {
@@ -31,14 +28,12 @@ fun String.toTest(context: Context, questionId: Long): Test {
 
                 val question = Quest()
                 question.problem = backup[1]
-                question.id = questionId + resultNumber
+                question.id = questionId + test.questionsNonNull().size
 
                 if (backup[0] == context.getString(R.string.load_short_answers)) {
 
                     question.answer = backup[2]
                     question.type = Constants.WRITE
-
-                    resultNumber += 1
 
                 } else if (backup[0] == context.getString(R.string.load_multiple_answers)) {
                     if (backup.size - 2 > Constants.ANSWER_MAX) continue
@@ -47,17 +42,12 @@ fun String.toTest(context: Context, questionId: Long): Test {
                     backup.drop(2).toTypedArray().forEach { question.answer += "$it " }
                     question.type = Constants.COMPLETE
 
-                    resultNumber += 1
-
                 } else if (backup[0] == context.getString(R.string.load_multiple_answers_order)) {
                     if (backup.size - 2 > Constants.ANSWER_MAX) continue
 
                     question.setAnswers(backup.drop(2).toTypedArray())
                     question.isCheckOrder = true
                     question.type = Constants.COMPLETE
-
-                    resultNumber += 1
-
 
                 } else if (backup[0] == context.getString(R.string.load_selection_problems)) {
 
@@ -66,9 +56,6 @@ fun String.toTest(context: Context, questionId: Long): Test {
                     question.answer = backup[2]
                     question.setSelections(backup.drop(3).toTypedArray())
                     question.type = Constants.SELECT
-
-                    resultNumber += 1
-
 
                 } else if (backup[0] == context.getString(R.string.load_selection_auto_problems)) {
 
@@ -82,9 +69,6 @@ fun String.toTest(context: Context, questionId: Long): Test {
                     question.auto = true
                     question.type = Constants.SELECT
                     question.setSelections(Array(otherNum) { context.getString(R.string.state_auto) })
-
-                    resultNumber += 1
-
 
                 } else if (backup[0] == context.getString(R.string.load_select_complete_auto_problem)) {
 
@@ -103,9 +87,6 @@ fun String.toTest(context: Context, questionId: Long): Test {
                     question.setAnswers(answers)
                     question.setSelections(others)
                     question.auto = true
-
-                    resultNumber += 1
-
 
                 } else if (backup[0] == context.getString(R.string.load_select_complete_problem)) {
 
@@ -126,17 +107,15 @@ fun String.toTest(context: Context, questionId: Long): Test {
                     question.setAnswers(answers)
                     question.setSelections(others)
 
-                    resultNumber += 1
                 }
 
                 test.addQuestion(question)
 
-
             } else if (backup.size == 2) {
 
                 if (backup[0] == context.getString(R.string.load_explanation)) {
-                    if (resultNumber > 0) {
-                        test.questionsNonNull()[resultNumber - 1]?.explanation = backup[1]
+                    if (test.questionsNonNull().isNotEmpty()) {
+                        test.questionsNonNull()[test.questionsNonNull().size - 1].explanation = backup[1]
                     }
                 } else if (backup[0] == context.getString(R.string.load_title)) {
                     test.title = backup[1]
