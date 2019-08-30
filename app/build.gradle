@@ -62,11 +62,12 @@ dependencies {
     implementation('androidx.appcompat:appcompat:1.0.0')
     implementation('com.google.android.material:material:1.0.0')
     implementation('androidx.cardview:cardview:1.0.0')
-    implementation 'com.google.android.gms:play-services-ads:18.1.1'
+    implementation 'com.google.android.gms:play-services-ads:18.2.0'
     implementation 'jp.studyplus.android.sdk:studyplus-android-sdk2:2.0.2'
-    implementation 'com.google.firebase:firebase-core:17.0.1'
-    implementation 'com.google.firebase:firebase-auth:18.1.0'
-    implementation 'com.google.firebase:firebase-storage:18.1.1'
+    implementation 'com.google.firebase:firebase-core:17.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.0.0'
+    implementation 'com.google.firebase:firebase-firestore:21.0.0'
+    implementation 'com.google.firebase:firebase-storage:19.0.0'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
     implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
     implementation 'com.firebaseui:firebase-ui-firestore:5.0.0'
@@ -86,7 +87,6 @@ dependencies {
     api 'com.isseiaoki:simplecropview:1.1.4'
     api 'androidx.multidex:multidex:2.0.1'
     api 'com.android.billingclient:billing:1.1'
-    implementation 'com.google.firebase:firebase-firestore:20.2.0'
     testImplementation "org.robolectric:robolectric:4.0"
     testImplementation 'junit:junit:4.12'
 
