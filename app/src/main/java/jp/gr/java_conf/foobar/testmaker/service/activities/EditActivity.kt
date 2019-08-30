@@ -401,13 +401,13 @@ open class EditActivity : BaseActivity() {
 
                 if (Build.VERSION.SDK_INT >= 21) buttonCate.stateListAnimator = null
 
-                buttonCate.tag = realmController.getTest(viewModel.testId).getCategory()
+                buttonCate.tag = viewModel.getTest(viewModel.testId).getCategory()
 
-                if (realmController.getTest(viewModel.testId).getCategory() == "") {
+                if (viewModel.getTest(viewModel.testId).getCategory() == "") {
 
                     buttonCate.text = getString(R.string.category)
                 } else {
-                    buttonCate.text = realmController.getTest(viewModel.testId).getCategory()
+                    buttonCate.text = viewModel.getTest(viewModel.testId).getCategory()
                 }
 
                 buttonCate.setOnClickListener {
@@ -439,9 +439,9 @@ open class EditActivity : BaseActivity() {
                     false
                 }
 
-                name.setText(realmController.getTest(viewModel.testId).title)
+                name.setText(viewModel.getTest(viewModel.testId).title)
 
-                colorChooser.setColorId(realmController.getTest(viewModel.testId).color)
+                colorChooser.setColorId(viewModel.getTest(viewModel.testId).color)
 
                 val builder = AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 builder.setView(dialogLayout)
@@ -462,7 +462,7 @@ open class EditActivity : BaseActivity() {
 
                     } else {
 
-                        realmController.updateTest(realmController.getTest(viewModel.testId), sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
+                        realmController.updateTest(viewModel.getTest(viewModel.testId), sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
 
                         dialog.dismiss()
                     }

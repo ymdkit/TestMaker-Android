@@ -15,11 +15,15 @@ import android.widget.Toast
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.TestAndFolderAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 open class ShowTestsActivity : BaseActivity() {
 
     internal lateinit var testAndFolderAdapter: TestAndFolderAdapter
+
+    private val showTestsViewModel: ShowTestsViewModel by viewModel()
+
 
     protected fun initTestAndFolderAdapter(setValue: () -> Unit){
 
@@ -33,9 +37,9 @@ open class ShowTestsActivity : BaseActivity() {
 
                 sendFirebaseEvent("play")
 
-                val test = realmController.getTest(id)
+                val test = showTestsViewModel.getTest(id)
 
-                if (test.questionsNonNull().size == 0) {
+                if (test.questionsNonNull().isEmpty()) {
 
                     Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
 
@@ -58,7 +62,7 @@ open class ShowTestsActivity : BaseActivity() {
 
                 sendFirebaseEvent("delete")
 
-                val test = realmController.getTest(id)
+                val test = showTestsViewModel.getTest(id)
 
                 val builder = AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
                 builder.setTitle(getString(R.string.delete_exam))
@@ -75,7 +79,7 @@ open class ShowTestsActivity : BaseActivity() {
             }
 
             override fun onClickShareTest(id: Long) {
-                val test = realmController.getTest(id)
+                val test = showTestsViewModel.getTest(id)
 
                 Toast.makeText(baseContext, getString(R.string.message_share_exam, test.title), Toast.LENGTH_LONG).show()
 

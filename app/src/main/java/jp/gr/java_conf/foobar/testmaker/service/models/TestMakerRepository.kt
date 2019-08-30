@@ -106,5 +106,7 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun getCategories(): List<Cate> = local.getCategories()
     fun addCategory(category: Cate) = local.addCategory(category)
     fun deleteCategory(category: Cate) = local.deleteCategory(category)
+    fun getTest(testId: Long): Test = local.getTest(testId)
+    fun getTestClone(testId: Long): Test = local.getTestClone(testId)
 
 }

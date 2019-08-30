@@ -12,10 +12,13 @@ import jp.studyplus.android.sdk.Studyplus
 import jp.studyplus.android.sdk.record.StudyRecord
 import jp.studyplus.android.sdk.record.StudyRecordBuilder
 import kotlinx.android.synthetic.main.activity_result.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ResultActivity : BaseActivity() {
     private lateinit var resultAdapter: ResultAdapter
     private var testId: Long = 0
+
+    private val resultViewModel: ResultViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,9 +30,10 @@ class ResultActivity : BaseActivity() {
 
         createAd(container)
 
-        val questions = realmController.getQuestionsSolved(testId)
+        val questions = resultViewModel.getTest(testId).getQuestionsSolved()
 
-        resultAdapter = ResultAdapter(this, realmController, testId)
+        resultAdapter = ResultAdapter(this)
+        resultAdapter.questions = questions.toList()
 
         recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
@@ -85,7 +89,7 @@ class ResultActivity : BaseActivity() {
 
 
         val record = StudyRecordBuilder()
-                .setComment("${realmController.getTest(testId).title} で勉強しました")
+                .setComment("${resultViewModel.getTest(testId).title} で勉強しました")
                 .setAmountTotal(questions.size)
                 .setDurationSeconds((intent.getLongExtra("duration",0)/ 1000).toInt())
                 .build()

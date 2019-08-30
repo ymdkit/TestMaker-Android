@@ -17,8 +17,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditProActivity : BaseActivity() {
+
+    private val editProViewModel: EditProViewModel by viewModel()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,10 +63,9 @@ class EditProActivity : BaseActivity() {
             builder.setNegativeButton(android.R.string.cancel, null)
             builder.show()
 
-
         }
 
-        edit_test.setText(realmController.getTest(intent.getLongExtra("testId", -1)).testToString(this, false))
+        edit_test.setText(editProViewModel.getTest(intent.getLongExtra("testId", -1)).testToString(this, false))
 
     }
 

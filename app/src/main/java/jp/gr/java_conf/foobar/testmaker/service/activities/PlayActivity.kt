@@ -17,12 +17,13 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadImage
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 import jp.gr.java_conf.foobar.testmaker.service.models.SePlayer
+import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.views.*
 import kotlinx.android.synthetic.main.activity_play.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -45,6 +46,11 @@ class PlayActivity : BaseActivity() {
     private var startTime: Long = 0
 
     private var allAnswers: ArrayList<String> = arrayListOf()
+
+    private val playViewModel: PlayViewModel by viewModel()
+
+    private lateinit var test: Test
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,18 +82,20 @@ class PlayActivity : BaseActivity() {
 
     private fun initQuestions() {
 
-        questions = if (intent.hasExtra("redo")) realmController.getQuestionsSolved(testId)
-        else realmController.getQuestions(testId)
+        test = playViewModel.getTest(testId)
+
+        questions = if (intent.hasExtra("redo")) test.getQuestionsSolved()
+        else ArrayList(test.questionsNonNull())
 
         realmController.resetSolving(testId)
 
-        if (!intent.hasExtra("redo")) questions = ArrayList(questions.drop(realmController.getTest(testId).startPosition))
+        if (!intent.hasExtra("redo")) questions = ArrayList(questions.drop(playViewModel.getTest(testId).startPosition))
 
         if (sharedPreferenceManager.refine) questions = questions.filter { !it.correct } as ArrayList<Quest>
 
         if (sharedPreferenceManager.random) questions.shuffle()
 
-        if (realmController.getTest(testId).limit < questions.size) questions = ArrayList(questions.take(realmController.getTest(testId).limit))
+        if (playViewModel.getTest(testId).limit < questions.size) questions = ArrayList(questions.take(playViewModel.getTest(testId).limit))
 
         if (questions.size < 1) {
             Toast.makeText(baseContext, getString(R.string.msg_null_questions), Toast.LENGTH_LONG).show()

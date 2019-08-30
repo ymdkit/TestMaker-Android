@@ -190,4 +190,8 @@ open class Test : RealmObject() {
 
         return FirebaseTest(name = title ?: "no title", color = firebaseColor)
     }
+
+    fun getQuestionsSolved(): ArrayList<Quest> {
+       return ArrayList(questions?.filter { it.solving } ?: listOf())
+    }
 }

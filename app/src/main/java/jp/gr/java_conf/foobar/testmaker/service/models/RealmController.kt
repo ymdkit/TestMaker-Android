@@ -95,29 +95,6 @@ class RealmController(context: Context, config: RealmConfiguration) {
 
     }
 
-    fun getQuestions(testId: Long): ArrayList<Quest> {
-
-        val realmArray = getTest(testId).questionsNonNull()
-
-        return ArrayList(realmArray)
-    }
-
-    fun getQuestionsSolved(testId: Long): ArrayList<Quest> {
-
-        val array = ArrayList<Quest>()
-
-        val realmArray = getTest(testId).questionsNonNull()
-
-        for (quest in realmArray.iterator()) {
-
-            if (quest.solving) {
-                array.add(quest)
-            }
-        }
-
-        return array
-    }
-
     fun addQuestions(testId: Long, questions: Array<Quest>) {
 
         val test = getTest(testId)

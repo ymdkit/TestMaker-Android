@@ -11,6 +11,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.valueNonNull
 import jp.gr.java_conf.foobar.testmaker.service.models.Cate
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
+import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.models.TestMakerRepository
 import jp.gr.java_conf.foobar.testmaker.service.views.EditCompleteView
 import jp.gr.java_conf.foobar.testmaker.service.views.EditSelectCompleteView
@@ -170,6 +171,7 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         onSuccess()
     }
 
+    fun getTest(testId: Long): Test = repository.getTest(testId)
     fun getCategories(): List<Cate> = repository.getCategories()
     fun addCategory(category: Cate) = repository.addCategory(category)
     fun deleteCategory(category: Cate) = repository.deleteCategory(category)
