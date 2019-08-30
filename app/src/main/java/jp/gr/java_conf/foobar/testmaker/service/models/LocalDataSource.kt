@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import io.realm.Realm
+import io.realm.RealmList
 import io.realm.Sort
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.SharedPreferenceManager
@@ -34,7 +35,8 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
     }
 
     fun getTestClone(testId: Long): Test {
-        return realm.copyFromRealm(realm.where(Test::class.java).equalTo("id", testId).findFirst() ?: Test())
+        return realm.copyFromRealm(realm.where(Test::class.java).equalTo("id", testId).findFirst()
+                ?: Test())
     }
 
     fun getQuestions(testId: Long): ArrayList<Quest>? {
@@ -148,9 +150,39 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun deleteCategory(category: Cate){
+    fun deleteCategory(category: Cate) {
         realm.beginTransaction()
-        realm.where(Cate::class.java).equalTo("category",category.category).findFirst()?.deleteFromRealm()
+        realm.where(Cate::class.java).equalTo("category", category.category).findFirst()?.deleteFromRealm()
         realm.commitTransaction()
     }
+
+    fun addTest(test: Test): Long {
+        realm.beginTransaction()
+        test.id = realm.where(Test::class.java).max("id")?.toLong()?.plus(1) ?: 1
+        realm.copyToRealm(test)
+        realm.commitTransaction()
+        return test.id
+    }
+
+    fun addQuestions(testId: Long, questions: Array<Quest>) {
+        questions.forEach { addQuestion(testId, it, -1L) }
+    }
+
+    fun deleteQuestions(testId: Long, array: Array<Boolean>) {
+        val test = getTest(testId)
+
+        realm.beginTransaction()
+        val list = RealmList<Quest>()
+
+        test.questionsNonNull().filterIndexed { index, quest -> !array[index] }
+                .forEachIndexed { index, quest ->
+                    quest.order = index
+                    list.add(quest)
+                }
+
+        test.setQuestions(list)
+        realm.commitTransaction()
+    }
+
+
 }

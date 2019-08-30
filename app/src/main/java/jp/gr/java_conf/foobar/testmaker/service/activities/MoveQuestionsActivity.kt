@@ -1,14 +1,12 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
 import jp.gr.java_conf.foobar.testmaker.service.views.adapters.CheckBoxQuestionAdapter
@@ -79,40 +77,41 @@ class MoveQuestionsActivity : BaseActivity() {
 
         button_save.setOnClickListener {
 
-            if(spinner_to_test.selectedItemPosition -1 == spinner_from_test.selectedItemPosition){
+            if (spinner_to_test.selectedItemPosition - 1 == spinner_from_test.selectedItemPosition) {
 
-                Toast.makeText(baseContext,getString(R.string.msg_same_test),Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext, getString(R.string.msg_same_test), Toast.LENGTH_SHORT).show()
 
                 return@setOnClickListener
             }
 
-            if(viewModel.getTests().isEmpty()) return@setOnClickListener
+            if (viewModel.getTests().isEmpty()) return@setOnClickListener
 
-            val selectedQuestions = questionAdapter.getItems().filterIndexed { index, _ ->  questionAdapter.checkBoxStates[index]}
+            val selectedQuestions = questionAdapter.getItems().filterIndexed { index, _ -> questionAdapter.checkBoxStates[index] }
 
-            if(spinner_to_test.selectedItemPosition == 0){
+            if (spinner_to_test.selectedItemPosition == 0) {
 
-                val testId = realmController.addTest(getString(R.string.test),ContextCompat.getColor(baseContext,R.color.red),"")
+                val test = Test()
+                test.title = getString(R.string.test)
+                test.color = ContextCompat.getColor(baseContext, R.color.red)
+                val testId = viewModel.addTest(test)
 
-                realmController.addQuestions(testId,selectedQuestions.toTypedArray())
+                viewModel.addQuestions(testId, selectedQuestions.toTypedArray())
 
-            }else{
+            } else {
 
-                realmController.addQuestions(viewModel.getTests()[spinner_to_test.selectedItemPosition -1].id,selectedQuestions.toTypedArray())
+                viewModel.addQuestions(viewModel.getTests()[spinner_to_test.selectedItemPosition - 1].id, selectedQuestions.toTypedArray())
 
             }
 
-            if(spinner_actions.selectedItemPosition == 0){//「移動先」の時
+            if (spinner_actions.selectedItemPosition == 0) {//「移動先」の時
 
-                realmController.removeQuestions(fromTest.id,questionAdapter.checkBoxStates)
-
-                //todo resetorder
+                viewModel.deleteQuestions(fromTest.id, questionAdapter.checkBoxStates)
 
             }
 
             finish()
 
-            Toast.makeText(baseContext,getString(R.string.msg_save),Toast.LENGTH_SHORT).show()
+            Toast.makeText(baseContext, getString(R.string.msg_save), Toast.LENGTH_SHORT).show()
         }
     }
 

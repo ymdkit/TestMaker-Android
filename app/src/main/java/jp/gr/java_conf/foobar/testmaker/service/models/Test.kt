@@ -1,17 +1,20 @@
 package jp.gr.java_conf.foobar.testmaker.service.models
 
 import android.content.Context
-import android.util.Log
-import io.realm.Realm
-
-import java.util.Calendar
-
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
-import io.realm.log.RealmLog
-import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.Constants
+import jp.gr.java_conf.foobar.testmaker.service.R
+import java.util.Calendar
+import kotlin.collections.ArrayList
+import kotlin.collections.List
+import kotlin.collections.filter
+import kotlin.collections.forEach
+import kotlin.collections.forEachIndexed
+import kotlin.collections.indices
+import kotlin.collections.listOf
+import kotlin.collections.sortedBy
 
 /**
  * Created by keita on 2017/02/08.
@@ -192,6 +195,6 @@ open class Test : RealmObject() {
     }
 
     fun getQuestionsSolved(): ArrayList<Quest> {
-       return ArrayList(questions?.filter { it.solving } ?: listOf())
+        return ArrayList(questions?.filter { it.solving } ?: listOf())
     }
 }

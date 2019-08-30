@@ -11,7 +11,7 @@ import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 
-class CheckBoxQuestionAdapter(private val context: Context, private val array: Array<Quest>): androidx.recyclerview.widget.RecyclerView.Adapter<CheckBoxQuestionAdapter.ViewHolder>() {
+class CheckBoxQuestionAdapter(context: Context, private val array: Array<Quest>): androidx.recyclerview.widget.RecyclerView.Adapter<CheckBoxQuestionAdapter.ViewHolder>() {
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -31,16 +31,16 @@ class CheckBoxQuestionAdapter(private val context: Context, private val array: A
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val checkBox = holder.checkBox
-        checkBox.isChecked = checkBoxStates[position]
+        checkBox.isChecked = checkBoxStates[holder.adapterPosition]
 
-        holder.problem.text = array[position].problem
+        holder.problem.text = array[holder.adapterPosition].problem
 
-        holder.answer.text = array[position].answer
+        holder.answer.text = array[holder.adapterPosition].answer
 
         holder.itemView.setOnClickListener {
 
             checkBox.isChecked = !checkBox.isChecked
-            checkBoxStates[position] = checkBox.isChecked
+            checkBoxStates[holder.adapterPosition] = checkBox.isChecked
 
         }
 
