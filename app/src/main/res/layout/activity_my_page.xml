@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@color/background"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.MyPageActivity">
+    tools:context=".activities.FirebaseMyPageActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

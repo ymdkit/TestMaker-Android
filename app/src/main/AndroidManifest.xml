@@ -85,11 +85,6 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".activities.OnlineMainActivity"
-            android:label="@string/title_activity_online_main"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.MyPageActivity" />
-        <activity
             android:name=".activities.MoveQuestionsActivity"
             android:label="@string/title_activity_move_questions"
             android:theme="@style/AppTheme" />

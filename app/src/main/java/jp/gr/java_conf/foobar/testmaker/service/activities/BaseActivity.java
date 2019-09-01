@@ -59,9 +59,12 @@ public class BaseActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        MobileAds.initialize(this, info.metaData.getString("testmaker_admob_key"));
+        if(info != null){
+            MobileAds.initialize(this, info.metaData.getString("testmaker_admob_key"));
+            Studyplus.getInstance().setup(info.metaData.getString("studyplus_comsumer_key"), info.metaData.getString("secret_studyplus_comsumer_key"));
 
-        Studyplus.getInstance().setup(info.metaData.getString("studyplus_comsumer_key"), info.metaData.getString("secret_studyplus_comsumer_key"));
+        }
+
 
     }
 

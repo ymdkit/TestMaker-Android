@@ -4,11 +4,6 @@
     >
 
     <item
-        android:id="@+id/old"
-        android:title="@string/old_online"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_profile"
         android:title="@string/profile"
         app:showAsAction="never" />

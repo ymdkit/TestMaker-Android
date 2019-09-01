@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import com.google.firebase.firestore.DocumentSnapshot
-import com.nifcloud.mbaas.core.NCMBObject
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.models.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton

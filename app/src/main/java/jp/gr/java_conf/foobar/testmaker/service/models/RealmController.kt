@@ -15,18 +15,6 @@ import java.util.*
 class RealmController(context: Context, config: RealmConfiguration) {
     private val realm: Realm = Realm.getInstance(config)
 
-    fun copyToRealm(it: Test) {
-        realm.beginTransaction()
-
-        if(it.id == 0L){
-            it.id = realm.where(Test::class.java).max("id")?.toLong()?.plus(1) ?: -1L
-        }
-
-        realm.copyToRealmOrUpdate(it)
-        realm.commitTransaction()
-
-    }
-
     val maxQuestionId: Long
         get() {
             return realm.where(Quest::class.java).max("id")?.toLong() ?: 1

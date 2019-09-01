@@ -123,16 +123,6 @@ class FirebaseActivity : BaseActivity() {
                 login()
             }
         }
-
-        if (!sharedPreferenceManager.firebaseNotes) {
-            AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                    .setTitle(getString(R.string.notes))
-                    .setMessage(getString(R.string.msg_notice_firebase))
-                    .setPositiveButton(getString(R.string.show_never)) { _, _ ->
-                        sharedPreferenceManager.firebaseNotes = true
-                    }
-                    .show()
-        }
     }
 
     override fun onResume() {
@@ -163,12 +153,6 @@ class FirebaseActivity : BaseActivity() {
 
                     login()
                 }
-            }
-
-            R.id.old -> {
-
-                startActivityForResult(Intent(this@FirebaseActivity, OnlineMainActivity::class.java), 0)
-
             }
 
             android.R.id.home -> {
