@@ -124,5 +124,5 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun updateLimit(test: Test, limit: Int) = local.updateLimit(test, limit)
     fun updateCorrect(quest: Quest, correct: Boolean) = local.updateCorrect(quest, correct)
     fun updateSolving(quest: Quest, solving: Boolean) = local.updateSolving(quest, solving)
-
+    fun getMaxQuestionId(): Long = local.getMaxQuestionId()
 }

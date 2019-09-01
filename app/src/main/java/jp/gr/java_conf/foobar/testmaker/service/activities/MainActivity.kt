@@ -24,10 +24,7 @@ import jp.gr.java_conf.foobar.testmaker.service.BillingManager.BILLING_MANAGER_N
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.models.CategoryEditor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.*
 
@@ -360,7 +357,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     private fun loadTestByText(text: String) {
 
-        val questionId = realmController.maxQuestionId
+        val questionId = viewModel.getMaxQuestionId()
 
         GlobalScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.Default) { text.toTest(baseContext, questionId) }.let {

@@ -73,7 +73,7 @@ class EditProActivity : BaseActivity() {
 
         val text = edit_test.text.toString()
 
-        val questionId = realmController.maxQuestionId
+        val questionId = editProViewModel.getMaxQuestionId()
 
         GlobalScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.Default) { text.toTest(baseContext, questionId) }.let {

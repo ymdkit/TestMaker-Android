@@ -23,6 +23,8 @@ class MainViewModel(private val repository: TestMakerRepository) : ViewModel() {
         repository.addOrUpdateTest(test)
     }
     fun addOrUpdateTest(test: Test): Long = repository.addOrUpdateTest(test)
+    fun getMaxQuestionId(): Long = repository.getMaxQuestionId()
+
 
 
     val title: MutableLiveData<String> = MutableLiveData()

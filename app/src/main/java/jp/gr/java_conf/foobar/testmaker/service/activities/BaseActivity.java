@@ -21,7 +21,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import jp.gr.java_conf.foobar.testmaker.service.R;
 import jp.gr.java_conf.foobar.testmaker.service.SharedPreferenceManager;
 import jp.gr.java_conf.foobar.testmaker.service.TestMakerApplication;
-import jp.gr.java_conf.foobar.testmaker.service.models.RealmController;
 import jp.studyplus.android.sdk.Studyplus;
 
 /**
@@ -29,8 +28,6 @@ import jp.studyplus.android.sdk.Studyplus;
  */
 
 public class BaseActivity extends AppCompatActivity {
-
-    RealmController realmController;
 
     public SharedPreferenceManager sharedPreferenceManager;
 
@@ -42,12 +39,9 @@ public class BaseActivity extends AppCompatActivity {
 
         TestMakerApplication app = (TestMakerApplication) getApplication();
 
-
-        realmController = new RealmController(getApplicationContext(), app.getConfig());
-
         sharedPreferenceManager = new SharedPreferenceManager(this);
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             firebaseAnalytic = FirebaseAnalytics.getInstance(this);
         }
 
@@ -59,7 +53,7 @@ public class BaseActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        if(info != null){
+        if (info != null) {
             MobileAds.initialize(this, info.metaData.getString("testmaker_admob_key"));
             Studyplus.getInstance().setup(info.metaData.getString("studyplus_comsumer_key"), info.metaData.getString("secret_studyplus_comsumer_key"));
 
@@ -68,14 +62,14 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    protected void sendFirebaseEvent(String event){
+    protected void sendFirebaseEvent(String event) {
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             firebaseAnalytic.logEvent(event, new Bundle());
         }
     }
 
-    protected void initToolBar(){
+    protected void initToolBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -84,9 +78,9 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void createAd(LinearLayout container){
+    protected void createAd(LinearLayout container) {
 
-        if(sharedPreferenceManager.isRemovedAd()){
+        if (sharedPreferenceManager.isRemovedAd()) {
             container.setVisibility(View.GONE);
             return;
         }

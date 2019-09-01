@@ -8,6 +8,7 @@ class EditProViewModel(private val repository: TestMakerRepository) : ViewModel(
 
     fun getTest(testId: Long): Test = repository.getTest(testId)
     fun addOrUpdateTest(test: Test): Long = repository.addOrUpdateTest(test)
+    fun getMaxQuestionId(): Long = repository.getMaxQuestionId()
 
 
 }
