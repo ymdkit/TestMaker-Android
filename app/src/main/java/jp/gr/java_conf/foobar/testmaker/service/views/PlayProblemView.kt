@@ -30,18 +30,6 @@ class PlayProblemView : LinearLayout {
 
     fun showImage() { layout_image.visibility = View.VISIBLE }
 
-    fun initImage() {
-
-        val drawable = image_problem.drawable
-        if (drawable != null) {
-            (drawable as BitmapDrawable).bitmap.recycle()
-        }
-
-        image_problem.setImageBitmap(null)
-        image_problem.setImageDrawable(null)
-
-    }
-
     fun getImageProblem(): ImageButton? {
 
         return image_problem

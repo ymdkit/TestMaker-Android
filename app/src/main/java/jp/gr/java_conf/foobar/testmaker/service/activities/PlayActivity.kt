@@ -16,7 +16,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.models.AsyncLoadImage
+import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.models.Quest
 import jp.gr.java_conf.foobar.testmaker.service.models.SePlayer
 import jp.gr.java_conf.foobar.testmaker.service.models.Test
@@ -346,15 +346,16 @@ class PlayActivity : BaseActivity() {
                 play_problem_view.setImage(storageRef)
 
             } else {
-                play_problem_view.initImage()
-                AsyncLoadImage(applicationContext, play_problem_view.getImageProblem(), question.imagePath, 1).execute(null)
+
+                playViewModel.loadImage(question.imagePath) {
+                    play_problem_view.getImageProblem()?.setImageWithGlide(baseContext, it)
+                }
+
             }
         }
     }
 
     private fun showResult() {
-
-//        play_problem_view.initImage()
 
         val i = Intent(this@PlayActivity, ResultActivity::class.java)
 
