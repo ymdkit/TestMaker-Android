@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -87,7 +86,7 @@ class PlayActivity : BaseActivity() {
         questions = if (intent.hasExtra("redo")) test.getQuestionsSolved()
         else ArrayList(test.questionsNonNull())
 
-        realmController.resetSolving(testId)
+        playViewModel.resetSolving(testId)
 
         if (!intent.hasExtra("redo")) questions = ArrayList(questions.drop(playViewModel.getTest(testId).startPosition))
 
@@ -218,7 +217,7 @@ class PlayActivity : BaseActivity() {
 
         soundRight.playSe()
 
-        realmController.updateCorrect(questions[number], true)
+        playViewModel.updateCorrect(questions[number], true)
 
         showImageJudge(R.drawable.right)
 
@@ -237,7 +236,7 @@ class PlayActivity : BaseActivity() {
 
     private fun actionMistake(yourAnswer: String) {
 
-        realmController.updateCorrect(questions[number], false)
+        playViewModel.updateCorrect(questions[number], false)
 
         showLayoutMistake(yourAnswer)
 
@@ -279,7 +278,8 @@ class PlayActivity : BaseActivity() {
 
                 val question = questions[number]
 
-                realmController.updateSolving(question.id, true)
+                //realmController.updateSolving(question.id, true)
+                playViewModel.updateSolving(question, true)
 
                 showProblem(question)
 
@@ -504,14 +504,14 @@ class PlayActivity : BaseActivity() {
         play_manual_view.setOnClickListener(object : PlayManualView.OnClickListener {
             override fun onClickRight() {
 
-                realmController.updateCorrect(questions[number], true)
+                playViewModel.updateCorrect(questions[number], true)
 
                 loadNext(60)
             }
 
             override fun onClickMistake() {
 
-                realmController.updateCorrect(questions[number], false)
+                playViewModel.updateCorrect(questions[number], false)
 
                 loadNext(60)
 

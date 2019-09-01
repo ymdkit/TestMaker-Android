@@ -73,7 +73,7 @@ open class EditActivity : BaseActivity() {
 
         viewModel.testId = intent.getLongExtra("testId", -1)
 
-        realmController.migrateOrder(viewModel.testId)
+        viewModel.migrateOrder()
 
         initAdapter()
 
@@ -462,7 +462,7 @@ open class EditActivity : BaseActivity() {
 
                     } else {
 
-                        realmController.updateTest(viewModel.getTest(viewModel.testId), sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
+                        viewModel.updateTest(sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
 
                         dialog.dismiss()
                     }
@@ -489,7 +489,7 @@ open class EditActivity : BaseActivity() {
 
             item.itemId == R.id.action_reset_achievement -> {
 
-                realmController.resetAchievement(viewModel.testId)
+                viewModel.resetAchievement()
 
                 Toast.makeText(baseContext, getString(R.string.msg_reset_achievement), Toast.LENGTH_SHORT).show()
 
@@ -636,7 +636,7 @@ open class EditActivity : BaseActivity() {
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
 
-                realmController.sortManual(from, to, viewModel.testId)
+                viewModel.sortManual(from, to, viewModel.testId)
                 editAdapter.questions.swap(from, to)
                 editAdapter.notifyItemMoved(from, to)
 

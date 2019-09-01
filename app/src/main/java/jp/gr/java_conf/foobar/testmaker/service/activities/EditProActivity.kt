@@ -80,7 +80,7 @@ class EditProActivity : BaseActivity() {
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_update), Toast.LENGTH_LONG).show()
 
                 it.id = intent.getLongExtra("testId", -1)
-                realmController.copyToRealm(it)
+                editProViewModel.addOrUpdateTest(it)
 
             }
         }

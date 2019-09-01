@@ -6,7 +6,7 @@ import jp.gr.java_conf.foobar.testmaker.service.models.TestMakerRepository
 
 class CategorizedViewModel(private val repository: TestMakerRepository): ViewModel() {
 
-    fun getTests(): List<Test> {
-        return repository.getTests()
-    }
+    fun getTests(): List<Test> = repository.getTests()
+    fun getCategorizedTests(category: String): List<Test> = repository.getCategorizedTests(category)
+
 }

@@ -8,7 +8,7 @@ import jp.gr.java_conf.foobar.testmaker.service.models.TestMakerRepository
 class MoveQuestionViewModel(private val repository: TestMakerRepository): ViewModel() {
 
     fun getTests(): List<Test> = repository.getTests()
-    fun addTest(test: Test): Long = repository.addTest(test)
+    fun addTest(test: Test): Long = repository.addOrUpdateTest(test)
     fun addQuestions(testId: Long, array: Array<Quest>) = repository.addQuestions(testId,array)
     fun deleteQuestions(testId: Long,array: Array<Boolean>) =  repository.deleteQuestions(testId,array)
 

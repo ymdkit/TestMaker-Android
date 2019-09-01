@@ -1,9 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.activities
 
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AlertDialog
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -69,7 +67,7 @@ open class ShowTestsActivity : BaseActivity() {
                 builder.setMessage(getString(R.string.message_delete_exam, test.title))
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
-                    realmController.deleteTest(test)
+                    showTestsViewModel.deleteTest(test)
                     testAndFolderAdapter.setValue()
 
                 }
@@ -200,9 +198,9 @@ open class ShowTestsActivity : BaseActivity() {
             val i = Intent(this@ShowTestsActivity, PlayActivity::class.java)
             i.putExtra("testId", test.id)
 
-            realmController.updateLimit(test, Integer.parseInt(limit))
-            realmController.updateStart(test,Integer.parseInt(start) - 1)
-            realmController.updateHistory(test)
+            showTestsViewModel.updateLimit(test, Integer.parseInt(limit))
+            showTestsViewModel.updateStart(test,Integer.parseInt(start) - 1)
+            showTestsViewModel.updateHistory(test)
 
             startActivityForResult(i, REQUEST_EDIT)
         }

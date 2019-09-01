@@ -21,7 +21,7 @@ class CategorizedActivity : ShowTestsActivity() {
 
         initTestAndFolderAdapter(setValue = {
 
-            testAndFolderAdapter.tests = realmController.getCategorizedList(intent.getStringExtra("category"))
+            testAndFolderAdapter.tests = viewModel.getCategorizedTests(intent.getStringExtra("category"))
             testAndFolderAdapter.categories = ArrayList()
             testAndFolderAdapter.allTests = viewModel.getTests()
 

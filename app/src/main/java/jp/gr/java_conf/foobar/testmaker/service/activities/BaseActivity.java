@@ -101,10 +101,4 @@ public class BaseActivity extends AppCompatActivity {
         container.addView(adView);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        realmController.close();
-    }
 }

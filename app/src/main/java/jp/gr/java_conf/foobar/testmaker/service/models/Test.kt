@@ -179,6 +179,7 @@ open class Test : RealmObject() {
 
     fun resetAchievement() {
 
+        questions ?: return
         questions!!.forEach { it.correct = false }
 
     }

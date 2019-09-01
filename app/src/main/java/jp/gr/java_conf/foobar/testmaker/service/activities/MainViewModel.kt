@@ -15,6 +15,15 @@ class MainViewModel(private val repository: TestMakerRepository) : ViewModel() {
     fun getCategories(): List<Cate> = repository.getCategories()
     fun addCategory(category: Cate) = repository.addCategory(category)
     fun deleteCategory(category: Cate) = repository.deleteCategory(category)
+    fun addTest(title: String, colorId: Int, category: String) {
+        val test = Test()
+        test.title = title
+        test.color = colorId
+        test.setCategory(category)
+        repository.addOrUpdateTest(test)
+    }
+    fun addOrUpdateTest(test: Test): Long = repository.addOrUpdateTest(test)
+
 
     val title: MutableLiveData<String> = MutableLiveData()
     var isEditing: MutableLiveData<Boolean> = MutableLiveData()

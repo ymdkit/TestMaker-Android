@@ -141,7 +141,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
         binding.buttonAdd.setOnClickListener {
 
-            realmController.addTest(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
+            viewModel.addTest(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
 
             Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
 
@@ -364,10 +364,8 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
         GlobalScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.Default) { text.toTest(baseContext, questionId) }.let {
-
-                realmController.copyToRealm(it)
+                viewModel.addOrUpdateTest(it)
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
-
                 testAndFolderAdapter.setValue()
             }
         }

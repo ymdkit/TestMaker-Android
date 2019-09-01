@@ -129,7 +129,7 @@
         <item>画像の差し替え</item>
         <item>取り消し</item>
     </string-array>
-    
+
     <string-array name="action_reload">
         <item>全部</item>
         <item>間違えた問題のみ</item>
@@ -258,7 +258,7 @@
     <string name="select_complete">選択完答</string>
     <string name="start">スタート</string>
     <string name="is_random">ランダムに出題</string>
-    <string name="info_firebase_test" >作者: %1$s\n\n投稿日: %2$s\n\n概要: %3$s</string>
+    <string name="info_firebase_test">作者: %1$s\n\n投稿日: %2$s\n\n概要: %3$s</string>
     <string name="msg_not_login">問題集の投稿、マイページの閲覧にはログインが必要です</string>
     <string name="old_online">旧みんなの問題集</string>
     <string name="old_online_main">旧みんなの問題集</string>
@@ -268,7 +268,7 @@
     <string name="report_subject">問題集の報告</string>
     <string name="report_body">以下に報告する理由を記載してください</string>
     <string name="notes">「みんなの問題集」機能のリニューアル</string>
-    <string name="msg_notice_firebase">・画像付き問題集の投稿が可能になりました\n・iOS版とデータベースを統合しました\n・投稿できる問題数の上限を撤廃しました\n\nこれまでに投稿した問題集については右メニューの「旧みんなの問題集」より確認できます</string>
+    <string name="msg_notice_firebase">・画像付き問題集の投稿が可能になりました\n・iOS版とデータベースを統合しました\n・投稿できる問題数の上限を撤廃しました</string>
     <string name="not_exist_ext">ファイルを開くためのアプリがインストールされていません</string>
     <string name="msg_test_upload">問題集を投稿しました</string>
 

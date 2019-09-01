@@ -101,6 +101,7 @@ class TestMakerRepository(private val local: LocalDataSource,
     }
 
     fun getTestsQuery() = remote.getTestsQuery()
+    fun getCategorizedTests(category: String): List<Test> = local.getCategorizedTests(category)
     fun getNonCategorizedTests(): List<Test> = local.getNonCategorizedTests()
     fun getExistingCategoryList(): List<Cate> = local.getExistingCategories()
     fun getCategories(): List<Cate> = local.getCategories()
@@ -109,9 +110,19 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun getTest(testId: Long): Test = local.getTest(testId)
     fun getTestClone(testId: Long): Test = local.getTestClone(testId)
 
-    fun addTest(test: Test): Long = local.addTest(test)
+    fun addOrUpdateTest(test: Test): Long = local.addOrUpdateTest(test)
     fun addQuestions(testId: Long, array: Array<Quest>) = local.addQuestions(testId, array)
     fun deleteQuestions(testId: Long, array: Array<Boolean>) = local.deleteQuestions(testId, array)
-
+    fun resetAchievement(testId: Long) = local.resetAchievement(testId)
+    fun resetSolving(testId: Long) = local.resetSolving(testId)
+    fun sortManual(from: Int, to: Int, testId: Long) = local.sortManual(from, to, testId)
+    fun migrateOrder(testId: Long) = local.migrateOrder(testId)
+    fun updateTest(test: Test, title: String, color: Int, category: String) = local.updateTest(test, title, color, category)
+    fun deleteTest(test: Test) = local.deleteTest(test)
+    fun updateHistory(test: Test) = local.updateHistory(test)
+    fun updateStart(test: Test, start: Int) = local.updateStart(test, start)
+    fun updateLimit(test: Test, limit: Int) = local.updateLimit(test, limit)
+    fun updateCorrect(quest: Quest, correct: Boolean) = local.updateCorrect(quest, correct)
+    fun updateSolving(quest: Quest, solving: Boolean) = local.updateSolving(quest, solving)
 
 }

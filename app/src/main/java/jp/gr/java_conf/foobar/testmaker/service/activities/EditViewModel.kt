@@ -33,6 +33,7 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
 
     var imagePath: String = ""
     var testId: Long = -1L
+    var test = getTest(testId)
     var questionId: Long = -1
     var editingView: View? = null
 
@@ -175,4 +176,8 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
     fun getCategories(): List<Cate> = repository.getCategories()
     fun addCategory(category: Cate) = repository.addCategory(category)
     fun deleteCategory(category: Cate) = repository.deleteCategory(category)
+    fun resetAchievement() = repository.resetAchievement(testId)
+    fun sortManual(from: Int, to: Int, testId: Long) = repository.sortManual(from, to, testId)
+    fun migrateOrder() = repository.migrateOrder(testId)
+    fun updateTest(title: String, color: Int, category: String) = repository.updateTest(getTest(testId), title, color, category)
 }

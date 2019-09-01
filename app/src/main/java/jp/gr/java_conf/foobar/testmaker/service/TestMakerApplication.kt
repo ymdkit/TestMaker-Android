@@ -33,5 +33,7 @@ class TestMakerApplication : MultiDexApplication() {
         startKoin(this, listOf(
                 getTestMakerModules(Realm.getInstance(config))
         ))
+
+
     }
 }
