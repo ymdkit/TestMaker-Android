@@ -8,7 +8,7 @@
 
         <variable
             name="model"
-            type="jp.gr.java_conf.foobar.testmaker.service.activities.EditViewModel" />
+            type="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditViewModel" />
 
         <import type="android.view.View" />
 
@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:background="@color/background"
         android:orientation="vertical"
-        tools:context="jp.gr.java_conf.foobar.testmaker.service.activities.EditActivity">
+        tools:context="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity">
 
 
         <androidx.appcompat.widget.Toolbar
@@ -345,7 +345,7 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <jp.gr.java_conf.foobar.testmaker.service.views.EditCompleteView
+                    <jp.gr.java_conf.foobar.testmaker.service.view.edit.EditCompleteView
                         android:id="@+id/edit_complete_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -353,14 +353,14 @@
                         card_view:layout_constraintTop_toBottomOf="@id/edit_write_view" />
 
 
-                    <jp.gr.java_conf.foobar.testmaker.service.views.EditSelectView
+                    <jp.gr.java_conf.foobar.testmaker.service.view.edit.EditSelectView
                         android:id="@+id/edit_select_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:visibility="@{model.formatQuestion == Constants.SELECT ? View.VISIBLE : View.GONE}"
                         card_view:layout_constraintTop_toBottomOf="@id/edit_complete_view" />
 
-                    <jp.gr.java_conf.foobar.testmaker.service.views.EditSelectCompleteView
+                    <jp.gr.java_conf.foobar.testmaker.service.view.edit.EditSelectCompleteView
                         android:id="@+id/edit_select_complete_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:background="@color/background"
         android:orientation="vertical"
-        tools:context="jp.gr.java_conf.foobar.testmaker.service.activities.MainActivity">
+        tools:context="jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"

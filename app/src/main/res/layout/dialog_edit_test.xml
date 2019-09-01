@@ -48,7 +48,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <jp.gr.java_conf.foobar.testmaker.service.views.ColorChooser
+        <jp.gr.java_conf.foobar.testmaker.service.view.share.ColorChooser
             android:id="@+id/color_chooser"
             android:layout_width="match_parent"
             android:layout_height="0dp"

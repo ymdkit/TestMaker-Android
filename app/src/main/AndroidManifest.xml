@@ -15,8 +15,8 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.FirebaseMyPageActivity"></activity>
-        <activity android:name=".activities.FirebaseActivity" />
+        <activity android:name=".view.online.FirebaseMyPageActivity"></activity>
+        <activity android:name=".view.online.FirebaseActivity" />
 
         <meta-data
             android:name="studyplus_comsumer_key"
@@ -39,7 +39,7 @@
             android:required="false" />
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".view.main.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,42 +48,42 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.PlayActivity"
+            android:name=".view.play.PlayActivity"
             android:label="解答"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".activities.EditActivity"
+            android:name=".view.edit.EditActivity"
             android:label="編集"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ResultActivity"
+            android:name=".view.result.ResultActivity"
             android:label="結果"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.WebViewActivity"
+            android:name=".view.library.WebViewActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.CategorizedActivity"
+            android:name=".view.category.CategorizedActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.EditProActivity"
+            android:name=".view.edit.EditProActivity"
             android:label="@string/title_activity_edit_pro"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.ShowTestsActivity" />
-        <activity android:name=".activities.BaseActivity" />
+        <activity android:name=".view.share.ShowTestsActivity" />
+        <activity android:name=".view.share.BaseActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".activities.MoveQuestionsActivity"
+            android:name=".view.move.MoveQuestionsActivity"
             android:label="@string/title_activity_move_questions"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.StudyPlusActivity"
+            android:name=".view.studyplus.StudyPlusActivity"
             android:label="@string/title_activity_study_plus"
             android:theme="@style/AppTheme" />
     </application>

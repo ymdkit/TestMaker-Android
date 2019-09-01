@@ -3,8 +3,8 @@ package jp.gr.java_conf.foobar.testmaker.service.extensions
 import android.content.Context
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.models.Quest
-import jp.gr.java_conf.foobar.testmaker.service.models.Test
+import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
 fun String.toTest(context: Context, questionId: Long): Test {
 

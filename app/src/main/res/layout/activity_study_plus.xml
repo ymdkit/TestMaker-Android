@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
-    tools:context=".activities.StudyPlusActivity">
+    tools:context=".view.studyplus.StudyPlusActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

@@ -67,7 +67,7 @@
 
             </LinearLayout>
 
-            <jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
+            <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/element_spacing_small"
@@ -79,7 +79,7 @@
                 custom:image="@drawable/ic_file_download_white"
                 />
 
-            <jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
+            <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/element_spacing_small"
@@ -91,7 +91,7 @@
                 custom:image="@drawable/ic_delete_white"
                 />
 
-            <jp.gr.java_conf.foobar.testmaker.service.views.ImageTextButton
+            <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/element_spacing_small"
