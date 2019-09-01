@@ -103,7 +103,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
                 imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
                 try {
 
-                    val outStream = context.openFileOutput(fileName, BaseActivity.MODE_PRIVATE)
+                    val outStream = context.openFileOutput(fileName,0)
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream)
                     outStream.close()
 

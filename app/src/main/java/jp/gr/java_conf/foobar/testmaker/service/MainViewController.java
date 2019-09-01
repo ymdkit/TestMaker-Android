@@ -53,7 +53,7 @@ public class MainViewController {
                 switch (purchase.getSku()) {
                     case "removead":
                         Log.d(TAG, "You remove ad! Congratulations!!!");
-                        mActivity.sharedPreferenceManager.setRemovedAd(true);
+                        mActivity.getSharedPreferenceManager().setRemovedAd(true);
                         mActivity.removeAd();
                         break;
                 }
