@@ -28,12 +28,6 @@
             android:name="testmaker_admob_key"
             android:value="${testmaker_admob_key}" />
         <meta-data
-            android:name="ncbm_app_key"
-            android:value="${ncbm_app_key}" />
-        <meta-data
-            android:name="ncbm_client_key"
-            android:value="${ncbm_client_key}" />
-        <meta-data
             android:name="com.google.android.gms.ads.jp.gr.java_conf.foobar.testmaker.service"
             android:value="hogehoge" />
         <meta-data
