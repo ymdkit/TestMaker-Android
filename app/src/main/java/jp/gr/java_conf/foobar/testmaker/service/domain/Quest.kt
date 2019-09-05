@@ -74,8 +74,8 @@ open class Quest : RealmObject() {
                 explanation = explanation,
                 imageRef = if (imagePath.isEmpty()) "" else "${user.uid}/$imagePath",
                 type = type,
-                isAuto = auto,
-                isCheckOrder = isCheckOrder,
+                auto = auto,
+                checkOrder = isCheckOrder,
                 order = order
         )
 

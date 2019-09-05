@@ -9,8 +9,8 @@ data class FirebaseQuestion(val question: String = "",
                             val explanation: String = "",
                             val imageRef: String = "",
                             val type: Int = 0,
-                            val isAuto: Boolean = false,
-                            val isCheckOrder: Boolean = false,
+                            val auto: Boolean = false,
+                            val checkOrder: Boolean = false,
                             val order: Int = 0
 ) {
 
@@ -26,8 +26,8 @@ data class FirebaseQuestion(val question: String = "",
         }
         quest.setAnswers(answers.toTypedArray())
         quest.setSelections(others.toTypedArray())
-        quest.auto = isAuto
-        quest.isCheckOrder = isCheckOrder
+        quest.auto = auto
+        quest.isCheckOrder = checkOrder
         quest.imagePath = imageRef
         quest.explanation = explanation
         quest.type = type

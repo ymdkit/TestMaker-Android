@@ -16,13 +16,17 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.result.ResultActivity
-import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.result.ResultActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_play.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -32,9 +36,7 @@ import kotlin.collections.ArrayList
  */
 class PlayActivity : BaseActivity() {
 
-    internal var number: Int = 0
-
-    private var testId: Long = 0
+    internal var number: Int = -1
 
     private lateinit var soundMistake: SePlayer
     private lateinit var soundRight: SePlayer
@@ -60,7 +62,7 @@ class PlayActivity : BaseActivity() {
 
         initToolBar()
 
-        testId = intent.getLongExtra("testId", -1)
+        playViewModel.testId = intent.getLongExtra("testId", -1)
 
         val container = findViewById<LinearLayout>(R.id.container)
         createAd(container)
@@ -72,8 +74,6 @@ class PlayActivity : BaseActivity() {
 
         initQuestions()
 
-        number = -1
-
         startTime = System.currentTimeMillis()
 
         loadNext(0)
@@ -82,20 +82,20 @@ class PlayActivity : BaseActivity() {
 
     private fun initQuestions() {
 
-        test = playViewModel.getTest(testId)
+        test = playViewModel.getTest()
 
         questions = if (intent.hasExtra("redo")) test.getQuestionsSolved()
         else ArrayList(test.questionsNonNull())
 
-        playViewModel.resetSolving(testId)
+        playViewModel.resetSolving()
 
-        if (!intent.hasExtra("redo")) questions = ArrayList(questions.drop(playViewModel.getTest(testId).startPosition))
+        if (!intent.hasExtra("redo")) questions = ArrayList(questions.drop(playViewModel.getTest().startPosition))
 
         if (sharedPreferenceManager.refine) questions = questions.filter { !it.correct } as ArrayList<Quest>
 
         if (sharedPreferenceManager.random) questions.shuffle()
 
-        if (playViewModel.getTest(testId).limit < questions.size) questions = ArrayList(questions.take(playViewModel.getTest(testId).limit))
+        if (playViewModel.getTest().limit < questions.size) questions = ArrayList(questions.take(playViewModel.getTest().limit))
 
         if (questions.size < 1) {
             Toast.makeText(baseContext, getString(R.string.msg_null_questions), Toast.LENGTH_LONG).show()
@@ -269,9 +269,10 @@ class PlayActivity : BaseActivity() {
 
     }
 
-    fun loadNext(second: Int) {
+    fun loadNext(second: Long) {
 
-        Handler().postDelayed({
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(second)
 
             number += 1
 
@@ -279,7 +280,6 @@ class PlayActivity : BaseActivity() {
 
                 val question = questions[number]
 
-                //realmController.updateSolving(question.id, true)
                 playViewModel.updateSolving(question, true)
 
                 showProblem(question)
@@ -307,9 +307,7 @@ class PlayActivity : BaseActivity() {
                 showResult()
 
             }
-
-        }, second.toLong())
-
+        }
     }
 
     private fun showProblem(question: Quest) {
@@ -361,7 +359,7 @@ class PlayActivity : BaseActivity() {
         val i = Intent(this@PlayActivity, ResultActivity::class.java)
 
         i.putExtra("duration", System.currentTimeMillis() - startTime)
-        i.putExtra("testId", testId)
+        i.putExtra("testId", playViewModel.testId)
 
         startActivity(i)
 
@@ -423,6 +421,7 @@ class PlayActivity : BaseActivity() {
 
         if (allAnswers.isEmpty()) {
             questions.forEach { q ->
+
                 when (q.type) {
                     Constants.WRITE -> allAnswers.add(q.answer)
                     Constants.SELECT -> allAnswers.add(q.answer)

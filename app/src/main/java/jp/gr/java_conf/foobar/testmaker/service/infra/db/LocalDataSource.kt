@@ -131,6 +131,9 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
             val question = it.toQuest()
             question.order = index
             question.id = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 1
+
+            println()
+
             realm.copyToRealmOrUpdate(question)
             test.addQuestion(question)
         }
