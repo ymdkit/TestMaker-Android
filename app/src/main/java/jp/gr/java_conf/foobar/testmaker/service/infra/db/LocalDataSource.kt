@@ -60,6 +60,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         } else {
 
             question.id = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 1
+            question.order = question.id.toInt()
             realm.copyToRealmOrUpdate(question)
             test.addQuestion(question)
         }
