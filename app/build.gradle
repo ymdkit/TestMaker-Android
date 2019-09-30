@@ -13,8 +13,8 @@ android {
         minSdkVersion 17
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 84
-        versionName "3.0.7"
+        versionCode 85
+        versionName "3.0.8"
     }
 
     packagingOptions {

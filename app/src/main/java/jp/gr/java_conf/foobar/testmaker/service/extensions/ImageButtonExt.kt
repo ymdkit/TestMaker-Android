@@ -13,8 +13,6 @@ import jp.gr.java_conf.foobar.testmaker.service.modules.GlideApp
 
 fun ImageButton.setImageWithGlide(context: Context, img: Bitmap){
 
-    scaleType = ImageView.ScaleType.CENTER_CROP
-
     val circularProgressDrawable = androidx.swiperefreshlayout.widget.CircularProgressDrawable(context)
     circularProgressDrawable.setColorSchemeColors(Color.WHITE)
     circularProgressDrawable.strokeWidth = 5f

@@ -20,12 +20,6 @@
         android:layout_weight="1"
         android:id="@+id/layout_image">
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/progressBar2" />
-
         <ImageButton
             android:contentDescription="@string/image"
             android:layout_width="match_parent"
