@@ -164,9 +164,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
     fun addOrUpdateTest(test: Test): Long {
         realm.beginTransaction()
         if (test.id == 0L) test.id = realm.where(Test::class.java).max("id")?.toLong()?.plus(1) ?: 1
-
-        val tests = getTests()
-
         realm.copyToRealmOrUpdate(test)
         realm.commitTransaction()
         return test.id
