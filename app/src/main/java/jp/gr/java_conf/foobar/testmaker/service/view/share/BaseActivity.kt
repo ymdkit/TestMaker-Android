@@ -82,6 +82,7 @@ open class BaseActivity : AppCompatActivity() {
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice("DA539D38B08126EBEF7E059DCA26831C")
                 .addTestDevice("BDB57B5078A79B87345E711A52F0F995")
+                .addTestDevice("4C3BA6538C8F304A33859DC20F66316E")
                 .build()
         adView.loadAd(adRequest)
 

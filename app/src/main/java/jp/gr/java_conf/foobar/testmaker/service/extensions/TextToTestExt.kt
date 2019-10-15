@@ -15,9 +15,7 @@ fun String.toTest(context: Context, questionId: Long): Test {
     test.color = context.resources.getIntArray(R.array.color_list)[0]
 
     for (i in backups.indices) {
-
         try {
-
             var backup = backups[i].replace("<br>".toRegex(), "\n").split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().filter { s: String -> s != "" }
 
             backup = backup.map {
@@ -34,21 +32,18 @@ fun String.toTest(context: Context, questionId: Long): Test {
 
                     question.answer = backup[2]
                     question.type = Constants.WRITE
-
                 } else if (backup[0] == context.getString(R.string.load_multiple_answers)) {
                     if (backup.size - 2 > Constants.ANSWER_MAX) continue
 
                     question.setAnswers(backup.drop(2).toTypedArray())
                     backup.drop(2).toTypedArray().forEach { question.answer += "$it " }
                     question.type = Constants.COMPLETE
-
                 } else if (backup[0] == context.getString(R.string.load_multiple_answers_order)) {
                     if (backup.size - 2 > Constants.ANSWER_MAX) continue
 
                     question.setAnswers(backup.drop(2).toTypedArray())
                     question.isCheckOrder = true
                     question.type = Constants.COMPLETE
-
                 } else if (backup[0] == context.getString(R.string.load_selection_problems)) {
 
                     if (backup.size - 3 > Constants.OTHER_SELECT_MAX) continue
@@ -56,7 +51,6 @@ fun String.toTest(context: Context, questionId: Long): Test {
                     question.answer = backup[2]
                     question.setSelections(backup.drop(3).toTypedArray())
                     question.type = Constants.SELECT
-
                 } else if (backup[0] == context.getString(R.string.load_selection_auto_problems)) {
 
                     if (backup.size != 4) continue
@@ -69,7 +63,6 @@ fun String.toTest(context: Context, questionId: Long): Test {
                     question.auto = true
                     question.type = Constants.SELECT
                     question.setSelections(Array(otherNum) { context.getString(R.string.state_auto) })
-
                 } else if (backup[0] == context.getString(R.string.load_select_complete_auto_problem)) {
 
                     val otherNum = Integer.parseInt(backup[2].substring(0, 1))
@@ -80,14 +73,13 @@ fun String.toTest(context: Context, questionId: Long): Test {
 
                     val answers = backup.drop(3).toTypedArray()
 
-                    if (others.size + answers.size > Constants.SELECT_COMPLETE_MAX) continue //要素数オーバー
+                    if (others.size + answers.size > Constants.SELECT_COMPLETE_MAX) continue // 要素数オーバー
 
                     question.type = Constants.SELECT_COMPLETE
                     answers.forEach { question.answer += "$it " }
                     question.setAnswers(answers)
                     question.setSelections(others)
                     question.auto = true
-
                 } else if (backup[0] == context.getString(R.string.load_select_complete_problem)) {
 
                     question.type = Constants.SELECT_COMPLETE
@@ -96,7 +88,7 @@ fun String.toTest(context: Context, questionId: Long): Test {
 
                     val otherNum = Integer.parseInt(backup[3].substring(0, 1))
 
-                    if (otherNum + answerNum > Constants.SELECT_COMPLETE_MAX) continue //要素数オーバー
+                    if (otherNum + answerNum > Constants.SELECT_COMPLETE_MAX) continue // 要素数オーバー
 
                     val answers = backup.drop(4).take(answerNum).toTypedArray()
 
@@ -106,11 +98,9 @@ fun String.toTest(context: Context, questionId: Long): Test {
                     answers.forEach { question.answer += "$it " }
                     question.setAnswers(answers)
                     question.setSelections(others)
-
                 }
 
                 test.addQuestion(question)
-
             } else if (backup.size == 2) {
 
                 if (backup[0] == context.getString(R.string.load_explanation)) {
@@ -125,10 +115,8 @@ fun String.toTest(context: Context, questionId: Long): Test {
                     test.color = Integer.parseInt(backup[1])
                 }
             }
-
         } catch (e: ArrayIndexOutOfBoundsException) {
         }
     }
     return test
-
 }
