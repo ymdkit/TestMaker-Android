@@ -8,3 +8,6 @@
 /build
 /captures
 /release
+/app/release
+.idea/
+buildSrc/
