@@ -35,8 +35,6 @@ class PlaySelectCompleteView : LinearLayout {
 
         }
 
-        if (Build.VERSION.SDK_INT >= 21) button_ok.stateListAnimator = null
-
         for (i in checkBoxes.indices) {
             val s = "check_select_" + (i + 1).toString()
             val strId = resources.getIdentifier(s, "id", context.packageName)

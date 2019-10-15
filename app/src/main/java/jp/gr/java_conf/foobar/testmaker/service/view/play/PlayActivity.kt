@@ -528,9 +528,6 @@ class PlayActivity : BaseActivity() {
             Handler().postDelayed({ button_confirm.isEnabled = true }, 600)
 
         }
-
-        if (Build.VERSION.SDK_INT >= 21) button_confirm.stateListAnimator = null
-
     }
 
     private fun showLayoutManual() {

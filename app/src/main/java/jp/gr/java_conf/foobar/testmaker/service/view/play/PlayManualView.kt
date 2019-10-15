@@ -29,14 +29,6 @@ class PlayManualView : LinearLayout {
         button_right.setOnClickListener { if (listener != null) listener!!.onClickRight() }
 
         button_mistake.setOnClickListener { if (listener != null) listener!!.onClickMistake() }
-
-        if (Build.VERSION.SDK_INT >= 21) {
-
-            button_right.stateListAnimator = null
-            button_mistake.stateListAnimator = null
-
-        }
-
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)

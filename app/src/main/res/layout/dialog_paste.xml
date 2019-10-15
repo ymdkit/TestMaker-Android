@@ -26,5 +26,6 @@
         android:layout_weight="1"
         android:background="@drawable/button_blue"
         android:id="@+id/button_paste"
+        android:stateListAnimator="@null"
         />
 </LinearLayout>
