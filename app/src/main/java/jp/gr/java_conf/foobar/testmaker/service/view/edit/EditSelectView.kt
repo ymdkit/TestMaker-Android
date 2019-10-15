@@ -90,8 +90,8 @@ class EditSelectView : RelativeLayout{
     }
 
     private fun disableAuto(limit: Int){
-
         for (i in 0 until limit) {
+            if(i >= editOthers.size) break
             if (editOthers[i]?.text.toString() == context.getString(R.string.state_auto)) editOthers[i]?.setText("")
 
             editOthers[i]?.isEnabled = true

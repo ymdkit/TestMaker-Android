@@ -97,6 +97,7 @@ class EditSelectCompleteView : RelativeLayout {
     private fun disableAuto(limit: Int){
 
         for (i in 0 until limit) {
+            if(i >= editSelectCompletes.size) break
             if(editSelectCompletes[i]?.hint?.contains(context.getString(R.string.hint_answer)) == true)continue
 
             if (editSelectCompletes[i]?.text.toString() == context.getString(R.string.state_auto)) editSelectCompletes[i]?.setText("")
