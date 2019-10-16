@@ -10,12 +10,13 @@
     <application
         android:name=".TestMakerApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup"
         android:icon="@drawable/icon_testmaker_small"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.online.FirebaseMyPageActivity"></activity>
+        <activity android:name=".view.online.FirebaseMyPageActivity"/>
         <activity android:name=".view.online.FirebaseActivity" />
 
         <meta-data
