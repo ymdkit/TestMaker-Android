@@ -5,25 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/action_normal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_red"
-        android:visibility="gone"
-        android:text="@string/message_order"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/action_random"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:background="@drawable/button_red"
-        android:visibility="gone"
-        android:text="@string/message_random"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <LinearLayout
         android:id="@+id/layout_option"
         android:layout_width="match_parent"
