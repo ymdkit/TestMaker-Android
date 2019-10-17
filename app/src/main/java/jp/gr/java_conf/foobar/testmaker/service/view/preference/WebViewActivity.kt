@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.library
+package jp.gr.java_conf.foobar.testmaker.service.view.preference
 
 import android.os.Bundle
 import android.view.MenuItem

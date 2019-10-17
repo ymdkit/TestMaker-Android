@@ -24,9 +24,10 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingProvider
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
-import jp.gr.java_conf.foobar.testmaker.service.view.library.WebViewActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.preference.WebViewActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.studyplus.StudyPlusActivity
 import kotlinx.coroutines.Dispatchers
@@ -188,13 +189,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                     startActivityForResult(intent, REQUEST_IMPORT)
 
                 }
-
-                R.id.nav_license -> {
-
-                    val licenseIntent = Intent(this@MainActivity, WebViewActivity::class.java)
-                    licenseIntent.putExtra("url", "file:///android_asset/licenses.html")
-                    startActivity(licenseIntent)
-                }
                 R.id.nav_paste -> {
 
                     val dialogLayout = layoutInflater.inflate(R.layout.dialog_paste, findViewById(R.id.layout_dialog_paste))
@@ -213,6 +207,9 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
                         dialog.dismiss()
                     }
+                }
+                R.id.nav_settings -> {
+                    startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
                 }
 
                 R.id.nav_online -> {

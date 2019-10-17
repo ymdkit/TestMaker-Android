@@ -39,7 +39,7 @@
     <string name="edit">編集</string>
     <string name="delete">削除</string>
     <string name="loading">読み込み中</string>
-    <string name="way">出題形式</string>
+    <string name="way">出題設定</string>
     <string name="load">読み込む</string>
     <string name="unknown">タイトル不明</string>
     <string name="limit">%1$d ~ %2$d までにしてください</string>
@@ -61,10 +61,10 @@
     <string name="is_check_order">・解答順を正誤判定に含める</string>
     <string name="message_paste">共有機能で作成したテキストを\nここに貼り付けてください</string>
     <string name="message_order">順番通りに出題</string>
-    <string name="message_random">ランダムに出題</string>
-    <string name="message_wrong_only">間違えた問題のみ出題</string>
-    <string name="message_switch_question">問題文と解答の入れ替え(記述問題)</string>
-    <string name="message_self">自己採点モード(記述問題)</string>
+    <string name="message_random">出題順をランダムにする</string>
+    <string name="message_wrong_only">間違えた問題のみ出題する</string>
+    <string name="message_switch_question">問題文と解答を入れ替える</string>
+    <string name="message_self">自己採点モード</string>
     <string name="message_delete_sound">効果音を消す</string>
     <string name="message_wrong_load">%1$s 行目に入力の不備があります。</string>
     <string name="message_success_load">%1$s を読み込みました</string>
@@ -257,7 +257,7 @@
     <string name="complete">完答</string>
     <string name="select_complete">選択完答</string>
     <string name="start">スタート</string>
-    <string name="is_random">ランダムに出題</string>
+    <string name="is_random">出題順をランダムにする</string>
     <string name="info_firebase_test">作者: %1$s\n\n投稿日: %2$s\n\n概要: %3$s</string>
     <string name="msg_not_login">問題集の投稿、マイページの閲覧にはログインが必要です</string>
     <string name="old_online">旧みんなの問題集</string>
@@ -271,6 +271,15 @@
     <string name="msg_notice_firebase">・画像付き問題集の投稿が可能になりました\n・iOS版とデータベースを統合しました\n・投稿できる問題数の上限を撤廃しました</string>
     <string name="not_exist_ext">ファイルを開くためのアプリがインストールされていません</string>
     <string name="msg_test_upload">問題集を投稿しました</string>
+    <string name="setting">設定</string>
+    <string name="setting_sound">効果音</string>
+    <string name="preference_group_other">その他</string>
+    <string name="summary_setting_reverse_answer">記述式の問題に適用されます</string>
+    <string name="setting_show_dialog">出題設定ダイアログの表示</string>
+    <string name="preference_group_study_plus">Studyplus連携設定</string>
+    <string name="preference_study_plus">Studyplus連携</string>
+    <string name="preference_post_study_plus">勉強結果の投稿</string>
+    <string name="setting_show_setting_dialog">出題前に設定を変更することができます</string>
 
 
 </resources>

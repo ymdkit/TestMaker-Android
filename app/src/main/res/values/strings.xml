@@ -271,5 +271,14 @@
     <string name="msg_notice_firebase">1. you can upload image\n2. share with iOS version\n if you see old version, please use [old online] in side menu</string>
     <string name="not_exist_ext">not exist available apps</string>
     <string name="msg_test_upload">upload success</string>
+    <string name="setting">setting</string>
+    <string name="setting_sound">sound</string>
+    <string name="preference_group_other">other</string>
+    <string name="summary_setting_reverse_answer"></string>
+    <string name="setting_show_dialog">show dialog before play</string>
+    <string name="preference_group_study_plus">Studyplus</string>
+    <string name="preference_study_plus">Connect Studyplus</string>
+    <string name="preference_post_study_plus">post your study</string>
+    <string name="setting_show_setting_dialog">show setting dialog before play</string>
 
 </resources>

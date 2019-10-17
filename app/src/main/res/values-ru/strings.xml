@@ -262,5 +262,13 @@
     <string name="msg_notice_firebase">онлайн функция обновлена\n1. Вы можете загрузить изображение\n2. Вы можете загрузить изображение</string>
     <string name="not_exist_ext">not exist available apps</string>
     <string name="msg_test_upload">upload success</string>
+    <string name="setting">setting</string>
+    <string name="setting_sound">звук</string>
+    <string name="preference_group_other">Другие</string>
+    <string name="setting_show_dialog">показать диалог перед игрой</string>
+    <string name="preference_group_study_plus">Studyplus</string>
+    <string name="preference_study_plus">Connect Studyplus</string>
+    <string name="preference_post_study_plus">post your study</string>
+    <string name="setting_show_setting_dialog">show setting dialog before play</string>
 
 </resources>

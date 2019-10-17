@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.db
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 
 class SharedPreferenceManager(context: Context) {
 
@@ -35,36 +36,6 @@ class SharedPreferenceManager(context: Context) {
     var isCheckOrder: Boolean
         get() = sharedPreferences.getBoolean("isCheckOrder", false)
         set(f) = sharedPreferences.edit().putBoolean("isCheckOrder", f)
-                .apply()
-
-    var manual: Boolean
-        get() = sharedPreferences.getBoolean("manual", false)
-        set(f) = sharedPreferences.edit().putBoolean("manual", f)
-                .apply()
-
-    var refine: Boolean
-        get() = sharedPreferences.getBoolean("refine", false)
-        set(f) = sharedPreferences.edit().putBoolean("refine", f)
-                .apply()
-
-    var audio: Boolean
-        get() = sharedPreferences.getBoolean("audio", false)
-        set(f) = sharedPreferences.edit().putBoolean("audio", f)
-                .apply()
-
-    var random: Boolean
-        get() = sharedPreferences.getBoolean("random", false)
-        set(f) = sharedPreferences.edit().putBoolean("random", f)
-                .apply()
-
-    var reverse: Boolean
-        get() = sharedPreferences.getBoolean("reverse", false)
-        set(f) = sharedPreferences.edit().putBoolean("reverse", f)
-                .apply()
-
-    var alwaysReview: Boolean
-        get() = sharedPreferences.getBoolean("alwaysReview", false)
-        set(f) = sharedPreferences.edit().putBoolean("alwaysReview", f)
                 .apply()
 
     var confirmSave: Boolean
@@ -103,6 +74,75 @@ class SharedPreferenceManager(context: Context) {
                 .apply()
 
 
+    //preferencesと連携するため
 
+    private val defaultPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+    var audio: Boolean
+        get() = defaultPreferences.getBoolean("audio", !oldAudio)
+        set(f) = defaultPreferences.edit().putBoolean("audio", f)
+                .apply()
+
+    var random : Boolean
+        get() = defaultPreferences.getBoolean("random", oldRandom)
+        set(f) = defaultPreferences.edit().putBoolean("random", f).apply()
+
+
+    var reverse: Boolean
+        get() = defaultPreferences.getBoolean("reverse", oldReverse)
+        set(f) = sharedPreferences.edit().putBoolean("reverse", f)
+                .apply()
+
+    var refine: Boolean
+        get() = defaultPreferences.getBoolean("refine", oldRefine)
+        set(f) = defaultPreferences.edit().putBoolean("refine", f)
+                .apply()
+
+    var manual: Boolean
+        get() = defaultPreferences.getBoolean("manual", oldManual)
+        set(f) = defaultPreferences.edit().putBoolean("manual", f)
+                .apply()
+
+    var alwaysReview: Boolean
+        get() = defaultPreferences.getBoolean("alwaysReview", oldAlwaysReview)
+        set(f) = defaultPreferences.edit().putBoolean("alwaysReview", f)
+                .apply()
+
+    var isShowPlaySettingDialog: Boolean
+        get() = defaultPreferences.getBoolean("show_setting_dialog", true)
+        set(f) = defaultPreferences.edit().putBoolean("show_setting_dialog", f)
+                .apply()
+
+    //preferencesと連携させるため古いフラグを退避
+
+    private var oldRandom: Boolean
+        get() = sharedPreferences.getBoolean("random", false)
+        set(f) = sharedPreferences.edit().putBoolean("random", f)
+                .apply()
+
+    private var oldReverse: Boolean
+        get() = sharedPreferences.getBoolean("reverse", false)
+        set(f) = sharedPreferences.edit().putBoolean("reverse", f)
+                .apply()
+
+    private var oldRefine: Boolean
+        get() = sharedPreferences.getBoolean("refine", false)
+        set(f) = sharedPreferences.edit().putBoolean("refine", f)
+                .apply()
+
+    private var oldAudio: Boolean
+        get() = sharedPreferences.getBoolean("audio", false)
+        set(f) = sharedPreferences.edit().putBoolean("audio", f)
+                .apply()
+
+    private var oldAlwaysReview: Boolean
+        get() = sharedPreferences.getBoolean("alwaysReview", false)
+        set(f) = sharedPreferences.edit().putBoolean("alwaysReview", f)
+                .apply()
+
+    private var oldManual: Boolean
+        get() = sharedPreferences.getBoolean("manual", false)
+        set(f) = sharedPreferences.edit().putBoolean("manual", f)
+                .apply()
 
 }

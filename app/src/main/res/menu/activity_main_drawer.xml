@@ -47,9 +47,9 @@
             android:title="@string/action_remove_ad" />
 
         <item
-            android:id="@+id/nav_license"
-            android:icon="@drawable/ic_folder_open_white"
-            android:title="@string/action_license" />
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_white"
+            android:title="@string/setting" />
 
     </group>
 

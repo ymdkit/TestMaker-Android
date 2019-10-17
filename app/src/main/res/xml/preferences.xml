@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="setting_play"
+        app:title="@string/way">
+
+        <SwitchPreferenceCompat
+            app:key="random"
+            app:title="@string/message_random" />
+
+        <SwitchPreferenceCompat
+            app:key="reverse"
+            app:summary="@string/summary_setting_reverse_answer"
+            app:title="@string/message_switch_question" />
+
+        <SwitchPreferenceCompat
+            app:key="refine"
+            app:title="@string/message_wrong_only" />
+
+        <SwitchPreferenceCompat
+            app:key="manual"
+            app:summary="@string/summary_setting_reverse_answer"
+            app:title="@string/message_self" />
+
+        <SwitchPreferenceCompat
+            app:key="alwaysReview"
+            app:title="@string/always_review" />
+
+        <SwitchPreferenceCompat
+            app:key="audio"
+            app:title="@string/setting_sound" />
+
+        <SwitchPreferenceCompat
+            app:key="show_setting_dialog"
+            app:title="@string/setting_show_dialog"
+            app:summary="@string/setting_show_setting_dialog"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="preference_group_study_plus"
+        app:title="@string/preference_group_study_plus">
+
+        <SwitchPreferenceCompat
+            app:key="setting_study_plus"
+            app:title="@string/preference_study_plus" />
+
+        <ListPreference
+            app:key="setting_post_study_plus"
+            app:title="@string/preference_post_study_plus"
+            app:dependency="setting_study_plus"/>
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="setting_other"
+        app:title="@string/preference_group_other">
+
+        <Preference
+            app:key="license"
+            app:title="@string/action_license">
+            <intent
+                android:targetClass="jp.gr.java_conf.foobar.testmaker.service.view.preference.WebViewActivity"
+                android:targetPackage="jp.gr.java_conf.foobar.testmaker.service">
+                <extra
+                    android:name="url"
+                    android:value="file:///android_asset/licenses.html" />
+            </intent>
+        </Preference>
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

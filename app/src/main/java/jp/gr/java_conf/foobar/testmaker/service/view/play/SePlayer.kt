@@ -50,7 +50,7 @@ class SePlayer(context: Context, id: Int) {
 
     fun playSe() {
         // play(再生するサウンドID,左のボリューム,右のボリューム,優先度,ループ回数(0はしない、-1は無限),再生レート)
-        if (!sharedPreferenceManager.audio) {
+        if (sharedPreferenceManager.audio) {
             soundPool.play(se, 1.0f, 1.0f, 1, 0, 1.0f)
         }
     }
