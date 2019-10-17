@@ -6,112 +6,92 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/layout_option"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/element_spacing_normal"
-        android:layout_marginRight="@dimen/element_spacing_normal"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="@dimen/element_spacing_normal"
+            android:gravity="start"
+            android:text="@string/number_questions"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/background_dark" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/element_spacing_normal"
-                android:layout_marginStart="@dimen/element_spacing_normal"
-                android:gravity="start"
-                android:text="@string/number_questions"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/background_dark" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/set_limit"
+            android:layout_width="@dimen/view_width_normal"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/element_spacing_small"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLength="4"
+            android:maxLines="1" />
 
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/set_limit"
-                android:layout_width="@dimen/view_width_normal"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/element_spacing_small"
-                android:layout_marginStart="@dimen/element_spacing_small"
-                android:ems="10"
-                android:inputType="number"
-                android:maxLength="4"
-                android:maxLines="1" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/element_spacing_normal"
+            android:gravity="start"
+            android:text="@string/position_start"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/background_dark" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/element_spacing_normal"
-                android:layout_marginStart="@dimen/element_spacing_normal"
-                android:gravity="start"
-                android:text="@string/position_start"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/background_dark" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/set_start_position"
-                android:layout_width="@dimen/view_width_normal"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/element_spacing_small"
-                android:layout_marginStart="@dimen/element_spacing_small"
-                android:ems="10"
-                android:inputType="number"
-                android:maxLength="4"
-                android:maxLines="1" />
-
-        </LinearLayout>
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/check_random"
-            style="@style/MyStartCheckBoxStyle"
-            android:text="@string/is_random" />
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/check_refine"
-            style="@style/MyStartCheckBoxStyle"
-            android:text="@string/message_wrong_only" />
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/check_reverse"
-            style="@style/MyStartCheckBoxStyle"
-            android:text="@string/message_switch_question" />
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/check_manual"
-            style="@style/MyStartCheckBoxStyle"
-            android:text="@string/message_self" />
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/check_always_review"
-            style="@style/MyStartCheckBoxStyle"
-            android:text="@string/always_review" />
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/check_case_insensitive"
-            style="@style/MyStartCheckBoxStyle"
-            android:text="@string/case_insensitive" />
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/check_audio"
-            style="@style/MyStartCheckBoxStyle"
-            android:text="@string/message_delete_sound" />
-
-        <Button
-            android:id="@+id/button_start"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/view_height_normal"
-            android:layout_margin="@dimen/element_spacing_small"
-            android:background="@drawable/button_blue"
-            android:text="@string/start"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small"
-            />
-
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/set_start_position"
+            android:layout_width="@dimen/view_width_normal"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/element_spacing_small"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLength="4"
+            android:maxLines="1" />
 
     </LinearLayout>
 
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check_random"
+        style="@style/MyStartCheckBoxStyle"
+        android:text="@string/is_random" />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check_refine"
+        style="@style/MyStartCheckBoxStyle"
+        android:text="@string/message_wrong_only" />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check_reverse"
+        style="@style/MyStartCheckBoxStyle"
+        android:text="@string/message_switch_question" />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check_manual"
+        style="@style/MyStartCheckBoxStyle"
+        android:text="@string/message_self" />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check_always_review"
+        style="@style/MyStartCheckBoxStyle"
+        android:text="@string/always_review" />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check_case_insensitive"
+        style="@style/MyStartCheckBoxStyle"
+        android:text="@string/case_insensitive" />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check_audio"
+        style="@style/MyStartCheckBoxStyle"
+        android:text="@string/message_delete_sound" />
+
+    <Button
+        android:id="@+id/button_start"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_height_normal"
+        android:layout_margin="@dimen/element_spacing_small"
+        style="@style/button_choose_normal"
+        android:text="@string/start"
+        android:textSize="@dimen/text_size_small" />
 
 </LinearLayout>

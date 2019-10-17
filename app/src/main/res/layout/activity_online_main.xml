@@ -62,7 +62,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/element_spacing_small"
-                    android:layout_marginLeft="@dimen/element_spacing_small"
                     android:gravity="center_vertical"
                     android:text="@string/upload_test"
                     android:textSize="@dimen/text_size_medium" />
