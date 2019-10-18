@@ -3,8 +3,9 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.db
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import jp.gr.java_conf.foobar.testmaker.service.R
 
-class SharedPreferenceManager(context: Context) {
+class SharedPreferenceManager(private val context: Context) {
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("question", Context.MODE_PRIVATE)
 
@@ -48,15 +49,11 @@ class SharedPreferenceManager(context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("confirmNotes", f)
                 .apply()
 
-    var uploadStudyPlus: Int
-        get() = sharedPreferences.getInt("study_plus", 1)
-        set(i) = sharedPreferences.edit().putInt("study_plus", i).apply()
-
     var isRemovedAd: Boolean
         get() = sharedPreferences.getBoolean("isRemovedAd", false)
         set(i) = sharedPreferences.edit().putBoolean("isRemovedAd", i).apply()
 
-    var isCaseInsensitive:Boolean
+    var isCaseInsensitive: Boolean
         get() = sharedPreferences.getBoolean("isCaseInsensitive", false)
         set(i) = sharedPreferences.edit().putBoolean("isCaseInsensitive", i).apply()
 
@@ -83,7 +80,7 @@ class SharedPreferenceManager(context: Context) {
         set(f) = defaultPreferences.edit().putBoolean("audio", f)
                 .apply()
 
-    var random : Boolean
+    var random: Boolean
         get() = defaultPreferences.getBoolean("random", oldRandom)
         set(f) = defaultPreferences.edit().putBoolean("random", f).apply()
 
@@ -112,6 +109,10 @@ class SharedPreferenceManager(context: Context) {
         get() = defaultPreferences.getBoolean("show_setting_dialog", true)
         set(f) = defaultPreferences.edit().putBoolean("show_setting_dialog", f)
                 .apply()
+
+    var uploadStudyPlus: String
+        get() = defaultPreferences.getString("study_plus", context.resources.getStringArray(R.array.upload_setting_study_plus_values)[oldUploadStudyPlus]) ?: "auto"
+        set(i) = defaultPreferences.edit().putString("study_plus",i).apply()
 
     //preferencesと連携させるため古いフラグを退避
 
@@ -143,6 +144,11 @@ class SharedPreferenceManager(context: Context) {
     private var oldManual: Boolean
         get() = sharedPreferences.getBoolean("manual", false)
         set(f) = sharedPreferences.edit().putBoolean("manual", f)
+                .apply()
+
+    private var oldUploadStudyPlus: Int
+        get() = sharedPreferences.getInt("study_plus", 1)
+        set(i) = sharedPreferences.edit().putInt("study_plus", i)
                 .apply()
 
 }

@@ -5,14 +5,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.studyplus.android.sdk.Studyplus
 import jp.studyplus.android.sdk.record.StudyRecord
-import jp.studyplus.android.sdk.record.StudyRecordBuilder
+import jp.studyplus.android.sdk.record.StudyRecordAmountTotal
 import kotlinx.android.synthetic.main.activity_result.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -90,35 +89,27 @@ class ResultActivity : BaseActivity() {
         }
 
 
-        val record = StudyRecordBuilder()
-                .setComment("${resultViewModel.getTest(testId).title} で勉強しました")
-                .setAmountTotal(questions.size)
-                .setDurationSeconds((intent.getLongExtra("duration",0)/ 1000).toInt())
-                .build()
+        val record = StudyRecord(
+                duration = (intent.getLongExtra("duration", 0) / 1000).toInt(),
+                amount = StudyRecordAmountTotal(questions.size),
+                comment = "${resultViewModel.getTest(testId).title} で勉強しました")
 
-
-        when(sharedPreferenceManager.uploadStudyPlus){
-            Constants.UPLOAD_AUTOMATICALLY_STUDY_PLUS ->
+        when (sharedPreferenceManager.uploadStudyPlus) {
+            resources.getStringArray(R.array.upload_setting_study_plus_values)[1] ->
                 uploadStudyPlus(record)
-
-            Constants.UPLOAD_MANUALLY_STUDY_PLUS -> {
-
+            resources.getStringArray(R.array.upload_setting_study_plus_values)[2] -> {
                 upload_study_plus.visibility = View.VISIBLE
-
-
             }
-
         }
 
         upload_study_plus.setOnClickListener {
-
             uploadStudyPlus(record)
         }
     }
 
-    private fun uploadStudyPlus(record: StudyRecord){
+    private fun uploadStudyPlus(record: StudyRecord) {
 
-        if(!Studyplus.instance.isAuthenticated(baseContext)) return
+        if (!Studyplus.instance.isAuthenticated(baseContext)) return
 
         Studyplus.instance.postRecord(this@ResultActivity, record,
                 object : Studyplus.Companion.OnPostRecordListener {

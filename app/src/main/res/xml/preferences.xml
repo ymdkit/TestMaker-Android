@@ -43,14 +43,16 @@
         app:key="preference_group_study_plus"
         app:title="@string/preference_group_study_plus">
 
-        <SwitchPreferenceCompat
+        <Preference
             app:key="setting_study_plus"
             app:title="@string/preference_study_plus" />
 
         <ListPreference
-            app:key="setting_post_study_plus"
+            app:key="study_plus"
             app:title="@string/preference_post_study_plus"
-            app:dependency="setting_study_plus"/>
+            app:entries="@array/upload_setting_study_plus"
+            app:entryValues="@array/upload_setting_study_plus_values"
+            app:isPreferenceVisible="false"/>
 
 
     </PreferenceCategory>

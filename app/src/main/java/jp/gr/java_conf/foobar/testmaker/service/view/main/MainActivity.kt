@@ -24,12 +24,10 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingProvider
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
-import jp.gr.java_conf.foobar.testmaker.service.view.preference.WebViewActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.studyplus.StudyPlusActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -217,9 +215,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 }
                 R.id.nav_move_questions -> {
                     startActivityForResult(Intent(this@MainActivity, MoveQuestionsActivity::class.java), REQUEST_EDIT)
-                }
-                R.id.nav_study_plus -> {
-                    startActivityForResult(Intent(this@MainActivity, StudyPlusActivity::class.java), REQUEST_EDIT)
                 }
                 R.id.nav_remove_ad -> {
                     if (billingManager.billingClientResponseCode <= BILLING_MANAGER_NOT_INITIALIZED) return@setNavigationItemSelectedListener false

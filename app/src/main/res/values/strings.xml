@@ -58,7 +58,7 @@
     <string name="message_auto">other question\'s answer become choice</string>
     <string name="message_delete">delete %1$s ?</string>
     <string name="message_delete_exam">delete %1$s ?</string>
-    <string name="message_delete_sound">mute sound</string>
+    <string name="message_delete_sound">sound</string>
     <string name="message_explanation">add explanation</string>
     <string name="message_not_auto">add more question</string>
     <string name="message_null_number">please input number</string>

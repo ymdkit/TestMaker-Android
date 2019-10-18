@@ -16,7 +16,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.preference.SettingsActivity"></activity>
+        <activity android:name=".view.preference.SettingsActivity"/>
         <activity android:name=".view.online.FirebaseMyPageActivity" />
         <activity android:name=".view.online.FirebaseActivity" />
 
@@ -84,10 +84,6 @@
         <activity
             android:name=".view.move.MoveQuestionsActivity"
             android:label="@string/title_activity_move_questions"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".view.studyplus.StudyPlusActivity"
-            android:label="@string/title_activity_study_plus"
             android:theme="@style/AppTheme" />
     </application>
 

@@ -30,4 +30,10 @@
         <item>6</item>
     </string-array>
 
+    <string-array name="upload_setting_study_plus_values">
+        <item>not</item>
+        <item>auto</item>
+        <item>manual</item>
+    </string-array>
+
 </resources>

@@ -64,7 +64,7 @@
     <string name="message_wrong_only">только Неверный ответ</string>
     <string name="message_switch_question">замена вопрос и ответ</string>
     <string name="message_self">профилирование сам</string>
-    <string name="message_delete_sound">безгласный</string>
+    <string name="message_delete_sound">звук</string>
     <string name="message_wrong_load">Ряд %1$s ненормальность</string>
     <string name="message_success_load">загрузка %1$s</string>
     <string name="message_null_questions">ноль вопрос</string>
