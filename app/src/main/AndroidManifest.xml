@@ -64,9 +64,6 @@
             android:label="結果"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.preference.WebViewActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.category.CategorizedActivity"
             android:screenOrientation="portrait" />
         <activity

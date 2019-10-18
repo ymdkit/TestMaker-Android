@@ -70,7 +70,6 @@ class SharedPreferenceManager(private val context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("first_firebase", f)
                 .apply()
 
-
     //preferencesと連携するため
 
     private val defaultPreferences = PreferenceManager.getDefaultSharedPreferences(context)

@@ -176,10 +176,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse("https://play.google.com/store/apps/details?id=jp.gr.java_conf.foobar.testmaker.service&amp;hl=ja")))
                 }
-                R.id.nav_others -> {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri
-                            .parse("http://play.google.com/store/apps/developer?id=ke-ta")))
-                }
                 R.id.nav_import -> {
 
                     val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)

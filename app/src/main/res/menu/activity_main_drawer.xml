@@ -10,41 +10,31 @@
             android:icon="@drawable/ic_edit_white"
             android:title="@string/action_rev" />
         <item
-            android:id="@+id/nav_others"
-            android:icon="@drawable/ic_play_arrow_white_24dp"
-            android:title="@string/action_other" />
-        <item
             android:id="@+id/nav_import"
             android:icon="@drawable/ic_file_download_white"
             android:title="@string/action_import" />
-
         <item
             android:id="@+id/nav_paste"
             android:icon="@drawable/ic_content_paste_white"
             android:title="@string/action_paste" />
-
         <item
             android:id="@+id/nav_online"
             android:icon="@drawable/ic_public_white"
             android:title="@string/action_online"
             />
-
         <item
             android:id="@+id/nav_move_questions"
             android:icon="@drawable/ic_swap_calls_white"
             android:title="@string/action_move"
             />
-
         <item
             android:id="@+id/nav_remove_ad"
             android:icon="@drawable/ic_remove_ad_white"
             android:title="@string/action_remove_ad" />
-
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_white"
             android:title="@string/setting" />
-
     </group>
 
 

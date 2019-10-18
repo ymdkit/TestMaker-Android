@@ -1,11 +1,14 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.preference
 
 import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import jp.gr.java_conf.foobar.testmaker.service.BuildConfig
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.studyplus.android.sdk.Studyplus
 
@@ -42,6 +45,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 summaryProvider = Preference.SummaryProvider<ListPreference> {
                     it.entry
                 }
+            }
+        }
+
+        val licensePreference = findPreference<Preference>("license")
+        licensePreference?.apply {
+            setOnPreferenceClickListener {
+                startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
+                true
+            }
+        }
+
+        val versionPreference = findPreference<Preference>("version")
+        versionPreference?.apply {
+            summaryProvider = Preference.SummaryProvider<Preference> {
+                BuildConfig.VERSION_NAME
             }
         }
     }

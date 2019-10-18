@@ -280,5 +280,6 @@
     <string name="preference_study_plus">Connect Studyplus</string>
     <string name="preference_post_study_plus">post your study</string>
     <string name="setting_show_setting_dialog">show setting dialog before play</string>
+    <string name="version_app">アプリのバージョン</string>
 
 </resources>
