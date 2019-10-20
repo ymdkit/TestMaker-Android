@@ -270,5 +270,10 @@
     <string name="preference_study_plus">Connect Studyplus</string>
     <string name="preference_post_study_plus">post your study</string>
     <string name="setting_show_setting_dialog">show setting dialog before play</string>
+    <string name="uploading">upload now</string>
+    <string name="downloading">download</string>
+    <string name="msg_success_download_test">download %1$s</string>
+    <string name="msg_share_test">share %1$s \n %2$s</string>
+    <string name="title_dialog_share">share</string>
 
 </resources>

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.infra.test.TestMakerRepository
 
 class FirebaseMyPageViewModel(private val repository: TestMakerRepository) : ViewModel() {
@@ -20,13 +21,7 @@ class FirebaseMyPageViewModel(private val repository: TestMakerRepository) : Vie
         repository.deleteTest(id)
     }
 
-    fun downloadTest(id: String) {
-        repository.downloadQuestions(id)
-    }
-
-    fun getDownloadTest(): LiveData<FirebaseTest> {
-        return repository.getDownloadQuestions()
-    }
+    suspend fun downloadTest(id: String): FirebaseTestResult = repository.downloadTest(id)
 
     fun convert(test: FirebaseTest) {
         repository.createObjectFromFirebase(test)

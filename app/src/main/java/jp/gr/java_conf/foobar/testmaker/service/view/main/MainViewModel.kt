@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.infra.test.TestMakerRepository
 
 class MainViewModel(private val repository: TestMakerRepository) : ViewModel() {
@@ -24,6 +26,10 @@ class MainViewModel(private val repository: TestMakerRepository) : ViewModel() {
     }
     fun addOrUpdateTest(test: Test): Long = repository.addOrUpdateTest(test)
     fun getMaxQuestionId(): Long = repository.getMaxQuestionId()
+    suspend fun downloadTest(testId: String): FirebaseTestResult = repository.downloadTest(testId)
+
+    fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test)
+
 
     val title: MutableLiveData<String> = MutableLiveData()
     var isEditing: MutableLiveData<Boolean> = MutableLiveData()

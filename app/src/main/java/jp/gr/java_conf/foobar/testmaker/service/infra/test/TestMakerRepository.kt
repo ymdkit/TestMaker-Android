@@ -10,6 +10,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -66,28 +67,18 @@ class TestMakerRepository(private val local: LocalDataSource,
         local.addQuestion(testId, question, questionId)
     }
 
-    fun downloadQuestions(testId: String) {
-        remote.downloadQuestions(testId)
-    }
-
-    fun getDownloadQuestions(): LiveData<FirebaseTest> {
-        return remote.getDownloadQuestions()
-    }
+    suspend fun downloadTest(testId: String): FirebaseTestResult = remote.downloadTest(testId)
 
     fun createObjectFromFirebase(test: FirebaseTest) {
         local.createObjectFromFirebase(test)
-    }
-
-    fun resetDownloadTest() {
-        remote.resetDownloadTest()
     }
 
     fun updateProfile(userName: String, completion: () -> Unit) {
         remote.updateProfile(userName, completion)
     }
 
-    suspend fun createTest(test: Test, overview: String) {
-        remote.createTest(test, overview)
+    suspend fun createTest(test: Test, overview: String): String {
+        return remote.createTest(test, overview)
     }
 
     fun getMyTests(): LiveData<List<DocumentSnapshot>> {

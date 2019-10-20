@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -17,12 +18,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.android.billingclient.api.BillingClient
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingProvider
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
@@ -31,6 +34,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.*
@@ -83,6 +87,34 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = testAndFolderAdapter
 
+
+        GlobalScope.launch (Dispatchers.Default){
+            val pendingDynamicLinkData = FirebaseDynamicLinks.getInstance()
+                    .getDynamicLink(intent).await() ?: return@launch
+
+            val deepLink = pendingDynamicLinkData.link
+
+
+            withContext(Dispatchers.Main){
+                val dialog = AlertDialog.Builder(this@MainActivity)
+                        .setTitle(getString(R.string.downloading))
+                        .setView( LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress,findViewById(R.id.layout_progress))).show()
+
+                val result = viewModel.downloadTest(deepLink.toString().split("/").last())
+
+                when(result){
+                    is FirebaseTestResult.Success->{
+                        viewModel.convert(result.test)
+                        testAndFolderAdapter.setValue()
+                        Toast.makeText(this@MainActivity,getString(R.string.msg_success_download_test,result.test.name),Toast.LENGTH_SHORT).show()
+                    }
+                    is FirebaseTestResult.Failure->{
+                        Toast.makeText(this@MainActivity,result.message,Toast.LENGTH_SHORT).show()
+                    }
+                }
+                dialog.dismiss()
+            }
+        }
     }
 
     private fun initViews() {

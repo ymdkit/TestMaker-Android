@@ -32,7 +32,7 @@
     <string name="auto">・選択肢の自動生成</string>
     <string name="state_auto">自動生成</string>
     <string name="share">共有</string>
-    <string name="help">使い方</string>
+    <string name="help">よくある質問</string>
     <string name="menu">メニュー</string>
     <string name="result">結果</string>
     <string name="retry">解き直す</string>
@@ -123,6 +123,11 @@
         <item>五十音順(降順)</item>
         <item>五十音順(昇順)</item>
         <item>最近解いた順</item>
+    </string-array>
+
+    <string-array name="action_share">
+        <item>アップロードしてリンクを共有</item>
+        <item>テキスト形式に変換して共有</item>
     </string-array>
 
     <string-array name="action_image">
@@ -280,6 +285,11 @@
     <string name="preference_study_plus">Studyplus連携</string>
     <string name="preference_post_study_plus">勉強結果の投稿</string>
     <string name="setting_show_setting_dialog">出題前に設定を変更することができます</string>
+    <string name="uploading">問題集をアップロード中</string>
+    <string name="downloading">問題集をダウンロード中</string>
+    <string name="msg_success_download_test">問題集 %1$s をダウンロードしました</string>
+    <string name="msg_share_test">問題集「 %1$s 」が共有されました。下記のリンクから問題集を受け取ってください\n %2$s</string>
+    <string name="title_dialog_share">共有方法の選択</string>
 
 
 </resources>
