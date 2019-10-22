@@ -94,7 +94,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
             val deepLink = pendingDynamicLinkData.link
 
-
             withContext(Dispatchers.Main){
                 val dialog = AlertDialog.Builder(this@MainActivity)
                         .setTitle(getString(R.string.downloading))

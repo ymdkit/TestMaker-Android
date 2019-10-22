@@ -21,7 +21,6 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategorizedActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestAndFolderAdapter
-import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -146,7 +145,7 @@ open class ShowTestsActivity : BaseActivity() {
         })
     }
 
-    private fun uploadTest(id: Long){
+    private fun uploadTest(id: Long) {
         val dialog = AlertDialog.Builder(this@ShowTestsActivity)
                 .setTitle(getString(R.string.uploading))
                 .setView(LayoutInflater.from(this@ShowTestsActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress)))
@@ -163,9 +162,9 @@ open class ShowTestsActivity : BaseActivity() {
                         .setLink(Uri.parse("https://testmaker-1cb29.com/$documentId"))
                         .setDomainUriPrefix("https://testmaker.page.link")
                         // Open links with this app on Android
-                        .setAndroidParameters(DynamicLink.AndroidParameters.Builder().build())
+                        .setAndroidParameters(DynamicLink.AndroidParameters.Builder().setMinimumVersion(87).build())
                         // Open links with com.example.ios on iOS
-                        .setIosParameters(DynamicLink.IosParameters.Builder("com.example.ios").build())
+                        .setIosParameters(DynamicLink.IosParameters.Builder("jp.gr.java-conf.foobar.testmaker.service").setAppStoreId("1201200202").setMinimumVersion("2.1.5").build())
                         .buildDynamicLink()
 
                 try {
@@ -323,7 +322,7 @@ open class ShowTestsActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == REQUEST_SIGNIN && resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_SIGNIN && resultCode == Activity.RESULT_OK) {
             uploadTest(selectedTestId)
         }
 

@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
@@ -28,7 +29,8 @@ class RemoteDataSource(val context: Context) {
     suspend fun downloadTest(testId: String): FirebaseTestResult {
 
         val test = db.collection("tests").document(testId).get().await().toObject(FirebaseTest::class.java)
-                ?: return FirebaseTestResult.Failure("問題集が見つかりません")
+                ?: return FirebaseTestResult.Failure(context.getString(
+                        R.string.msg_test_not_exist))
 
         test.questions = downloadQuestions(testId)
 

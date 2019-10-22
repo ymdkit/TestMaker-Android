@@ -14,8 +14,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 86
-        versionName "3.0.9"
+        versionCode 87
+        versionName "3.1.0"
     }
 
     packagingOptions {
