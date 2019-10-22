@@ -69,10 +69,7 @@ class PlayCompleteView : LinearLayout {
                 Handler().postDelayed({ button_judge.isEnabled = true }, 600)
 
             }
-
         }
-
-        if (Build.VERSION.SDK_INT >= 21) button_judge.stateListAnimator = null
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)

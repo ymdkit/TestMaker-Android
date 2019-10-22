@@ -31,7 +31,6 @@
             />
 
         <ImageButton
-            android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginTop="@dimen/element_spacing_small"
             android:contentDescription="@string/image"
             android:layout_width="@dimen/view_height_small"

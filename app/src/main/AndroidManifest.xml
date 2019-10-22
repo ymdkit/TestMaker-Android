@@ -10,12 +10,14 @@
     <application
         android:name=".TestMakerApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup"
         android:icon="@drawable/icon_testmaker_small"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.online.FirebaseMyPageActivity"></activity>
+        <activity android:name=".view.preference.SettingsActivity"/>
+        <activity android:name=".view.online.FirebaseMyPageActivity" />
         <activity android:name=".view.online.FirebaseActivity" />
 
         <meta-data
@@ -43,8 +45,16 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="testmaker-1cb29.com"
+                    android:scheme="https"/>
             </intent-filter>
         </activity>
         <activity
@@ -59,9 +69,6 @@
         <activity
             android:name=".view.result.ResultActivity"
             android:label="結果"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.library.WebViewActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.category.CategorizedActivity"
@@ -81,10 +88,6 @@
         <activity
             android:name=".view.move.MoveQuestionsActivity"
             android:label="@string/title_activity_move_questions"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".view.studyplus.StudyPlusActivity"
-            android:label="@string/title_activity_study_plus"
             android:theme="@style/AppTheme" />
     </application>
 

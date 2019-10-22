@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
@@ -23,44 +24,26 @@ class RemoteDataSource(val context: Context) {
 
     private var myTests: MutableLiveData<List<DocumentSnapshot>>? = null
 
-    private var downloadTest: MutableLiveData<FirebaseTest>? = null
-
     private val db = FirebaseFirestore.getInstance()
 
-    fun downloadQuestions(testId: String) {
+    suspend fun downloadTest(testId: String): FirebaseTestResult {
 
-        val collectionTest = db.collection("tests")
+        val test = db.collection("tests").document(testId).get().await().toObject(FirebaseTest::class.java)
+                ?: return FirebaseTestResult.Failure(context.getString(
+                        R.string.msg_test_not_exist))
 
-        collectionTest.document(testId).get().addOnSuccessListener {
+        test.questions = downloadQuestions(testId)
 
-            val test = it.toObject(FirebaseTest::class.java) ?: return@addOnSuccessListener
-
-            collectionTest.document(testId)
-                    .collection("questions")
-                    .get()
-                    .addOnSuccessListener { query ->
-
-                        test.questions = query.toObjects(FirebaseQuestion::class.java).sortedBy { q -> q.order }
-
-                        downloadTest?.postValue(test)
-                    }
-                    .addOnFailureListener {
-
-                    }
-        }
+        return FirebaseTestResult.Success(test)
     }
 
-    fun getDownloadQuestions(): LiveData<FirebaseTest> {
-
-        if (downloadTest == null) {
-            downloadTest = MutableLiveData()
-        }
-        return downloadTest as LiveData<FirebaseTest>
-
-    }
-
-    fun resetDownloadTest() {
-        downloadTest = null
+    private suspend fun downloadQuestions(testId: String): List<FirebaseQuestion> {
+        return db.collection("tests")
+                .document(testId)
+                .collection("questions")
+                .get()
+                .await()
+                .toObjects(FirebaseQuestion::class.java).sortedBy { q -> q.order }
     }
 
     fun setUser(user: FirebaseUser?) {
@@ -76,10 +59,10 @@ class RemoteDataSource(val context: Context) {
 
     }
 
-    suspend fun createTest(test: Test, overview: String) {
+    suspend fun createTest(test: Test, overview: String): String {
 
         val firebaseTest = test.toFirebaseTest(context)
-        val user = FirebaseAuth.getInstance().currentUser ?: return
+        val user = FirebaseAuth.getInstance().currentUser ?: return ""
 
         firebaseTest.userId = user.uid
         firebaseTest.userName = user.displayName ?: "guest"
@@ -115,6 +98,8 @@ class RemoteDataSource(val context: Context) {
         }
 
         batch.commit().await()
+
+        return ref.id
     }
 
     fun getMyTests(): LiveData<List<DocumentSnapshot>> {

@@ -12,9 +12,7 @@
         android:id="@+id/textInputLayout_select_complete_1"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignEnd="@+id/center_view"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/center_view">
+        android:layout_alignParentStart="true">
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_select_complete_1"
@@ -26,9 +24,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_select_complete_2"
         style="@style/MyTextInputLayoutStyle"
-        android:layout_alignLeft="@+id/center_view"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignStart="@+id/center_view">
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -43,9 +39,7 @@
         android:id="@+id/textInputLayout_select_complete_3"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignEnd="@+id/center_view"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/center_view"
         android:layout_below="@+id/textInputLayout_select_complete_1">
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -58,9 +52,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_select_complete_4"
         style="@style/MyTextInputLayoutStyle"
-        android:layout_alignLeft="@+id/center_view"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignStart="@+id/center_view"
         android:layout_below="@+id/textInputLayout_select_complete_2">
 
@@ -75,9 +67,7 @@
         android:id="@+id/textInputLayout_select_complete_5"
         style="@style/MyTextInputLayoutStyle"
         android:layout_alignEnd="@+id/center_view"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@id/center_view"
         android:layout_below="@+id/textInputLayout_select_complete_3">
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -90,9 +80,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_select_complete_6"
         style="@style/MyTextInputLayoutStyle"
-        android:layout_alignLeft="@+id/center_view"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignStart="@+id/center_view"
         android:layout_below="@+id/textInputLayout_select_complete_4">
 

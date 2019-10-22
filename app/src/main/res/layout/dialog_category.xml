@@ -19,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/element_spacing_large"
-            android:layout_marginRight="@dimen/element_spacing_normal"
             android:layout_marginEnd="@dimen/element_spacing_normal"
             android:layout_marginTop="@dimen/element_spacing_large"
             android:layout_weight="1"
@@ -53,9 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/element_spacing_large"
-            android:layout_marginLeft="@dimen/element_spacing_small"
             android:layout_marginStart="@dimen/element_spacing_small"
-            android:layout_marginRight="@dimen/element_spacing_normal"
             android:layout_marginEnd="@dimen/element_spacing_normal"
             android:layout_marginTop="@dimen/element_spacing_large"
             android:layout_weight="1"
@@ -82,10 +79,8 @@
             android:layout_height="2dp"
             android:layout_alignBottom="@+id/textView11"
             android:layout_marginBottom="@dimen/element_spacing_large"
-            android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginStart="@dimen/element_spacing_normal"
             android:layout_toEndOf="@+id/textView11"
-            android:layout_toRightOf="@+id/textView11"
             android:background="@android:color/holo_blue_light" />
 
     </RelativeLayout>

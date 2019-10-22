@@ -398,8 +398,6 @@ open class EditActivity : BaseActivity() {
 
                 val colorChooser = dialogLayout.findViewById<ColorChooser>(R.id.color_chooser)
 
-                if (Build.VERSION.SDK_INT >= 21) buttonCate.stateListAnimator = null
-
                 buttonCate.tag = viewModel.getTest(viewModel.testId).getCategory()
 
                 if (viewModel.getTest(viewModel.testId).getCategory() == "") {
@@ -612,13 +610,6 @@ open class EditActivity : BaseActivity() {
                 }
             }
         })
-
-
-        if (Build.VERSION.SDK_INT >= 21) {
-            button_add.stateListAnimator = null
-            button_cancel.stateListAnimator = null
-            button_detail.stateListAnimator = null
-        }
 
         recycler_view.layoutManager = LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ

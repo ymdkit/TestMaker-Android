@@ -1,7 +1,8 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.share
 
+import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AlertDialog
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -10,12 +11,21 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.dynamiclinks.DynamicLink
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategorizedActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestAndFolderAdapter
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestAndFolderAdapter
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -25,14 +35,16 @@ open class ShowTestsActivity : BaseActivity() {
 
     private val showTestsViewModel: ShowTestsViewModel by viewModel()
 
+    private var selectedTestId: Long = -1L //ログイン時に一度画面から離れるので選択中の値を保持
 
-    protected fun initTestAndFolderAdapter(setValue: () -> Unit){
+
+    protected fun initTestAndFolderAdapter(setValue: () -> Unit) {
 
         testAndFolderAdapter = TestAndFolderAdapter(this, setValue)
 
         testAndFolderAdapter.setValue()
 
-        testAndFolderAdapter.setOnClickListener(object : TestAndFolderAdapter.OnClickListener{
+        testAndFolderAdapter.setOnClickListener(object : TestAndFolderAdapter.OnClickListener {
 
             override fun onClickPlayTest(id: Long) {
 
@@ -80,24 +92,48 @@ open class ShowTestsActivity : BaseActivity() {
             }
 
             override fun onClickShareTest(id: Long) {
-                val test = showTestsViewModel.getTest(id)
 
-                Toast.makeText(baseContext, getString(R.string.message_share_exam, test.title), Toast.LENGTH_LONG).show()
+                AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
+                        .setTitle(getString(R.string.title_dialog_share))
+                        .setItems(resources.getStringArray(R.array.action_share)) { _, which ->
 
-                try {
-                    val intent = Intent()
-                    intent.action = Intent.ACTION_SEND
-                    intent.type = "text/plain"
+                            when (which) {
+                                0 -> { //リンクの共有
+                                    FirebaseAuth.getInstance().currentUser?.let {
 
-                    intent.putExtra(Intent.EXTRA_TEXT, test.testToString(baseContext, false))
-                    startActivity(intent)
+                                        uploadTest(id)
 
-                } catch (e: Exception) {
+                                    } ?: run {
 
-                    sendFirebaseEvent("export error: $e")
+                                        login(id)
+                                    }
 
-                }
 
+                                }
+
+                                1 -> { //テキスト変換
+
+                                    val test = showTestsViewModel.getTest(id)
+
+                                    Toast.makeText(baseContext, getString(R.string.message_share_exam, test.title), Toast.LENGTH_LONG).show()
+
+                                    try {
+                                        val intent = Intent()
+                                        intent.action = Intent.ACTION_SEND
+                                        intent.type = "text/plain"
+
+                                        intent.putExtra(Intent.EXTRA_TEXT, test.testToString(baseContext, false))
+                                        startActivity(intent)
+
+                                    } catch (e: Exception) {
+
+                                        sendFirebaseEvent("export error: $e")
+
+                                    }
+                                }
+                            }
+
+                        }.show()
             }
 
             override fun onClickOpen(category: String) {
@@ -107,8 +143,43 @@ open class ShowTestsActivity : BaseActivity() {
                 startActivityForResult(i, REQUEST_EDIT)
             }
         })
+    }
 
+    private fun uploadTest(id: Long) {
+        val dialog = AlertDialog.Builder(this@ShowTestsActivity)
+                .setTitle(getString(R.string.uploading))
+                .setView(LayoutInflater.from(this@ShowTestsActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress)))
+                .show()
 
+        val test = showTestsViewModel.getTestClone(id)
+
+        GlobalScope.launch(Dispatchers.Default) {
+            val documentId = showTestsViewModel.uploadTest(test, "")
+
+            withContext(Dispatchers.Main) {
+                dialog.dismiss()
+                val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                        .setLink(Uri.parse("https://testmaker-1cb29.com/$documentId"))
+                        .setDomainUriPrefix("https://testmaker.page.link")
+                        // Open links with this app on Android
+                        .setAndroidParameters(DynamicLink.AndroidParameters.Builder().setMinimumVersion(87).build())
+                        // Open links with com.example.ios on iOS
+                        .setIosParameters(DynamicLink.IosParameters.Builder("jp.gr.java-conf.foobar.testmaker.service").setAppStoreId("1201200202").setMinimumVersion("2.1.5").build())
+                        .buildDynamicLink()
+
+                try {
+                    val intent = Intent()
+                    intent.action = Intent.ACTION_SEND
+                    intent.type = "text/plain"
+
+                    intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, test.title, dynamicLink.uri))
+                    startActivity(intent)
+
+                } catch (e: Exception) {
+                    sendFirebaseEvent("export error: $e")
+                }
+            }
+        }
     }
 
     private fun initDialogPlayStart(test: Test) {
@@ -119,7 +190,7 @@ open class ShowTestsActivity : BaseActivity() {
         editLimit.setText(test.limit.toString())
 
         val editStart = dialogLayout.findViewById<EditText>(R.id.set_start_position)
-        editStart.setText((test.startPosition + 1 ).toString())
+        editStart.setText((test.startPosition + 1).toString())
 
         val checkRandom = dialogLayout.findViewById<CheckBox>(R.id.check_random)
         checkRandom.isChecked = sharedPreferenceManager.random
@@ -148,11 +219,11 @@ open class ShowTestsActivity : BaseActivity() {
         val checkCaseInsensitive = dialogLayout.findViewById<CheckBox>(R.id.check_case_insensitive)
         checkCaseInsensitive.isChecked = sharedPreferenceManager.isCaseInsensitive
         checkCaseInsensitive.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.isCaseInsensitive = isChecked }
-        if(Locale.getDefault().language != "en")checkCaseInsensitive.visibility = View.GONE
+        if (Locale.getDefault().language != "en") checkCaseInsensitive.visibility = View.GONE
 
         val buttonStart = dialogLayout.findViewById<Button>(R.id.button_start)
         buttonStart.setOnClickListener {
-            startAnswer(test, editStart.text.toString(),editLimit.text.toString())
+            startAnswer(test, editStart.text.toString(), editLimit.text.toString())
         }
 
         val builder = AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
@@ -160,9 +231,15 @@ open class ShowTestsActivity : BaseActivity() {
         builder.setTitle(getString(R.string.way))
         builder.setPositiveButton(android.R.string.ok, null)
         builder.setNegativeButton(android.R.string.cancel, null)
-        val dialog = builder.show()
 
-        hideDefaultButtonsFromDialog(dialog)
+        if (!sharedPreferenceManager.isShowPlaySettingDialog) {
+            startAnswer(test, editStart.text.toString(), editLimit.text.toString())
+        } else {
+            val dialog = builder.show()
+            hideDefaultButtonsFromDialog(dialog)
+
+        }
+
 
     }
 
@@ -178,7 +255,7 @@ open class ShowTestsActivity : BaseActivity() {
 
     }
 
-    private fun startAnswer(test: Test, start:String, limit: String) {
+    private fun startAnswer(test: Test, start: String, limit: String) {
 
         var incorrect = false
 
@@ -192,7 +269,7 @@ open class ShowTestsActivity : BaseActivity() {
 
             Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_number), Toast.LENGTH_SHORT).show()
 
-        }else if (start == "" || start.toInt() > test.questionsNonNull().size || start.toInt() < 1) {
+        } else if (start == "" || start.toInt() > test.questionsNonNull().size || start.toInt() < 1) {
 
             Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_start), Toast.LENGTH_SHORT).show()
 
@@ -202,11 +279,38 @@ open class ShowTestsActivity : BaseActivity() {
             i.putExtra("testId", test.id)
 
             showTestsViewModel.updateLimit(test, Integer.parseInt(limit))
-            showTestsViewModel.updateStart(test,Integer.parseInt(start) - 1)
+            showTestsViewModel.updateStart(test, Integer.parseInt(start) - 1)
             showTestsViewModel.updateHistory(test)
 
             startActivityForResult(i, REQUEST_EDIT)
         }
+    }
+
+    private fun login(id: Long) {
+
+        selectedTestId = id
+
+        AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                .setTitle(getString(R.string.login))
+                .setMessage(getString(R.string.msg_not_login))
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    val providers = arrayListOf(
+                            AuthUI.IdpConfig.EmailBuilder().build(),
+                            AuthUI.IdpConfig.GoogleBuilder().build())
+
+                    // Create and launch sign-in intent
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setAvailableProviders(providers)
+                                    .setTosAndPrivacyPolicyUrls(
+                                            "https://keita-developer.hatenablog.com/entry/2019/07/01/103627",
+                                            "https://keita-developer.hatenablog.com/entry/2019/01/01/000000")
+                                    .build(),
+                            REQUEST_SIGNIN)
+                }
+                .setNegativeButton(getString(R.string.cancel), null)
+                .show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -217,6 +321,12 @@ open class ShowTestsActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_SIGNIN && resultCode == Activity.RESULT_OK) {
+            uploadTest(selectedTestId)
+        }
+
+        selectedTestId = -1L
 
         testAndFolderAdapter.setValue()
 
@@ -247,6 +357,7 @@ open class ShowTestsActivity : BaseActivity() {
 
     companion object {
         const val REQUEST_EDIT = 11111
+        const val REQUEST_SIGNIN = 54321
     }
 
 }

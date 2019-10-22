@@ -20,6 +20,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import kotlinx.android.synthetic.main.activity_online_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -60,8 +61,28 @@ class FirebaseActivity : BaseActivity() {
 
         pagingAdapter = FirebaseTestPagingAdapter(baseContext, options)
         pagingAdapter.download = { id: String ->
-            viewModel.downloadTest(id)
+
+            GlobalScope.launch (Dispatchers.Main){
+                val dialog = AlertDialog.Builder(this@FirebaseActivity)
+                        .setTitle(getString(R.string.downloading))
+                        .setView( LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress,findViewById(R.id.layout_progress))).show()
+
+                val result = viewModel.downloadTest(id)
+
+                when(result){
+                    is FirebaseTestResult.Success->{
+                        viewModel.convert(result.test)
+                        Toast.makeText(this@FirebaseActivity,getString(R.string.msg_success_download_test,result.test.name),Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                    is FirebaseTestResult.Failure->{
+                        Toast.makeText(this@FirebaseActivity,result.message,Toast.LENGTH_SHORT).show()
+                    }
+                }
+                dialog.dismiss()
+            }
         }
+
         pagingAdapter.showInfo = { data: FirebaseTest ->
             val dialogLayout = LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
 
@@ -92,13 +113,6 @@ class FirebaseActivity : BaseActivity() {
         }
         pagingAdapter.finishLoading = {
             swipe_refresh.isRefreshing = false
-        }
-
-        viewModel.getDownloadTest().observeNonNull(this) {
-
-            viewModel.convert(it)
-            finish()
-
         }
 
         swipe_refresh.setOnRefreshListener {

@@ -45,9 +45,6 @@ class PlayWriteView : LinearLayout {
             if (listener != null) listener!!.onClick(edit_answer.text.toString())
 
         }
-
-        if (Build.VERSION.SDK_INT >= 21) button_judge.stateListAnimator = null
-
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}

@@ -16,11 +16,6 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="@string/hint_answer" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#999" />
-
     <LinearLayout
         android:id="@+id/body"
         android:layout_width="match_parent"
@@ -50,7 +45,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:orientation="vertical">
 
                         <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayProblemView
@@ -101,6 +96,7 @@
                             android:background="@drawable/button_blue"
                             android:text="@string/confirm"
                             android:textColor="@color/white"
+                            android:stateListAnimator="@null"
                             android:visibility="gone" />
 
 
