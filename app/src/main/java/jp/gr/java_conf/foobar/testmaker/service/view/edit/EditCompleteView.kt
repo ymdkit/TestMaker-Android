@@ -10,6 +10,7 @@ import android.widget.RelativeLayout
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import kotlin.math.min
 
 class EditCompleteView: RelativeLayout{
 
@@ -45,7 +46,7 @@ class EditCompleteView: RelativeLayout{
 
     fun setAnswers(question: Quest){
 
-        for (i in 0 until question.answers.size) answers[i]?.setText(question.answers[i]?.selection)
+        for (i in 0 until min(Constants.ANSWER_MAX,question.answers.size)) answers[i]?.setText(question.answers[i]?.selection)
 
     }
 

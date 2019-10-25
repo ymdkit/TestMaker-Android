@@ -29,18 +29,19 @@ import com.google.firebase.storage.FirebaseStorage
 import com.isseiaoki.simplecropview.CropImageView
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.extensions.swap
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ColorChooser
 import kotlinx.android.synthetic.main.activity_edit.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
 import java.util.*
+import kotlin.math.min
 
 /**
  * Created by keita on 2017/02/12.
@@ -218,7 +219,7 @@ open class EditActivity : BaseActivity() {
                         edit_select_view.setOthers(question.selections)
                         viewModel.isAuto.value = question.auto
 
-                        viewModel.spinnerSelectsPosition.value = question.selections.size - 1
+                        viewModel.spinnerSelectsPosition.value = min(Constants.OTHER_SELECT_MAX - 1, question.selections.size - 1)
 
                         edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
 
@@ -231,7 +232,7 @@ open class EditActivity : BaseActivity() {
                         edit_complete_view.reloadAnswers(question.answers.size)
                         edit_complete_view.setAnswers(question)
 
-                        viewModel.spinnerAnswersPosition.value = question.answers.size - 2
+                        viewModel.spinnerAnswersPosition.value = min(Constants.ANSWER_MAX - 2, question.answers.size - 2)
 
                     }
 
@@ -246,9 +247,8 @@ open class EditActivity : BaseActivity() {
                         viewModel.isAuto.value = question.auto
                         edit_select_complete_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers + 1)
 
-                        viewModel.spinnerAnswersPosition.value = question.answers.size - 2
-                        viewModel.spinnerSelectsPosition.value = question.selections.size + question.answers.size - 2
-
+                        viewModel.spinnerAnswersPosition.value = min(Constants.SELECT_COMPLETE_MAX, question.answers.size)
+                        viewModel.spinnerSelectsPosition.value = min(Constants.SELECT_COMPLETE_MAX - 2, question.selections.size + question.answers.size - 2)
 
                     }
                 }
@@ -283,6 +283,7 @@ open class EditActivity : BaseActivity() {
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
+        super.onActivityResult(requestCode, resultCode, resultData)
         editAdapter.notifyDataSetChanged()
 
         if (resultCode != Activity.RESULT_OK) return
