@@ -161,7 +161,7 @@ class PlayActivity : BaseActivity() {
 
     fun checkAnswer(answers: ArrayList<String?>) { //完答
 
-        var loop = false
+        var loop = true
 
         for (answer in answers) {
 
@@ -189,7 +189,6 @@ class PlayActivity : BaseActivity() {
 
         } else {
             if (loop) loop = answers.distinct().size == answers.size //同じ解答を繰り返してもダメ
-
         }
 
         if (loop) {

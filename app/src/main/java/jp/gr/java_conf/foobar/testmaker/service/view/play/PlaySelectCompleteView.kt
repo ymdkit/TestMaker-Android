@@ -1,7 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.play
 
 import android.content.Context
-import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import android.widget.LinearLayout
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import kotlinx.android.synthetic.main.layout_play_select_complete.view.*
+import kotlin.math.min
 
 class PlaySelectCompleteView : LinearLayout {
 
@@ -39,14 +39,14 @@ class PlaySelectCompleteView : LinearLayout {
             val s = "check_select_" + (i + 1).toString()
             val strId = resources.getIdentifier(s, "id", context.packageName)
             checkBoxes[i] = findViewById(strId)
-            checkBoxes[i]!!.tag = i
+            checkBoxes[i]?.tag = i
 
         }
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    init{
+    init {
 
         LayoutInflater.from(context).inflate(R.layout.layout_play_select_complete, this)
 
@@ -62,7 +62,7 @@ class PlaySelectCompleteView : LinearLayout {
 
         } else {
 
-            question.selections.forEach{choices.add(it.selection)}
+            question.selections.forEach { choices.add(it.selection) }
 
         }
 
@@ -70,10 +70,9 @@ class PlaySelectCompleteView : LinearLayout {
 
         choices.shuffle()
 
-        for (i in 0 until question.selections.size + question.answers.size) {
-
-            checkBoxes[i]!!.tag = i
-            checkBoxes[i]!!.text = choices[i]
+        for (i in 0 until min(checkBoxes.size,question.selections.size + question.answers.size)) {
+            checkBoxes[i]?.tag = i
+            checkBoxes[i]?.text = choices[i]
 
         }
 
@@ -90,7 +89,7 @@ class PlaySelectCompleteView : LinearLayout {
         }
     }
 
-    fun getAnswers() : ArrayList<String?>{
+    fun getAnswers(): ArrayList<String?> {
 
         val array = ArrayList<String?>()
 
