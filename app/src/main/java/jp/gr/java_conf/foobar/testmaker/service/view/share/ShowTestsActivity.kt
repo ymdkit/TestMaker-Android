@@ -304,8 +304,8 @@ open class ShowTestsActivity : BaseActivity() {
                                     .createSignInIntentBuilder()
                                     .setAvailableProviders(providers)
                                     .setTosAndPrivacyPolicyUrls(
-                                            "https://keita-developer.hatenablog.com/entry/2019/07/01/103627",
-                                            "https://keita-developer.hatenablog.com/entry/2019/01/01/000000")
+                                            "https://testmaker-1cb29.firebaseapp.com/terms",
+                                            "https://testmaker-1cb29.firebaseapp.com/privacy")
                                     .build(),
                             REQUEST_SIGNIN)
                 }
