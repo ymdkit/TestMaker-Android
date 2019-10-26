@@ -16,17 +16,13 @@
         app:popupTheme="@style/Theme.AppCompat.Light"
         app:title="@string/result" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#999"/>
-
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         style="@style/MyCardViewStyle"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="@dimen/element_spacing_small"
+        android:padding="@dimen/element_spacing_normal"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
@@ -53,11 +49,10 @@
                 <ImageButton
                     android:contentDescription="@string/image"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_height_normal"
-                    android:layout_margin="@dimen/element_spacing_small"
+                    android:layout_height="@dimen/view_height_large"
                     android:layout_weight="1"
                     android:scaleType="fitCenter"
-                    android:background="@drawable/button_blue"
+                    android:backgroundTint="@color/colorPrimary"
                     android:src="@drawable/ic_home_white"
                     android:id="@+id/top"
                      />
@@ -65,11 +60,10 @@
                 <ImageButton
                     android:contentDescription="@string/image"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_height_normal"
-                    android:layout_margin="@dimen/element_spacing_small"
+                    android:layout_height="@dimen/view_height_large"
                     android:layout_weight="1"
                     android:scaleType="fitCenter"
-                    android:background="@drawable/button_blue"
+                    android:backgroundTint="@color/colorPrimary"
                     android:src="@drawable/ic_refresh_white"
                     android:id="@+id/retry"
                      />
@@ -77,11 +71,10 @@
                 <ImageButton
                     android:contentDescription="@string/image"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_height_normal"
-                    android:layout_margin="@dimen/element_spacing_small"
+                    android:layout_height="@dimen/view_height_large"
                     android:layout_weight="1.5"
                     android:scaleType="fitCenter"
-                    android:background="@drawable/button_blue"
+                    android:backgroundTint="@color/colorPrimary"
                     android:src="@drawable/ic_studyplus"
                     android:id="@+id/upload_study_plus"
                     android:visibility="gone"

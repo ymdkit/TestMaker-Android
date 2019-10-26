@@ -27,7 +27,7 @@ fun ImageButton.setImageWithGlide(context: Context, img: Bitmap){
 fun ImageButton.setImageWithGlide(context: Context, ref: StorageReference){
 
     val circularProgressDrawable = androidx.swiperefreshlayout.widget.CircularProgressDrawable(context)
-    circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(context, R.color.blue_holo))
+    circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(context, R.color.colorPrimary))
     circularProgressDrawable.strokeWidth = 5f
     circularProgressDrawable.centerRadius = 30f
     circularProgressDrawable.start()

@@ -78,26 +78,26 @@
 
             <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
                 android:id="@+id/play"
-                android:layout_width="@dimen/view_width_small"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/element_spacing_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/element_spacing_small"
-                android:layout_marginRight="@dimen/element_spacing_small"
-                android:layout_weight="1.3"
+                android:layout_marginBottom="@dimen/element_spacing_small"
                 custom:image="@drawable/ic_file_download_white"
                 custom:layout_constraintRight_toLeftOf="@id/open"
+                custom:layout_constraintTop_toTopOf="parent"
+                custom:layout_constraintBottom_toBottomOf="parent"
                 custom:text="@string/download_test" />
 
             <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
                 android:id="@+id/open"
-                android:layout_width="@dimen/view_width_small"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/element_spacing_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/element_spacing_small"
-                android:layout_marginRight="@dimen/element_spacing_small"
-                android:layout_weight="1.3"
+                android:layout_marginBottom="@dimen/element_spacing_small"
                 custom:image="@drawable/ic_info_white"
                 custom:layout_constraintRight_toRightOf="parent"
+                custom:layout_constraintTop_toTopOf="parent"
+                custom:layout_constraintBottom_toBottomOf="parent"
                 custom:text="@string/info" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

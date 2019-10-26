@@ -33,16 +33,14 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:background="@drawable/button_blue"
             android:maxLength="5"
             android:text="@string/category"
-            android:textAllCaps="false"
             android:textColor="@color/white"
+            android:textAllCaps="false"
             android:stateListAnimator="@null"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -62,11 +62,14 @@
 
             <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
                 android:id="@+id/open"
-                android:layout_width="@dimen/view_width_normal"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/element_spacing_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/element_spacing_small"
+                android:layout_marginBottom="@dimen/element_spacing_small"
                 custom:image="@drawable/ic_folder_open_white"
                 custom:layout_constraintRight_toRightOf="parent"
+                custom:layout_constraintTop_toTopOf="parent"
+                custom:layout_constraintBottom_toBottomOf="parent"
                 custom:text="@string/open" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

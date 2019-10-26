@@ -16,8 +16,7 @@
             android:layout_marginStart="@dimen/element_spacing_normal"
             android:gravity="start"
             android:text="@string/number_questions"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/background_dark" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_limit"
@@ -35,8 +34,7 @@
             android:layout_marginStart="@dimen/element_spacing_normal"
             android:gravity="start"
             android:text="@string/position_start"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/background_dark" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/set_start_position"
@@ -89,7 +87,6 @@
         android:id="@+id/button_start"
         android:layout_width="match_parent"
         android:layout_height="@dimen/view_height_normal"
-        android:layout_margin="@dimen/element_spacing_small"
         style="@style/button_choose_normal"
         android:text="@string/start"
         android:textSize="@dimen/text_size_small" />

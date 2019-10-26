@@ -15,7 +15,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:splitMotionEvents="false">
 
@@ -26,7 +26,7 @@
                 android:layout_margin="@dimen/element_spacing_normal"
                 android:background="@drawable/circle"
                 android:contentDescription="@string/image"
-                custom:layout_constraintLeft_toLeftOf="parent" />
+                custom:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/text_title_test"
@@ -56,45 +56,50 @@
 
             <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
                 android:id="@+id/play"
-                android:layout_width="@dimen/view_width_small"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/element_spacing_small"
-                android:layout_marginEnd="@dimen/element_spacing_small"
+                android:layout_marginBottom="@dimen/element_spacing_small"
                 custom:image="@drawable/ic_play_arrow_white_24dp"
                 custom:layout_constraintRight_toLeftOf="@id/edit"
+                custom:layout_constraintTop_toTopOf="parent"
+                custom:layout_constraintBottom_toBottomOf="parent"
                 custom:text="@string/play" />
 
             <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
                 android:id="@+id/edit"
-                android:layout_width="@dimen/view_width_small"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/element_spacing_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/element_spacing_small"
-                android:layout_marginRight="@dimen/element_spacing_small"
+                android:layout_marginBottom="@dimen/element_spacing_small"
                 custom:image="@drawable/ic_edit_white"
                 custom:layout_constraintRight_toLeftOf="@id/delete"
+                custom:layout_constraintTop_toTopOf="parent"
+                custom:layout_constraintBottom_toBottomOf="parent"
                 custom:text="@string/edit" />
 
             <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
                 android:id="@+id/delete"
-                android:layout_width="@dimen/view_width_small"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/element_spacing_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/element_spacing_small"
-                android:layout_marginRight="@dimen/element_spacing_small"
+                android:layout_marginBottom="@dimen/element_spacing_small"
                 custom:image="@drawable/ic_delete_white"
                 custom:layout_constraintRight_toLeftOf="@id/open"
+                custom:layout_constraintTop_toTopOf="parent"
+                custom:layout_constraintBottom_toBottomOf="parent"
                 custom:text="@string/delete" />
 
             <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
                 android:id="@+id/open"
-                android:layout_width="@dimen/view_width_small"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/element_spacing_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/element_spacing_small"
-                android:layout_marginRight="@dimen/element_spacing_small"
+                android:layout_marginBottom="@dimen/element_spacing_small"
                 custom:image="@drawable/ic_share_white"
                 custom:layout_constraintRight_toRightOf="parent"
+                custom:layout_constraintTop_toTopOf="parent"
+                custom:layout_constraintBottom_toBottomOf="parent"
                 custom:text="@string/share" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
