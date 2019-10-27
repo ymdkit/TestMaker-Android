@@ -30,13 +30,8 @@
 
     <Button
         android:id="@+id/button_save"
-        style="@style/button_choose_normal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/Button.Primary.TextWide"
         android:text="@string/save"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_medium"
         app:layout_constraintBottom_toTopOf="@id/container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

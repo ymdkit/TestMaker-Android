@@ -18,12 +18,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        style="@style/MyCardViewStyle"
-        android:layout_height="wrap_content"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="@dimen/element_spacing_small"
-        android:padding="@dimen/element_spacing_normal"
-        app:cardUseCompatPadding="true">
+        style="@style/Card">
 
         <LinearLayout
             android:layout_width="match_parent"

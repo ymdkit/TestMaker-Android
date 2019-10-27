@@ -90,13 +90,8 @@
 
                         <Button
                             android:id="@+id/button_confirm"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/element_spacing_small"
-                            android:background="@drawable/button_blue"
+                            style="@style/Button.Primary.TextWide"
                             android:text="@string/confirm"
-                            android:textColor="@color/white"
-                            android:stateListAnimator="@null"
                             android:visibility="gone" />
 
 

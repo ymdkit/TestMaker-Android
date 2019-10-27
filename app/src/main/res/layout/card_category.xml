@@ -7,11 +7,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        style="@style/MyCardViewStyle"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        custom:cardCornerRadius="@dimen/element_spacing_small"
-        custom:cardUseCompatPadding="true">
+        style="@style/Card">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -22,12 +18,12 @@
             <ImageButton
                 android:id="@+id/color"
                 android:layout_width="@dimen/element_spacing_small"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:layout_margin="@dimen/element_spacing_normal"
                 android:background="@drawable/circle"
                 android:contentDescription="@null"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/white"
+                custom:layout_constraintTop_toTopOf="parent"
+                custom:layout_constraintBottom_toBottomOf="parent"
                 custom:layout_constraintLeft_toLeftOf="parent" />
 
 
@@ -50,7 +46,6 @@
                 android:id="@+id/num_questions"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:gravity="start"
                 android:textSize="@dimen/text_size_small"
                 android:layout_marginStart="@dimen/element_spacing_small"
@@ -64,8 +59,6 @@
                 android:id="@+id/open"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/element_spacing_small"
-                android:layout_marginBottom="@dimen/element_spacing_small"
                 custom:image="@drawable/ic_folder_open_white"
                 custom:layout_constraintRight_toRightOf="parent"
                 custom:layout_constraintTop_toTopOf="parent"

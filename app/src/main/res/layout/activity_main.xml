@@ -42,12 +42,9 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="@dimen/element_spacing_small"
-                    app:cardUseCompatPadding="true"
+                    style="@style/Card"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -87,14 +84,11 @@
 
                         <Button
                             android:id="@+id/button_add"
+                            style="@style/Button.Accent"
                             android:layout_width="match_parent"
                             android:layout_height="56dp"
-                            android:backgroundTint="@color/colorAccent"
                             android:enabled="false"
-                            android:stateListAnimator="@null"
                             android:text="@string/action_add"
-                            android:textAllCaps="false"
-                            android:textColor="@color/white"
                             android:textSize="@dimen/text_size_medium"
                             android:visibility="@{model.isEditing ? View.VISIBLE : View.GONE}"
                             app:layout_constraintBottom_toBottomOf="parent"

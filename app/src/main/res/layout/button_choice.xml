@@ -4,9 +4,11 @@
 
     <Button
         android:id="@+id/button"
+        style="@style/Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/text"
-        android:layout_alignTop="@+id/text"
-        style="@style/button_choose_normal"/>
+        android:layout_alignTop="@+id/text" />
 
     <TextView
         android:id="@+id/text"
@@ -15,14 +17,13 @@
         android:gravity="start"
         android:paddingTop="@dimen/element_spacing_very_large"
         android:paddingBottom="@dimen/element_spacing_very_large"
-        android:paddingLeft="@dimen/element_spacing_normal"
         android:paddingStart="@dimen/element_spacing_normal"
         android:paddingEnd="@dimen/element_spacing_normal"
-        android:paddingRight="@dimen/element_spacing_normal"
         android:layout_centerInParent="true"
         android:textSize="@dimen/text_size_large"
         android:text="@string/pass"
         android:textColor="@color/white"
+        android:elevation="2dp"
         android:translationZ="2dp"/>
 
 </RelativeLayout>

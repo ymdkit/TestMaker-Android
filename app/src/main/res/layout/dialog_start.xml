@@ -83,12 +83,9 @@
         style="@style/MyStartCheckBoxStyle"
         android:text="@string/message_delete_sound" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_start"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/view_height_normal"
-        style="@style/button_choose_normal"
-        android:text="@string/start"
-        android:textSize="@dimen/text_size_small" />
+        style="@style/Button.Primary.TextWide"
+        android:text="@string/start" />
 
 </LinearLayout>

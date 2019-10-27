@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/background"
     tools:context=".view.move.MoveQuestionsActivity">
 
@@ -14,20 +13,20 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
+        app:layout_constraintBottom_toTopOf="@id/cardView"
+        app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/Theme.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="@string/action_move" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="match_parent"
+        style="@style/Card"
         android:layout_height="0dp"
-        android:layout_margin="@dimen/element_spacing_small"
-        android:layout_weight="1"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="@dimen/element_spacing_small"
-        app:cardUseCompatPadding="true">
+        app:layout_constraintBottom_toTopOf="@id/container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,8 +47,8 @@
                     android:layout_marginEnd="@dimen/element_spacing_normal"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_large"
-                    android:text="@string/target" />
+                    android:text="@string/target"
+                    android:textSize="@dimen/text_size_large" />
 
                 <Spinner
                     android:id="@+id/spinner_from_test"
@@ -75,8 +74,8 @@
                 android:id="@+id/check_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/check_all_questions"
-                android:layout_weight="0.1"/>
+                android:layout_weight="0.1"
+                android:text="@string/check_all_questions" />
 
             <View
                 android:layout_width="match_parent"
@@ -110,10 +109,7 @@
 
             <Button
                 android:id="@+id/button_save"
-                style="@style/button_choose_normal"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/view_height_small"
-                android:layout_weight="0.1"
+                style="@style/Button.Primary.TextWide"
                 android:text="@string/save" />
 
         </LinearLayout>
@@ -126,7 +122,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/element_spacing_small"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardView" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
