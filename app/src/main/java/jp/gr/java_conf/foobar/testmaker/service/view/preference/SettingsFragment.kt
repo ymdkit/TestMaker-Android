@@ -18,6 +18,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         initStudyPlusPreferences()
+        initOtherPreferences()
     }
 
     fun initStudyPlusPreferences() {
@@ -47,7 +48,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
             }
         }
+    }
 
+    private fun initOtherPreferences() {
         val licensePreference = findPreference<Preference>("license")
         licensePreference?.apply {
             setOnPreferenceClickListener {

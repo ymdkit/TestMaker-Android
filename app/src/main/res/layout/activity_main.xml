@@ -30,7 +30,7 @@
                 android:minHeight="?attr/actionBarSize"
                 app:layout_constraintTop_toTopOf="parent"
                 app:popupTheme="@style/Theme.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:title="@string/app_name" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
