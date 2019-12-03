@@ -47,32 +47,32 @@
                     android:orientation="horizontal">
 
                     <ImageButton
+                        style="@style/Button.Primary"
                         android:contentDescription="@string/image"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_height_large"
                         android:layout_weight="1"
                         android:scaleType="fitCenter"
-                        android:backgroundTint="@color/colorPrimary"
                         android:src="@drawable/ic_home_white"
                         android:id="@+id/top" />
 
                     <ImageButton
+                        style="@style/Button.Primary"
                         android:contentDescription="@string/image"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_height_large"
                         android:layout_weight="1"
                         android:scaleType="fitCenter"
-                        android:backgroundTint="@color/colorPrimary"
                         android:src="@drawable/ic_refresh_white"
                         android:id="@+id/retry" />
 
                     <ImageButton
+                        style="@style/Button.Primary"
                         android:contentDescription="@string/image"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/view_height_large"
                         android:layout_weight="1.5"
                         android:scaleType="fitCenter"
-                        android:backgroundTint="@color/colorPrimary"
                         android:src="@drawable/ic_studyplus"
                         android:id="@+id/upload_study_plus"
                         android:visibility="gone" />
