@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest
 import com.google.android.gms.ads.doubleclick.PublisherAdView
@@ -68,25 +69,20 @@ open class BaseActivity : AppCompatActivity() {
         actionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    protected fun createAd(container: LinearLayout) {
+    protected fun createAd(adView: AdView) {
 
         if (sharedPreferenceManager.isRemovedAd) {
-            container.visibility = View.GONE
+            adView.visibility = View.GONE
             return
         }
 
-        val adView = PublisherAdView(this)
-        adView.adUnitId = "ca-app-pub-8942090726462263/8420884238"
-        adView.setAdSizes(AdSize.BANNER)
-        val adRequest = PublisherAdRequest.Builder()
+        val adRequest = AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice("DA539D38B08126EBEF7E059DCA26831C")
-                .addTestDevice("BDB57B5078A79B87345E711A52F0F995")
                 .addTestDevice("4C3BA6538C8F304A33859DC20F66316E")
-                .build()
+                .addTestDevice("BDB57B5078A79B87345E711A52F0F995").build()
         adView.loadAd(adRequest)
 
-        container.addView(adView)
     }
 
 }

@@ -1,133 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:popupTheme="@style/Theme.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="@string/hint_answer" />
-
-    <LinearLayout
-        android:id="@+id/body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/background"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/cardView"
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"
+                android:layout_width="match_parent"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/Theme.AppCompat.DayNight"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@string/hint_answer" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/body"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="@dimen/element_spacing_small"
-            android:layout_weight="1"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            card_view:cardCornerRadius="@dimen/element_spacing_small"
-            card_view:cardUseCompatPadding="true">
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-
-            <FrameLayout
+            <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cardView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/element_spacing_small"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                card_view:cardCornerRadius="@dimen/element_spacing_small"
+                card_view:cardUseCompatPadding="true"
+                card_view:layout_constraintTop_toTopOf="parent">
 
-                <ScrollView
+
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fillViewport="true">
+                    android:layout_height="wrap_content">
 
-                    <LinearLayout
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:orientation="vertical">
+                        android:layout_height="match_parent"
+                        android:fillViewport="true">
 
-                        <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayProblemView
-                            android:id="@+id/play_problem_view"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="0dp"
+                            android:orientation="vertical">
 
-                        <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayReviewView
-                            android:id="@+id/play_review_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayProblemView
+                                android:id="@+id/play_problem_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
 
-                        <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayMistakeView
-                            android:id="@+id/play_mistake_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayReviewView
+                                android:id="@+id/play_review_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
 
-                        <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayManualView
-                            android:id="@+id/play_manual_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayMistakeView
+                                android:id="@+id/play_mistake_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
 
-                        <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayWriteView
-                            android:id="@+id/play_write_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayManualView
+                                android:id="@+id/play_manual_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
 
-                        <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayCompleteView
-                            android:id="@+id/play_complete_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayWriteView
+                                android:id="@+id/play_write_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
 
-                        <jp.gr.java_conf.foobar.testmaker.service.view.play.PlaySelectView
-                            android:id="@+id/play_select_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            <jp.gr.java_conf.foobar.testmaker.service.view.play.PlayCompleteView
+                                android:id="@+id/play_complete_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
 
-                        <jp.gr.java_conf.foobar.testmaker.service.view.play.PlaySelectCompleteView
-                            android:id="@+id/play_select_complete_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                            <jp.gr.java_conf.foobar.testmaker.service.view.play.PlaySelectView
+                                android:id="@+id/play_select_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
 
-                        <Button
-                            android:id="@+id/button_confirm"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/element_spacing_small"
-                            android:background="@drawable/button_blue"
-                            android:text="@string/confirm"
-                            android:textColor="@color/white"
-                            android:stateListAnimator="@null"
-                            android:visibility="gone" />
+                            <jp.gr.java_conf.foobar.testmaker.service.view.play.PlaySelectCompleteView
+                                android:id="@+id/play_select_complete_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
 
-
-                    </LinearLayout>
-
-                </ScrollView>
-
-                <ImageView
-                    android:id="@+id/image_judge"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_margin="@dimen/element_spacing_normal"
-                    android:contentDescription="@string/image"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/right"
-                    android:visibility="gone" />
-
-            </FrameLayout>
+                            <Button
+                                android:id="@+id/button_confirm"
+                                style="@style/Button.Primary.TextWide"
+                                android:text="@string/confirm"
+                                android:visibility="gone" />
 
 
-        </androidx.cardview.widget.CardView>
+                        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/element_spacing_small"
-            android:orientation="vertical" />
+                    </ScrollView>
 
-    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/image_judge"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_margin="@dimen/element_spacing_normal"
+                        android:contentDescription="@string/image"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/right"
+                        android:visibility="gone" />
+
+                </FrameLayout>
 
 
-</LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:adSize="BANNER"
+                app:adUnitId="ca-app-pub-8942090726462263/1562886633"
+                app:layout_constraintTop_toBottomOf="@id/cardView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

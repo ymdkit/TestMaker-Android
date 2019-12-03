@@ -79,9 +79,7 @@
 
     <Button
         android:id="@+id/button_judge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/button_choose_normal"
+        style="@style/Button.Primary.TextWide"
         android:text="@string/ok"
         android:layout_below="@+id/textInputLayout_answer_3"
         />

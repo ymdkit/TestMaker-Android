@@ -6,6 +6,7 @@
     <dimen name="element_spacing_large">12dp</dimen>
     <dimen name="element_spacing_normal">8dp</dimen>
     <dimen name="element_spacing_small">4dp</dimen>
+    <dimen name="element_spacing_very_small">2dp</dimen>
     <dimen name="view_height_very_large">72dp</dimen>
     <dimen name="view_height_large">64dp</dimen>
     <dimen name="view_height_normal">48dp</dimen>

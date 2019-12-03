@@ -24,38 +24,31 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
+                style="@style/Toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/Theme.AppCompat.DayNight"
                 app:layout_constraintTop_toTopOf="parent"
-                app:popupTheme="@style/Theme.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:title="@string/app_name"/>
+                app:title="@string/app_name" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:padding="@dimen/element_spacing_small"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:layout_constraintBottom_toBottomOf="parent"
-                >
+                app:layout_constraintTop_toBottomOf="@id/toolbar">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="@dimen/element_spacing_small"
-                    app:cardUseCompatPadding="true"
-                    app:layout_constraintTop_toTopOf="parent"
-                    >
+                    style="@style/Card"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/element_spacing_small">
+                        android:padding="@dimen/element_spacing_very_small">
 
                         <ImageButton
                             android:id="@+id/button_expand"
@@ -89,14 +82,11 @@
 
                         <Button
                             android:id="@+id/button_add"
+                            style="@style/Button.Accent"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/button_add"
+                            android:layout_height="56dp"
                             android:enabled="false"
-                            android:stateListAnimator="@null"
                             android:text="@string/action_add"
-                            android:textAllCaps="false"
-                            android:textColor="@color/white"
                             android:textSize="@dimen/text_size_medium"
                             android:visibility="@{model.isEditing ? View.VISIBLE : View.GONE}"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -111,19 +101,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintBottom_toTopOf="@id/container"
+                    app:layout_constraintBottom_toTopOf="@id/adView"
                     app:layout_constraintTop_toBottomOf="@id/cardView" />
 
-                <LinearLayout
-                    android:id="@+id/container"
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/adView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|bottom"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/element_spacing_small"
+                    app:adSize="BANNER"
+                    app:adUnitId="ca-app-pub-8942090726462263/1562886633"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

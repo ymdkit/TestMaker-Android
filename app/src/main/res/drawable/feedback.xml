@@ -4,8 +4,6 @@
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/element_spacing_small" />
 
-            <solid android:color="@android:color/darker_gray" />
-
         </shape>
     </item>
 
@@ -13,7 +11,6 @@
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/element_spacing_small" />
 
-            <solid android:color="@color/none" />
 
         </shape>
     </item>

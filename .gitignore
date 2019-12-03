@@ -9,5 +9,5 @@
 /captures
 /release
 /app/release
-.idea/
+/.idea
 buildSrc/

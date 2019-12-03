@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityResultBinding
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
@@ -29,7 +31,8 @@ class ResultActivity : BaseActivity() {
 
         setSupportActionBar(toolbar)
 
-        createAd(container)
+        val binding = DataBindingUtil.setContentView<ActivityResultBinding>(this, R.layout.activity_result)
+        createAd(binding.adView)
 
         val questions = resultViewModel.getTest(testId).getQuestionsSolved()
 

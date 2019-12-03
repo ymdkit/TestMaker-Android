@@ -26,11 +26,8 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_blue"
-            style="@style/button_choose_normal"
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/Button.Primary.TextWide"
             android:id="@+id/button_save_profile"
             android:text="@string/save"/>
 

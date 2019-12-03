@@ -26,7 +26,7 @@ class CategoryEditor(private val context: Context,
                      private val getCategories: () -> List<Cate>,
                      private val addCategory: (Cate) -> Unit,
                      private val deleteCategory: (Cate) -> Unit) {
-    private var buttonColor: ImageButton? = null
+
     private var colorChooser: ColorChooser? = null
 
     private var dialogCate: AlertDialog? = null
@@ -51,8 +51,6 @@ class CategoryEditor(private val context: Context,
                 drawable.setColor(getCategories()[position].color)
 
                 buttonCate.background = drawable
-                buttonColor!!.background = context.resources.getDrawable(R.drawable.button_blue)
-
                 buttonCate.tag = getCategories()[position].category
 
                 dialogCate!!.dismiss()
@@ -64,23 +62,8 @@ class CategoryEditor(private val context: Context,
         recyclerView.setHasFixedSize(true) // アイテムは固定サイズ
         recyclerView.adapter = adapter
 
-        colorChooser = LayoutInflater.from(context).inflate(R.layout.dialog_color, null).findViewById(R.id.color_chooser)
+        colorChooser = dialogLayout.findViewById(R.id.color_chooser)
 
-        buttonColor = dialogLayout.findViewById(R.id.color)
-        buttonColor!!.setBackgroundDrawable(ResourcesCompat.getDrawable(context.resources, R.drawable.button_blue, null))
-        buttonColor!!.setOnClickListener {
-
-            val layoutColor = LayoutInflater.from(context).inflate(R.layout.dialog_color, null)
-            val dialogColor = setDialog(layoutColor, context.getString(R.string.edit_color))
-
-            colorChooser = layoutColor.findViewById(R.id.color_chooser)
-            colorChooser!!.setColorId(colorChooser!!.getColors()!![0])
-            colorChooser!!.setDialog(dialogColor, buttonColor!!)
-
-            dialogColor.getButton(DialogInterface.BUTTON_POSITIVE).visibility = View.GONE
-            dialogColor.getButton(DialogInterface.BUTTON_NEGATIVE).visibility = View.GONE
-
-        }
 
         val add = dialogLayout.findViewById<ImageButton>(R.id.add)
         add.setOnClickListener {
@@ -102,10 +85,6 @@ class CategoryEditor(private val context: Context,
                 drawable.setColor(colorChooser!!.getColorId())
 
                 buttonCate.background = drawable
-                buttonColor!!.background = ResourcesCompat.getDrawable(context.resources, R.drawable.button_blue, null)
-
-                //realmController.addCate(e.text.toString(), colorChooser!!.getColorId())
-
                 val category = Cate()
                 category.category = e.text.toString()
                 category.color = colorChooser!!.getColorId()
@@ -117,8 +96,6 @@ class CategoryEditor(private val context: Context,
                 dialogCate!!.dismiss()
 
             }
-
-
         }
 
         dialogCate = setDialog(dialogLayout, context.getString(R.string.edit_category))

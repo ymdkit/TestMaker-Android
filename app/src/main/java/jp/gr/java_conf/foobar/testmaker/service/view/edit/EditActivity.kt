@@ -67,7 +67,7 @@ open class EditActivity : BaseActivity() {
         binding.lifecycleOwner = this
         binding.model = viewModel
 
-        createAd(container)
+        createAd(binding.adView)
 
         initToolBar()
 
@@ -523,7 +523,6 @@ open class EditActivity : BaseActivity() {
         viewModel.questionId = -1
         viewModel.imagePath = ""
         button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
-        button_image.setBackgroundResource(R.drawable.button_blue)
         button_cancel.visibility = View.GONE
 
         button_add.text = getString(R.string.action_add)

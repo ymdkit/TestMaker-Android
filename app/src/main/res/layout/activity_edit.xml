@@ -24,418 +24,401 @@
 
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/Theme.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="@string/title_activity_edit" />
-
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
-            style="@style/MyCardViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:cardCornerRadius="@dimen/element_spacing_small"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/element_spacing_small">
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/Theme.AppCompat.DayNight"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@string/title_activity_edit" />
 
-
-                <ImageButton
-                    android:id="@+id/button_expand"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_height_small"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/feedback"
-                    android:contentDescription="@string/open"
-                    android:scaleType="fitCenter"
-                    android:src="@{model.stateEditing == Constants.NOT_EDITING ? @drawable/ic_expand_more_black : @drawable/ic_expand_less_black}"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/text_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/add_question"
-                    android:textSize="@dimen/text_size_medium"
-                    app:layout_constraintBottom_toBottomOf="@id/button_expand"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/button_cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:background="@drawable/button_blue"
-                    android:text="@string/cancel"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_small"
-                    android:visibility="gone"
-                    android:layout_margin="@dimen/element_spacing_small"
-                    app:layout_constraintBottom_toBottomOf="@id/button_expand"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/layout_config"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="@{model.stateEditing == Constants.EDIT_CONFIG ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintTop_toBottomOf="@id/button_expand">
-
-                    <TextView
-                        android:id="@+id/text_format_question"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="@dimen/element_spacing_small"
-                        android:gravity="center_vertical"
-                        android:text="@string/format_question"
-                        android:textSize="@dimen/text_size_medium"
-                        app:layout_constraintBottom_toBottomOf="@id/radio_question"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <RadioGroup
-                        android:id="@+id/radio_question"
-                        android:layout_width="0dp"
-                        android:layout_height="24dp"
-                        android:layout_marginEnd="@dimen/element_spacing_small"
-                        android:gravity="end"
-                        android:orientation="horizontal"
-                        app:layout_constraintLeft_toRightOf="@id/text_format_question"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/text_format_question">
-
-                        <RadioButton
-                            android:id="@+id/radio_write"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:checked="@{model.formatQuestion == Constants.WRITE}"
-                            android:tag="@{Constants.WRITE}"
-                            android:text="@string/normal"
-                            android:textColor="@android:color/tab_indicator_text" />
-
-                        <RadioButton
-                            android:id="@+id/radio_select"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:checked="@{model.formatQuestion == Constants.SELECT}"
-                            android:tag="@{Constants.SELECT}"
-                            android:text="@string/select"
-                            android:textColor="@android:color/tab_indicator_text" />
-
-                        <RadioButton
-                            android:id="@+id/radio_complete"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:checked="@{model.formatQuestion == Constants.COMPLETE}"
-                            android:tag="@{Constants.COMPLETE}"
-                            android:text="@string/complete"
-                            android:textColor="@android:color/tab_indicator_text" />
-
-                        <RadioButton
-                            android:id="@+id/radio_select_complete"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:checked="@{model.formatQuestion == Constants.SELECT_COMPLETE}"
-                            android:tag="@{Constants.SELECT_COMPLETE}"
-                            android:text="@string/select_complete"
-                            android:textColor="@android:color/tab_indicator_text" />
-                    </RadioGroup>
-
-                    <TextView
-                        android:id="@+id/text_size_answer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/element_spacing_small"
-                        android:gravity="center_vertical"
-                        android:text="@string/number_answers"
-                        android:textSize="@dimen/text_size_medium"
-                        android:visibility="@{model.formatQuestion == Constants.COMPLETE || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintBottom_toBottomOf="@id/spinner_size_answer"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/radio_question" />
-
-                    <Spinner
-                        android:id="@+id/spinner_size_answer"
-                        android:layout_width="@dimen/view_width_large"
-                        android:layout_height="wrap_content"
-                        android:entries="@{model.formatQuestion == Constants.COMPLETE ? @stringArray/spinner_answers_complete : @stringArray/spinner_answers_select_complete}"
-                        android:gravity="end"
-                        android:paddingStart="@dimen/view_width_small"
-                        android:paddingEnd="0dp"
-                        android:selectedItemPosition="@={model.spinnerAnswersPosition}"
-                        android:visibility="@{model.formatQuestion == Constants.COMPLETE || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/text_size_answer" />
-
-                    <TextView
-                        android:id="@+id/text_size_select"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/element_spacing_small"
-                        android:gravity="center_vertical"
-                        android:text="@string/number_choosers"
-                        android:textSize="@dimen/text_size_medium"
-                        android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintBottom_toBottomOf="@id/spinner_size_select"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/spinner_size_answer" />
-
-                    <Spinner
-                        android:id="@+id/spinner_size_select"
-                        android:layout_width="@dimen/view_width_large"
-                        android:layout_height="wrap_content"
-                        android:entries="@{model.formatQuestion == Constants.SELECT ? @stringArray/spinner_selects : @stringArray/spinner_selects_complete}"
-                        android:gravity="end"
-                        android:paddingStart="@dimen/view_width_small"
-                        android:paddingEnd="0dp"
-                        android:selectedItemPosition="@={model.spinnerSelectsPosition}"
-                        android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/text_size_select" />
-
-                    <TextView
-                        android:id="@+id/text_auto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/element_spacing_small"
-                        android:gravity="center_vertical"
-                        android:text="@string/auto"
-                        android:textSize="@dimen/text_size_medium"
-                        android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintBottom_toBottomOf="@id/change_auto"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/spinner_size_select" />
-
-
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/change_auto"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|end"
-                        android:checked="@={model.isAuto}"
-                        android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintLeft_toRightOf="@id/text_auto"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/text_auto" />
-
-                    <TextView
-                        android:id="@+id/text_check_order"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/element_spacing_small"
-                        android:gravity="center_vertical"
-                        android:text="@string/is_check_order"
-                        android:textSize="@dimen/text_size_medium"
-                        android:visibility="@{model.formatQuestion == Constants.COMPLETE ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintBottom_toBottomOf="@id/change_check_order"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/change_auto" />
-
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/change_check_order"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|end"
-                        android:checked="@={model.isCheckOrder}"
-                        android:visibility="@{model.formatQuestion == Constants.COMPLETE ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintLeft_toRightOf="@id/text_check_order"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/text_check_order" />
-
-                    <TextView
-                        android:id="@+id/text_explanation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/element_spacing_small"
-                        android:gravity="center_vertical"
-                        android:text="@string/message_explanation"
-                        android:textSize="@dimen/text_size_medium"
-                        app:layout_constraintBottom_toBottomOf="@id/change_explanation"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/change_check_order" />
-
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/change_explanation"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|end"
-                        android:checked="@={model.isEditingExplanation}"
-                        app:layout_constraintLeft_toRightOf="@id/text_explanation"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/text_explanation" />
-
-                    <Button
-                        android:id="@+id/button_finish_config"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/view_height_small"
-                        android:layout_marginTop="@dimen/element_spacing_small"
-                        android:background="@drawable/button_blue"
-                        android:onClick="@{() -> model.editQuestion()}"
-                        android:text="@string/ok"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_small"
-                        app:layout_constraintTop_toBottomOf="@id/change_explanation" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/layout_body"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="@{model.stateEditing == Constants.EDIT_QUESTION ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintTop_toBottomOf="@id/layout_config">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputLayout_question_write"
-                        style="@style/MyTextInputLayoutStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@id/button_image"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/set_problem"
-                            style="@style/MyEditTextMultiLine"
-                            android:hint="@string/hint_question"
-                            android:text="@={model.question}" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <ImageButton
-                        android:id="@+id/button_image"
-                        android:layout_width="@dimen/view_height_normal"
-                        android:layout_height="@dimen/view_height_normal"
-                        android:background="@drawable/button_blue"
-                        android:contentDescription="@string/image"
-                        android:padding="@dimen/element_spacing_normal"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_insert_photo_white_24dp"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/edit_write_view"
-                        style="@style/MyTextInputLayoutStyle"
-                        android:layout_width="match_parent"
-                        android:visibility="@{model.formatQuestion == Constants.WRITE ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintTop_toBottomOf="@id/textInputLayout_question_write">
-
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/set_answer_write"
-                            style="@style/MyEditTextSingleLine"
-                            android:hint="@string/hint_answer"
-                            android:text="@={model.answer}" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <jp.gr.java_conf.foobar.testmaker.service.view.edit.EditCompleteView
-                        android:id="@+id/edit_complete_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="@{model.formatQuestion == Constants.COMPLETE ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintTop_toBottomOf="@id/edit_write_view" />
-
-
-                    <jp.gr.java_conf.foobar.testmaker.service.view.edit.EditSelectView
-                        android:id="@+id/edit_select_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="@{model.formatQuestion == Constants.SELECT ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintTop_toBottomOf="@id/edit_complete_view" />
-
-                    <jp.gr.java_conf.foobar.testmaker.service.view.edit.EditSelectCompleteView
-                        android:id="@+id/edit_select_complete_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="@{model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintTop_toBottomOf="@id/edit_select_view" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputLayout_explanation"
-                        style="@style/MyTextInputLayoutStyle"
-                        android:layout_width="match_parent"
-                        android:visibility="@{model.isEditingExplanation ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintTop_toBottomOf="@id/edit_select_complete_view">
-
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/set_explanation"
-                            style="@style/MyEditTextMultiLine"
-                            android:hint="@string/hint_explanation"
-                            android:text="@={model.explanation}" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <Button
-                        android:id="@+id/button_add"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/element_spacing_small"
-                        android:background="@drawable/button_add"
-                        android:stateListAnimator="@null"
-                        android:text="@string/action_add"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_medium"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@id/button_detail"
-                        app:layout_constraintTop_toBottomOf="@id/textInputLayout_explanation" />
-
-                    <ImageButton
-                        android:id="@+id/button_detail"
-                        android:layout_width="48dp"
-                        android:layout_height="0dp"
-                        android:background="@drawable/button_blue"
-                        android:padding="@dimen/element_spacing_normal"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_settings_white_16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/button_add" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/container"
-            app:layout_constraintTop_toBottomOf="@id/cardView" />
-
-        <LinearLayout
-            android:id="@+id/container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/element_spacing_small"
+            android:padding="@dimen/element_spacing_small"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            >
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                style="@style/Card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/recycler_view">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:id="@+id/button_expand"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_height_small"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/feedback"
+                        android:contentDescription="@string/open"
+                        android:scaleType="fitCenter"
+                        android:src="@{model.stateEditing == Constants.NOT_EDITING ? @drawable/ic_expand_more_black : @drawable/ic_expand_less_black}"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/text_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="@dimen/element_spacing_small"
+                        android:gravity="center_vertical"
+                        android:text="@string/add_question"
+                        android:textSize="@dimen/text_size_medium"
+                        app:layout_constraintBottom_toBottomOf="@id/button_expand"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/button_cancel"
+                        style="@style/Button.Primary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:text="@string/cancel"
+                        android:textSize="@dimen/text_size_small"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@id/button_expand"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layout_config"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{model.stateEditing == Constants.EDIT_CONFIG ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/button_expand">
+
+                        <TextView
+                            android:id="@+id/text_format_question"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_marginTop="@dimen/element_spacing_small"
+                            android:gravity="center_vertical"
+                            android:text="@string/format_question"
+                            android:textSize="@dimen/text_size_medium"
+                            app:layout_constraintBottom_toBottomOf="@id/radio_question"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <RadioGroup
+                            android:id="@+id/radio_question"
+                            android:layout_width="0dp"
+                            android:layout_height="24dp"
+                            android:layout_marginEnd="@dimen/element_spacing_small"
+                            android:gravity="end"
+                            android:orientation="horizontal"
+                            app:layout_constraintLeft_toRightOf="@id/text_format_question"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/text_format_question">
+
+                            <RadioButton
+                                android:id="@+id/radio_write"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:checked="@{model.formatQuestion == Constants.WRITE}"
+                                android:tag="@{Constants.WRITE}"
+                                android:text="@string/normal"
+                                android:textColor="@android:color/tab_indicator_text" />
+
+                            <RadioButton
+                                android:id="@+id/radio_select"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:checked="@{model.formatQuestion == Constants.SELECT}"
+                                android:tag="@{Constants.SELECT}"
+                                android:text="@string/select"
+                                android:textColor="@android:color/tab_indicator_text" />
+
+                            <RadioButton
+                                android:id="@+id/radio_complete"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:checked="@{model.formatQuestion == Constants.COMPLETE}"
+                                android:tag="@{Constants.COMPLETE}"
+                                android:text="@string/complete"
+                                android:textColor="@android:color/tab_indicator_text" />
+
+                            <RadioButton
+                                android:id="@+id/radio_select_complete"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:checked="@{model.formatQuestion == Constants.SELECT_COMPLETE}"
+                                android:tag="@{Constants.SELECT_COMPLETE}"
+                                android:text="@string/select_complete"
+                                android:textColor="@android:color/tab_indicator_text" />
+                        </RadioGroup>
+
+                        <TextView
+                            android:id="@+id/text_size_answer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/element_spacing_small"
+                            android:gravity="center_vertical"
+                            android:text="@string/number_answers"
+                            android:textSize="@dimen/text_size_medium"
+                            android:visibility="@{model.formatQuestion == Constants.COMPLETE || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintBottom_toBottomOf="@id/spinner_size_answer"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/radio_question" />
+
+                        <Spinner
+                            android:id="@+id/spinner_size_answer"
+                            android:layout_width="@dimen/view_width_large"
+                            android:layout_height="wrap_content"
+                            android:entries="@{model.formatQuestion == Constants.COMPLETE ? @stringArray/spinner_answers_complete : @stringArray/spinner_answers_select_complete}"
+                            android:gravity="end"
+                            android:paddingStart="@dimen/view_width_small"
+                            android:paddingEnd="0dp"
+                            android:selectedItemPosition="@={model.spinnerAnswersPosition}"
+                            android:visibility="@{model.formatQuestion == Constants.COMPLETE || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/text_size_answer" />
+
+                        <TextView
+                            android:id="@+id/text_size_select"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/element_spacing_small"
+                            android:gravity="center_vertical"
+                            android:text="@string/number_choosers"
+                            android:textSize="@dimen/text_size_medium"
+                            android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintBottom_toBottomOf="@id/spinner_size_select"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/spinner_size_answer" />
+
+                        <Spinner
+                            android:id="@+id/spinner_size_select"
+                            android:layout_width="@dimen/view_width_large"
+                            android:layout_height="wrap_content"
+                            android:entries="@{model.formatQuestion == Constants.SELECT ? @stringArray/spinner_selects : @stringArray/spinner_selects_complete}"
+                            android:gravity="end"
+                            android:paddingStart="@dimen/view_width_small"
+                            android:paddingEnd="0dp"
+                            android:selectedItemPosition="@={model.spinnerSelectsPosition}"
+                            android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/text_size_select" />
+
+                        <TextView
+                            android:id="@+id/text_auto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/element_spacing_small"
+                            android:gravity="center_vertical"
+                            android:text="@string/auto"
+                            android:textSize="@dimen/text_size_medium"
+                            android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintBottom_toBottomOf="@id/change_auto"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/spinner_size_select" />
+
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/change_auto"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:checked="@={model.isAuto}"
+                            android:visibility="@{model.formatQuestion == Constants.SELECT || model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintLeft_toRightOf="@id/text_auto"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/text_auto" />
+
+                        <TextView
+                            android:id="@+id/text_check_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/element_spacing_small"
+                            android:gravity="center_vertical"
+                            android:text="@string/is_check_order"
+                            android:textSize="@dimen/text_size_medium"
+                            android:visibility="@{model.formatQuestion == Constants.COMPLETE ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintBottom_toBottomOf="@id/change_check_order"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/change_auto" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/change_check_order"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:checked="@={model.isCheckOrder}"
+                            android:visibility="@{model.formatQuestion == Constants.COMPLETE ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintLeft_toRightOf="@id/text_check_order"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/text_check_order" />
+
+                        <TextView
+                            android:id="@+id/text_explanation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/element_spacing_small"
+                            android:gravity="center_vertical"
+                            android:text="@string/message_explanation"
+                            android:textSize="@dimen/text_size_medium"
+                            app:layout_constraintBottom_toBottomOf="@id/change_explanation"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/change_check_order" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/change_explanation"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:checked="@={model.isEditingExplanation}"
+                            app:layout_constraintLeft_toRightOf="@id/text_explanation"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/text_explanation" />
+
+                        <Button
+                            android:id="@+id/button_finish_config"
+                            style="@style/Button.Primary.TextWide"
+                            android:layout_marginTop="@dimen/element_spacing_small"
+                            android:onClick="@{() -> model.editQuestion()}"
+                            android:text="@string/ok"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/change_explanation" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layout_body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="@{model.stateEditing == Constants.EDIT_QUESTION ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/layout_config">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/textInputLayout_question_write"
+                            style="@style/MyTextInputLayoutStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toLeftOf="@id/button_image"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <androidx.appcompat.widget.AppCompatEditText
+                                android:id="@+id/set_problem"
+                                style="@style/MyEditTextMultiLine"
+                                android:hint="@string/hint_question"
+                                android:text="@={model.question}" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <ImageButton
+                            android:id="@+id/button_image"
+                            style="@style/Button.Primary.RectImage"
+                            android:src="@drawable/ic_insert_photo_white_24dp"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/edit_write_view"
+                            style="@style/MyTextInputLayoutStyle"
+                            android:layout_width="match_parent"
+                            android:visibility="@{model.formatQuestion == Constants.WRITE ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintTop_toBottomOf="@id/textInputLayout_question_write">
+
+                            <androidx.appcompat.widget.AppCompatEditText
+                                android:id="@+id/set_answer_write"
+                                style="@style/MyEditTextSingleLine"
+                                android:hint="@string/hint_answer"
+                                android:text="@={model.answer}" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <jp.gr.java_conf.foobar.testmaker.service.view.edit.EditCompleteView
+                            android:id="@+id/edit_complete_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="@{model.formatQuestion == Constants.COMPLETE ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintTop_toBottomOf="@id/edit_write_view" />
+
+
+                        <jp.gr.java_conf.foobar.testmaker.service.view.edit.EditSelectView
+                            android:id="@+id/edit_select_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="@{model.formatQuestion == Constants.SELECT ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintTop_toBottomOf="@id/edit_complete_view" />
+
+                        <jp.gr.java_conf.foobar.testmaker.service.view.edit.EditSelectCompleteView
+                            android:id="@+id/edit_select_complete_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="@{model.formatQuestion == Constants.SELECT_COMPLETE ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintTop_toBottomOf="@id/edit_select_view" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/textInputLayout_explanation"
+                            style="@style/MyTextInputLayoutStyle"
+                            android:layout_width="match_parent"
+                            android:visibility="@{model.isEditingExplanation ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintTop_toBottomOf="@id/edit_select_complete_view">
+
+                            <androidx.appcompat.widget.AppCompatEditText
+                                android:id="@+id/set_explanation"
+                                style="@style/MyEditTextMultiLine"
+                                android:hint="@string/hint_explanation"
+                                android:text="@={model.explanation}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <Button
+                            android:id="@+id/button_add"
+                            style="@style/Button.Accent"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:text="@string/action_add"
+                            android:textSize="@dimen/text_size_medium"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toLeftOf="@id/button_detail"
+                            app:layout_constraintTop_toBottomOf="@id/textInputLayout_explanation" />
+
+                        <ImageButton
+                            android:id="@+id/button_detail"
+                            style="@style/Button.Primary.RectImage"
+                            android:src="@drawable/ic_settings_white_16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/button_add" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@id/adView"
+                app:layout_constraintTop_toBottomOf="@id/cardView" />
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:adSize="BANNER"
+                app:adUnitId="ca-app-pub-8942090726462263/1562886633"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

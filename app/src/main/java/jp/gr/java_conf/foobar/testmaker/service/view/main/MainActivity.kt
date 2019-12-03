@@ -57,7 +57,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
@@ -67,7 +66,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             binding.buttonAdd.isEnabled = it?.isNotEmpty() ?: false
         })
 
-        createAd(binding.container)
+        createAd(binding.adView)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         viewController = MainViewController(this)
@@ -378,7 +377,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     }
 
     fun removeAd() {
-        binding.container.visibility = View.GONE
+        binding.adView.visibility = View.GONE
     }
 
     companion object {
