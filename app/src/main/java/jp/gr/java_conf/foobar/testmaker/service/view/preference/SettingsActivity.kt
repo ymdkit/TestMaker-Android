@@ -4,8 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivitySettingsBinding
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.studyplus.android.sdk.Studyplus
 
@@ -13,12 +14,11 @@ class SettingsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
 
-        val toolbar = findViewById<Toolbar>(R.id.settingsToolbar)
-        setSupportActionBar(toolbar)
-        val actionBar = supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true)
+        val binding = DataBindingUtil.setContentView<ActivitySettingsBinding>(this, R.layout.activity_settings)
+        createAd(binding.adView)
+
+        initToolBar()
 
         supportFragmentManager
                 .beginTransaction()
