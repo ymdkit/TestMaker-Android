@@ -11,14 +11,15 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
 import androidx.paging.PagedList
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.google.firebase.auth.FirebaseAuth
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
-import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import kotlinx.android.synthetic.main.activity_online_main.*
@@ -40,7 +41,8 @@ class FirebaseActivity : BaseActivity() {
         setContentView(R.layout.activity_online_main)
         swipe_refresh.isRefreshing = true
 
-        createAd(container)
+        val binding = DataBindingUtil.setContentView<ActivityOnlineMainBinding>(this, R.layout.activity_online_main)
+        createAd(binding.adView)
 
         initToolBar()
 

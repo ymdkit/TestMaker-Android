@@ -2,7 +2,6 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import android.view.LayoutInflater
@@ -10,7 +9,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditProBinding
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import kotlinx.android.synthetic.main.activity_edit_pro.*
@@ -33,7 +34,8 @@ class EditProActivity : BaseActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        createAd(container)
+        val binding = DataBindingUtil.setContentView<ActivityEditProBinding>(this, R.layout.activity_edit_pro)
+        createAd(binding.adView)
 
         button_save.setOnClickListener {
 

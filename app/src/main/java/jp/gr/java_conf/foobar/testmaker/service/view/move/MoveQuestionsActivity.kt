@@ -7,7 +7,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMoveQuestionsBinding
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import kotlinx.android.synthetic.main.activity_move_questions.*
@@ -27,7 +29,8 @@ class MoveQuestionsActivity : BaseActivity() {
 
         initToolBar()
 
-        createAd(container)
+        val binding = DataBindingUtil.setContentView<ActivityMoveQuestionsBinding>(this, R.layout.activity_move_questions)
+        createAd(binding.adView)
 
         val tests = viewModel.getTests()
 

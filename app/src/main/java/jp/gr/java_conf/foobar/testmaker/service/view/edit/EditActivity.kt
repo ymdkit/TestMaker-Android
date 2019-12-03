@@ -67,7 +67,7 @@ open class EditActivity : BaseActivity() {
         binding.lifecycleOwner = this
         binding.model = viewModel
 
-        createAd(container)
+        createAd(binding.adView)
 
         initToolBar()
 
