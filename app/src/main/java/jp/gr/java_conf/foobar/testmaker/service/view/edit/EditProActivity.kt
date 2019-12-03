@@ -30,12 +30,10 @@ class EditProActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_pro)
 
-        setSupportActionBar(pro_toolbar)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         val binding = DataBindingUtil.setContentView<ActivityEditProBinding>(this, R.layout.activity_edit_pro)
         createAd(binding.adView)
+
+        initToolBar()
 
         button_save.setOnClickListener {
 

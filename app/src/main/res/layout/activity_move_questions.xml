@@ -10,16 +10,13 @@
         tools:context=".view.move.MoveQuestionsActivity">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:layout_constraintBottom_toTopOf="@id/cardView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/Theme.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="@string/action_move" />
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"
+                android:layout_width="match_parent"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/Theme.AppCompat.DayNight"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@string/action_move" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"

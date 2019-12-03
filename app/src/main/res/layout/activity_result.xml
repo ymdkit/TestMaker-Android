@@ -8,15 +8,13 @@
         android:background="@color/background">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/Theme.AppCompat.Light"
-            app:title="@string/result"
-            app:layout_constraintTop_toTopOf="parent" />
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"
+                android:layout_width="match_parent"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/Theme.AppCompat.DayNight"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@string/result" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"

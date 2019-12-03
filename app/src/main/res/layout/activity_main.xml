@@ -24,13 +24,11 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
+                style="@style/Toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                app:layout_constraintTop_toTopOf="parent"
-                app:popupTheme="@style/Theme.AppCompat.Light"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/Theme.AppCompat.DayNight"
+                app:layout_constraintTop_toTopOf="parent"
                 app:title="@string/app_name" />
 
             <androidx.constraintlayout.widget.ConstraintLayout

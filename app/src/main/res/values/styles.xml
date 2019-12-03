@@ -77,6 +77,11 @@
         <item name="cardUseCompatPadding">true</item>
     </style>
 
+    <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+    </style>
+
     <style name="MySwitchStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>

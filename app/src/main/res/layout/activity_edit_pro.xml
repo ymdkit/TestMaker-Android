@@ -10,15 +10,13 @@
 
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/pro_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/Theme.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="@string/title_activity_edit" />
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"
+                android:layout_width="match_parent"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/Theme.AppCompat.DayNight"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@string/title_activity_edit" />
 
         <EditText
             android:id="@+id/edit_test"
@@ -30,7 +28,7 @@
             android:gravity="start|top"
             android:inputType="textMultiLine"
             app:layout_constraintBottom_toTopOf="@id/button_save"
-            app:layout_constraintTop_toBottomOf="@id/pro_toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <Button
             android:id="@+id/button_save"

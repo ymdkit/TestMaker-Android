@@ -27,10 +27,10 @@ class MoveQuestionsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_move_questions)
 
-        initToolBar()
-
         val binding = DataBindingUtil.setContentView<ActivityMoveQuestionsBinding>(this, R.layout.activity_move_questions)
         createAd(binding.adView)
+
+        initToolBar()
 
         val tests = viewModel.getTests()
 
