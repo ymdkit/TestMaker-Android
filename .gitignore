@@ -11,3 +11,4 @@
 /app/release
 /.idea
 buildSrc/
+/fastlane/*.json
