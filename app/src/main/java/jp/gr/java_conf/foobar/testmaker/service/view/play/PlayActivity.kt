@@ -134,6 +134,7 @@ class PlayActivity : BaseActivity() {
     }
 
     fun checkAnswer(yourAnswer: String) {
+        if(number >= questions.size) return
 
         play_select_view.invalidate()
 

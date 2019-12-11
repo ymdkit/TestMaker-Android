@@ -9,6 +9,14 @@ apply plugin: 'io.fabric'
 
 
 android {
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("TESTMAKER_STORE_PATH"))
+            keyAlias = System.getenv("TESTMAKER_KEY_ALIAS")
+            storePassword System.getenv("TESTMAKER_KEY_STORE_PASS")
+            keyPassword System.getenv("TESTMAKER_KEY_PASS")
+        }
+    }
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
@@ -32,11 +40,13 @@ android {
             manifestPlaceholders = [studyplus_consumer_key       : System.getenv("STUDYPLUS_CONSUMER_KEY"),
                                     secret_studyplus_consumer_key: System.getenv("SECRET_STUDYPLUS_CONSUMER_KEY"),
                                     testmaker_admob_key          : System.getenv("TESTMAKER_ADMOB_KEY")]
+            signingConfig signingConfigs.release
         }
         debug {
             manifestPlaceholders = [studyplus_consumer_key       : System.getenv("STUDYPLUS_CONSUMER_KEY"),
                                     secret_studyplus_consumer_key: System.getenv("SECRET_STUDYPLUS_CONSUMER_KEY"),
                                     testmaker_admob_key          : System.getenv("TESTMAKER_ADMOB_KEY")]
+            setApplicationIdSuffix(".debug")
         }
     }
     compileOptions {
@@ -91,6 +101,8 @@ dependencies {
     testImplementation "org.robolectric:robolectric:4.3"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'tools.fastlane:screengrab:1.0.0'
+
 
 }
 repositories {

@@ -12,3 +12,4 @@
 /.idea
 buildSrc/
 /fastlane/*.json
+google-services.json

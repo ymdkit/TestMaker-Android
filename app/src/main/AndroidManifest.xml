@@ -11,7 +11,6 @@
         android:name=".TestMakerApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup"
-        android:icon="@drawable/icon_testmaker_small"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
