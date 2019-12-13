@@ -15,7 +15,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.paging.PagedList
 import com.firebase.ui.auth.IdpResponse
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
-import com.google.firebase.auth.FirebaseAuth
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
@@ -68,9 +67,7 @@ class FirebaseActivity : BaseActivity() {
                         .setTitle(getString(R.string.downloading))
                         .setView( LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress,findViewById(R.id.layout_progress))).show()
 
-                val result = viewModel.downloadTest(id)
-
-                when(result){
+                when(val result = viewModel.downloadTest(id)){
                     is FirebaseTestResult.Success->{
                         viewModel.convert(result.test)
                         Toast.makeText(this@FirebaseActivity,getString(R.string.msg_success_download_test,result.test.name),Toast.LENGTH_SHORT).show()
@@ -122,7 +119,7 @@ class FirebaseActivity : BaseActivity() {
 
         button_upload.setOnClickListener {
 
-            FirebaseAuth.getInstance().currentUser?.let {
+            viewModel.getUser()?.let {
 
                 if (viewModel.getLocalTests().isEmpty() || viewModel.getLocalTests().all { it.getQuestionsForEach().size < 1 }) {
 
@@ -155,12 +152,11 @@ class FirebaseActivity : BaseActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        val actionId = item.itemId
 
-        when (actionId) {
+        when (item.itemId) {
             R.id.action_profile -> {
 
-                FirebaseAuth.getInstance().currentUser?.let {
+                viewModel.getUser()?.let {
                     startActivityForResult(Intent(this@FirebaseActivity, FirebaseMyPageActivity::class.java), 0)
                 } ?: run {
                     login()
@@ -188,8 +184,7 @@ class FirebaseActivity : BaseActivity() {
 
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
-                val user = FirebaseAuth.getInstance().currentUser
-                viewModel.createUser(user)
+                viewModel.createUser(viewModel.getUser())
 
                 Toast.makeText(this, getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
                 // ...

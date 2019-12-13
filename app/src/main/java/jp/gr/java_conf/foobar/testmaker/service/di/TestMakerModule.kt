@@ -22,9 +22,9 @@ import org.koin.dsl.module.module
 fun getTestMakerModules(realm: Realm) = module {
     single { TestMakerRepository(get(), get()) }
     single { LocalDataSource(realm, get(), get()) }
-    single { RemoteDataSource(get()) }
-    single { SharedPreferenceManager(get()) }
     single { Auth() }
+    single { RemoteDataSource(get(),get()) }
+    single { SharedPreferenceManager(get()) }
     viewModel { MainViewModel(get(), get()) }
     viewModel { EditViewModel(get(), get()) }
     viewModel { CategorizedViewModel(get()) }
@@ -34,6 +34,6 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { EditProViewModel(get()) }
     viewModel { PlayViewModel(get()) }
     viewModel { ResultViewModel(get()) }
-    viewModel { ShowTestsViewModel(get()) }
+    viewModel { ShowTestsViewModel(get(), get()) }
 
 }

@@ -90,7 +90,7 @@
                 custom:layout_constraintBottom_toBottomOf="parent"
                 custom:layout_constraintRight_toLeftOf="@id/open"
                 custom:layout_constraintTop_toTopOf="parent"
-                custom:text="@string/download_test" />
+                custom:text="@string/delete" />
 
             <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
                 android:id="@+id/open"

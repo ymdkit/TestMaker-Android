@@ -19,7 +19,6 @@ import androidx.lifecycle.Observer
 import com.android.billingclient.api.BillingClient
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
@@ -101,9 +100,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                         .setTitle(getString(R.string.downloading))
                         .setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
-                val result = viewModel.downloadTest(deepLink.toString().split("/").last())
-
-                when (result) {
+                when (val result = viewModel.downloadTest(deepLink.toString().split("/").last())) {
                     is FirebaseTestResult.Success -> {
                         viewModel.convert(result.test)
                         testAndFolderAdapter.setValue()
@@ -245,7 +242,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                     val editPaste = dialogLayout.findViewById<EditText>(R.id.edit_paste)
                     val buttonImport = dialogLayout.findViewById<Button>(R.id.button_paste)
 
-                    buttonImport.setOnClickListener { _ ->
+                    buttonImport.setOnClickListener {
 
                         loadTestByText(editPaste.text.toString())
 
@@ -330,8 +327,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
-                val user = FirebaseAuth.getInstance().currentUser
-                viewModel.createUser(user)
+                viewModel.createUser(viewModel.getUser())
 
                 Toast.makeText(this, getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
                 // ...

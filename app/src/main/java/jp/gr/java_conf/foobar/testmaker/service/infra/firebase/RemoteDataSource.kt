@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.DocumentSnapshot
@@ -15,12 +14,13 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 import java.util.*
 
 
-class RemoteDataSource(val context: Context) {
+class RemoteDataSource(val context: Context,val auth: Auth) {
 
     private var myTests: MutableLiveData<List<DocumentSnapshot>>? = null
 
@@ -62,7 +62,7 @@ class RemoteDataSource(val context: Context) {
     suspend fun createTest(test: Test, overview: String): String {
 
         val firebaseTest = test.toFirebaseTest(context)
-        val user = FirebaseAuth.getInstance().currentUser ?: return ""
+        val user = auth.getUser() ?: return ""
 
         firebaseTest.userId = user.uid
         firebaseTest.userName = user.displayName ?: "guest"
@@ -80,7 +80,7 @@ class RemoteDataSource(val context: Context) {
         firebaseQuestions.forEach {
             batch.set(ref.collection("questions").document(), it.toFirebaseQuestions(user))
 
-            if (it.imagePath.isNotEmpty()) {
+            if (it.imagePath.isNotEmpty() && !it.imagePath.contains("/")) {
                 val storage = FirebaseStorage.getInstance()
 
                 val storageRef = storage.reference.child("${user.uid}/${it.imagePath}")
@@ -90,7 +90,7 @@ class RemoteDataSource(val context: Context) {
                 imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
                 val input = context.openFileInput(it.imagePath)
                 val bitmap = BitmapFactory.decodeStream(input, null, imageOptions)
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos)
+                bitmap?.compress(Bitmap.CompressFormat.JPEG, 50, baos)
                 val data = baos.toByteArray()
 
                 storageRef.putBytes(data)
@@ -112,7 +112,7 @@ class RemoteDataSource(val context: Context) {
 
     fun fetchMyTests() {
 
-        val user = FirebaseAuth.getInstance().currentUser ?: return
+        val user = auth.getUser() ?: return
 
         db.collection("tests").whereEqualTo("userId", user.uid).get()
                 .addOnSuccessListener { query ->
@@ -138,7 +138,7 @@ class RemoteDataSource(val context: Context) {
 
     fun updateProfile(userName: String, completion: () -> Unit) {
 
-        val user = FirebaseAuth.getInstance().currentUser ?: return
+        val user = auth.getUser() ?: return
 
         val profileUpdates = UserProfileChangeRequest.Builder()
                 .setDisplayName(userName).build()

@@ -25,4 +25,6 @@ class FirebaseViewModel(private val repository: TestMakerRepository, private val
 
     fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
 
+    fun getUser(): FirebaseUser? = auth.getUser()
+
 }

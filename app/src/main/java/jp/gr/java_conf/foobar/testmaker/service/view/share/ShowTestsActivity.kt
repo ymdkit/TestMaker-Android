@@ -13,7 +13,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.firebase.ui.auth.AuthUI
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -95,20 +94,16 @@ open class ShowTestsActivity : BaseActivity() {
 
                 AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
                         .setTitle(getString(R.string.title_dialog_share))
-                        .setItems(resources.getStringArray(R.array.action_share)) { _, which ->
+                        .setItems(resources.getStringArray(R.array.action_share)) { dialog, which ->
 
                             when (which) {
                                 0 -> { //リンクの共有
-                                    FirebaseAuth.getInstance().currentUser?.let {
-
+                                    showTestsViewModel.getUser()?.let {
+                                        dialog.dismiss()
                                         uploadTest(id)
-
                                     } ?: run {
-
                                         login(id)
                                     }
-
-
                                 }
 
                                 1 -> { //テキスト変換
@@ -259,7 +254,7 @@ open class ShowTestsActivity : BaseActivity() {
 
         var incorrect = false
 
-        for (k in 0 until test.questionsNonNull().size) if (!(test.questionsNonNull()[k]!!.correct)) incorrect = true
+        for (element in test.questionsNonNull()) if (!(element.correct)) incorrect = true
 
         if (!incorrect && sharedPreferenceManager.refine) {
 
