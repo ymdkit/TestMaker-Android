@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.di
 
 import io.realm.Realm
+import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
@@ -23,11 +24,12 @@ fun getTestMakerModules(realm: Realm) = module {
     single { LocalDataSource(realm, get(), get()) }
     single { RemoteDataSource(get()) }
     single { SharedPreferenceManager(get()) }
-    viewModel { MainViewModel(get()) }
+    single { Auth() }
+    viewModel { MainViewModel(get(), get()) }
     viewModel { EditViewModel(get(), get()) }
     viewModel { CategorizedViewModel(get()) }
     viewModel { MoveQuestionViewModel(get()) }
-    viewModel { FirebaseViewModel(get()) }
+    viewModel { FirebaseViewModel(get(), get()) }
     viewModel { FirebaseMyPageViewModel(get()) }
     viewModel { EditProViewModel(get()) }
     viewModel { PlayViewModel(get()) }

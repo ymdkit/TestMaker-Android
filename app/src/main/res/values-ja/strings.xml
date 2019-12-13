@@ -291,6 +291,7 @@
     <string name="msg_share_test">問題集「 %1$s 」が共有されました。下記のリンクから問題集を受け取ってください\n %2$s</string>
     <string name="title_dialog_share">共有方法の選択</string>
     <string name="msg_test_not_exist">問題集が見つかりません</string>
+    <string name="my_page">マイページ</string>
 
 
 </resources>

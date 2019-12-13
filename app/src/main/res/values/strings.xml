@@ -293,5 +293,6 @@
     <string name="msg_share_test">share %1$s \n %2$s</string>
     <string name="title_dialog_share">share</string>
     <string name="msg_test_not_exist">test does not exist</string>
+    <string name="my_page">My Page</string>
 
 </resources>

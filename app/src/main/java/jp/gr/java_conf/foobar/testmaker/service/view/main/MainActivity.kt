@@ -17,7 +17,9 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.android.billingclient.api.BillingClient
+import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
@@ -29,6 +31,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResul
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsActivity
 import kotlinx.coroutines.Dispatchers
@@ -87,27 +90,27 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         binding.recyclerView.adapter = testAndFolderAdapter
 
 
-        GlobalScope.launch (Dispatchers.Default){
+        GlobalScope.launch(Dispatchers.Default) {
             val pendingDynamicLinkData = FirebaseDynamicLinks.getInstance()
                     .getDynamicLink(intent).await() ?: return@launch
 
             val deepLink = pendingDynamicLinkData.link
 
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 val dialog = AlertDialog.Builder(this@MainActivity)
                         .setTitle(getString(R.string.downloading))
-                        .setView( LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress,findViewById(R.id.layout_progress))).show()
+                        .setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
                 val result = viewModel.downloadTest(deepLink.toString().split("/").last())
 
-                when(result){
-                    is FirebaseTestResult.Success->{
+                when (result) {
+                    is FirebaseTestResult.Success -> {
                         viewModel.convert(result.test)
                         testAndFolderAdapter.setValue()
-                        Toast.makeText(this@MainActivity,getString(R.string.msg_success_download_test,result.test.name),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
                     }
-                    is FirebaseTestResult.Failure->{
-                        Toast.makeText(this@MainActivity,result.message,Toast.LENGTH_SHORT).show()
+                    is FirebaseTestResult.Failure -> {
+                        Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_SHORT).show()
                     }
                 }
                 dialog.dismiss()
@@ -197,6 +200,23 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
+                R.id.nav_my_page -> {
+
+                    if (viewModel.getUser() != null) {
+                        startActivityForResult(Intent(this@MainActivity, FirebaseMyPageActivity::class.java), 0)
+                    } else {
+                        AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                                .setTitle(getString(R.string.login))
+                                .setMessage(getString(R.string.msg_not_login))
+                                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                                    startActivityForResult(
+                                            viewModel.getAuthUIIntent(),
+                                            REQUEST_SIGN_IN)
+                                }
+                                .setNegativeButton(getString(R.string.cancel), null)
+                                .show()
+                    }
+                }
                 R.id.nav_help //editProActivityにも同様の記述
                 -> {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
@@ -305,6 +325,24 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             binding.drawerLayout.closeDrawers()
         }
 
+        if (requestCode == REQUEST_SIGN_IN) {
+            val response = IdpResponse.fromResultIntent(data)
+
+            if (resultCode == Activity.RESULT_OK) {
+                // Successfully signed in
+                val user = FirebaseAuth.getInstance().currentUser
+                viewModel.createUser(user)
+
+                Toast.makeText(this, getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
+                // ...
+            } else {
+                // Sign in failed. If response is null the user canceled the
+                // sign-in flow using the back button. Otherwise check
+                response?.error?.errorCode
+                // ...
+            }
+        }
+
         if (resultCode != Activity.RESULT_OK) return
 
         if (requestCode == REQUEST_IMPORT) {
@@ -382,5 +420,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     companion object {
         const val REQUEST_IMPORT = 12345
+        const val REQUEST_SIGN_IN = 12346
     }
 }

@@ -307,7 +307,7 @@ open class ShowTestsActivity : BaseActivity() {
                                             "https://testmaker-1cb29.firebaseapp.com/terms",
                                             "https://testmaker-1cb29.firebaseapp.com/privacy")
                                     .build(),
-                            REQUEST_SIGNIN)
+                            REQUEST_SIGN_IN_UPLOAD)
                 }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
@@ -322,7 +322,7 @@ open class ShowTestsActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_SIGNIN && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_SIGN_IN_UPLOAD && resultCode == Activity.RESULT_OK) {
             uploadTest(selectedTestId)
         }
 
@@ -357,7 +357,7 @@ open class ShowTestsActivity : BaseActivity() {
 
     companion object {
         const val REQUEST_EDIT = 11111
-        const val REQUEST_SIGNIN = 54321
+        const val REQUEST_SIGN_IN_UPLOAD = 54321
     }
 
 }
