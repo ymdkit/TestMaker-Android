@@ -12,15 +12,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMyPageBinding
-import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_my_page.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -45,24 +44,24 @@ class FirebaseMyPageActivity : BaseActivity() {
 
         adapter = FirebaseMyPageAdapter(baseContext)
         adapter.download = { data: DocumentSnapshot ->
-            GlobalScope.launch (Dispatchers.Main){
+            GlobalScope.launch(Dispatchers.Main) {
                 val dialog = AlertDialog.Builder(this@FirebaseMyPageActivity)
                         .setTitle(getString(R.string.downloading))
-                        .setView( LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_progress,findViewById(R.id.layout_progress))).show()
+                        .setView(LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
                 val result = viewModel.downloadTest(data.id)
 
-                when(result){
-                    is FirebaseTestResult.Success->{
+                when (result) {
+                    is FirebaseTestResult.Success -> {
                         viewModel.convert(result.test)
-                        Toast.makeText(this@FirebaseMyPageActivity,getString(R.string.msg_success_download_test,result.test.name),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@FirebaseMyPageActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@FirebaseMyPageActivity, MainActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                         startActivity(intent)
                     }
-                    is FirebaseTestResult.Failure->{
-                        Toast.makeText(this@FirebaseMyPageActivity,result.message,Toast.LENGTH_SHORT).show()
+                    is FirebaseTestResult.Failure -> {
+                        Toast.makeText(this@FirebaseMyPageActivity, result.message, Toast.LENGTH_SHORT).show()
                     }
                 }
                 dialog.dismiss()
@@ -108,7 +107,7 @@ class FirebaseMyPageActivity : BaseActivity() {
 
         edit_profile.setOnClickListener {
 
-            val user = FirebaseAuth.getInstance().currentUser ?: return@setOnClickListener
+            val user = viewModel.getUser() ?: return@setOnClickListener
 
             val dialogLayout = LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_edit_user_name, findViewById(R.id.layout_dialog_edit_user))
             val editUsername = dialogLayout.findViewById<EditText>(R.id.edit_user_name)
@@ -159,8 +158,8 @@ class FirebaseMyPageActivity : BaseActivity() {
                         .setMessage(getString(R.string.msg_logout))
                         .setPositiveButton(getString(R.string.ok)) { _, _ ->
 
-                            FirebaseAuth.getInstance().signOut()
-                            finish()
+                            viewModel.logOut()
+                            finish ()
                         }
                         .setNegativeButton(getString(R.string.cancel), null)
                         .show()
@@ -178,7 +177,7 @@ class FirebaseMyPageActivity : BaseActivity() {
 
     private fun reloadUserProfile() {
 
-        val user = FirebaseAuth.getInstance().currentUser ?: return
+        val user = viewModel.getUser() ?: return
         text_user_name.text = getString(R.string.creator_name, user.displayName)
 
     }

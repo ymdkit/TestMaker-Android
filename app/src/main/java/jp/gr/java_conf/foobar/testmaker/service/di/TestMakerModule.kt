@@ -30,7 +30,7 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { CategorizedViewModel(get()) }
     viewModel { MoveQuestionViewModel(get()) }
     viewModel { FirebaseViewModel(get(), get()) }
-    viewModel { FirebaseMyPageViewModel(get()) }
+    viewModel { FirebaseMyPageViewModel(get(), get()) }
     viewModel { EditProViewModel(get()) }
     viewModel { PlayViewModel(get()) }
     viewModel { ResultViewModel(get()) }

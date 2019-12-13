@@ -5,9 +5,11 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class Auth{
+class Auth {
 
     fun getUser(): FirebaseUser? = FirebaseAuth.getInstance().currentUser
+
+    fun logOut() = FirebaseAuth.getInstance().signOut()
 
     fun getAuthUIIntent(): Intent {
 
