@@ -12,17 +12,42 @@ class MainController(private val context: Context) : EpoxyController() {
 
     private var listener: OnClickListener? = null
 
-    var tests: List<Test> = emptyList()
+    var selectedCategory = ""
         set(value) {
             field = value
+            refresh()
             requestModelBuild()
         }
 
     var categories: List<Cate> = emptyList()
         set(value) {
             field = value
+            refresh()
             requestModelBuild()
         }
+
+    var tests: List<Test> = emptyList()
+        set(value) {
+            field = value
+            refresh()
+            requestModelBuild()
+        }
+
+    private fun refresh() {
+        if (tests.isEmpty()) return
+
+        nonCategorizedTests = if (categories.isEmpty()) {
+            tests
+        } else {
+            tests.filter { !categories.map { it.category }.contains(it.getCategory()) }
+        }
+
+        categorizedTests = tests.filter { it.getCategory() == selectedCategory }
+    }
+
+    private var nonCategorizedTests: List<Test> = emptyList()
+
+    private var categorizedTests: List<Test> = emptyList()
 
     interface OnClickListener {
         fun onClickPlayTest(id: Long)
@@ -46,10 +71,26 @@ class MainController(private val context: Context) : EpoxyController() {
                 listener(listener)
 
             }
+
+            if (categorizedTests.isNotEmpty() && categorizedTests.first().getCategory() == it.category) {
+
+                categorizedTests.forEach {
+                    cardTest {
+                        isCategorized(true)
+                        id(it.id)
+                        testId(it.id)
+                        colorId(it.color)
+                        title(it.title)
+                        size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questionsNonNull().size))
+                        listener(listener)
+                    }
+                }
+            }
         }
 
-        tests.forEach {
+        nonCategorizedTests.forEach {
             cardTest {
+                isCategorized(false)
                 id(it.id)
                 testId(it.id)
                 colorId(it.color)

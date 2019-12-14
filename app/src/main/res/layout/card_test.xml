@@ -5,6 +5,10 @@
     <data>
 
         <variable
+            name="isCategorized"
+            type="Boolean" />
+
+        <variable
             name="testId"
             type="Long" />
 
@@ -23,6 +27,8 @@
         <variable
             name="listener"
             type="jp.gr.java_conf.foobar.testmaker.service.view.main.MainController.OnClickListener" />
+        
+        <import type="jp.gr.java_conf.foobar.testmaker.service.R"/>
 
 
     </data>
@@ -30,6 +36,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="@{isCategorized ? @dimen/element_spacing_normal : @dimen/element_spacing_none}"
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView

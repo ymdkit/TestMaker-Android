@@ -85,7 +85,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             mainController.categories = it
         }
 
-        viewModel.getNonCategorizedTests().observeNonNull(this) {
+        viewModel.getTests().observeNonNull(this) {
             mainController.tests = it
         }
 

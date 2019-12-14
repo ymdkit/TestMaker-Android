@@ -292,6 +292,7 @@
     <string name="title_dialog_share">共有方法の選択</string>
     <string name="msg_test_not_exist">問題集が見つかりません</string>
     <string name="my_page">マイページ</string>
+    <string name="close">閉じる</string>
 
 
 </resources>

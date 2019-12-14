@@ -14,7 +14,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.test.TestMakerRepository
 
 class MainViewModel(private val repository: TestMakerRepository, private val auth: Auth) : ViewModel() {
 
-    fun getNonCategorizedTests(): LiveData<List<Test>> = repository.getNonCategorizedTestsOfLiveData()
     fun getExistingCategoryList(): LiveData<List<Cate>> = repository.getExistingCategoriesOfLiveData()
     fun getCategories(): List<Cate> = repository.getCategories()
     fun addCategory(category: Cate) = repository.addCategory(category)
@@ -36,6 +35,7 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
     fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
     fun getUser(): FirebaseUser? = auth.getUser()
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
+    fun getTests(): LiveData<List<Test>> = repository.getTestsOfLiveData()
 
     val title: MutableLiveData<String> = MutableLiveData()
     var isEditing: MutableLiveData<Boolean> = MutableLiveData()

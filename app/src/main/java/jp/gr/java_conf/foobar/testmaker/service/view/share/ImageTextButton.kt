@@ -32,7 +32,6 @@ class ImageTextButton : LinearLayout {
 
                 text.visibility = View.VISIBLE
                 text.text = a.getText(R.styleable.ImageTextButton_text)
-
             }
         }
 

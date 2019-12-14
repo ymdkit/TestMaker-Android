@@ -17,7 +17,6 @@ import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.view.category.CategorizedActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
@@ -128,10 +127,8 @@ open class ShowTestsActivity : BaseActivity(){
             }
 
             override fun onClickOpen(category: String) {
-                val i = Intent(this@ShowTestsActivity, CategorizedActivity::class.java)
-                i.putExtra("category", category)
+                mainController.selectedCategory = category
 
-                startActivityForResult(i, REQUEST_EDIT)
             }
         })
     }

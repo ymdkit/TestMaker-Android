@@ -294,5 +294,6 @@
     <string name="title_dialog_share">share</string>
     <string name="msg_test_not_exist">test does not exist</string>
     <string name="my_page">My Page</string>
+    <string name="close">close</string>
 
 </resources>

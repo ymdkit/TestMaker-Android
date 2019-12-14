@@ -15,7 +15,6 @@
         <variable
             name="listener"
             type="jp.gr.java_conf.foobar.testmaker.service.view.main.MainController.OnClickListener" />
-
     </data>
 
     <LinearLayout
@@ -82,7 +81,7 @@
                     custom:layout_constraintBottom_toBottomOf="parent"
                     custom:layout_constraintRight_toRightOf="parent"
                     custom:layout_constraintTop_toTopOf="parent"
-                    custom:text="@string/open" />
+                    custom:text="" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

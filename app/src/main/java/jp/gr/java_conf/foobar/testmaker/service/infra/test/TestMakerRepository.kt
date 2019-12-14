@@ -23,26 +23,11 @@ class TestMakerRepository(private val local: LocalDataSource,
     var tests: MutableLiveData<List<Test>>? = null
         private set
 
-    var nonCategorizedTests: MutableLiveData<List<Test>>? = null
-        private set
-
-    var categorizedTests: MutableLiveData<List<Test>>? = null
-        private set
-
     var questions: MutableLiveData<ArrayList<Quest>>? = null
         private set
 
     var existingCategories: MutableLiveData<List<Cate>>? = null
         private set
-
-
-    fun getCategorizedTestsOfLiveData(category: String): LiveData<List<Test>> {
-        if (categorizedTests == null) {
-            categorizedTests = MutableLiveData()
-        }
-        fetchCategorisedTests(category)
-        return categorizedTests as LiveData<List<Test>>
-    }
 
     fun getTests(): List<Test> = local.getTests()
 
@@ -52,14 +37,6 @@ class TestMakerRepository(private val local: LocalDataSource,
             fetchTests()
         }
         return tests as LiveData<List<Test>>
-    }
-
-    fun getNonCategorizedTestsOfLiveData(): LiveData<List<Test>> {
-        if (nonCategorizedTests == null) {
-            nonCategorizedTests = MutableLiveData()
-            fetchTests()
-        }
-        return nonCategorizedTests as LiveData<List<Test>>
     }
 
     fun getExistingCategoriesOfLiveData(): LiveData<List<Cate>> {
@@ -79,17 +56,9 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun fetchTests() {
         GlobalScope.launch(Dispatchers.Main) {
             tests?.postValue(local.getTests())
-            nonCategorizedTests?.postValue(local.getNonCategorizedTests())
         }
         fetchCategories()
     }
-
-    fun fetchCategorisedTests(category: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            categorizedTests?.postValue(local.getCategorizedTests(category))
-        }
-    }
-
 
     fun getQuestions(testId: Long): LiveData<ArrayList<Quest>> {
         if (questions == null) {
@@ -167,10 +136,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun getTestsQuery() = remote.getTestsQuery()
     fun getCategorizedTests(category: String): List<Test> = local.getCategorizedTests(category)
 
-    fun getNonCategorizedTests(): List<Test> = local.getNonCategorizedTests()
-
-
-    fun getExistingCategoryList(): List<Cate> = local.getExistingCategories()
     fun getCategories(): List<Cate> = local.getCategories()
     fun addCategory(category: Cate) = local.addCategory(category)
     fun deleteCategory(category: Cate) {
