@@ -54,7 +54,6 @@ class MainController(private val context: Context) : EpoxyController() {
         fun onClickEditTest(id: Long)
         fun onClickDeleteTest(id: Long)
         fun onClickShareTest(id: Long)
-        fun onClickOpen(category: String)
     }
 
     fun setOnClickListener(listener: OnClickListener) {

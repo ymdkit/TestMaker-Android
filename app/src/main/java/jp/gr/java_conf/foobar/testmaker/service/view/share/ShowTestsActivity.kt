@@ -125,11 +125,6 @@ open class ShowTestsActivity : BaseActivity(){
 
                         }.show()
             }
-
-            override fun onClickOpen(category: String) {
-                mainController.selectedCategory = category
-
-            }
         })
     }
 
