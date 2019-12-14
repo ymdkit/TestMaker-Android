@@ -68,7 +68,11 @@ class MainController(private val context: Context) : EpoxyController() {
                 id(it.category)
                 colorId(it.color)
                 category(it.category)
-                listener(listener)
+                size(context.getString(R.string.number_exams, tests.filter { test -> it.category == test.getCategory() }.size))
+                onClick { _, _, _, _ ->
+                    selectedCategory = if (selectedCategory == it.category) "" else it.category
+                }
+                selected(categorizedTests.isNotEmpty() && categorizedTests.first().getCategory() == it.category)
 
             }
 

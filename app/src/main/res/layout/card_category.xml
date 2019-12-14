@@ -5,16 +5,28 @@
     <data>
 
         <variable
+            name="selected"
+            type="Boolean" />
+
+        <variable
             name="category"
+            type="String" />
+
+        <variable
+            name="size"
             type="String" />
 
         <variable
             name="colorId"
             type="Integer" />
 
+
         <variable
-            name="listener"
-            type="jp.gr.java_conf.foobar.testmaker.service.view.main.MainController.OnClickListener" />
+            name="onClick"
+            type="android.view.View.OnClickListener" />
+
+        <import type="jp.gr.java_conf.foobar.testmaker.service.R" />
+
     </data>
 
     <LinearLayout
@@ -50,14 +62,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/element_spacing_small"
-                    android:layout_marginTop="@dimen/element_spacing_large"
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:text="@{category}"
                     android:textSize="@dimen/text_size_medium"
                     custom:layout_constraintLeft_toRightOf="@id/color"
                     custom:layout_constraintRight_toLeftOf="@id/open"
-                    custom:layout_constraintTop_toTopOf="parent" />
+                    custom:layout_constraintTop_toTopOf="@id/color" />
 
 
                 <TextView
@@ -67,21 +78,21 @@
                     android:layout_marginStart="@dimen/element_spacing_small"
                     android:layout_marginTop="@dimen/element_spacing_normal"
                     android:gravity="start"
-                    android:textSize="@dimen/text_size_small"
+                    android:text="@{size}"
+                    android:textSize="@dimen/text_size_ssmall"
                     custom:layout_constraintLeft_toRightOf="@id/color"
                     custom:layout_constraintRight_toLeftOf="@id/open"
-                    custom:layout_constraintTop_toBottomOf="@id/text_title_category" />
+                    custom:layout_constraintBottom_toBottomOf="@id/color" />
 
-                <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
+                <ImageButton
                     android:id="@+id/open"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{()->listener.onClickOpen(category)}"
-                    custom:image="@drawable/ic_folder_open_white"
+                    android:onClick="@{onClick}"
+                    android:src="@{selected ? @drawable/ic_close_white : @drawable/ic_folder_open_white}"
+                    style="@style/Button.Primary.RectImage"
+                    custom:layout_constraintEnd_toEndOf="parent"
                     custom:layout_constraintBottom_toBottomOf="parent"
-                    custom:layout_constraintRight_toRightOf="parent"
                     custom:layout_constraintTop_toTopOf="parent"
-                    custom:text="" />
+                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
