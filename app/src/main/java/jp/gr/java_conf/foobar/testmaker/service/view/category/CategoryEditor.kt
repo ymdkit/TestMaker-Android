@@ -14,7 +14,6 @@ import android.widget.Toast
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ColorChooser
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestAndFolderAdapter
 
 /**
  * Created by keita on 2017/05/20.
@@ -22,7 +21,6 @@ import jp.gr.java_conf.foobar.testmaker.service.view.main.TestAndFolderAdapter
 
 class CategoryEditor(private val context: Context,
                      private val buttonCate: Button,
-                     private val categoryAdapter: TestAndFolderAdapter?,
                      private val getCategories: () -> List<Cate>,
                      private val addCategory: (Cate) -> Unit,
                      private val deleteCategory: (Cate) -> Unit) {
@@ -35,7 +33,7 @@ class CategoryEditor(private val context: Context,
 
         val dialogLayout = LayoutInflater.from(context).inflate(R.layout.dialog_category, null)
 
-        val adapter = CategoryAdapter(context, categoryAdapter)
+        val adapter = CategoryAdapter(context)
         adapter.deleteCategory = {
             deleteCategory(it)
             adapter.categories = getCategories()

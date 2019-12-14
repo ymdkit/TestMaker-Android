@@ -5,6 +5,7 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityCategorizedBinding
+import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsActivity
 import kotlinx.android.synthetic.main.activity_categorized.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -23,17 +24,19 @@ class CategorizedActivity : ShowTestsActivity() {
 
         initToolBar()
 
-        initTestAndFolderAdapter(setValue = {
+        initTestAndFolderAdapter()
 
-            testAndFolderAdapter.tests = viewModel.getCategorizedTests(intent.getStringExtra("category"))
-            testAndFolderAdapter.categories = ArrayList()
-            testAndFolderAdapter.allTests = viewModel.getTests()
+        viewModel.getCategorizedTests(intent.getStringExtra("category")).observeNonNull(this){
+            mainController.tests = it
+        }
 
-        })
+        viewModel.getTests().observeNonNull(this){
+            viewModel.fetchCategorizedTests(intent.getStringExtra("category"))
+        }
 
         recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
-        recycler_view.adapter = testAndFolderAdapter
+        recycler_view.adapter = mainController.adapter
 
     }
 

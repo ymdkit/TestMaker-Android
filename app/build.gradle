@@ -64,6 +64,10 @@ android {
     dataBinding {
         enabled = true
     }
+
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
@@ -94,6 +98,9 @@ dependencies {
     implementation 'org.koin:koin-androidx-viewmodel:1.0.2'
     implementation "androidx.paging:paging-runtime:2.1.0"
     implementation 'androidx.preference:preference:1.1.0'
+    implementation 'com.airbnb.android:epoxy:3.8.0'
+    implementation 'com.airbnb.android:epoxy-databinding:3.8.0'
+    kapt 'com.airbnb.android:epoxy-processor:3.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
     api 'com.isseiaoki:simplecropview:1.1.4'

@@ -22,6 +22,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
+import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
@@ -78,15 +79,18 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
         initViews()
 
-        initTestAndFolderAdapter(setValue = {
-            testAndFolderAdapter.categories = viewModel.getExistingCategoryList()
-            testAndFolderAdapter.tests = viewModel.getNonCategorizedTests()
-            testAndFolderAdapter.allTests = viewModel.getTests()
+        initTestAndFolderAdapter()
 
-        })
+        viewModel.getExistingCategoryList().observeNonNull(this) {
+            mainController.categories = it
+        }
+
+        viewModel.getNonCategorizedTests().observeNonNull(this) {
+            mainController.tests = it
+        }
 
         binding.recyclerView.setHasFixedSize(true)
-        binding.recyclerView.adapter = testAndFolderAdapter
+        binding.recyclerView.adapter = mainController.adapter
 
 
         GlobalScope.launch(Dispatchers.Default) {
@@ -103,7 +107,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 when (val result = viewModel.downloadTest(deepLink.toString().split("/").last())) {
                     is FirebaseTestResult.Success -> {
                         viewModel.convert(result.test)
-                        testAndFolderAdapter.setValue()
                         Toast.makeText(this@MainActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
                     }
                     is FirebaseTestResult.Failure -> {
@@ -139,7 +142,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
             val categoryEditor = CategoryEditor(this@MainActivity,
                     binding.test.buttonCategory,
-                    testAndFolderAdapter,
                     getCategories = { viewModel.getCategories() }
                     ,
                     addCategory = {
@@ -173,8 +175,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             viewModel.addTest(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
 
             Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
-
-            testAndFolderAdapter.setValue()
 
             viewModel.isEditing.postValue(false)
 
@@ -318,7 +318,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_CANCELED) {
-            testAndFolderAdapter.setValue()
             binding.drawerLayout.closeDrawers()
         }
 
@@ -387,7 +386,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             withContext(Dispatchers.Default) { text.toTest(baseContext, questionId) }.let {
                 viewModel.addOrUpdateTest(it)
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
-                testAndFolderAdapter.setValue()
             }
         }
     }

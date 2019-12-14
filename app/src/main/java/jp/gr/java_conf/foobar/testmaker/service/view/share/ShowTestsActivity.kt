@@ -19,7 +19,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategorizedActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestAndFolderAdapter
+import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -28,22 +28,19 @@ import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-open class ShowTestsActivity : BaseActivity() {
+open class ShowTestsActivity : BaseActivity(){
 
-    internal lateinit var testAndFolderAdapter: TestAndFolderAdapter
+    internal lateinit var mainController: MainController
 
     private val showTestsViewModel: ShowTestsViewModel by viewModel()
 
     private var selectedTestId: Long = -1L //ログイン時に一度画面から離れるので選択中の値を保持
 
 
-    protected fun initTestAndFolderAdapter(setValue: () -> Unit) {
+    protected fun initTestAndFolderAdapter() {
 
-        testAndFolderAdapter = TestAndFolderAdapter(this, setValue)
-
-        testAndFolderAdapter.setValue()
-
-        testAndFolderAdapter.setOnClickListener(object : TestAndFolderAdapter.OnClickListener {
+        mainController = MainController(this)
+        mainController.setOnClickListener(object : MainController.OnClickListener {
 
             override fun onClickPlayTest(id: Long) {
 
@@ -82,7 +79,6 @@ open class ShowTestsActivity : BaseActivity() {
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
                     showTestsViewModel.deleteTest(test)
-                    testAndFolderAdapter.setValue()
 
                 }
                 builder.setNegativeButton(android.R.string.cancel, null)
@@ -322,9 +318,12 @@ open class ShowTestsActivity : BaseActivity() {
         }
 
         selectedTestId = -1L
+    }
 
-        testAndFolderAdapter.setValue()
-
+    override fun onResume() {
+        super.onResume()
+        showTestsViewModel.fetchTests()
+        showTestsViewModel.fetchCategories()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -341,7 +340,7 @@ open class ShowTestsActivity : BaseActivity() {
 
                         sharedPreferenceManager.sort = which
 
-                        testAndFolderAdapter.setValue()
+                        showTestsViewModel.fetchTests()
 
                     }.show()
 

@@ -18,6 +18,8 @@ class ShowTestsViewModel(private val repository: TestMakerRepository,private val
         return repository.createTest(test, overview)
     }
     fun getUser(): FirebaseUser? = auth.getUser()
+    fun fetchTests() = repository.fetchTests()
+    fun fetchCategories() = repository.fetchCategories()
 
 
 }
