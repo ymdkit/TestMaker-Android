@@ -49,9 +49,7 @@ class FirebaseMyPageActivity : BaseActivity() {
                         .setTitle(getString(R.string.downloading))
                         .setView(LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
-                val result = viewModel.downloadTest(data.id)
-
-                when (result) {
+                when (val result = viewModel.downloadTest(data.id)) {
                     is FirebaseTestResult.Success -> {
                         viewModel.convert(result.test)
                         Toast.makeText(this@FirebaseMyPageActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
@@ -74,23 +72,23 @@ class FirebaseMyPageActivity : BaseActivity() {
             val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
             textInfo.text = getString(R.string.info_firebase_test, data.userName, data.getDate(), data.overview)
 
-            val builder = AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
-            builder.setView(dialogLayout)
-            builder.setTitle(data.name)
-            builder.show()
+            AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
+                    .setView(dialogLayout)
+                    .setTitle(data.name)
+                    .show()
         }
         adapter.delete = { data: DocumentSnapshot ->
 
-            val builder = AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
-            builder.setTitle(getString(R.string.delete_exam))
-            builder.setMessage(getString(R.string.message_delete_exam, data.toObject(FirebaseTest::class.java)?.name))
-            builder.setPositiveButton(android.R.string.ok) { _, _ ->
+            AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
+                    .setTitle(getString(R.string.delete_exam))
+                    .setMessage(getString(R.string.message_delete_exam, data.toObject(FirebaseTest::class.java)?.name))
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
 
-                viewModel.deleteTest(data.id)
+                        viewModel.deleteTest(data.id)
 
-            }
-            builder.setNegativeButton(android.R.string.cancel, null)
-            builder.create().show()
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .create().show()
 
         }
 
@@ -138,6 +136,11 @@ class FirebaseMyPageActivity : BaseActivity() {
         reloadUserProfile()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchMyTests()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_firebase_my_page, menu)
@@ -148,9 +151,8 @@ class FirebaseMyPageActivity : BaseActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        val actionId = item.itemId
 
-        when (actionId) {
+        when (item.itemId) {
             R.id.nav_logout -> {
 
                 AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
@@ -159,7 +161,7 @@ class FirebaseMyPageActivity : BaseActivity() {
                         .setPositiveButton(getString(R.string.ok)) { _, _ ->
 
                             viewModel.logOut()
-                            finish ()
+                            finish()
                         }
                         .setNegativeButton(getString(R.string.cancel), null)
                         .show()
