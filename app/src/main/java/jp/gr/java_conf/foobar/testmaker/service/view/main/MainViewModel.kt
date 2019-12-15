@@ -36,6 +36,8 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
     fun getUser(): FirebaseUser? = auth.getUser()
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
     fun getTests(): LiveData<List<Test>> = repository.getTestsOfLiveData()
+    fun fetchTests() = repository.fetchTests()
+    fun fetchCategories() = repository.fetchCategories()
 
     val title: MutableLiveData<String> = MutableLiveData()
     var isEditing: MutableLiveData<Boolean> = MutableLiveData()

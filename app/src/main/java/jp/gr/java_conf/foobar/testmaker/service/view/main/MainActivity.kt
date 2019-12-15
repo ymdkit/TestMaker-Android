@@ -6,6 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -188,6 +190,36 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         }
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        if (item.itemId == R.id.action_compare) {
+
+            AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setTitle(getString(R.string.sort))
+                    .setItems(resources.getStringArray(R.array.sort_exam)) { _, which ->
+
+                        sharedPreferenceManager.sort = which
+                        viewModel.fetchTests()
+
+                    }.show()
+
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+
 
     private fun initNavigationView() {
 
@@ -393,6 +425,12 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         drawerToggle.syncState()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchTests()
+        viewModel.fetchCategories()
     }
 
     public override fun onDestroy() {

@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
@@ -296,12 +294,6 @@ open class ShowTestsActivity : BaseActivity(){
                 .show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -310,35 +302,6 @@ open class ShowTestsActivity : BaseActivity(){
         }
 
         selectedTestId = -1L
-    }
-
-    override fun onResume() {
-        super.onResume()
-        showTestsViewModel.fetchTests()
-        showTestsViewModel.fetchCategories()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        if (item.itemId == R.id.action_compare) {
-
-            AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setTitle(getString(R.string.sort))
-                    .setItems(resources.getStringArray(R.array.sort_exam)) { _, which ->
-
-                        sharedPreferenceManager.sort = which
-
-                        showTestsViewModel.fetchTests()
-
-                    }.show()
-
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     companion object {
