@@ -174,7 +174,6 @@
     <string name="load_select_complete_problem">selection complete problem</string>
     <string name="load_select_complete_auto_problem">selection complete auto problem</string>
     <string name="message_answer_duplicate">answers are duplicated</string>
-    <string name="action_parchase">paying</string>
     <string name="action_online">online tests</string>
     <string name="reload">reload</string>
     <string name="number_download">%1$d downloaded</string>

@@ -175,7 +175,6 @@
     <string name="load_select_complete_problem">選択完答</string>
     <string name="load_select_complete_auto_problem">選択完答A</string>
     <string name="message_answer_duplicate">答えが重複しています</string>
-    <string name="action_parchase">プレミアム版</string>
     <string name="action_online">みんなの問題集</string>
     <string name="reload">更新</string>
     <string name="number_download">ダウンロード数 %1$d</string>

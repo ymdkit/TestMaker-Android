@@ -23,6 +23,5 @@
         android:textAllCaps="false"
         android:layout_weight="1"
         android:id="@+id/button_paste"
-        android:stateListAnimator="@null"
         />
 </LinearLayout>
