@@ -15,6 +15,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class TestMakerRepository(private val local: LocalDataSource,
@@ -113,8 +114,12 @@ class TestMakerRepository(private val local: LocalDataSource,
         remote.updateProfile(userName, completion)
     }
 
-    suspend fun createTest(test: Test, overview: String): String {
-        return remote.createTest(test, overview)
+    suspend fun createTest(test: Test, overview: String, oldDocumentId: String): String {
+        val newDocumentId = remote.createTest(test, overview, oldDocumentId)
+        withContext(Dispatchers.Main) {
+            local.updateDocumentId(getTest(test.id), newDocumentId)
+        }
+        return newDocumentId
     }
 
     fun getMyTests(): LiveData<List<DocumentSnapshot>> {
@@ -134,7 +139,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     }
 
     fun getTestsQuery() = remote.getTestsQuery()
-    fun getCategorizedTests(category: String): List<Test> = local.getCategorizedTests(category)
 
     fun getCategories(): List<Cate> = local.getCategories()
     fun addCategory(category: Cate) = local.addCategory(category)

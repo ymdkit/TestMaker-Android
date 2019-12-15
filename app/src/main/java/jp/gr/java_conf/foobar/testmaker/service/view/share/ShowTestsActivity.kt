@@ -135,7 +135,7 @@ open class ShowTestsActivity : BaseActivity(){
         val test = showTestsViewModel.getTestClone(id)
 
         GlobalScope.launch(Dispatchers.Default) {
-            val documentId = showTestsViewModel.uploadTest(test, "")
+            val documentId = showTestsViewModel.uploadTest(test, test.documentId)
 
             withContext(Dispatchers.Main) {
                 dialog.dismiss()

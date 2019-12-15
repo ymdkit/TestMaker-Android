@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -59,7 +60,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
 
     }
 
-    suspend fun createTest(test: Test, overview: String): String {
+    suspend fun createTest(test: Test, overview: String, documentId: String): String {
 
         val firebaseTest = test.toFirebaseTest(context)
         val user = auth.getUser() ?: return ""
@@ -70,7 +71,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
         firebaseTest.size = test.questionsNonNull().size
         firebaseTest.locale = Locale.getDefault().language
 
-        val ref = db.collection("tests").document()
+        val ref = if(documentId != "") db.collection("tests").document(documentId) else db.collection("tests").document()
 
         val firebaseQuestions = test.questionsNonNull()
 
