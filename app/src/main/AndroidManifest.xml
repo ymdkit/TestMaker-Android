@@ -11,7 +11,6 @@
         android:name=".TestMakerApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup"
-        android:icon="@drawable/icon_testmaker_small"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
@@ -75,10 +74,6 @@
         <activity
             android:name=".view.result.ResultActivity"
             android:label="結果"
-            android:screenOrientation="portrait"
-            android:configChanges="uiMode"/>
-        <activity
-            android:name=".view.category.CategorizedActivity"
             android:screenOrientation="portrait"
             android:configChanges="uiMode"/>
         <activity

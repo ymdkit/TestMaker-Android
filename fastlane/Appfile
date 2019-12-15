@@ -1,0 +1,2 @@
+json_key_file("./fastlane/api-6810811073662446427-604173-31d01e83c937.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("jp.gr.java_conf.foobar.testmaker.service") # e.g. com.krausefx.app

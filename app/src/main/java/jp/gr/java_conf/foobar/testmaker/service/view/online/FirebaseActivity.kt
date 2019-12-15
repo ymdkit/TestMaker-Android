@@ -13,15 +13,13 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.paging.PagedList
-import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
-import com.google.firebase.auth.FirebaseAuth
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
-import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
+import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_online_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -69,9 +67,7 @@ class FirebaseActivity : BaseActivity() {
                         .setTitle(getString(R.string.downloading))
                         .setView( LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress,findViewById(R.id.layout_progress))).show()
 
-                val result = viewModel.downloadTest(id)
-
-                when(result){
+                when(val result = viewModel.downloadTest(id)){
                     is FirebaseTestResult.Success->{
                         viewModel.convert(result.test)
                         Toast.makeText(this@FirebaseActivity,getString(R.string.msg_success_download_test,result.test.name),Toast.LENGTH_SHORT).show()
@@ -123,7 +119,7 @@ class FirebaseActivity : BaseActivity() {
 
         button_upload.setOnClickListener {
 
-            FirebaseAuth.getInstance().currentUser?.let {
+            viewModel.getUser()?.let {
 
                 if (viewModel.getLocalTests().isEmpty() || viewModel.getLocalTests().all { it.getQuestionsForEach().size < 1 }) {
 
@@ -156,17 +152,13 @@ class FirebaseActivity : BaseActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        val actionId = item.itemId
 
-        when (actionId) {
+        when (item.itemId) {
             R.id.action_profile -> {
 
-                FirebaseAuth.getInstance().currentUser?.let {
-
+                viewModel.getUser()?.let {
                     startActivityForResult(Intent(this@FirebaseActivity, FirebaseMyPageActivity::class.java), 0)
-
                 } ?: run {
-
                     login()
                 }
             }
@@ -192,8 +184,7 @@ class FirebaseActivity : BaseActivity() {
 
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
-                val user = FirebaseAuth.getInstance().currentUser
-                viewModel.createUser(user)
+                viewModel.createUser(viewModel.getUser())
 
                 Toast.makeText(this, getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
                 // ...
@@ -212,19 +203,8 @@ class FirebaseActivity : BaseActivity() {
                 .setTitle(getString(R.string.login))
                 .setMessage(getString(R.string.msg_not_login))
                 .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                    val providers = arrayListOf(
-                            AuthUI.IdpConfig.EmailBuilder().build(),
-                            AuthUI.IdpConfig.GoogleBuilder().build())
-
-                    // Create and launch sign-in intent
                     startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setAvailableProviders(providers)
-                                    .setTosAndPrivacyPolicyUrls(
-                                            "https://testmaker-1cb29.firebaseapp.com/terms",
-                                            "https://testmaker-1cb29.firebaseapp.com/privacy")
-                                    .build(),
+                            viewModel.getAuthUIIntent(),
                             RC_SIGN_IN)
                 }
                 .setNegativeButton(getString(R.string.cancel), null)

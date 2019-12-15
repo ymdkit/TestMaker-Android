@@ -8,22 +8,58 @@ import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class TestMakerRepository(private val local: LocalDataSource,
                           private val remote: RemoteDataSource) {
 
+    var tests: MutableLiveData<List<Test>>? = null
+        private set
+
     var questions: MutableLiveData<ArrayList<Quest>>? = null
         private set
 
+    var existingCategories: MutableLiveData<List<Cate>>? = null
+        private set
+
     fun getTests(): List<Test> = local.getTests()
+
+    fun getTestsOfLiveData(): LiveData<List<Test>> {
+        if (tests == null) {
+            tests = MutableLiveData()
+            fetchTests()
+        }
+        return tests as LiveData<List<Test>>
+    }
+
+    fun getExistingCategoriesOfLiveData(): LiveData<List<Cate>> {
+        if (existingCategories == null) {
+            existingCategories = MutableLiveData()
+            fetchCategories()
+        }
+        return existingCategories as LiveData<List<Cate>>
+    }
+
+    fun fetchCategories() {
+        GlobalScope.launch(Dispatchers.Main) {
+            existingCategories?.postValue(local.getExistingCategories())
+        }
+    }
+
+    fun fetchTests() {
+        GlobalScope.launch(Dispatchers.Main) {
+            tests?.postValue(local.getTests())
+        }
+        fetchCategories()
+    }
 
     fun getQuestions(testId: Long): LiveData<ArrayList<Quest>> {
         if (questions == null) {
@@ -71,14 +107,19 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun createObjectFromFirebase(test: FirebaseTest) {
         local.createObjectFromFirebase(test)
+        fetchTests()
     }
 
     fun updateProfile(userName: String, completion: () -> Unit) {
         remote.updateProfile(userName, completion)
     }
 
-    suspend fun createTest(test: Test, overview: String): String {
-        return remote.createTest(test, overview)
+    suspend fun createTest(test: Test, overview: String, oldDocumentId: String): String {
+        val newDocumentId = remote.createTest(test, overview, oldDocumentId)
+        withContext(Dispatchers.Main) {
+            local.updateDocumentId(getTest(test.id), newDocumentId)
+        }
+        return newDocumentId
     }
 
     fun getMyTests(): LiveData<List<DocumentSnapshot>> {
@@ -98,16 +139,29 @@ class TestMakerRepository(private val local: LocalDataSource,
     }
 
     fun getTestsQuery() = remote.getTestsQuery()
-    fun getCategorizedTests(category: String): List<Test> = local.getCategorizedTests(category)
-    fun getNonCategorizedTests(): List<Test> = local.getNonCategorizedTests()
-    fun getExistingCategoryList(): List<Cate> = local.getExistingCategories()
+
     fun getCategories(): List<Cate> = local.getCategories()
     fun addCategory(category: Cate) = local.addCategory(category)
-    fun deleteCategory(category: Cate) = local.deleteCategory(category)
+    fun deleteCategory(category: Cate) {
+        local.deleteCategory(category)
+        fetchCategories()
+    }
+
     fun getTest(testId: Long): Test = local.getTest(testId)
     fun getTestClone(testId: Long): Test = local.getTestClone(testId)
 
-    fun addOrUpdateTest(test: Test): Long = local.addOrUpdateTest(test)
+    fun addOrUpdateTest(test: Test): Long {
+        val id = local.addOrUpdateTest(test)
+        fetchTests()
+        return id
+    }
+
+    fun deleteTest(test: Test) {
+        local.deleteTest(test)
+        fetchTests()
+    }
+
+
     fun addQuestions(testId: Long, array: Array<Quest>) = local.addQuestions(testId, array)
     fun deleteQuestions(testId: Long, array: Array<Boolean>) = local.deleteQuestions(testId, array)
     fun resetAchievement(testId: Long) = local.resetAchievement(testId)
@@ -115,11 +169,11 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun sortManual(from: Int, to: Int, testId: Long) = local.sortManual(from, to, testId)
     fun migrateOrder(testId: Long) = local.migrateOrder(testId)
     fun updateTest(test: Test, title: String, color: Int, category: String) = local.updateTest(test, title, color, category)
-    fun deleteTest(test: Test) = local.deleteTest(test)
     fun updateHistory(test: Test) = local.updateHistory(test)
     fun updateStart(test: Test, start: Int) = local.updateStart(test, start)
     fun updateLimit(test: Test, limit: Int) = local.updateLimit(test, limit)
     fun updateCorrect(quest: Quest, correct: Boolean) = local.updateCorrect(quest, correct)
     fun updateSolving(quest: Quest, solving: Boolean) = local.updateSolving(quest, solving)
     fun getMaxQuestionId(): Long = local.getMaxQuestionId()
+
 }

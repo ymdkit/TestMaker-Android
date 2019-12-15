@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
@@ -13,14 +11,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.firebase.ui.auth.AuthUI
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.view.category.CategorizedActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestAndFolderAdapter
+import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -29,22 +25,19 @@ import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-open class ShowTestsActivity : BaseActivity() {
+open class ShowTestsActivity : BaseActivity(){
 
-    internal lateinit var testAndFolderAdapter: TestAndFolderAdapter
+    internal lateinit var mainController: MainController
 
     private val showTestsViewModel: ShowTestsViewModel by viewModel()
 
     private var selectedTestId: Long = -1L //ログイン時に一度画面から離れるので選択中の値を保持
 
 
-    protected fun initTestAndFolderAdapter(setValue: () -> Unit) {
+    protected fun initTestAndFolderAdapter() {
 
-        testAndFolderAdapter = TestAndFolderAdapter(this, setValue)
-
-        testAndFolderAdapter.setValue()
-
-        testAndFolderAdapter.setOnClickListener(object : TestAndFolderAdapter.OnClickListener {
+        mainController = MainController(this)
+        mainController.setOnClickListener(object : MainController.OnClickListener {
 
             override fun onClickPlayTest(id: Long) {
 
@@ -83,7 +76,6 @@ open class ShowTestsActivity : BaseActivity() {
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
                     showTestsViewModel.deleteTest(test)
-                    testAndFolderAdapter.setValue()
 
                 }
                 builder.setNegativeButton(android.R.string.cancel, null)
@@ -95,20 +87,16 @@ open class ShowTestsActivity : BaseActivity() {
 
                 AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
                         .setTitle(getString(R.string.title_dialog_share))
-                        .setItems(resources.getStringArray(R.array.action_share)) { _, which ->
+                        .setItems(resources.getStringArray(R.array.action_share)) { dialog, which ->
 
                             when (which) {
                                 0 -> { //リンクの共有
-                                    FirebaseAuth.getInstance().currentUser?.let {
-
+                                    showTestsViewModel.getUser()?.let {
+                                        dialog.dismiss()
                                         uploadTest(id)
-
                                     } ?: run {
-
                                         login(id)
                                     }
-
-
                                 }
 
                                 1 -> { //テキスト変換
@@ -135,13 +123,6 @@ open class ShowTestsActivity : BaseActivity() {
 
                         }.show()
             }
-
-            override fun onClickOpen(category: String) {
-                val i = Intent(this@ShowTestsActivity, CategorizedActivity::class.java)
-                i.putExtra("category", category)
-
-                startActivityForResult(i, REQUEST_EDIT)
-            }
         })
     }
 
@@ -154,7 +135,7 @@ open class ShowTestsActivity : BaseActivity() {
         val test = showTestsViewModel.getTestClone(id)
 
         GlobalScope.launch(Dispatchers.Default) {
-            val documentId = showTestsViewModel.uploadTest(test, "")
+            val documentId = showTestsViewModel.uploadTest(test, test.documentId)
 
             withContext(Dispatchers.Main) {
                 dialog.dismiss()
@@ -259,7 +240,7 @@ open class ShowTestsActivity : BaseActivity() {
 
         var incorrect = false
 
-        for (k in 0 until test.questionsNonNull().size) if (!(test.questionsNonNull()[k]!!.correct)) incorrect = true
+        for (element in test.questionsNonNull()) if (!(element.correct)) incorrect = true
 
         if (!incorrect && sharedPreferenceManager.refine) {
 
@@ -307,57 +288,25 @@ open class ShowTestsActivity : BaseActivity() {
                                             "https://testmaker-1cb29.firebaseapp.com/terms",
                                             "https://testmaker-1cb29.firebaseapp.com/privacy")
                                     .build(),
-                            REQUEST_SIGNIN)
+                            REQUEST_SIGN_IN_UPLOAD)
                 }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_SIGNIN && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_SIGN_IN_UPLOAD && resultCode == Activity.RESULT_OK) {
             uploadTest(selectedTestId)
         }
 
         selectedTestId = -1L
-
-        testAndFolderAdapter.setValue()
-
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        if (item.itemId == R.id.action_compare) {
-
-            AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setTitle(getString(R.string.sort))
-                    .setItems(resources.getStringArray(R.array.sort_exam)) { _, which ->
-
-                        sharedPreferenceManager.sort = which
-
-                        testAndFolderAdapter.setValue()
-
-                    }.show()
-
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     companion object {
         const val REQUEST_EDIT = 11111
-        const val REQUEST_SIGNIN = 54321
+        const val REQUEST_SIGN_IN_UPLOAD = 54321
     }
 
 }

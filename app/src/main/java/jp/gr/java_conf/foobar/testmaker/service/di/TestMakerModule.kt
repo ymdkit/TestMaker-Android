@@ -1,11 +1,11 @@
 package jp.gr.java_conf.foobar.testmaker.service.di
 
 import io.realm.Realm
+import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.test.TestMakerRepository
-import jp.gr.java_conf.foobar.testmaker.service.view.category.CategorizedViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditProViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainViewModel
@@ -21,17 +21,17 @@ import org.koin.dsl.module.module
 fun getTestMakerModules(realm: Realm) = module {
     single { TestMakerRepository(get(), get()) }
     single { LocalDataSource(realm, get(), get()) }
-    single { RemoteDataSource(get()) }
+    single { Auth() }
+    single { RemoteDataSource(get(),get()) }
     single { SharedPreferenceManager(get()) }
-    viewModel { MainViewModel(get()) }
+    viewModel { MainViewModel(get(), get()) }
     viewModel { EditViewModel(get(), get()) }
-    viewModel { CategorizedViewModel(get()) }
     viewModel { MoveQuestionViewModel(get()) }
-    viewModel { FirebaseViewModel(get()) }
-    viewModel { FirebaseMyPageViewModel(get()) }
+    viewModel { FirebaseViewModel(get(), get()) }
+    viewModel { FirebaseMyPageViewModel(get(), get()) }
     viewModel { EditProViewModel(get()) }
     viewModel { PlayViewModel(get()) }
     viewModel { ResultViewModel(get()) }
-    viewModel { ShowTestsViewModel(get()) }
+    viewModel { ShowTestsViewModel(get(), get()) }
 
 }

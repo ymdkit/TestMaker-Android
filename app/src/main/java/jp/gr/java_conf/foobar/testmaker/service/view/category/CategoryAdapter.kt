@@ -11,12 +11,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestAndFolderAdapter
 
 /**
  * Created by keita on 2016/06/19.
  */
-class CategoryAdapter(private val context: Context, private val mainAdapter: TestAndFolderAdapter?) : androidx.recyclerview.widget.RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryAdapter(private val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
     var categories: List<Cate> = emptyList()
         set(value) {
@@ -71,13 +70,7 @@ class CategoryAdapter(private val context: Context, private val mainAdapter: Tes
 
             deleteCategory(data)
 
-            //mRealmController.deleteCate(data)
-
             notifyDataSetChanged()
-
-            mainAdapter?.also {
-                it.setValue()
-            }
 
         }
 

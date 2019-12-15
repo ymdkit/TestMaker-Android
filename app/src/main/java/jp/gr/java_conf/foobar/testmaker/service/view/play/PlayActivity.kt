@@ -112,28 +112,8 @@ class PlayActivity : BaseActivity() {
         super.onPause()
     }
 
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
-
-        if (id == R.id.action_rev) {
-            val uri = Uri
-                    .parse("https://play.google.com/store/apps/details?id=jp.gr.java_conf.foobar.testmaker.service&amp;hl=ja")
-            startActivity(Intent(Intent.ACTION_VIEW, uri))
-            return true
-
-        } else if (item.itemId == android.R.id.home) {
-            startActivity(Intent(this@PlayActivity, MainActivity::class.java))
-            return true
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
     fun checkAnswer(yourAnswer: String) {
+        if(number >= questions.size) return
 
         play_select_view.invalidate()
 

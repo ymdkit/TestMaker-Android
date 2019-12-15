@@ -409,7 +409,7 @@ open class EditActivity : BaseActivity() {
                 }
 
                 buttonCate.setOnClickListener {
-                    val categoryEditor = CategoryEditor(this@EditActivity, buttonCate, null,
+                    val categoryEditor = CategoryEditor(this@EditActivity, buttonCate,
                             getCategories = { viewModel.getCategories() }
                             ,
                             addCategory = {

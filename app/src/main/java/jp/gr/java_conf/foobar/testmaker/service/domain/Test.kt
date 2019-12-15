@@ -30,10 +30,9 @@ open class Test : RealmObject() {
     var startPosition: Int = 0
     var title: String? = null
     private var category: String? = null
-
     var history: Long = 0
-
     private var questions: RealmList<Quest>? = null
+    var documentId: String = ""
 
     val questionsCorrectCount: Int
         get() {

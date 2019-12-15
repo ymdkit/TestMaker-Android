@@ -6,6 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -17,10 +19,12 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.android.billingclient.api.BillingClient
+import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
+import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
@@ -29,6 +33,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResul
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsActivity
 import kotlinx.coroutines.Dispatchers
@@ -76,38 +81,38 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
         initViews()
 
-        initTestAndFolderAdapter(setValue = {
-            testAndFolderAdapter.categories = viewModel.getExistingCategoryList()
-            testAndFolderAdapter.tests = viewModel.getNonCategorizedTests()
-            testAndFolderAdapter.allTests = viewModel.getTests()
+        initTestAndFolderAdapter()
 
-        })
+        viewModel.getExistingCategoryList().observeNonNull(this) {
+            mainController.categories = it
+        }
+
+        viewModel.getTests().observeNonNull(this) {
+            mainController.tests = it
+        }
 
         binding.recyclerView.setHasFixedSize(true)
-        binding.recyclerView.adapter = testAndFolderAdapter
+        binding.recyclerView.adapter = mainController.adapter
 
 
-        GlobalScope.launch (Dispatchers.Default){
+        GlobalScope.launch(Dispatchers.Default) {
             val pendingDynamicLinkData = FirebaseDynamicLinks.getInstance()
                     .getDynamicLink(intent).await() ?: return@launch
 
             val deepLink = pendingDynamicLinkData.link
 
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 val dialog = AlertDialog.Builder(this@MainActivity)
                         .setTitle(getString(R.string.downloading))
-                        .setView( LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress,findViewById(R.id.layout_progress))).show()
+                        .setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
-                val result = viewModel.downloadTest(deepLink.toString().split("/").last())
-
-                when(result){
-                    is FirebaseTestResult.Success->{
+                when (val result = viewModel.downloadTest(deepLink.toString().split("/").last())) {
+                    is FirebaseTestResult.Success -> {
                         viewModel.convert(result.test)
-                        testAndFolderAdapter.setValue()
-                        Toast.makeText(this@MainActivity,getString(R.string.msg_success_download_test,result.test.name),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
                     }
-                    is FirebaseTestResult.Failure->{
-                        Toast.makeText(this@MainActivity,result.message,Toast.LENGTH_SHORT).show()
+                    is FirebaseTestResult.Failure -> {
+                        Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_SHORT).show()
                     }
                 }
                 dialog.dismiss()
@@ -139,7 +144,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
             val categoryEditor = CategoryEditor(this@MainActivity,
                     binding.test.buttonCategory,
-                    testAndFolderAdapter,
                     getCategories = { viewModel.getCategories() }
                     ,
                     addCategory = {
@@ -174,8 +178,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
             Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
 
-            testAndFolderAdapter.setValue()
-
             viewModel.isEditing.postValue(false)
 
             binding.test.editTitle.setText("")
@@ -189,6 +191,36 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        if (item.itemId == R.id.action_compare) {
+
+            AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setTitle(getString(R.string.sort))
+                    .setItems(resources.getStringArray(R.array.sort_exam)) { _, which ->
+
+                        sharedPreferenceManager.sort = which
+                        viewModel.fetchTests()
+
+                    }.show()
+
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+
+
     private fun initNavigationView() {
 
         setSupportActionBar(binding.toolbar)
@@ -197,6 +229,23 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
+                R.id.nav_my_page -> {
+
+                    if (viewModel.getUser() != null) {
+                        startActivityForResult(Intent(this@MainActivity, FirebaseMyPageActivity::class.java), 0)
+                    } else {
+                        AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                                .setTitle(getString(R.string.login))
+                                .setMessage(getString(R.string.msg_not_login))
+                                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                                    startActivityForResult(
+                                            viewModel.getAuthUIIntent(),
+                                            REQUEST_SIGN_IN)
+                                }
+                                .setNegativeButton(getString(R.string.cancel), null)
+                                .show()
+                    }
+                }
                 R.id.nav_help //editProActivityにも同様の記述
                 -> {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
@@ -225,7 +274,7 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                     val editPaste = dialogLayout.findViewById<EditText>(R.id.edit_paste)
                     val buttonImport = dialogLayout.findViewById<Button>(R.id.button_paste)
 
-                    buttonImport.setOnClickListener { _ ->
+                    buttonImport.setOnClickListener {
 
                         loadTestByText(editPaste.text.toString())
 
@@ -301,8 +350,24 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_CANCELED) {
-            testAndFolderAdapter.setValue()
             binding.drawerLayout.closeDrawers()
+        }
+
+        if (requestCode == REQUEST_SIGN_IN) {
+            val response = IdpResponse.fromResultIntent(data)
+
+            if (resultCode == Activity.RESULT_OK) {
+                // Successfully signed in
+                viewModel.createUser(viewModel.getUser())
+
+                Toast.makeText(this, getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
+                // ...
+            } else {
+                // Sign in failed. If response is null the user canceled the
+                // sign-in flow using the back button. Otherwise check
+                response?.error?.errorCode
+                // ...
+            }
         }
 
         if (resultCode != Activity.RESULT_OK) return
@@ -353,7 +418,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
             withContext(Dispatchers.Default) { text.toTest(baseContext, questionId) }.let {
                 viewModel.addOrUpdateTest(it)
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
-                testAndFolderAdapter.setValue()
             }
         }
     }
@@ -361,6 +425,12 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         drawerToggle.syncState()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchTests()
+        viewModel.fetchCategories()
     }
 
     public override fun onDestroy() {
@@ -382,5 +452,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
     companion object {
         const val REQUEST_IMPORT = 12345
+        const val REQUEST_SIGN_IN = 12346
     }
 }

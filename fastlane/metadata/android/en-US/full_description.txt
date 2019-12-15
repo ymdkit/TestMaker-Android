@@ -1,0 +1,22 @@
+This app is an app that can make a collection of questions on their own.
+
+Since there are two types of problems the form of a question description and selection question, you can solve the question in the quiz sensation.
+
+Image pasted to the question statement, because there are a variety of options, such as automatic generation of choice in the selection problem, you can customize the question to their liking.
+
+In addition, since there is also a text file ⇆ problem collection of conversion function, you can edit the problem in the PC, or you can send a collection of problems to a friend.
+
+● The main purpose of use
+- Memorization of foreign languages ​​such as English words
+- Archaic memorization
+· Official of memorization
+History memorization
+• Periodic test preparation
+- Junior high school test preparation
+And high school test preparation
+Center Exam
+- Memorize for qualification acquisition
+- Your own memorization book creation
+
+Sound effects 魔王魂
+Image Material icons

@@ -31,8 +31,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
             realm.where(Test::class.java).findAll().sort("title")
     })
 
-    fun getCategorizedTests(category: String) = getTests().filter { it.getCategory() == category }
-
     fun getTest(testId: Long): Test {
         return realm.where(Test::class.java).equalTo("id", testId).findFirst() ?: Test()
     }
@@ -283,6 +281,12 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
     fun updateSolving(quest: Quest, solving: Boolean) {
         realm.beginTransaction()
         quest.solving = solving
+        realm.commitTransaction()
+    }
+
+    fun updateDocumentId(test: Test, documentId: String) {
+        realm.beginTransaction()
+        test.documentId = documentId
         realm.commitTransaction()
     }
 

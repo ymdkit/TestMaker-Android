@@ -1,0 +1,8 @@
+ver2.7
+you can select case-insensitive option
+ver2.4
+you can move or copy questions to other tests
+ver2.2
+you can upload tests
+ver2.0.1
+Help page created
