@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Base application theme. -->
@@ -8,13 +9,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="android:windowAnimationStyle">@style/ActivityTransitionAnimation</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="ActivityTransitionAnimation">
@@ -34,11 +28,6 @@
         </item><!-- 何も入力してないとき入力フォーム内のHintの色 --><!-- 通常時EditTextの下線 -->
         <item name="colorControlActivated">@color/colorPrimary</item><!-- フォーカス時の下線の色 -->
     </style>
-
-    <style name="AppTheme.Design.TextAppearance.Design.Hint" parent="TextAppearance.AppCompat.Caption"><!-- 上の方のhintの表示サイズ -->
-        <item name="android:textColor">@color/colorPrimary</item><!--  上の方のhintの表示の色 -->
-    </style>
-
 
     <!--ボタン関連のスタイル-->
     <style name="Button">
@@ -80,10 +69,6 @@
     <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
-    </style>
-
-    <style name="MySwitchStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
     <style name="MyColorBoxStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
@@ -145,5 +130,4 @@
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
 
     </style>
-
 </resources>

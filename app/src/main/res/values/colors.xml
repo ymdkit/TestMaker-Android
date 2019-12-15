@@ -4,13 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ffa144</color>
 
-    <color name="colorAccentfeed">#ba7827</color>
-
     <color name="grey">#7c7c7c</color>
-    <color name="problem">#ffffcc</color>
-    <color name="blue_mistake">#99a9ff</color>
-    <color name="red_right">#ff9b99</color>
-
     <array name="color_list">
         <item>@color/red</item>
         <item>@color/orange</item>
@@ -34,9 +28,4 @@
     <color name="white">#ffffff</color>
 
     <color name="background">#6496e5ff</color>
-
-    <color name="none">#00000000</color>
-
-    <color name="text">@android:color/secondary_text_light</color>
-
 </resources>
