@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -31,7 +30,7 @@ class FirebaseMyPageActivity : BaseActivity() {
 
     private val viewModel: FirebaseMyPageViewModel by viewModel()
 
-    private lateinit var adapter: FirebaseMyPageAdapter
+    private lateinit var controller: FirebaseMyPageController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,65 +41,72 @@ class FirebaseMyPageActivity : BaseActivity() {
 
         initToolBar()
 
-        adapter = FirebaseMyPageAdapter(baseContext)
-        adapter.download = { data: DocumentSnapshot ->
-            GlobalScope.launch(Dispatchers.Main) {
-                val dialog = AlertDialog.Builder(this@FirebaseMyPageActivity)
-                        .setTitle(getString(R.string.downloading))
-                        .setView(LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
+        swipe_refresh.isRefreshing = true
 
-                when (val result = viewModel.downloadTest(data.id)) {
-                    is FirebaseTestResult.Success -> {
-                        viewModel.convert(result.test)
-                        Toast.makeText(this@FirebaseMyPageActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@FirebaseMyPageActivity, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                        startActivity(intent)
+        controller = FirebaseMyPageController(this)
+        controller.setOnClickListener(object : FirebaseMyPageController.OnClickListener {
+            override fun onClickDownloadTest(document: DocumentSnapshot) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    val dialog = AlertDialog.Builder(this@FirebaseMyPageActivity)
+                            .setTitle(getString(R.string.downloading))
+                            .setView(LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
+
+                    when (val result = viewModel.downloadTest(document.id)) {
+                        is FirebaseTestResult.Success -> {
+                            viewModel.convert(result.test)
+
+                            Toast.makeText(this@FirebaseMyPageActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@FirebaseMyPageActivity, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                            startActivity(intent)
+                        }
+                        is FirebaseTestResult.Failure -> {
+                            Toast.makeText(this@FirebaseMyPageActivity, result.message, Toast.LENGTH_SHORT).show()
+                        }
                     }
-                    is FirebaseTestResult.Failure -> {
-                        Toast.makeText(this@FirebaseMyPageActivity, result.message, Toast.LENGTH_SHORT).show()
-                    }
+                    dialog.dismiss()
                 }
-                dialog.dismiss()
             }
-        }
 
-        adapter.showInfo = { data: FirebaseTest ->
-            val dialogLayout = LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
+            override fun onClickDetailTest(document: DocumentSnapshot) {
 
-            val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
-            textInfo.text = getString(R.string.info_firebase_test, data.userName, data.getDate(), data.overview)
+                val data = document.toObject(FirebaseTest::class.java) ?: return
 
-            AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
-                    .setView(dialogLayout)
-                    .setTitle(data.name)
-                    .show()
-        }
-        adapter.delete = { data: DocumentSnapshot ->
+                val dialogLayout = LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
 
-            AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
-                    .setTitle(getString(R.string.delete_exam))
-                    .setMessage(getString(R.string.message_delete_exam, data.toObject(FirebaseTest::class.java)?.name))
-                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
+                textInfo.text = getString(R.string.info_firebase_test, data.userName, data.getDate(), data.overview)
 
-                        viewModel.deleteTest(data.id)
+                AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
+                        .setView(dialogLayout)
+                        .setTitle(data.name)
+                        .show()
+            }
 
-                    }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .create().show()
+            override fun onClickDeleteTest(document: DocumentSnapshot) {
+                AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
+                        .setTitle(getString(R.string.delete_exam))
+                        .setMessage(getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name))
+                        .setPositiveButton(android.R.string.ok) { _, _ ->
 
-        }
+                            viewModel.deleteTest(document.id)
+                            swipe_refresh.isRefreshing = true
 
+                        }
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create().show()
+            }
+
+        })
+
+        recycler_view.setHasFixedSize(true)
+        recycler_view.adapter = controller.adapter
 
         viewModel.getMyTests().observeNonNull(this) {
-            recycler_view.visibility = View.VISIBLE
-            swipe_refresh.isRefreshing = false
 
-            recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
-            recycler_view.setHasFixedSize(true)
-            recycler_view.adapter = this.adapter
-            adapter.array = it
+            controller.tests = it
+            swipe_refresh.isRefreshing = false
         }
 
         edit_profile.setOnClickListener {
