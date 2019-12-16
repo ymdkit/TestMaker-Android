@@ -20,16 +20,34 @@ import java.io.IOException
 
 class LocalDataSource(private val realm: Realm, private val preference: SharedPreferenceManager, private val context: Context) {
 
-    fun getTests(): List<Test> = realm.copyFromRealm(when (preference.sort) {
-        Constants.TITLE_DESCENDING ->
-            realm.where(Test::class.java).findAll().sort("title", Sort.DESCENDING)
-        Constants.TITLE_ASCENDING ->
-            realm.where(Test::class.java).findAll().sort("title")
-        Constants.HISTORY ->
-            realm.where(Test::class.java).findAll().sort("history", Sort.DESCENDING)
-        else ->
-            realm.where(Test::class.java).findAll().sort("title")
-    })
+    fun getTests(): List<Test> {
+        val tests = realm.where(Test::class.java).findAll().sort("category", Sort.DESCENDING, "order", Sort.ASCENDING)
+        realm.beginTransaction()
+        tests.forEachIndexed { index, test ->
+            test.order = index
+        }
+        realm.commitTransaction()
+        return realm.copyFromRealm(realm.where(Test::class.java).findAll().sort("order"))
+    }
+
+    fun sortAllTests(mode: Int) {
+        val tests = when (mode) {
+            Constants.TITLE_DESCENDING ->
+                realm.where(Test::class.java).findAll().sort("category", Sort.ASCENDING, "title", Sort.DESCENDING)
+            Constants.TITLE_ASCENDING ->
+                realm.where(Test::class.java).findAll().sort("category", Sort.ASCENDING, "title", Sort.ASCENDING)
+            Constants.HISTORY ->
+                realm.where(Test::class.java).findAll().sort("category", Sort.ASCENDING, "history", Sort.DESCENDING)
+            else ->
+                realm.where(Test::class.java).findAll().sort("category", Sort.ASCENDING, "title", Sort.ASCENDING)
+        }
+
+        realm.beginTransaction()
+        tests.forEachIndexed { index, test ->
+            test.order = index
+        }
+        realm.commitTransaction()
+    }
 
     fun getTest(testId: Long): Test {
         return realm.where(Test::class.java).equalTo("id", testId).findFirst() ?: Test()
@@ -104,7 +122,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
                 imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
                 try {
 
-                    val outStream = context.openFileOutput(fileName,0)
+                    val outStream = context.openFileOutput(fileName, 0)
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream)
                     outStream.close()
 
@@ -140,8 +158,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun getNonCategorizedTests(): List<Test> = getTests().filter { !getCategories().map { cate -> cate.category }.contains(it.getCategory()) }
-
     fun getCategories(): List<Cate> = realm.copyFromRealm(realm.where(Cate::class.java).findAll().sort("category"))
             ?: emptyList()
 
@@ -162,6 +178,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
     fun addOrUpdateTest(test: Test): Long {
         realm.beginTransaction()
         if (test.id == 0L) test.id = realm.where(Test::class.java).max("id")?.toLong()?.plus(1) ?: 1
+        test.order = test.id.toInt()
         realm.copyToRealmOrUpdate(test)
         realm.commitTransaction()
         return test.id
@@ -173,6 +190,35 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         test.title = title
         test.color = color
         test.setCategory(category)
+
+        realm.commitTransaction()
+    }
+
+    fun sortTests(from: Long, to: Long) {
+
+        val fromTest = getTest(from)
+        val toTest = getTest(to)
+
+        realm.beginTransaction()
+
+        toTest.setCategory(fromTest.getCategory())
+
+        val tmp = fromTest.order
+        fromTest.order = toTest.order
+        toTest.order = tmp
+
+        realm.commitTransaction()
+
+    }
+
+    fun changeCategory(testId: Long, category: String) {
+        val test = getTest(testId)
+
+        val previousCategory = getExistingCategories()[getExistingCategories().indexOfFirst { it.category == category } - 1].category
+
+        realm.beginTransaction()
+
+        test.setCategory(if (test.getCategory() == previousCategory) "" else previousCategory)
 
         realm.commitTransaction()
     }
@@ -282,6 +328,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.beginTransaction()
         quest.solving = solving
         realm.commitTransaction()
+
     }
 
     fun updateDocumentId(test: Test, documentId: String) {

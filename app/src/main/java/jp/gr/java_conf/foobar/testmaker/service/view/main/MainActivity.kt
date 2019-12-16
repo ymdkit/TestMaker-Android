@@ -18,10 +18,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import com.airbnb.epoxy.EpoxyTouchHelper
 import com.android.billingclient.api.BillingClient
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
+import jp.gr.java_conf.foobar.testmaker.service.CardTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
@@ -94,6 +97,25 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = mainController.adapter
 
+        EpoxyTouchHelper
+                .initDragging(mainController)
+                .withRecyclerView(binding.recyclerView)
+                .forVerticalList()
+                .withTarget(CardTestBindingModel_::class.java)
+                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<CardTestBindingModel_>() {
+                    override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: CardTestBindingModel_?, itemView: View?) {
+                        val from = mainController.adapter.getModelAtPosition(fromPosition)
+                        val to = mainController.adapter.getModelAtPosition(toPosition)
+
+                        if (from is CardTestBindingModel_ && to is CardTestBindingModel_) {
+                            viewModel.sortTests(from.testId(), to.testId())
+                        } else if (from is CardCategoryBindingModel_ && to is CardTestBindingModel_) {
+                            viewModel.changeCategory(to.testId(), from.category())
+                        }
+                    }
+
+                })
+
 
         GlobalScope.launch(Dispatchers.Default) {
             val pendingDynamicLinkData = FirebaseDynamicLinks.getInstance()
@@ -117,6 +139,11 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                 }
                 dialog.dismiss()
             }
+        }
+
+        if (sharedPreferenceManager.sort != -1) {
+            sendFirebaseEvent("migrate_sort_setting")
+            viewModel.migrateSortSetting()
         }
     }
 
@@ -198,27 +225,17 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
         if (item.itemId == R.id.action_compare) {
-
             AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                     .setNegativeButton(android.R.string.cancel, null)
                     .setTitle(getString(R.string.sort))
                     .setItems(resources.getStringArray(R.array.sort_exam)) { _, which ->
-
-                        sharedPreferenceManager.sort = which
-                        viewModel.fetchTests()
-
+                        viewModel.sortAllTests(which)
                     }.show()
-
         }
 
         return super.onOptionsItemSelected(item)
     }
-
 
 
     private fun initNavigationView() {

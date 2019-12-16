@@ -18,5 +18,6 @@ object Constants {
     const val TITLE_DESCENDING = 0
     const val TITLE_ASCENDING = 1
     const val HISTORY = 2
+    const val CUSTOM_ORDER = 3
 
 }
