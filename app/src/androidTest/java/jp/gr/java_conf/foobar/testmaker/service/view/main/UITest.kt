@@ -27,6 +27,7 @@ class UITest {
 
     @Test
     fun addTest() {
+
         val appCompatImageButton = onView(
                 allOf(withId(R.id.button_expand), withContentDescription("画像"),
                         childAtPosition(

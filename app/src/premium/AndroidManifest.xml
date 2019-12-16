@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="jp.gr.java_conf.foobar.testmaker.service">
+
+    <application>
+
+        <meta-data
+            android:name="removeAd"
+            android:value="true" />
+
+    </application>
+
+</manifest>

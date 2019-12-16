@@ -52,6 +52,9 @@ open class BaseActivity : AppCompatActivity() {
             MobileAds.initialize(this, info.metaData.getString("testmaker_admob_key"))
             Studyplus.instance.setup(info.metaData.getString("studyplus_comsumer_key")!!, info.metaData.getString("secret_studyplus_comsumer_key")!!)
 
+            if(info.metaData.getBoolean("removeAd")){
+                sharedPreferenceManager.isRemovedAd = true
+            }
         }
     }
 

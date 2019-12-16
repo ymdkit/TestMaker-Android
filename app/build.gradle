@@ -51,6 +51,19 @@ android {
             setApplicationIdSuffix(".debug")
         }
     }
+
+    flavorDimensions "pay"
+
+    productFlavors {
+        normal {
+            dimension "pay"
+        }
+        premium {
+            dimension "pay"
+            setApplicationIdSuffix(".premium")
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
