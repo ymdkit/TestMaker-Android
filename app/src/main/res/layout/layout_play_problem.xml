@@ -26,7 +26,9 @@
             android:layout_height="250dp"
             android:clickable="false"
             android:scaleType="fitCenter"
-            android:id="@+id/image_problem" />
+            android:background="@null"
+            android:id="@+id/image_problem"
+            android:layout_margin="@dimen/element_spacing_normal"/>
 
     </FrameLayout>
 
