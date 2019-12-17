@@ -121,9 +121,9 @@ class MainActivityGrab {
         editActivityTest()
         playActivityTest()
 
-        addTest("地理　農業", R.id.imageView4, 3)
+        addTest("地理 農業", R.id.imageView4, 3)
         addTest("数学 公式", R.id.imageView7, 6)
-        addTest("英単語　復習", R.id.imageView8, 7)
+        addTest("英単語 復習", R.id.imageView8, 7)
 
         takeScreenshot("MainActivity", mActivityTestRule.activity)
     }
