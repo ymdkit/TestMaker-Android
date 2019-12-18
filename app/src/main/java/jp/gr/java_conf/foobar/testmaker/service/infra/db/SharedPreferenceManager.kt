@@ -44,11 +44,6 @@ class SharedPreferenceManager(private val context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("confirmSave", f)
                 .apply()
 
-    var confirmNotes: Boolean //投稿前の確認
-        get() = sharedPreferences.getBoolean("confirmNotes", false)
-        set(f) = sharedPreferences.edit().putBoolean("confirmNotes", f)
-                .apply()
-
     var isRemovedAd: Boolean
         get() = sharedPreferences.getBoolean("isRemovedAd", false)
         set(i) = sharedPreferences.edit().putBoolean("isRemovedAd", i).apply()
@@ -60,15 +55,6 @@ class SharedPreferenceManager(private val context: Context) {
     var sort: Int
         get() = sharedPreferences.getInt("sort", -1)
         set(i) = sharedPreferences.edit().putInt("sort", i).apply()
-
-    var sortOnline: Int
-        get() = sharedPreferences.getInt("sortOnline", 1)
-        set(i) = sharedPreferences.edit().putInt("sortOnline", i).apply()
-
-    var firebaseNotes: Boolean //投稿前の確認
-        get() = sharedPreferences.getBoolean("first_firebase", false)
-        set(f) = sharedPreferences.edit().putBoolean("first_firebase", f)
-                .apply()
 
     //preferencesと連携するため
 

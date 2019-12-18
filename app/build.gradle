@@ -26,8 +26,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 94
-        versionName "3.2.2"
+        versionCode 95
+        versionName "3.2.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -51,6 +51,19 @@ android {
             setApplicationIdSuffix(".debug")
         }
     }
+
+    flavorDimensions "pay"
+
+    productFlavors {
+        normal {
+            dimension "pay"
+        }
+        premium {
+            dimension "pay"
+            setApplicationIdSuffix(".premium")
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -113,7 +126,7 @@ dependencies {
     androidTestImplementation 'tools.fastlane:screengrab:1.0.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
-
+    androidTestImplementation 'com.jraska:falcon:2.1.1'
 
 }
 repositories {

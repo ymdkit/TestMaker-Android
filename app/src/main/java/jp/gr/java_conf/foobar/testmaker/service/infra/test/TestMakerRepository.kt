@@ -168,12 +168,30 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun resetSolving(testId: Long) = local.resetSolving(testId)
     fun sortManual(from: Int, to: Int, testId: Long) = local.sortManual(from, to, testId)
     fun migrateOrder(testId: Long) = local.migrateOrder(testId)
-    fun updateTest(test: Test, title: String, color: Int, category: String) = local.updateTest(test, title, color, category)
+    fun updateTest(test: Test, title: String, color: Int, category: String) {
+        local.updateTest(test, title, color, category)
+        fetchTests()
+    }
+
     fun updateHistory(test: Test) = local.updateHistory(test)
     fun updateStart(test: Test, start: Int) = local.updateStart(test, start)
     fun updateLimit(test: Test, limit: Int) = local.updateLimit(test, limit)
     fun updateCorrect(quest: Quest, correct: Boolean) = local.updateCorrect(quest, correct)
     fun updateSolving(quest: Quest, solving: Boolean) = local.updateSolving(quest, solving)
     fun getMaxQuestionId(): Long = local.getMaxQuestionId()
+    fun sortTests(from: Long, to: Long) {
+        local.sortTests(from, to)
+        fetchTests()
+    }
+
+    fun changeCategory(testId: Long, category: String) {
+        local.changeCategory(testId, category)
+        fetchTests()
+    }
+
+    fun sortAllTests(mode: Int) {
+        local.sortAllTests(mode)
+        fetchTests()
+    }
 
 }

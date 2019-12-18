@@ -2,8 +2,8 @@ package jp.gr.java_conf.foobar.testmaker.service.di
 
 import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.test.TestMakerRepository
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditProViewModel
@@ -22,9 +22,9 @@ fun getTestMakerModules(realm: Realm) = module {
     single { TestMakerRepository(get(), get()) }
     single { LocalDataSource(realm, get(), get()) }
     single { Auth() }
-    single { RemoteDataSource(get(),get()) }
+    single { RemoteDataSource(get(), get()) }
     single { SharedPreferenceManager(get()) }
-    viewModel { MainViewModel(get(), get()) }
+    viewModel { MainViewModel(get(), get(), get()) }
     viewModel { EditViewModel(get(), get()) }
     viewModel { MoveQuestionViewModel(get()) }
     viewModel { FirebaseViewModel(get(), get()) }

@@ -33,6 +33,7 @@ open class Test : RealmObject() {
     var history: Long = 0
     private var questions: RealmList<Quest>? = null
     var documentId: String = ""
+    var order: Int = 0
 
     val questionsCorrectCount: Int
         get() {

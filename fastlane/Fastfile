@@ -24,6 +24,7 @@ platform :android do
   lane :playstore do
     gradle(
       task: "bundle",
+      flavor: "normal"
       build_type: 'Release'
     )
     supply(

@@ -12,7 +12,7 @@ class MainController(private val context: Context) : EpoxyController() {
 
     private var listener: OnClickListener? = null
 
-    var selectedCategory = ""
+    private var selectedCategory = ""
         set(value) {
             field = value
             refresh()
@@ -34,7 +34,10 @@ class MainController(private val context: Context) : EpoxyController() {
         }
 
     private fun refresh() {
-        if (tests.isEmpty()) return
+        if (tests.isEmpty()) {
+            nonCategorizedTests = emptyList()
+            return
+        }
 
         nonCategorizedTests = if (categories.isEmpty()) {
             tests
@@ -102,8 +105,5 @@ class MainController(private val context: Context) : EpoxyController() {
                 listener(listener)
             }
         }
-
-
     }
-
 }

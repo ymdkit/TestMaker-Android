@@ -193,6 +193,18 @@ public class Migration implements RealmMigration {
 
         }
 
+        if(oldVersion == 11){
+
+            RealmObjectSchema testSchema = schema.get("Test");
+
+            testSchema
+                    .addField("order", Integer.class, FieldAttribute.REQUIRED)
+                    .transform(obj -> obj.set("order", (int)obj.getLong("id")));
+
+            oldVersion++;
+
+        }
+
         //schemaVersion変えるの忘れるな(MyApplication内)
 
     }
