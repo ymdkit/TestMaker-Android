@@ -114,7 +114,8 @@
     </string-array>
 
     <string-array name="action_image">
-        <item>画像の差し替え</item>
+        <item>写真を撮影</item>
+        <item>ギャラリーから選択</item>
         <item>取り消し</item>
     </string-array>
 

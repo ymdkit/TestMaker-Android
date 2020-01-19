@@ -1,13 +1,15 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
+import android.Manifest
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.Menu
@@ -19,6 +21,8 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -72,6 +76,7 @@ open class EditActivity : BaseActivity() {
         initToolBar()
 
         viewModel.testId = intent.getLongExtra("testId", -1)
+        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${viewModel.getTest().title}"
 
         viewModel.migrateOrder()
 
@@ -289,15 +294,18 @@ open class EditActivity : BaseActivity() {
         if (resultCode != Activity.RESULT_OK) return
         if (resultData == null) return
 
-        try {
+        val bitmap = when (requestCode) {
+            REQUEST_SAF_PICK_IMAGE -> getBitmapFromUri(resultData.data)
+            else -> resultData.extras?.get("data") as Bitmap
+        }
 
-            val uri = resultData.data
+        try {
 
             val dialogLayout = LayoutInflater.from(this).inflate(R.layout.dialog_crop,
                     findViewById(R.id.layout_dialog_crop_image))
 
             val cropView = dialogLayout.findViewById<CropImageView>(R.id.cropImageView)
-            cropView.imageBitmap = getBitmapFromUri(uri)
+            cropView.imageBitmap = bitmap
 
             val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
             builder.setView(dialogLayout)
@@ -463,6 +471,8 @@ open class EditActivity : BaseActivity() {
                         viewModel.updateTest(sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
 
                         dialog.dismiss()
+                        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${viewModel.getTest().title}"
+
                     }
                 }
 
@@ -562,54 +572,51 @@ open class EditActivity : BaseActivity() {
             val radio = findViewById<RadioButton>(checkedId)
             val tag = radio.tag
             if (tag is Int) viewModel.formatQuestion.value = tag
-
-
         }
 
         button_add.setOnClickListener { addQuestion() }
 
         button_cancel.setOnClickListener { cancelEditing() }
 
-        button_image.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
+        button_image.setOnClickListener {
+            val listDlg = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
+            listDlg.setItems(
+                    if (viewModel.imagePath != "") resources.getStringArray(R.array.action_image) else resources.getStringArray(R.array.action_image).take(2).toTypedArray()
+            ) { _, which ->
 
-                if (viewModel.imagePath != "") {
+                when (which) {
+                    0 -> { //撮影
+                        if (ContextCompat.checkSelfPermission(this@EditActivity, Manifest.permission.CAMERA)
+                                != PackageManager.PERMISSION_GRANTED) {
 
-                    // リスト表示用のアラートダイアログ
-                    val listDlg = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
-                    listDlg.setItems(
-                            resources.getStringArray(R.array.action_image)
-                    ) { _, which ->
+                            ActivityCompat.requestPermissions(this@EditActivity,
+                                    arrayOf(Manifest.permission.CAMERA),
+                                    REQUEST_PERMISSION_CAMERA)
 
-                        when (which) {
-                            0 -> openImage() //差し替え
-                            1 -> { //取り消し
-                                viewModel.imagePath = ""
-                                button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
-                                button_image.setBackgroundResource(R.drawable.button_blue)
+                        } else {
+                            if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                                Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+                                    takePictureIntent.resolveActivity(packageManager)?.also {
+                                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                                    }
+                                }
                             }
                         }
                     }
-
-                    listDlg.show()
-
-                } else {
-                    openImage()
+                    1 -> { //ギャラリー
+                        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                        intent.addCategory(Intent.CATEGORY_OPENABLE)
+                        intent.type = "image/*"
+                        startActivityForResult(intent, REQUEST_SAF_PICK_IMAGE)
+                    }
+                    2 -> { //取り消し
+                        viewModel.imagePath = ""
+                        button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
+                    }
                 }
             }
-
-            fun openImage() {
-
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                    startActivityForResult(Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), REQUEST_PICK_IMAGE)
-                } else {
-                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                    intent.addCategory(Intent.CATEGORY_OPENABLE)
-                    intent.type = "image/*"
-                    startActivityForResult(intent, REQUEST_SAF_PICK_IMAGE)
-                }
-            }
-        })
+            listDlg.show()
+        }
 
         recycler_view.layoutManager = LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
@@ -638,10 +645,30 @@ open class EditActivity : BaseActivity() {
         recycler_view.addItemDecoration(touchHelper)
     }
 
-    companion object {
-        private const val REQUEST_PICK_IMAGE = 10011
-        private const val REQUEST_SAF_PICK_IMAGE = 10012
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_PERMISSION_CAMERA -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
 
+                    if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+                            takePictureIntent.resolveActivity(packageManager)?.also {
+                                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                            }
+                        }
+                    }
+
+                }
+                return
+            }
+        }
+    }
+
+    companion object {
+        private const val REQUEST_SAF_PICK_IMAGE = 10012
+        private const val REQUEST_IMAGE_CAPTURE = 10013
+        private const val REQUEST_PERMISSION_CAMERA = 10014
     }
 }
 
