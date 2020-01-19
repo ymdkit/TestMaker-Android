@@ -294,74 +294,39 @@ open class EditActivity : BaseActivity() {
         if (resultCode != Activity.RESULT_OK) return
         if (resultData == null) return
 
-        when (requestCode) {
-            REQUEST_SAF_PICK_IMAGE -> {
+        val bitmap = when (requestCode) {
+            REQUEST_SAF_PICK_IMAGE -> getBitmapFromUri(resultData.data)
+            else -> resultData.extras?.get("data") as Bitmap
+        }
 
-                try {
+        try {
 
-                    val uri = resultData.data
+            val dialogLayout = LayoutInflater.from(this).inflate(R.layout.dialog_crop,
+                    findViewById(R.id.layout_dialog_crop_image))
 
-                    val dialogLayout = LayoutInflater.from(this).inflate(R.layout.dialog_crop,
-                            findViewById(R.id.layout_dialog_crop_image))
+            val cropView = dialogLayout.findViewById<CropImageView>(R.id.cropImageView)
+            cropView.imageBitmap = bitmap
 
-                    val cropView = dialogLayout.findViewById<CropImageView>(R.id.cropImageView)
-                    cropView.imageBitmap = getBitmapFromUri(uri)
+            val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
+            builder.setView(dialogLayout)
+            builder.setTitle(getString(R.string.trim))
+            builder.setPositiveButton(android.R.string.ok, null)
+            builder.setNegativeButton(android.R.string.cancel, null)
 
-                    val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
-                    builder.setView(dialogLayout)
-                    builder.setTitle(getString(R.string.trim))
-                    builder.setPositiveButton(android.R.string.ok, null)
-                    builder.setNegativeButton(android.R.string.cancel, null)
+            val dialog = builder.show()
 
-                    val dialog = builder.show()
+            val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            positiveButton.setOnClickListener {
 
-                    val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                    positiveButton.setOnClickListener {
+                viewModel.imagePath = fileName
+                button_image.setImageWithGlide(baseContext, cropView.croppedBitmap)
+                viewModel.saveImage(cropView.croppedBitmap)
 
-                        viewModel.imagePath = fileName
-                        button_image.setImageWithGlide(baseContext, cropView.croppedBitmap)
-                        viewModel.saveImage(cropView.croppedBitmap)
-
-                        dialog.dismiss()
-                    }
-
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-
+                dialog.dismiss()
             }
-            REQUEST_IMAGE_CAPTURE -> {
-                try {
 
-
-                    val dialogLayout = LayoutInflater.from(this).inflate(R.layout.dialog_crop,
-                            findViewById(R.id.layout_dialog_crop_image))
-
-                    val cropView = dialogLayout.findViewById<CropImageView>(R.id.cropImageView)
-                    cropView.imageBitmap = resultData.extras?.get("data") as Bitmap
-
-                    val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
-                    builder.setView(dialogLayout)
-                    builder.setTitle(getString(R.string.trim))
-                    builder.setPositiveButton(android.R.string.ok, null)
-                    builder.setNegativeButton(android.R.string.cancel, null)
-
-                    val dialog = builder.show()
-
-                    val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                    positiveButton.setOnClickListener {
-
-                        viewModel.imagePath = fileName
-                        button_image.setImageWithGlide(baseContext, cropView.croppedBitmap)
-                        viewModel.saveImage(cropView.croppedBitmap)
-
-                        dialog.dismiss()
-                    }
-
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
@@ -685,9 +650,6 @@ open class EditActivity : BaseActivity() {
         when (requestCode) {
             REQUEST_PERMISSION_CAMERA -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    ActivityCompat.requestPermissions(this@EditActivity,
-                            arrayOf(Manifest.permission.CAMERA),
-                            REQUEST_PERMISSION_CAMERA)
 
                     if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
                         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
