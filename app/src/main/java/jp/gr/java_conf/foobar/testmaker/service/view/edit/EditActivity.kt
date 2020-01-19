@@ -72,6 +72,7 @@ open class EditActivity : BaseActivity() {
         initToolBar()
 
         viewModel.testId = intent.getLongExtra("testId", -1)
+        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${viewModel.getTest().title}"
 
         viewModel.migrateOrder()
 
@@ -463,6 +464,8 @@ open class EditActivity : BaseActivity() {
                         viewModel.updateTest(sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
 
                         dialog.dismiss()
+                        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${viewModel.getTest().title}"
+
                     }
                 }
 

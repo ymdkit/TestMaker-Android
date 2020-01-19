@@ -8,10 +8,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.extensions.valueNonNull
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.extensions.valueNonNull
 import jp.gr.java_conf.foobar.testmaker.service.infra.test.TestMakerRepository
 
 class EditViewModel(private val repository: TestMakerRepository, val context: Context) : ViewModel() {
@@ -30,7 +30,6 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
 
     var imagePath: String = ""
     var testId: Long = -1L
-    var test = getTest(testId)
     var questionId: Long = -1
     var editingView: View? = null
 
@@ -46,6 +45,8 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         question.value = ""
         explanation.value = ""
     }
+
+    fun getTest(): Test = repository.getTest(testId)
 
     fun editQuestion() {
         stateEditing.value = Constants.EDIT_QUESTION
