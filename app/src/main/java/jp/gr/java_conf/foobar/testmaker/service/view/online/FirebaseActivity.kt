@@ -20,7 +20,6 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBi
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
-import kotlinx.android.synthetic.main.activity_online_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -36,11 +35,11 @@ class FirebaseActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_online_main)
-        swipe_refresh.isRefreshing = true
 
         val binding = DataBindingUtil.setContentView<ActivityOnlineMainBinding>(this, R.layout.activity_online_main)
         createAd(binding.adView)
+
+        binding.swipeRefresh.isRefreshing = true
 
         initToolBar()
 
@@ -103,21 +102,20 @@ class FirebaseActivity : BaseActivity() {
             builder.show()
         }
 
-        recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
-        recycler_view.setHasFixedSize(true)
-        recycler_view.adapter = pagingAdapter
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.adapter = pagingAdapter
         pagingAdapter.startLoading = {
-            swipe_refresh.isRefreshing = true
+            binding.swipeRefresh.isRefreshing = true
         }
         pagingAdapter.finishLoading = {
-            swipe_refresh.isRefreshing = false
+            binding.swipeRefresh.isRefreshing = false
         }
 
-        swipe_refresh.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             pagingAdapter.refresh()
         }
 
-        button_upload.setOnClickListener {
+        binding.buttonUpload.setOnClickListener {
 
             viewModel.getUser()?.let {
 
@@ -135,10 +133,7 @@ class FirebaseActivity : BaseActivity() {
                 login()
             }
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
         pagingAdapter.refresh()
     }
 

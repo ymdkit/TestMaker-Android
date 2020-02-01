@@ -10,120 +10,136 @@
         tools:context=".view.move.MoveQuestionsActivity">
 
         <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                style="@style/Toolbar"
-                android:layout_width="match_parent"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/Theme.AppCompat.DayNight"
-                app:layout_constraintTop_toTopOf="parent"
-                app:title="@string/action_move" />
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            android:layout_width="match_parent"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/Theme.AppCompat.DayNight"
+            app:title="@string/action_move" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
-            style="@style/Card"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/adView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:padding="@dimen/element_spacing_small"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                style="@style/Card"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@id/adView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.15"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/element_spacing_normal">
+                    android:layout_height="match_parent">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:id="@+id/text_target"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/element_spacing_normal"
-                        android:layout_weight="3"
+                        android:layout_margin="@dimen/element_spacing_large"
                         android:gravity="center"
                         android:text="@string/target"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_large"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <Spinner
                         android:id="@+id/spinner_from_test"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_margin="@dimen/element_spacing_large"
+                        app:layout_constraintBottom_toTopOf="@id/divider_top"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/text_target"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/divider_top"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/element_spacing_normal"
+                        android:background="#999"
+                        app:layout_constraintBottom_toTopOf="@id/list_questions"
+                        app:layout_constraintTop_toBottomOf="@id/spinner_from_test" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/list_questions"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toTopOf="@id/check_all"
+                        app:layout_constraintTop_toBottomOf="@id/divider_top" />
 
 
-                </LinearLayout>
+                    <CheckBox
+                        android:id="@+id/check_all"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/element_spacing_large"
+                        android:text="@string/check_all_questions"
+                        app:layout_constraintBottom_toTopOf="@id/divider_bottom"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/list_questions" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#999" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/list_questions"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1.5" />
-
-                <CheckBox
-                    android:id="@+id/check_all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
-                    android:text="@string/check_all_questions" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#999" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.15"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/element_spacing_normal">
+                    <View
+                        android:id="@+id/divider_bottom"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#999"
+                        app:layout_constraintBottom_toTopOf="@id/spinner_actions"
+                        app:layout_constraintTop_toBottomOf="@id/check_all"/>
 
                     <Spinner
                         android:id="@+id/spinner_actions"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/element_spacing_normal"
-                        android:layout_weight="1.5"
-                        android:entries="@array/actions_question" />
+                        android:layout_margin="@dimen/element_spacing_large"
+                        android:entries="@array/actions_question"
+                        app:layout_constraintBottom_toTopOf="@id/button_save"
+                        app:layout_constraintTop_toBottomOf="@id/divider_bottom"
+                        app:layout_constraintEnd_toStartOf="@id/spinner_to_test"
+                        app:layout_constraintStart_toStartOf="parent" />
 
                     <Spinner
                         android:id="@+id/spinner_to_test"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_margin="@dimen/element_spacing_large"
+                        app:layout_constraintBottom_toTopOf="@id/button_save"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/spinner_actions"
+                        app:layout_constraintTop_toBottomOf="@id/divider_bottom" />
 
 
-                </LinearLayout>
+                    <Button
+                        android:id="@+id/button_save"
+                        style="@style/Button.Primary.TextWide"
+                        android:layout_width="match_parent"
+                        android:text="@string/save"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/spinner_to_test" />
 
-                <Button
-                    android:id="@+id/button_save"
-                    style="@style/Button.Primary.TextWide"
-                    android:text="@string/save" />
 
-            </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:adSize="BANNER"
-            app:adUnitId="ca-app-pub-8942090726462263/8420884238"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:adSize="BANNER"
+                app:adUnitId="ca-app-pub-8942090726462263/8420884238"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
