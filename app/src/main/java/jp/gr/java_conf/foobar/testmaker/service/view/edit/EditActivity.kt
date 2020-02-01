@@ -236,6 +236,7 @@ open class EditActivity : BaseActivity() {
                         sharedPreferenceManager.isCheckOrder = question.isCheckOrder
                         edit_complete_view.reloadAnswers(question.answers.size)
                         edit_complete_view.setAnswers(question)
+                        viewModel.isCheckOrder.value = question.isCheckOrder
 
                         viewModel.spinnerAnswersPosition.value = min(Constants.ANSWER_MAX - 2, question.answers.size - 2)
 
