@@ -73,7 +73,6 @@ open class FirebaseTestPagingAdapter(private val context: Context,options: Fires
         val cate: ImageButton = v.findViewById(R.id.color)
         val title: TextView = v.findViewById(R.id.text_title_category)
         val num: TextView = v.findViewById(R.id.num_questions)
-        val num_download: TextView = v.findViewById(R.id.num_download)
         val information: ImageTextButton = v.findViewById(R.id.open)
         val play: ImageTextButton = v.findViewById(R.id.play)
 
