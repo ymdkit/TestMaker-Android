@@ -24,7 +24,7 @@ fun getTestMakerModules(realm: Realm) = module {
     single { Auth() }
     single { RemoteDataSource(get(), get()) }
     single { SharedPreferenceManager(get()) }
-    viewModel { MainViewModel(get(), get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get()) }
     viewModel { EditViewModel(get(), get()) }
     viewModel { MoveQuestionViewModel(get()) }
     viewModel { FirebaseViewModel(get(), get()) }

@@ -230,4 +230,6 @@
     <string name="title_dialog_share">share</string>
     <string name="msg_test_not_exist">test does not exist</string>
     <string name="my_page">My Page</string>
+    <string name="purchase_canceled">canceled</string>
+    <string name="sku_remove_ad">android.test.purchased</string>
 </resources>
