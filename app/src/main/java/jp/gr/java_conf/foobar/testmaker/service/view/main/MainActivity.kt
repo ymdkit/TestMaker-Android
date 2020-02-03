@@ -29,9 +29,8 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
-import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager
-import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingManager.BILLING_MANAGER_NOT_INITIALIZED
-import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingProvider
+import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
+import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
@@ -48,20 +47,15 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.*
 
 
-class MainActivity : ShowTestsActivity(), BillingProvider {
+class MainActivity : ShowTestsActivity() {
 
     private lateinit var inputMethodManager: InputMethodManager
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
-    private lateinit var billingManager: BillingManager
-
-    private lateinit var viewController: MainViewController
-
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModel()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,8 +71,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         createAd(binding.adView)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        viewController = MainViewController(this)
-        billingManager = BillingManager(this, viewController.mUpdateListener)
 
         initNavigationView()
 
@@ -92,6 +84,37 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
 
         viewModel.getTests().observeNonNull(this) {
             mainController.tests = it
+        }
+
+        viewModel.startConnection()
+        viewModel.billingStatus.observeNonNull(this) {
+            when (it) {
+                is BillingStatus.Error -> {
+                    when(it.responseCode){
+                        BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED ->{
+                            Toast.makeText(baseContext,getString(R.string.alrady_removed_ad),Toast.LENGTH_SHORT).show()
+                            binding.adView.visibility = View.GONE
+                            viewModel.removeAd()
+                        }
+                        BillingClient.BillingResponseCode.USER_CANCELED -> Toast.makeText(baseContext,getString(R.string.purchase_canceled),Toast.LENGTH_SHORT).show()
+                        else -> Toast.makeText(baseContext,getString(R.string.error),Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is BillingStatus.PurchaseSuccess -> {
+
+                    it.purchases?.let {
+                        for (purchase in it) {
+                            when(purchase.sku){
+                                getString(R.string.sku_remove_ad)->{
+                                    binding.adView.visibility = View.GONE
+                                    viewModel.removeAd()
+                                }
+                            }
+                        }
+                    }
+                }
+                else ->{}
+            }
         }
 
         binding.recyclerView.setHasFixedSize(true)
@@ -309,37 +332,10 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
                     startActivityForResult(Intent(this@MainActivity, MoveQuestionsActivity::class.java), REQUEST_EDIT)
                 }
                 R.id.nav_remove_ad -> {
-                    if (billingManager.billingClientResponseCode <= BILLING_MANAGER_NOT_INITIALIZED) return@setNavigationItemSelectedListener false
-                    if (isFinishing) return@setNavigationItemSelectedListener false
 
-                    getBillingManager().querySkuDetailsAsync(BillingClient.SkuType.INAPP, listOf("removead")
-                    ) { responseCode, skuDetailsList ->
-                        if (responseCode != BillingClient.BillingResponse.OK) {
+                    println("removead${sharedPreferenceManager.isRemovedAd}")
 
-                            Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
-
-                        } else if (skuDetailsList != null && skuDetailsList.size > 0) {
-                            // If we successfully got SKUs, add a header in front of the row
-                            // Then fill all the other rows
-                            for (details in skuDetailsList) {
-
-                                if (isPremiumPurchased) {
-
-                                    Toast.makeText(baseContext, getString(R.string.alrady_removed_ad), Toast.LENGTH_SHORT).show()
-
-                                } else {
-
-                                    getBillingManager().initiatePurchaseFlow(details.sku,
-                                            BillingClient.SkuType.INAPP)
-                                }
-                            }
-
-                        } else {
-                            // Handle empty state
-                            Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
-
-                        }
-                    }
+                    viewModel.purchaseRemoveAd(this, BillingItem(getString(R.string.sku_remove_ad), BillingClient.SkuType.INAPP))
                 }
             }
             false
@@ -448,23 +444,6 @@ class MainActivity : ShowTestsActivity(), BillingProvider {
         super.onResume()
         viewModel.fetchTests()
         viewModel.fetchCategories()
-    }
-
-    public override fun onDestroy() {
-        billingManager.destroy()
-        super.onDestroy()
-    }
-
-    override fun getBillingManager(): BillingManager {
-        return billingManager
-    }
-
-    override fun isPremiumPurchased(): Boolean {
-        return sharedPreferenceManager.isRemovedAd
-    }
-
-    fun removeAd() {
-        binding.adView.visibility = View.GONE
     }
 
     companion object {
