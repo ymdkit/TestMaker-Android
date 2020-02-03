@@ -5,19 +5,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest
-import com.google.android.gms.ads.doubleclick.PublisherAdView
 import com.google.firebase.analytics.FirebaseAnalytics
-
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.studyplus.android.sdk.Studyplus
@@ -52,7 +45,7 @@ open class BaseActivity : AppCompatActivity() {
             MobileAds.initialize(this, info.metaData.getString("testmaker_admob_key"))
             Studyplus.instance.setup(info.metaData.getString("studyplus_comsumer_key")!!, info.metaData.getString("secret_studyplus_comsumer_key")!!)
 
-            if(info.metaData.getBoolean("removeAd")){
+            if (info.metaData.getBoolean("removeAd")) {
                 sharedPreferenceManager.isRemovedAd = true
             }
         }
@@ -83,7 +76,8 @@ open class BaseActivity : AppCompatActivity() {
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice("DA539D38B08126EBEF7E059DCA26831C")
                 .addTestDevice("4C3BA6538C8F304A33859DC20F66316E")
-                .addTestDevice("BDB57B5078A79B87345E711A52F0F995").build()
+                .addTestDevice("BDB57B5078A79B87345E711A52F0F995")
+                .addTestDevice("BE05B66A799F19F3AF6808EAD82F69F6").build()
         adView.loadAd(adRequest)
 
     }
