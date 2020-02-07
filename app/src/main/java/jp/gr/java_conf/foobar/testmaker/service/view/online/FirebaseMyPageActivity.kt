@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMyPageBinding
@@ -21,12 +22,12 @@ import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_my_page.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class FirebaseMyPageActivity : BaseActivity() {
+class FirebaseMyPageActivity : BaseActivity(), FirebaseMyPageController.OnClickListener {
 
     private val viewModel: FirebaseMyPageViewModel by viewModel()
 
@@ -44,61 +45,7 @@ class FirebaseMyPageActivity : BaseActivity() {
         swipe_refresh.isRefreshing = true
 
         controller = FirebaseMyPageController(this)
-        controller.setOnClickListener(object : FirebaseMyPageController.OnClickListener {
-            override fun onClickDownloadTest(document: DocumentSnapshot) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    val dialog = AlertDialog.Builder(this@FirebaseMyPageActivity)
-                            .setTitle(getString(R.string.downloading))
-                            .setView(LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
-
-                    when (val result = viewModel.downloadTest(document.id)) {
-                        is FirebaseTestResult.Success -> {
-                            viewModel.convert(result.test)
-
-                            Toast.makeText(this@FirebaseMyPageActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this@FirebaseMyPageActivity, MainActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                            startActivity(intent)
-                        }
-                        is FirebaseTestResult.Failure -> {
-                            Toast.makeText(this@FirebaseMyPageActivity, result.message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    dialog.dismiss()
-                }
-            }
-
-            override fun onClickDetailTest(document: DocumentSnapshot) {
-
-                val data = document.toObject(FirebaseTest::class.java) ?: return
-
-                val dialogLayout = LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
-
-                val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
-                textInfo.text = getString(R.string.info_firebase_test, data.userName, data.getDate(), data.overview)
-
-                AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
-                        .setView(dialogLayout)
-                        .setTitle(data.name)
-                        .show()
-            }
-
-            override fun onClickDeleteTest(document: DocumentSnapshot) {
-                AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
-                        .setTitle(getString(R.string.delete_exam))
-                        .setMessage(getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name))
-                        .setPositiveButton(android.R.string.ok) { _, _ ->
-
-                            viewModel.deleteTest(document.id)
-                            swipe_refresh.isRefreshing = true
-
-                        }
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .create().show()
-            }
-
-        })
+        controller.setOnClickListener(this)
 
         recycler_view.setHasFixedSize(true)
         recycler_view.adapter = controller.adapter
@@ -154,10 +101,6 @@ class FirebaseMyPageActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
         when (item.itemId) {
             R.id.nav_logout -> {
 
@@ -188,5 +131,64 @@ class FirebaseMyPageActivity : BaseActivity() {
         val user = viewModel.getUser() ?: return
         text_user_name.text = getString(R.string.creator_name, user.displayName)
 
+    }
+
+    override fun onClickDownloadTest(document: DocumentSnapshot) {
+        lifecycleScope.launch {
+
+            val dialog = AlertDialog.Builder(this@FirebaseMyPageActivity)
+                    .setTitle(getString(R.string.downloading))
+                    .setView(LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).create()
+
+
+            withContext(Dispatchers.Main) {
+                dialog.show()
+            }
+
+            val result = viewModel.downloadTest(document.id)
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is FirebaseTestResult.Success -> {
+                        viewModel.convert(result.test)
+
+                        Toast.makeText(this@FirebaseMyPageActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this@FirebaseMyPageActivity, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        startActivity(intent)
+                    }
+                    is FirebaseTestResult.Failure -> {
+                        Toast.makeText(this@FirebaseMyPageActivity, result.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                dialog.dismiss()
+            }
+        }
+    }
+
+    override fun onClickDetailTest(document: DocumentSnapshot) {
+        val data = document.toObject(FirebaseTest::class.java) ?: return
+
+        val dialogLayout = LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
+
+        val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
+        textInfo.text = getString(R.string.info_firebase_test, data.userName, data.getDate(), data.overview)
+
+        AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
+                .setView(dialogLayout)
+                .setTitle(data.name)
+                .show()
+    }
+
+    override fun onClickDeleteTest(document: DocumentSnapshot) {
+        AlertDialog.Builder(this@FirebaseMyPageActivity, R.style.MyAlertDialogStyle)
+                .setTitle(getString(R.string.delete_exam))
+                .setMessage(getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name))
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    viewModel.deleteTest(document.id)
+                    swipe_refresh.isRefreshing = true
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .create().show()
     }
 }
