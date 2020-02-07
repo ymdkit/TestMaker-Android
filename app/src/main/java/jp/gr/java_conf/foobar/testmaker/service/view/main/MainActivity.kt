@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.android.billingclient.api.BillingClient
 import com.firebase.ui.auth.IdpResponse
@@ -140,18 +141,23 @@ class MainActivity : ShowTestsActivity() {
                 })
 
 
-        GlobalScope.launch(Dispatchers.Default) {
+        lifecycleScope.launch {
             val pendingDynamicLinkData = FirebaseDynamicLinks.getInstance()
                     .getDynamicLink(intent).await() ?: return@launch
 
-            val deepLink = pendingDynamicLinkData.link
+            val dialog = AlertDialog.Builder(this@MainActivity)
+                    .setTitle(getString(R.string.downloading))
+                    .setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).create()
 
             withContext(Dispatchers.Main) {
-                val dialog = AlertDialog.Builder(this@MainActivity)
-                        .setTitle(getString(R.string.downloading))
-                        .setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
+                dialog.show()
+            }
 
-                when (val result = viewModel.downloadTest(deepLink.toString().split("/").last())) {
+            val deepLink = pendingDynamicLinkData.link
+            val result = viewModel.downloadTest(deepLink.toString().split("/").last())
+
+            withContext(Dispatchers.Main) {
+                when (result) {
                     is FirebaseTestResult.Success -> {
                         viewModel.convert(result.test)
                         Toast.makeText(this@MainActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
