@@ -11,7 +11,10 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.test.TestMakerRepository
 
 class FirebaseViewModel(private val repository: TestMakerRepository, private val auth: Auth) : ViewModel() {
 
-    fun getLocalTests() = repository.getTests()
+    var localTests : List<Test> = emptyList()
+        get() {
+            return if(field.isEmpty()) repository.getTests() else field
+    }
 
     fun getTestsQuery() = repository.getTestsQuery()
 

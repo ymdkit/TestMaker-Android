@@ -53,13 +53,10 @@ open class FirebaseTestPagingAdapter(private val context: Context,options: Fires
         holder.num.text = context.getString(R.string.num_questions,data.size)
         holder.play.setOnClickListener {
             download(data.documentId)
-
         }
 
         holder.information.setOnClickListener{
-
             showInfo(data)
-
         }
 
         val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle,null) as GradientDrawable
