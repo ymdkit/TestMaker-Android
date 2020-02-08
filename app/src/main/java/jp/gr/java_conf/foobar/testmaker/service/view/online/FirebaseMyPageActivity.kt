@@ -21,9 +21,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResul
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_my_page.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -138,31 +136,24 @@ class FirebaseMyPageActivity : BaseActivity(), FirebaseMyPageController.OnClickL
 
             val dialog = AlertDialog.Builder(this@FirebaseMyPageActivity)
                     .setTitle(getString(R.string.downloading))
-                    .setView(LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).create()
+                    .setView(LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
+            when (val result = viewModel.downloadTest(document.id)) {
+                is FirebaseTestResult.Success -> {
+                    viewModel.convert(result.test)
 
-            withContext(Dispatchers.Main) {
-                dialog.show()
-            }
-
-            val result = viewModel.downloadTest(document.id)
-            withContext(Dispatchers.Main) {
-                when (result) {
-                    is FirebaseTestResult.Success -> {
-                        viewModel.convert(result.test)
-
-                        Toast.makeText(this@FirebaseMyPageActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@FirebaseMyPageActivity, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                        startActivity(intent)
-                    }
-                    is FirebaseTestResult.Failure -> {
-                        Toast.makeText(this@FirebaseMyPageActivity, result.message, Toast.LENGTH_SHORT).show()
-                    }
+                    Toast.makeText(this@FirebaseMyPageActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@FirebaseMyPageActivity, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    startActivity(intent)
                 }
-                dialog.dismiss()
+                is FirebaseTestResult.Failure -> {
+                    Toast.makeText(this@FirebaseMyPageActivity, result.message, Toast.LENGTH_SHORT).show()
+                }
             }
+            dialog.dismiss()
+
         }
     }
 
