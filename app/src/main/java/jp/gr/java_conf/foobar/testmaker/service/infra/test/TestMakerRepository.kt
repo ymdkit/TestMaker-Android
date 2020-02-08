@@ -103,7 +103,9 @@ class TestMakerRepository(private val local: LocalDataSource,
         local.addQuestion(testId, question, questionId)
     }
 
-    suspend fun downloadTest(testId: String): FirebaseTestResult = remote.downloadTest(testId)
+    suspend fun downloadTest(testId: String): FirebaseTestResult = withContext(Dispatchers.Default) {
+        remote.downloadTest(testId)
+    }
 
     fun createObjectFromFirebase(test: FirebaseTest) {
         local.createObjectFromFirebase(test)

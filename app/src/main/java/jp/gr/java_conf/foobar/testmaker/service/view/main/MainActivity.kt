@@ -142,32 +142,30 @@ class MainActivity : ShowTestsActivity() {
 
 
         lifecycleScope.launch {
-            val pendingDynamicLinkData = FirebaseDynamicLinks.getInstance()
-                    .getDynamicLink(intent).await() ?: return@launch
+            val pendingDynamicLinkData = withContext(Dispatchers.Default) {
+                FirebaseDynamicLinks.getInstance()
+                        .getDynamicLink(intent).await()
+            }
+
+            pendingDynamicLinkData ?: return@launch
 
             val dialog = AlertDialog.Builder(this@MainActivity)
                     .setTitle(getString(R.string.downloading))
-                    .setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).create()
-
-            withContext(Dispatchers.Main) {
-                dialog.show()
-            }
+                    .setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
             val deepLink = pendingDynamicLinkData.link
-            val result = viewModel.downloadTest(deepLink.toString().split("/").last())
 
-            withContext(Dispatchers.Main) {
-                when (result) {
-                    is FirebaseTestResult.Success -> {
-                        viewModel.convert(result.test)
-                        Toast.makeText(this@MainActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
-                    }
-                    is FirebaseTestResult.Failure -> {
-                        Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_SHORT).show()
-                    }
+            when (val result = viewModel.downloadTest(deepLink.toString().split("/").last())) {
+                is FirebaseTestResult.Success -> {
+                    viewModel.convert(result.test)
+                    Toast.makeText(this@MainActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
                 }
-                dialog.dismiss()
+                is FirebaseTestResult.Failure -> {
+                    Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_SHORT).show()
+                }
             }
+            dialog.dismiss()
+
         }
 
         if (sharedPreferenceManager.sort != -1) {
