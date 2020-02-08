@@ -323,7 +323,10 @@ open class EditActivity : BaseActivity() {
 
                 viewModel.imagePath = fileName
                 button_image.setImageWithGlide(baseContext, cropView.croppedBitmap)
-                viewModel.saveImage(cropView.croppedBitmap)
+
+                lifecycleScope.launch{
+                    viewModel.saveImage(cropView.croppedBitmap)
+                }
 
                 dialog.dismiss()
             }

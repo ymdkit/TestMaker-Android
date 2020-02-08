@@ -87,7 +87,7 @@ class TestMakerRepository(private val local: LocalDataSource,
         local.loadImage(imagePath)
     }
 
-    fun saveImage(fileName: String, bitmap: Bitmap) {
+    suspend fun saveImage(fileName: String, bitmap: Bitmap) = withContext(Dispatchers.IO){
         local.saveImage(fileName, bitmap)
     }
 

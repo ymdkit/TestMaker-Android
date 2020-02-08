@@ -11,10 +11,6 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.io.IOException
 
@@ -111,22 +107,18 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
     }
 
     fun saveImage(fileName: String, bitmap: Bitmap) {
-        GlobalScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.Default) {
-                val imageOptions = BitmapFactory.Options()
-                imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-                try {
+        val imageOptions = BitmapFactory.Options()
+        imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
+        try {
 
-                    val outStream = context.openFileOutput(fileName, 0)
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream)
-                    outStream.close()
+            val outStream = context.openFileOutput(fileName, 0)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream)
+            outStream.close()
 
-                } catch (e: FileNotFoundException) {
-                    e.printStackTrace()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
