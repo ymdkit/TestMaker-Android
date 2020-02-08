@@ -40,7 +40,6 @@ import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageActivi
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsActivity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -91,22 +90,22 @@ class MainActivity : ShowTestsActivity() {
         viewModel.billingStatus.observeNonNull(this) {
             when (it) {
                 is BillingStatus.Error -> {
-                    when(it.responseCode){
-                        BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED ->{
-                            Toast.makeText(baseContext,getString(R.string.alrady_removed_ad),Toast.LENGTH_SHORT).show()
+                    when (it.responseCode) {
+                        BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
+                            Toast.makeText(baseContext, getString(R.string.alrady_removed_ad), Toast.LENGTH_SHORT).show()
                             binding.adView.visibility = View.GONE
                             viewModel.removeAd()
                         }
-                        BillingClient.BillingResponseCode.USER_CANCELED -> Toast.makeText(baseContext,getString(R.string.purchase_canceled),Toast.LENGTH_SHORT).show()
-                        else -> Toast.makeText(baseContext,getString(R.string.error),Toast.LENGTH_SHORT).show()
+                        BillingClient.BillingResponseCode.USER_CANCELED -> Toast.makeText(baseContext, getString(R.string.purchase_canceled), Toast.LENGTH_SHORT).show()
+                        else -> Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
                     }
                 }
                 is BillingStatus.PurchaseSuccess -> {
 
                     it.purchases?.let {
                         for (purchase in it) {
-                            when(purchase.sku){
-                                getString(R.string.sku_remove_ad)->{
+                            when (purchase.sku) {
+                                getString(R.string.sku_remove_ad) -> {
                                     binding.adView.visibility = View.GONE
                                     viewModel.removeAd()
                                 }
@@ -114,7 +113,8 @@ class MainActivity : ShowTestsActivity() {
                         }
                     }
                 }
-                else ->{}
+                else -> {
+                }
             }
         }
 
@@ -433,11 +433,12 @@ class MainActivity : ShowTestsActivity() {
 
         val questionId = viewModel.getMaxQuestionId()
 
-        GlobalScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.Default) { text.toTest(baseContext, questionId) }.let {
-                viewModel.addOrUpdateTest(it)
-                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
-            }
+        lifecycleScope.launch {
+
+            val test = text.toTest(baseContext, questionId)
+
+            viewModel.addOrUpdateTest(test)
+            Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, test.title), Toast.LENGTH_LONG).show()
         }
     }
 
