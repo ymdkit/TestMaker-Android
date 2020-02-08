@@ -80,7 +80,6 @@ class FirebaseActivity : BaseActivity() {
                     }
                 }
                 dialog.dismiss()
-
             }
         }
 
