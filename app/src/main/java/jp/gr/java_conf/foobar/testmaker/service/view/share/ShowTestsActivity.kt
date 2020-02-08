@@ -19,13 +19,11 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-open class ShowTestsActivity : BaseActivity(){
+open class ShowTestsActivity : BaseActivity() {
 
     internal lateinit var mainController: MainController
 
@@ -135,33 +133,30 @@ open class ShowTestsActivity : BaseActivity(){
                     .setTitle(getString(R.string.uploading))
                     .setView(LayoutInflater.from(this@ShowTestsActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).create()
 
-            withContext(Dispatchers.Main) {
-                progress.show()
-            }
+            progress.show()
 
             val documentId = showTestsViewModel.uploadTest(test, test.documentId)
 
-            withContext(Dispatchers.Main) {
-                progress.dismiss()
-                val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                        .setLink(Uri.parse("https://testmaker-1cb29.com/$documentId"))
-                        .setDomainUriPrefix("https://testmaker.page.link")
-                        .setAndroidParameters(DynamicLink.AndroidParameters.Builder().setMinimumVersion(87).build())
-                        .setIosParameters(DynamicLink.IosParameters.Builder("jp.gr.java-conf.foobar.testmaker.service").setAppStoreId("1201200202").setMinimumVersion("2.1.5").build())
-                        .buildDynamicLink()
+            progress.dismiss()
+            val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                    .setLink(Uri.parse("https://testmaker-1cb29.com/$documentId"))
+                    .setDomainUriPrefix("https://testmaker.page.link")
+                    .setAndroidParameters(DynamicLink.AndroidParameters.Builder().setMinimumVersion(87).build())
+                    .setIosParameters(DynamicLink.IosParameters.Builder("jp.gr.java-conf.foobar.testmaker.service").setAppStoreId("1201200202").setMinimumVersion("2.1.5").build())
+                    .buildDynamicLink()
 
-                try {
-                    val intent = Intent()
-                    intent.action = Intent.ACTION_SEND
-                    intent.type = "text/plain"
+            try {
+                val intent = Intent()
+                intent.action = Intent.ACTION_SEND
+                intent.type = "text/plain"
 
-                    intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, test.title, dynamicLink.uri))
-                    startActivity(intent)
+                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, test.title, dynamicLink.uri))
+                startActivity(intent)
 
-                } catch (e: Exception) {
-                    sendFirebaseEvent("export error: $e")
-                }
+            } catch (e: Exception) {
+                sendFirebaseEvent("export error: $e")
             }
+
         }
     }
 

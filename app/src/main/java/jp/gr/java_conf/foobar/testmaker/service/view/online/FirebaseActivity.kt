@@ -239,6 +239,7 @@ class FirebaseActivity : BaseActivity() {
                                         view: View?, positionSpinner: Int, id: Long) {
                 position = positionSpinner
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
@@ -257,20 +258,15 @@ class FirebaseActivity : BaseActivity() {
 
                         val progress = AlertDialog.Builder(this@FirebaseActivity)
                                 .setTitle(getString(R.string.uploading))
-                                .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).create()
-
-                        withContext(Dispatchers.Main) {
-                            progress.show()
-                        }
+                                .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
                         viewModel.uploadTest(viewModel.localTests[position], editOverView.text.toString())
 
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-                            pagingAdapter.refresh()
-                            dialog.dismiss()
-                            progress.dismiss()
-                        }
+                        Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
+                        pagingAdapter.refresh()
+                        dialog.dismiss()
+                        progress.dismiss()
+
                     }
                 }
     }

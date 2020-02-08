@@ -117,10 +117,9 @@ class TestMakerRepository(private val local: LocalDataSource,
     }
 
     suspend fun createTest(test: Test, overview: String, oldDocumentId: String): String {
-        val newDocumentId = remote.createTest(test, overview, oldDocumentId)
-        withContext(Dispatchers.Main) {
-            local.updateDocumentId(getTest(test.id), newDocumentId)
-        }
+        val newDocumentId = withContext(Dispatchers.Default) { remote.createTest(test, overview, oldDocumentId) }
+        local.updateDocumentId(getTest(test.id), newDocumentId)
+
         return newDocumentId
     }
 
