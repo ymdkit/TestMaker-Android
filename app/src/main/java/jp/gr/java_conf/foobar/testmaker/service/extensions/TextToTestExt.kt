@@ -5,8 +5,10 @@ import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-fun String.toTest(context: Context, questionId: Long): Test {
+suspend fun String.toTest(context: Context, questionId: Long): Test = withContext(Dispatchers.Default) {
 
     val backups = split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
@@ -118,5 +120,5 @@ fun String.toTest(context: Context, questionId: Long): Test {
         } catch (e: ArrayIndexOutOfBoundsException) {
         }
     }
-    return test
+    test
 }

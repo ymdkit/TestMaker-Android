@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagedList
 import com.firebase.ui.auth.IdpResponse
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
@@ -19,11 +20,9 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
+import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -60,20 +59,24 @@ class FirebaseActivity : BaseActivity() {
 
         pagingAdapter = FirebaseTestPagingAdapter(baseContext, options)
         pagingAdapter.download = { id: String ->
+            lifecycleScope.launch {
 
-            GlobalScope.launch (Dispatchers.Main){
                 val dialog = AlertDialog.Builder(this@FirebaseActivity)
                         .setTitle(getString(R.string.downloading))
-                        .setView( LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress,findViewById(R.id.layout_progress))).show()
+                        .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
-                when(val result = viewModel.downloadTest(id)){
-                    is FirebaseTestResult.Success->{
+                when (val result = viewModel.downloadTest(id)) {
+                    is FirebaseTestResult.Success -> {
                         viewModel.convert(result.test)
-                        Toast.makeText(this@FirebaseActivity,getString(R.string.msg_success_download_test,result.test.name),Toast.LENGTH_SHORT).show()
-                        finish()
+
+                        Toast.makeText(this@FirebaseActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this@FirebaseActivity, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        startActivity(intent)
                     }
-                    is FirebaseTestResult.Failure->{
-                        Toast.makeText(this@FirebaseActivity,result.message,Toast.LENGTH_SHORT).show()
+                    is FirebaseTestResult.Failure -> {
+                        Toast.makeText(this@FirebaseActivity, result.message, Toast.LENGTH_SHORT).show()
                     }
                 }
                 dialog.dismiss()
@@ -119,7 +122,7 @@ class FirebaseActivity : BaseActivity() {
 
             viewModel.getUser()?.let {
 
-                if (viewModel.getLocalTests().isEmpty() || viewModel.getLocalTests().all { it.getQuestionsForEach().size < 1 }) {
+                if (viewModel.localTests.isEmpty() || viewModel.localTests.all { it.getQuestionsForEach().size < 1 }) {
 
                     Toast.makeText(baseContext, getString(R.string.message_non_exist_test), Toast.LENGTH_SHORT).show()
 
@@ -212,23 +215,14 @@ class FirebaseActivity : BaseActivity() {
 
         val dialogLayout = LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_upload, findViewById(R.id.layout_dialog_upload))
 
-        val tests = viewModel.getLocalTests()
-
-        val array = Array(tests.size) { i -> tests[i].title }
-
         val spinner = dialogLayout.findViewById<Spinner>(R.id.spinner)
-        val progressBar = dialogLayout.findViewById<ProgressBar>(R.id.progressBar)
         val editOverView = dialogLayout.findViewById<EditText>(R.id.edit_overview)
-        // ArrayAdapter
         val adapter = ArrayAdapter(baseContext,
-                android.R.layout.simple_spinner_item, array)
+                android.R.layout.simple_spinner_item, viewModel.localTests.map { it.title }.toTypedArray())
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        // spinner に adapter をセット
         spinner.adapter = adapter
-
-        // リスナーを登録
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             //　アイテムが選択された時
             override fun onItemSelected(parent: AdapterView<*>?,
@@ -236,35 +230,35 @@ class FirebaseActivity : BaseActivity() {
                 position = positionSpinner
             }
 
-            //　アイテムが選択されなかった
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        val builder = AlertDialog.Builder(this@FirebaseActivity, R.style.MyAlertDialogStyle)
-        builder.setView(dialogLayout)
-        builder.setTitle(getString(R.string.message_upload_test))
-        builder.setPositiveButton(android.R.string.ok, null)
+        val dialog = AlertDialog.Builder(this@FirebaseActivity, R.style.MyAlertDialogStyle)
+                .setView(dialogLayout)
+                .setTitle(getString(R.string.message_upload_test))
+                .setPositiveButton(android.R.string.ok, null)
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
 
-        builder.setNegativeButton(android.R.string.cancel, null)
-        val dialog = builder.show()
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                .setOnClickListener {
+                    it.isEnabled = false
 
-        val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-        positiveButton.setOnClickListener {
+                    lifecycleScope.launch {
 
-            progressBar.visibility = View.VISIBLE
-            it.isEnabled = false
+                        val progress = AlertDialog.Builder(this@FirebaseActivity)
+                                .setTitle(getString(R.string.uploading))
+                                .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
-            GlobalScope.launch(Dispatchers.Default) {
+                        viewModel.uploadTest(viewModel.localTests[position], editOverView.text.toString())
 
-                viewModel.uploadTest(tests[position], editOverView.text.toString())
+                        Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
+                        pagingAdapter.refresh()
+                        dialog.dismiss()
+                        progress.dismiss()
 
-                withContext(Dispatchers.Main){
-                    Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-                    dialog.dismiss()
-                    pagingAdapter.refresh()
+                    }
                 }
-            }
-        }
     }
 
     companion object {

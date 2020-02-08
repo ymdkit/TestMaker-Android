@@ -2,16 +2,15 @@ package jp.gr.java_conf.foobar.testmaker.service.view.play
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -19,14 +18,12 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityPlayBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
-import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ResultActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_play.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -250,7 +247,7 @@ class PlayActivity : BaseActivity() {
 
     fun loadNext(second: Long) {
 
-        GlobalScope.launch(Dispatchers.Main) {
+        runBlocking {
             delay(second)
 
             number += 1
@@ -325,10 +322,9 @@ class PlayActivity : BaseActivity() {
 
             } else {
 
-                playViewModel.loadImage(question.imagePath) {
-                    play_problem_view.getImageProblem()?.setImageWithGlide(baseContext, it)
+                lifecycleScope.launch {
+                    play_problem_view.getImageProblem()?.setImageWithGlide(baseContext,playViewModel.loadImage(question.imagePath))
                 }
-
             }
         }
     }

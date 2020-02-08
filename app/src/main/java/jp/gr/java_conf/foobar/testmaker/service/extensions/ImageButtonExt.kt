@@ -11,7 +11,8 @@ import com.google.firebase.storage.StorageReference
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.modules.GlideApp
 
-fun ImageButton.setImageWithGlide(context: Context, img: Bitmap){
+fun ImageButton.setImageWithGlide(context: Context, img: Bitmap?){
+    img ?: return
 
     val circularProgressDrawable = androidx.swiperefreshlayout.widget.CircularProgressDrawable(context)
     circularProgressDrawable.setColorSchemeColors(Color.WHITE)

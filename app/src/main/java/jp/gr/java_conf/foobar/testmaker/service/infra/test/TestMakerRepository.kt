@@ -13,8 +13,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
@@ -49,15 +47,11 @@ class TestMakerRepository(private val local: LocalDataSource,
     }
 
     fun fetchCategories() {
-        GlobalScope.launch(Dispatchers.Main) {
-            existingCategories?.postValue(local.getExistingCategories())
-        }
+        existingCategories?.value = local.getExistingCategories()
     }
 
     fun fetchTests() {
-        GlobalScope.launch(Dispatchers.Main) {
-            tests?.postValue(local.getTests())
-        }
+        tests?.value = local.getTests()
         fetchCategories()
     }
 
@@ -70,9 +64,7 @@ class TestMakerRepository(private val local: LocalDataSource,
     }
 
     fun fetchQuestions(testId: Long) {
-        GlobalScope.launch(Dispatchers.Main) {
-            questions?.postValue(local.getQuestions(testId))
-        }
+        questions?.value = local.getQuestions(testId)
     }
 
     fun clearQuestions() {
@@ -83,11 +75,11 @@ class TestMakerRepository(private val local: LocalDataSource,
         local.deleteQuestion(question)
     }
 
-    fun loadImage(imagePath: String, setImage: (Bitmap) -> Unit) {
-        local.loadImage(imagePath, setImage)
+    suspend fun loadImage(imagePath: String): Bitmap? = withContext(Dispatchers.IO) {
+        local.loadImage(imagePath)
     }
 
-    fun saveImage(fileName: String, bitmap: Bitmap) {
+    suspend fun saveImage(fileName: String, bitmap: Bitmap) = withContext(Dispatchers.IO) {
         local.saveImage(fileName, bitmap)
     }
 
@@ -103,7 +95,9 @@ class TestMakerRepository(private val local: LocalDataSource,
         local.addQuestion(testId, question, questionId)
     }
 
-    suspend fun downloadTest(testId: String): FirebaseTestResult = remote.downloadTest(testId)
+    suspend fun downloadTest(testId: String): FirebaseTestResult = withContext(Dispatchers.Default) {
+        remote.downloadTest(testId)
+    }
 
     fun createObjectFromFirebase(test: FirebaseTest) {
         local.createObjectFromFirebase(test)
@@ -115,10 +109,9 @@ class TestMakerRepository(private val local: LocalDataSource,
     }
 
     suspend fun createTest(test: Test, overview: String, oldDocumentId: String): String {
-        val newDocumentId = remote.createTest(test, overview, oldDocumentId)
-        withContext(Dispatchers.Main) {
-            local.updateDocumentId(getTest(test.id), newDocumentId)
-        }
+        val newDocumentId = withContext(Dispatchers.Default) { remote.createTest(test, overview, oldDocumentId) }
+        local.updateDocumentId(getTest(test.id), newDocumentId)
+
         return newDocumentId
     }
 
