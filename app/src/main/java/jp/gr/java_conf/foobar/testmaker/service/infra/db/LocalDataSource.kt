@@ -90,29 +90,24 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun loadImage(imagePath: String, setImage: (Bitmap) -> Unit) {
-        GlobalScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.Default) {
-                val imageOptions = BitmapFactory.Options()
-                imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-                try {
+    fun loadImage(imagePath: String): Bitmap? {
+        val imageOptions = BitmapFactory.Options()
+        imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
+        try {
 
-                    val input = context.openFileInput(imagePath)
-                    val bm = BitmapFactory.decodeStream(input, null, imageOptions)
+            val input = context.openFileInput(imagePath)
+            val bm = BitmapFactory.decodeStream(input, null, imageOptions)
 
-                    input.close()
+            input.close()
 
-                    return@withContext bm
+            return bm
 
-                } catch (e: FileNotFoundException) {
-                    e.printStackTrace()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }.let {
-                if (it is Bitmap) setImage(it)
-            }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
+        return null
     }
 
     fun saveImage(fileName: String, bitmap: Bitmap) {

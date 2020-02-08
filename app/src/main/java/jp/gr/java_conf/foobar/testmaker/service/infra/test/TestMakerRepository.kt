@@ -83,8 +83,8 @@ class TestMakerRepository(private val local: LocalDataSource,
         local.deleteQuestion(question)
     }
 
-    fun loadImage(imagePath: String, setImage: (Bitmap) -> Unit) {
-        local.loadImage(imagePath, setImage)
+    suspend fun loadImage(imagePath: String): Bitmap? = withContext(Dispatchers.IO){
+        local.loadImage(imagePath)
     }
 
     fun saveImage(fileName: String, bitmap: Bitmap) {

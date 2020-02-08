@@ -68,9 +68,8 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         repository.clearQuestions()
     }
 
-    fun loadImage(setImage: (Bitmap) -> Unit) {
-        repository.loadImage(imagePath, setImage)
-    }
+    suspend fun loadImage() : Bitmap? = repository.loadImage(imagePath)
+
 
     fun saveImage(bitmap: Bitmap) {
         repository.saveImage(imagePath, bitmap)
