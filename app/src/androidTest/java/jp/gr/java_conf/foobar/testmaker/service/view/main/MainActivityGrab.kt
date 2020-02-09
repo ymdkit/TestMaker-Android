@@ -125,10 +125,12 @@ class MainActivityGrab {
         addTest("数学 公式", R.id.imageView7, 6)
         addTest("英単語 復習", R.id.imageView8, 7)
 
+        sleep(10000)
+
         takeScreenshot("MainActivity", mActivityTestRule.activity)
     }
 
-    fun editActivityTest() {
+    private fun editActivityTest() {
 
         val appCompatImageButton = onView(
                 allOf(withId(R.id.button), withContentDescription("画像"),
