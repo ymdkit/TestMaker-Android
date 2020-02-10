@@ -205,6 +205,18 @@ public class Migration implements RealmMigration {
 
         }
 
+        if(oldVersion == 12){
+
+            RealmObjectSchema testSchema = schema.get("Quest");
+
+            testSchema
+                    .addField("documentId", String.class, FieldAttribute.REQUIRED)
+                    .transform(obj -> obj.set("documentId", ""));
+
+            oldVersion++;
+
+        }
+
         //schemaVersion変えるの忘れるな(MyApplication内)
 
     }

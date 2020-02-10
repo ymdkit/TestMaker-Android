@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -73,13 +72,27 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
 
         val ref = if(documentId != "") db.collection("tests").document(documentId) else db.collection("tests").document()
 
+        ref.set(firebaseTest).await()
+
+        return ref.id
+    }
+
+    suspend fun uploadQuestions(test: Test,documentId: String): List<String>{
+
+        val questionRefs = arrayListOf<String>()
+
         val firebaseQuestions = test.questionsNonNull()
 
-        ref.set(firebaseTest).await()
+        val testRef = db.collection("tests").document(documentId)
+
+        val user = auth.getUser() ?: return emptyList()
 
         val batch = db.batch()
         firebaseQuestions.forEach {
-            batch.set(ref.collection("questions").document(), it.toFirebaseQuestions(user))
+            val questionRef = if(it.documentId.isEmpty()) testRef.collection("questions").document() else testRef.collection("questions").document(it.documentId)
+            batch.set(questionRef, it.toFirebaseQuestions(user))
+
+            questionRefs.add(questionRef.id)
 
             if (it.imagePath.isNotEmpty() && !it.imagePath.contains("/")) {
                 val storage = FirebaseStorage.getInstance()
@@ -100,7 +113,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
 
         batch.commit().await()
 
-        return ref.id
+        return questionRefs
     }
 
     fun getMyTests(): LiveData<List<DocumentSnapshot>> {

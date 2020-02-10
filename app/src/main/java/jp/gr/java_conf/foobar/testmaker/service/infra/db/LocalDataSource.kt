@@ -324,6 +324,12 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
+    fun updateDocumentId(question: Quest, documentId: String) {
+        realm.beginTransaction()
+        question.documentId = documentId
+        realm.commitTransaction()
+    }
+
     fun getMaxQuestionId(): Long = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 1
 
 }
