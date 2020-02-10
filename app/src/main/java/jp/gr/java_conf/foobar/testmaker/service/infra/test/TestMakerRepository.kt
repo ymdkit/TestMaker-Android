@@ -111,7 +111,10 @@ class TestMakerRepository(private val local: LocalDataSource,
     suspend fun createTest(test: Test, overview: String, oldDocumentId: String): String {
         val newDocumentId = withContext(Dispatchers.Default) { remote.createTest(test, overview, oldDocumentId) }
         local.updateDocumentId(getTest(test.id), newDocumentId)
-
+        val newDocumentIds = withContext(Dispatchers.Default) { remote.uploadQuestions(test,newDocumentId) }
+        getTest(test.id).questionsNonNull().forEachIndexed { index, quest ->
+            local.updateDocumentId(quest,newDocumentIds[index])
+        }
         return newDocumentId
     }
 

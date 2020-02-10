@@ -27,6 +27,7 @@ open class Quest : RealmObject() {
     var solving: Boolean = false
     var order: Int = 0
     var isCheckOrder: Boolean = false
+    var documentId: String = ""
 
     fun getProblem(isReverse: Boolean): String {
 
