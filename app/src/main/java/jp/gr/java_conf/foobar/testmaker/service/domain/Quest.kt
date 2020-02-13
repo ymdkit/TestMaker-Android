@@ -5,6 +5,7 @@ import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
+import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseQuestion
 
 /**
@@ -29,17 +30,9 @@ open class Quest : RealmObject() {
     var isCheckOrder: Boolean = false
     var documentId: String = ""
 
-    fun getProblem(isReverse: Boolean): String {
+    fun getProblem(isReverse: Boolean = false) = if (isReversible() && isReverse) answer else problem
 
-        return if (isReverse) answer else problem
-
-    }
-
-    fun getAnswer(isReverse: Boolean): String {
-
-        return if (isReverse) problem else answer
-
-    }
+    fun getAnswer(isReverse: Boolean = false) = if (isReversible() && isReverse) problem else answer
 
     fun setSelections(strings: Array<String>) {
 
@@ -81,5 +74,7 @@ open class Quest : RealmObject() {
         )
 
     }
+
+    private fun isReversible() = type == Constants.WRITE || type == Constants.COMPLETE
 
 }

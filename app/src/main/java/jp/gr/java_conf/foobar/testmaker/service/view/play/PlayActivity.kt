@@ -114,7 +114,7 @@ class PlayActivity : BaseActivity() {
 
         play_select_view.invalidate()
 
-        val answer = questions[number].getAnswer(isReverse(questions[number]))
+        val answer = questions[number].getAnswer(sharedPreferenceManager.reverse)
 
         if (isEqual(yourAnswer, answer)) {
 
@@ -288,7 +288,7 @@ class PlayActivity : BaseActivity() {
 
     private fun showProblem(question: Quest) {
 
-        play_problem_view.setTextProblem(question.getProblem(isReverse(question)))
+        play_problem_view.setTextProblem(question.getProblem(sharedPreferenceManager.reverse))
         play_problem_view.setTextNumber(getString(R.string.number, (number + 1).toString()))
 
         play_review_view.visibility = View.GONE
@@ -516,15 +516,9 @@ class PlayActivity : BaseActivity() {
 
         val question = questions[number]
 
-        play_review_view.setTextAnswer(question.getAnswer(isReverse(question)))
+        play_review_view.setTextAnswer(question.getAnswer(sharedPreferenceManager.reverse))
 
         play_review_view.setTextExplanation(question.explanation)
-
-    }
-
-    private fun isReverse(question: Quest): Boolean {
-
-        return (question.type == Constants.WRITE || question.type == Constants.COMPLETE) && sharedPreferenceManager.reverse
 
     }
 }
