@@ -17,13 +17,13 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityPlayBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.extensions.debounceClick
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ResultActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_play.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -110,7 +110,7 @@ class PlayActivity : BaseActivity() {
     }
 
     fun checkAnswer(yourAnswer: String) {
-        if(number >= questions.size) return
+        if (number >= questions.size) return
 
         play_select_view.invalidate()
 
@@ -323,7 +323,7 @@ class PlayActivity : BaseActivity() {
             } else {
 
                 lifecycleScope.launch {
-                    play_problem_view.getImageProblem()?.setImageWithGlide(baseContext,playViewModel.loadImage(question.imagePath))
+                    play_problem_view.getImageProblem()?.setImageWithGlide(baseContext, playViewModel.loadImage(question.imagePath))
                 }
             }
         }
@@ -494,14 +494,8 @@ class PlayActivity : BaseActivity() {
             }
         })
 
-        button_confirm.setOnClickListener {
-
-            button_confirm.isEnabled = false
-
+        button_confirm.debounceClick {
             showLayoutManual()
-
-            Handler().postDelayed({ button_confirm.isEnabled = true }, 600)
-
         }
     }
 
