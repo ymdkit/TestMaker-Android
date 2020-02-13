@@ -49,9 +49,6 @@ class PlayActivity : BaseActivity() {
 
     private val playViewModel: PlayViewModel by viewModel()
 
-    private lateinit var test: Test
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
@@ -89,7 +86,7 @@ class PlayActivity : BaseActivity() {
 
     private fun initQuestions() {
 
-        test = playViewModel.getTest()
+        val test = playViewModel.getTest()
 
         questions = QuestionsBuilder(test.questionsNonNull())
                 .retry(intent.hasExtra("redo"))
@@ -104,6 +101,47 @@ class PlayActivity : BaseActivity() {
         if (questions.isEmpty()) {
             Toast.makeText(baseContext, getString(R.string.msg_null_questions), Toast.LENGTH_LONG).show()
             return
+        }
+    }
+
+    fun loadNext(second: Long) {
+
+        lifecycleScope.launch {
+            delay(second)
+
+            number += 1
+
+            if (questions.size > number) {
+
+                val question = questions[number]
+
+                playViewModel.updateSolving(question, true)
+
+                showProblem(question)
+
+                when (question.type) {
+
+                    Constants.WRITE ->
+
+                        showLayoutWrite()
+                    Constants.COMPLETE ->
+
+                        showLayoutComplete(question)
+
+                    Constants.SELECT ->
+
+                        showLayoutSelect(question)
+
+                    Constants.SELECT_COMPLETE ->
+
+                        showLayoutSelectComplete(question)
+                }
+
+            } else { //全問終了後
+
+                showResult()
+
+            }
         }
     }
 
@@ -187,47 +225,6 @@ class PlayActivity : BaseActivity() {
         play_review_view.setTextExplanation(questions[number].explanation)
         play_mistake_view.show(yourAnswer)
 
-    }
-
-    fun loadNext(second: Long) {
-
-        lifecycleScope.launch {
-            delay(second)
-
-            number += 1
-
-            if (questions.size > number) {
-
-                val question = questions[number]
-
-                playViewModel.updateSolving(question, true)
-
-                showProblem(question)
-
-                when (question.type) {
-
-                    Constants.WRITE ->
-
-                        showLayoutWrite()
-                    Constants.COMPLETE ->
-
-                        showLayoutComplete(question)
-
-                    Constants.SELECT ->
-
-                        showLayoutSelect(question)
-
-                    Constants.SELECT_COMPLETE ->
-
-                        showLayoutSelectComplete(question)
-                }
-
-            } else { //全問終了後
-
-                showResult()
-
-            }
-        }
     }
 
     private fun showProblem(question: Quest) {
