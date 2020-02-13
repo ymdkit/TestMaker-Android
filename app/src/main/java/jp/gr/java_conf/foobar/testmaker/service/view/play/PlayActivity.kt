@@ -247,7 +247,7 @@ class PlayActivity : BaseActivity() {
 
     fun loadNext(second: Long) {
 
-        runBlocking {
+        lifecycleScope.launch {
             delay(second)
 
             number += 1
