@@ -7,15 +7,8 @@ import io.realm.annotations.PrimaryKey
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import java.util.Calendar
+import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.List
-import kotlin.collections.filter
-import kotlin.collections.forEach
-import kotlin.collections.forEachIndexed
-import kotlin.collections.indices
-import kotlin.collections.listOf
-import kotlin.collections.sortedBy
 
 /**
  * Created by keita on 2017/02/08.
@@ -199,5 +192,31 @@ open class Test : RealmObject() {
 
     fun getQuestionsSolved(): ArrayList<Quest> {
         return ArrayList(questions?.filter { it.solving } ?: listOf())
+    }
+
+    fun getChoices(size: Int, answer: String, context: Context): ArrayList<String> {
+
+        val result = arrayListOf<String>()
+
+        for (q in questions?.take(100)?.shuffled() ?: emptyList()) {
+            if (result.size >= size) break
+
+            when (q.type) {
+                Constants.WRITE, Constants.SELECT -> {
+                    if (q.answer != answer) result.add(q.answer)
+                }
+                Constants.COMPLETE, Constants.SELECT_COMPLETE -> {
+                    if(q.answers.isNotEmpty()){
+                        if (q.answers[0]?.selection != answer) result.add(q.answers[0]?.selection ?: "")
+                    }
+                }
+            }
+        }
+
+        while (result.size < size) {
+            result.add(context.getString(R.string.message_not_auto))
+        }
+
+        return result
     }
 }

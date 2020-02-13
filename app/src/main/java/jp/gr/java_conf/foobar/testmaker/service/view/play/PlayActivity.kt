@@ -17,7 +17,6 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityPlayBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionsBuilder
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.debounceClick
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ResultActivity
@@ -26,7 +25,6 @@ import kotlinx.android.synthetic.main.activity_play.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -44,8 +42,6 @@ class PlayActivity : BaseActivity() {
     private lateinit var inputMethodManager: InputMethodManager
 
     private var startTime: Long = 0
-
-    private var allAnswers: ArrayList<String> = arrayListOf()
 
     private val playViewModel: PlayViewModel by viewModel()
 
@@ -334,54 +330,7 @@ class PlayActivity : BaseActivity() {
     }
 
     private fun makeChoice(num: Int): ArrayList<String> {
-
-        if (allAnswers.isEmpty()) {
-            questions.forEach { q ->
-
-                when (q.type) {
-                    Constants.WRITE -> allAnswers.add(q.answer)
-                    Constants.SELECT -> allAnswers.add(q.answer)
-                    Constants.COMPLETE -> allAnswers = ArrayList(allAnswers.plus(q.answers.map { it.selection }))
-                    Constants.SELECT_COMPLETE -> allAnswers = ArrayList(allAnswers.plus(q.answers.map { it.selection }))
-                }
-            }
-            allAnswers = ArrayList(allAnswers.distinct())
-        }
-
-        val other = ArrayList<String>()
-        val answers = ArrayList(allAnswers.map { it })
-
-        var i = 0
-        while (i < num) {
-
-            if (answers.size > 0) {
-
-                val rnd = Random()
-                val ran = rnd.nextInt(answers.size)
-
-                if (answers[ran] == questions[number].answer) {
-                    answers.removeAt(ran)
-                    continue
-                }
-
-                if (questions[number].answers.map { it.selection }.contains(answers[ran])) {
-                    answers.removeAt(ran)
-                    continue
-                }
-
-                other.add(answers[ran])
-                answers.removeAt(ran)
-                i++
-
-
-            } else {
-                other.add(i, getString(R.string.message_not_auto))
-                i++
-            }
-
-        }
-
-        return other
+        return playViewModel.getTest().getChoices(num,questions[number].answer,baseContext)
     }
 
     private fun initViews() {
