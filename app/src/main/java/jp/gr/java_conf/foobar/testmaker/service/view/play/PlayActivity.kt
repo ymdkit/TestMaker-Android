@@ -16,6 +16,7 @@ import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityPlayBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionsBuilder
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.debounceClick
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
@@ -38,7 +39,7 @@ class PlayActivity : BaseActivity() {
     private lateinit var soundMistake: SePlayer
     private lateinit var soundRight: SePlayer
 
-    internal lateinit var questions: ArrayList<Quest>
+    internal lateinit var questions: List<Quest>
 
     private lateinit var inputMethodManager: InputMethodManager
 
@@ -77,29 +78,6 @@ class PlayActivity : BaseActivity() {
 
     }
 
-    private fun initQuestions() {
-
-        test = playViewModel.getTest()
-
-        questions = if (intent.hasExtra("redo")) test.getQuestionsSolved()
-        else ArrayList(test.questionsNonNull())
-
-        playViewModel.resetSolving()
-
-        if (!intent.hasExtra("redo")) questions = ArrayList(questions.drop(playViewModel.getTest().startPosition))
-
-        if (sharedPreferenceManager.refine) questions = questions.filter { !it.correct } as ArrayList<Quest>
-
-        if (sharedPreferenceManager.random) questions.shuffle()
-
-        if (playViewModel.getTest().limit < questions.size) questions = ArrayList(questions.take(playViewModel.getTest().limit))
-
-        if (questions.size < 1) {
-            Toast.makeText(baseContext, getString(R.string.msg_null_questions), Toast.LENGTH_LONG).show()
-            return
-        }
-    }
-
     override fun onPause() {
 
         play_write_view.hideKeyboard()
@@ -107,6 +85,26 @@ class PlayActivity : BaseActivity() {
         inputMethodManager.hideSoftInputFromWindow(play_complete_view.firstEditText.windowToken, 0)
 
         super.onPause()
+    }
+
+    private fun initQuestions() {
+
+        test = playViewModel.getTest()
+
+        questions = QuestionsBuilder(test.questionsNonNull())
+                .retry(intent.hasExtra("redo"))
+                .startPosition(test.startPosition)
+                .mistakeOnly(sharedPreferenceManager.refine)
+                .shuffle(sharedPreferenceManager.random)
+                .limit(test.limit)
+                .build()
+
+        playViewModel.resetSolving()
+
+        if (questions.isEmpty()) {
+            Toast.makeText(baseContext, getString(R.string.msg_null_questions), Toast.LENGTH_LONG).show()
+            return
+        }
     }
 
     fun checkAnswer(yourAnswer: String) {
