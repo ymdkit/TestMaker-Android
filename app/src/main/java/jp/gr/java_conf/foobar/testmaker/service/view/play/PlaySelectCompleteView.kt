@@ -89,9 +89,9 @@ class PlaySelectCompleteView : LinearLayout {
         }
     }
 
-    fun getAnswers(): ArrayList<String?> {
+    fun getAnswers(): ArrayList<String> {
 
-        val array = ArrayList<String?>()
+        val array = ArrayList<String>()
 
         checkBoxes.filter { box -> box?.isChecked!! }.forEach { array.add(it?.text.toString()) }
 

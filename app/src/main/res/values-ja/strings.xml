@@ -47,7 +47,7 @@
     <string name="message_wrong">名前を入力してください</string>
     <string name="message_shortage">全項目を入力してください</string>
     <string name="message_delete">問題 %1$s を削除しますか</string>
-    <string name="message_answer">正解:  %1$s</string>
+    <string name="message_answer">正解\n%1$s</string>
     <string name="message_not_auto">問題数不足で自動生成できません</string>
     <string name="message_explanation">・解説文を入れる</string>
     <string name="is_check_order">・解答順を正誤判定に含める</string>
@@ -65,7 +65,7 @@
     <string name="question">問題: %1$s</string>
     <string name="answer">正答: %1$s </string>
     <string name="explanation">解説:  %1$s</string>
-    <string name="your_answer">解答:  %1$s</string>
+    <string name="your_answer">解答\n%1$s</string>
     <string name="image">画像</string>
     <string name="title_activity_edit">編集</string>
     <string name="add">add</string>

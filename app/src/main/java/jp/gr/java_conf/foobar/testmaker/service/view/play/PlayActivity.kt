@@ -113,78 +113,24 @@ class PlayActivity : BaseActivity() {
         if (number >= questions.size) return
 
         play_select_view.invalidate()
-
-        val answer = questions[number].getAnswer(sharedPreferenceManager.reverse)
-
-        if (isEqual(yourAnswer, answer)) {
-
+        if (questions[number].isCorrect(yourAnswer,sharedPreferenceManager.reverse,sharedPreferenceManager.isCaseInsensitive)) {
             actionCorrect()
-
         } else {
-
             actionMistake(yourAnswer)
-
-            play_review_view.setTextAnswer(answer)
-
+            play_review_view.setTextAnswer(questions[number].getAnswer(sharedPreferenceManager.reverse))
         }
     }
 
-    private fun isEqual(yourAnswer: String, answer: String): Boolean {
+    fun checkAnswer(answers: List<String>) { //完答
 
-        if (sharedPreferenceManager.isCaseInsensitive) return yourAnswer.toLowerCase() == answer.toLowerCase()
-
-        return yourAnswer == answer
-    }
-
-    fun checkAnswer(answers: ArrayList<String?>) { //完答
-
-        var loop = true
-
-        for (answer in answers) {
-
-            loop = false
-
-            for (k in 0 until questions[number].answers.size) if (isEqual(answer
-                            ?: "0", questions[number].answers[k]?.selection ?: "1")) loop = true
-
-            if (!loop) break
-
-        }
-
-        if (loop) loop = answers.size == questions[number].answers.size //必要条件だけ答えてもダメ
-
-        if (questions[number].isCheckOrder) {
-
-            for ((index, answer) in answers.withIndex()) {
-
-                if (answer != questions[number].answers[index]?.selection) {
-                    loop = false
-                    break
-                }
-
-            }
-
-        } else {
-            if (loop) loop = answers.distinct().size == answers.size //同じ解答を繰り返してもダメ
-        }
-
-        if (loop) {
+        if (questions[number].isCorrect(answers,sharedPreferenceManager.isCaseInsensitive)) {
 
             actionCorrect()
 
         } else {
 
-            val yourAnswer = StringBuilder()
-
-            for (your in answers) if (your != "") yourAnswer.append(your).append(" ")
-
-            actionMistake(yourAnswer.toString())
-
-            val answer = StringBuilder()
-
-            for (i in 0 until questions[number].answers.size) answer.append(questions[number].answers[i]?.selection).append(" ")
-
-            play_review_view.setTextAnswer(questions[number].answer)
+            actionMistake(answers.filter { it.isNotEmpty() }.joinToString("\n"))
+            play_review_view.setTextAnswer(questions[number].answers.map { it.selection }.filter { it.isNotEmpty() }.joinToString("\n"))
 
         }
 
