@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageButton
 import android.widget.LinearLayout
+import com.github.chrisbanes.photoview.PhotoView
 import com.google.firebase.storage.StorageReference
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
@@ -29,7 +29,7 @@ class PlayProblemView : LinearLayout {
 
     fun showImage() { layout_image.visibility = View.VISIBLE }
 
-    fun getImageProblem(): ImageButton? {
+    fun getImageProblem(): PhotoView? {
 
         return image_problem
     }
