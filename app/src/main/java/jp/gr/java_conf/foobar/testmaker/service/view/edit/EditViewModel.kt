@@ -29,6 +29,7 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
     val explanation: MutableLiveData<String> = MutableLiveData()
 
     var imagePath: String = ""
+    var order: Int = -1
     var testId: Long = -1L
     var questionId: Long = -1
     var editingView: View? = null
@@ -82,6 +83,7 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         quest.problem = question.valueNonNull()
         quest.imagePath = imagePath
         quest.explanation = explanation.valueNonNull()
+        quest.order = order
 
         val form = editingView
 

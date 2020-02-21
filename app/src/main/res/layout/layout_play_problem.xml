@@ -20,7 +20,7 @@
         android:layout_weight="1"
         android:id="@+id/layout_image">
 
-        <ImageButton
+        <com.github.chrisbanes.photoview.PhotoView
             android:contentDescription="@string/image"
             android:layout_width="match_parent"
             android:layout_height="250dp"

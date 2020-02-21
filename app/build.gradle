@@ -26,8 +26,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 102
-        versionName "3.3.6"
+        versionCode 103
+        versionName "3.3.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -115,6 +115,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
     implementation 'com.airbnb.android:epoxy:3.8.0'
     implementation 'com.airbnb.android:epoxy-databinding:3.8.0'
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     kapt 'com.airbnb.android:epoxy-processor:3.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'

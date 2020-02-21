@@ -184,6 +184,7 @@ open class EditActivity : BaseActivity() {
                 set_explanation.setText(question.explanation)
 
                 viewModel.questionId = question.id
+                viewModel.order = question.order
 
                 if (question.imagePath != "") {
                     viewModel.imagePath = question.imagePath
@@ -538,6 +539,7 @@ open class EditActivity : BaseActivity() {
         set_explanation.setText("")
         viewModel.questionId = -1
         viewModel.imagePath = ""
+        viewModel.order = -1
         button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
         button_cancel.visibility = View.GONE
 
