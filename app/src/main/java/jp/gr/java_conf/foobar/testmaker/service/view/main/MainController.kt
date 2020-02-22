@@ -65,9 +65,9 @@ class MainController(private val context: Context) : EpoxyController() {
 
     override fun buildModels() {
 
-        categories.forEach {
+        categories.forEachIndexed { index, it ->
             cardCategory {
-                id(it.category)
+                id(index)
                 colorId(it.color)
                 category(it.category)
                 size(context.getString(R.string.number_exams, tests.filter { test -> it.category == test.getCategory() }.size))
