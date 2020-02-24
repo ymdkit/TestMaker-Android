@@ -67,7 +67,7 @@ class MainController(private val context: Context) : EpoxyController() {
 
         categories.forEachIndexed { index, it ->
             cardCategory {
-                id(index)
+                id(it.category)
                 colorId(it.color)
                 category(it.category)
                 size(context.getString(R.string.number_exams, tests.filter { test -> it.category == test.getCategory() }.size))
