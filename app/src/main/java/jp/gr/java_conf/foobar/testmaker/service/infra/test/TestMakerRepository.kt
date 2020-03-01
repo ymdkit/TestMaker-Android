@@ -136,7 +136,7 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun getTestsQuery() = remote.getTestsQuery()
 
-    fun getCategories(): List<Cate> = local.getCategories()
+    fun getCategories(): List<Cate> = local.getCategoriesClone()
     fun addCategory(category: Cate) = local.addCategory(category)
     fun deleteCategory(category: Cate) {
         local.deleteCategory(category)
