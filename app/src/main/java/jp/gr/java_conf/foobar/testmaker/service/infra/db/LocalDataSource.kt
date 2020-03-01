@@ -285,6 +285,22 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
+    fun migrateCategoryOrder() {
+
+        val categories = getCategories()
+
+        if (categories.size < 2) return
+
+        realm.beginTransaction()
+
+        if (categories[0].order == categories[1].order) {
+
+            categories.forEachIndexed { index, category -> category.order = index }
+
+        }
+        realm.commitTransaction()
+    }
+
     fun updateHistory(test: Test) {
         realm.beginTransaction()
         test.setHistory()

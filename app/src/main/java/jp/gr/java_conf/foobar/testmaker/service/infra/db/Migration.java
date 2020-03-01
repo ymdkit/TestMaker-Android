@@ -223,10 +223,7 @@ public class Migration implements RealmMigration {
 
             personSchema
                     .addField("order", Integer.class, FieldAttribute.REQUIRED)
-                    .transform(obj -> {
-                        long id = obj.getLong("id");
-                        obj.set("order", id);
-                    });
+                    .transform(obj -> obj.set("order", 0));
 
 
             oldVersion++;
