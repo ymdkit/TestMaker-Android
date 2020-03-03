@@ -145,7 +145,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    private fun getCategories(): List<Cate> = (realm.where(Cate::class.java).findAll().sort("category"))
+    private fun getCategories(): List<Cate> = (realm.where(Cate::class.java).findAll().sort("order"))
 
     fun getCategoriesClone(): List<Cate> = realm.copyFromRealm(getCategories()).distinctBy { it.category }
 
@@ -197,18 +197,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
 
         realm.commitTransaction()
 
-    }
-
-    fun changeCategory(testId: Long, category: String) {
-        val test = getTest(testId)
-
-        val previousCategory = getExistingCategories()[getExistingCategories().indexOfFirst { it.category == category } - 1].category
-
-        realm.beginTransaction()
-
-        test.setCategory(if (test.getCategory() == previousCategory) "" else previousCategory)
-
-        realm.commitTransaction()
     }
 
     fun deleteTest(test: Test) {
@@ -298,6 +286,21 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
             categories.forEachIndexed { index, category -> category.order = index }
 
         }
+        realm.commitTransaction()
+    }
+
+    fun swapCategories(from: String, to: String){
+        val categories = getCategories()
+
+        realm.beginTransaction()
+
+        val fromCategory = categories.distinctBy { it.category }.first { it.category == from }
+        val toCategory = categories.distinctBy { it.category }.first { it.category == to }
+
+        val tmp = fromCategory.order
+        fromCategory.order = toCategory.order
+        toCategory.order = tmp
+
         realm.commitTransaction()
     }
 

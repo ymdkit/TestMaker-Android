@@ -49,7 +49,7 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun fetchCategories() {
 
         val categories = local.getExistingCategories()
-        if(categories.all { it.order == 0 }){
+        if (categories.all { it.order == 0 }) {
             local.migrateCategoryOrder()
         }
 
@@ -187,14 +187,14 @@ class TestMakerRepository(private val local: LocalDataSource,
         fetchTests()
     }
 
-    fun changeCategory(testId: Long, category: String) {
-        local.changeCategory(testId, category)
-        fetchTests()
-    }
-
     fun sortAllTests(mode: Int) {
         local.sortAllTests(mode)
         fetchTests()
+    }
+
+    fun swapCategories(from: String, to: String) {
+        local.swapCategories(from, to)
+        fetchCategories()
     }
 
 }

@@ -19,6 +19,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.android.billingclient.api.BillingClient
 import com.firebase.ui.auth.IdpResponse
@@ -125,16 +126,16 @@ class MainActivity : ShowTestsActivity() {
                 .initDragging(mainController)
                 .withRecyclerView(binding.recyclerView)
                 .forVerticalList()
-                .withTarget(CardTestBindingModel_::class.java)
-                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<CardTestBindingModel_>() {
-                    override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: CardTestBindingModel_?, itemView: View?) {
+                .forAllModels()
+                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<EpoxyModel<*>>(){
+                    override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: EpoxyModel<*>?, itemView: View?) {
                         val from = mainController.adapter.getModelAtPosition(fromPosition)
                         val to = mainController.adapter.getModelAtPosition(toPosition)
 
                         if (from is CardTestBindingModel_ && to is CardTestBindingModel_) {
                             viewModel.sortTests(from.testId(), to.testId())
-                        } else if (from is CardCategoryBindingModel_ && to is CardTestBindingModel_) {
-                            viewModel.changeCategory(to.testId(), from.category())
+                        } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
+                            viewModel.swapCategories(from.category(), to.category())
                         }
                     }
 
