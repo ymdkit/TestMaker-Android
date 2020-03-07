@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.di
 
 import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.CategoryDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
@@ -19,8 +20,9 @@ import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 
 fun getTestMakerModules(realm: Realm) = module {
-    single { TestMakerRepository(get(), get()) }
+    single { TestMakerRepository(get(), get(), get()) }
     single { LocalDataSource(realm, get(), get()) }
+    single { CategoryDataSource(realm) }
     single { Auth() }
     single { RemoteDataSource(get(), get()) }
     single { SharedPreferenceManager(get()) }

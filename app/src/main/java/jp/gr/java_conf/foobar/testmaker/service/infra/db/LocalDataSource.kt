@@ -151,18 +151,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
 
     fun getExistingCategories(): List<Cate> = getCategoriesClone().filter { getTests().map { test -> test.getCategory() }.contains(it.category) }
 
-    fun addCategory(category: Cate) {
-        realm.beginTransaction()
-        realm.copyToRealm(category)
-        realm.commitTransaction()
-    }
-
-    fun deleteCategory(category: Cate) {
-        realm.beginTransaction()
-        realm.where(Cate::class.java).equalTo("category", category.category).findFirst()?.deleteFromRealm()
-        realm.commitTransaction()
-    }
-
     fun addOrUpdateTest(test: Test): Long {
         realm.beginTransaction()
         if (test.id == 0L) test.id = realm.where(Test::class.java).max("id")?.toLong()?.plus(1) ?: 1

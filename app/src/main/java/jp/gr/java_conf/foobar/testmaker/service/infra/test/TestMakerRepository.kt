@@ -8,6 +8,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.CategoryDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
@@ -17,7 +18,8 @@ import kotlinx.coroutines.withContext
 
 
 class TestMakerRepository(private val local: LocalDataSource,
-                          private val remote: RemoteDataSource) {
+                          private val remote: RemoteDataSource,
+                          private val categoryDataSource: CategoryDataSource) {
 
     var tests: MutableLiveData<List<Test>>? = null
         private set
@@ -144,9 +146,9 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun getCategories(): List<Cate> = local.getCategoriesClone()
 
-    fun addCategory(category: Cate) = local.addCategory(category)
+    fun addCategory(category: Cate) = categoryDataSource.create(category)
     fun deleteCategory(category: Cate) {
-        local.deleteCategory(category)
+        categoryDataSource.delete(category)
         fetchCategories()
     }
 
