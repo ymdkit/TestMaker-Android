@@ -147,10 +147,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
 
     private fun getCategories(): List<Category> = (realm.where(Category::class.java).findAll().sort("order"))
 
-    fun getCategoriesClone(): List<Category> = realm.copyFromRealm(getCategories()).distinctBy { it.name }
-
-    fun getExistingCategories(): List<Category> = getCategoriesClone().filter { getTests().map { test -> test.getCategory() }.contains(it.name) }
-
     fun addOrUpdateTest(test: Test): Long {
         realm.beginTransaction()
         if (test.id == 0L) test.id = realm.where(Test::class.java).max("id")?.toLong()?.plus(1) ?: 1

@@ -29,6 +29,12 @@ class CategoryDataSource(private val realm: Realm){
     fun get(): List<Category> = realm.copyFromRealm(realm.where(Category::class.java).findAll())?.sortedBy { it.order }
             ?: listOf()
 
+    fun update(category: Category) {
+        realm.executeTransaction {
+            it.copyToRealmOrUpdate(category)
+        }
+    }
+
     fun delete(category: Category) {
         realm.executeTransaction {
             realm.where(Category::class.java).equalTo("category", category.name).findFirst()?.deleteFromRealm()

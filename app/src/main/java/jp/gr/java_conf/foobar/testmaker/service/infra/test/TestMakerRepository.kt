@@ -49,13 +49,16 @@ class TestMakerRepository(private val local: LocalDataSource,
     }
 
     fun fetchCategories() {
-
-        val categories = local.getExistingCategories()
-        if (categories.all { it.order == 0 }) {
-            local.migrateCategoryOrder()
+        val categories = categoryDataSource.get()
+        if (categories.all { it.order == 0 } && categories.size > 1) {
+            categories.forEachIndexed { index, category ->
+                category.apply {
+                    this.order = index
+                    categoryDataSource.update(this)
+                }
+            }
         }
-
-        existingCategories?.value = categories
+        existingCategories?.value = categories.filter { getTests().map { test -> test.getCategory() }.contains(it.name) }
     }
 
     fun fetchTests() {
@@ -144,7 +147,7 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun getTestsQuery() = remote.getTestsQuery()
 
-    fun getCategories(): List<Category> = local.getCategoriesClone()
+    fun getCategories(): List<Category> = categoryDataSource.get()
 
     fun addCategory(category: Category) = categoryDataSource.create(category)
     fun deleteCategory(category: Category) {
