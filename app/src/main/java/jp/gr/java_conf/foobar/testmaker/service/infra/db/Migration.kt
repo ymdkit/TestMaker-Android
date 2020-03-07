@@ -144,6 +144,15 @@ class Migration : RealmMigration {
                     ?.transform { obj: DynamicRealmObject -> obj["order"] = 0 }
             oldVersion++
         }
+        if (oldVersion == 14L) {
+            schema.create("Category")
+                    .addField("id", Long::class.java, FieldAttribute.PRIMARY_KEY)
+                    .addField("name", String::class.java, FieldAttribute.REQUIRED)
+                    .addField("color", Int::class.java, FieldAttribute.REQUIRED)
+                    .addField("order", Int::class.java, FieldAttribute.REQUIRED)
+            oldVersion++
+
+        }
         //schemaVersion変えるの忘れるな(TestMakerApplication内)
     }
 }
