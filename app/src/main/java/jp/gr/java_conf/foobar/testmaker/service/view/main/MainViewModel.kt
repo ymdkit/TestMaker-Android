@@ -3,7 +3,10 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.android.billingclient.api.*
 import com.google.firebase.auth.FirebaseUser
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
@@ -43,7 +46,6 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
     fun fetchTests() = repository.fetchTests()
     fun fetchCategories() = repository.fetchCategories()
     fun sortTests(from: Long, to: Long) = repository.sortTests(from, to)
-    fun changeCategory(testId: Long, category: String) = repository.changeCategory(testId, category)
     fun sortAllTests(mode: Int) = repository.sortAllTests(mode)
 
     fun migrateSortSetting() {
@@ -54,7 +56,7 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
     val title: MutableLiveData<String> = MutableLiveData()
     var isEditing: MutableLiveData<Boolean> = MutableLiveData()
 
-    private val billingClient =  BillingClient.newBuilder(context).enablePendingPurchases().setListener(this).build()
+    private val billingClient = BillingClient.newBuilder(context).enablePendingPurchases().setListener(this).build()
     private val _billingStatus = MutableLiveData<BillingStatus>()
     val billingStatus: LiveData<BillingStatus> = _billingStatus
 
@@ -127,4 +129,6 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
     fun removeAd() {
         preference.isRemovedAd = true
     }
+
+    fun swapCategories(from: String, to: String) = repository.swapCategories(from, to)
 }

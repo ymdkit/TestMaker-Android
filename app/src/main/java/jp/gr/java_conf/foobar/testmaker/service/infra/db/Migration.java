@@ -89,13 +89,13 @@ public class Migration implements RealmMigration {
             RealmObjectSchema selectSchema = schema.get("Select");
 
 
-            personSchema.addRealmListField("answers",selectSchema)
+            personSchema.addRealmListField("answers", selectSchema)
                     .transform(obj -> {
                         if (obj.getInt("type") == Constants.COMPLETE) {
 
-                            for(int i=0;i<obj.getList("selections").size();i++){
+                            for (int i = 0; i < obj.getList("selections").size(); i++) {
                                 DynamicRealmObject answer = realm.createObject("Select");
-                                answer.setString("select",obj.getList("selections").get(i).getString("select"));
+                                answer.setString("select", obj.getList("selections").get(i).getString("select"));
                                 obj.getList("answers").add(answer);
                             }
 
@@ -128,24 +128,24 @@ public class Migration implements RealmMigration {
 
             // Change type from String to int
             personSchema
-                    .addField("problem_temp", String.class,FieldAttribute.REQUIRED)
+                    .addField("problem_temp", String.class, FieldAttribute.REQUIRED)
                     .transform(obj -> {
                         String oldProblem = obj.getString("problem");
-                        obj.setString("problem_temp",oldProblem);
+                        obj.setString("problem_temp", oldProblem);
                     })
                     .removeField("problem")
                     .renameField("problem_temp", "problem")
-                    .addField("answer_temp", String.class,FieldAttribute.REQUIRED)
+                    .addField("answer_temp", String.class, FieldAttribute.REQUIRED)
                     .transform(obj -> {
                         String oldProblem = obj.getString("answer");
-                        obj.setString("answer_temp",oldProblem);
+                        obj.setString("answer_temp", oldProblem);
                     })
                     .removeField("answer")
                     .renameField("answer_temp", "answer")
-                    .addField("imagePath_temp", String.class,FieldAttribute.REQUIRED)
+                    .addField("imagePath_temp", String.class, FieldAttribute.REQUIRED)
                     .transform(obj -> {
                         String oldProblem = obj.getString("imagePath");
-                        obj.setString("imagePath_temp",oldProblem);
+                        obj.setString("imagePath_temp", oldProblem);
                     })
                     .removeField("imagePath")
                     .renameField("imagePath_temp", "imagePath");
@@ -155,7 +155,7 @@ public class Migration implements RealmMigration {
 
         }
 
-        if(oldVersion == 8){
+        if (oldVersion == 8) {
 
             RealmObjectSchema testSchema = schema.get("Test");
 
@@ -168,7 +168,7 @@ public class Migration implements RealmMigration {
 
         }
 
-        if(oldVersion == 9){
+        if (oldVersion == 9) {
 
             RealmObjectSchema testSchema = schema.get("Quest");
 
@@ -181,7 +181,7 @@ public class Migration implements RealmMigration {
 
         }
 
-        if(oldVersion == 10){
+        if (oldVersion == 10) {
 
             RealmObjectSchema testSchema = schema.get("Test");
 
@@ -193,25 +193,38 @@ public class Migration implements RealmMigration {
 
         }
 
-        if(oldVersion == 11){
+        if (oldVersion == 11) {
 
             RealmObjectSchema testSchema = schema.get("Test");
 
             testSchema
                     .addField("order", Integer.class, FieldAttribute.REQUIRED)
-                    .transform(obj -> obj.set("order", (int)obj.getLong("id")));
+                    .transform(obj -> obj.set("order", (int) obj.getLong("id")));
 
             oldVersion++;
 
         }
 
-        if(oldVersion == 12){
+        if (oldVersion == 12) {
 
             RealmObjectSchema testSchema = schema.get("Quest");
 
             testSchema
                     .addField("documentId", String.class, FieldAttribute.REQUIRED)
                     .transform(obj -> obj.set("documentId", ""));
+
+            oldVersion++;
+
+        }
+
+        if (oldVersion == 13) {
+
+            RealmObjectSchema personSchema = schema.get("Cate");
+
+            personSchema
+                    .addField("order", Integer.class, FieldAttribute.REQUIRED)
+                    .transform(obj -> obj.set("order", 0));
+
 
             oldVersion++;
 

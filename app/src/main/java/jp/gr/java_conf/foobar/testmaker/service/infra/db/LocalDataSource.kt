@@ -145,10 +145,11 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun getCategories(): List<Cate> = (realm.copyFromRealm(realm.where(Cate::class.java).findAll().sort("category")) ?: emptyList()).distinctBy { it.category }
+    private fun getCategories(): List<Cate> = (realm.where(Cate::class.java).findAll().sort("order"))
 
+    fun getCategoriesClone(): List<Cate> = realm.copyFromRealm(getCategories()).distinctBy { it.category }
 
-    fun getExistingCategories(): List<Cate> = getCategories().filter { getTests().map { test -> test.getCategory() }.contains(it.category) }
+    fun getExistingCategories(): List<Cate> = getCategoriesClone().filter { getTests().map { test -> test.getCategory() }.contains(it.category) }
 
     fun addCategory(category: Cate) {
         realm.beginTransaction()
@@ -196,18 +197,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
 
         realm.commitTransaction()
 
-    }
-
-    fun changeCategory(testId: Long, category: String) {
-        val test = getTest(testId)
-
-        val previousCategory = getExistingCategories()[getExistingCategories().indexOfFirst { it.category == category } - 1].category
-
-        realm.beginTransaction()
-
-        test.setCategory(if (test.getCategory() == previousCategory) "" else previousCategory)
-
-        realm.commitTransaction()
     }
 
     fun deleteTest(test: Test) {
@@ -281,6 +270,37 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
             getTest(testId).getQuestionsForEach().forEachIndexed { index, quest -> quest.order = index }
 
         }
+        realm.commitTransaction()
+    }
+
+    fun migrateCategoryOrder() {
+
+        val categories = getCategories()
+
+        if (categories.size < 2) return
+
+        realm.beginTransaction()
+
+        if (categories[0].order == categories[1].order) {
+
+            categories.forEachIndexed { index, category -> category.order = index }
+
+        }
+        realm.commitTransaction()
+    }
+
+    fun swapCategories(from: String, to: String){
+        val categories = getCategories()
+
+        realm.beginTransaction()
+
+        val fromCategory = categories.distinctBy { it.category }.first { it.category == from }
+        val toCategory = categories.distinctBy { it.category }.first { it.category == to }
+
+        val tmp = fromCategory.order
+        fromCategory.order = toCategory.order
+        toCategory.order = tmp
+
         realm.commitTransaction()
     }
 

@@ -47,7 +47,13 @@ class TestMakerRepository(private val local: LocalDataSource,
     }
 
     fun fetchCategories() {
-        existingCategories?.value = local.getExistingCategories()
+
+        val categories = local.getExistingCategories()
+        if (categories.all { it.order == 0 }) {
+            local.migrateCategoryOrder()
+        }
+
+        existingCategories?.value = categories
     }
 
     fun fetchTests() {
@@ -111,9 +117,9 @@ class TestMakerRepository(private val local: LocalDataSource,
     suspend fun createTest(test: Test, overview: String, oldDocumentId: String): String {
         val newDocumentId = withContext(Dispatchers.Default) { remote.createTest(test, overview, oldDocumentId) }
         local.updateDocumentId(getTest(test.id), newDocumentId)
-        val newDocumentIds = withContext(Dispatchers.Default) { remote.uploadQuestions(test,newDocumentId) }
+        val newDocumentIds = withContext(Dispatchers.Default) { remote.uploadQuestions(test, newDocumentId) }
         getTest(test.id).questionsNonNull().forEachIndexed { index, quest ->
-            local.updateDocumentId(quest,newDocumentIds[index])
+            local.updateDocumentId(quest, newDocumentIds[index])
         }
         return newDocumentId
     }
@@ -136,7 +142,8 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun getTestsQuery() = remote.getTestsQuery()
 
-    fun getCategories(): List<Cate> = local.getCategories()
+    fun getCategories(): List<Cate> = local.getCategoriesClone()
+
     fun addCategory(category: Cate) = local.addCategory(category)
     fun deleteCategory(category: Cate) {
         local.deleteCategory(category)
@@ -180,14 +187,14 @@ class TestMakerRepository(private val local: LocalDataSource,
         fetchTests()
     }
 
-    fun changeCategory(testId: Long, category: String) {
-        local.changeCategory(testId, category)
-        fetchTests()
-    }
-
     fun sortAllTests(mode: Int) {
         local.sortAllTests(mode)
         fetchTests()
+    }
+
+    fun swapCategories(from: String, to: String) {
+        local.swapCategories(from, to)
+        fetchCategories()
     }
 
 }
