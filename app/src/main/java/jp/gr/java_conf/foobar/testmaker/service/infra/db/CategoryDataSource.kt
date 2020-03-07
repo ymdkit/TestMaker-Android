@@ -14,6 +14,7 @@ class CategoryDataSource(private val realm: Realm){
                 category.name = it.category
                 category.color = it.color
                 category.order = it.order
+                realm.copyToRealm(category)
                 it.deleteFromRealm()
             }
         }
