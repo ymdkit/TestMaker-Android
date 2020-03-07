@@ -130,5 +130,5 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
         preference.isRemovedAd = true
     }
 
-    fun swapCategories(from: String, to: String) = repository.swapCategories(from, to)
+    fun swapCategories(from: Category, to: Category) = repository.swapCategories(from, to)
 }

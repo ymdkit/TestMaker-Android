@@ -7,7 +7,6 @@ import io.realm.Realm
 import io.realm.RealmList
 import io.realm.Sort
 import jp.gr.java_conf.foobar.testmaker.service.Constants
-import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
@@ -145,8 +144,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    private fun getCategories(): List<Category> = (realm.where(Category::class.java).findAll().sort("order"))
-
     fun addOrUpdateTest(test: Test): Long {
         realm.beginTransaction()
         if (test.id == 0L) test.id = realm.where(Test::class.java).max("id")?.toLong()?.plus(1) ?: 1
@@ -254,37 +251,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
             getTest(testId).getQuestionsForEach().forEachIndexed { index, quest -> quest.order = index }
 
         }
-        realm.commitTransaction()
-    }
-
-    fun migrateCategoryOrder() {
-
-        val categories = getCategories()
-
-        if (categories.size < 2) return
-
-        realm.beginTransaction()
-
-        if (categories[0].order == categories[1].order) {
-
-            categories.forEachIndexed { index, category -> category.order = index }
-
-        }
-        realm.commitTransaction()
-    }
-
-    fun swapCategories(from: String, to: String){
-        val categories = getCategories()
-
-        realm.beginTransaction()
-
-        val fromCategory = categories.distinctBy { it.name }.first { it.name == from }
-        val toCategory = categories.distinctBy { it.name }.first { it.name == to }
-
-        val tmp = fromCategory.order
-        fromCategory.order = toCategory.order
-        toCategory.order = tmp
-
         realm.commitTransaction()
     }
 

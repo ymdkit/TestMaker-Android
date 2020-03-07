@@ -66,11 +66,10 @@ class MainController(private val context: Context) : EpoxyController() {
 
     override fun buildModels() {
 
-        categories.forEachIndexed { index, it ->
+        categories.forEach {
             cardCategory {
                 id(it.name)
-                colorId(it.color)
-                category(it.name)
+                category(it)
                 size(context.getString(R.string.number_exams, tests.filter { test -> it.name == test.getCategory() }.size))
                 onClick { _, _, _, _ ->
                     selectedCategory = if (selectedCategory == it.name) "" else it.name

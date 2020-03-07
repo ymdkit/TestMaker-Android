@@ -4,7 +4,7 @@ import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 
-class CategoryDataSource(private val realm: Realm){
+class CategoryDataSource(private val realm: Realm) {
 
     init {
         realm.executeTransaction {
@@ -21,12 +21,17 @@ class CategoryDataSource(private val realm: Realm){
     }
 
     fun create(category: Category) {
+        category.id = realm.where(Category::class.java).max("id")?.toLong()?.plus(1) ?: 0
+        category.order = category.id.toInt()
         realm.executeTransaction {
             it.copyToRealm(category)
         }
     }
 
-    fun get(): List<Category> = realm.copyFromRealm(realm.where(Category::class.java).findAll())?.sortedBy { it.order }
+    fun get(): List<Category> = realm.copyFromRealm(realm.where(Category::class.java)
+            .findAll())
+            ?.distinctBy { it.name }
+            ?.sortedBy { it.order }
             ?: listOf()
 
     fun update(category: Category) {
@@ -35,9 +40,19 @@ class CategoryDataSource(private val realm: Realm){
         }
     }
 
+    fun swap(from: Category, to: Category) {
+        val tmp = from.order
+        update(from.apply {
+            this.order = to.order
+        })
+        update(to.apply {
+            this.order = tmp
+        })
+    }
+
     fun delete(category: Category) {
         realm.executeTransaction {
-            realm.where(Category::class.java).equalTo("category", category.name).findFirst()?.deleteFromRealm()
+            realm.where(Category::class.java).equalTo("name", category.name).findFirst()?.deleteFromRealm()
         }
     }
 

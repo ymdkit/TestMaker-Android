@@ -197,8 +197,8 @@ class TestMakerRepository(private val local: LocalDataSource,
         fetchTests()
     }
 
-    fun swapCategories(from: String, to: String) {
-        local.swapCategories(from, to)
+    fun swapCategories(from: Category, to: Category) {
+        categoryDataSource.swap(from, to)
         fetchCategories()
     }
 
