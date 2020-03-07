@@ -7,7 +7,7 @@ import io.realm.Realm
 import io.realm.RealmList
 import io.realm.Sort
 import jp.gr.java_conf.foobar.testmaker.service.Constants
-import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
@@ -145,11 +145,11 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    private fun getCategories(): List<Cate> = (realm.where(Cate::class.java).findAll().sort("order"))
+    private fun getCategories(): List<Category> = (realm.where(Category::class.java).findAll().sort("order"))
 
-    fun getCategoriesClone(): List<Cate> = realm.copyFromRealm(getCategories()).distinctBy { it.category }
+    fun getCategoriesClone(): List<Category> = realm.copyFromRealm(getCategories()).distinctBy { it.name }
 
-    fun getExistingCategories(): List<Cate> = getCategoriesClone().filter { getTests().map { test -> test.getCategory() }.contains(it.category) }
+    fun getExistingCategories(): List<Category> = getCategoriesClone().filter { getTests().map { test -> test.getCategory() }.contains(it.name) }
 
     fun addOrUpdateTest(test: Test): Long {
         realm.beginTransaction()
@@ -282,8 +282,8 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
 
         realm.beginTransaction()
 
-        val fromCategory = categories.distinctBy { it.category }.first { it.category == from }
-        val toCategory = categories.distinctBy { it.category }.first { it.category == to }
+        val fromCategory = categories.distinctBy { it.name }.first { it.name == from }
+        val toCategory = categories.distinctBy { it.name }.first { it.name == to }
 
         val tmp = fromCategory.order
         fromCategory.order = toCategory.order

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.CategoryDataSource
@@ -27,7 +28,7 @@ class TestMakerRepository(private val local: LocalDataSource,
     var questions: MutableLiveData<ArrayList<Quest>>? = null
         private set
 
-    var existingCategories: MutableLiveData<List<Cate>>? = null
+    var existingCategories: MutableLiveData<List<Category>>? = null
         private set
 
     fun getTests(): List<Test> = local.getTests()
@@ -40,12 +41,12 @@ class TestMakerRepository(private val local: LocalDataSource,
         return tests as LiveData<List<Test>>
     }
 
-    fun getExistingCategoriesOfLiveData(): LiveData<List<Cate>> {
+    fun getExistingCategoriesOfLiveData(): LiveData<List<Category>> {
         if (existingCategories == null) {
             existingCategories = MutableLiveData()
             fetchCategories()
         }
-        return existingCategories as LiveData<List<Cate>>
+        return existingCategories as LiveData<List<Category>>
     }
 
     fun fetchCategories() {
@@ -144,10 +145,10 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun getTestsQuery() = remote.getTestsQuery()
 
-    fun getCategories(): List<Cate> = local.getCategoriesClone()
+    fun getCategories(): List<Category> = local.getCategoriesClone()
 
-    fun addCategory(category: Cate) = categoryDataSource.create(category)
-    fun deleteCategory(category: Cate) {
+    fun addCategory(category: Category) = categoryDataSource.create(category)
+    fun deleteCategory(category: Category) {
         categoryDataSource.delete(category)
         fetchCategories()
     }

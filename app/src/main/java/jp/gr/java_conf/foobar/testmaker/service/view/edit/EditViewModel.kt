@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.valueNonNull
@@ -169,9 +170,9 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
     }
 
     fun getTest(testId: Long): Test = repository.getTest(testId)
-    fun getCategories(): List<Cate> = repository.getCategories()
-    fun addCategory(category: Cate) = repository.addCategory(category)
-    fun deleteCategory(category: Cate) = repository.deleteCategory(category)
+    fun getCategories() = repository.getCategories()
+    fun addCategory(category: Category) = repository.addCategory(category)
+    fun deleteCategory(category: Category) = repository.deleteCategory(category)
     fun resetAchievement() = repository.resetAchievement(testId)
     fun sortManual(from: Int, to: Int, testId: Long) = repository.sortManual(from, to, testId)
     fun migrateOrder() = repository.migrateOrder(testId)

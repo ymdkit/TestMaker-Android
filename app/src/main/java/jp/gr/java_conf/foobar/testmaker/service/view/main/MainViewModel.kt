@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.billingclient.api.*
 import com.google.firebase.auth.FirebaseUser
-import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
@@ -21,10 +21,10 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.test.TestMakerRepository
 
 class MainViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val preference: SharedPreferenceManager, context: Context) : ViewModel(), PurchasesUpdatedListener, BillingClientStateListener, LifecycleObserver {
 
-    fun getExistingCategoryList(): LiveData<List<Cate>> = repository.getExistingCategoriesOfLiveData()
-    fun getCategories(): List<Cate> = repository.getCategories()
-    fun addCategory(category: Cate) = repository.addCategory(category)
-    fun deleteCategory(category: Cate) = repository.deleteCategory(category)
+    fun getExistingCategoryList() = repository.getExistingCategoriesOfLiveData()
+    fun getCategories() = repository.getCategories()
+    fun addCategory(category: Category) = repository.addCategory(category)
+    fun deleteCategory(category: Category) = repository.deleteCategory(category)
     fun addTest(title: String, colorId: Int, category: String) {
         val test = Test()
         test.title = title

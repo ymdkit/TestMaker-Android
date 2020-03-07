@@ -12,7 +12,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ColorChooser
 
 /**
@@ -21,9 +21,9 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.ColorChooser
 
 class CategoryEditor(private val context: Context,
                      private val buttonCate: Button,
-                     private val getCategories: () -> List<Cate>,
-                     private val addCategory: (Cate) -> Unit,
-                     private val deleteCategory: (Cate) -> Unit) {
+                     private val getCategories: () -> List<Category>,
+                     private val addCategory: (Category) -> Unit,
+                     private val deleteCategory: (Category) -> Unit) {
 
     private var colorChooser: ColorChooser? = null
 
@@ -42,14 +42,14 @@ class CategoryEditor(private val context: Context,
 
         adapter.setOnClickListener(object : CategoryAdapter.OnClickListener {
             override fun onClickCategory(position: Int) {
-                buttonCate.text = getCategories()[position].category
+                buttonCate.text = getCategories()[position].name
 
                 val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle, null) as GradientDrawable
 
                 drawable.setColor(getCategories()[position].color)
 
                 buttonCate.background = drawable
-                buttonCate.tag = getCategories()[position].category
+                buttonCate.tag = getCategories()[position].name
 
                 dialogCate!!.dismiss()
             }
@@ -83,8 +83,8 @@ class CategoryEditor(private val context: Context,
                 drawable.setColor(colorChooser!!.getColorId())
 
                 buttonCate.background = drawable
-                val category = Cate()
-                category.category = e.text.toString()
+                val category = Category()
+                category.name = e.text.toString()
                 category.color = colorChooser!!.getColorId()
 
                 addCategory(category)

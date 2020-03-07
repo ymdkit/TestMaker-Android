@@ -6,6 +6,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.cardCategory
 import jp.gr.java_conf.foobar.testmaker.service.cardTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
 class MainController(private val context: Context) : EpoxyController() {
@@ -19,7 +20,7 @@ class MainController(private val context: Context) : EpoxyController() {
             requestModelBuild()
         }
 
-    var categories: List<Cate> = emptyList()
+    var categories: List<Category> = emptyList()
         set(value) {
             field = value
             refresh()
@@ -42,7 +43,7 @@ class MainController(private val context: Context) : EpoxyController() {
         nonCategorizedTests = if (categories.isEmpty()) {
             tests
         } else {
-            tests.filter { !categories.map { it.category }.contains(it.getCategory()) }
+            tests.filter { !categories.map { it.name }.contains(it.getCategory()) }
         }
 
         categorizedTests = tests.filter { it.getCategory() == selectedCategory }
@@ -67,18 +68,18 @@ class MainController(private val context: Context) : EpoxyController() {
 
         categories.forEachIndexed { index, it ->
             cardCategory {
-                id(it.category)
+                id(it.name)
                 colorId(it.color)
-                category(it.category)
-                size(context.getString(R.string.number_exams, tests.filter { test -> it.category == test.getCategory() }.size))
+                category(it.name)
+                size(context.getString(R.string.number_exams, tests.filter { test -> it.name == test.getCategory() }.size))
                 onClick { _, _, _, _ ->
-                    selectedCategory = if (selectedCategory == it.category) "" else it.category
+                    selectedCategory = if (selectedCategory == it.name) "" else it.name
                 }
-                selected(categorizedTests.isNotEmpty() && categorizedTests.first().getCategory() == it.category)
+                selected(categorizedTests.isNotEmpty() && categorizedTests.first().getCategory() == it.name)
 
             }
 
-            if (categorizedTests.isNotEmpty() && categorizedTests.first().getCategory() == it.category) {
+            if (categorizedTests.isNotEmpty() && categorizedTests.first().getCategory() == it.name) {
 
                 categorizedTests.forEach {
                     cardTest {

@@ -144,17 +144,6 @@ class Migration : RealmMigration {
                     ?.transform { obj: DynamicRealmObject -> obj["order"] = 0 }
             oldVersion++
         }
-        if (oldVersion == 14L) {
-            realm.where("Cate").findAll().forEachIndexed { index, cate ->
-                val category = realm.createObject("Category")
-                category.setLong("id", index.toLong())
-                category.setString("category", cate.getString("category"))
-                category.setInt("color", cate.getInt("color"))
-                category.setInt("order", cate.getInt("order"))
-            }
-
-            oldVersion++
-        }
         //schemaVersion変えるの忘れるな(TestMakerApplication内)
     }
 }
