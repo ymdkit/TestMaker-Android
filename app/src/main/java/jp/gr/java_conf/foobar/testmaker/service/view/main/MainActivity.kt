@@ -199,7 +199,7 @@ class MainActivity : ShowTestsActivity() {
             inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
             val categoryEditor = CategoryEditor(this@MainActivity,
                     binding.test.buttonCategory,
-                    getCategories = { viewModel.getCategories() }
+                    getCategories = { viewModel.getCategories().value ?: emptyList() }
                     ,
                     addCategory = {
                         viewModel.addCategory(it)

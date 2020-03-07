@@ -425,7 +425,7 @@ open class EditActivity : BaseActivity() {
 
                 buttonCate.setOnClickListener {
                     val categoryEditor = CategoryEditor(this@EditActivity, buttonCate,
-                            getCategories = { viewModel.getCategories() }
+                            getCategories = { viewModel.getCategories().value ?: emptyList() }
                             ,
                             addCategory = {
                                 viewModel.addCategory(it)

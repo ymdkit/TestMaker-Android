@@ -1,14 +1,12 @@
-package jp.gr.java_conf.foobar.testmaker.service.infra.test
+package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
-import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.CategoryDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
@@ -18,16 +16,12 @@ import kotlinx.coroutines.withContext
 
 
 class TestMakerRepository(private val local: LocalDataSource,
-                          private val remote: RemoteDataSource,
-                          private val categoryDataSource: CategoryDataSource) {
+                          private val remote: RemoteDataSource) {
 
     var tests: MutableLiveData<List<Test>>? = null
         private set
 
     var questions: MutableLiveData<ArrayList<Quest>>? = null
-        private set
-
-    var existingCategories: MutableLiveData<List<Category>>? = null
         private set
 
     fun getTests(): List<Test> = local.getTests()
@@ -40,30 +34,8 @@ class TestMakerRepository(private val local: LocalDataSource,
         return tests as LiveData<List<Test>>
     }
 
-    fun getExistingCategoriesOfLiveData(): LiveData<List<Category>> {
-        if (existingCategories == null) {
-            existingCategories = MutableLiveData()
-            fetchCategories()
-        }
-        return existingCategories as LiveData<List<Category>>
-    }
-
-    fun fetchCategories() {
-        val categories = categoryDataSource.get()
-        if (categories.all { it.order == 0 } && categories.size > 1) {
-            categories.forEachIndexed { index, category ->
-                category.apply {
-                    this.order = index
-                    categoryDataSource.update(this)
-                }
-            }
-        }
-        existingCategories?.value = categories.filter { getTests().map { test -> test.getCategory() }.contains(it.name) }
-    }
-
     fun fetchTests() {
         tests?.value = local.getTests()
-        fetchCategories()
     }
 
     fun getQuestions(testId: Long): LiveData<ArrayList<Quest>> {
@@ -147,14 +119,6 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun getTestsQuery() = remote.getTestsQuery()
 
-    fun getCategories(): List<Category> = categoryDataSource.get()
-
-    fun addCategory(category: Category) = categoryDataSource.create(category)
-    fun deleteCategory(category: Category) {
-        categoryDataSource.delete(category)
-        fetchCategories()
-    }
-
     fun getTest(testId: Long): Test = local.getTest(testId)
     fun getTestClone(testId: Long): Test = local.getTestClone(testId)
 
@@ -195,11 +159,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun sortAllTests(mode: Int) {
         local.sortAllTests(mode)
         fetchTests()
-    }
-
-    fun swapCategories(from: Category, to: Category) {
-        categoryDataSource.swap(from, to)
-        fetchCategories()
     }
 
 }

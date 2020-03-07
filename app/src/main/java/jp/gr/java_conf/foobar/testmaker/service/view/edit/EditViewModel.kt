@@ -8,14 +8,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.valueNonNull
-import jp.gr.java_conf.foobar.testmaker.service.infra.test.TestMakerRepository
+import jp.gr.java_conf.foobar.testmaker.service.infra.repository.CategoryRepository
+import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 
-class EditViewModel(private val repository: TestMakerRepository, val context: Context) : ViewModel() {
+class EditViewModel(private val repository: TestMakerRepository, val context: Context, private val categoryRepository: CategoryRepository) : ViewModel() {
 
     val formatQuestion: MutableLiveData<Int> = MutableLiveData()
     val stateEditing: MutableLiveData<Int> = MutableLiveData()
@@ -170,9 +170,9 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
     }
 
     fun getTest(testId: Long): Test = repository.getTest(testId)
-    fun getCategories() = repository.getCategories()
-    fun addCategory(category: Category) = repository.addCategory(category)
-    fun deleteCategory(category: Category) = repository.deleteCategory(category)
+    fun getCategories() = categoryRepository.get()
+    fun addCategory(category: Category) = categoryRepository.create(category)
+    fun deleteCategory(category: Category) = categoryRepository.delete(category)
     fun resetAchievement() = repository.resetAchievement(testId)
     fun sortManual(from: Int, to: Int, testId: Long) = repository.sortManual(from, to, testId)
     fun migrateOrder() = repository.migrateOrder(testId)
