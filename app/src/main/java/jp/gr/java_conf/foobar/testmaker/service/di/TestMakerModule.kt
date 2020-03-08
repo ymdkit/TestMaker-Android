@@ -8,6 +8,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.CategoryRepository
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
+import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditProViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainViewModel
@@ -28,8 +29,9 @@ fun getTestMakerModules(realm: Realm) = module {
     single { Auth() }
     single { RemoteDataSource(get(), get()) }
     single { SharedPreferenceManager(get()) }
-    viewModel { MainViewModel(get(), get(), get(), get(), get()) }
-    viewModel { EditViewModel(get(), get(), get()) }
+    viewModel { CategoryViewModel(get()) }
+    viewModel { MainViewModel(get(), get(), get(), get()) }
+    viewModel { EditViewModel(get(), get()) }
     viewModel { MoveQuestionViewModel(get()) }
     viewModel { FirebaseViewModel(get(), get()) }
     viewModel { FirebaseMyPageViewModel(get(), get()) }

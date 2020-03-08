@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.billingclient.api.*
 import com.google.firebase.auth.FirebaseUser
-import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
@@ -17,22 +16,16 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
-import jp.gr.java_conf.foobar.testmaker.service.infra.repository.CategoryRepository
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 
-class MainViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val preference: SharedPreferenceManager, context: Context, private val categoryRepository: CategoryRepository) : ViewModel(), PurchasesUpdatedListener, BillingClientStateListener, LifecycleObserver {
+class MainViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val preference: SharedPreferenceManager, context: Context) : ViewModel(), PurchasesUpdatedListener, BillingClientStateListener, LifecycleObserver {
 
-    fun getExistingCategoryList() = categoryRepository.getHasTests()
-    fun getCategories() = categoryRepository.get()
-    fun addCategory(category: Category) = categoryRepository.create(category)
-    fun deleteCategory(category: Category) = categoryRepository.delete(category)
     fun addTest(title: String, colorId: Int, category: String) {
         val test = Test()
         test.title = title
         test.color = colorId
         test.setCategory(category)
         repository.addOrUpdateTest(test)
-        categoryRepository.refresh()
     }
 
     fun addOrUpdateTest(test: Test): Long = repository.addOrUpdateTest(test)
@@ -46,7 +39,6 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
     fun getTests(): LiveData<List<Test>> = repository.getTestsOfLiveData()
     fun fetchTests() = repository.fetchTests()
-    fun fetchCategories() = categoryRepository.refresh()
     fun sortTests(from: Long, to: Long) = repository.sortTests(from, to)
     fun sortAllTests(mode: Int) = repository.sortAllTests(mode)
 
@@ -131,6 +123,4 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
     fun removeAd() {
         preference.isRemovedAd = true
     }
-
-    fun swapCategories(from: Category, to: Category) = categoryRepository.swap(from, to)
 }

@@ -40,6 +40,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.extensions.swap
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
+import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ColorChooser
 import kotlinx.android.synthetic.main.activity_edit.*
@@ -58,6 +59,7 @@ open class EditActivity : BaseActivity() {
     internal lateinit var editAdapter: EditAdapter
 
     private val viewModel: EditViewModel by viewModel()
+    private val categoryViewModel: CategoryViewModel by viewModel()
 
     private val fileName: String
         get() {
@@ -425,13 +427,13 @@ open class EditActivity : BaseActivity() {
 
                 buttonCate.setOnClickListener {
                     val categoryEditor = CategoryEditor(this@EditActivity, buttonCate,
-                            getCategories = { viewModel.getCategories().value ?: emptyList() }
+                            getCategories = { categoryViewModel.categories.value ?: emptyList() }
                             ,
                             addCategory = {
-                                viewModel.addCategory(it)
+                                categoryViewModel.create(it)
                             },
                             deleteCategory = {
-                                viewModel.deleteCategory(it)
+                                categoryViewModel.delete(it)
                             })
                     categoryEditor.setCategory()
                 }

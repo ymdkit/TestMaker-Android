@@ -35,6 +35,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
+import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageActivity
@@ -57,6 +58,8 @@ class MainActivity : ShowTestsActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModel()
+    private val categoryViewModel: CategoryViewModel by viewModel()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +82,7 @@ class MainActivity : ShowTestsActivity() {
 
         initTestAndFolderAdapter()
 
-        viewModel.getExistingCategoryList().observeNonNull(this) {
+        categoryViewModel.hasTestsCategories.observeNonNull(this) {
             mainController.categories = it
         }
 
@@ -135,7 +138,7 @@ class MainActivity : ShowTestsActivity() {
                         if (from is CardTestBindingModel_ && to is CardTestBindingModel_) {
                             viewModel.sortTests(from.testId(), to.testId())
                         } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
-                            viewModel.swapCategories(from.category(), to.category())
+                            categoryViewModel.swap(from.category(), to.category())
                         }
                     }
 
@@ -199,13 +202,13 @@ class MainActivity : ShowTestsActivity() {
             inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
             val categoryEditor = CategoryEditor(this@MainActivity,
                     binding.test.buttonCategory,
-                    getCategories = { viewModel.getCategories().value ?: emptyList() }
+                    getCategories = { categoryViewModel.categories.value ?: emptyList() }
                     ,
                     addCategory = {
-                        viewModel.addCategory(it)
+                        categoryViewModel.create(it)
                     },
                     deleteCategory = {
-                        viewModel.deleteCategory(it)
+                        categoryViewModel.create(it)
                     })
             categoryEditor.setCategory()
         }
@@ -230,7 +233,7 @@ class MainActivity : ShowTestsActivity() {
         binding.buttonAdd.setOnClickListener {
 
             viewModel.addTest(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
-
+            categoryViewModel.refresh()
             Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
 
             viewModel.isEditing.postValue(false)
@@ -449,7 +452,7 @@ class MainActivity : ShowTestsActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.fetchTests()
-        viewModel.fetchCategories()
+        categoryViewModel.refresh()
     }
 
     companion object {
