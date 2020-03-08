@@ -7,7 +7,9 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 
 class TestViewModel(private val repository: TestRepository) : ViewModel() {
 
-    var tests: LiveData<List<Test>> = repository.get()
+    var testsLiveData: LiveData<List<Test>> = repository.getAsLiveData()
+
+    var tests: List<Test> = repository.get()
 
     fun refresh() {
         repository.refresh()

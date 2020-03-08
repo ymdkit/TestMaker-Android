@@ -35,9 +35,7 @@ class MoveQuestionsActivity : BaseActivity() {
 
         initToolBar()
 
-        testViewModel.tests.observeNonNull(this) {
-            initViews(it)
-        }
+        initViews()
 
         button_save.setOnClickListener {
 
@@ -48,7 +46,7 @@ class MoveQuestionsActivity : BaseActivity() {
                 return@setOnClickListener
             }
 
-            if (testViewModel.tests.value?.isEmpty() == true) return@setOnClickListener
+            if (testViewModel.tests.isEmpty()) return@setOnClickListener
 
             val selectedQuestions = questionAdapter.getItems().filterIndexed { index, _ -> questionAdapter.checkBoxStates[index] }
 
@@ -62,9 +60,8 @@ class MoveQuestionsActivity : BaseActivity() {
                 viewModel.addQuestions(testId, selectedQuestions.toTypedArray())
 
             } else {
-                testViewModel.tests.value?.let {
-                    viewModel.addQuestions(it[spinner_to_test.selectedItemPosition - 1].id, selectedQuestions.toTypedArray())
-                }
+
+                viewModel.addQuestions(testViewModel.tests[spinner_to_test.selectedItemPosition - 1].id, selectedQuestions.toTypedArray())
             }
 
             if (spinner_actions.selectedItemPosition == 0) {//「移動先」の時
@@ -79,7 +76,9 @@ class MoveQuestionsActivity : BaseActivity() {
         }
     }
 
-    private fun initViews(tests: List<Test>) {
+    private fun initViews() {
+        val tests = testViewModel.tests
+
         val fromArray = Array(tests.size) { i -> tests[i].title }
 
         val fromAdapter = ArrayAdapter(baseContext,

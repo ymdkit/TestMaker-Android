@@ -7,12 +7,18 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.TestDataSource
 
 class TestRepository(private val dataSource: TestDataSource) {
 
-    private var tests: MutableLiveData<List<Test>> = MutableLiveData(dataSource.get())
+    private var testsLiveData: MutableLiveData<List<Test>> = MutableLiveData(dataSource.get())
 
-    fun get(): LiveData<List<Test>> = tests
+    private var tests: List<Test>? = null
+
+    fun getAsLiveData(): LiveData<List<Test>> = testsLiveData
+
+    fun get(): List<Test> = tests ?: dataSource.get().also {
+        tests = it
+    }
 
     fun refresh() {
-        tests.value = dataSource.get()
+        testsLiveData.value = dataSource.get()
     }
 
     fun create(test: Test): Long {
