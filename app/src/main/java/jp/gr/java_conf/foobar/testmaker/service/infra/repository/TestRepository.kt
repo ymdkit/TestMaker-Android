@@ -15,9 +15,10 @@ class TestRepository(private val dataSource: TestDataSource) {
         tests.value = dataSource.get()
     }
 
-    fun create(test: Test) {
-        dataSource.create(test)
+    fun create(test: Test): Long {
+        val id = dataSource.create(test)
         refresh()
+        return id
     }
 
     fun delete(test: Test) {

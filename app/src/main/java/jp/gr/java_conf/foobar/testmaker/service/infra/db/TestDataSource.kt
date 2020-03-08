@@ -5,12 +5,13 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
 class TestDataSource(private val realm: Realm) {
 
-    fun create(test: Test) {
+    fun create(test: Test): Long {
         test.id = realm.where(Test::class.java).max("id")?.toLong()?.plus(1) ?: 0
         test.order = test.id.toInt()
         realm.executeTransaction {
             it.copyToRealm(test)
         }
+        return test.id
     }
 
     fun get(): List<Test> = realm.copyFromRealm(realm.where(Test::class.java)

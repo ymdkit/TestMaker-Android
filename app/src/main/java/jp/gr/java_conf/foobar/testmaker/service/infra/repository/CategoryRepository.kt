@@ -5,14 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.CategoryDataSource
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.TestDataSource
 
-class CategoryRepository(private val dataSource: CategoryDataSource, private val testDataSource: LocalDataSource) {
+class CategoryRepository(private val dataSource: CategoryDataSource, private val testDataSource: TestDataSource) {
 
     private var categories: MutableLiveData<List<Category>> = MutableLiveData(dataSource.get())
 
     private var hasTestsCategories: LiveData<List<Category>> = Transformations.map(categories) { it ->
-        it.filter { testDataSource.getTests().map { test -> test.getCategory() }.contains(it.name) }
+        it.filter { testDataSource.get().map { test -> test.getCategory() }.contains(it.name) }
     }
 
     fun get(): LiveData<List<Category>> = categories

@@ -13,14 +13,12 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
         repository.refresh()
     }
 
-    fun create(test: Test) {
-        repository.create(test)
-        repository.refresh()
+    fun create(test: Test): Long {
+        return repository.create(test)
     }
 
     fun delete(test: Test) {
         repository.delete(test)
-        repository.refresh()
     }
 
     fun swap(from: Test, to: Test) {
