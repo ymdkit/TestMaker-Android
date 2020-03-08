@@ -129,6 +129,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
 
         val test = firebaseTest.toTest(context)
         test.id = realm.where(Test::class.java).max("id")?.toLong()?.plus(1) ?: 1
+        test.order = test.id.toInt()
 
         firebaseTest.questions.forEachIndexed { index, it ->
             val question = it.toQuest()
@@ -160,30 +161,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         test.color = color
         test.setCategory(category)
 
-        realm.commitTransaction()
-    }
-
-    fun sortTests(from: Long, to: Long) {
-
-        val fromTest = getTest(from)
-        val toTest = getTest(to)
-
-        realm.beginTransaction()
-
-        toTest.setCategory(fromTest.getCategory())
-
-        val tmp = fromTest.order
-        fromTest.order = toTest.order
-        toTest.order = tmp
-
-        realm.commitTransaction()
-
-    }
-
-    fun deleteTest(test: Test) {
-
-        realm.beginTransaction()
-        test.deleteFromRealm()
         realm.commitTransaction()
     }
 

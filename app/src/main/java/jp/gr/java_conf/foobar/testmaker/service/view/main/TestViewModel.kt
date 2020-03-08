@@ -15,6 +15,14 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
         repository.refresh()
     }
 
+    fun create(title: String, color: Int, category: String): Long {
+        return repository.create(Test().apply {
+            this.title = title
+            this.color = color
+            this.setCategory(category)
+        })
+    }
+
     fun create(test: Test): Long {
         return repository.create(test)
     }

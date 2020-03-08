@@ -11,10 +11,6 @@ class ShowTestsViewModel(private val repository: TestMakerRepository, private va
 
     fun getTest(testId: Long): Test = repository.getTest(testId)
     fun getTestClone(testId: Long): Test = repository.getTestClone(testId)
-    fun deleteTest(test: Test) {
-        repository.deleteTest(test)
-        categoryRepository.refresh()
-    }
     fun updateHistory(test: Test) = repository.updateHistory(test)
     fun updateStart(test: Test, start: Int) = repository.updateStart(test, start)
     fun updateLimit(test: Test, limit: Int) = repository.updateLimit(test, limit)

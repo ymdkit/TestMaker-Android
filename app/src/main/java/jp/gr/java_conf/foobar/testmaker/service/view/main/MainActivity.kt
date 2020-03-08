@@ -58,6 +58,7 @@ class MainActivity : ShowTestsActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModel()
+    private val testViewModel: TestViewModel by viewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +86,7 @@ class MainActivity : ShowTestsActivity() {
             mainController.categories = it
         }
 
-        viewModel.getTests().observeNonNull(this) {
+        testViewModel.testsLiveData.observeNonNull(this) {
             mainController.tests = it
         }
 
@@ -135,7 +136,7 @@ class MainActivity : ShowTestsActivity() {
                         val to = mainController.adapter.getModelAtPosition(toPosition)
 
                         if (from is CardTestBindingModel_ && to is CardTestBindingModel_) {
-                            viewModel.sortTests(from.testId(), to.testId())
+                            testViewModel.swap(from.test(), to.test())
                         } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
                             categoryViewModel.swap(from.category(), to.category())
                         }
@@ -161,6 +162,7 @@ class MainActivity : ShowTestsActivity() {
             when (val result = viewModel.downloadTest(deepLink.toString().split("/").last())) {
                 is FirebaseTestResult.Success -> {
                     viewModel.convert(result.test)
+                    testViewModel.refresh()
                     Toast.makeText(this@MainActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
                 }
                 is FirebaseTestResult.Failure -> {
@@ -231,7 +233,7 @@ class MainActivity : ShowTestsActivity() {
 
         binding.buttonAdd.setOnClickListener {
 
-            viewModel.addTest(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
+            testViewModel.create(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
             categoryViewModel.refresh()
             Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
 
@@ -438,7 +440,7 @@ class MainActivity : ShowTestsActivity() {
 
             val test = text.toTest(baseContext, questionId)
 
-            viewModel.addOrUpdateTest(test)
+            testViewModel.create(test)
             Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, test.title), Toast.LENGTH_LONG).show()
         }
     }
@@ -451,6 +453,7 @@ class MainActivity : ShowTestsActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.fetchTests()
+        testViewModel.refresh()
         categoryViewModel.refresh()
     }
 

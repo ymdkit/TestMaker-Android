@@ -16,8 +16,10 @@ import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,6 +30,8 @@ open class ShowTestsActivity : BaseActivity() {
     internal lateinit var mainController: MainController
 
     private val showTestsViewModel: ShowTestsViewModel by viewModel()
+    private val testViewModel: TestViewModel by viewModel()
+    private val categoryViewModel: CategoryViewModel by viewModel()
 
     private var selectedTestId: Long = -1L //ログイン時に一度画面から離れるので選択中の値を保持
 
@@ -71,13 +75,11 @@ open class ShowTestsActivity : BaseActivity() {
                 builder.setTitle(getString(R.string.delete_exam))
                 builder.setMessage(getString(R.string.message_delete_exam, test.title))
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
-
-                    showTestsViewModel.deleteTest(test)
-
+                    testViewModel.delete(test)
+                    categoryViewModel.refresh()
                 }
                 builder.setNegativeButton(android.R.string.cancel, null)
                 builder.create().show()
-
             }
 
             override fun onClickShareTest(id: Long) {

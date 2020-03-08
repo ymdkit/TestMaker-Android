@@ -24,14 +24,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     var questions: MutableLiveData<ArrayList<Quest>>? = null
         private set
 
-    fun getTestsOfLiveData(): LiveData<List<Test>> {
-        if (tests == null) {
-            tests = MutableLiveData()
-            fetchTests()
-        }
-        return tests as LiveData<List<Test>>
-    }
-
     fun fetchTests() {
         tests?.value = local.getTests()
     }
@@ -126,12 +118,6 @@ class TestMakerRepository(private val local: LocalDataSource,
         return id
     }
 
-    fun deleteTest(test: Test) {
-        local.deleteTest(test)
-        fetchTests()
-    }
-
-
     fun addQuestions(testId: Long, array: Array<Quest>) = local.addQuestions(testId, array)
     fun deleteQuestions(testId: Long, array: Array<Boolean>) = local.deleteQuestions(testId, array)
     fun resetAchievement(testId: Long) = local.resetAchievement(testId)
@@ -149,10 +135,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun updateCorrect(quest: Quest, correct: Boolean) = local.updateCorrect(quest, correct)
     fun updateSolving(quest: Quest, solving: Boolean) = local.updateSolving(quest, solving)
     fun getMaxQuestionId(): Long = local.getMaxQuestionId()
-    fun sortTests(from: Long, to: Long) {
-        local.sortTests(from, to)
-        fetchTests()
-    }
 
     fun sortAllTests(mode: Int) {
         local.sortAllTests(mode)

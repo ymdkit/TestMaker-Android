@@ -5,7 +5,6 @@ import com.airbnb.epoxy.EpoxyController
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.cardCategory
 import jp.gr.java_conf.foobar.testmaker.service.cardTest
-import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
@@ -84,9 +83,7 @@ class MainController(private val context: Context) : EpoxyController() {
                     cardTest {
                         isCategorized(true)
                         id(it.id)
-                        testId(it.id)
-                        colorId(it.color)
-                        title(it.title)
+                        test(it)
                         size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questionsNonNull().size))
                         listener(listener)
                     }
@@ -98,9 +95,7 @@ class MainController(private val context: Context) : EpoxyController() {
             cardTest {
                 isCategorized(false)
                 id(it.id)
-                testId(it.id)
-                colorId(it.color)
-                title(it.title)
+                test(it)
                 size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questionsNonNull().size))
                 listener(listener)
             }

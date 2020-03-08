@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.billingclient.api.*
 import com.google.firebase.auth.FirebaseUser
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
@@ -20,15 +19,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerReposi
 
 class MainViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val preference: SharedPreferenceManager, context: Context) : ViewModel(), PurchasesUpdatedListener, BillingClientStateListener, LifecycleObserver {
 
-    fun addTest(title: String, colorId: Int, category: String) {
-        val test = Test()
-        test.title = title
-        test.color = colorId
-        test.setCategory(category)
-        repository.addOrUpdateTest(test)
-    }
-
-    fun addOrUpdateTest(test: Test): Long = repository.addOrUpdateTest(test)
     fun getMaxQuestionId(): Long = repository.getMaxQuestionId()
     suspend fun downloadTest(testId: String): FirebaseTestResult = repository.downloadTest(testId)
 
@@ -37,9 +27,7 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
     fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
     fun getUser(): FirebaseUser? = auth.getUser()
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
-    fun getTests(): LiveData<List<Test>> = repository.getTestsOfLiveData()
     fun fetchTests() = repository.fetchTests()
-    fun sortTests(from: Long, to: Long) = repository.sortTests(from, to)
     fun sortAllTests(mode: Int) = repository.sortAllTests(mode)
 
     fun migrateSortSetting() {

@@ -18,7 +18,8 @@ class TestRepository(private val dataSource: TestDataSource) {
     }
 
     fun refresh() {
-        testsLiveData.value = dataSource.get()
+        tests = dataSource.get()
+        testsLiveData.value = tests
     }
 
     fun create(test: Test): Long {
