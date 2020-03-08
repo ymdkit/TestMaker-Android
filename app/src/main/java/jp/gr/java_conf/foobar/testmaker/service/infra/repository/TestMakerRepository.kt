@@ -24,8 +24,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     var questions: MutableLiveData<ArrayList<Quest>>? = null
         private set
 
-    fun getTests(): List<Test> = local.getTests()
-
     fun getTestsOfLiveData(): LiveData<List<Test>> {
         if (tests == null) {
             tests = MutableLiveData()
