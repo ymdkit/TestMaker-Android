@@ -31,7 +31,6 @@ open class ShowTestsActivity : BaseActivity() {
 
     private var selectedTestId: Long = -1L //ログイン時に一度画面から離れるので選択中の値を保持
 
-
     protected fun initTestAndFolderAdapter() {
 
         mainController = MainController(this)

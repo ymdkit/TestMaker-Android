@@ -52,7 +52,7 @@ class CategoryDataSource(private val realm: Realm) {
 
     fun delete(category: Category) {
         realm.executeTransaction {
-            realm.where(Category::class.java).equalTo("name", category.name).findFirst()?.deleteFromRealm()
+            realm.where(Category::class.java).equalTo("id", category.id).findFirst()?.deleteFromRealm()
         }
     }
 

@@ -60,7 +60,6 @@ class MainActivity : ShowTestsActivity() {
     private val viewModel: MainViewModel by viewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -208,7 +207,7 @@ class MainActivity : ShowTestsActivity() {
                         categoryViewModel.create(it)
                     },
                     deleteCategory = {
-                        categoryViewModel.create(it)
+                        categoryViewModel.delete(it)
                     })
             categoryEditor.setCategory()
         }
