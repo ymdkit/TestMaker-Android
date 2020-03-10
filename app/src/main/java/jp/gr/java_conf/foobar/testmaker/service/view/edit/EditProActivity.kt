@@ -55,8 +55,9 @@ class EditProActivity : BaseActivity() {
 
         }
 
-        edit_test.setText(editProViewModel.getTest(intent.getLongExtra("testId", -1)).testToString(this, false))
-
+        testViewModel.tests.find { it.id == intent.getLongExtra("testId", -1) }?.let {
+            edit_test.setText(it.testToString(this, false))
+        }
     }
 
     private fun saveText() {

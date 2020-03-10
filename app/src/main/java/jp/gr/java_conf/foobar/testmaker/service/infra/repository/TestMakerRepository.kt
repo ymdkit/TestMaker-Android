@@ -18,9 +18,6 @@ import kotlinx.coroutines.withContext
 class TestMakerRepository(private val local: LocalDataSource,
                           private val remote: RemoteDataSource) {
 
-    var tests: MutableLiveData<List<Test>>? = null
-        private set
-
     var questions: MutableLiveData<ArrayList<Quest>>? = null
         private set
 
