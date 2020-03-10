@@ -12,8 +12,6 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
 
     var tests: List<Test> = repository.get()
 
-    fun get(id: Long) = tests.find { it.id == id }
-
     fun refresh() {
         repository.refresh()
     }

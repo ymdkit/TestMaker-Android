@@ -479,7 +479,9 @@ open class EditActivity : BaseActivity() {
 
                     } else {
 
-                        viewModel.updateTest(sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
+                        testViewModel.tests.find { it.id == viewModel.testId }?.let {
+                            testViewModel.update(it, sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
+                        }
 
                         dialog.dismiss()
                         supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${viewModel.getTest().title}"

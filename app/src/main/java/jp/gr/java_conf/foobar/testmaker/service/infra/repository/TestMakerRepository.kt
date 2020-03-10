@@ -119,10 +119,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun resetSolving(testId: Long) = local.resetSolving(testId)
     fun sortManual(from: Int, to: Int, testId: Long) = local.sortManual(from, to, testId)
     fun migrateOrder(testId: Long) = local.migrateOrder(testId)
-    fun updateTest(test: Test, title: String, color: Int, category: String) {
-        local.updateTest(test, title, color, category)
-        //fetchTests()
-    }
 
     fun updateHistory(test: Test) = local.updateHistory(test)
     fun updateStart(test: Test, start: Int) = local.updateStart(test, start)

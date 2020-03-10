@@ -125,16 +125,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         return test.id
     }
 
-    fun updateTest(test: Test, title: String, color: Int, category: String) {
-        realm.beginTransaction()
-
-        test.title = title
-        test.color = color
-        test.setCategory(category)
-
-        realm.commitTransaction()
-    }
-
     fun addQuestions(testId: Long, questions: Array<Quest>) {
         questions.forEach { addQuestion(testId, it, -1L) }
     }
