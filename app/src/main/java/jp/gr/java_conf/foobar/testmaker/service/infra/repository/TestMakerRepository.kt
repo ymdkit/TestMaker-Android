@@ -105,7 +105,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun getTestsQuery() = remote.getTestsQuery()
 
     fun getTest(testId: Long): Test = local.getTest(testId)
-    fun getTestClone(testId: Long): Test = local.getTestClone(testId)
 
     fun addQuestions(testId: Long, array: Array<Quest>) = local.addQuestions(testId, array)
     fun deleteQuestions(testId: Long, array: Array<Boolean>) = local.deleteQuestions(testId, array)

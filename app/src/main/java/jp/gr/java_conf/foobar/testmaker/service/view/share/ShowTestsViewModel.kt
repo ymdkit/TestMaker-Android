@@ -10,7 +10,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerReposi
 class ShowTestsViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val categoryRepository: CategoryRepository) : ViewModel() {
 
     fun getTest(testId: Long): Test = repository.getTest(testId)
-    fun getTestClone(testId: Long): Test = repository.getTestClone(testId)
     fun updateHistory(test: Test) = repository.updateHistory(test)
     fun updateStart(test: Test, start: Int) = repository.updateStart(test, start)
     fun updateLimit(test: Test, limit: Int) = repository.updateLimit(test, limit)

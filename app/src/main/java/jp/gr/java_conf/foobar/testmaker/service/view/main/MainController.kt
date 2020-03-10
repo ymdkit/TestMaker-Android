@@ -53,10 +53,10 @@ class MainController(private val context: Context) : EpoxyController() {
     private var categorizedTests: List<Test> = emptyList()
 
     interface OnClickListener {
-        fun onClickPlayTest(id: Long)
-        fun onClickEditTest(id: Long)
-        fun onClickDeleteTest(id: Long)
-        fun onClickShareTest(id: Long)
+        fun onClickPlayTest(test: Test)
+        fun onClickEditTest(test: Test)
+        fun onClickDeleteTest(test: Test)
+        fun onClickShareTest(test: Test)
     }
 
     fun setOnClickListener(listener: OnClickListener) {

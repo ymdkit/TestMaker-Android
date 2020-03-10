@@ -33,18 +33,16 @@ open class ShowTestsActivity : BaseActivity() {
     private val testViewModel: TestViewModel by viewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
 
-    private var selectedTestId: Long = -1L //ログイン時に一度画面から離れるので選択中の値を保持
+    private var selectedTest: Test? = null //ログイン時に一度画面から離れるので選択中の値を保持
 
     protected fun initTestAndFolderAdapter() {
 
         mainController = MainController(this)
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
-            override fun onClickPlayTest(id: Long) {
+            override fun onClickPlayTest(test: Test) {
 
                 sendFirebaseEvent("play")
-
-                val test = showTestsViewModel.getTest(id)
 
                 if (test.questionsNonNull().isEmpty()) {
 
@@ -57,20 +55,17 @@ open class ShowTestsActivity : BaseActivity() {
                 }
             }
 
-            override fun onClickEditTest(id: Long) {
+            override fun onClickEditTest(test: Test) {
 
                 sendFirebaseEvent("edit")
                 val i = Intent(this@ShowTestsActivity, EditActivity::class.java)
-                i.putExtra("testId", id)
+                i.putExtra("testId", test.id)
                 startActivityForResult(i, REQUEST_EDIT)
             }
 
-            override fun onClickDeleteTest(id: Long) {
+            override fun onClickDeleteTest(test: Test) {
 
                 sendFirebaseEvent("delete")
-
-                val test = showTestsViewModel.getTest(id)
-
                 val builder = AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
                 builder.setTitle(getString(R.string.delete_exam))
                 builder.setMessage(getString(R.string.message_delete_exam, test.title))
@@ -82,7 +77,7 @@ open class ShowTestsActivity : BaseActivity() {
                 builder.create().show()
             }
 
-            override fun onClickShareTest(id: Long) {
+            override fun onClickShareTest(test: Test) {
 
                 AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
                         .setTitle(getString(R.string.title_dialog_share))
@@ -92,15 +87,13 @@ open class ShowTestsActivity : BaseActivity() {
                                 0 -> { //リンクの共有
                                     showTestsViewModel.getUser()?.let {
                                         dialog.dismiss()
-                                        uploadTest(id)
+                                        uploadTest(test)
                                     } ?: run {
-                                        login(id)
+                                        login(test)
                                     }
                                 }
 
                                 1 -> { //テキスト変換
-
-                                    val test = showTestsViewModel.getTest(id)
 
                                     Toast.makeText(baseContext, getString(R.string.message_share_exam, test.title), Toast.LENGTH_LONG).show()
 
@@ -125,8 +118,7 @@ open class ShowTestsActivity : BaseActivity() {
         })
     }
 
-    private fun uploadTest(id: Long) {
-        val test = showTestsViewModel.getTestClone(id)
+    private fun uploadTest(test: Test) {
 
         lifecycleScope.launch {
 
@@ -265,9 +257,9 @@ open class ShowTestsActivity : BaseActivity() {
         }
     }
 
-    private fun login(id: Long) {
+    private fun login(test: Test) {
 
-        selectedTestId = id
+        selectedTest = test
 
         AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 .setTitle(getString(R.string.login))
@@ -296,10 +288,12 @@ open class ShowTestsActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_SIGN_IN_UPLOAD && resultCode == Activity.RESULT_OK) {
-            uploadTest(selectedTestId)
+            selectedTest?.let {
+                uploadTest(it)
+                selectedTest = null
+            }
         }
 
-        selectedTestId = -1L
     }
 
     companion object {

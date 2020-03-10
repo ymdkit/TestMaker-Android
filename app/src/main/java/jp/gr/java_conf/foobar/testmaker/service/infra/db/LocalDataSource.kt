@@ -19,11 +19,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         return realm.where(Test::class.java).equalTo("id", testId).findFirst() ?: Test()
     }
 
-    fun getTestClone(testId: Long): Test {
-        return realm.copyFromRealm(realm.where(Test::class.java).equalTo("id", testId).findFirst()
-                ?: Test())
-    }
-
     fun getQuestions(testId: Long): ArrayList<Quest>? {
 
         val realmArray = getTest(testId).questionsNonNull()
