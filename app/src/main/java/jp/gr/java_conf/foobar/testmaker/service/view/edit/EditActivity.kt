@@ -41,6 +41,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.extensions.swap
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ColorChooser
 import kotlinx.android.synthetic.main.activity_edit.*
@@ -60,6 +61,7 @@ open class EditActivity : BaseActivity() {
 
     private val viewModel: EditViewModel by viewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
+    private val testViewModel: TestViewModel by viewModel()
 
     private val fileName: String
         get() {

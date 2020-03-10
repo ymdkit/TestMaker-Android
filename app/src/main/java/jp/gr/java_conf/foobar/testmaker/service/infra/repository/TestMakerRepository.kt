@@ -24,10 +24,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     var questions: MutableLiveData<ArrayList<Quest>>? = null
         private set
 
-    fun fetchTests() {
-        tests?.value = local.getTests()
-    }
-
     fun getQuestions(testId: Long): LiveData<ArrayList<Quest>> {
         if (questions == null) {
             questions = MutableLiveData()
@@ -74,7 +70,6 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun createObjectFromFirebase(test: FirebaseTest) {
         local.createObjectFromFirebase(test)
-        fetchTests()
     }
 
     fun updateProfile(userName: String, completion: () -> Unit) {
@@ -114,7 +109,7 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun addOrUpdateTest(test: Test): Long {
         val id = local.addOrUpdateTest(test)
-        fetchTests()
+        //fetchTests()
         return id
     }
 
@@ -126,7 +121,7 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun migrateOrder(testId: Long) = local.migrateOrder(testId)
     fun updateTest(test: Test, title: String, color: Int, category: String) {
         local.updateTest(test, title, color, category)
-        fetchTests()
+        //fetchTests()
     }
 
     fun updateHistory(test: Test) = local.updateHistory(test)
@@ -135,10 +130,5 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun updateCorrect(quest: Quest, correct: Boolean) = local.updateCorrect(quest, correct)
     fun updateSolving(quest: Quest, solving: Boolean) = local.updateSolving(quest, solving)
     fun getMaxQuestionId(): Long = local.getMaxQuestionId()
-
-    fun sortAllTests(mode: Int) {
-        local.sortAllTests(mode)
-        fetchTests()
-    }
 
 }

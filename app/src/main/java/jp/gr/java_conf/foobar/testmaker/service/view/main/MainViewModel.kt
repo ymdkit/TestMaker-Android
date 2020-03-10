@@ -27,13 +27,6 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
     fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
     fun getUser(): FirebaseUser? = auth.getUser()
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
-    fun fetchTests() = repository.fetchTests()
-    fun sortAllTests(mode: Int) = repository.sortAllTests(mode)
-
-    fun migrateSortSetting() {
-        repository.sortAllTests(preference.sort)
-        preference.sort = -1
-    }
 
     val title: MutableLiveData<String> = MutableLiveData()
     var isEditing: MutableLiveData<Boolean> = MutableLiveData()

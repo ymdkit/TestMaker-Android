@@ -28,6 +28,7 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.CardTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
@@ -173,10 +174,6 @@ class MainActivity : ShowTestsActivity() {
 
         }
 
-        if (sharedPreferenceManager.sort != -1) {
-            sendFirebaseEvent("migrate_sort_setting")
-            viewModel.migrateSortSetting()
-        }
     }
 
     private fun initViews() {
@@ -262,7 +259,7 @@ class MainActivity : ShowTestsActivity() {
                     .setNegativeButton(android.R.string.cancel, null)
                     .setTitle(getString(R.string.sort))
                     .setItems(resources.getStringArray(R.array.sort_exam)) { _, which ->
-                        viewModel.sortAllTests(which)
+                        testViewModel.sort(SortTest.values()[which])
                     }.show()
         }
 
@@ -452,7 +449,6 @@ class MainActivity : ShowTestsActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchTests()
         testViewModel.refresh()
         categoryViewModel.refresh()
     }

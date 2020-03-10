@@ -15,35 +15,6 @@ import java.io.IOException
 
 class LocalDataSource(private val realm: Realm, private val preference: SharedPreferenceManager, private val context: Context) {
 
-    fun getTests(): List<Test> {
-        val tests = realm.where(Test::class.java).findAll().sort("category", Sort.DESCENDING, "order", Sort.ASCENDING)
-        realm.beginTransaction()
-        tests.forEachIndexed { index, test ->
-            test.order = index
-        }
-        realm.commitTransaction()
-        return realm.copyFromRealm(realm.where(Test::class.java).findAll().sort("order"))
-    }
-
-    fun sortAllTests(mode: Int) {
-        val tests = when (mode) {
-            Constants.TITLE_DESCENDING ->
-                realm.where(Test::class.java).findAll().sort("category", Sort.ASCENDING, "title", Sort.DESCENDING)
-            Constants.TITLE_ASCENDING ->
-                realm.where(Test::class.java).findAll().sort("category", Sort.ASCENDING, "title", Sort.ASCENDING)
-            Constants.HISTORY ->
-                realm.where(Test::class.java).findAll().sort("category", Sort.ASCENDING, "history", Sort.DESCENDING)
-            else ->
-                realm.where(Test::class.java).findAll().sort("category", Sort.ASCENDING, "title", Sort.ASCENDING)
-        }
-
-        realm.beginTransaction()
-        tests.forEachIndexed { index, test ->
-            test.order = index
-        }
-        realm.commitTransaction()
-    }
-
     fun getTest(testId: Long): Test {
         return realm.where(Test::class.java).equalTo("id", testId).findFirst() ?: Test()
     }

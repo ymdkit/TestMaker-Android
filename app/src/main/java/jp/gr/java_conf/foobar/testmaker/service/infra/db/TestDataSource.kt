@@ -1,6 +1,8 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.db
 
 import io.realm.Realm
+import io.realm.Sort
+import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
 class TestDataSource(private val realm: Realm) {
@@ -38,6 +40,16 @@ class TestDataSource(private val realm: Realm) {
     fun delete(test: Test) {
         realm.executeTransaction {
             realm.where(Test::class.java).equalTo("id", test.id).findFirst()?.deleteFromRealm()
+        }
+    }
+
+    fun sort(mode: SortTest) {
+        val tests = realm.copyFromRealm(realm.where(Test::class.java).findAll().sort("category", Sort.ASCENDING, mode.column, mode.sort))
+
+        tests.forEachIndexed { index, test ->
+            update(test.apply {
+                order = index
+            })
         }
     }
 

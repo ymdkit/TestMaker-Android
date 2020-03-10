@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 
@@ -10,6 +11,8 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
     var testsLiveData: LiveData<List<Test>> = repository.getAsLiveData()
 
     var tests: List<Test> = repository.get()
+
+    fun get(id: Long) = tests.find { it.id == id }
 
     fun refresh() {
         repository.refresh()
@@ -27,12 +30,24 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
         return repository.create(test)
     }
 
+    fun update(test: Test, title: String, color: Int, category: String) {
+        repository.update(test.apply {
+            this.title = title
+            this.color = color
+            this.setCategory(category)
+        })
+    }
+
     fun delete(test: Test) {
         repository.delete(test)
     }
 
     fun swap(from: Test, to: Test) {
         repository.swap(from, to)
+    }
+
+    fun sort(mode: SortTest) {
+        repository.sort(mode)
     }
 
 }
