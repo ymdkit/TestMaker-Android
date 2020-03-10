@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditProBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_edit_pro.*
 import kotlinx.coroutines.launch
@@ -22,7 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class EditProActivity : BaseActivity() {
 
     private val editProViewModel: EditProViewModel by viewModel()
-
+    private val testViewModel: TestViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +71,7 @@ class EditProActivity : BaseActivity() {
 
             Toast.makeText(baseContext, baseContext.getString(R.string.message_success_update), Toast.LENGTH_LONG).show()
             test.id = intent.getLongExtra("testId", -1)
-            editProViewModel.addOrUpdateTest(test)
+            testViewModel.update(test)
 
         }
     }

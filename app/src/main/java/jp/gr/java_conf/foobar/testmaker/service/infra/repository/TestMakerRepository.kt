@@ -107,12 +107,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun getTest(testId: Long): Test = local.getTest(testId)
     fun getTestClone(testId: Long): Test = local.getTestClone(testId)
 
-    fun addOrUpdateTest(test: Test): Long {
-        val id = local.addOrUpdateTest(test)
-        //fetchTests()
-        return id
-    }
-
     fun addQuestions(testId: Long, array: Array<Quest>) = local.addQuestions(testId, array)
     fun deleteQuestions(testId: Long, array: Array<Boolean>) = local.deleteQuestions(testId, array)
     fun resetAchievement(testId: Long) = local.resetAchievement(testId)

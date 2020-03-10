@@ -24,9 +24,7 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
         })
     }
 
-    fun create(test: Test): Long {
-        return repository.create(test)
-    }
+    fun create(test: Test): Long = repository.create(test)
 
     fun update(test: Test, title: String, color: Int, category: String) {
         repository.update(test.apply {
@@ -35,6 +33,9 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
             this.setCategory(category)
         })
     }
+
+    fun update(test: Test) = repository.update(test)
+
 
     fun delete(test: Test) {
         repository.delete(test)

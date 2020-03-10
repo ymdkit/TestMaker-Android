@@ -116,15 +116,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun addOrUpdateTest(test: Test): Long {
-        realm.beginTransaction()
-        if (test.id == 0L) test.id = realm.where(Test::class.java).max("id")?.toLong()?.plus(1) ?: 1
-        test.order = test.id.toInt()
-        realm.copyToRealmOrUpdate(test)
-        realm.commitTransaction()
-        return test.id
-    }
-
     fun addQuestions(testId: Long, questions: Array<Quest>) {
         questions.forEach { addQuestion(testId, it, -1L) }
     }

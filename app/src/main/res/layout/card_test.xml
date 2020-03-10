@@ -13,6 +13,14 @@
             type="jp.gr.java_conf.foobar.testmaker.service.domain.Test" />
 
         <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="color"
+            type="Integer" />
+
+        <variable
             name="size"
             type="String" />
 
@@ -48,7 +56,7 @@
                     android:layout_margin="@dimen/element_spacing_normal"
                     android:background="@drawable/circle"
                     android:contentDescription="@null"
-                    android:testColor="@{test.color}"
+                    android:testColor="@{color}"
                     custom:layout_constraintBottom_toBottomOf="parent"
                     custom:layout_constraintLeft_toLeftOf="parent"
                     custom:layout_constraintTop_toTopOf="parent" />
@@ -60,7 +68,7 @@
                     android:layout_marginStart="@dimen/element_spacing_normal"
                     android:layout_marginTop="@dimen/element_spacing_normal"
                     android:maxLines="2"
-                    android:text="@{test.title}"
+                    android:text="@{title}"
                     android:textSize="@dimen/text_size_medium"
                     custom:layout_constraintLeft_toRightOf="@id/color"
                     custom:layout_constraintRight_toLeftOf="@id/play"
