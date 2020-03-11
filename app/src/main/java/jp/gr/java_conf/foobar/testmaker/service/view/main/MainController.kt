@@ -84,8 +84,6 @@ class MainController(private val context: Context) : EpoxyController() {
                         isCategorized(true)
                         id(it.id)
                         test(it)
-                        title(it.title)
-                        color(it.color)
                         size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
                         listener(listener)
                     }
@@ -98,8 +96,6 @@ class MainController(private val context: Context) : EpoxyController() {
                 isCategorized(false)
                 id(it.id)
                 test(it)
-                title(it.title)
-                color(it.color)
                 size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
                 listener(listener)
             }
