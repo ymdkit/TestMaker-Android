@@ -506,10 +506,7 @@ open class EditActivity : BaseActivity() {
             }
             item.itemId == R.id.action_edit_pro -> {
 
-                val i = Intent(this@EditActivity, EditProActivity::class.java)
-
-                i.putExtra("testId", test.id)
-                startActivityForResult(i, 0)
+                EditProActivity.startActivity(this, test)
 
                 return true
             }

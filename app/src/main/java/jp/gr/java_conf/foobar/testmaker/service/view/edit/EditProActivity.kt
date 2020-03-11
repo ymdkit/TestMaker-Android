@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -26,6 +27,8 @@ class EditProActivity : BaseActivity() {
 
     private val editProViewModel: EditProViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
+
+    private val test by lazy { intent.getParcelableExtra<Test>("test") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +60,8 @@ class EditProActivity : BaseActivity() {
 
         }
 
-        testViewModel.tests.find { it.id == intent.getLongExtra("testId", -1) }?.let {
-            edit_test.setText(RealmTest.createFromTest(it).testToString(this, false))
-        }
+        edit_test.setText(RealmTest.createFromTest(test).testToString(this, false))
+
     }
 
     private fun saveText() {
@@ -70,11 +72,11 @@ class EditProActivity : BaseActivity() {
 
         lifecycleScope.launch {
 
-            val test = text.toTest(baseContext, questionId)
+            val result = text.toTest(baseContext, questionId)
 
             Toast.makeText(baseContext, baseContext.getString(R.string.message_success_update), Toast.LENGTH_LONG).show()
-            test.id = intent.getLongExtra("testId", -1)
-            testViewModel.update(Test.createFromRealmTest(test))
+            result.id = test.id
+            testViewModel.update(Test.createFromRealmTest(result))
 
         }
     }
@@ -103,6 +105,15 @@ class EditProActivity : BaseActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        fun startActivity(activity: Activity, test: Test) {
+            val intent = Intent(activity, EditProActivity::class.java).apply {
+                putExtra("test", test)
+            }
+            activity.startActivity(intent)
+        }
     }
 
 }
