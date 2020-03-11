@@ -17,7 +17,8 @@ data class Test(
         val order: Int = 0
 ) : Parcelable {
 
-    val questionsCorrectCount = questions.count { it.isCorrect }
+    val questionsCorrectCount
+        get() = questions.count { it.isCorrect }
 
     companion object {
         fun createFromRealmTest(realmTest: RealmTest) = Test(

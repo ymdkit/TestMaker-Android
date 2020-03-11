@@ -3,7 +3,6 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 import android.content.Context
 import android.graphics.Bitmap
 import android.view.View
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
@@ -28,7 +27,6 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
 
     var imagePath: String = ""
     var order: Int = -1
-    var testId: Long = -1L
     var questionId: Long = -1
     var editingView: View? = null
 
@@ -53,11 +51,7 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         repository.deleteQuestion(question)
     }
 
-    fun getQuestions(): LiveData<ArrayList<Quest>> {
-        return repository.getQuestions(testId)
-    }
-
-    fun fetchQuestions() {
+    fun fetchQuestions(testId: Long) {
         repository.fetchQuestions(testId)
     }
 
@@ -69,7 +63,7 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
 
     suspend fun saveImage(bitmap: Bitmap) = repository.saveImage(imagePath, bitmap)
 
-    fun addQuestion(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun addQuestion(testId: Long, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
 
         if (question.valueNonNull().isEmpty()) onFailure(context.getString(R.string.message_shortage))
 
@@ -160,10 +154,10 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         }
 
         repository.addQuestion(testId, quest, questionId)
-        fetchQuestions()
+        fetchQuestions(testId)
         onSuccess()
     }
 
     fun sortManual(from: Int, to: Int, testId: Long) = repository.sortManual(from, to, testId)
-    fun migrateOrder() = repository.migrateOrder(testId)
+    fun migrateOrder(testId: Long) = repository.migrateOrder(testId)
 }

@@ -51,6 +51,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.min
 
 /**
@@ -71,6 +72,8 @@ open class EditActivity : BaseActivity() {
             return c.get(Calendar.YEAR).toString() + "_" + (c.get(Calendar.MONTH) + 1) + "_" + c.get(Calendar.DAY_OF_MONTH) + "_" + c.get(Calendar.HOUR_OF_DAY) + "_" + c.get(Calendar.MINUTE) + "_" + c.get(Calendar.SECOND) + "_" + c.get(Calendar.MILLISECOND) + ".png"
         }
 
+    private val test by lazy { intent.getParcelableExtra<Test>("test") }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
@@ -83,10 +86,9 @@ open class EditActivity : BaseActivity() {
 
         initToolBar()
 
-        viewModel.testId = intent.getLongExtra("testId", -1)
-        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${testViewModel.tests.find { it.id == viewModel.testId }?.title}"
+        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${test.title}"
 
-        viewModel.migrateOrder()
+        viewModel.migrateOrder(test.id)
 
         initAdapter()
 
@@ -165,14 +167,16 @@ open class EditActivity : BaseActivity() {
 
 
         viewModel.clearQuestions()
-        viewModel.getQuestions().observeNonNull(this) {
-            editAdapter.questions = it
-        }
+//        viewModel.getQuestions().observeNonNull(this) {
+//            editAdapter.questions = it
+//        }
+
+        editAdapter.questions = ArrayList(test.questions.map { Quest.createQuestFromQuestion(it) })
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchQuestions()
+        viewModel.fetchQuestions(test.id)
     }
 
     private fun initAdapter() {
@@ -365,7 +369,7 @@ open class EditActivity : BaseActivity() {
     }
 
     private fun addQuestion() {
-        viewModel.addQuestion(
+        viewModel.addQuestion(test.id,
                 onSuccess = {
                     reset()
                     Toast.makeText(baseContext, getString(R.string.msg_save), Toast.LENGTH_LONG).show()
@@ -420,15 +424,13 @@ open class EditActivity : BaseActivity() {
 
                 val colorChooser = dialogLayout.findViewById<ColorChooser>(R.id.color_chooser)
 
-                val test = testViewModel.tests.find { it.id == viewModel.testId }
+                buttonCate.tag = test.category
 
-                buttonCate.tag = test?.category
-
-                if (test?.category == "") {
+                if (test.category == "") {
 
                     buttonCate.text = getString(R.string.category)
                 } else {
-                    buttonCate.text = test?.category
+                    buttonCate.text = test.category
                 }
 
                 buttonCate.setOnClickListener {
@@ -483,12 +485,12 @@ open class EditActivity : BaseActivity() {
 
                     } else {
 
-                        testViewModel.tests.find { it.id == viewModel.testId }?.let {
+                        test.let {
                             testViewModel.update(it, sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
                         }
 
                         dialog.dismiss()
-                        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${testViewModel.tests.find { it.id == viewModel.testId }?.title}"
+                        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${test.title}"
 
                     }
                 }
@@ -506,7 +508,7 @@ open class EditActivity : BaseActivity() {
 
                 val i = Intent(this@EditActivity, EditProActivity::class.java)
 
-                i.putExtra("testId", viewModel.testId)
+                i.putExtra("testId", test.id)
                 startActivityForResult(i, 0)
 
                 return true
@@ -514,7 +516,7 @@ open class EditActivity : BaseActivity() {
 
             item.itemId == R.id.action_reset_achievement -> {
 
-                testViewModel.tests.find { it.id == viewModel.testId }?.let {
+                test.let {
                     testViewModel.update(Test.createFromRealmTest(RealmTest.createFromTest(it).apply {
                         resetAchievement()
                     }))
@@ -655,7 +657,7 @@ open class EditActivity : BaseActivity() {
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
 
-                viewModel.sortManual(from, to, viewModel.testId)
+                viewModel.sortManual(from, to, test.id)
                 editAdapter.questions.swap(from, to)
                 editAdapter.notifyItemMoved(from, to)
 
@@ -691,6 +693,13 @@ open class EditActivity : BaseActivity() {
         private const val REQUEST_SAF_PICK_IMAGE = 10012
         private const val REQUEST_IMAGE_CAPTURE = 10013
         private const val REQUEST_PERMISSION_CAMERA = 10014
+
+        fun startActivity(activity: Activity, test: Test) {
+            val intent = Intent(activity, EditActivity::class.java).apply {
+                putExtra("test", test)
+            }
+            activity.startActivity(intent)
+        }
     }
 }
 

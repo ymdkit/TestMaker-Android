@@ -59,9 +59,9 @@ open class ShowTestsActivity : BaseActivity() {
             override fun onClickEditTest(test: Test) {
 
                 sendFirebaseEvent("edit")
-                val i = Intent(this@ShowTestsActivity, EditActivity::class.java)
-                i.putExtra("testId", test.id)
-                startActivityForResult(i, REQUEST_EDIT)
+
+                EditActivity.startActivity(this@ShowTestsActivity, test)
+
             }
 
             override fun onClickDeleteTest(test: Test) {
