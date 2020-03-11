@@ -11,7 +11,7 @@ class TestDataSource(private val realm: Realm) {
     fun create(test: Test): Long {
         val realmTest = RealmTest.createFromTest(test)
         realmTest.id = realm.where(RealmTest::class.java).max("id")?.toLong()?.plus(1) ?: 0
-        realmTest.order = test.id.toInt()
+        realmTest.order = realmTest.id.toInt()
         realm.executeTransaction {
             it.copyToRealm(realmTest)
         }
