@@ -82,7 +82,7 @@ open class EditActivity : BaseActivity() {
         initToolBar()
 
         viewModel.testId = intent.getLongExtra("testId", -1)
-        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${viewModel.getTest().title}"
+        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${testViewModel.tests.find { it.id == viewModel.testId }?.title}"
 
         viewModel.migrateOrder()
 
@@ -202,7 +202,7 @@ open class EditActivity : BaseActivity() {
 
                     } else {
                         lifecycleScope.launch {
-                            button_image.setImageWithGlide(baseContext,viewModel.loadImage())
+                            button_image.setImageWithGlide(baseContext, viewModel.loadImage())
                         }
                     }
 
@@ -329,7 +329,7 @@ open class EditActivity : BaseActivity() {
                 viewModel.imagePath = fileName
                 button_image.setImageWithGlide(baseContext, cropView.croppedBitmap)
 
-                lifecycleScope.launch{
+                lifecycleScope.launch {
                     viewModel.saveImage(cropView.croppedBitmap)
                 }
 
@@ -418,13 +418,15 @@ open class EditActivity : BaseActivity() {
 
                 val colorChooser = dialogLayout.findViewById<ColorChooser>(R.id.color_chooser)
 
-                buttonCate.tag = viewModel.getTest(viewModel.testId).getCategory()
+                val test = testViewModel.tests.find { it.id == viewModel.testId }
 
-                if (viewModel.getTest(viewModel.testId).getCategory() == "") {
+                buttonCate.tag = test?.getCategory()
+
+                if (test?.getCategory() == "") {
 
                     buttonCate.text = getString(R.string.category)
                 } else {
-                    buttonCate.text = viewModel.getTest(viewModel.testId).getCategory()
+                    buttonCate.text = test?.getCategory()
                 }
 
                 buttonCate.setOnClickListener {
@@ -456,9 +458,9 @@ open class EditActivity : BaseActivity() {
                     false
                 }
 
-                name.setText(viewModel.getTest(viewModel.testId).title)
+                name.setText(test?.title)
 
-                colorChooser.setColorId(viewModel.getTest(viewModel.testId).color)
+                colorChooser.setColorId(test?.color ?: R.color.red)
 
                 val builder = AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 builder.setView(dialogLayout)
@@ -484,7 +486,7 @@ open class EditActivity : BaseActivity() {
                         }
 
                         dialog.dismiss()
-                        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${viewModel.getTest().title}"
+                        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${testViewModel.tests.find { it.id == viewModel.testId }?.title}"
 
                     }
                 }
