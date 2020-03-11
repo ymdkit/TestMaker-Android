@@ -13,6 +13,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditProBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
@@ -56,7 +58,7 @@ class EditProActivity : BaseActivity() {
         }
 
         testViewModel.tests.find { it.id == intent.getLongExtra("testId", -1) }?.let {
-            edit_test.setText(it.testToString(this, false))
+            edit_test.setText(RealmTest.createFromTest(it).testToString(this, false))
         }
     }
 
@@ -72,7 +74,7 @@ class EditProActivity : BaseActivity() {
 
             Toast.makeText(baseContext, baseContext.getString(R.string.message_success_update), Toast.LENGTH_LONG).show()
             test.id = intent.getLongExtra("testId", -1)
-            testViewModel.update(test)
+            testViewModel.update(Test.createFromRealmTest(test))
 
         }
     }

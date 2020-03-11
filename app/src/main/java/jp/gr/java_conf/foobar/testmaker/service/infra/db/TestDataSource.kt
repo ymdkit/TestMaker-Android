@@ -4,21 +4,24 @@ import io.realm.Realm
 import io.realm.Sort
 import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
 class TestDataSource(private val realm: Realm) {
 
-    fun create(test: RealmTest): Long {
-        test.id = realm.where(RealmTest::class.java).max("id")?.toLong()?.plus(1) ?: 0
-        test.order = test.id.toInt()
+    fun create(test: Test): Long {
+        val realmTest = RealmTest.createFromTest(test)
+        realmTest.id = realm.where(RealmTest::class.java).max("id")?.toLong()?.plus(1) ?: 0
+        realmTest.order = test.id.toInt()
         realm.executeTransaction {
-            it.copyToRealm(test)
+            it.copyToRealm(realmTest)
         }
-        return test.id
+        return realmTest.id
     }
 
-    fun get(): List<RealmTest> = realm.copyFromRealm(realm.where(RealmTest::class.java)
+    fun get(): List<Test> = realm.copyFromRealm(realm.where(RealmTest::class.java)
             .findAll())
             ?.sortedBy { it.order }
+            ?.map { Test.createFromRealmTest(it) }
             ?: listOf()
 
     fun update(test: RealmTest) {
@@ -27,17 +30,23 @@ class TestDataSource(private val realm: Realm) {
         }
     }
 
-    fun swap(from: RealmTest, to: RealmTest) {
+    fun update(test: Test) {
+        realm.executeTransaction {
+            it.copyToRealmOrUpdate(RealmTest.createFromTest(test))
+        }
+    }
+
+    fun swap(from: Test, to: Test) {
         val tmp = from.order
-        update(from.apply {
+        update(RealmTest.createFromTest(from).apply {
             this.order = to.order
         })
-        update(to.apply {
+        update(RealmTest.createFromTest(to).apply {
             this.order = tmp
         })
     }
 
-    fun delete(test: RealmTest) {
+    fun delete(test: Test) {
         realm.executeTransaction {
             realm.where(RealmTest::class.java).equalTo("id", test.id).findFirst()?.deleteFromRealm()
         }

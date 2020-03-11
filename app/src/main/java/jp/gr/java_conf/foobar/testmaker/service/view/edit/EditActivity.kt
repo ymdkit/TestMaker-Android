@@ -36,6 +36,8 @@ import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 import jp.gr.java_conf.foobar.testmaker.service.extensions.swap
@@ -420,13 +422,13 @@ open class EditActivity : BaseActivity() {
 
                 val test = testViewModel.tests.find { it.id == viewModel.testId }
 
-                buttonCate.tag = test?.getCategory()
+                buttonCate.tag = test?.category
 
-                if (test?.getCategory() == "") {
+                if (test?.category == "") {
 
                     buttonCate.text = getString(R.string.category)
                 } else {
-                    buttonCate.text = test?.getCategory()
+                    buttonCate.text = test?.category
                 }
 
                 buttonCate.setOnClickListener {
@@ -513,9 +515,9 @@ open class EditActivity : BaseActivity() {
             item.itemId == R.id.action_reset_achievement -> {
 
                 testViewModel.tests.find { it.id == viewModel.testId }?.let {
-                    testViewModel.update(it.apply {
+                    testViewModel.update(Test.createFromRealmTest(RealmTest.createFromTest(it).apply {
                         resetAchievement()
-                    })
+                    }))
                 }
 
                 Toast.makeText(baseContext, getString(R.string.msg_reset_achievement), Toast.LENGTH_SHORT).show()

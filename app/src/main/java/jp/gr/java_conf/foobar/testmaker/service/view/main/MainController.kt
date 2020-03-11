@@ -6,7 +6,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.cardCategory
 import jp.gr.java_conf.foobar.testmaker.service.cardTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
 class MainController(private val context: Context) : EpoxyController() {
 
@@ -26,7 +26,7 @@ class MainController(private val context: Context) : EpoxyController() {
             requestModelBuild()
         }
 
-    var tests: List<RealmTest> = emptyList()
+    var tests: List<Test> = emptyList()
         set(value) {
             field = value
             refresh()
@@ -42,21 +42,21 @@ class MainController(private val context: Context) : EpoxyController() {
         nonCategorizedTests = if (categories.isEmpty()) {
             tests
         } else {
-            tests.filter { !categories.map { it.name }.contains(it.getCategory()) }
+            tests.filter { !categories.map { it.name }.contains(it.category) }
         }
 
-        categorizedTests = tests.filter { it.getCategory() == selectedCategory }
+        categorizedTests = tests.filter { it.category == selectedCategory }
     }
 
-    private var nonCategorizedTests: List<RealmTest> = emptyList()
+    private var nonCategorizedTests: List<Test> = emptyList()
 
-    private var categorizedTests: List<RealmTest> = emptyList()
+    private var categorizedTests: List<Test> = emptyList()
 
     interface OnClickListener {
-        fun onClickPlayTest(test: RealmTest)
-        fun onClickEditTest(test: RealmTest)
-        fun onClickDeleteTest(test: RealmTest)
-        fun onClickShareTest(test: RealmTest)
+        fun onClickPlayTest(test: Test)
+        fun onClickEditTest(test: Test)
+        fun onClickDeleteTest(test: Test)
+        fun onClickShareTest(test: Test)
     }
 
     fun setOnClickListener(listener: OnClickListener) {
@@ -69,15 +69,15 @@ class MainController(private val context: Context) : EpoxyController() {
             cardCategory {
                 id(it.name)
                 category(it)
-                size(context.getString(R.string.number_exams, tests.filter { test -> it.name == test.getCategory() }.size))
+                size(context.getString(R.string.number_exams, tests.filter { test -> it.name == test.category }.size))
                 onClick { _, _, _, _ ->
                     selectedCategory = if (selectedCategory == it.name) "" else it.name
                 }
-                selected(categorizedTests.isNotEmpty() && categorizedTests.first().getCategory() == it.name)
+                selected(categorizedTests.isNotEmpty() && categorizedTests.first().category == it.name)
 
             }
 
-            if (categorizedTests.isNotEmpty() && categorizedTests.first().getCategory() == it.name) {
+            if (categorizedTests.isNotEmpty() && categorizedTests.first().category == it.name) {
 
                 categorizedTests.forEach {
                     cardTest {
@@ -86,7 +86,7 @@ class MainController(private val context: Context) : EpoxyController() {
                         test(it)
                         title(it.title)
                         color(it.color)
-                        size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questionsNonNull().size))
+                        size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
                         listener(listener)
                     }
                 }
@@ -100,7 +100,7 @@ class MainController(private val context: Context) : EpoxyController() {
                 test(it)
                 title(it.title)
                 color(it.color)
-                size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questionsNonNull().size))
+                size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
                 listener(listener)
             }
         }

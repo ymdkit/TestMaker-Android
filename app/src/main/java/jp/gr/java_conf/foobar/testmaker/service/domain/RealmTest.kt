@@ -28,22 +28,6 @@ open class RealmTest : RealmObject() {
     var documentId: String = ""
     var order: Int = 0
 
-    val questionsCorrectCount: Int
-        get() {
-
-            if (questions == null) return 0
-
-            var count = 0
-
-            for (question in questions!!) {
-
-                if (question.correct) count++
-
-            }
-
-            return count
-        }
-
     fun setHistory() {
         val c = Calendar.getInstance()
         history = c.timeInMillis
@@ -206,8 +190,9 @@ open class RealmTest : RealmObject() {
                     if (q.answer != answer) result.add(q.answer)
                 }
                 Constants.COMPLETE, Constants.SELECT_COMPLETE -> {
-                    if(q.answers.isNotEmpty()){
-                        if (q.answers[0]?.selection != answer) result.add(q.answers[0]?.selection ?: "")
+                    if (q.answers.isNotEmpty()) {
+                        if (q.answers[0]?.selection != answer) result.add(q.answers[0]?.selection
+                                ?: "")
                     }
                 }
             }
@@ -218,5 +203,24 @@ open class RealmTest : RealmObject() {
         }
 
         return result
+    }
+
+    companion object {
+        fun createFromTest(test: Test): RealmTest {
+            val realmTest = RealmTest()
+
+            realmTest.id = test.id
+            realmTest.color = test.color
+            realmTest.limit = test.limit
+            realmTest.startPosition = test.startPosition
+            realmTest.title = test.title
+            realmTest.setCategory(test.category)
+            realmTest.history = test.history
+            test.questions.forEach { realmTest.addQuestion(it) }
+            realmTest.documentId = test.documentId
+            realmTest.order = test.order
+
+            return realmTest
+        }
     }
 }

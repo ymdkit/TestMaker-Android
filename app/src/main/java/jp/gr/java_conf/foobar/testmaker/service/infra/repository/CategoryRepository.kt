@@ -12,7 +12,7 @@ class CategoryRepository(private val dataSource: CategoryDataSource, private val
     private var categories: MutableLiveData<List<Category>> = MutableLiveData(dataSource.get())
 
     private var hasTestsCategories: LiveData<List<Category>> = Transformations.map(categories) { it ->
-        it.filter { testDataSource.get().map { test -> test.getCategory() }.contains(it.name) }
+        it.filter { testDataSource.get().map { test -> test.category }.contains(it.name) }
     }
 
     fun get(): LiveData<List<Category>> = categories

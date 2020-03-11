@@ -18,6 +18,7 @@ import com.firebase.ui.auth.IdpResponse
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
@@ -124,7 +125,7 @@ class FirebaseActivity : BaseActivity() {
 
             viewModel.getUser()?.let {
 
-                if (testViewModel.tests.isEmpty() || testViewModel.tests.all { it.getQuestionsForEach().size < 1 }) {
+                if (testViewModel.tests.isEmpty() || testViewModel.tests.all { it.questions.isEmpty() }) {
 
                     Toast.makeText(baseContext, getString(R.string.message_non_exist_test), Toast.LENGTH_SHORT).show()
 
@@ -252,7 +253,7 @@ class FirebaseActivity : BaseActivity() {
                                 .setTitle(getString(R.string.uploading))
                                 .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
-                        viewModel.uploadTest(testViewModel.tests[position], editOverView.text.toString())
+                        viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[position]), editOverView.text.toString())
 
                         Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
                         pagingAdapter.refresh()

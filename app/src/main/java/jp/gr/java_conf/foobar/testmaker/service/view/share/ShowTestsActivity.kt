@@ -16,6 +16,7 @@ import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
@@ -40,22 +41,22 @@ open class ShowTestsActivity : BaseActivity() {
         mainController = MainController(this)
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
-            override fun onClickPlayTest(test: RealmTest) {
+            override fun onClickPlayTest(test: Test) {
 
                 sendFirebaseEvent("play")
 
-                if (test.questionsNonNull().isEmpty()) {
+                if (test.questions.isEmpty()) {
 
                     Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
 
                 } else {
 
-                    initDialogPlayStart(test)
+                    initDialogPlayStart(RealmTest.createFromTest(test))
 
                 }
             }
 
-            override fun onClickEditTest(test: RealmTest) {
+            override fun onClickEditTest(test: Test) {
 
                 sendFirebaseEvent("edit")
                 val i = Intent(this@ShowTestsActivity, EditActivity::class.java)
@@ -63,7 +64,7 @@ open class ShowTestsActivity : BaseActivity() {
                 startActivityForResult(i, REQUEST_EDIT)
             }
 
-            override fun onClickDeleteTest(test: RealmTest) {
+            override fun onClickDeleteTest(test: Test) {
 
                 sendFirebaseEvent("delete")
                 val builder = AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
@@ -77,7 +78,7 @@ open class ShowTestsActivity : BaseActivity() {
                 builder.create().show()
             }
 
-            override fun onClickShareTest(test: RealmTest) {
+            override fun onClickShareTest(test: Test) {
 
                 AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
                         .setTitle(getString(R.string.title_dialog_share))
@@ -87,9 +88,9 @@ open class ShowTestsActivity : BaseActivity() {
                                 0 -> { //リンクの共有
                                     showTestsViewModel.getUser()?.let {
                                         dialog.dismiss()
-                                        uploadTest(test)
+                                        uploadTest(RealmTest.createFromTest(test))
                                     } ?: run {
-                                        login(test)
+                                        login(RealmTest.createFromTest(test))
                                     }
                                 }
 
@@ -102,7 +103,7 @@ open class ShowTestsActivity : BaseActivity() {
                                         intent.action = Intent.ACTION_SEND
                                         intent.type = "text/plain"
 
-                                        intent.putExtra(Intent.EXTRA_TEXT, test.testToString(baseContext, false))
+                                        intent.putExtra(Intent.EXTRA_TEXT, RealmTest.createFromTest(test).testToString(baseContext, false))
                                         startActivity(intent)
 
                                     } catch (e: Exception) {

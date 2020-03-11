@@ -3,18 +3,18 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import jp.gr.java_conf.foobar.testmaker.service.SortTest
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.TestDataSource
 
 class TestRepository(private val dataSource: TestDataSource) {
 
-    private var testsLiveData: MutableLiveData<List<RealmTest>> = MutableLiveData(dataSource.get())
+    private var testsLiveData: MutableLiveData<List<Test>> = MutableLiveData(dataSource.get())
 
-    private var tests: List<RealmTest>? = null
+    private var tests: List<Test>? = null
 
-    fun getAsLiveData(): LiveData<List<RealmTest>> = testsLiveData
+    fun getAsLiveData(): LiveData<List<Test>> = testsLiveData
 
-    fun get(): List<RealmTest> = tests ?: dataSource.get().also {
+    fun get(): List<Test> = tests ?: dataSource.get().also {
         tests = it
     }
 
@@ -23,23 +23,23 @@ class TestRepository(private val dataSource: TestDataSource) {
         testsLiveData.value = tests
     }
 
-    fun create(test: RealmTest): Long {
+    fun create(test: Test): Long {
         val id = dataSource.create(test)
         refresh()
         return id
     }
 
-    fun update(test: RealmTest) {
+    fun update(test: Test) {
         dataSource.update(test)
         refresh()
     }
 
-    fun delete(test: RealmTest) {
+    fun delete(test: Test) {
         dataSource.delete(test)
         refresh()
     }
 
-    fun swap(from: RealmTest, to: RealmTest) {
+    fun swap(from: Test, to: Test) {
         dataSource.swap(from, to)
         refresh()
     }

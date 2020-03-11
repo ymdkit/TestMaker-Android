@@ -30,6 +30,7 @@ import jp.gr.java_conf.foobar.testmaker.service.CardTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
@@ -435,10 +436,10 @@ class MainActivity : ShowTestsActivity() {
 
         lifecycleScope.launch {
 
-            val test = text.toTest(baseContext, questionId)
+            val result = text.toTest(baseContext, questionId)
 
-            testViewModel.create(test)
-            Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, test.title), Toast.LENGTH_LONG).show()
+            testViewModel.create(Test.createFromRealmTest(result))
+            Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, result.title), Toast.LENGTH_LONG).show()
         }
     }
 

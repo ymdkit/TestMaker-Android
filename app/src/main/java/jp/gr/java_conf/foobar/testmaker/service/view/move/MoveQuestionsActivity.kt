@@ -98,9 +98,9 @@ class MoveQuestionsActivity : BaseActivity() {
         spinner_from_test.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
-                fromTest = tests[position]
+                fromTest = RealmTest.createFromTest(tests[position])
 
-                questionAdapter = CheckBoxQuestionAdapter(baseContext, tests[position].questionsNonNull().toTypedArray())
+                questionAdapter = CheckBoxQuestionAdapter(baseContext, tests[position].questions.toTypedArray())
 
                 list_questions.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
                 list_questions.setHasFixedSize(true)

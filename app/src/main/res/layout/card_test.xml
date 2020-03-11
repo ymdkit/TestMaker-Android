@@ -10,7 +10,7 @@
 
         <variable
             name="test"
-            type="jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest" />
+            type="jp.gr.java_conf.foobar.testmaker.service.domain.Test" />
 
         <variable
             name="title"
