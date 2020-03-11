@@ -131,12 +131,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun resetAchievement(testId: Long) {
-        realm.beginTransaction()
-        getTest(testId).resetAchievement()
-        realm.commitTransaction()
-    }
-
     fun resetSolving(testId: Long) {
         realm.beginTransaction()
         getTest(testId).getQuestionsForEach().forEach { it.solving = false }

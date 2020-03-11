@@ -512,7 +512,11 @@ open class EditActivity : BaseActivity() {
 
             item.itemId == R.id.action_reset_achievement -> {
 
-                viewModel.resetAchievement()
+                testViewModel.tests.find { it.id == viewModel.testId }?.let {
+                    testViewModel.update(it.apply {
+                        resetAchievement()
+                    })
+                }
 
                 Toast.makeText(baseContext, getString(R.string.msg_reset_achievement), Toast.LENGTH_SHORT).show()
 

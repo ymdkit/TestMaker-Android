@@ -165,7 +165,6 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         onSuccess()
     }
 
-    fun resetAchievement() = repository.resetAchievement(testId)
     fun sortManual(from: Int, to: Int, testId: Long) = repository.sortManual(from, to, testId)
     fun migrateOrder() = repository.migrateOrder(testId)
 }
