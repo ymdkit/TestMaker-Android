@@ -43,12 +43,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun deleteQuestion(question: Quest) {
-        realm.beginTransaction()
-        question.deleteFromRealm()
-        realm.commitTransaction()
-    }
-
     fun loadImage(imagePath: String): Bitmap? {
         val imageOptions = BitmapFactory.Options()
         imageOptions.inPreferredConfig = Bitmap.Config.RGB_565

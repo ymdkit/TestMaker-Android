@@ -47,10 +47,6 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         stateEditing.value = Constants.EDIT_QUESTION
     }
 
-    fun deleteQuestion(question: Quest) {
-        repository.deleteQuestion(question)
-    }
-
     fun fetchQuestions(testId: Long) {
         repository.fetchQuestions(testId)
     }
