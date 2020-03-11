@@ -35,7 +35,7 @@ import com.isseiaoki.simplecropview.CropImageView
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
@@ -65,6 +65,7 @@ open class EditActivity : BaseActivity() {
     private val viewModel: EditViewModel by viewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
+    private val questionViewModel: QuestionViewModel by viewModel()
 
     private val fileName: String
         get() {
@@ -171,7 +172,7 @@ open class EditActivity : BaseActivity() {
 //            editAdapter.questions = it
 //        }
 
-        editAdapter.questions = ArrayList(test.questions.map { Quest.createQuestFromQuestion(it) })
+        editAdapter.questions = ArrayList(test.questions)
     }
 
     override fun onResume() {
@@ -184,13 +185,13 @@ open class EditActivity : BaseActivity() {
         editAdapter = EditAdapter(this)
 
         editAdapter.setOnClickListener(object : EditAdapter.OnClickListener {
-            override fun onClickEditQuestion(question: Quest) {
+            override fun onClickEditQuestion(question: Question) {
 
                 showLayoutEdit()
                 text_title.text = getString(R.string.edit_question)
                 button_cancel.visibility = View.VISIBLE
                 button_add.text = getString(R.string.save_question)
-                set_problem.setText(question.problem)
+                set_problem.setText(question.question)
                 set_explanation.setText(question.explanation)
 
                 viewModel.questionId = question.id
@@ -231,13 +232,13 @@ open class EditActivity : BaseActivity() {
 
                         showLayoutSelect()
 
-                        sharedPreferenceManager.numOthers = question.selections.size
-                        edit_select_view.reloadOthers(question.selections.size)
+                        sharedPreferenceManager.numOthers = question.others.size
+                        edit_select_view.reloadOthers(question.others.size)
                         edit_select_view.setAnswer(question.answer)
-                        edit_select_view.setOthers(question.selections)
-                        viewModel.isAuto.value = question.auto
+                        edit_select_view.setOthers(question.others)
+                        viewModel.isAuto.value = question.isAutoGenerateOthers
 
-                        viewModel.spinnerSelectsPosition.value = min(Constants.OTHER_SELECT_MAX - 1, question.selections.size - 1)
+                        viewModel.spinnerSelectsPosition.value = min(Constants.OTHER_SELECT_MAX - 1, question.others.size - 1)
 
                         edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
 
@@ -259,30 +260,30 @@ open class EditActivity : BaseActivity() {
 
                         showLayoutSelectComplete()
                         sharedPreferenceManager.numAnswersSelect = question.answers.size
-                        sharedPreferenceManager.numOthers = question.selections.size + question.answers.size - 1
+                        sharedPreferenceManager.numOthers = question.others.size + question.answers.size - 1
                         edit_select_complete_view.setAnswerNum(question.answers.size)
-                        edit_select_complete_view.reloadSelects(question.answers.size + question.selections.size)
-                        edit_select_complete_view.setSelections(question.answers, question.selections)
-                        viewModel.isAuto.value = question.auto
+                        edit_select_complete_view.reloadSelects(question.answers.size + question.others.size)
+                        edit_select_complete_view.setSelections(question.answers, question.others)
+                        viewModel.isAuto.value = question.isAutoGenerateOthers
                         edit_select_complete_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers + 1)
 
                         viewModel.spinnerAnswersPosition.value = min(Constants.SELECT_COMPLETE_MAX, question.answers.size)
-                        viewModel.spinnerSelectsPosition.value = min(Constants.SELECT_COMPLETE_MAX - 2, question.selections.size + question.answers.size - 2)
+                        viewModel.spinnerSelectsPosition.value = min(Constants.SELECT_COMPLETE_MAX - 2, question.others.size + question.answers.size - 2)
 
                     }
                 }
             }
 
-            override fun onClickDeleteQuestion(data: Quest, position: Int) {
+            override fun onClickDeleteQuestion(data: Question, position: Int) {
 
                 val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
                 builder.setTitle(getString(R.string.delete_question))
-                builder.setMessage(getString(R.string.message_delete, data.problem))
+                builder.setMessage(getString(R.string.message_delete, data.question))
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
                     if (data.imagePath != "") deleteFile(data.imagePath)
 
-                    viewModel.deleteQuestion(data)
+                    questionViewModel.delete(data)
                     editAdapter.questions.removeAt(position)
                     editAdapter.notifyItemRemoved(position)
                 }

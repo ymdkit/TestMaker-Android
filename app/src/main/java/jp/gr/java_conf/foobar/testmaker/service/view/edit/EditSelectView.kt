@@ -61,9 +61,9 @@ class EditSelectView : RelativeLayout{
         set_answer_choose.setText(answer)
     }
 
-    fun setOthers(others: RealmList<Select>){
+    fun setOthers(others: List<String>) {
 
-        for (i in 0 until others.size) editOthers[i]?.setText(others[i]?.selection)
+        for (i in others.indices) editOthers[i]?.setText(others[i])
 
     }
 

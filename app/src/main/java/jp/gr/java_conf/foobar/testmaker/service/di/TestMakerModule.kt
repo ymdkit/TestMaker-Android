@@ -11,6 +11,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditProViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.QuestionViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionViewModel
@@ -36,6 +37,7 @@ fun getTestMakerModules(realm: Realm) = module {
     single { SharedPreferenceManager(get()) }
     viewModel { CategoryViewModel(get()) }
     viewModel { TestViewModel(get()) }
+    viewModel { QuestionViewModel(get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }
     viewModel { EditViewModel(get(), get()) }
     viewModel { MoveQuestionViewModel(get()) }

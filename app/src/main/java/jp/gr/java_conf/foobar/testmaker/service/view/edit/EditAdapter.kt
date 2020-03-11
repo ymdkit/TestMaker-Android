@@ -8,6 +8,7 @@ import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.filteredList
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
 
 /**
@@ -17,7 +18,7 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
-    var questions: ArrayList<Quest> = ArrayList()
+    var questions: ArrayList<Question> = ArrayList()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -28,8 +29,8 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
     private var listener: OnClickListener? = null
 
     interface OnClickListener {
-        fun onClickEditQuestion(question: Quest)
-        fun onClickDeleteQuestion(data: Quest, position: Int)
+        fun onClickEditQuestion(question: Question)
+        fun onClickDeleteQuestion(question: Question, position: Int)
     }
 
     fun setOnClickListener(listener: OnClickListener) {
@@ -50,7 +51,7 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
         val data = init(holder.adapterPosition)
 
-        holder.problem.text = context.getString(R.string.question, data.problem)
+        holder.problem.text = context.getString(R.string.question, data.question)
         holder.answer.text = context.getString(R.string.answer, data.answer)
 
         holder.edit.setOnClickListener {
@@ -63,7 +64,7 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
     }
 
-    private fun init(position: Int): Quest {
+    private fun init(position: Int): Question {
         return if (searchWord.isEmpty()) questions[position] else questions.filteredList(searchWord)[position]
     }
 

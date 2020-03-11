@@ -58,14 +58,14 @@ class EditSelectCompleteView : RelativeLayout {
         return editSelectCompletes.filter { editText -> editText?.hint?.contains(context.getString(R.string.hint_answer)) == true}.size
     }
 
-    fun setSelections(answers: RealmList<Select>, others: RealmList<Select>){
+    fun setSelections(answers: List<String>, others: List<String>) {
 
         editSelectCompletes.filter { editText -> editText?.hint?.contains(context.getString(R.string.hint_answer)) == true }
-                .forEachIndexed { index, editText -> editText?.setText(answers[index]?.selection) }
+                .forEachIndexed { index, editText -> editText?.setText(answers[index]) }
 
         editSelectCompletes.filterIndexed { index, editText -> editText?.hint == context.getString(R.string.hint_other) && textInputLayouts[index]?.visibility == View.VISIBLE }
                 .forEachIndexed{index, editText ->
-                    editText?.setText(others[index]?.selection)
+                    editText?.setText(others[index])
                     editText?.isEnabled = true}
 
     }
