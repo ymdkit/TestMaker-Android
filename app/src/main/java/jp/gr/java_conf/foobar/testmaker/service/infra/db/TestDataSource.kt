@@ -24,7 +24,7 @@ class TestDataSource(private val realm: Realm) {
             ?.map { Test.createFromRealmTest(it) }
             ?: listOf()
 
-    fun update(test: RealmTest) {
+    private fun update(test: RealmTest) {
         realm.executeTransaction {
             it.copyToRealmOrUpdate(test)
         }
