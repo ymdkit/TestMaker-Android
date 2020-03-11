@@ -4,15 +4,15 @@ import android.content.Context
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-suspend fun String.toTest(context: Context, questionId: Long): Test = withContext(Dispatchers.Default) {
+suspend fun String.toTest(context: Context, questionId: Long): RealmTest = withContext(Dispatchers.Default) {
 
     val backups = split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
-    val test = Test()
+    val test = RealmTest()
     test.title = context.getString(R.string.unknown)
     test.color = context.resources.getIntArray(R.array.color_list)[0]
 

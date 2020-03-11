@@ -6,7 +6,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.cardCategory
 import jp.gr.java_conf.foobar.testmaker.service.cardTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 
 class MainController(private val context: Context) : EpoxyController() {
 
@@ -26,7 +26,7 @@ class MainController(private val context: Context) : EpoxyController() {
             requestModelBuild()
         }
 
-    var tests: List<Test> = emptyList()
+    var tests: List<RealmTest> = emptyList()
         set(value) {
             field = value
             refresh()
@@ -48,15 +48,15 @@ class MainController(private val context: Context) : EpoxyController() {
         categorizedTests = tests.filter { it.getCategory() == selectedCategory }
     }
 
-    private var nonCategorizedTests: List<Test> = emptyList()
+    private var nonCategorizedTests: List<RealmTest> = emptyList()
 
-    private var categorizedTests: List<Test> = emptyList()
+    private var categorizedTests: List<RealmTest> = emptyList()
 
     interface OnClickListener {
-        fun onClickPlayTest(test: Test)
-        fun onClickEditTest(test: Test)
-        fun onClickDeleteTest(test: Test)
-        fun onClickShareTest(test: Test)
+        fun onClickPlayTest(test: RealmTest)
+        fun onClickEditTest(test: RealmTest)
+        fun onClickDeleteTest(test: RealmTest)
+        fun onClickShareTest(test: RealmTest)
     }
 
     fun setOnClickListener(listener: OnClickListener) {

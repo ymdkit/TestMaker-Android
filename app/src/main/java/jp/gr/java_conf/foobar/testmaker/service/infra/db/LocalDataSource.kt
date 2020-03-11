@@ -5,18 +5,16 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import io.realm.Realm
 import io.realm.RealmList
-import io.realm.Sort
-import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import java.io.FileNotFoundException
 import java.io.IOException
 
 class LocalDataSource(private val realm: Realm, private val preference: SharedPreferenceManager, private val context: Context) {
 
-    fun getTest(testId: Long): Test {
-        return realm.where(Test::class.java).equalTo("id", testId).findFirst() ?: Test()
+    fun getTest(testId: Long): RealmTest {
+        return realm.where(RealmTest::class.java).equalTo("id", testId).findFirst() ?: RealmTest()
     }
 
     fun getQuestions(testId: Long): ArrayList<Quest>? {
@@ -94,7 +92,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.beginTransaction()
 
         val test = firebaseTest.toTest(context)
-        test.id = realm.where(Test::class.java).max("id")?.toLong()?.plus(1) ?: 1
+        test.id = realm.where(RealmTest::class.java).max("id")?.toLong()?.plus(1) ?: 1
         test.order = test.id.toInt()
 
         firebaseTest.questions.forEachIndexed { index, it ->
@@ -172,20 +170,20 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun updateHistory(test: Test) {
+    fun updateHistory(test: RealmTest) {
         realm.beginTransaction()
         test.setHistory()
         realm.commitTransaction()
     }
 
-    fun updateStart(test: Test, start: Int) {
+    fun updateStart(test: RealmTest, start: Int) {
 
         realm.beginTransaction()
         test.startPosition = start
         realm.commitTransaction()
     }
 
-    fun updateLimit(test: Test, limit: Int) {
+    fun updateLimit(test: RealmTest, limit: Int) {
 
         realm.beginTransaction()
         test.limit = limit
@@ -206,7 +204,7 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
 
     }
 
-    fun updateDocumentId(test: Test, documentId: String) {
+    fun updateDocumentId(test: RealmTest, documentId: String) {
         realm.beginTransaction()
         test.documentId = documentId
         realm.commitTransaction()

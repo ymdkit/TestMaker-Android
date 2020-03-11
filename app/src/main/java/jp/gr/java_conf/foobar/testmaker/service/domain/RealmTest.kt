@@ -14,7 +14,7 @@ import kotlin.collections.ArrayList
  * Created by keita on 2017/02/08.
  */
 
-open class Test : RealmObject() {
+open class RealmTest : RealmObject() {
 
     @PrimaryKey
     var id: Long = 0

@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
@@ -73,7 +73,7 @@ class TestMakerRepository(private val local: LocalDataSource,
         remote.updateProfile(userName, completion)
     }
 
-    suspend fun createTest(test: Test, overview: String, oldDocumentId: String): String {
+    suspend fun createTest(test: RealmTest, overview: String, oldDocumentId: String): String {
         val newDocumentId = withContext(Dispatchers.Default) { remote.createTest(test, overview, oldDocumentId) }
         local.updateDocumentId(getTest(test.id), newDocumentId)
         val newDocumentIds = withContext(Dispatchers.Default) { remote.uploadQuestions(test, newDocumentId) }
@@ -101,7 +101,7 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun getTestsQuery() = remote.getTestsQuery()
 
-    fun getTest(testId: Long): Test = local.getTest(testId)
+    fun getTest(testId: Long): RealmTest = local.getTest(testId)
 
     fun addQuestions(testId: Long, array: Array<Quest>) = local.addQuestions(testId, array)
     fun deleteQuestions(testId: Long, array: Array<Boolean>) = local.deleteQuestions(testId, array)
@@ -109,9 +109,9 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun sortManual(from: Int, to: Int, testId: Long) = local.sortManual(from, to, testId)
     fun migrateOrder(testId: Long) = local.migrateOrder(testId)
 
-    fun updateHistory(test: Test) = local.updateHistory(test)
-    fun updateStart(test: Test, start: Int) = local.updateStart(test, start)
-    fun updateLimit(test: Test, limit: Int) = local.updateLimit(test, limit)
+    fun updateHistory(test: RealmTest) = local.updateHistory(test)
+    fun updateStart(test: RealmTest, start: Int) = local.updateStart(test, start)
+    fun updateLimit(test: RealmTest, limit: Int) = local.updateLimit(test, limit)
     fun updateCorrect(quest: Quest, correct: Boolean) = local.updateCorrect(quest, correct)
     fun updateSolving(quest: Quest, solving: Boolean) = local.updateSolving(quest, solving)
     fun getMaxQuestionId(): Long = local.getMaxQuestionId()

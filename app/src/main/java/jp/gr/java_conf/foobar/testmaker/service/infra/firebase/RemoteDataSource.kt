@@ -13,7 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
@@ -59,7 +59,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
 
     }
 
-    suspend fun createTest(test: Test, overview: String, documentId: String): String {
+    suspend fun createTest(test: RealmTest, overview: String, documentId: String): String {
 
         val firebaseTest = test.toFirebaseTest(context)
         val user = auth.getUser() ?: return ""
@@ -77,7 +77,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
         return ref.id
     }
 
-    suspend fun uploadQuestions(test: Test,documentId: String): List<String>{
+    suspend fun uploadQuestions(test: RealmTest, documentId: String): List<String> {
 
         val questionRefs = arrayListOf<String>()
 

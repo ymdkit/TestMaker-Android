@@ -15,7 +15,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
@@ -33,14 +33,14 @@ open class ShowTestsActivity : BaseActivity() {
     private val testViewModel: TestViewModel by viewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
 
-    private var selectedTest: Test? = null //ログイン時に一度画面から離れるので選択中の値を保持
+    private var selectedTest: RealmTest? = null //ログイン時に一度画面から離れるので選択中の値を保持
 
     protected fun initTestAndFolderAdapter() {
 
         mainController = MainController(this)
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
-            override fun onClickPlayTest(test: Test) {
+            override fun onClickPlayTest(test: RealmTest) {
 
                 sendFirebaseEvent("play")
 
@@ -55,7 +55,7 @@ open class ShowTestsActivity : BaseActivity() {
                 }
             }
 
-            override fun onClickEditTest(test: Test) {
+            override fun onClickEditTest(test: RealmTest) {
 
                 sendFirebaseEvent("edit")
                 val i = Intent(this@ShowTestsActivity, EditActivity::class.java)
@@ -63,7 +63,7 @@ open class ShowTestsActivity : BaseActivity() {
                 startActivityForResult(i, REQUEST_EDIT)
             }
 
-            override fun onClickDeleteTest(test: Test) {
+            override fun onClickDeleteTest(test: RealmTest) {
 
                 sendFirebaseEvent("delete")
                 val builder = AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
@@ -77,7 +77,7 @@ open class ShowTestsActivity : BaseActivity() {
                 builder.create().show()
             }
 
-            override fun onClickShareTest(test: Test) {
+            override fun onClickShareTest(test: RealmTest) {
 
                 AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
                         .setTitle(getString(R.string.title_dialog_share))
@@ -118,7 +118,7 @@ open class ShowTestsActivity : BaseActivity() {
         })
     }
 
-    private fun uploadTest(test: Test) {
+    private fun uploadTest(test: RealmTest) {
 
         lifecycleScope.launch {
 
@@ -153,7 +153,7 @@ open class ShowTestsActivity : BaseActivity() {
         }
     }
 
-    private fun initDialogPlayStart(test: Test) {
+    private fun initDialogPlayStart(test: RealmTest) {
 
         val dialogLayout = LayoutInflater.from(this@ShowTestsActivity).inflate(R.layout.dialog_start, findViewById(R.id.layout_dialog_start))
 
@@ -226,7 +226,7 @@ open class ShowTestsActivity : BaseActivity() {
 
     }
 
-    private fun startAnswer(test: Test, start: String, limit: String) {
+    private fun startAnswer(test: RealmTest, start: String, limit: String) {
 
         var incorrect = false
 
@@ -257,7 +257,7 @@ open class ShowTestsActivity : BaseActivity() {
         }
     }
 
-    private fun login(test: Test) {
+    private fun login(test: RealmTest) {
 
         selectedTest = test
 
