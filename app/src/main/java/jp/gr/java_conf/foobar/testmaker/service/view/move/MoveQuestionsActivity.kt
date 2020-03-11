@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMoveQuestionsBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
@@ -53,11 +54,11 @@ class MoveQuestionsActivity : BaseActivity() {
 
                 val testId = testViewModel.create(getString(R.string.test), ContextCompat.getColor(baseContext, R.color.red), "")
 
-                viewModel.addQuestions(testId, selectedQuestions.toTypedArray())
+                viewModel.addQuestions(testId, selectedQuestions.map { Quest.createQuestFromQuestion(it) }.toTypedArray())
 
             } else {
 
-                viewModel.addQuestions(testViewModel.tests[spinner_to_test.selectedItemPosition - 1].id, selectedQuestions.toTypedArray())
+                viewModel.addQuestions(testViewModel.tests[spinner_to_test.selectedItemPosition - 1].id, selectedQuestions.map { Quest.createQuestFromQuestion(it) }.toTypedArray())
             }
 
             if (spinner_actions.selectedItemPosition == 0) {//「移動先」の時

@@ -231,7 +231,7 @@ open class ShowTestsActivity : BaseActivity() {
 
         var incorrect = false
 
-        for (element in test.questions) if (!(element.correct)) incorrect = true
+        for (element in test.questions) if (!(element.isCorrect)) incorrect = true
 
         if (!incorrect && sharedPreferenceManager.refine) {
 

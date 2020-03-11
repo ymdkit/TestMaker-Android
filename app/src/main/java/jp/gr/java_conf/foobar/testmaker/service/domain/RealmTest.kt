@@ -211,7 +211,7 @@ open class RealmTest : RealmObject() {
             realmTest.title = test.title
             realmTest.setCategory(test.category)
             realmTest.history = test.history
-            test.questions.forEach { realmTest.addQuestion(it) }
+            test.questions.forEach { realmTest.addQuestion(Quest.createQuestFromQuestion(it)) }
             realmTest.documentId = test.documentId
             realmTest.order = test.order
 

@@ -1,5 +1,9 @@
 package jp.gr.java_conf.foobar.testmaker.service.domain
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Question(
         val id: Long = 0,
         val question: String = "",
@@ -15,7 +19,8 @@ data class Question(
         var order: Int = 0,
         var isCheckOrder: Boolean = false,
         var documentId: String = ""
-) {
+) : Parcelable {
+
     companion object {
         fun createFromRealmQuestion(realmQuestion: Quest) = Question(
                 id = realmQuestion.id,
