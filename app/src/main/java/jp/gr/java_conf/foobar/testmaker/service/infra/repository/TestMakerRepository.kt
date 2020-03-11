@@ -109,8 +109,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun sortManual(from: Int, to: Int, testId: Long) = local.sortManual(from, to, testId)
     fun migrateOrder(testId: Long) = local.migrateOrder(testId)
 
-    fun updateStart(test: RealmTest, start: Int) = local.updateStart(test, start)
-    fun updateLimit(test: RealmTest, limit: Int) = local.updateLimit(test, limit)
     fun updateCorrect(quest: Quest, correct: Boolean) = local.updateCorrect(quest, correct)
     fun updateSolving(quest: Quest, solving: Boolean) = local.updateSolving(quest, solving)
     fun getMaxQuestionId(): Long = local.getMaxQuestionId()

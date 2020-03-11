@@ -28,11 +28,6 @@ open class RealmTest : RealmObject() {
     var documentId: String = ""
     var order: Int = 0
 
-    fun setHistory() {
-        val c = Calendar.getInstance()
-        history = c.timeInMillis
-    }
-
     fun setCategory(c: String) {
         category = c
     }

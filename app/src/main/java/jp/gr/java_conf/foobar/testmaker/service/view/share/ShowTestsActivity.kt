@@ -250,10 +250,10 @@ open class ShowTestsActivity : BaseActivity() {
             val i = Intent(this@ShowTestsActivity, PlayActivity::class.java)
             i.putExtra("testId", test.id)
 
-            showTestsViewModel.updateLimit(RealmTest.createFromTest(test), Integer.parseInt(limit))
-            showTestsViewModel.updateStart(RealmTest.createFromTest(test), Integer.parseInt(start) - 1)
-            testViewModel.update(test.copy(history = Calendar.getInstance().timeInMillis))
-
+            testViewModel.update(test.copy(
+                    limit = Integer.parseInt(limit),
+                    startPosition = Integer.parseInt(start) - 1,
+                    history = Calendar.getInstance().timeInMillis))
             startActivityForResult(i, REQUEST_EDIT)
         }
     }

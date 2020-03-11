@@ -170,21 +170,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun updateStart(test: RealmTest, start: Int) {
-
-        realm.beginTransaction()
-        test.startPosition = start
-        realm.commitTransaction()
-    }
-
-    fun updateLimit(test: RealmTest, limit: Int) {
-
-        realm.beginTransaction()
-        test.limit = limit
-        realm.commitTransaction()
-
-    }
-
     fun updateCorrect(quest: Quest, correct: Boolean) {
         realm.beginTransaction()
         quest.correct = correct
