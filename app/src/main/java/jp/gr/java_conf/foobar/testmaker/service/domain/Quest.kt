@@ -105,4 +105,25 @@ open class Quest : RealmObject() {
 
     private fun isReversible() = type == Constants.WRITE || type == Constants.COMPLETE
 
+    companion object {
+        fun createQuestFromQuestion(question: Question): Quest {
+            val quest = Quest()
+            quest.id = question.id
+            quest.problem = question.question
+            quest.answer = question.answer
+            quest.explanation = question.explanation
+            quest.correct = question.isCorrect
+            quest.imagePath = question.imagePath
+            quest.setSelections(question.others.toTypedArray())
+            quest.setAnswers(question.answers.toTypedArray())
+            quest.type = question.type
+            quest.auto = question.isAutoGenerateOthers
+            quest.solving = question.isSolved
+            quest.order = question.order
+            quest.isCheckOrder = question.isCheckOrder
+            quest.documentId = question.documentId
+            return quest
+        }
+    }
+
 }

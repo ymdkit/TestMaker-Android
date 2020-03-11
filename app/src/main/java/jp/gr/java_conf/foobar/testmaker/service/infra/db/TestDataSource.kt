@@ -38,12 +38,8 @@ class TestDataSource(private val realm: Realm) {
 
     fun swap(from: Test, to: Test) {
         val tmp = from.order
-        update(RealmTest.createFromTest(from).apply {
-            this.order = to.order
-        })
-        update(RealmTest.createFromTest(to).apply {
-            this.order = tmp
-        })
+        update(from.copy(order = to.order))
+        update(to.copy(order = tmp))
     }
 
     fun delete(test: Test) {
