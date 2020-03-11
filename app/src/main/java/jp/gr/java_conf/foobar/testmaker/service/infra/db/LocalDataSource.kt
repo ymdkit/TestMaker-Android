@@ -170,12 +170,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun updateHistory(test: RealmTest) {
-        realm.beginTransaction()
-        test.setHistory()
-        realm.commitTransaction()
-    }
-
     fun updateStart(test: RealmTest, start: Int) {
 
         realm.beginTransaction()

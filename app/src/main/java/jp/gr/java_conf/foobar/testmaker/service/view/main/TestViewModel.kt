@@ -33,7 +33,6 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
 
     fun update(test: Test) = repository.update(test)
 
-
     fun delete(test: Test) {
         repository.delete(test)
     }

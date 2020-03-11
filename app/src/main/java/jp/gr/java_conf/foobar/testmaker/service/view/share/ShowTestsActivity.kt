@@ -51,7 +51,7 @@ open class ShowTestsActivity : BaseActivity() {
 
                 } else {
 
-                    initDialogPlayStart(RealmTest.createFromTest(test))
+                    initDialogPlayStart(test)
 
                 }
             }
@@ -154,7 +154,7 @@ open class ShowTestsActivity : BaseActivity() {
         }
     }
 
-    private fun initDialogPlayStart(test: RealmTest) {
+    private fun initDialogPlayStart(test: Test) {
 
         val dialogLayout = LayoutInflater.from(this@ShowTestsActivity).inflate(R.layout.dialog_start, findViewById(R.id.layout_dialog_start))
 
@@ -227,11 +227,11 @@ open class ShowTestsActivity : BaseActivity() {
 
     }
 
-    private fun startAnswer(test: RealmTest, start: String, limit: String) {
+    private fun startAnswer(test: Test, start: String, limit: String) {
 
         var incorrect = false
 
-        for (element in test.questionsNonNull()) if (!(element.correct)) incorrect = true
+        for (element in test.questions) if (!(element.correct)) incorrect = true
 
         if (!incorrect && sharedPreferenceManager.refine) {
 
@@ -241,7 +241,7 @@ open class ShowTestsActivity : BaseActivity() {
 
             Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_number), Toast.LENGTH_SHORT).show()
 
-        } else if (start == "" || start.toInt() > test.questionsNonNull().size || start.toInt() < 1) {
+        } else if (start == "" || start.toInt() > test.questions.size || start.toInt() < 1) {
 
             Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_start), Toast.LENGTH_SHORT).show()
 
@@ -250,9 +250,9 @@ open class ShowTestsActivity : BaseActivity() {
             val i = Intent(this@ShowTestsActivity, PlayActivity::class.java)
             i.putExtra("testId", test.id)
 
-            showTestsViewModel.updateLimit(test, Integer.parseInt(limit))
-            showTestsViewModel.updateStart(test, Integer.parseInt(start) - 1)
-            showTestsViewModel.updateHistory(test)
+            showTestsViewModel.updateLimit(RealmTest.createFromTest(test), Integer.parseInt(limit))
+            showTestsViewModel.updateStart(RealmTest.createFromTest(test), Integer.parseInt(start) - 1)
+            testViewModel.update(test.copy(history = Calendar.getInstance().timeInMillis))
 
             startActivityForResult(i, REQUEST_EDIT)
         }
