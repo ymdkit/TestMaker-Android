@@ -45,7 +45,7 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
         repository.sort(mode)
     }
 
-    fun create(question: Question): Long = repository.create(question)
+    fun create(test: Test, question: Question): Long = repository.create(test, question)
 
     fun update(question: Question) = repository.update(question)
 

@@ -67,14 +67,16 @@ class TestDataSource(private val realm: Realm) {
         }
     }
 
-    fun create(question: Question): Long {
-        val realmQuestion = Quest.createQuestFromQuestion(question)
-        realmQuestion.id = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
-        realmQuestion.order = realmQuestion.id.toInt()
-        realm.executeTransaction {
-            it.copyToRealm(realmQuestion)
-        }
-        return realmQuestion.id
+    fun create(test: Test, question: Question): Long {
+        val questionId = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
+
+        update(test.copy(
+                questions = test.questions + listOf(question.copy(
+                        id = questionId,
+                        order = questionId.toInt()
+                ))
+        ))
+        return questionId
     }
 
     fun update(question: Question) {

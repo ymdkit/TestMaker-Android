@@ -16,26 +16,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         return realm.where(RealmTest::class.java).equalTo("id", testId).findFirst() ?: RealmTest()
     }
 
-    fun addQuestion(testId: Long, question: Quest, questionId: Long) {
-        realm.beginTransaction()
-
-        val test = getTest(testId)
-
-        if (questionId != -1L) {
-            question.id = questionId
-            realm.copyToRealmOrUpdate(question)
-
-        } else {
-
-            question.id = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 1
-            question.order = question.id.toInt()
-            realm.copyToRealmOrUpdate(question)
-            test.addQuestion(question)
-        }
-
-        realm.commitTransaction()
-    }
-
     fun loadImage(imagePath: String): Bitmap? {
         val imageOptions = BitmapFactory.Options()
         imageOptions.inPreferredConfig = Bitmap.Config.RGB_565

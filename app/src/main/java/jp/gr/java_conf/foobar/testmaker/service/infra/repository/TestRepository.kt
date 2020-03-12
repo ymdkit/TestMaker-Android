@@ -50,8 +50,8 @@ class TestRepository(private val dataSource: TestDataSource) {
         refresh()
     }
 
-    fun create(question: Question): Long {
-        val id = dataSource.create(question)
+    fun create(test: Test, question: Question): Long {
+        val id = dataSource.create(test, question)
         refresh()
         return id
     }

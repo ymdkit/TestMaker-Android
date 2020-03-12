@@ -255,8 +255,9 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
     }
 
     private fun addQuestion() {
-        viewModel.addQuestion(test.id,
+        viewModel.createQuestion(
                 onSuccess = {
+                    if (viewModel.questionId == -1L) testViewModel.create(test, it) else testViewModel.update(it)
                     reset()
                     Toast.makeText(baseContext, getString(R.string.msg_save), Toast.LENGTH_LONG).show()
                 },
@@ -368,12 +369,8 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
 
                     } else {
 
-                        test.let {
-                            testViewModel.update(it, sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
-                        }
-
+                        testViewModel.update(test, sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
                         dialog.dismiss()
-                        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${test.title}"
 
                     }
                 }

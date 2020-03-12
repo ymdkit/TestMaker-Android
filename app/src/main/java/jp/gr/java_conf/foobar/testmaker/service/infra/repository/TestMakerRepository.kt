@@ -33,10 +33,6 @@ class TestMakerRepository(private val local: LocalDataSource,
         return local.isCheckOrder()
     }
 
-    fun addQuestion(testId: Long, question: Quest, questionId: Long) {
-        local.addQuestion(testId, question, questionId)
-    }
-
     suspend fun downloadTest(testId: String): FirebaseTestResult = withContext(Dispatchers.Default) {
         remote.downloadTest(testId)
     }

@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.extensions.valueNonNull
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 
@@ -51,17 +51,17 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
 
     suspend fun saveImage(bitmap: Bitmap) = repository.saveImage(imagePath, bitmap)
 
-    fun addQuestion(testId: Long, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
-
+    fun createQuestion(onSuccess: (Question) -> Unit, onFailure: (String) -> Unit) {
         if (question.valueNonNull().isEmpty()) onFailure(context.getString(R.string.message_shortage))
 
-        val quest = Quest()
-
-        quest.type = formatQuestion.valueNonNull()
-        quest.problem = question.valueNonNull()
-        quest.imagePath = imagePath
-        quest.explanation = explanation.valueNonNull()
-        quest.order = order
+        var question = Question(
+                id = questionId,
+                question = question.valueNonNull(),
+                type = formatQuestion.valueNonNull(),
+                imagePath = imagePath,
+                explanation = explanation.valueNonNull(),
+                order = order
+        )
 
         val form = editingView
 
@@ -75,7 +75,7 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
 
                     return
                 }
-                quest.answer = answer.valueNonNull()
+                question = question.copy(answer = answer.valueNonNull())
 
             }
             Constants.SELECT -> {
@@ -88,9 +88,11 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
                         return
                     }
 
-                    quest.answer = form.getAnswer()
-                    quest.setSelections(form.getOthers())
-                    quest.auto = repository.isAuto()
+                    question = question.copy(
+                            answer = form.getAnswer(),
+                            others = form.getOthers(),
+                            isAutoGenerateOthers = repository.isAuto())
+
                 } else {
                     return
                 }
@@ -109,9 +111,11 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
                         return
                     }
 
-                    quest.setAnswers(form.getAnswers())
-                    form.getAnswers().forEach { quest.answer += "$it " }
-                    quest.isCheckOrder = repository.isCheckOrder()
+                    question = question.copy(
+                            answer = form.getAnswers().joinToString(separator = " "),
+                            answers = form.getAnswers(),
+                            isCheckOrder = repository.isCheckOrder())
+
                 } else {
                     return
                 }
@@ -130,18 +134,19 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
                         return
                     }
 
-                    quest.setAnswers(form.getAnswers())
-                    form.getAnswers().forEach { quest.answer += "$it " }
-                    quest.setSelections(form.getOthers())
-                    quest.auto = repository.isAuto()
-                    quest.isCheckOrder = false //todo 後に実装
+                    question = question.copy(
+                            answer = form.getAnswers().joinToString(separator = " "),
+                            answers = form.getAnswers(),
+                            others = form.getOthers(),
+                            isAutoGenerateOthers = repository.isAuto(),
+                            isCheckOrder = repository.isCheckOrder())
                 } else {
                     return
                 }
             }
         }
 
-        repository.addQuestion(testId, quest, questionId)
-        onSuccess()
+        onSuccess(question)
+
     }
 }
