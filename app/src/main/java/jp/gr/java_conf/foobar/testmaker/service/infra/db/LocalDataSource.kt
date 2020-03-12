@@ -121,22 +121,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun migrateOrder(testId: Long) { //order実装前の問題集に対する処理
-
-        val questions = getTest(testId).questionsNonNull()
-
-        if (questions.size < 2) return
-
-        realm.beginTransaction()
-
-        if (questions[0].order == questions[1].order) {
-
-            getTest(testId).getQuestionsForEach().forEachIndexed { index, quest -> quest.order = index }
-
-        }
-        realm.commitTransaction()
-    }
-
     fun updateCorrect(quest: Quest, correct: Boolean) {
         realm.beginTransaction()
         quest.correct = correct

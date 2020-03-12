@@ -146,5 +146,4 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
     }
 
     fun sortManual(from: Int, to: Int, testId: Long) = repository.sortManual(from, to, testId)
-    fun migrateOrder(testId: Long) = repository.migrateOrder(testId)
 }

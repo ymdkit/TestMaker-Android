@@ -85,9 +85,6 @@ open class EditActivity : BaseActivity() {
         createAd(binding.adView)
 
         initToolBar()
-
-        viewModel.migrateOrder(test.id)
-
         initAdapter()
 
         initViews()
