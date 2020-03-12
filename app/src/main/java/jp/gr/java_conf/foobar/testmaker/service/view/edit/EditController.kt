@@ -33,9 +33,10 @@ class EditController : EpoxyController() {
     override fun buildModels() {
 
         val result = if (searchWord.isNotEmpty()) questions.filteredList(searchWord) else questions
-        result.forEach {
+        result.forEachIndexed { index, it ->
             cardQuestion {
                 id(it.id)
+                index(index)
                 question(it)
                 listener(listener)
             }
