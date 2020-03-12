@@ -4,6 +4,7 @@ import io.realm.Realm
 import io.realm.Sort
 import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
@@ -63,6 +64,34 @@ class TestDataSource(private val realm: Realm) {
             update(test.apply {
                 order = index
             })
+        }
+    }
+
+    fun create(question: Question): Long {
+        val realmQuestion = Quest.createQuestFromQuestion(question)
+        realmQuestion.id = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
+        realmQuestion.order = realmQuestion.id.toInt()
+        realm.executeTransaction {
+            it.copyToRealm(realmQuestion)
+        }
+        return realmQuestion.id
+    }
+
+    fun update(question: Question) {
+        realm.executeTransaction {
+            it.copyToRealmOrUpdate(Quest.createQuestFromQuestion(question))
+        }
+    }
+
+    fun swap(from: Question, to: Question) {
+        val tmp = from.order
+        update(from.copy(order = to.order))
+        update(to.copy(order = tmp))
+    }
+
+    fun delete(question: Question) {
+        realm.executeTransaction {
+            realm.where(Quest::class.java).equalTo("id", question.id).findFirst()?.deleteFromRealm()
         }
     }
 

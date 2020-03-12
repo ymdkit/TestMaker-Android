@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.extensions.filteredList
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
+import jp.gr.java_conf.foobar.testmaker.service.extensions.filteredList
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
 
 /**
@@ -18,7 +17,7 @@ class EditAdapter(private val context: Context) : androidx.recyclerview.widget.R
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
-    var questions: ArrayList<Question> = ArrayList()
+    var questions: List<Question> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()

@@ -3,7 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.SortTest
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 
@@ -45,4 +45,15 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
         repository.sort(mode)
     }
 
+    fun create(question: Question): Long = repository.create(question)
+
+    fun update(question: Question) = repository.update(question)
+
+    fun delete(question: Question) {
+        repository.delete(question)
+    }
+
+    fun swap(from: Question, to: Question) {
+        repository.swap(from, to)
+    }
 }

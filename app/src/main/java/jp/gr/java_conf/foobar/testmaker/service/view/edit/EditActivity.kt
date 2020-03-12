@@ -40,7 +40,6 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
-import jp.gr.java_conf.foobar.testmaker.service.extensions.swap
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
@@ -51,7 +50,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.min
 
 /**
@@ -65,7 +63,6 @@ open class EditActivity : BaseActivity() {
     private val viewModel: EditViewModel by viewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
-    private val questionViewModel: QuestionViewModel by viewModel()
 
     private val fileName: String
         get() {
@@ -73,11 +70,13 @@ open class EditActivity : BaseActivity() {
             return c.get(Calendar.YEAR).toString() + "_" + (c.get(Calendar.MONTH) + 1) + "_" + c.get(Calendar.DAY_OF_MONTH) + "_" + c.get(Calendar.HOUR_OF_DAY) + "_" + c.get(Calendar.MINUTE) + "_" + c.get(Calendar.SECOND) + "_" + c.get(Calendar.MILLISECOND) + ".png"
         }
 
-    private val test by lazy { intent.getParcelableExtra<Test>("test") }
+    private lateinit var test: Test
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
+
+        test = intent.getParcelableExtra<Test>("test")
 
         val binding = DataBindingUtil.setContentView<ActivityEditBinding>(this, R.layout.activity_edit)
         binding.lifecycleOwner = this
@@ -86,8 +85,6 @@ open class EditActivity : BaseActivity() {
         createAd(binding.adView)
 
         initToolBar()
-
-        supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${test.title}"
 
         viewModel.migrateOrder(test.id)
 
@@ -166,13 +163,15 @@ open class EditActivity : BaseActivity() {
             }
         }
 
+        testViewModel.testsLiveData.observeNonNull(this) {
+            it.find { test.id == it.id }?.let {
+                test = it
+            }
+            supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${test.title}"
+            editAdapter.questions = test.questions
+        }
 
         viewModel.clearQuestions()
-//        viewModel.getQuestions().observeNonNull(this) {
-//            editAdapter.questions = it
-//        }
-
-        editAdapter.questions = ArrayList(test.questions)
     }
 
     override fun onResume() {
@@ -274,17 +273,16 @@ open class EditActivity : BaseActivity() {
                 }
             }
 
-            override fun onClickDeleteQuestion(data: Question, position: Int) {
+            override fun onClickDeleteQuestion(question: Question, position: Int) {
 
                 val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
                 builder.setTitle(getString(R.string.delete_question))
-                builder.setMessage(getString(R.string.message_delete, data.question))
+                builder.setMessage(getString(R.string.message_delete, question.question))
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
 
-                    if (data.imagePath != "") deleteFile(data.imagePath)
+                    if (question.imagePath != "") deleteFile(question.imagePath)
 
-                    questionViewModel.delete(data)
-                    editAdapter.questions.removeAt(position)
+                    testViewModel.delete(question)
                     editAdapter.notifyItemRemoved(position)
                 }
                 builder.setNegativeButton(android.R.string.cancel, null)
@@ -656,7 +654,6 @@ open class EditActivity : BaseActivity() {
                 val to = target.adapterPosition
 
                 viewModel.sortManual(from, to, test.id)
-                editAdapter.questions.swap(from, to)
                 editAdapter.notifyItemMoved(from, to)
 
                 return true

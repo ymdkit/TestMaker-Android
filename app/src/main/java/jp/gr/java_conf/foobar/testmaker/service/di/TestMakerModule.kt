@@ -2,16 +2,17 @@ package jp.gr.java_conf.foobar.testmaker.service.di
 
 import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.*
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.CategoryDataSource
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.TestDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.CategoryRepository
-import jp.gr.java_conf.foobar.testmaker.service.infra.repository.QuestionRepository
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditProViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.QuestionViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
@@ -26,17 +27,14 @@ fun getTestMakerModules(realm: Realm) = module {
     single { TestMakerRepository(get(), get()) }
     single { TestRepository(get()) }
     single { CategoryRepository(get(), get()) }
-    single { QuestionRepository(get()) }
     single { LocalDataSource(realm, get(), get()) }
     single { CategoryDataSource(realm) }
     single { TestDataSource(realm) }
-    single { QuestionDataSource(realm) }
     single { Auth() }
     single { RemoteDataSource(get(), get()) }
     single { SharedPreferenceManager(get()) }
     viewModel { CategoryViewModel(get()) }
     viewModel { TestViewModel(get()) }
-    viewModel { QuestionViewModel(get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }
     viewModel { EditViewModel(get(), get()) }
     viewModel { FirebaseViewModel(get(), get()) }
