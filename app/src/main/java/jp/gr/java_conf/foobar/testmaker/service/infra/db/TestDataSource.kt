@@ -3,17 +3,25 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.db
 import io.realm.Realm
 import io.realm.Sort
 import jp.gr.java_conf.foobar.testmaker.service.SortTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
 class TestDataSource(private val realm: Realm) {
 
     fun create(test: Test): Long {
-        val realmTest = RealmTest.createFromTest(test)
+        val questionId = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
+        val realmTest = RealmTest.createFromTest(test.copy(
+                questions = test.questions.mapIndexed { index, question ->
+                    question.copy(
+                            id = questionId + index,
+                            order = index)
+                }))
+
         realmTest.id = realm.where(RealmTest::class.java).max("id")?.toLong()?.plus(1) ?: 0
         realmTest.order = realmTest.id.toInt()
-        realm.executeTransaction {
-            it.copyToRealm(realmTest)
+        realm.executeTransaction { realm ->
+            realm.copyToRealm(realmTest)
         }
         return realmTest.id
     }

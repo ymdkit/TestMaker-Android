@@ -52,9 +52,11 @@ class MoveQuestionsActivity : BaseActivity() {
 
             if (spinner_to_test.selectedItemPosition == 0) {
 
-                val testId = testViewModel.create(getString(R.string.test), ContextCompat.getColor(baseContext, R.color.red), "")
-
-                viewModel.addQuestions(testId, selectedQuestions.map { Quest.createQuestFromQuestion(it) }.toTypedArray())
+                testViewModel.create(Test(
+                        title = getString(R.string.test),
+                        color = ContextCompat.getColor(baseContext, R.color.red),
+                        questions = selectedQuestions)
+                )
 
             } else {
 
