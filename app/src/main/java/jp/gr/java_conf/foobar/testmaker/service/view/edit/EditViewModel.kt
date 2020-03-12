@@ -144,6 +144,4 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         repository.addQuestion(testId, quest, questionId)
         onSuccess()
     }
-
-    fun sortManual(from: Int, to: Int, testId: Long) = repository.sortManual(from, to, testId)
 }

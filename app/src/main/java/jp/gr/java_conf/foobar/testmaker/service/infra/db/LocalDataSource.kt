@@ -102,25 +102,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun sortManual(from: Int, to: Int, testId: Long) {
-
-        val questions = getTest(testId).questionsNonNull()
-        val fromOrder = questions[from].order
-        val toOrder = questions[to].order
-
-        updateOrder(questions[from].id, toOrder)
-        updateOrder(questions[to].id, fromOrder)
-
-    }
-
-    private fun updateOrder(questionId: Long, order: Int) {
-        realm.beginTransaction()
-        val question = realm.where(Quest::class.java).equalTo("id", questionId).findFirst()
-                ?: Quest()
-        question.order = order
-        realm.commitTransaction()
-    }
-
     fun updateCorrect(quest: Quest, correct: Boolean) {
         realm.beginTransaction()
         quest.correct = correct

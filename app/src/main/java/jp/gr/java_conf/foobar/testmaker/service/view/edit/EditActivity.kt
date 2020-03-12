@@ -456,9 +456,9 @@ open class EditActivity : BaseActivity() {
                     false
                 }
 
-                name.setText(test?.title)
+                name.setText(test.title)
 
-                colorChooser.setColorId(test?.color ?: R.color.red)
+                colorChooser.setColorId(test.color)
 
                 val builder = AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 builder.setView(dialogLayout)
@@ -647,10 +647,7 @@ open class EditActivity : BaseActivity() {
 
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
-
-                viewModel.sortManual(from, to, test.id)
-                editAdapter.notifyItemMoved(from, to)
-
+                testViewModel.swap(test.questions[from], test.questions[to])
                 return true
             }
         })
