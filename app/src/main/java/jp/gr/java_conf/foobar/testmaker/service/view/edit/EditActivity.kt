@@ -170,13 +170,11 @@ open class EditActivity : BaseActivity() {
             supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${test.title}"
             editAdapter.questions = test.questions
         }
-
-        viewModel.clearQuestions()
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchQuestions(test.id)
+        testViewModel.refresh()
     }
 
     private fun initAdapter() {

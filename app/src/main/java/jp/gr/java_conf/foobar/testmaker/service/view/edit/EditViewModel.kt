@@ -47,14 +47,6 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         stateEditing.value = Constants.EDIT_QUESTION
     }
 
-    fun fetchQuestions(testId: Long) {
-        repository.fetchQuestions(testId)
-    }
-
-    fun clearQuestions() {
-        repository.clearQuestions()
-    }
-
     suspend fun loadImage() = repository.loadImage(imagePath)
 
     suspend fun saveImage(bitmap: Bitmap) = repository.saveImage(imagePath, bitmap)
@@ -150,7 +142,6 @@ class EditViewModel(private val repository: TestMakerRepository, val context: Co
         }
 
         repository.addQuestion(testId, quest, questionId)
-        fetchQuestions(testId)
         onSuccess()
     }
 

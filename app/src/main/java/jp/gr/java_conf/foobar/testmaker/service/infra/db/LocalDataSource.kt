@@ -16,12 +16,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         return realm.where(RealmTest::class.java).equalTo("id", testId).findFirst() ?: RealmTest()
     }
 
-    fun getQuestions(testId: Long): ArrayList<Quest>? {
-
-        val realmArray = getTest(testId).questionsNonNull()
-        return ArrayList(realmArray)
-    }
-
     fun addQuestion(testId: Long, question: Quest, questionId: Long) {
         realm.beginTransaction()
 

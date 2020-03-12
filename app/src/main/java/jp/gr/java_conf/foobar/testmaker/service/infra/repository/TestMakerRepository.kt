@@ -21,14 +21,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     var questions: MutableLiveData<ArrayList<Quest>>? = null
         private set
 
-    fun fetchQuestions(testId: Long) {
-        questions?.value = local.getQuestions(testId)
-    }
-
-    fun clearQuestions() {
-        questions = null
-    }
-
     suspend fun loadImage(imagePath: String): Bitmap? = withContext(Dispatchers.IO) {
         local.loadImage(imagePath)
     }
