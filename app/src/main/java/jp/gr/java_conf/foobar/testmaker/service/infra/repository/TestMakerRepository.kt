@@ -91,8 +91,6 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun getTest(testId: Long): RealmTest = local.getTest(testId)
 
-    fun addQuestions(testId: Long, array: Array<Quest>) = local.addQuestions(testId, array)
-    fun deleteQuestions(testId: Long, array: Array<Boolean>) = local.deleteQuestions(testId, array)
     fun resetSolving(testId: Long) = local.resetSolving(testId)
     fun sortManual(from: Int, to: Int, testId: Long) = local.sortManual(from, to, testId)
     fun migrateOrder(testId: Long) = local.migrateOrder(testId)

@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMoveQuestionsBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
@@ -19,7 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MoveQuestionsActivity : BaseActivity() {
 
-    private val viewModel: MoveQuestionViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
 
     lateinit var questionAdapter: CheckBoxQuestionAdapter
@@ -60,12 +58,17 @@ class MoveQuestionsActivity : BaseActivity() {
 
             } else {
 
-                viewModel.addQuestions(testViewModel.tests[spinner_to_test.selectedItemPosition - 1].id, selectedQuestions.map { Quest.createQuestFromQuestion(it) }.toTypedArray())
+                val test = testViewModel.tests[spinner_to_test.selectedItemPosition - 1]
+                testViewModel.update(
+                        test.copy(questions = test.questions + selectedQuestions)
+                )
             }
 
             if (spinner_actions.selectedItemPosition == 0) {//「移動先」の時
 
-                viewModel.deleteQuestions(fromTest.id, questionAdapter.checkBoxStates)
+                testViewModel.update(
+                        fromTest.copy(questions = fromTest.questions.filterIndexed { index, _ -> !questionAdapter.checkBoxStates[index] })
+                )
 
             }
 

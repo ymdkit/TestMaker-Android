@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import io.realm.Realm
-import io.realm.RealmList
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
@@ -100,26 +99,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
 
         realm.copyToRealmOrUpdate(test)
 
-        realm.commitTransaction()
-    }
-
-    fun addQuestions(testId: Long, questions: Array<Quest>) {
-        questions.forEach { addQuestion(testId, it, -1L) }
-    }
-
-    fun deleteQuestions(testId: Long, array: Array<Boolean>) {
-        val test = getTest(testId)
-
-        realm.beginTransaction()
-        val list = RealmList<Quest>()
-
-        test.questionsNonNull().filterIndexed { index, quest -> !array[index] }
-                .forEachIndexed { index, quest ->
-                    quest.order = index
-                    list.add(quest)
-                }
-
-        test.setQuestions(list)
         realm.commitTransaction()
     }
 
