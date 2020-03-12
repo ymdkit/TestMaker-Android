@@ -2,7 +2,6 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
@@ -17,9 +16,6 @@ import kotlinx.coroutines.withContext
 
 class TestMakerRepository(private val local: LocalDataSource,
                           private val remote: RemoteDataSource) {
-
-    var questions: MutableLiveData<ArrayList<Quest>>? = null
-        private set
 
     suspend fun loadImage(imagePath: String): Bitmap? = withContext(Dispatchers.IO) {
         local.loadImage(imagePath)
