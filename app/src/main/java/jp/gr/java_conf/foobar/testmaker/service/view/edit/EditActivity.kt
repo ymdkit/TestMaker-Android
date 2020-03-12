@@ -28,7 +28,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
 import com.isseiaoki.simplecropview.CropImageView
@@ -56,13 +55,17 @@ import kotlin.math.min
  * Created by keita on 2017/02/12.
  */
 
-open class EditActivity : BaseActivity() {
-
-    internal lateinit var editAdapter: EditAdapter
+open class EditActivity : BaseActivity(), EditController.OnClickListener {
 
     private val viewModel: EditViewModel by viewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
+
+    private val controller: EditController by lazy {
+        EditController().apply {
+            setOnClickListener(this@EditActivity)
+        }
+    }
 
     private val fileName: String
         get() {
@@ -81,12 +84,12 @@ open class EditActivity : BaseActivity() {
         val binding = DataBindingUtil.setContentView<ActivityEditBinding>(this, R.layout.activity_edit)
         binding.lifecycleOwner = this
         binding.model = viewModel
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.adapter = controller.adapter
 
         createAd(binding.adView)
 
         initToolBar()
-        initAdapter()
-
         initViews()
 
         showLayoutWrite()
@@ -165,125 +168,13 @@ open class EditActivity : BaseActivity() {
                 test = it
             }
             supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${test.title}"
-            editAdapter.questions = test.questions
+            controller.questions = test.questions
         }
     }
 
     override fun onResume() {
         super.onResume()
         testViewModel.refresh()
-    }
-
-    private fun initAdapter() {
-
-        editAdapter = EditAdapter(this)
-
-        editAdapter.setOnClickListener(object : EditAdapter.OnClickListener {
-            override fun onClickEditQuestion(question: Question) {
-
-                showLayoutEdit()
-                text_title.text = getString(R.string.edit_question)
-                button_cancel.visibility = View.VISIBLE
-                button_add.text = getString(R.string.save_question)
-                set_problem.setText(question.question)
-                set_explanation.setText(question.explanation)
-
-                viewModel.questionId = question.id
-                viewModel.order = question.order
-
-                if (question.imagePath != "") {
-                    viewModel.imagePath = question.imagePath
-
-                    if (question.imagePath.contains("/")) {
-
-                        val storage = FirebaseStorage.getInstance()
-                        val storageRef = storage.reference.child(question.imagePath)
-
-                        button_image.setImageWithGlide(baseContext, storageRef)
-
-                    } else {
-                        lifecycleScope.launch {
-                            button_image.setImageWithGlide(baseContext, viewModel.loadImage())
-                        }
-                    }
-
-                } else {
-                    button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
-                }
-
-                viewModel.isEditingExplanation.value = question.explanation.isNotEmpty()
-
-                when (question.type) {
-
-                    Constants.WRITE -> {
-                        showLayoutWrite()
-
-                        set_answer_write.setText(question.answer)
-                        sharedPreferenceManager.numAnswers = 1
-                    }
-
-                    Constants.SELECT -> {
-
-                        showLayoutSelect()
-
-                        sharedPreferenceManager.numOthers = question.others.size
-                        edit_select_view.reloadOthers(question.others.size)
-                        edit_select_view.setAnswer(question.answer)
-                        edit_select_view.setOthers(question.others)
-                        viewModel.isAuto.value = question.isAutoGenerateOthers
-
-                        viewModel.spinnerSelectsPosition.value = min(Constants.OTHER_SELECT_MAX - 1, question.others.size - 1)
-
-                        edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
-
-                    }
-                    Constants.COMPLETE -> {
-
-                        showLayoutComplete()
-                        sharedPreferenceManager.numAnswers = question.answers.size
-                        sharedPreferenceManager.isCheckOrder = question.isCheckOrder
-                        edit_complete_view.reloadAnswers(question.answers.size)
-                        edit_complete_view.setAnswers(question)
-                        viewModel.isCheckOrder.value = question.isCheckOrder
-
-                        viewModel.spinnerAnswersPosition.value = min(Constants.ANSWER_MAX - 2, question.answers.size - 2)
-
-                    }
-
-                    Constants.SELECT_COMPLETE -> {
-
-                        showLayoutSelectComplete()
-                        sharedPreferenceManager.numAnswersSelect = question.answers.size
-                        sharedPreferenceManager.numOthers = question.others.size + question.answers.size - 1
-                        edit_select_complete_view.setAnswerNum(question.answers.size)
-                        edit_select_complete_view.reloadSelects(question.answers.size + question.others.size)
-                        edit_select_complete_view.setSelections(question.answers, question.others)
-                        viewModel.isAuto.value = question.isAutoGenerateOthers
-                        edit_select_complete_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers + 1)
-
-                        viewModel.spinnerAnswersPosition.value = min(Constants.SELECT_COMPLETE_MAX, question.answers.size)
-                        viewModel.spinnerSelectsPosition.value = min(Constants.SELECT_COMPLETE_MAX - 2, question.others.size + question.answers.size - 2)
-
-                    }
-                }
-            }
-
-            override fun onClickDeleteQuestion(question: Question, position: Int) {
-
-                val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
-                builder.setTitle(getString(R.string.delete_question))
-                builder.setMessage(getString(R.string.message_delete, question.question))
-                builder.setPositiveButton(android.R.string.ok) { _, _ ->
-
-                    if (question.imagePath != "") deleteFile(question.imagePath)
-
-                    testViewModel.delete(question)
-                    editAdapter.notifyItemRemoved(position)
-                }
-                builder.setNegativeButton(android.R.string.cancel, null)
-                builder.create().show()
-            }
-        })
     }
 
     private fun showLayoutEdit() {
@@ -297,7 +188,7 @@ open class EditActivity : BaseActivity() {
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         super.onActivityResult(requestCode, resultCode, resultData)
-        editAdapter.notifyDataSetChanged()
+        testViewModel.refresh()
 
         if (resultCode != Activity.RESULT_OK) return
         if (resultData == null) return
@@ -379,21 +270,18 @@ open class EditActivity : BaseActivity() {
         val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String): Boolean {
-                editAdapter.searchWord = s
-                editAdapter.notifyDataSetChanged()
+                controller.searchWord = s
                 return false
             }
 
             override fun onQueryTextChange(s: String): Boolean {
-                editAdapter.searchWord = s
-                editAdapter.notifyDataSetChanged()
+                controller.searchWord = s
                 return false
             }
         })
 
         searchView.setOnCloseListener {
-            editAdapter.searchWord = ""
-            editAdapter.notifyDataSetChanged()
+            controller.searchWord = ""
             false
         }
 
@@ -633,10 +521,6 @@ open class EditActivity : BaseActivity() {
             listDlg.show()
         }
 
-        recycler_view.layoutManager = LinearLayoutManager(applicationContext)
-        recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
-        recycler_view.adapter = editAdapter
-
         val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
             override fun onSwiped(holder: RecyclerView.ViewHolder, position: Int) {
@@ -687,6 +571,107 @@ open class EditActivity : BaseActivity() {
             }
             activity.startActivity(intent)
         }
+    }
+
+    override fun onClickEditQuestion(question: Question) {
+        showLayoutEdit()
+        text_title.text = getString(R.string.edit_question)
+        button_cancel.visibility = View.VISIBLE
+        button_add.text = getString(R.string.save_question)
+        set_problem.setText(question.question)
+        set_explanation.setText(question.explanation)
+
+        viewModel.questionId = question.id
+        viewModel.order = question.order
+
+        if (question.imagePath != "") {
+            viewModel.imagePath = question.imagePath
+
+            if (question.imagePath.contains("/")) {
+
+                val storage = FirebaseStorage.getInstance()
+                val storageRef = storage.reference.child(question.imagePath)
+
+                button_image.setImageWithGlide(baseContext, storageRef)
+
+            } else {
+                lifecycleScope.launch {
+                    button_image.setImageWithGlide(baseContext, viewModel.loadImage())
+                }
+            }
+
+        } else {
+            button_image.setImageResource(R.drawable.ic_insert_photo_white_24dp)
+        }
+
+        viewModel.isEditingExplanation.value = question.explanation.isNotEmpty()
+
+        when (question.type) {
+
+            Constants.WRITE -> {
+                showLayoutWrite()
+
+                set_answer_write.setText(question.answer)
+                sharedPreferenceManager.numAnswers = 1
+            }
+
+            Constants.SELECT -> {
+
+                showLayoutSelect()
+
+                sharedPreferenceManager.numOthers = question.others.size
+                edit_select_view.reloadOthers(question.others.size)
+                edit_select_view.setAnswer(question.answer)
+                edit_select_view.setOthers(question.others)
+                viewModel.isAuto.value = question.isAutoGenerateOthers
+
+                viewModel.spinnerSelectsPosition.value = min(Constants.OTHER_SELECT_MAX - 1, question.others.size - 1)
+
+                edit_select_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers)
+
+            }
+            Constants.COMPLETE -> {
+
+                showLayoutComplete()
+                sharedPreferenceManager.numAnswers = question.answers.size
+                sharedPreferenceManager.isCheckOrder = question.isCheckOrder
+                edit_complete_view.reloadAnswers(question.answers.size)
+                edit_complete_view.setAnswers(question)
+                viewModel.isCheckOrder.value = question.isCheckOrder
+
+                viewModel.spinnerAnswersPosition.value = min(Constants.ANSWER_MAX - 2, question.answers.size - 2)
+
+            }
+
+            Constants.SELECT_COMPLETE -> {
+
+                showLayoutSelectComplete()
+                sharedPreferenceManager.numAnswersSelect = question.answers.size
+                sharedPreferenceManager.numOthers = question.others.size + question.answers.size - 1
+                edit_select_complete_view.setAnswerNum(question.answers.size)
+                edit_select_complete_view.reloadSelects(question.answers.size + question.others.size)
+                edit_select_complete_view.setSelections(question.answers, question.others)
+                viewModel.isAuto.value = question.isAutoGenerateOthers
+                edit_select_complete_view.setAuto(sharedPreferenceManager.auto, sharedPreferenceManager.numOthers + 1)
+
+                viewModel.spinnerAnswersPosition.value = min(Constants.SELECT_COMPLETE_MAX, question.answers.size)
+                viewModel.spinnerSelectsPosition.value = min(Constants.SELECT_COMPLETE_MAX - 2, question.others.size + question.answers.size - 2)
+
+            }
+        }
+    }
+
+    override fun onClickDeleteQuestion(question: Question) {
+        val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
+        builder.setTitle(getString(R.string.delete_question))
+        builder.setMessage(getString(R.string.message_delete, question.question))
+        builder.setPositiveButton(android.R.string.ok) { _, _ ->
+
+            if (question.imagePath != "") deleteFile(question.imagePath)
+            testViewModel.delete(question)
+        }
+        builder.setNegativeButton(android.R.string.cancel, null)
+        builder.create().show()
     }
 }
 
