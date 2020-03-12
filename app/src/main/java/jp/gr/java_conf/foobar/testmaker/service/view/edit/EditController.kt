@@ -36,7 +36,7 @@ class EditController : EpoxyController() {
         result.forEachIndexed { index, it ->
             cardQuestion {
                 id(it.id)
-                index(index)
+                index(index + 1)
                 question(it)
                 listener(listener)
             }

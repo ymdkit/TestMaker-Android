@@ -27,10 +27,10 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.epoxy.EpoxyTouchHelper
 import com.google.firebase.storage.FirebaseStorage
 import com.isseiaoki.simplecropview.CropImageView
+import jp.gr.java_conf.foobar.testmaker.service.CardQuestionBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditBinding
@@ -67,6 +67,8 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
         }
     }
 
+    private val binding by lazy { DataBindingUtil.setContentView<ActivityEditBinding>(this, R.layout.activity_edit) }
+
     private val fileName: String
         get() {
             val c = Calendar.getInstance()
@@ -81,7 +83,6 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
 
         test = intent.getParcelableExtra<Test>("test")
 
-        val binding = DataBindingUtil.setContentView<ActivityEditBinding>(this, R.layout.activity_edit)
         binding.lifecycleOwner = this
         binding.model = viewModel
         binding.recyclerView.setHasFixedSize(true)
@@ -521,23 +522,23 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
             listDlg.show()
         }
 
-        val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
-            override fun onSwiped(holder: RecyclerView.ViewHolder, position: Int) {
-            }
+        EpoxyTouchHelper
+                .initDragging(controller)
+                .withRecyclerView(binding.recyclerView)
+                .forVerticalList()
+                .withTarget(CardQuestionBindingModel_::class.java)
+                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<CardQuestionBindingModel_>() {
+                    override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: CardQuestionBindingModel_, itemView: View?) {
+                        val from = controller.adapter.getModelAtPosition(fromPosition)
+                        val to = controller.adapter.getModelAtPosition(toPosition)
 
-            // ここで指定した方向にのみドラッグ可能
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                        if (from is CardQuestionBindingModel_ && to is CardQuestionBindingModel_) {
+                            testViewModel.swap(from.question(), to.question())
+                        }
+                    }
+                })
 
-                val from = viewHolder.adapterPosition
-                val to = target.adapterPosition
-                testViewModel.swap(test.questions[from], test.questions[to])
-                return true
-            }
-        })
 
-        touchHelper.attachToRecyclerView(recycler_view)
-        recycler_view.addItemDecoration(touchHelper)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
