@@ -25,7 +25,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditProActivity : BaseActivity() {
 
-    private val editProViewModel: EditProViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
 
     private val test by lazy { intent.getParcelableExtra<Test>("test") }

@@ -339,8 +339,6 @@ class MainActivity : ShowTestsActivity() {
                 }
                 R.id.nav_remove_ad -> {
 
-                    println("removead${sharedPreferenceManager.isRemovedAd}")
-
                     viewModel.purchaseRemoveAd(this, BillingItem(getString(R.string.sku_remove_ad), BillingClient.SkuType.INAPP))
                 }
             }
