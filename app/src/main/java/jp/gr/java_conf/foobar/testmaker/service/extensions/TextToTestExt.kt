@@ -73,7 +73,8 @@ suspend fun String.toTest(context: Context): Test = withContext(Dispatchers.Defa
                     question = question.copy(
                             answer = backup[2],
                             others = List(otherNum) { context.getString(R.string.state_auto) },
-                            type = Constants.SELECT
+                            type = Constants.SELECT,
+                            isAutoGenerateOthers = true
                     )
 
                 } else if (backup[0] == context.getString(R.string.load_select_complete_auto_problem)) {
@@ -111,7 +112,7 @@ suspend fun String.toTest(context: Context): Test = withContext(Dispatchers.Defa
                     val others = backup.drop(4 + answerNum).take(otherNum)
 
                     question = question.copy(
-                            answer = backup.drop(2).joinToString(separator = " "),
+                            answer = answers.joinToString(separator = " "),
                             answers = answers,
                             others = others,
                             type = Constants.SELECT_COMPLETE
