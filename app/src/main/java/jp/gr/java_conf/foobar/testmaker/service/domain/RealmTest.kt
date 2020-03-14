@@ -43,16 +43,6 @@ open class RealmTest : RealmObject() {
 
     fun questionsNonNull(): List<Quest> = questions?.sortedBy { it.order } ?: listOf()
 
-    fun getQuestionsForEach(): RealmList<Quest> {//順番はどうでもいいが全てにアクセスしたい時
-
-        return questions ?: RealmList()
-
-    }
-
-    fun setQuestions(q: RealmList<Quest>) {
-        questions = q
-    }
-
     fun testToString(context: Context, upload: Boolean): String {
 
         var backup = ""
