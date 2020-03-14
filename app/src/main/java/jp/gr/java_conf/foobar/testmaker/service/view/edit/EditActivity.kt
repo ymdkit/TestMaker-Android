@@ -81,7 +81,7 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
 
-        test = intent.getParcelableExtra<Test>("test")
+        test = intent.getParcelableExtra("test")
 
         binding.lifecycleOwner = this
         binding.model = viewModel
@@ -558,19 +558,6 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
         }
     }
 
-    companion object {
-        private const val REQUEST_SAF_PICK_IMAGE = 10012
-        private const val REQUEST_IMAGE_CAPTURE = 10013
-        private const val REQUEST_PERMISSION_CAMERA = 10014
-
-        fun startActivity(activity: Activity, test: Test) {
-            val intent = Intent(activity, EditActivity::class.java).apply {
-                putExtra("test", test)
-            }
-            activity.startActivity(intent)
-        }
-    }
-
     override fun onClickEditQuestion(question: Question) {
         showLayoutEdit()
         text_title.text = getString(R.string.edit_question)
@@ -670,6 +657,19 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.create().show()
+    }
+
+    companion object {
+        private const val REQUEST_SAF_PICK_IMAGE = 10012
+        private const val REQUEST_IMAGE_CAPTURE = 10013
+        private const val REQUEST_PERMISSION_CAMERA = 10014
+
+        fun startActivity(activity: Activity, test: Test) {
+            val intent = Intent(activity, EditActivity::class.java).apply {
+                putExtra("test", test)
+            }
+            activity.startActivity(intent)
+        }
     }
 }
 

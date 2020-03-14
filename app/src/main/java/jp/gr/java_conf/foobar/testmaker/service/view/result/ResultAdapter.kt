@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 
 /**
  * Created by keita on 2016/05/29.
@@ -16,7 +16,7 @@ class ResultAdapter(context: Context) : androidx.recyclerview.widget.RecyclerVie
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
-    var questions: List<Quest> = emptyList()
+    var questions: List<Question> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -35,10 +35,10 @@ class ResultAdapter(context: Context) : androidx.recyclerview.widget.RecyclerVie
         val data = questions[holder.adapterPosition]
 
         holder.number.text = (holder.adapterPosition + 1).toString()
-        holder.problem.text = data.problem
+        holder.problem.text = data.question
         holder.answer.text = data.answer
 
-        holder.mark.setImageResource(if (data.correct) R.drawable.right else R.drawable.mistake)
+        holder.mark.setImageResource(if (data.isCorrect) R.drawable.right else R.drawable.mistake)
 
     }
 

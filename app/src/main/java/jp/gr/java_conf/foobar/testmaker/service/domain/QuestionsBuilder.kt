@@ -1,12 +1,12 @@
 package jp.gr.java_conf.foobar.testmaker.service.domain
 
-class QuestionsBuilder(var questions: List<Quest>) {
+class QuestionsBuilder(var questions: List<Question>) {
 
-    var isRetry = false
+    private var isRetry = false
 
     fun retry(isRetry: Boolean): QuestionsBuilder {
         this.isRetry = isRetry
-        if(isRetry) questions = questions.filter { it.solving }
+        if (isRetry) questions = questions.filter { it.isSolved }
         return this
     }
 
@@ -17,7 +17,7 @@ class QuestionsBuilder(var questions: List<Quest>) {
     }
 
     fun mistakeOnly(isMistakeOnly: Boolean): QuestionsBuilder {
-        if(isMistakeOnly) questions = questions.filter { !it.correct }
+        if (isMistakeOnly) questions = questions.filter { !it.isCorrect }
         return this
     }
 

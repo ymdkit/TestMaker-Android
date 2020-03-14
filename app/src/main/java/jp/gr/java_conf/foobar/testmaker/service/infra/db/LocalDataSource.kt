@@ -76,25 +76,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         realm.commitTransaction()
     }
 
-    fun resetSolving(testId: Long) {
-        realm.beginTransaction()
-        getTest(testId).getQuestionsForEach().forEach { it.solving = false }
-        realm.commitTransaction()
-    }
-
-    fun updateCorrect(quest: Quest, correct: Boolean) {
-        realm.beginTransaction()
-        quest.correct = correct
-        realm.commitTransaction()
-    }
-
-    fun updateSolving(quest: Quest, solving: Boolean) {
-        realm.beginTransaction()
-        quest.solving = solving
-        realm.commitTransaction()
-
-    }
-
     fun updateDocumentId(test: RealmTest, documentId: String) {
         realm.beginTransaction()
         test.documentId = documentId

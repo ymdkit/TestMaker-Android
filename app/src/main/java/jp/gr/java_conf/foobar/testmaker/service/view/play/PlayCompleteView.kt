@@ -1,7 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.play
 
 import android.content.Context
-import android.os.Build
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -10,8 +9,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import kotlinx.android.synthetic.main.layout_play_complete.view.*
 
 class PlayCompleteView : LinearLayout {
@@ -75,8 +74,8 @@ class PlayCompleteView : LinearLayout {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init { LayoutInflater.from(context).inflate(R.layout.layout_play_complete, this) }
-    
-    fun initEditAnswers(question: Quest) {
+
+    fun initEditAnswers(question: Question) {
 
         for (i in editAnswers.indices) {
 

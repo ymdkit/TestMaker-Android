@@ -1,7 +1,11 @@
 package jp.gr.java_conf.foobar.testmaker.service.domain
 
+import android.content.Context
 import android.os.Parcelable
+import jp.gr.java_conf.foobar.testmaker.service.Constants
+import jp.gr.java_conf.foobar.testmaker.service.R
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 data class Test(
@@ -19,6 +23,32 @@ data class Test(
 
     val questionsCorrectCount
         get() = questions.count { it.isCorrect }
+
+    fun getChoices(size: Int, answer: String, context: Context): ArrayList<String> {
+
+        val result = arrayListOf<String>()
+
+        for (q in questions.take(100).shuffled()) {
+            if (result.size >= size) break
+
+            when (q.type) {
+                Constants.WRITE, Constants.SELECT -> {
+                    if (q.answer != answer) result.add(q.answer)
+                }
+                Constants.COMPLETE, Constants.SELECT_COMPLETE -> {
+                    if (q.answers.isNotEmpty()) {
+                        if (q.answers[0] != answer) result.add(q.answers[0])
+                    }
+                }
+            }
+        }
+
+        while (result.size < size) {
+            result.add(context.getString(R.string.message_not_auto))
+        }
+
+        return result
+    }
 
     companion object {
         fun createFromRealmTest(realmTest: RealmTest) = Test(

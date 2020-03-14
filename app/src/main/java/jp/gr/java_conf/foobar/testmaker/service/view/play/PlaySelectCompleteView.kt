@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import kotlinx.android.synthetic.main.layout_play_select_complete.view.*
 import kotlin.math.min
 
@@ -52,25 +52,25 @@ class PlaySelectCompleteView : LinearLayout {
 
     }
 
-    fun setTextChoices(question: Quest, autoChoices: ArrayList<String>) {
+    fun setTextChoices(question: Question, autoChoices: ArrayList<String>) {
 
         var choices = ArrayList<String>()
 
-        if (question.auto) {
+        if (question.isAutoGenerateOthers) {
 
             choices = autoChoices
 
         } else {
 
-            question.selections.forEach { choices.add(it.selection) }
+            question.others.forEach { choices.add(it) }
 
         }
 
-        question.answers.forEach { choices.add(it.selection) }
+        question.answers.forEach { choices.add(it) }
 
         choices.shuffle()
 
-        for (i in 0 until min(checkBoxes.size,question.selections.size + question.answers.size)) {
+        for (i in 0 until min(checkBoxes.size, question.others.size + question.answers.size)) {
             checkBoxes[i]?.tag = i
             checkBoxes[i]?.text = choices[i]
 
@@ -78,12 +78,12 @@ class PlaySelectCompleteView : LinearLayout {
 
     }
 
-    fun show(question: Quest) {
+    fun show(question: Question) {
 
         visibility = View.VISIBLE
 
         checkBoxes.forEachIndexed { index, checkBox ->
-            checkBox?.visibility = if (index < question.selections.size + question.answers.size) View.VISIBLE else View.GONE
+            checkBox?.visibility = if (index < question.others.size + question.answers.size) View.VISIBLE else View.GONE
 
             checkBox?.isChecked = false
         }

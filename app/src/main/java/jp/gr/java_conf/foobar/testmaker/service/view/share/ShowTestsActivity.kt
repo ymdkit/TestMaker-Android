@@ -247,14 +247,14 @@ open class ShowTestsActivity : BaseActivity() {
 
         } else {
 
-            val i = Intent(this@ShowTestsActivity, PlayActivity::class.java)
-            i.putExtra("testId", test.id)
-
-            testViewModel.update(test.copy(
+            val result = test.copy(
                     limit = Integer.parseInt(limit),
                     startPosition = Integer.parseInt(start) - 1,
-                    history = Calendar.getInstance().timeInMillis))
-            startActivityForResult(i, REQUEST_EDIT)
+                    history = Calendar.getInstance().timeInMillis)
+
+            PlayActivity.startActivity(this@ShowTestsActivity, result)
+
+            testViewModel.update(result)
         }
     }
 

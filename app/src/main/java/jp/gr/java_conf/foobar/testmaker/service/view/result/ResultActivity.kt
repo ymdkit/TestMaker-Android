@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.result
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityResultBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
@@ -15,38 +17,31 @@ import jp.studyplus.android.sdk.Studyplus
 import jp.studyplus.android.sdk.record.StudyRecord
 import jp.studyplus.android.sdk.record.StudyRecordAmountTotal
 import kotlinx.android.synthetic.main.activity_result.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ResultActivity : BaseActivity() {
     private lateinit var resultAdapter: ResultAdapter
-    private var testId: Long = 0
 
-    private val resultViewModel: ResultViewModel by viewModel()
+    private val test by lazy { intent.getParcelableExtra<Test>("test") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
-
-        testId = intent.getLongExtra("testId", -1)
 
         setSupportActionBar(toolbar)
 
         val binding = DataBindingUtil.setContentView<ActivityResultBinding>(this, R.layout.activity_result)
         createAd(binding.adView)
 
-        val questions = resultViewModel.getTest(testId).getQuestionsSolved()
+        val questions = test.questions.filter { it.isSolved }
 
         resultAdapter = ResultAdapter(this)
-        resultAdapter.questions = questions.toList()
+        resultAdapter.questions = questions
 
         recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
         recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
         recycler_view.adapter = resultAdapter
 
-        var count = 0
-        for (i in questions.indices) if (questions[i].correct) count++
-
-        result.text = getString(R.string.message_ratio, count, questions.size)
+        result.text = getString(R.string.message_ratio, questions.count { it.isCorrect }, questions.size)
 
         top.setOnClickListener { startActivity(Intent(this@ResultActivity, MainActivity::class.java)) }
 
@@ -55,30 +50,19 @@ class ResultActivity : BaseActivity() {
             AlertDialog.Builder(this@ResultActivity, R.style.MyAlertDialogStyle)
                     .setTitle(getString(R.string.retry))
                     .setItems(resources.getStringArray(R.array.action_reload)) { _, which ->
-                        val i = Intent(this@ResultActivity, PlayActivity::class.java)
-                        i.putExtra("testId", testId)
-
-                        i.putExtra("redo", 1)
-
                         when (which) {
                             0 -> {//全問やり直し
 
                                 sharedPreferenceManager.refine = false
-
-                                startActivity(i)
+                                PlayActivity.startActivity(this@ResultActivity, test, true)
                             }
 
                             1 -> { //不正解のみやり直し
 
-                                var incorrect = false
-
-                                for (k in questions.indices) if (!questions[k].correct) incorrect = true
-
-                                if (incorrect) {
+                                if (questions.any { !it.isCorrect }) {
 
                                     sharedPreferenceManager.refine = true
-
-                                    startActivity(i)
+                                    PlayActivity.startActivity(this@ResultActivity, test, true)
 
                                 } else {
 
@@ -95,7 +79,7 @@ class ResultActivity : BaseActivity() {
         val record = StudyRecord(
                 duration = (intent.getLongExtra("duration", 0) / 1000).toInt(),
                 amount = StudyRecordAmountTotal(questions.size),
-                comment = "${resultViewModel.getTest(testId).title} で勉強しました")
+                comment = "${test.title} で勉強しました")
 
         when (sharedPreferenceManager.uploadStudyPlus) {
             resources.getStringArray(R.array.upload_setting_study_plus_values)[1] ->
@@ -135,6 +119,17 @@ class ResultActivity : BaseActivity() {
         startActivity(Intent(this@ResultActivity, MainActivity::class.java))
 
         super.onBackPressed()
+    }
+
+    companion object {
+
+        fun startActivity(activity: Activity, test: Test, duration: Long) {
+            val intent = Intent(activity, ResultActivity::class.java).apply {
+                putExtra("test", test)
+                putExtra("duration", duration)
+            }
+            activity.startActivity(intent)
+        }
     }
 
 }

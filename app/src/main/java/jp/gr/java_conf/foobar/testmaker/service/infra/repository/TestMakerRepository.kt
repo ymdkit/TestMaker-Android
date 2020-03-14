@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
@@ -74,11 +73,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun getTestsQuery() = remote.getTestsQuery()
 
     fun getTest(testId: Long): RealmTest = local.getTest(testId)
-
-    fun resetSolving(testId: Long) = local.resetSolving(testId)
-
-    fun updateCorrect(quest: Quest, correct: Boolean) = local.updateCorrect(quest, correct)
-    fun updateSolving(quest: Quest, solving: Boolean) = local.updateSolving(quest, solving)
     fun getMaxQuestionId(): Long = local.getMaxQuestionId()
 
 }
