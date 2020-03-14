@@ -19,7 +19,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerReposi
 
 class MainViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val preference: SharedPreferenceManager, context: Context) : ViewModel(), PurchasesUpdatedListener, BillingClientStateListener, LifecycleObserver {
 
-    fun getMaxQuestionId(): Long = repository.getMaxQuestionId()
     suspend fun downloadTest(testId: String): FirebaseTestResult = repository.downloadTest(testId)
 
     fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test)

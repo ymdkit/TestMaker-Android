@@ -73,7 +73,7 @@ class EditProActivity : BaseActivity() {
             val result = text.toTest(baseContext)
 
             Toast.makeText(baseContext, baseContext.getString(R.string.message_success_update), Toast.LENGTH_LONG).show()
-            testViewModel.update(result.copy(id = test.id))
+            testViewModel.update(result.copy(id = test.id, order = test.order))
 
         }
     }

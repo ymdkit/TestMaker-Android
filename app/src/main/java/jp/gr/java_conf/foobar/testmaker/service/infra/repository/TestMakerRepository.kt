@@ -73,6 +73,5 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun getTestsQuery() = remote.getTestsQuery()
 
     fun getTest(testId: Long): RealmTest = local.getTest(testId)
-    fun getMaxQuestionId(): Long = local.getMaxQuestionId()
 
 }
