@@ -3,18 +3,16 @@ package jp.gr.java_conf.foobar.testmaker.service.extensions
 import android.content.Context
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-suspend fun String.toTest(context: Context, questionId: Long): RealmTest = withContext(Dispatchers.Default) {
+suspend fun String.toTest(context: Context): Test = withContext(Dispatchers.Default) {
 
     val backups = split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
-    val test = RealmTest()
-    test.title = context.getString(R.string.unknown)
-    test.color = context.resources.getIntArray(R.array.color_list)[0]
+    var test = Test(title = context.getString(R.string.unknown), color = context.resources.getIntArray(R.array.color_list)[0])
 
     for (i in backups.indices) {
         try {
@@ -26,33 +24,44 @@ suspend fun String.toTest(context: Context, questionId: Long): RealmTest = withC
 
             if (backup.size > 2) {
 
-                val question = Quest()
-                question.problem = backup[1]
-                question.id = questionId + test.questionsNonNull().size
+                var question = Question(question = backup[1])
 
                 if (backup[0] == context.getString(R.string.load_short_answers)) {
 
-                    question.answer = backup[2]
-                    question.type = Constants.WRITE
+                    question = question.copy(
+                            answer = backup[2],
+                            type = Constants.WRITE
+                    )
+
                 } else if (backup[0] == context.getString(R.string.load_multiple_answers)) {
                     if (backup.size - 2 > Constants.ANSWER_MAX) continue
 
-                    question.setAnswers(backup.drop(2).toTypedArray())
-                    backup.drop(2).toTypedArray().forEach { question.answer += "$it " }
-                    question.type = Constants.COMPLETE
+                    question = question.copy(
+                            answers = backup.drop(2),
+                            answer = backup.drop(2).joinToString(separator = " "),
+                            type = Constants.COMPLETE
+                    )
+
                 } else if (backup[0] == context.getString(R.string.load_multiple_answers_order)) {
                     if (backup.size - 2 > Constants.ANSWER_MAX) continue
 
-                    question.setAnswers(backup.drop(2).toTypedArray())
-                    question.isCheckOrder = true
-                    question.type = Constants.COMPLETE
+                    question = question.copy(
+                            answers = backup.drop(2),
+                            answer = backup.drop(2).joinToString(separator = " "),
+                            type = Constants.COMPLETE,
+                            isCheckOrder = true
+                    )
+
                 } else if (backup[0] == context.getString(R.string.load_selection_problems)) {
 
                     if (backup.size - 3 > Constants.OTHER_SELECT_MAX) continue
 
-                    question.answer = backup[2]
-                    question.setSelections(backup.drop(3).toTypedArray())
-                    question.type = Constants.SELECT
+                    question = question.copy(
+                            answer = backup[2],
+                            others = backup.drop(3),
+                            type = Constants.SELECT
+                    )
+
                 } else if (backup[0] == context.getString(R.string.load_selection_auto_problems)) {
 
                     if (backup.size != 4) continue
@@ -61,27 +70,32 @@ suspend fun String.toTest(context: Context, questionId: Long): RealmTest = withC
 
                     if (otherNum > Constants.OTHER_SELECT_MAX) continue
 
-                    question.answer = backup[2]
-                    question.auto = true
-                    question.type = Constants.SELECT
-                    question.setSelections(Array(otherNum) { context.getString(R.string.state_auto) })
+                    question = question.copy(
+                            answer = backup[2],
+                            others = List(otherNum) { context.getString(R.string.state_auto) },
+                            type = Constants.SELECT
+                    )
+
                 } else if (backup[0] == context.getString(R.string.load_select_complete_auto_problem)) {
 
                     val otherNum = Integer.parseInt(backup[2].substring(0, 1))
 
                     if (otherNum > Constants.OTHER_SELECT_MAX) continue
 
-                    val others = Array(otherNum) { context.getString(R.string.state_auto) }
+                    val others = List(otherNum) { context.getString(R.string.state_auto) }
 
-                    val answers = backup.drop(3).toTypedArray()
+                    val answers = backup.drop(3)
 
                     if (others.size + answers.size > Constants.SELECT_COMPLETE_MAX) continue // 要素数オーバー
 
-                    question.type = Constants.SELECT_COMPLETE
-                    answers.forEach { question.answer += "$it " }
-                    question.setAnswers(answers)
-                    question.setSelections(others)
-                    question.auto = true
+                    question = question.copy(
+                            answer = backup.drop(2).joinToString(separator = " "),
+                            answers = answers,
+                            others = others,
+                            type = Constants.SELECT_COMPLETE,
+                            isAutoGenerateOthers = true
+                    )
+
                 } else if (backup[0] == context.getString(R.string.load_select_complete_problem)) {
 
                     question.type = Constants.SELECT_COMPLETE
@@ -92,29 +106,40 @@ suspend fun String.toTest(context: Context, questionId: Long): RealmTest = withC
 
                     if (otherNum + answerNum > Constants.SELECT_COMPLETE_MAX) continue // 要素数オーバー
 
-                    val answers = backup.drop(4).take(answerNum).toTypedArray()
+                    val answers = backup.drop(4).take(answerNum)
 
-                    val others = backup.drop(4 + answerNum).take(otherNum).toTypedArray()
+                    val others = backup.drop(4 + answerNum).take(otherNum)
 
-                    question.type = Constants.SELECT_COMPLETE
-                    answers.forEach { question.answer += "$it " }
-                    question.setAnswers(answers)
-                    question.setSelections(others)
+                    question = question.copy(
+                            answer = backup.drop(2).joinToString(separator = " "),
+                            answers = answers,
+                            others = others,
+                            type = Constants.SELECT_COMPLETE
+                    )
                 }
 
-                test.addQuestion(question)
+                test = test.copy(
+                        questions = test.questions + listOf(question)
+                )
+
             } else if (backup.size == 2) {
 
                 if (backup[0] == context.getString(R.string.load_explanation)) {
-                    if (test.questionsNonNull().isNotEmpty()) {
-                        test.questionsNonNull()[test.questionsNonNull().size - 1].explanation = backup[1]
+                    if (test.questions.isNotEmpty()) {
+                        test.questions[test.questions.size - 1].explanation = backup[1]
                     }
                 } else if (backup[0] == context.getString(R.string.load_title)) {
-                    test.title = backup[1]
+                    test = test.copy(
+                            title = backup[1]
+                    )
                 } else if (backup[0] == context.getString(R.string.load_category)) {
-                    test.setCategory(backup[1])
+                    test = test.copy(
+                            category = backup[1]
+                    )
                 } else if (backup[0] == context.getString(R.string.load_color)) {
-                    test.color = Integer.parseInt(backup[1])
+                    test = test.copy(
+                            color = Integer.parseInt(backup[1])
+                    )
                 }
             }
         } catch (e: ArrayIndexOutOfBoundsException) {

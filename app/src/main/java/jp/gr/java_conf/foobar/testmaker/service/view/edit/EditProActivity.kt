@@ -68,15 +68,12 @@ class EditProActivity : BaseActivity() {
 
         val text = edit_test.text.toString()
 
-        val questionId = editProViewModel.getMaxQuestionId()
-
         lifecycleScope.launch {
 
-            val result = text.toTest(baseContext, questionId)
+            val result = text.toTest(baseContext)
 
             Toast.makeText(baseContext, baseContext.getString(R.string.message_success_update), Toast.LENGTH_LONG).show()
-            result.id = test.id
-            testViewModel.update(Test.createFromRealmTest(result))
+            testViewModel.update(result.copy(id = test.id))
 
         }
     }

@@ -40,8 +40,19 @@ class TestDataSource(private val realm: Realm) {
     }
 
     fun update(test: Test) {
+        var result = test
+        val questionId = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
+        if (test.questions.size >= 2 && test.questions[0].id == test.questions[1].id) {
+            result = result.copy(questions =
+            result.questions.mapIndexed { index, question ->
+                question.copy(
+                        id = questionId + index,
+                        order = index)
+            })
+        }
+
         realm.executeTransaction {
-            it.copyToRealmOrUpdate(RealmTest.createFromTest(test))
+            it.copyToRealmOrUpdate(RealmTest.createFromTest(result))
         }
     }
 
