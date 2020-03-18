@@ -87,7 +87,6 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
 
         binding.lifecycleOwner = this
         binding.model = viewModel
-        binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = controller.adapter
 
         createAd(binding.adView)

@@ -124,7 +124,6 @@ class MainActivity : ShowTestsActivity() {
             }
         }
 
-        binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = mainController.adapter
 
         EpoxyTouchHelper

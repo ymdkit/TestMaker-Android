@@ -4,6 +4,7 @@ import android.graphics.drawable.GradientDrawable
 import android.widget.ImageButton
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 
 object CustomBindingAdapter {
 
@@ -18,4 +19,9 @@ object CustomBindingAdapter {
 
     }
 
+    @BindingAdapter("android:isHasFixedSize")
+    @JvmStatic
+    fun RecyclerView.setIsHasFixedSize(isFixed: Boolean) {
+        setHasFixedSize(isFixed)
+    }
 }

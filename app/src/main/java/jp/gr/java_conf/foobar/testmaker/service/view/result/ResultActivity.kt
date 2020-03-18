@@ -44,8 +44,6 @@ class ResultActivity : BaseActivity() {
         resultAdapter = ResultAdapter(this)
         resultAdapter.questions = questions
 
-        recycler_view.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
-        recycler_view.setHasFixedSize(true) // アイテムは固定サイズ
         recycler_view.adapter = resultAdapter
 
         result.text = getString(R.string.message_ratio, questions.count { it.isCorrect }, questions.size)
