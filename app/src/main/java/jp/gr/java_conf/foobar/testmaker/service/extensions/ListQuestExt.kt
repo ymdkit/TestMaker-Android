@@ -1,7 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.extensions
 
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 
-fun ArrayList<Quest>.filteredList(searchWord: String): ArrayList<Quest> {
-    return ArrayList(filter { it.problem.contains(searchWord) || it.answer.contains(searchWord) || it.answers.any { it.selection.contains(searchWord) } })
+fun List<Question>.filteredList(searchWord: String): List<Question> {
+    return filter { it.question.contains(searchWord) || it.answer.contains(searchWord) || it.answers.any { it.contains(searchWord) } }
 }

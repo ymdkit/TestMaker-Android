@@ -1,16 +1,14 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
 import android.content.Context
-import com.google.android.material.textfield.TextInputLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.RelativeLayout
-import io.realm.RealmList
+import com.google.android.material.textfield.TextInputLayout
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Select
 
 class EditSelectCompleteView : RelativeLayout {
 
@@ -44,13 +42,13 @@ class EditSelectCompleteView : RelativeLayout {
         return true
     }
 
-    fun getAnswers():Array<String>{
-        return Array(getNumAnswers()){i -> editSelectCompletes[i]?.text.toString()}
+    fun getAnswers(): List<String> {
+        return List(getNumAnswers()) { i -> editSelectCompletes[i]?.text.toString() }
     }
 
-    fun getOthers(): Array<String> {
+    fun getOthers(): List<String> {
 
-        return Array(textInputLayouts.filter { layout -> layout?.visibility == View.VISIBLE }.size - getNumAnswers()){ i -> editSelectCompletes[i + getNumAnswers()]?.text.toString()}
+        return List(textInputLayouts.filter { layout -> layout?.visibility == View.VISIBLE }.size - getNumAnswers()) { i -> editSelectCompletes[i + getNumAnswers()]?.text.toString() }
 
     }
 
@@ -58,14 +56,14 @@ class EditSelectCompleteView : RelativeLayout {
         return editSelectCompletes.filter { editText -> editText?.hint?.contains(context.getString(R.string.hint_answer)) == true}.size
     }
 
-    fun setSelections(answers: RealmList<Select>, others: RealmList<Select>){
+    fun setSelections(answers: List<String>, others: List<String>) {
 
         editSelectCompletes.filter { editText -> editText?.hint?.contains(context.getString(R.string.hint_answer)) == true }
-                .forEachIndexed { index, editText -> editText?.setText(answers[index]?.selection) }
+                .forEachIndexed { index, editText -> editText?.setText(answers[index]) }
 
         editSelectCompletes.filterIndexed { index, editText -> editText?.hint == context.getString(R.string.hint_other) && textInputLayouts[index]?.visibility == View.VISIBLE }
                 .forEachIndexed{index, editText ->
-                    editText?.setText(others[index]?.selection)
+                    editText?.setText(others[index])
                     editText?.isEnabled = true}
 
     }

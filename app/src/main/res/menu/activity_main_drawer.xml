@@ -10,6 +10,10 @@
             android:icon="@drawable/ic_help_outline_white"
             android:title="@string/help" />
         <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_chat_bubble"
+            android:title="@string/menu_feedback" />
+        <item
             android:id="@+id/nav_review"
             android:icon="@drawable/ic_edit_white"
             android:title="@string/action_rev" />

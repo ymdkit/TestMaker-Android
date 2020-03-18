@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -28,6 +29,7 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.CardTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
@@ -35,6 +37,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
+import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageActivity
@@ -57,6 +60,8 @@ class MainActivity : ShowTestsActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModel()
+    private val testViewModel: TestViewModel by viewModel()
+    private val categoryViewModel: CategoryViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,11 +84,11 @@ class MainActivity : ShowTestsActivity() {
 
         initTestAndFolderAdapter()
 
-        viewModel.getExistingCategoryList().observeNonNull(this) {
+        categoryViewModel.hasTestsCategories.observeNonNull(this) {
             mainController.categories = it
         }
 
-        viewModel.getTests().observeNonNull(this) {
+        testViewModel.testsLiveData.observeNonNull(this) {
             mainController.tests = it
         }
 
@@ -133,9 +138,9 @@ class MainActivity : ShowTestsActivity() {
                         val to = mainController.adapter.getModelAtPosition(toPosition)
 
                         if (from is CardTestBindingModel_ && to is CardTestBindingModel_) {
-                            viewModel.sortTests(from.testId(), to.testId())
+                            testViewModel.swap(from.test(), to.test())
                         } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
-                            viewModel.swapCategories(from.category(), to.category())
+                            categoryViewModel.swap(from.category(), to.category())
                         }
                     }
 
@@ -159,6 +164,7 @@ class MainActivity : ShowTestsActivity() {
             when (val result = viewModel.downloadTest(deepLink.toString().split("/").last())) {
                 is FirebaseTestResult.Success -> {
                     viewModel.convert(result.test)
+                    testViewModel.refresh()
                     Toast.makeText(this@MainActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
                 }
                 is FirebaseTestResult.Failure -> {
@@ -169,10 +175,6 @@ class MainActivity : ShowTestsActivity() {
 
         }
 
-        if (sharedPreferenceManager.sort != -1) {
-            sendFirebaseEvent("migrate_sort_setting")
-            viewModel.migrateSortSetting()
-        }
     }
 
     private fun initViews() {
@@ -199,13 +201,13 @@ class MainActivity : ShowTestsActivity() {
             inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
             val categoryEditor = CategoryEditor(this@MainActivity,
                     binding.test.buttonCategory,
-                    getCategories = { viewModel.getCategories() }
+                    getCategories = { categoryViewModel.categories.value ?: emptyList() }
                     ,
                     addCategory = {
-                        viewModel.addCategory(it)
+                        categoryViewModel.create(it)
                     },
                     deleteCategory = {
-                        viewModel.deleteCategory(it)
+                        categoryViewModel.delete(it)
                     })
             categoryEditor.setCategory()
         }
@@ -229,8 +231,8 @@ class MainActivity : ShowTestsActivity() {
 
         binding.buttonAdd.setOnClickListener {
 
-            viewModel.addTest(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
-
+            testViewModel.create(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
+            categoryViewModel.refresh()
             Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
 
             viewModel.isEditing.postValue(false)
@@ -247,7 +249,6 @@ class MainActivity : ShowTestsActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
@@ -258,7 +259,7 @@ class MainActivity : ShowTestsActivity() {
                     .setNegativeButton(android.R.string.cancel, null)
                     .setTitle(getString(R.string.sort))
                     .setItems(resources.getStringArray(R.array.sort_exam)) { _, which ->
-                        viewModel.sortAllTests(which)
+                        testViewModel.sort(SortTest.values()[which])
                     }.show()
         }
 
@@ -295,6 +296,19 @@ class MainActivity : ShowTestsActivity() {
                 -> {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse(getString(R.string.help_url))))
+                }
+                R.id.nav_feedback
+                -> {
+                    val addresses = arrayOf<String>(getString(R.string.contact_email))
+                    val intent = Intent(Intent.ACTION_SENDTO).apply {
+                        data = Uri.parse("mailto:")
+                        putExtra(Intent.EXTRA_EMAIL, addresses)
+                        putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject_feedback))
+                        putExtra(Intent.EXTRA_TEXT, getString(R.string.email_body_feedback, Build.VERSION.SDK_INT))
+                    }
+                    if (intent.resolveActivity(packageManager) != null) {
+                        startActivity(intent)
+                    }
                 }
                 R.id.nav_review -> {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
@@ -337,8 +351,6 @@ class MainActivity : ShowTestsActivity() {
                     startActivityForResult(Intent(this@MainActivity, MoveQuestionsActivity::class.java), REQUEST_EDIT)
                 }
                 R.id.nav_remove_ad -> {
-
-                    println("removead${sharedPreferenceManager.isRemovedAd}")
 
                     viewModel.purchaseRemoveAd(this, BillingItem(getString(R.string.sku_remove_ad), BillingClient.SkuType.INAPP))
                 }
@@ -429,15 +441,11 @@ class MainActivity : ShowTestsActivity() {
     }
 
     private fun loadTestByText(text: String) {
-
-        val questionId = viewModel.getMaxQuestionId()
-
         lifecycleScope.launch {
-
-            val test = text.toTest(baseContext, questionId)
-
-            viewModel.addOrUpdateTest(test)
-            Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, test.title), Toast.LENGTH_LONG).show()
+            text.toTest(baseContext).also {
+                testViewModel.create(it)
+                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -448,8 +456,8 @@ class MainActivity : ShowTestsActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchTests()
-        viewModel.fetchCategories()
+        testViewModel.refresh()
+        categoryViewModel.refresh()
     }
 
     companion object {

@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,7 +14,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditProBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_edit_pro.*
 import kotlinx.coroutines.launch
@@ -21,12 +25,17 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditProActivity : BaseActivity() {
 
-    private val editProViewModel: EditProViewModel by viewModel()
+    private val testViewModel: TestViewModel by viewModel()
 
+    private lateinit var test: Test
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_pro)
+
+        testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
+            test = it
+        }
 
         val binding = DataBindingUtil.setContentView<ActivityEditProBinding>(this, R.layout.activity_edit_pro)
         createAd(binding.adView)
@@ -54,7 +63,7 @@ class EditProActivity : BaseActivity() {
 
         }
 
-        edit_test.setText(editProViewModel.getTest(intent.getLongExtra("testId", -1)).testToString(this, false))
+        edit_test.setText(RealmTest.createFromTest(test).testToString(this, false))
 
     }
 
@@ -62,15 +71,12 @@ class EditProActivity : BaseActivity() {
 
         val text = edit_test.text.toString()
 
-        val questionId = editProViewModel.getMaxQuestionId()
-
         lifecycleScope.launch {
 
-            val test = text.toTest(baseContext, questionId)
+            val result = text.toTest(baseContext)
 
             Toast.makeText(baseContext, baseContext.getString(R.string.message_success_update), Toast.LENGTH_LONG).show()
-            test.id = intent.getLongExtra("testId", -1)
-            editProViewModel.addOrUpdateTest(test)
+            testViewModel.update(result.copy(id = test.id, order = test.order))
 
         }
     }
@@ -99,6 +105,15 @@ class EditProActivity : BaseActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        fun startActivity(activity: Activity, id: Long) {
+            val intent = Intent(activity, EditProActivity::class.java).apply {
+                putExtra("id", id)
+            }
+            activity.startActivity(intent)
+        }
     }
 
 }

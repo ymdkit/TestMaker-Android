@@ -5,7 +5,7 @@ import com.airbnb.epoxy.EpoxyController
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.cardCategory
 import jp.gr.java_conf.foobar.testmaker.service.cardTest
-import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
 class MainController(private val context: Context) : EpoxyController() {
@@ -19,7 +19,7 @@ class MainController(private val context: Context) : EpoxyController() {
             requestModelBuild()
         }
 
-    var categories: List<Cate> = emptyList()
+    var categories: List<Category> = emptyList()
         set(value) {
             field = value
             refresh()
@@ -42,10 +42,10 @@ class MainController(private val context: Context) : EpoxyController() {
         nonCategorizedTests = if (categories.isEmpty()) {
             tests
         } else {
-            tests.filter { !categories.map { it.category }.contains(it.getCategory()) }
+            tests.filter { !categories.map { it.name }.contains(it.category) }
         }
 
-        categorizedTests = tests.filter { it.getCategory() == selectedCategory }
+        categorizedTests = tests.filter { it.category == selectedCategory }
     }
 
     private var nonCategorizedTests: List<Test> = emptyList()
@@ -53,10 +53,10 @@ class MainController(private val context: Context) : EpoxyController() {
     private var categorizedTests: List<Test> = emptyList()
 
     interface OnClickListener {
-        fun onClickPlayTest(id: Long)
-        fun onClickEditTest(id: Long)
-        fun onClickDeleteTest(id: Long)
-        fun onClickShareTest(id: Long)
+        fun onClickPlayTest(test: Test)
+        fun onClickEditTest(test: Test)
+        fun onClickDeleteTest(test: Test)
+        fun onClickShareTest(test: Test)
     }
 
     fun setOnClickListener(listener: OnClickListener) {
@@ -65,29 +65,26 @@ class MainController(private val context: Context) : EpoxyController() {
 
     override fun buildModels() {
 
-        categories.forEachIndexed { index, it ->
+        categories.forEach {
             cardCategory {
-                id(it.category)
-                colorId(it.color)
-                category(it.category)
-                size(context.getString(R.string.number_exams, tests.filter { test -> it.category == test.getCategory() }.size))
+                id(it.name)
+                category(it)
+                size(context.getString(R.string.number_exams, tests.filter { test -> it.name == test.category }.size))
                 onClick { _, _, _, _ ->
-                    selectedCategory = if (selectedCategory == it.category) "" else it.category
+                    selectedCategory = if (selectedCategory == it.name) "" else it.name
                 }
-                selected(categorizedTests.isNotEmpty() && categorizedTests.first().getCategory() == it.category)
+                selected(categorizedTests.isNotEmpty() && categorizedTests.first().category == it.name)
 
             }
 
-            if (categorizedTests.isNotEmpty() && categorizedTests.first().getCategory() == it.category) {
+            if (categorizedTests.isNotEmpty() && categorizedTests.first().category == it.name) {
 
                 categorizedTests.forEach {
                     cardTest {
                         isCategorized(true)
                         id(it.id)
-                        testId(it.id)
-                        colorId(it.color)
-                        title(it.title)
-                        size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questionsNonNull().size))
+                        test(it)
+                        size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
                         listener(listener)
                     }
                 }
@@ -98,10 +95,8 @@ class MainController(private val context: Context) : EpoxyController() {
             cardTest {
                 isCategorized(false)
                 id(it.id)
-                testId(it.id)
-                colorId(it.color)
-                title(it.title)
-                size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questionsNonNull().size))
+                test(it)
+                size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
                 listener(listener)
             }
         }

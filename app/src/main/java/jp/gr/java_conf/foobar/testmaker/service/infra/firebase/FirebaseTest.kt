@@ -3,7 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.firebase
 import android.content.Context
 import com.google.firebase.Timestamp
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -21,8 +21,8 @@ data class FirebaseTest(var name: String = "",
 
     var questions: List<FirebaseQuestion> = listOf()
 
-    fun toTest(context: Context): Test {
-        val test = Test()
+    fun toTest(context: Context): RealmTest {
+        val test = RealmTest()
         test.limit = 100
         test.title = name
         test.color = context.resources.getIntArray(R.array.color_list)[Math.min(Math.abs(color), 7)]

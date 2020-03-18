@@ -7,7 +7,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
-import jp.gr.java_conf.foobar.testmaker.service.infra.test.TestMakerRepository
+import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 
 class FirebaseMyPageViewModel(private val repository: TestMakerRepository,private val auth: Auth) : ViewModel() {
 

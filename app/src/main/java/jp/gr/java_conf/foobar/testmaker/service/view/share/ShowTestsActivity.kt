@@ -15,9 +15,12 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,22 +31,21 @@ open class ShowTestsActivity : BaseActivity() {
     internal lateinit var mainController: MainController
 
     private val showTestsViewModel: ShowTestsViewModel by viewModel()
+    private val testViewModel: TestViewModel by viewModel()
+    private val categoryViewModel: CategoryViewModel by viewModel()
 
-    private var selectedTestId: Long = -1L //ログイン時に一度画面から離れるので選択中の値を保持
-
+    private var selectedTest: RealmTest? = null //ログイン時に一度画面から離れるので選択中の値を保持
 
     protected fun initTestAndFolderAdapter() {
 
         mainController = MainController(this)
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
-            override fun onClickPlayTest(id: Long) {
+            override fun onClickPlayTest(test: Test) {
 
                 sendFirebaseEvent("play")
 
-                val test = showTestsViewModel.getTest(id)
-
-                if (test.questionsNonNull().isEmpty()) {
+                if (test.questions.isEmpty()) {
 
                     Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
 
@@ -54,34 +56,29 @@ open class ShowTestsActivity : BaseActivity() {
                 }
             }
 
-            override fun onClickEditTest(id: Long) {
+            override fun onClickEditTest(test: Test) {
 
                 sendFirebaseEvent("edit")
-                val i = Intent(this@ShowTestsActivity, EditActivity::class.java)
-                i.putExtra("testId", id)
-                startActivityForResult(i, REQUEST_EDIT)
+
+                EditActivity.startActivity(this@ShowTestsActivity, test.id)
+
             }
 
-            override fun onClickDeleteTest(id: Long) {
+            override fun onClickDeleteTest(test: Test) {
 
                 sendFirebaseEvent("delete")
-
-                val test = showTestsViewModel.getTest(id)
-
                 val builder = AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
                 builder.setTitle(getString(R.string.delete_exam))
                 builder.setMessage(getString(R.string.message_delete_exam, test.title))
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
-
-                    showTestsViewModel.deleteTest(test)
-
+                    testViewModel.delete(test)
+                    categoryViewModel.refresh()
                 }
                 builder.setNegativeButton(android.R.string.cancel, null)
                 builder.create().show()
-
             }
 
-            override fun onClickShareTest(id: Long) {
+            override fun onClickShareTest(test: Test) {
 
                 AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
                         .setTitle(getString(R.string.title_dialog_share))
@@ -91,15 +88,13 @@ open class ShowTestsActivity : BaseActivity() {
                                 0 -> { //リンクの共有
                                     showTestsViewModel.getUser()?.let {
                                         dialog.dismiss()
-                                        uploadTest(id)
+                                        uploadTest(RealmTest.createFromTest(test))
                                     } ?: run {
-                                        login(id)
+                                        login(RealmTest.createFromTest(test))
                                     }
                                 }
 
                                 1 -> { //テキスト変換
-
-                                    val test = showTestsViewModel.getTest(id)
 
                                     Toast.makeText(baseContext, getString(R.string.message_share_exam, test.title), Toast.LENGTH_LONG).show()
 
@@ -108,7 +103,7 @@ open class ShowTestsActivity : BaseActivity() {
                                         intent.action = Intent.ACTION_SEND
                                         intent.type = "text/plain"
 
-                                        intent.putExtra(Intent.EXTRA_TEXT, test.testToString(baseContext, false))
+                                        intent.putExtra(Intent.EXTRA_TEXT, RealmTest.createFromTest(test).testToString(baseContext, false))
                                         startActivity(intent)
 
                                     } catch (e: Exception) {
@@ -124,8 +119,7 @@ open class ShowTestsActivity : BaseActivity() {
         })
     }
 
-    private fun uploadTest(id: Long) {
-        val test = showTestsViewModel.getTestClone(id)
+    private fun uploadTest(test: RealmTest) {
 
         lifecycleScope.launch {
 
@@ -237,7 +231,7 @@ open class ShowTestsActivity : BaseActivity() {
 
         var incorrect = false
 
-        for (element in test.questionsNonNull()) if (!(element.correct)) incorrect = true
+        for (element in test.questions) if (!(element.isCorrect)) incorrect = true
 
         if (!incorrect && sharedPreferenceManager.refine) {
 
@@ -247,26 +241,26 @@ open class ShowTestsActivity : BaseActivity() {
 
             Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_number), Toast.LENGTH_SHORT).show()
 
-        } else if (start == "" || start.toInt() > test.questionsNonNull().size || start.toInt() < 1) {
+        } else if (start == "" || start.toInt() > test.questions.size || start.toInt() < 1) {
 
             Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_start), Toast.LENGTH_SHORT).show()
 
         } else {
 
-            val i = Intent(this@ShowTestsActivity, PlayActivity::class.java)
-            i.putExtra("testId", test.id)
+            val result = test.copy(
+                    limit = Integer.parseInt(limit),
+                    startPosition = Integer.parseInt(start) - 1,
+                    history = Calendar.getInstance().timeInMillis)
 
-            showTestsViewModel.updateLimit(test, Integer.parseInt(limit))
-            showTestsViewModel.updateStart(test, Integer.parseInt(start) - 1)
-            showTestsViewModel.updateHistory(test)
+            PlayActivity.startActivity(this@ShowTestsActivity, result.id)
 
-            startActivityForResult(i, REQUEST_EDIT)
+            testViewModel.update(result)
         }
     }
 
-    private fun login(id: Long) {
+    private fun login(test: RealmTest) {
 
-        selectedTestId = id
+        selectedTest = test
 
         AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 .setTitle(getString(R.string.login))
@@ -295,10 +289,12 @@ open class ShowTestsActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_SIGN_IN_UPLOAD && resultCode == Activity.RESULT_OK) {
-            uploadTest(selectedTestId)
+            selectedTest?.let {
+                uploadTest(it)
+                selectedTest = null
+            }
         }
 
-        selectedTestId = -1L
     }
 
     companion object {

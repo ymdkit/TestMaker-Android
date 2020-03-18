@@ -18,9 +18,11 @@ import com.firebase.ui.auth.IdpResponse
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,6 +31,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class FirebaseActivity : BaseActivity() {
 
     private val viewModel: FirebaseViewModel by viewModel()
+    private val testViewModel: TestViewModel by viewModel()
 
     private lateinit var pagingAdapter: FirebaseTestPagingAdapter
 
@@ -122,7 +125,7 @@ class FirebaseActivity : BaseActivity() {
 
             viewModel.getUser()?.let {
 
-                if (viewModel.localTests.isEmpty() || viewModel.localTests.all { it.getQuestionsForEach().size < 1 }) {
+                if (testViewModel.tests.isEmpty() || testViewModel.tests.all { it.questions.isEmpty() }) {
 
                     Toast.makeText(baseContext, getString(R.string.message_non_exist_test), Toast.LENGTH_SHORT).show()
 
@@ -218,7 +221,7 @@ class FirebaseActivity : BaseActivity() {
         val spinner = dialogLayout.findViewById<Spinner>(R.id.spinner)
         val editOverView = dialogLayout.findViewById<EditText>(R.id.edit_overview)
         val adapter = ArrayAdapter(baseContext,
-                android.R.layout.simple_spinner_item, viewModel.localTests.map { it.title }.toTypedArray())
+                android.R.layout.simple_spinner_item, testViewModel.tests.map { it.title }.toTypedArray())
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
@@ -241,7 +244,7 @@ class FirebaseActivity : BaseActivity() {
                 .show()
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                .setOnClickListener {
+                .setOnClickListener { it ->
                     it.isEnabled = false
 
                     lifecycleScope.launch {
@@ -250,7 +253,7 @@ class FirebaseActivity : BaseActivity() {
                                 .setTitle(getString(R.string.uploading))
                                 .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
-                        viewModel.uploadTest(viewModel.localTests[position], editOverView.text.toString())
+                        viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[position]), editOverView.text.toString())
 
                         Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
                         pagingAdapter.refresh()

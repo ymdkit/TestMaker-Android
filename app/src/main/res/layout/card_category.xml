@@ -4,22 +4,19 @@
 
     <data>
 
+        <import type="jp.gr.java_conf.foobar.testmaker.service.domain.Category" />
+
+        <variable
+            name="category"
+            type="Category" />
+
         <variable
             name="selected"
             type="Boolean" />
 
         <variable
-            name="category"
-            type="String" />
-
-        <variable
             name="size"
             type="String" />
-
-        <variable
-            name="colorId"
-            type="Integer" />
-
 
         <variable
             name="onClick"
@@ -51,7 +48,7 @@
                     android:layout_margin="@dimen/element_spacing_normal"
                     android:background="@drawable/circle"
                     android:contentDescription="@null"
-                    android:testColor="@{colorId}"
+                    android:testColor="@{category.color}"
                     custom:layout_constraintBottom_toBottomOf="parent"
                     custom:layout_constraintLeft_toLeftOf="parent"
                     custom:layout_constraintTop_toTopOf="parent" />
@@ -64,7 +61,7 @@
                     android:layout_marginStart="@dimen/element_spacing_small"
                     android:gravity="center_vertical"
                     android:singleLine="true"
-                    android:text="@{category}"
+                    android:text="@{category.name}"
                     android:textSize="@dimen/text_size_medium"
                     custom:layout_constraintLeft_toRightOf="@id/color"
                     custom:layout_constraintRight_toLeftOf="@id/open"

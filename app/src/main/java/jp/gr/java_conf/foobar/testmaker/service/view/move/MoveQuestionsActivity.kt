@@ -10,14 +10,15 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMoveQuestionsBinding
-import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_move_questions.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MoveQuestionsActivity : BaseActivity() {
 
-    private val viewModel: MoveQuestionViewModel by viewModel()
+    private val testViewModel: TestViewModel by viewModel()
 
     lateinit var questionAdapter: CheckBoxQuestionAdapter
 
@@ -32,7 +33,53 @@ class MoveQuestionsActivity : BaseActivity() {
 
         initToolBar()
 
-        val tests = viewModel.getTests()
+        initViews()
+
+        button_save.setOnClickListener {
+
+            if (spinner_to_test.selectedItemPosition - 1 == spinner_from_test.selectedItemPosition) {
+
+                Toast.makeText(baseContext, getString(R.string.msg_same_test), Toast.LENGTH_SHORT).show()
+
+                return@setOnClickListener
+            }
+
+            if (testViewModel.tests.isEmpty()) return@setOnClickListener
+
+            val selectedQuestions = questionAdapter.getItems().filterIndexed { index, _ -> questionAdapter.checkBoxStates[index] }
+
+            if (spinner_to_test.selectedItemPosition == 0) {
+
+                testViewModel.create(Test(
+                        title = getString(R.string.test),
+                        color = ContextCompat.getColor(baseContext, R.color.red),
+                        questions = selectedQuestions)
+                )
+
+            } else {
+
+                val test = testViewModel.tests[spinner_to_test.selectedItemPosition - 1]
+                testViewModel.update(
+                        test.copy(questions = test.questions + selectedQuestions)
+                )
+            }
+
+            if (spinner_actions.selectedItemPosition == 0) {//「移動先」の時
+
+                testViewModel.update(
+                        fromTest.copy(questions = fromTest.questions.filterIndexed { index, _ -> !questionAdapter.checkBoxStates[index] })
+                )
+
+            }
+
+            finish()
+
+            Toast.makeText(baseContext, getString(R.string.msg_save), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun initViews() {
+        val tests = testViewModel.tests
 
         val fromArray = Array(tests.size) { i -> tests[i].title }
 
@@ -59,7 +106,7 @@ class MoveQuestionsActivity : BaseActivity() {
 
                 fromTest = tests[position]
 
-                questionAdapter = CheckBoxQuestionAdapter(baseContext, tests[position].questionsNonNull().toTypedArray())
+                questionAdapter = CheckBoxQuestionAdapter(baseContext, tests[position].questions.toTypedArray())
 
                 list_questions.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
                 list_questions.setHasFixedSize(true)
@@ -74,47 +121,7 @@ class MoveQuestionsActivity : BaseActivity() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
             }
-        }
-
-        button_save.setOnClickListener {
-
-            if (spinner_to_test.selectedItemPosition - 1 == spinner_from_test.selectedItemPosition) {
-
-                Toast.makeText(baseContext, getString(R.string.msg_same_test), Toast.LENGTH_SHORT).show()
-
-                return@setOnClickListener
-            }
-
-            if (viewModel.getTests().isEmpty()) return@setOnClickListener
-
-            val selectedQuestions = questionAdapter.getItems().filterIndexed { index, _ -> questionAdapter.checkBoxStates[index] }
-
-            if (spinner_to_test.selectedItemPosition == 0) {
-
-                val test = Test()
-                test.title = getString(R.string.test)
-                test.color = ContextCompat.getColor(baseContext, R.color.red)
-                val testId = viewModel.addTest(test)
-
-                viewModel.addQuestions(testId, selectedQuestions.toTypedArray())
-
-            } else {
-
-                viewModel.addQuestions(viewModel.getTests()[spinner_to_test.selectedItemPosition - 1].id, selectedQuestions.toTypedArray())
-
-            }
-
-            if (spinner_actions.selectedItemPosition == 0) {//「移動先」の時
-
-                viewModel.deleteQuestions(fromTest.id, questionAdapter.checkBoxStates)
-
-            }
-
-            finish()
-
-            Toast.makeText(baseContext, getString(R.string.msg_save), Toast.LENGTH_SHORT).show()
         }
     }
 

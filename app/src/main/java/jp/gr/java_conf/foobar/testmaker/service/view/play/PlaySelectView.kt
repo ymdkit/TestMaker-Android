@@ -1,7 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.play
 
 import android.content.Context
-import android.os.Build
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -10,7 +9,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import kotlinx.android.synthetic.main.layout_play_select.view.*
 import java.util.*
 
@@ -77,23 +76,23 @@ class PlaySelectView : LinearLayout {
         }
     }
 
-    fun setTextChoices(question: Quest, autoChoices: ArrayList<String>) {
+    fun setTextChoices(question: Question, autoChoices: ArrayList<String>) {
 
         var choices = ArrayList<String>()
 
-        if (question.auto) {
+        if (question.isAutoGenerateOthers) {
 
             choices = autoChoices
 
         } else {
 
-            for (i in 0 until question.selections.size) choices.add(question.selections[i]!!.selection)
+            for (element in question.others) choices.add(element)
 
         }
         choices.add(question.answer)
         choices.shuffle()
 
-        for (i in 0 until question.selections.size + 1) {
+        for (i in 0 until question.others.size + 1) {
 
             buttonChoices[i]!!.tag = i
             textChoices[i]!!.text = choices[i]
@@ -102,12 +101,12 @@ class PlaySelectView : LinearLayout {
 
     }
 
-    fun show(question: Quest) {
+    fun show(question: Question) {
 
         visibility = View.VISIBLE
 
         for (i in buttonChoices.indices) {
-            if (i < question.selections.size + 1) {
+            if (i < question.others.size + 1) {
                 buttonChoices[i]!!.visibility = View.VISIBLE
                 textChoices[i]!!.visibility = View.VISIBLE
             } else {

@@ -1,5 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service
 
+import io.realm.Sort
+
 object Constants {
 
     const val WRITE = 0
@@ -14,10 +16,10 @@ object Constants {
     const val OTHER_SELECT_MAX = 5
     const val ANSWER_MAX = 4
     const val SELECT_COMPLETE_MAX = 6
+}
 
-    const val TITLE_DESCENDING = 0
-    const val TITLE_ASCENDING = 1
-    const val HISTORY = 2
-    const val CUSTOM_ORDER = 3
-
+enum class SortTest(val column: String, val sort: Sort) {
+    TITLE_DESCENDING("title", Sort.DESCENDING),
+    TITLE_ASCENDING("title", Sort.ASCENDING),
+    HISTORY("history", Sort.DESCENDING);
 }

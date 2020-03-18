@@ -11,13 +11,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 
 /**
  * Created by keita on 2016/06/19.
  */
 class CategoryAdapter(private val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
-    var categories: List<Cate> = emptyList()
+    var categories: List<Category> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -28,7 +29,7 @@ class CategoryAdapter(private val context: Context) : androidx.recyclerview.widg
 
     private var listener: OnClickListener? = null
 
-    var deleteCategory: (Cate) -> Unit = {}
+    var deleteCategory: (Category) -> Unit = {}
 
     interface OnClickListener {
         fun onClickCategory(position: Int)
@@ -51,7 +52,7 @@ class CategoryAdapter(private val context: Context) : androidx.recyclerview.widg
 
         val data = categories[holder.adapterPosition]
 
-        holder.cate.text = data.category
+        holder.cate.text = data.name
 
         val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle, null) as GradientDrawable
 

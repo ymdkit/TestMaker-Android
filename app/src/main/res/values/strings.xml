@@ -232,4 +232,8 @@
     <string name="my_page">My Page</string>
     <string name="purchase_canceled">canceled</string>
     <string name="sku_remove_ad">android.test.purchased</string>
+    <string name="menu_feedback">feedback</string>
+    <string name="contact_email">testmaker.contact@gmail.com</string>
+    <string name="email_subject_feedback">feedback</string>
+    <string name="email_body_feedback">It would be very helpful if you could provide a description of what you did and what you did with the screenshot. \n\n\n\n\n Android SDK%1$d </string>
 </resources>
