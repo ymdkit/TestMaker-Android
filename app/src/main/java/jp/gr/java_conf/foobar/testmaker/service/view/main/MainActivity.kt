@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -248,7 +249,6 @@ class MainActivity : ShowTestsActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
@@ -296,6 +296,19 @@ class MainActivity : ShowTestsActivity() {
                 -> {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
                             .parse(getString(R.string.help_url))))
+                }
+                R.id.nav_feedback
+                -> {
+                    val addresses = arrayOf<String>(getString(R.string.contact_email))
+                    val intent = Intent(Intent.ACTION_SENDTO).apply {
+                        data = Uri.parse("mailto:")
+                        putExtra(Intent.EXTRA_EMAIL, addresses)
+                        putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject_feedback))
+                        putExtra(Intent.EXTRA_TEXT, getString(R.string.email_body_feedback, Build.VERSION.SDK_INT))
+                    }
+                    if (intent.resolveActivity(packageManager) != null) {
+                        startActivity(intent)
+                    }
                 }
                 R.id.nav_review -> {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri

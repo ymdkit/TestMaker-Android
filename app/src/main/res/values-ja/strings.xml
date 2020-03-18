@@ -229,4 +229,7 @@
     <string name="msg_test_not_exist">問題集が見つかりません</string>
     <string name="my_page">マイページ</string>
     <string name="purchase_canceled">購入がキャンセルされました</string>
+    <string name="menu_feedback">お問い合わせ</string>
+    <string name="email_subject_feedback">「暗記メーカー」に関するお問い合わせ</string>
+    <string name="email_body_feedback">お問い合わせの内容について、どのような操作を行ったかや画面のスクリーンショットの添付をしていただけるととても助かります\n\n\n\n\n Android SDK%1$d より送信</string>
 </resources>
