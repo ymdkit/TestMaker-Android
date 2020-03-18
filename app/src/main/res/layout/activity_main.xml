@@ -27,95 +27,86 @@
                 style="@style/Toolbar"
                 android:layout_width="match_parent"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/Theme.AppCompat.DayNight"
                 app:layout_constraintTop_toTopOf="parent"
+                app:popupTheme="@style/Theme.AppCompat.DayNight"
                 app:title="@string/app_name" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:padding="@dimen/element_spacing_small"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardView"
+                style="@style/Card"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardView"
-                    style="@style/Card"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/element_spacing_very_small">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <ImageButton
+                        android:id="@+id/button_expand"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_height_small"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/feedback"
+                        android:contentDescription="@string/image"
+                        android:scaleType="fitCenter"
+                        android:src="@{model.isEditing ? @drawable/ic_expand_less_black : @drawable/ic_expand_more_black}"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/text_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/view_height_small"
+                        android:layout_marginStart="@dimen/element_spacing_small"
+                        android:gravity="center_vertical"
+                        android:text="@string/add_exam"
+                        android:textSize="@dimen/text_size_medium"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <include
+                        android:id="@+id/test"
+                        layout="@layout/dialog_edit_test"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/element_spacing_very_small">
+                        android:visibility="@{model.isEditing ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/text_title"
+                        app:title="@={model.title}" />
 
-                        <ImageButton
-                            android:id="@+id/button_expand"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/view_height_small"
-                            android:layout_gravity="center_vertical"
-                            android:background="@drawable/feedback"
-                            android:contentDescription="@string/image"
-                            android:scaleType="fitCenter"
-                            android:src="@{model.isEditing ? @drawable/ic_expand_less_black : @drawable/ic_expand_more_black}"
-                            app:layout_constraintTop_toTopOf="parent" />
+                    <Button
+                        android:id="@+id/button_add"
+                        style="@style/Button.Accent"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:enabled="false"
+                        android:text="@string/action_add"
+                        android:textSize="@dimen/text_size_medium"
+                        android:visibility="@{model.isEditing ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/test" />
 
-                        <TextView
-                            android:id="@+id/text_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/view_height_small"
-                            android:layout_marginStart="@dimen/element_spacing_small"
-                            android:gravity="center_vertical"
-                            android:text="@string/add_exam"
-                            android:textSize="@dimen/text_size_medium"
-                            app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <include
-                            android:id="@+id/test"
-                            layout="@layout/dialog_edit_test"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="@{model.isEditing ? View.VISIBLE : View.GONE}"
-                            app:layout_constraintTop_toBottomOf="@id/text_title"
-                            app:title="@={model.title}" />
+            </com.google.android.material.card.MaterialCardView>
 
-                        <Button
-                            android:id="@+id/button_add"
-                            style="@style/Button.Accent"
-                            android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:enabled="false"
-                            android:text="@string/action_add"
-                            android:textSize="@dimen/text_size_medium"
-                            android:visibility="@{model.isEditing ? View.VISIBLE : View.GONE}"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/test" />
+            <com.airbnb.epoxy.EpoxyRecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:isHasFixedSize="@{true}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@id/adView"
+                app:layout_constraintTop_toBottomOf="@id/cardView" />
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.airbnb.epoxy.EpoxyRecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:isHasFixedSize="@{true}"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintBottom_toTopOf="@id/adView"
-                    app:layout_constraintTop_toBottomOf="@id/cardView" />
-
-                <com.google.android.gms.ads.AdView
-                    android:id="@+id/adView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:adSize="BANNER"
-                    app:adUnitId="ca-app-pub-8942090726462263/8420884238"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:adSize="BANNER"
+                app:adUnitId="ca-app-pub-8942090726462263/8420884238"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
