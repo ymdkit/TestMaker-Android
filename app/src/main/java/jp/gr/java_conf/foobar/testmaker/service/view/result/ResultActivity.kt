@@ -11,21 +11,28 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityResultBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.studyplus.android.sdk.Studyplus
 import jp.studyplus.android.sdk.record.StudyRecord
 import jp.studyplus.android.sdk.record.StudyRecordAmountTotal
 import kotlinx.android.synthetic.main.activity_result.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ResultActivity : BaseActivity() {
     private lateinit var resultAdapter: ResultAdapter
 
-    private val test by lazy { intent.getParcelableExtra<Test>("test") }
+    private lateinit var test: Test
+    private val testViewModel: TestViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
+
+        testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
+            test = it
+        }
 
         setSupportActionBar(toolbar)
 
@@ -54,7 +61,7 @@ class ResultActivity : BaseActivity() {
                             0 -> {//全問やり直し
 
                                 sharedPreferenceManager.refine = false
-                                PlayActivity.startActivity(this@ResultActivity, test, true)
+                                PlayActivity.startActivity(this@ResultActivity, test.id, true)
                             }
 
                             1 -> { //不正解のみやり直し
@@ -62,7 +69,7 @@ class ResultActivity : BaseActivity() {
                                 if (questions.any { !it.isCorrect }) {
 
                                     sharedPreferenceManager.refine = true
-                                    PlayActivity.startActivity(this@ResultActivity, test, true)
+                                    PlayActivity.startActivity(this@ResultActivity, test.id, true)
 
                                 } else {
 
@@ -123,9 +130,9 @@ class ResultActivity : BaseActivity() {
 
     companion object {
 
-        fun startActivity(activity: Activity, test: Test, duration: Long) {
+        fun startActivity(activity: Activity, id: Long, duration: Long) {
             val intent = Intent(activity, ResultActivity::class.java).apply {
-                putExtra("test", test)
+                putExtra("id", id)
                 putExtra("duration", duration)
             }
             activity.startActivity(intent)

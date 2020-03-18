@@ -27,11 +27,15 @@ class EditProActivity : BaseActivity() {
 
     private val testViewModel: TestViewModel by viewModel()
 
-    private val test by lazy { intent.getParcelableExtra<Test>("test") }
+    private lateinit var test: Test
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_pro)
+
+        testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
+            test = it
+        }
 
         val binding = DataBindingUtil.setContentView<ActivityEditProBinding>(this, R.layout.activity_edit_pro)
         createAd(binding.adView)
@@ -104,9 +108,9 @@ class EditProActivity : BaseActivity() {
     }
 
     companion object {
-        fun startActivity(activity: Activity, test: Test) {
+        fun startActivity(activity: Activity, id: Long) {
             val intent = Intent(activity, EditProActivity::class.java).apply {
-                putExtra("test", test)
+                putExtra("id", id)
             }
             activity.startActivity(intent)
         }

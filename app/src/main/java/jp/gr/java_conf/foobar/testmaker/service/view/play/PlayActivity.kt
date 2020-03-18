@@ -53,7 +53,10 @@ class PlayActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        test = intent.getParcelableExtra("test")
+
+        testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
+            test = it
+        }
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
@@ -282,7 +285,7 @@ class PlayActivity : BaseActivity() {
     }
 
     private fun showResult() {
-        ResultActivity.startActivity(this@PlayActivity, test, System.currentTimeMillis() - startTime)
+        ResultActivity.startActivity(this@PlayActivity, test.id, System.currentTimeMillis() - startTime)
     }
 
     private fun showLayoutWrite() {
@@ -420,16 +423,16 @@ class PlayActivity : BaseActivity() {
 
     companion object {
 
-        fun startActivity(activity: Activity, test: Test) {
+        fun startActivity(activity: Activity, id: Long) {
             val intent = Intent(activity, PlayActivity::class.java).apply {
-                putExtra("test", test)
+                putExtra("id", id)
             }
             activity.startActivity(intent)
         }
 
-        fun startActivity(activity: Activity, test: Test, isRetry: Boolean) {
+        fun startActivity(activity: Activity, id: Long, isRetry: Boolean) {
             val intent = Intent(activity, PlayActivity::class.java).apply {
-                putExtra("test", test)
+                putExtra("id", id)
                 putExtra("isRetry", isRetry)
             }
             activity.startActivity(intent)

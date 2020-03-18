@@ -81,7 +81,9 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
 
-        test = intent.getParcelableExtra("test")
+        testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
+            test = it
+        }
 
         binding.lifecycleOwner = this
         binding.model = viewModel
@@ -386,7 +388,7 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
             }
             item.itemId == R.id.action_edit_pro -> {
 
-                EditProActivity.startActivity(this, test)
+                EditProActivity.startActivity(this, test.id)
 
                 return true
             }
@@ -664,9 +666,9 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
         private const val REQUEST_IMAGE_CAPTURE = 10013
         private const val REQUEST_PERMISSION_CAMERA = 10014
 
-        fun startActivity(activity: Activity, test: Test) {
+        fun startActivity(activity: Activity, id: Long) {
             val intent = Intent(activity, EditActivity::class.java).apply {
-                putExtra("test", test)
+                putExtra("id", id)
             }
             activity.startActivity(intent)
         }

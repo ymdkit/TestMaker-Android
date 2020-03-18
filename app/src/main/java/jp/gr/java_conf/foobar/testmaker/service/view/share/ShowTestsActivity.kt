@@ -60,7 +60,7 @@ open class ShowTestsActivity : BaseActivity() {
 
                 sendFirebaseEvent("edit")
 
-                EditActivity.startActivity(this@ShowTestsActivity, test)
+                EditActivity.startActivity(this@ShowTestsActivity, test.id)
 
             }
 
@@ -252,7 +252,7 @@ open class ShowTestsActivity : BaseActivity() {
                     startPosition = Integer.parseInt(start) - 1,
                     history = Calendar.getInstance().timeInMillis)
 
-            PlayActivity.startActivity(this@ShowTestsActivity, result)
+            PlayActivity.startActivity(this@ShowTestsActivity, result.id)
 
             testViewModel.update(result)
         }
