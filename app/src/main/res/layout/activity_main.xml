@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -22,81 +23,54 @@
             android:layout_height="match_parent"
             android:background="@color/background">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                style="@style/Toolbar"
-                android:layout_width="match_parent"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:layout_constraintTop_toTopOf="parent"
-                app:popupTheme="@style/Theme.AppCompat.DayNight"
-                app:title="@string/app_name" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardView"
-                style="@style/Card"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/element_spacing_very_small">
-
-                    <ImageButton
-                        android:id="@+id/button_expand"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/view_height_small"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/feedback"
-                        android:contentDescription="@string/image"
-                        android:scaleType="fitCenter"
-                        android:src="@{model.isEditing ? @drawable/ic_expand_less_black : @drawable/ic_expand_more_black}"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/text_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/view_height_small"
-                        android:layout_marginStart="@dimen/element_spacing_small"
-                        android:gravity="center_vertical"
-                        android:text="@string/add_exam"
-                        android:textSize="@dimen/text_size_medium"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <include
-                        android:id="@+id/test"
-                        layout="@layout/dialog_edit_test"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="@{model.isEditing ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintTop_toBottomOf="@id/text_title"
-                        app:title="@={model.title}" />
-
-                    <Button
-                        android:id="@+id/button_add"
-                        style="@style/Button.Accent"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:enabled="false"
-                        android:text="@string/action_add"
-                        android:textSize="@dimen/text_size_medium"
-                        android:visibility="@{model.isEditing ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/test" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.airbnb.epoxy.EpoxyRecyclerView
-                android:id="@+id/recycler_view"
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/layout_coordinator"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:isHasFixedSize="@{true}"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toTopOf="@id/adView"
-                app:layout_constraintTop_toBottomOf="@id/cardView" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:layout_editor_absoluteX="0dp">
+
+                <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/app_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        style="@style/Toolbar"
+                        android:layout_width="match_parent"
+                        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                        app:popupTheme="@style/Theme.AppCompat.DayNight"
+                        app:title="@string/app_name" />
+
+                </com.google.android.material.appbar.AppBarLayout>
+
+                <com.airbnb.epoxy.EpoxyRecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:isHasFixedSize="@{true}"
+                    android:padding="@dimen/element_spacing_small"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:layout_constraintBottom_toTopOf="@id/adView"
+                    app:layout_constraintTop_toBottomOf="@id/cardView" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/element_spacing_very_large"
+                    android:src="@drawable/ic_add_white"
+                    app:layout_anchor="@id/recycler_view"
+                    app:layout_anchorGravity="bottom|end"
+                    app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adView"

@@ -16,9 +16,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
@@ -36,7 +34,6 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
-import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
@@ -69,10 +66,6 @@ class MainActivity : ShowTestsActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         binding.model = viewModel
-
-        viewModel.title.observe(this, Observer {
-            binding.buttonAdd.isEnabled = it?.isNotEmpty() ?: false
-        })
 
         createAd(binding.adView)
 
@@ -178,72 +171,72 @@ class MainActivity : ShowTestsActivity() {
 
     private fun initViews() {
 
-        binding.buttonExpand.setOnClickListener {
-
-            if (viewModel.isEditing.value != true) {
-                binding.test.editTitle.requestFocus()
-            }
-
-            viewModel.isEditing.postValue(!(viewModel.isEditing.value ?: false))
-        }
-
-        binding.test.editTitle.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED)
-            } else {
-                inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
-            }
-        }
-
-        binding.test.buttonCategory.tag = ""
-        binding.test.buttonCategory.setOnClickListener {
-            inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
-            val categoryEditor = CategoryEditor(this@MainActivity,
-                    binding.test.buttonCategory,
-                    getCategories = { categoryViewModel.categories.value ?: emptyList() }
-                    ,
-                    addCategory = {
-                        categoryViewModel.create(it)
-                    },
-                    deleteCategory = {
-                        categoryViewModel.delete(it)
-                    })
-            categoryEditor.setCategory()
-        }
-
-        binding.test.buttonCategory.setOnLongClickListener {
-
-            AlertDialog.Builder(this@MainActivity, R.style.MyAlertDialogStyle)
-                    .setMessage(getString(R.string.cancel_category))
-                    .setPositiveButton(android.R.string.ok) { _, _ ->
-
-                        binding.test.buttonCategory.tag = ""
-                        binding.test.buttonCategory.text = getString(R.string.category)
-                        binding.test.buttonCategory.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
-
-                    }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .create().show()
-
-            false
-        }
-
-        binding.buttonAdd.setOnClickListener {
-
-            testViewModel.create(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
-            categoryViewModel.refresh()
-            Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
-
-            viewModel.isEditing.postValue(false)
-
-            binding.test.editTitle.setText("")
-            binding.test.buttonCategory.tag = ""
-            binding.test.buttonCategory.text = getString(R.string.category)
-            binding.test.buttonCategory.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
-
-            sendFirebaseEvent("add-test")
-
-        }
+//        binding.buttonExpand.setOnClickListener {
+//
+//            if (viewModel.isEditing.value != true) {
+//                binding.test.editTitle.requestFocus()
+//            }
+//
+//            viewModel.isEditing.postValue(!(viewModel.isEditing.value ?: false))
+//        }
+//
+//        binding.test.editTitle.setOnFocusChangeListener { v, hasFocus ->
+//            if (hasFocus) {
+//                inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED)
+//            } else {
+//                inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
+//            }
+//        }
+//
+//        binding.test.buttonCategory.tag = ""
+//        binding.test.buttonCategory.setOnClickListener {
+//            inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
+//            val categoryEditor = CategoryEditor(this@MainActivity,
+//                    binding.test.buttonCategory,
+//                    getCategories = { categoryViewModel.categories.value ?: emptyList() }
+//                    ,
+//                    addCategory = {
+//                        categoryViewModel.create(it)
+//                    },
+//                    deleteCategory = {
+//                        categoryViewModel.delete(it)
+//                    })
+//            categoryEditor.setCategory()
+//        }
+//
+//        binding.test.buttonCategory.setOnLongClickListener {
+//
+//            AlertDialog.Builder(this@MainActivity, R.style.MyAlertDialogStyle)
+//                    .setMessage(getString(R.string.cancel_category))
+//                    .setPositiveButton(android.R.string.ok) { _, _ ->
+//
+//                        binding.test.buttonCategory.tag = ""
+//                        binding.test.buttonCategory.text = getString(R.string.category)
+//                        binding.test.buttonCategory.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
+//
+//                    }
+//                    .setNegativeButton(android.R.string.cancel, null)
+//                    .create().show()
+//
+//            false
+//        }
+//
+//        binding.buttonAdd.setOnClickListener {
+//
+//            testViewModel.create(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
+//            categoryViewModel.refresh()
+//            Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
+//
+//            viewModel.isEditing.postValue(false)
+//
+//            binding.test.editTitle.setText("")
+//            binding.test.buttonCategory.tag = ""
+//            binding.test.buttonCategory.text = getString(R.string.category)
+//            binding.test.buttonCategory.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
+//
+//            sendFirebaseEvent("add-test")
+//
+//        }
 
     }
 
@@ -371,7 +364,7 @@ class MainActivity : ShowTestsActivity() {
     }
 
     override fun onPause() {
-        inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
+        //inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
         super.onPause()
     }
 
