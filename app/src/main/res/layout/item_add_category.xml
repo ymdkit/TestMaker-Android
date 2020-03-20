@@ -35,7 +35,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:padding="@dimen/element_spacing_normal"
-            android:src="@drawable/ic_add"
+            android:src="@drawable/ic_add_white"
             android:tint="@color/colorPrimary"
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
