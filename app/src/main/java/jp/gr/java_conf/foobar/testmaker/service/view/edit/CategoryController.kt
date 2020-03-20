@@ -5,17 +5,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.itemAddCategory
 import jp.gr.java_conf.foobar.testmaker.service.itemCategory
 
-class CategoryController(private val onClickAddCategoryListener: OnClickAddCategoryListener) : EpoxyController() {
-
-    private var listener: OnClickListener = object : OnClickListener {
-        override fun onClickCategory(category: Category) {
-            selectedCategory = category
-        }
-
-        override fun onClickCancelCategory() {
-            selectedCategory = null
-        }
-    }
+class CategoryController(private val onCategoryEventListener: OnCategoryEventListener) : EpoxyController() {
 
     var categories: List<Category> = emptyList()
         set(value) {
@@ -29,13 +19,9 @@ class CategoryController(private val onClickAddCategoryListener: OnClickAddCateg
             requestModelBuild()
         }
 
-    interface OnClickListener {
-        fun onClickCategory(category: Category)
-        fun onClickCancelCategory()
-    }
-
-    interface OnClickAddCategoryListener {
+    interface OnCategoryEventListener {
         fun onClickAddCategory()
+        fun onClickDeleteCategory(category: Category)
     }
 
     override fun buildModels() {
@@ -44,15 +30,17 @@ class CategoryController(private val onClickAddCategoryListener: OnClickAddCateg
             itemCategory {
                 id(it.id)
                 category(it)
-                listener(listener)
                 selected(true)
+                onClickCancel { _ ->
+                    selectedCategory = null
+                }
             }
         } ?: run {
 
             itemAddCategory {
                 id("add_category")
-                onClick { view ->
-                    onClickAddCategoryListener.onClickAddCategory()
+                onClick { _ ->
+                    onCategoryEventListener.onClickAddCategory()
                 }
             }
 
@@ -60,8 +48,13 @@ class CategoryController(private val onClickAddCategoryListener: OnClickAddCateg
                 itemCategory {
                     id(it.id)
                     category(it)
-                    listener(listener)
                     selected(false)
+                    onClick { _ ->
+                        selectedCategory = it
+                    }
+                    onClickDelete { _ ->
+                        onCategoryEventListener.onClickDeleteCategory(it)
+                    }
                 }
             }
         }

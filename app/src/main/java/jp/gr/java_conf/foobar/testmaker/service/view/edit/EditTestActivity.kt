@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditTestBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
@@ -35,9 +36,13 @@ class EditTestActivity : BaseActivity() {
 
     private val controller by lazy {
         CategoryController(
-                object : CategoryController.OnClickAddCategoryListener {
+                object : CategoryController.OnCategoryEventListener {
                     override fun onClickAddCategory() {
                         EditCategoryActivity.startActivityForResult(this@EditTestActivity, REQUEST_EDIT_CATEGORY)
+                    }
+
+                    override fun onClickDeleteCategory(category: Category) {
+                        categoryViewModel.delete(category)
                     }
                 }
         )

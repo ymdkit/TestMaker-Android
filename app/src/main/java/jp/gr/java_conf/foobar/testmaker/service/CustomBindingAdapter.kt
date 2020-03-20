@@ -38,4 +38,10 @@ object CustomBindingAdapter {
         this.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
+    @BindingAdapter("android:onLongClick")
+    @JvmStatic
+    fun setOnLongClick(view: View, clickListener: View.OnLongClickListener?) {
+        view.setOnLongClickListener(clickListener)
+    }
+
 }
