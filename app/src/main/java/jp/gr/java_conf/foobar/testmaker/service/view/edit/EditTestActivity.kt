@@ -53,6 +53,8 @@ class EditTestActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         createAd(binding.adView)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (intent.hasExtra("id")) {
             testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {

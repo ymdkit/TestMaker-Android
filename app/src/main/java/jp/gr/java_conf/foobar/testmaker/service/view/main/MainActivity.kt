@@ -66,8 +66,6 @@ class MainActivity : ShowTestsActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.lifecycleOwner = this
-        binding.model = viewModel
 
         binding.fab.setOnClickListener {
             EditTestActivity.startActivity(this)

@@ -27,9 +27,6 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
     fun getUser(): FirebaseUser? = auth.getUser()
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
 
-    val title: MutableLiveData<String> = MutableLiveData()
-    var isEditing: MutableLiveData<Boolean> = MutableLiveData()
-
     private val billingClient = BillingClient.newBuilder(context).enablePendingPurchases().setListener(this).build()
     private val _billingStatus = MutableLiveData<BillingStatus>()
     val billingStatus: LiveData<BillingStatus> = _billingStatus
