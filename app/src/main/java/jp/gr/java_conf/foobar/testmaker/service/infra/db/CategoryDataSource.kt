@@ -21,13 +21,14 @@ class CategoryDataSource(private val realm: Realm) {
         }
     }
 
-    fun create(category: Category) {
+    fun create(category: Category): Long {
         val result = RealmCategory.createFromCategory(category)
         result.id = realm.where(RealmCategory::class.java).max("id")?.toLong()?.plus(1) ?: 0
         result.order = category.id.toInt()
         realm.executeTransaction {
             it.copyToRealm(result)
         }
+        return result.id
     }
 
     fun get(): List<Category> = realm.copyFromRealm(realm.where(RealmCategory::class.java)
@@ -36,6 +37,11 @@ class CategoryDataSource(private val realm: Realm) {
             ?.distinctBy { it.name }
             ?.sortedBy { it.order }
             ?: listOf()
+
+    fun get(id: Long): Category = Category.createFromRealmCategory(realm.copyFromRealm(realm.where(RealmCategory::class.java)
+            .equalTo("id", id)
+            .findFirst()
+            ?: RealmCategory()))
 
     fun update(category: Category) {
         realm.executeTransaction {

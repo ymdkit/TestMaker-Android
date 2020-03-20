@@ -9,11 +9,11 @@ import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditTestBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.category.EditCategoryActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,17 +34,13 @@ class EditTestActivity : BaseActivity() {
     }
 
     private val controller by lazy {
-        CategoryController().apply {
-            setOnClickListener(object : CategoryController.OnClickListener {
-                override fun onClickCategory(category: Category) {
-                    selectedCategory = category
+        CategoryController(
+                object : CategoryController.OnClickAddCategoryListener {
+                    override fun onClickAddCategory() {
+                        EditCategoryActivity.startActivityForResult(this@EditTestActivity, REQUEST_EDIT_CATEGORY)
+                    }
                 }
-
-                override fun onLongClickCategory(category: Category) {
-                    selectedCategory = null
-                }
-            })
-        }
+        )
     }
 
     private var test: Test? = null
@@ -60,6 +56,8 @@ class EditTestActivity : BaseActivity() {
             testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
                 test = it
                 editTestViewModel.titleTest.value = it.title
+                binding.colorChooser.setColorId(it.color)
+                controller.selectedCategory = categoryViewModel.categories.value?.find { category -> it.category == category.name }
             }
         }
 
@@ -103,14 +101,26 @@ class EditTestActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem) =
             when (item.itemId) {
                 android.R.id.home -> {
-
                     finish()
                     true
                 }
                 else -> super.onOptionsItemSelected(item)
             }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != Activity.RESULT_OK) return
+
+        when (requestCode) {
+            REQUEST_EDIT_CATEGORY -> {
+                controller.selectedCategory = categoryViewModel.get(data?.getLongExtra("category_id", -1L)
+                        ?: -1L)
+            }
+        }
+    }
+
     companion object {
+        const val REQUEST_EDIT_CATEGORY = 10000
 
         fun startActivity(activity: Activity, id: Long) {
             val intent = Intent(activity, EditTestActivity::class.java).apply {

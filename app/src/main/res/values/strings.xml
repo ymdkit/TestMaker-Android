@@ -238,4 +238,6 @@
     <string name="email_body_feedback">It would be very helpful if you could provide a description of what you did and what you did with the screenshot. \n\n\n\n\n Android SDK%1$d </string>
     <string name="label_color">color</string>
     <string name="label_category">category</string>
+    <string name="text_add_category">new category</string>
+    <string name="add_category">new category</string>
 </resources>

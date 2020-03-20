@@ -2,7 +2,6 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
 import android.Manifest
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -10,20 +9,16 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -39,11 +34,9 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
-import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryEditor
-import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ColorChooser
 import kotlinx.android.synthetic.main.activity_edit.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -58,7 +51,6 @@ import kotlin.math.min
 open class EditActivity : BaseActivity(), EditController.OnClickListener {
 
     private val viewModel: EditViewModel by viewModel()
-    private val categoryViewModel: CategoryViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
 
     private val controller: EditController by lazy {
@@ -291,123 +283,30 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        val actionId = item.itemId
-
-        when {
-            actionId == R.id.action_setting -> {
-
-                val dialogLayout = LayoutInflater.from(this).inflate(R.layout.dialog_edit_test,
-                        findViewById(R.id.layout_dialog_edit_test))
-
-                val name = dialogLayout.findViewById<EditText>(R.id.edit_title)
-
-                val buttonCate = dialogLayout.findViewById<Button>(R.id.button_category)
-
-                val colorChooser = dialogLayout.findViewById<ColorChooser>(R.id.color_chooser)
-
-                buttonCate.tag = test.category
-
-                if (test.category == "") {
-
-                    buttonCate.text = getString(R.string.category)
-                } else {
-                    buttonCate.text = test.category
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+            when (item.itemId) {
+                R.id.action_setting -> {
+                    EditTestActivity.startActivity(this, test.id)
+                    true
                 }
-
-                buttonCate.setOnClickListener {
-                    val categoryEditor = CategoryEditor(this@EditActivity, buttonCate,
-                            getCategories = { categoryViewModel.categories.value ?: emptyList() }
-                            ,
-                            addCategory = {
-                                categoryViewModel.create(it)
-                            },
-                            deleteCategory = {
-                                categoryViewModel.delete(it)
-                            })
-                    categoryEditor.setCategory()
+                android.R.id.home -> {
+                    finish()
+                    true
                 }
-
-                buttonCate.setOnLongClickListener {
-
-                    // アラートダイアログ を生成
-                    val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
-                    builder.setMessage(getString(R.string.cancel_category))
-                    builder.setPositiveButton(android.R.string.ok) { _, _ ->
-                        buttonCate.tag = ""
-                        buttonCate.text = getString(R.string.category)
-                        buttonCate.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
+                R.id.action_reset_achievement -> {
+                    test.let {
+                        testViewModel.update(Test.createFromRealmTest(RealmTest.createFromTest(it).apply {
+                            resetAchievement()
+                        }))
                     }
-                    builder.setNegativeButton(android.R.string.cancel, null)
-                    builder.create().show()
 
-                    false
+                    showToast(getString(R.string.msg_reset_achievement))
+                    true
                 }
-
-                name.setText(test.title)
-
-                colorChooser.setColorId(test.color)
-
-                val builder = AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                builder.setView(dialogLayout)
-                builder.setTitle(getString(R.string.edit_exam))
-                builder.setPositiveButton(android.R.string.ok, null)
-                builder.setNegativeButton(android.R.string.cancel, null)
-
-                val dialog = builder.show()
-
-                val button = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                button.setOnClickListener {
-                    // 場合によっては自分で明示的に閉じる必要がある
-                    val sb = name.text as SpannableStringBuilder
-
-                    if (sb.toString() == "") {
-
-                        Toast.makeText(applicationContext, getString(R.string.message_wrong), Toast.LENGTH_SHORT).show()
-
-                    } else {
-
-                        testViewModel.update(test, sb.toString(), colorChooser.getColorId(), buttonCate.tag.toString())
-                        dialog.dismiss()
-
-                    }
+                else -> {
+                    super.onOptionsItemSelected(item)
                 }
-
-                dialog.show()
-
             }
-            item.itemId == android.R.id.home -> {
-
-                finish()
-
-                return true
-            }
-            item.itemId == R.id.action_edit_pro -> {
-
-                EditProActivity.startActivity(this, test.id)
-
-                return true
-            }
-
-            item.itemId == R.id.action_reset_achievement -> {
-
-                test.let {
-                    testViewModel.update(Test.createFromRealmTest(RealmTest.createFromTest(it).apply {
-                        resetAchievement()
-                    }))
-                }
-
-                Toast.makeText(baseContext, getString(R.string.msg_reset_achievement), Toast.LENGTH_SHORT).show()
-
-                return true
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
 
     fun showLayoutWrite() {
         viewModel.formatQuestion.value = Constants.WRITE
@@ -540,7 +439,9 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
+                                            permissions: Array<String>
+                                            , grantResults: IntArray
+    ) {
         when (requestCode) {
             REQUEST_PERMISSION_CAMERA -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {

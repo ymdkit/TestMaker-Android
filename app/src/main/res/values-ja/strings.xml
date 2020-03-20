@@ -234,4 +234,6 @@
     <string name="email_body_feedback">お問い合わせの内容について、どのような操作を行ったかや画面のスクリーンショットの添付をしていただけるととても助かります\n\n\n\n\n Android SDK%1$d より送信</string>
     <string name="label_color">カラー</string>
     <string name="label_category">カテゴリ</string>
+    <string name="text_add_category">新しいカテゴリを追加</string>
+    <string name="add_category">カテゴリの追加</string>
 </resources>

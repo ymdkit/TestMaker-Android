@@ -2,11 +2,20 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
 import com.airbnb.epoxy.EpoxyController
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
+import jp.gr.java_conf.foobar.testmaker.service.itemAddCategory
 import jp.gr.java_conf.foobar.testmaker.service.itemCategory
 
-class CategoryController : EpoxyController() {
+class CategoryController(private val onClickAddCategoryListener: OnClickAddCategoryListener) : EpoxyController() {
 
-    private var listener: OnClickListener? = null
+    private var listener: OnClickListener = object : OnClickListener {
+        override fun onClickCategory(category: Category) {
+            selectedCategory = category
+        }
+
+        override fun onClickCancelCategory() {
+            selectedCategory = null
+        }
+    }
 
     var categories: List<Category> = emptyList()
         set(value) {
@@ -22,11 +31,11 @@ class CategoryController : EpoxyController() {
 
     interface OnClickListener {
         fun onClickCategory(category: Category)
-        fun onLongClickCategory(category: Category)
+        fun onClickCancelCategory()
     }
 
-    fun setOnClickListener(listener: OnClickListener) {
-        this.listener = listener
+    interface OnClickAddCategoryListener {
+        fun onClickAddCategory()
     }
 
     override fun buildModels() {
@@ -36,13 +45,23 @@ class CategoryController : EpoxyController() {
                 id(it.id)
                 category(it)
                 listener(listener)
+                selected(true)
             }
         } ?: run {
+
+            itemAddCategory {
+                id("add_category")
+                onClick { view ->
+                    onClickAddCategoryListener.onClickAddCategory()
+                }
+            }
+
             categories.forEach {
                 itemCategory {
                     id(it.id)
                     category(it)
                     listener(listener)
+                    selected(false)
                 }
             }
         }

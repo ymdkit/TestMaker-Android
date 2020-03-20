@@ -17,15 +17,18 @@ class CategoryRepository(private val dataSource: CategoryDataSource, private val
 
     fun get(): LiveData<List<Category>> = categories
 
+    fun get(id: Long): Category = dataSource.get(id)
+
     fun getHasTests(): LiveData<List<Category>> = hasTestsCategories
 
     fun refresh() {
         categories.value = dataSource.get()
     }
 
-    fun create(category: Category) {
-        dataSource.create(category)
+    fun create(category: Category): Long {
+        val id = dataSource.create(category)
         refresh()
+        return id
     }
 
     fun delete(category: Category) {
