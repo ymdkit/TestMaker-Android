@@ -4,7 +4,8 @@
         R.layout.card_online_my_page,
         R.layout.card_question,
         R.layout.item_category,
-        R.layout.item_add_category
+        R.layout.item_add_category,
+        R.layout.item_category_header
 })
 package jp.gr.java_conf.foobar.testmaker.service;
 

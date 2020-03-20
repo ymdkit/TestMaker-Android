@@ -240,4 +240,7 @@
     <string name="label_category">category</string>
     <string name="text_add_category">new category</string>
     <string name="add_category">new category</string>
+    <string name="text_header_category">category setting</string>
+    <string name="save_test">save test</string>
+    <string name="save_category">save category</string>
 </resources>

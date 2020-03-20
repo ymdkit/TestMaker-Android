@@ -4,6 +4,7 @@ import com.airbnb.epoxy.EpoxyController
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.itemAddCategory
 import jp.gr.java_conf.foobar.testmaker.service.itemCategory
+import jp.gr.java_conf.foobar.testmaker.service.itemCategoryHeader
 
 class CategoryController(private val onCategoryEventListener: OnCategoryEventListener) : EpoxyController() {
 
@@ -14,6 +15,12 @@ class CategoryController(private val onCategoryEventListener: OnCategoryEventLis
         }
 
     var selectedCategory: Category? = null
+        set(value) {
+            field = value
+            requestModelBuild()
+        }
+
+    var isOpen: Boolean = false
         set(value) {
             field = value
             requestModelBuild()
@@ -37,6 +44,15 @@ class CategoryController(private val onCategoryEventListener: OnCategoryEventLis
             }
         } ?: run {
 
+            itemCategoryHeader {
+                id("header_category")
+                isOpen(isOpen)
+                onClick { _ ->
+                    isOpen = !isOpen
+                }
+            }
+            if (!isOpen) return@run
+
             itemAddCategory {
                 id("add_category")
                 onClick { _ ->
@@ -57,6 +73,7 @@ class CategoryController(private val onCategoryEventListener: OnCategoryEventLis
                     }
                 }
             }
+
         }
     }
 }

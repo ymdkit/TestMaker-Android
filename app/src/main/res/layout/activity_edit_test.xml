@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="@dimen/element_spacing_large"
-                android:text="@string/action_add"
+                android:text="@string/save_test"
                 android:textSize="@dimen/text_size_medium"
                 app:layout_constraintBottom_toBottomOf="parent" />
 

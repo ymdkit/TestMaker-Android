@@ -236,4 +236,7 @@
     <string name="label_category">カテゴリ</string>
     <string name="text_add_category">新しいカテゴリを追加</string>
     <string name="add_category">カテゴリの追加</string>
+    <string name="text_header_category">カテゴリ設定</string>
+    <string name="save_test">問題集を保存</string>
+    <string name="save_category">カテゴリを保存</string>
 </resources>
