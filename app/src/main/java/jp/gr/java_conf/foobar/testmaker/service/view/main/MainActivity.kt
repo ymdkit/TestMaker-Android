@@ -30,11 +30,13 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageActivity
@@ -67,13 +69,15 @@ class MainActivity : ShowTestsActivity() {
         binding.lifecycleOwner = this
         binding.model = viewModel
 
+        binding.fab.setOnClickListener {
+            EditTestActivity.startActivity(this)
+        }
+
         createAd(binding.adView)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         initNavigationView()
-
-        initViews()
 
         initTestAndFolderAdapter()
 
@@ -124,7 +128,7 @@ class MainActivity : ShowTestsActivity() {
                 .withRecyclerView(binding.recyclerView)
                 .forVerticalList()
                 .forAllModels()
-                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<EpoxyModel<*>>(){
+                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<EpoxyModel<*>>() {
                     override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: EpoxyModel<*>?, itemView: View?) {
                         val from = mainController.adapter.getModelAtPosition(fromPosition)
                         val to = mainController.adapter.getModelAtPosition(toPosition)
@@ -157,86 +161,15 @@ class MainActivity : ShowTestsActivity() {
                 is FirebaseTestResult.Success -> {
                     viewModel.convert(result.test)
                     testViewModel.refresh()
-                    Toast.makeText(this@MainActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
+                    showToast(getString(R.string.msg_success_download_test, result.test.name))
                 }
                 is FirebaseTestResult.Failure -> {
-                    Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_SHORT).show()
+                    showToast(result.message)
                 }
             }
             dialog.dismiss()
 
         }
-
-    }
-
-    private fun initViews() {
-
-//        binding.buttonExpand.setOnClickListener {
-//
-//            if (viewModel.isEditing.value != true) {
-//                binding.test.editTitle.requestFocus()
-//            }
-//
-//            viewModel.isEditing.postValue(!(viewModel.isEditing.value ?: false))
-//        }
-//
-//        binding.test.editTitle.setOnFocusChangeListener { v, hasFocus ->
-//            if (hasFocus) {
-//                inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED)
-//            } else {
-//                inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
-//            }
-//        }
-//
-//        binding.test.buttonCategory.tag = ""
-//        binding.test.buttonCategory.setOnClickListener {
-//            inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
-//            val categoryEditor = CategoryEditor(this@MainActivity,
-//                    binding.test.buttonCategory,
-//                    getCategories = { categoryViewModel.categories.value ?: emptyList() }
-//                    ,
-//                    addCategory = {
-//                        categoryViewModel.create(it)
-//                    },
-//                    deleteCategory = {
-//                        categoryViewModel.delete(it)
-//                    })
-//            categoryEditor.setCategory()
-//        }
-//
-//        binding.test.buttonCategory.setOnLongClickListener {
-//
-//            AlertDialog.Builder(this@MainActivity, R.style.MyAlertDialogStyle)
-//                    .setMessage(getString(R.string.cancel_category))
-//                    .setPositiveButton(android.R.string.ok) { _, _ ->
-//
-//                        binding.test.buttonCategory.tag = ""
-//                        binding.test.buttonCategory.text = getString(R.string.category)
-//                        binding.test.buttonCategory.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
-//
-//                    }
-//                    .setNegativeButton(android.R.string.cancel, null)
-//                    .create().show()
-//
-//            false
-//        }
-//
-//        binding.buttonAdd.setOnClickListener {
-//
-//            testViewModel.create(binding.test.editTitle.text.toString(), binding.test.colorChooser.getColorId(), binding.test.buttonCategory.tag.toString())
-//            categoryViewModel.refresh()
-//            Toast.makeText(this@MainActivity, getString(R.string.message_add), Toast.LENGTH_LONG).show()
-//
-//            viewModel.isEditing.postValue(false)
-//
-//            binding.test.editTitle.setText("")
-//            binding.test.buttonCategory.tag = ""
-//            binding.test.buttonCategory.text = getString(R.string.category)
-//            binding.test.buttonCategory.background = ResourcesCompat.getDrawable(resources, R.drawable.button_blue, null)
-//
-//            sendFirebaseEvent("add-test")
-//
-//        }
 
     }
 

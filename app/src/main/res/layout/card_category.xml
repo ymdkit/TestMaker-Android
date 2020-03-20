@@ -3,12 +3,9 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <data>
-
-        <import type="jp.gr.java_conf.foobar.testmaker.service.domain.Category" />
-
         <variable
             name="category"
-            type="Category" />
+            type="jp.gr.java_conf.foobar.testmaker.service.domain.Category" />
 
         <variable
             name="selected"

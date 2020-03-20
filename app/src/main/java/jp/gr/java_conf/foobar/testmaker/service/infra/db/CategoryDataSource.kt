@@ -3,13 +3,14 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.db
 import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmCategory
 
 class CategoryDataSource(private val realm: Realm) {
 
     init {
         realm.executeTransaction {
             realm.where(Cate::class.java).findAll().forEachIndexed { index, it ->
-                val category = Category()
+                val category = RealmCategory()
                 category.id = index.toLong()
                 category.name = it.category
                 category.color = it.color
@@ -21,38 +22,36 @@ class CategoryDataSource(private val realm: Realm) {
     }
 
     fun create(category: Category) {
-        category.id = realm.where(Category::class.java).max("id")?.toLong()?.plus(1) ?: 0
-        category.order = category.id.toInt()
+        val result = RealmCategory.createFromCategory(category)
+        result.id = realm.where(RealmCategory::class.java).max("id")?.toLong()?.plus(1) ?: 0
+        result.order = category.id.toInt()
         realm.executeTransaction {
-            it.copyToRealm(category)
+            it.copyToRealm(result)
         }
     }
 
-    fun get(): List<Category> = realm.copyFromRealm(realm.where(Category::class.java)
+    fun get(): List<Category> = realm.copyFromRealm(realm.where(RealmCategory::class.java)
             .findAll())
+            ?.map { Category.createFromRealmCategory(it) }
             ?.distinctBy { it.name }
             ?.sortedBy { it.order }
             ?: listOf()
 
     fun update(category: Category) {
         realm.executeTransaction {
-            it.copyToRealmOrUpdate(category)
+            it.copyToRealmOrUpdate(RealmCategory.createFromCategory(category))
         }
     }
 
     fun swap(from: Category, to: Category) {
         val tmp = from.order
-        update(from.apply {
-            this.order = to.order
-        })
-        update(to.apply {
-            this.order = tmp
-        })
+        update(from.copy(order = to.order))
+        update(to.copy(order = tmp))
     }
 
     fun delete(category: Category) {
         realm.executeTransaction {
-            realm.where(Category::class.java).equalTo("id", category.id).findFirst()?.deleteFromRealm()
+            realm.where(RealmCategory::class.java).equalTo("id", category.id).findFirst()?.deleteFromRealm()
         }
     }
 

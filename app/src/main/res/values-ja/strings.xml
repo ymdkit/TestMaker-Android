@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">暗記メーカー</string>
-    <string name="add_exam">問題集の追加</string>
+    <string name="add_test">問題集の追加</string>
     <string name="edit_exam">問題集の編集</string>
     <string name="delete_exam">問題集の削除</string>
     <string name="message_delete_exam">問題集: %1$s を削除しますか？</string>
@@ -69,7 +69,7 @@
     <string name="image">画像</string>
     <string name="title_activity_edit">編集</string>
     <string name="add">add</string>
-    <string name="hint_name">問題集の名前</string>
+    <string name="hint_name">タイトル</string>
     <string name="hint_explanation">解説</string>
     <string name="hint_answer">解答</string>
     <string name="hint_answer1">解答1</string>
@@ -232,4 +232,6 @@
     <string name="menu_feedback">お問い合わせ</string>
     <string name="email_subject_feedback">「暗記メーカー」に関するお問い合わせ</string>
     <string name="email_body_feedback">お問い合わせの内容について、どのような操作を行ったかや画面のスクリーンショットの添付をしていただけるととても助かります\n\n\n\n\n Android SDK%1$d より送信</string>
+    <string name="label_color">カラー</string>
+    <string name="label_category">カテゴリ</string>
 </resources>

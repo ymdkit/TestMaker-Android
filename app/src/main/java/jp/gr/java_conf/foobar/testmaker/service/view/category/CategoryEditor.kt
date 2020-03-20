@@ -3,14 +3,14 @@ package jp.gr.java_conf.foobar.testmaker.service.view.category
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
-import androidx.core.content.res.ResourcesCompat
-import androidx.appcompat.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.res.ResourcesCompat
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ColorChooser
@@ -83,9 +83,10 @@ class CategoryEditor(private val context: Context,
                 drawable.setColor(colorChooser!!.getColorId())
 
                 buttonCate.background = drawable
-                val category = Category()
-                category.name = e.text.toString()
-                category.color = colorChooser!!.getColorId()
+                val category = Category(
+                        name = e.text.toString(),
+                        color = colorChooser!!.getColorId()
+                )
 
                 addCategory(category)
 

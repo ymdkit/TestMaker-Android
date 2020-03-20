@@ -157,7 +157,11 @@ class Migration : RealmMigration {
             schema.rename("Test", "RealmTest")
 
             oldVersion++
+        }
+        if (oldVersion == 16L) {
+            schema.rename("Category", "RealmCategory")
 
+            oldVersion++
         }
         //schemaVersion変えるの忘れるな(TestMakerApplication内)
     }

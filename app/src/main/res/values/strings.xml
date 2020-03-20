@@ -15,7 +15,7 @@
     <string name="action_paste">load by copying and pasting</string>
     <string name="action_right">correct</string>
     <string name="action_wrong">incorrect</string>
-    <string name="add_exam">add test</string>
+    <string name="add_test">add test</string>
     <string name="add_question">add question</string>
     <string name="answer">A. %1$s</string>
     <string name="app_name">TestMaker</string>
@@ -236,4 +236,6 @@
     <string name="contact_email">testmaker.contact@gmail.com</string>
     <string name="email_subject_feedback">feedback</string>
     <string name="email_body_feedback">It would be very helpful if you could provide a description of what you did and what you did with the screenshot. \n\n\n\n\n Android SDK%1$d </string>
+    <string name="label_color">color</string>
+    <string name="label_category">category</string>
 </resources>
