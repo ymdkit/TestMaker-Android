@@ -7,6 +7,7 @@ import jp.gr.java_conf.foobar.testmaker.service.cardCategory
 import jp.gr.java_conf.foobar.testmaker.service.cardTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.itemTestEmpty
 
 class MainController(private val context: Context) : EpoxyController() {
 
@@ -64,6 +65,13 @@ class MainController(private val context: Context) : EpoxyController() {
     }
 
     override fun buildModels() {
+
+        if (tests.isEmpty()) {
+            itemTestEmpty {
+                id("empty")
+            }
+            return
+        }
 
         categories.forEach {
             cardCategory {

@@ -244,4 +244,5 @@
     <string name="save_test">save test</string>
     <string name="save_category">save category</string>
     <string name="msg_save_test">saved test</string>
+    <string name="empty_test">make your first test</string>
 </resources>

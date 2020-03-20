@@ -240,4 +240,5 @@
     <string name="save_test">問題集を保存</string>
     <string name="save_category">カテゴリを保存</string>
     <string name="msg_save_test">問題集を保存しました</string>
+    <string name="empty_test">保存している問題集はありません。\n右下の+ボタンから問題集を追加してください</string>
 </resources>
