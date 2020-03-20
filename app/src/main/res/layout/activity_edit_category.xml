@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
             app:popupTheme="@style/Theme.AppCompat.DayNight"
-            app:title="@string/add_category" />
+            app:title="@string/title_activity_edit_category" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
