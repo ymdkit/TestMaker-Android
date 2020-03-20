@@ -289,6 +289,10 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
                     EditTestActivity.startActivity(this, test.id)
                     true
                 }
+                R.id.action_edit_pro -> {
+                    EditProActivity.startActivity(this, test.id)
+                    true
+                }
                 android.R.id.home -> {
                     finish()
                     true
