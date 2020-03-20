@@ -93,7 +93,7 @@ class EditTestActivity : BaseActivity() {
                 testViewModel.create(binding.editTitle.text.toString(), binding.colorChooser.getColorId(), controller.selectedCategory?.name)
             }
 
-            showToast(getString(R.string.message_add))
+            showToast(getString(R.string.msg_save_test))
             finish()
         }
     }

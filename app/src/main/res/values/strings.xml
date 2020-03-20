@@ -243,4 +243,5 @@
     <string name="text_header_category">category setting</string>
     <string name="save_test">save test</string>
     <string name="save_category">save category</string>
+    <string name="msg_save_test">saved test</string>
 </resources>
