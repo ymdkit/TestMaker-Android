@@ -120,7 +120,7 @@ class FirebaseActivity : BaseActivity() {
             pagingAdapter.refresh()
         }
 
-        binding.buttonUpload.setOnClickListener {
+        binding.fab.setOnClickListener {
 
             viewModel.getUser()?.let {
 
