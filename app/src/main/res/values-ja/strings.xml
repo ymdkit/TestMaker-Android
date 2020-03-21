@@ -243,4 +243,5 @@
     <string name="empty_test">保存している問題集はありません。\n右下の+ボタンから問題集を追加してください</string>
     <string name="title_activity_edit_test">問題集の編集</string>
     <string name="title_activity_edit_category">カテゴリの編集</string>
+    <string name="title_activity_edit_question">問題の編集</string>
 </resources>

@@ -81,6 +81,10 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
         binding.model = viewModel
         binding.recyclerView.adapter = controller.adapter
 
+        binding.fab.setOnClickListener {
+            EditQuestionActivity.startActivity(this, test.id)
+        }
+
         createAd(binding.adView)
 
         initToolBar()
