@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+
+        <variable
+            name="viewModel"
+            type="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionActivity">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
