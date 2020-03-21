@@ -20,7 +20,8 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.category.EditCategoryActivity"></activity>
+        <activity android:name=".view.edit.EditQuestionActivity"></activity>
+        <activity android:name=".view.category.EditCategoryActivity" />
         <activity android:name=".view.edit.EditTestActivity" />
         <activity
             android:name=".view.preference.SettingsActivity"
