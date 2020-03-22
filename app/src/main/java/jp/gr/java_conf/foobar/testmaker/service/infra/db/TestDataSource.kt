@@ -33,6 +33,9 @@ class TestDataSource(private val realm: Realm) {
             ?.map { Test.createFromRealmTest(it) }
             ?: listOf()
 
+    fun get(id: Long): Test = Test.createFromRealmTest(realm.copyFromRealm(realm.where(RealmTest::class.java)
+            .equalTo("id", id).findFirst() ?: RealmTest()))
+
     private fun update(test: RealmTest) {
         realm.executeTransaction {
             it.copyToRealmOrUpdate(test)

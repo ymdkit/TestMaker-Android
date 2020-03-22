@@ -4,6 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class EditQuestionViewModel : ViewModel() {
+
+    var testId = -1L
+
     val question = MutableLiveData("")
     val answer = MutableLiveData("")
 }

@@ -11,17 +11,18 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditQuestionBinding
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditQuestionActivity : BaseActivity() {
 
     private val editQuestionViewModel: EditQuestionViewModel by viewModel()
+    private val testViewModel: TestViewModel by viewModel()
 
     private val binding by lazy {
         DataBindingUtil.setContentView<ActivityEditQuestionBinding>(this, R.layout.activity_edit_question).apply {
             lifecycleOwner = this@EditQuestionActivity
-            viewModel = editQuestionViewModel
         }
     }
 
@@ -32,10 +33,17 @@ class EditQuestionActivity : BaseActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.viewPager.adapter = ViewPagerAdapter(this)
+        binding.viewPager.adapter = ViewPagerAdapter(this, object : OnQuestionEditListener {
+            override fun onQuestionEdit() {
+                finish()
+            }
+        })
+
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = "OBJECT ${(position + 1)}"
         }.attach()
+
+        editQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
 
     }
 
@@ -49,24 +57,31 @@ class EditQuestionActivity : BaseActivity() {
             }
 
     companion object {
+        const val ARGUMENT_TEST_ID = "testId"
+        const val QUESTION_ID = "questionId"
+
         fun startActivity(activity: Activity, testId: Long, questionId: Long) {
             val intent = Intent(activity, EditQuestionActivity::class.java).apply {
-                putExtra("testId", testId)
-                putExtra("questionId", questionId)
+                putExtra(ARGUMENT_TEST_ID, testId)
+                putExtra(QUESTION_ID, questionId)
             }
             activity.startActivity(intent)
         }
 
         fun startActivity(activity: Activity, testId: Long) {
             val intent = Intent(activity, EditQuestionActivity::class.java).apply {
-                putExtra("testId", testId)
+                putExtra(ARGUMENT_TEST_ID, testId)
             }
             activity.startActivity(intent)
         }
     }
 
-    private inner class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
+    private inner class ViewPagerAdapter(activity: FragmentActivity, onQuestionEditListener: OnQuestionEditListener) : FragmentStateAdapter(activity) {
         override fun getItemCount(): Int = 4
         override fun createFragment(position: Int): Fragment = EditWriteQuestionFragment()
+    }
+
+    interface OnQuestionEditListener {
+        fun onQuestionEdit()
     }
 }

@@ -13,6 +13,8 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
 
     var tests: List<Test> = repository.get()
 
+    fun get(id: Long) = repository.get(id)
+
     fun refresh() {
         repository.refresh()
     }
