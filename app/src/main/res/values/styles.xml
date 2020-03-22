@@ -89,7 +89,6 @@
     </style>
 
     <style name="MyEditTextSingleLine" parent="Theme.AppCompat.DayNight.NoActionBar">
-
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
@@ -102,6 +101,18 @@
         <item name="android:maxLines">2</item>
     </style>
 
+    <style name="EditText" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="EditText.MultiLine">
+        <item name="android:inputType">textMultiLine</item>
+    </style>
+
+    <style name="Switch">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
 
     <style name="MyCheckBoxStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
 

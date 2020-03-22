@@ -2,11 +2,13 @@ package jp.gr.java_conf.foobar.testmaker.service
 
 import android.graphics.drawable.GradientDrawable
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
 
 object CustomBindingAdapter {
 
@@ -42,6 +44,13 @@ object CustomBindingAdapter {
     @JvmStatic
     fun setOnLongClick(view: View, clickListener: View.OnLongClickListener?) {
         view.setOnLongClickListener(clickListener)
+    }
+
+    @BindingAdapter("android:animatedVisibility")
+    @JvmStatic
+    fun setAnimatedVisibility(view: View, isVisible: Boolean) {
+        TransitionManager.beginDelayedTransition(view.rootView as ViewGroup)
+        view.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
 }

@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionViewModel" />
@@ -17,21 +19,35 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_question_write"
             style="@style/MyTextInputLayoutStyle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/element_spacing_normal"
+            app:layout_constraintEnd_toStartOf="@id/button_image"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/set_problem"
-                style="@style/MyEditTextMultiLine"
+                style="@style/EditText.MultiLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/hint_question"
                 android:text="@={viewModel.question}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <ImageButton
+            android:id="@+id/button_image"
+            style="@style/Button.Primary.RectImage"
+            android:animatedVisibility="@{viewModel.isCheckedImage}"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_insert_photo_white_24dp"
+            app:layout_constraintBottom_toBottomOf="@id/textInputLayout_question_write"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textInputLayout_question_write" />
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_write_view"
+            android:id="@+id/text_input_answer"
             style="@style/MyTextInputLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,6 +62,54 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_explanation"
+            style="@style/MyTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:animatedVisibility="@{viewModel.isCheckedExplanation}"
+            app:layout_constraintTop_toBottomOf="@id/text_input_answer">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edit_explanation"
+                style="@style/MyEditTextSingleLine"
+                android:hint="@string/hint_explanation"
+                android:text="@={viewModel.explanation}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/label_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/element_spacing_small"
+            android:layout_marginTop="@dimen/element_spacing_very_large"
+            android:text="@string/label_setting_question"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/text_input_explanation" />
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/change_explanation"
+            style="@style/Switch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/element_spacing_small"
+            android:checked="@={viewModel.isCheckedExplanation}"
+            android:text="@string/message_explanation"
+            app:layout_constraintTop_toBottomOf="@id/label_setting" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_image"
+            style="@style/Switch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/element_spacing_small"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:checked="@={viewModel.isCheckedImage}"
+            android:text="@string/message_image"
+            app:layout_constraintTop_toBottomOf="@id/change_explanation" />
 
         <Button
             android:id="@+id/button_add"

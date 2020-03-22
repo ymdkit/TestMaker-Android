@@ -49,7 +49,7 @@
     <string name="message_delete">問題 %1$s を削除しますか</string>
     <string name="message_answer">正解\n%1$s</string>
     <string name="message_not_auto">問題数不足で自動生成できません</string>
-    <string name="message_explanation">・解説文を入れる</string>
+    <string name="message_explanation">解説文を入れる</string>
     <string name="is_check_order">・解答順を正誤判定に含める</string>
     <string name="message_paste">共有機能で作成したテキストを\nここに貼り付けてください</string>
     <string name="message_random">出題順をランダムにする</string>
@@ -244,4 +244,6 @@
     <string name="title_activity_edit_test">問題集の編集</string>
     <string name="title_activity_edit_category">カテゴリの編集</string>
     <string name="title_activity_edit_question">問題の編集</string>
+    <string name="message_image">問題中に画像を使用する</string>
+    <string name="label_setting_question">詳細設定</string>
 </resources>
