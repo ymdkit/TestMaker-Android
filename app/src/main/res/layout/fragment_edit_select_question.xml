@@ -41,7 +41,6 @@
             android:id="@+id/button_image"
             style="@style/Button.Primary.RectImage"
             android:animatedVisibility="@{viewModel.isCheckedImage}"
-            android:srcWithGlide="@{viewModel.imagePath}"
             android:contentDescription="@null"
             android:src="@drawable/ic_insert_photo_white_24dp"
             app:layout_constraintBottom_toBottomOf="@id/textInputLayout_question_write"
@@ -65,13 +64,98 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_other_1"
+            style="@style/MyTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+
+            app:layout_constraintTop_toBottomOf="@id/text_input_answer">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_other_1"
+                style="@style/MyEditTextSingleLine"
+                android:hint="@string/hint_other"
+                android:text="@={viewModel.explanation}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_other_2"
+            style="@style/MyTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+
+            app:layout_constraintTop_toBottomOf="@id/text_input_other_1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_other_2"
+                style="@style/MyEditTextSingleLine"
+                android:hint="@string/hint_other"
+                android:text="@={viewModel.explanation}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_other_3"
+            style="@style/MyTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+
+            app:layout_constraintTop_toBottomOf="@id/text_input_other_2">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_other_3"
+                style="@style/MyEditTextSingleLine"
+                android:hint="@string/hint_other"
+                android:text="@={viewModel.explanation}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_other_4"
+            style="@style/MyTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+
+            app:layout_constraintTop_toBottomOf="@id/text_input_other_3">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_other_4"
+                style="@style/MyEditTextSingleLine"
+                android:hint="@string/hint_other"
+                android:text="@={viewModel.explanation}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_other_5"
+            style="@style/MyTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+
+            app:layout_constraintTop_toBottomOf="@id/text_input_other_4">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_other_5"
+                style="@style/MyEditTextSingleLine"
+                android:hint="@string/hint_other"
+                android:text="@={viewModel.explanation}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_explanation"
             style="@style/MyTextInputLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/element_spacing_normal"
             android:animatedVisibility="@{viewModel.isCheckedExplanation}"
-            app:layout_constraintTop_toBottomOf="@id/text_input_answer">
+            app:layout_constraintTop_toBottomOf="@id/text_input_other_5">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_explanation"
@@ -91,6 +175,21 @@
             android:textColor="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/text_input_explanation" />
 
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner_size_select"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:layout_constraintTop_toBottomOf="@id/label_setting" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_auto"
+            style="@style/Switch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/element_spacing_small"
+            android:checked="@={viewModel.isCheckedExplanation}"
+            android:text="@string/message_auto"
+            app:layout_constraintTop_toBottomOf="@id/spinner_size_select" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/change_explanation"
@@ -98,9 +197,10 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginStart="@dimen/element_spacing_small"
+            android:layout_marginTop="@dimen/element_spacing_normal"
             android:checked="@={viewModel.isCheckedExplanation}"
             android:text="@string/message_explanation"
-            app:layout_constraintTop_toBottomOf="@id/label_setting" />
+            app:layout_constraintTop_toBottomOf="@id/switch_auto" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_image"

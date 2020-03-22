@@ -50,6 +50,8 @@ class EditQuestionViewModel : ViewModel() {
         this.question.value = question.question
         answer.value = question.answer
         explanation.value = question.explanation
+        isCheckedExplanation.value = question.explanation.isNotEmpty()
         imagePath.value = question.imagePath
+        isCheckedImage.value = question.imagePath.isNotEmpty()
     }
 }

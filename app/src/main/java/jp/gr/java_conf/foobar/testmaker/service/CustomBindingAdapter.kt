@@ -9,6 +9,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionManager
+import com.google.firebase.storage.FirebaseStorage
+import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 
 object CustomBindingAdapter {
 
@@ -60,4 +62,15 @@ object CustomBindingAdapter {
         view.isEnabled = isEnabled
     }
 
+    @BindingAdapter("android:srcWithGlide")
+    @JvmStatic
+    fun ImageView.setSrcWithGlide(src: String) {
+        if (src.contains("/")) {
+            val storage = FirebaseStorage.getInstance()
+            val storageRef = storage.reference.child(src)
+            setImageWithGlide(context, storageRef)
+        } else {
+            setImageWithGlide(context, context.getFileStreamPath(src))
+        }
+    }
 }

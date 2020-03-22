@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentEditWriteQuestionBinding
+import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentEditSelectQuestionBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -19,7 +19,7 @@ class EditSelectQuestionFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val binding = DataBindingUtil.inflate<FragmentEditWriteQuestionBinding>(inflater, R.layout.fragment_edit_write_question, container, false).apply {
+        val binding = DataBindingUtil.inflate<FragmentEditSelectQuestionBinding>(inflater, R.layout.fragment_edit_select_question, container, false).apply {
             //            lifecycleOwner = viewLifecycleOwner
 //            viewModel = editQuestionViewModel
         }
