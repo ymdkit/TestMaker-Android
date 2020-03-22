@@ -33,11 +33,7 @@ class EditQuestionActivity : BaseActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.viewPager.adapter = ViewPagerAdapter(this, object : OnQuestionEditListener {
-            override fun onQuestionEdit() {
-                finish()
-            }
-        })
+        binding.viewPager.adapter = ViewPagerAdapter(this)
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = "OBJECT ${(position + 1)}"
@@ -76,12 +72,8 @@ class EditQuestionActivity : BaseActivity() {
         }
     }
 
-    private inner class ViewPagerAdapter(activity: FragmentActivity, onQuestionEditListener: OnQuestionEditListener) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = 4
-        override fun createFragment(position: Int): Fragment = EditWriteQuestionFragment()
-    }
-
-    interface OnQuestionEditListener {
-        fun onQuestionEdit()
+    private inner class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
+        override fun getItemCount(): Int = 2
+        override fun createFragment(position: Int): Fragment = listOf(EditWriteQuestionFragment(), EditSelectQuestionFragment())[position]
     }
 }

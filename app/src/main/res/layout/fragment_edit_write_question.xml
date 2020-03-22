@@ -55,7 +55,7 @@
             android:layout_marginTop="@dimen/element_spacing_normal"
             app:layout_constraintTop_toBottomOf="@id/textInputLayout_question_write">
 
-            <androidx.appcompat.widget.AppCompatEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/set_answer_write"
                 style="@style/MyEditTextSingleLine"
                 android:hint="@string/hint_answer"
@@ -72,7 +72,7 @@
             android:animatedVisibility="@{viewModel.isCheckedExplanation}"
             app:layout_constraintTop_toBottomOf="@id/text_input_answer">
 
-            <androidx.appcompat.widget.AppCompatEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_explanation"
                 style="@style/MyEditTextSingleLine"
                 android:hint="@string/hint_explanation"
@@ -111,6 +111,17 @@
             android:checked="@={viewModel.isCheckedImage}"
             android:text="@string/message_image"
             app:layout_constraintTop_toBottomOf="@id/change_explanation" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_reset_form"
+            style="@style/Switch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/element_spacing_small"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:checked="@={viewModel.isResetForm}"
+            android:text="@string/message_reset_form"
+            app:layout_constraintTop_toBottomOf="@id/switch_image" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_add"
