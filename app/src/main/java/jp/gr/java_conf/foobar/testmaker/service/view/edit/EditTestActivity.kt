@@ -80,10 +80,6 @@ class EditTestActivity : BaseActivity() {
             controller.categories = it
         }
 
-        editTestViewModel.titleTest.observeNonNull(this) {
-            binding.buttonAdd.isClickable = it.isNotEmpty()
-        }
-
         binding.buttonAdd.setOnClickListener {
             sendFirebaseEvent("add-test")
 

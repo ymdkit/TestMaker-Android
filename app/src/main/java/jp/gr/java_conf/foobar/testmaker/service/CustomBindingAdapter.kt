@@ -53,4 +53,11 @@ object CustomBindingAdapter {
         view.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
+    @BindingAdapter("android:animatedEnabled")
+    @JvmStatic
+    fun setAnimatedEnabled(view: View, isEnabled: Boolean) {
+        TransitionManager.beginDelayedTransition(view.rootView as ViewGroup)
+        view.isEnabled = isEnabled
+    }
+
 }

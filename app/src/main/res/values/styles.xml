@@ -29,6 +29,10 @@
         <item name="colorControlActivated">@color/colorPrimary</item><!-- フォーカス時の下線の色 -->
     </style>
 
+    <style name="ThemeOverlay.Button.Accent" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <!--ボタン関連のスタイル-->
     <style name="Button">
         <item name="android:textColor">@color/white</item>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -111,15 +112,18 @@
             android:text="@string/message_image"
             app:layout_constraintTop_toBottomOf="@id/change_explanation" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_add"
-            style="@style/Button.Accent"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:theme="@style/ThemeOverlay.Button.Accent"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="@dimen/element_spacing_large"
+            android:enabled="@{viewModel.isValidated}"
             android:text="@string/save_question"
             android:textSize="@dimen/text_size_medium"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:enabled="false" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
