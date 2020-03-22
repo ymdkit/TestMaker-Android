@@ -255,4 +255,5 @@
     <string name="label_setting_question">setting</string>
     <string name="message_reset_form">reset form when you saved</string>
     <string name="message_auto">auto create selections</string>
+    <string name="hint_auto">auto generate</string>
 </resources>

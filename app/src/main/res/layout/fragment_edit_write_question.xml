@@ -17,123 +17,137 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout_question_write"
-            style="@style/MyTextInputLayoutStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/element_spacing_normal"
-            app:layout_constraintEnd_toStartOf="@id/button_image"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/button_add">
 
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/set_problem"
-                style="@style/EditText.MultiLine"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_question"
-                android:text="@={viewModel.question}" />
+                android:layout_height="match_parent">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout_question_write"
+                    style="@style/MyTextInputLayoutStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/element_spacing_normal"
+                    app:layout_constraintEnd_toStartOf="@id/button_image"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/button_image"
-            style="@style/Button.Primary.RectImage"
-            android:animatedVisibility="@{viewModel.isCheckedImage}"
-            android:srcWithGlide="@{viewModel.imagePath}"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_insert_photo_white_24dp"
-            app:layout_constraintBottom_toBottomOf="@id/textInputLayout_question_write"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textInputLayout_question_write" />
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/set_problem"
+                        style="@style/EditText.MultiLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_question"
+                        android:text="@={viewModel.question}" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_answer"
-            style="@style/MyTextInputLayoutStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/element_spacing_normal"
-            app:layout_constraintTop_toBottomOf="@id/textInputLayout_question_write">
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/set_answer_write"
-                style="@style/MyEditTextSingleLine"
-                android:hint="@string/hint_answer"
-                android:text="@={viewModel.answer}" />
+                <ImageButton
+                    android:id="@+id/button_image"
+                    style="@style/Button.Primary.RectImage"
+                    android:animatedVisibility="@{viewModel.isCheckedImage}"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_insert_photo_white_24dp"
+                    android:srcWithGlide="@{viewModel.imagePath}"
+                    app:layout_constraintBottom_toBottomOf="@id/textInputLayout_question_write"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/textInputLayout_question_write" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_answer"
+                    style="@style/MyTextInputLayoutStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/element_spacing_normal"
+                    app:layout_constraintTop_toBottomOf="@id/textInputLayout_question_write">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_explanation"
-            style="@style/MyTextInputLayoutStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/element_spacing_normal"
-            android:animatedVisibility="@{viewModel.isCheckedExplanation}"
-            app:layout_constraintTop_toBottomOf="@id/text_input_answer">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/set_answer_write"
+                        style="@style/MyEditTextSingleLine"
+                        android:hint="@string/hint_answer"
+                        android:text="@={viewModel.answer}" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_explanation"
-                style="@style/MyEditTextSingleLine"
-                android:hint="@string/hint_explanation"
-                android:text="@={viewModel.explanation}" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_explanation"
+                    style="@style/MyTextInputLayoutStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/element_spacing_normal"
+                    android:animatedVisibility="@{viewModel.isCheckedExplanation}"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_answer">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/label_setting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/element_spacing_small"
-            android:layout_marginTop="@dimen/element_spacing_very_large"
-            android:text="@string/label_setting_question"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintTop_toBottomOf="@id/text_input_explanation" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_explanation"
+                        style="@style/MyEditTextSingleLine"
+                        android:hint="@string/hint_explanation"
+                        android:text="@={viewModel.explanation}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/label_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:layout_marginTop="@dimen/element_spacing_very_large"
+                    android:text="@string/label_setting_question"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_explanation" />
 
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/change_explanation"
-            style="@style/Switch"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="@dimen/element_spacing_small"
-            android:checked="@={viewModel.isCheckedExplanation}"
-            android:text="@string/message_explanation"
-            app:layout_constraintTop_toBottomOf="@id/label_setting" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/change_explanation"
+                    style="@style/Switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:checked="@={viewModel.isCheckedExplanation}"
+                    android:text="@string/message_explanation"
+                    app:layout_constraintTop_toBottomOf="@id/label_setting" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_image"
-            style="@style/Switch"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="@dimen/element_spacing_small"
-            android:layout_marginTop="@dimen/element_spacing_normal"
-            android:checked="@={viewModel.isCheckedImage}"
-            android:text="@string/message_image"
-            app:layout_constraintTop_toBottomOf="@id/change_explanation" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_image"
+                    style="@style/Switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:layout_marginTop="@dimen/element_spacing_normal"
+                    android:checked="@={viewModel.isCheckedImage}"
+                    android:text="@string/message_image"
+                    app:layout_constraintTop_toBottomOf="@id/change_explanation" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_reset_form"
-            style="@style/Switch"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="@dimen/element_spacing_small"
-            android:layout_marginTop="@dimen/element_spacing_normal"
-            android:checked="@={viewModel.isResetForm}"
-            android:text="@string/message_reset_form"
-            app:layout_constraintTop_toBottomOf="@id/switch_image" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_reset_form"
+                    style="@style/Switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:layout_marginTop="@dimen/element_spacing_normal"
+                    android:checked="@={viewModel.isResetForm}"
+                    android:text="@string/message_reset_form"
+                    app:layout_constraintTop_toBottomOf="@id/switch_image" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_add"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:theme="@style/ThemeOverlay.Button.Accent"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="@dimen/element_spacing_large"
             android:enabled="@{viewModel.isValidated}"
             android:text="@string/save_question"
             android:textSize="@dimen/text_size_medium"
+            android:theme="@style/ThemeOverlay.Button.Accent"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:enabled="false" />
 

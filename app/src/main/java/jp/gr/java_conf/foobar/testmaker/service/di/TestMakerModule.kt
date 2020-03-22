@@ -13,6 +13,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.category.EditCategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditSelectQuestionViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainViewModel
@@ -40,6 +41,7 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { EditViewModel(get(), get()) }
     viewModel { EditTestViewModel() }
     viewModel { EditQuestionViewModel() }
+    viewModel { EditSelectQuestionViewModel() }
     viewModel { EditCategoryViewModel() }
     viewModel { FirebaseViewModel(get(), get()) }
     viewModel { FirebaseMyPageViewModel(get(), get()) }

@@ -37,6 +37,7 @@ class EditWriteQuestionFragment : Fragment() {
 
     private var binding: FragmentEditWriteQuestionBinding? = null
 
+    //todo: 別の場所から取得したい
     private val fileName: String
         get() {
             val c = Calendar.getInstance()

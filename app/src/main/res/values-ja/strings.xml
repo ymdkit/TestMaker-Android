@@ -247,5 +247,6 @@
     <string name="message_image">問題中に画像を使用する</string>
     <string name="label_setting_question">詳細設定</string>
     <string name="message_reset_form">保存時に入力値をリセットする</string>
-    <string name="message_auto">選択肢の自動生成</string>
+    <string name="message_auto">選択肢を自動生成する（他の問題の答え）</string>
+    <string name="hint_auto">自動生成</string>
 </resources>

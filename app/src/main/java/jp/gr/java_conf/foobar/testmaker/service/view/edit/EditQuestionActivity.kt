@@ -18,6 +18,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class EditQuestionActivity : BaseActivity() {
 
     private val editQuestionViewModel: EditQuestionViewModel by viewModel()
+    private val editSelectQuestionViewModel: EditSelectQuestionViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
 
     private val binding by lazy {
@@ -33,16 +34,24 @@ class EditQuestionActivity : BaseActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.viewPager.adapter = ViewPagerAdapter(this)
+        binding.viewPager.offscreenPageLimit = 4
+        binding.viewPager.adapter = ViewPagerAdapter(this, listOf(EditWriteQuestionFragment(), EditSelectQuestionFragment()))
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            //todo: 出題形式のENUMを作ろう
             tab.text = "OBJECT ${(position + 1)}"
         }.attach()
 
+        //todo: テストの受け渡し方法どうする
         editQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
+        editSelectQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
+
 
         testViewModel.get(editQuestionViewModel.testId).questions.find { it.id == intent.getLongExtra(ARGUMENT_QUESTION_ID, -1L) }?.let {
+            //todo: 出題形式による条件分岐
+            binding.tabLayout.getTabAt(it.type)?.select()
             editQuestionViewModel.selectedQuestion = it
+            editSelectQuestionViewModel.selectedQuestion = it
         }
 
     }
@@ -76,8 +85,8 @@ class EditQuestionActivity : BaseActivity() {
         }
     }
 
-    private inner class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
+    private inner class ViewPagerAdapter(activity: FragmentActivity, private val fragments: List<Fragment>) : FragmentStateAdapter(activity) {
         override fun getItemCount(): Int = 2
-        override fun createFragment(position: Int): Fragment = listOf(EditWriteQuestionFragment(), EditSelectQuestionFragment())[position]
+        override fun createFragment(position: Int): Fragment = fragments[position]
     }
 }

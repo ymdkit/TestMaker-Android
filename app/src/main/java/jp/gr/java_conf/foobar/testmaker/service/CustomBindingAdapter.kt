@@ -55,22 +55,19 @@ object CustomBindingAdapter {
         view.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
-    @BindingAdapter("android:animatedEnabled")
-    @JvmStatic
-    fun setAnimatedEnabled(view: View, isEnabled: Boolean) {
-        TransitionManager.beginDelayedTransition(view.rootView as ViewGroup)
-        view.isEnabled = isEnabled
-    }
-
     @BindingAdapter("android:srcWithGlide")
     @JvmStatic
     fun ImageView.setSrcWithGlide(src: String) {
-        if (src.contains("/")) {
-            val storage = FirebaseStorage.getInstance()
-            val storageRef = storage.reference.child(src)
-            setImageWithGlide(context, storageRef)
+        if (src.isEmpty()) {
+            setImageResource(R.drawable.ic_insert_photo_white_24dp)
         } else {
-            setImageWithGlide(context, context.getFileStreamPath(src))
+            if (src.contains("/")) {
+                val storage = FirebaseStorage.getInstance()
+                val storageRef = storage.reference.child(src)
+                setImageWithGlide(context, storageRef)
+            } else {
+                setImageWithGlide(context, context.getFileStreamPath(src))
+            }
         }
     }
 }

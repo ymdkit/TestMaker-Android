@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 
-class EditQuestionViewModel : ViewModel() {
+class EditSelectQuestionViewModel : ViewModel() {
 
     var testId = -1L
     var selectedQuestion = Question()
@@ -17,25 +17,39 @@ class EditQuestionViewModel : ViewModel() {
 
     val question = MutableLiveData("")
     val answer = MutableLiveData("")
+    val others = List(SIZE_OTHER_MAX) { MutableLiveData("") }
     val explanation = MutableLiveData("")
     val isCheckedImage = MutableLiveData(false)
+    val isCheckedAuto = MutableLiveData(false)
     val isCheckedExplanation = MutableLiveData(false)
     val isResetForm = MutableLiveData(true)
     val imagePath = MutableLiveData("")
+    val sizeOfOthers = MutableLiveData(3)
+
 
     val isValidated = MediatorLiveData<Boolean>().also { result ->
         result.addSource(question) { result.value = isValid }
         result.addSource(answer) { result.value = isValid }
+        others.forEach {
+            result.addSource(it) { result.value = isValid }
+        }
+        result.addSource(sizeOfOthers) { result.value = isValid }
     }
 
     private val isValid: Boolean
-        get() = !question.value.isNullOrEmpty() && !answer.value.isNullOrEmpty()
+        get() = !question.value.isNullOrEmpty() &&
+                !answer.value.isNullOrEmpty() &&
+                !others.take(sizeOfOthers.value ?: SIZE_OTHER_MAX).any {
+                    it.value.isNullOrEmpty()
+                }
 
     fun createQuestion() = selectedQuestion.copy(
             question = question.value ?: "",
             answer = answer.value ?: "",
+            others = others.map { it.value ?: "" }.take(sizeOfOthers.value ?: 0),
             explanation = explanation.value ?: "",
-            type = Constants.WRITE,
+            isAutoGenerateOthers = isCheckedAuto.value ?: false,
+            type = Constants.SELECT,
             imagePath = imagePath.value ?: ""
     )
 
@@ -45,15 +59,37 @@ class EditQuestionViewModel : ViewModel() {
             answer.value = ""
             explanation.value = ""
             imagePath.value = ""
+            others.forEach {
+                it.value = ""
+            }
         }
     }
 
     private fun inputForm(question: Question) {
         this.question.value = question.question
         answer.value = question.answer
+        sizeOfOthers.value = question.others.size
         explanation.value = question.explanation
         isCheckedExplanation.value = question.explanation.isNotEmpty()
         imagePath.value = question.imagePath
         isCheckedImage.value = question.imagePath.isNotEmpty()
+        isCheckedAuto.value = question.isAutoGenerateOthers
+        question.others.forEachIndexed { index, s ->
+            if (index >= SIZE_OTHER_MAX) return@forEachIndexed
+            others[index].value = s
+        }
+    }
+
+    fun mutateSizeOfOthers(num: Int) {
+        sizeOfOthers.value?.let {
+            if (it + num in SIZE_OTHER_MIN..SIZE_OTHER_MAX) {
+                sizeOfOthers.value = it + num
+            }
+        }
+    }
+
+    companion object {
+        const val SIZE_OTHER_MIN = 1
+        const val SIZE_OTHER_MAX = 5
     }
 }
