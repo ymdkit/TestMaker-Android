@@ -20,8 +20,10 @@ import androidx.lifecycle.lifecycleScope
 import com.isseiaoki.simplecropview.CropImageView
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentEditWriteQuestionBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -54,7 +56,14 @@ class EditWriteQuestionFragment : Fragment() {
             viewModel = editQuestionViewModel
 
             buttonAdd.setOnClickListener {
-                testViewModel.create(testViewModel.get(editQuestionViewModel.testId), editQuestionViewModel.createQuestion())
+                requireContext().showToast(getString(R.string.msg_save))
+                if (editQuestionViewModel.selectedQuestion.id == Question().id) {
+                    testViewModel.create(testViewModel.get(editQuestionViewModel.testId), editQuestionViewModel.createQuestion())
+                } else {
+                    testViewModel.update(editQuestionViewModel.createQuestion())
+                    requireActivity().finish()
+                }
+
                 editQuestionViewModel.formReset()
             }
 

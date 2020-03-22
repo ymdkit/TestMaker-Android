@@ -469,6 +469,11 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
     }
 
     override fun onClickEditQuestion(question: Question) {
+
+        EditQuestionActivity.startActivity(this, test.id, question.id)
+        return
+
+
         showLayoutEdit()
         text_title.text = getString(R.string.edit_question)
         button_cancel.visibility = View.VISIBLE

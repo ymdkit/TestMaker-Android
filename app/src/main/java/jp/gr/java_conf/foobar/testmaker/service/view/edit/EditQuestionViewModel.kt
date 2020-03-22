@@ -8,6 +8,11 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 class EditQuestionViewModel : ViewModel() {
 
     var testId = -1L
+    var selectedQuestion = Question()
+        set(value) {
+            field = value
+            inputForm(field)
+        }
 
     val question = MutableLiveData("")
     val answer = MutableLiveData("")
@@ -25,7 +30,7 @@ class EditQuestionViewModel : ViewModel() {
     private val isValid: Boolean
         get() = !question.value.isNullOrEmpty() && !answer.value.isNullOrEmpty()
 
-    fun createQuestion() = Question(
+    fun createQuestion() = selectedQuestion.copy(
             question = question.value ?: "",
             answer = answer.value ?: "",
             explanation = explanation.value ?: "",
@@ -39,5 +44,12 @@ class EditQuestionViewModel : ViewModel() {
             explanation.value = ""
             imagePath.value = ""
         }
+    }
+
+    private fun inputForm(question: Question) {
+        this.question.value = question.question
+        answer.value = question.answer
+        explanation.value = question.explanation
+        imagePath.value = question.imagePath
     }
 }

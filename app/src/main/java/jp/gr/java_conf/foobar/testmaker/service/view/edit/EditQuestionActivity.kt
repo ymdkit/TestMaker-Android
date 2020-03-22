@@ -41,6 +41,10 @@ class EditQuestionActivity : BaseActivity() {
 
         editQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
 
+        testViewModel.get(editQuestionViewModel.testId).questions.find { it.id == intent.getLongExtra(ARGUMENT_QUESTION_ID, -1L) }?.let {
+            editQuestionViewModel.selectedQuestion = it
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
@@ -54,12 +58,12 @@ class EditQuestionActivity : BaseActivity() {
 
     companion object {
         const val ARGUMENT_TEST_ID = "testId"
-        const val QUESTION_ID = "questionId"
+        const val ARGUMENT_QUESTION_ID = "questionId"
 
         fun startActivity(activity: Activity, testId: Long, questionId: Long) {
             val intent = Intent(activity, EditQuestionActivity::class.java).apply {
                 putExtra(ARGUMENT_TEST_ID, testId)
-                putExtra(QUESTION_ID, questionId)
+                putExtra(ARGUMENT_QUESTION_ID, questionId)
             }
             activity.startActivity(intent)
         }
