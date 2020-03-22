@@ -3,7 +3,12 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditQuestionBinding
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
@@ -24,8 +29,24 @@ class EditQuestionActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         createAd(binding.adView)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding.viewPager.adapter = ViewPagerAdapter(this)
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = "OBJECT ${(position + 1)}"
+        }.attach()
 
     }
+
+    override fun onOptionsItemSelected(item: MenuItem) =
+            when (item.itemId) {
+                android.R.id.home -> {
+                    finish()
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
+            }
 
     companion object {
         fun startActivity(activity: Activity, testId: Long, questionId: Long) {
@@ -42,5 +63,10 @@ class EditQuestionActivity : BaseActivity() {
             }
             activity.startActivity(intent)
         }
+    }
+
+    private inner class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
+        override fun getItemCount(): Int = 4
+        override fun createFragment(position: Int): Fragment = EditWriteQuestionFragment()
     }
 }

@@ -15,7 +15,7 @@
     <string name="add_question">問題の追加</string>
     <string name="edit_question">問題の編集</string>
     <string name="delete_question">問題の削除</string>
-    <string name="save_question">変更を保存</string>
+    <string name="save_question">問題を保存</string>
     <string name="number_answers">・解答の数(完答)</string>
     <string name="number_choosers">・選択肢の数</string>
     <string name="number_questions">出題数</string>

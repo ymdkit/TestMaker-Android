@@ -248,4 +248,7 @@
     <string name="title_activity_edit_test">edit test</string>
     <string name="title_activity_edit_category">edit category</string>
     <string name="title_activity_edit_question">edit question</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
