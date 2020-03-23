@@ -54,7 +54,7 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
     private val testViewModel: TestViewModel by viewModel()
 
     private val controller: EditController by lazy {
-        EditController().apply {
+        EditController(this).apply {
             setOnClickListener(this@EditActivity)
         }
     }
