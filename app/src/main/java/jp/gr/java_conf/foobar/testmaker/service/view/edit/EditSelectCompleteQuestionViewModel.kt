@@ -2,32 +2,25 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 
-class EditSelectCompleteQuestionViewModel : ViewModel() {
+class EditSelectCompleteQuestionViewModel : EditQuestionViewModel() {
 
-    var testId = -1L
     var selectedQuestion = Question()
         set(value) {
             field = value
             inputForm(field)
         }
 
-    val question = MutableLiveData("")
     val answer = MutableLiveData("")
     val answers = List(SIZE_ANSWER_MAX) { MutableLiveData("") }
     val others = List(SIZE_OTHER_MAX) { MutableLiveData("") }
-    val explanation = MutableLiveData("")
     val isCheckedImage = MutableLiveData(false)
-    val isCheckedAuto = MutableLiveData(false)
     val isCheckedExplanation = MutableLiveData(false)
-    val isResetForm = MutableLiveData(true)
-    val imagePath = MutableLiveData("")
+    val isCheckedAuto = MutableLiveData(false)
     val sizeOfOthers = MutableLiveData(2)
     val sizeOfAnswers = MutableLiveData(2)
-    val isVisibleSetting = MutableLiveData(false)
 
     private val sizeOfTotal: Int
         get() {
@@ -134,10 +127,6 @@ class EditSelectCompleteQuestionViewModel : ViewModel() {
                 sizeOfAnswers.value = it + num
             }
         }
-    }
-
-    fun onClickSetting() {
-        isVisibleSetting.value = !(isVisibleSetting.value ?: false)
     }
 
     companion object {

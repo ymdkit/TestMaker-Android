@@ -25,6 +25,7 @@ class EditCompleteQuestionFragment : EditQuestionFragment() {
             binding = this
             lifecycleOwner = viewLifecycleOwner
             viewModel = editCompleteQuestionViewModel
+            commonViewModel = editQuestionViewModel
 
             buttonAdd.setOnClickListener {
                 requireContext().showToast(getString(R.string.msg_save))

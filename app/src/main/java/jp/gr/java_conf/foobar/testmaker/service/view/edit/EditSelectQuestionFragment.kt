@@ -36,6 +36,7 @@ class EditSelectQuestionFragment : EditQuestionFragment() {
             binding = this
             lifecycleOwner = viewLifecycleOwner
             viewModel = editSelectQuestionViewModel
+            commonViewModel = editQuestionViewModel
 
             buttonAdd.setOnClickListener {
                 requireContext().showToast(getString(R.string.msg_save))

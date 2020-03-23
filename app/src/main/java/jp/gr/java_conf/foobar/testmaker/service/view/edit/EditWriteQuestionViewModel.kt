@@ -2,27 +2,20 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 
-class EditWriteQuestionViewModel : ViewModel() {
+class EditWriteQuestionViewModel : EditQuestionViewModel() {
 
-    var testId = -1L
     var selectedQuestion = Question()
         set(value) {
             field = value
             inputForm(field)
         }
 
-    val question = MutableLiveData("")
     val answer = MutableLiveData("")
-    val explanation = MutableLiveData("")
     val isCheckedImage = MutableLiveData(false)
     val isCheckedExplanation = MutableLiveData(false)
-    val isResetForm = MutableLiveData(true)
-    val imagePath = MutableLiveData("")
-    val isVisibleSetting = MutableLiveData(false)
 
     val isValidated = MediatorLiveData<Boolean>().also { result ->
         result.addSource(question) { result.value = isValid }
@@ -47,10 +40,6 @@ class EditWriteQuestionViewModel : ViewModel() {
             explanation.value = ""
             imagePath.value = ""
         }
-    }
-
-    fun onClickSetting() {
-        isVisibleSetting.value = !(isVisibleSetting.value ?: false)
     }
 
     private fun inputForm(question: Question) {

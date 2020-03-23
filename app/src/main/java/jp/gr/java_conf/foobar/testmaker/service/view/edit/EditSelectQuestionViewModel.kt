@@ -2,30 +2,23 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 
-class EditSelectQuestionViewModel : ViewModel() {
+class EditSelectQuestionViewModel : EditQuestionViewModel() {
 
-    var testId = -1L
     var selectedQuestion = Question()
         set(value) {
             field = value
             inputForm(field)
         }
 
-    val question = MutableLiveData("")
     val answer = MutableLiveData("")
     val others = List(SIZE_OTHER_MAX) { MutableLiveData("") }
-    val explanation = MutableLiveData("")
     val isCheckedImage = MutableLiveData(false)
-    val isCheckedAuto = MutableLiveData(false)
     val isCheckedExplanation = MutableLiveData(false)
-    val isResetForm = MutableLiveData(true)
-    val imagePath = MutableLiveData("")
+    val isCheckedAuto = MutableLiveData(false)
     val sizeOfOthers = MutableLiveData(3)
-    val isVisibleSetting = MutableLiveData(false)
 
     val isValidated = MediatorLiveData<Boolean>().also { result ->
         result.addSource(question) { result.value = isValid }
@@ -86,10 +79,6 @@ class EditSelectQuestionViewModel : ViewModel() {
                 sizeOfOthers.value = it + num
             }
         }
-    }
-
-    fun onClickSetting() {
-        isVisibleSetting.value = !(isVisibleSetting.value ?: false)
     }
 
     companion object {
