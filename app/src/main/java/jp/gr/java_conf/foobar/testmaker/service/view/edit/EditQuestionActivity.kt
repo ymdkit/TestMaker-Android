@@ -20,6 +20,7 @@ class EditQuestionActivity : BaseActivity() {
     private val editQuestionViewModel: EditQuestionViewModel by viewModel()
     private val editSelectQuestionViewModel: EditSelectQuestionViewModel by viewModel()
     private val editCompleteQuestionViewModel: EditCompleteQuestionViewModel by viewModel()
+    private val editSelectCompleteQuestionViewModel: EditSelectCompleteQuestionViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
 
     private val binding by lazy {
@@ -36,7 +37,11 @@ class EditQuestionActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.viewPager.offscreenPageLimit = 4
-        binding.viewPager.adapter = ViewPagerAdapter(this, listOf(EditWriteQuestionFragment(), EditSelectQuestionFragment(), EditCompleteQuestionFragment()))
+        binding.viewPager.adapter = ViewPagerAdapter(this, listOf(
+                EditWriteQuestionFragment(),
+                EditSelectQuestionFragment(),
+                EditCompleteQuestionFragment(),
+                EditSelectCompleteQuestionFragment()))
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             //todo: 出題形式のENUMを作ろう
@@ -47,6 +52,7 @@ class EditQuestionActivity : BaseActivity() {
         editQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
         editSelectQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
         editCompleteQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
+        editSelectCompleteQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
 
 
         testViewModel.get(editQuestionViewModel.testId).questions.find { it.id == intent.getLongExtra(ARGUMENT_QUESTION_ID, -1L) }?.let {
@@ -55,6 +61,7 @@ class EditQuestionActivity : BaseActivity() {
             editQuestionViewModel.selectedQuestion = it
             editSelectQuestionViewModel.selectedQuestion = it
             editCompleteQuestionViewModel.selectedQuestion = it
+            editSelectCompleteQuestionViewModel.selectedQuestion = it
         }
 
     }
@@ -89,7 +96,8 @@ class EditQuestionActivity : BaseActivity() {
     }
 
     private inner class ViewPagerAdapter(activity: FragmentActivity, private val fragments: List<Fragment>) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = 3
+        //todo ENUMで管理
+        override fun getItemCount(): Int = 4
         override fun createFragment(position: Int): Fragment = fragments[position]
     }
 }
