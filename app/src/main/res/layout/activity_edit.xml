@@ -4,17 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="model"
-            type="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditViewModel" />
-
-        <import type="android.view.View" />
-
-        <import type="jp.gr.java_conf.foobar.testmaker.service.Constants" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -28,7 +28,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 open class EditActivity : BaseActivity(), EditController.OnClickListener {
 
-    private val viewModel: EditViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
 
     private val controller: EditController by lazy {
@@ -50,7 +49,6 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
         }
 
         binding.lifecycleOwner = this
-        binding.model = viewModel
         binding.recyclerView.adapter = controller.adapter
 
         binding.fab.setOnClickListener {
@@ -152,16 +150,15 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
     }
 
     override fun onClickDeleteQuestion(question: Question) {
-        val builder = AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
-        builder.setTitle(getString(R.string.delete_question))
-        builder.setMessage(getString(R.string.message_delete, question.question))
-        builder.setPositiveButton(android.R.string.ok) { _, _ ->
-
+        AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
+                .setTitle(getString(R.string.delete_question))
+                .setMessage(getString(R.string.message_delete, question.question))
+                .setPositiveButton(android.R.string.ok) { _, _ ->
             if (question.imagePath != "") deleteFile(question.imagePath)
             testViewModel.delete(question)
         }
-        builder.setNegativeButton(android.R.string.cancel, null)
-        builder.create().show()
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
     }
 
     companion object {

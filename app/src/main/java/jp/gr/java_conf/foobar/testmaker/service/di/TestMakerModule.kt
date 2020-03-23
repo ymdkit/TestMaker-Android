@@ -35,7 +35,6 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { CategoryViewModel(get()) }
     viewModel { TestViewModel(get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }
-    viewModel { EditViewModel(get(), get()) }
     viewModel { EditTestViewModel() }
     viewModel { EditQuestionViewModel() }
     viewModel { EditSelectQuestionViewModel() }
