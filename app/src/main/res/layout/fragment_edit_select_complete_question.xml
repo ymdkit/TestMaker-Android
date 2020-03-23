@@ -328,7 +328,7 @@
                         android:id="@+id/edit_explanation"
                         style="@style/MyEditTextSingleLine"
                         android:hint="@string/hint_explanation"
-                        android:text="@={commonViewModel.explanation}" />
+                        android:text="@={viewModel.explanation}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -339,6 +339,7 @@
                     android:layout_marginStart="@dimen/element_spacing_small"
                     android:layout_marginTop="@dimen/element_spacing_very_large"
                     android:onClick="@{() -> commonViewModel.onClickSetting()}"
+                    android:drawableEnd="@{commonViewModel.isVisibleSetting ? @drawable/ic_expand_less : @drawable/ic_expand_more}"
                     android:text="@string/label_setting_question"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

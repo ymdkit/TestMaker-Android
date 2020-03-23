@@ -7,11 +7,9 @@ open class EditQuestionViewModel : ViewModel() {
 
     var testId = -1L
 
-    val explanation = MutableLiveData("")
     val isResetForm = MutableLiveData(true)
     val imagePath = MutableLiveData("")
     val isVisibleSetting = MutableLiveData(false)
-
 
     fun onClickSetting() {
         isVisibleSetting.value = !(isVisibleSetting.value ?: false)
