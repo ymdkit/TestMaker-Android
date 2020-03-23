@@ -70,7 +70,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/set_answer_write"
-                        style="@style/MyEditTextSingleLine"
+                        style="@style/MyEditTextMultiLine"
                         android:hint="@string/hint_answer"
                         android:text="@={viewModel.answer}" />
 
@@ -86,7 +86,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_other_1"
-                        style="@style/MyEditTextSingleLine"
+                        style="@style/MyEditTextMultiLine"
                         android:enabled="@{!viewModel.isCheckedAuto}"
                         android:hint="@{viewModel.isCheckedAuto ? @string/hint_auto : @string/hint_other}"
                         android:text="@={viewModel.others[0]}" />
@@ -104,7 +104,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_other_2"
-                        style="@style/MyEditTextSingleLine"
+                        style="@style/MyEditTextMultiLine"
                         android:enabled="@{!viewModel.isCheckedAuto}"
                         android:hint="@{viewModel.isCheckedAuto ? @string/hint_auto : @string/hint_other}"
                         android:text="@={viewModel.others[1]}" />
@@ -122,7 +122,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_other_3"
-                        style="@style/MyEditTextSingleLine"
+                        style="@style/MyEditTextMultiLine"
                         android:enabled="@{!viewModel.isCheckedAuto}"
                         android:hint="@{viewModel.isCheckedAuto ? @string/hint_auto : @string/hint_other}"
                         android:text="@={viewModel.others[2]}" />
@@ -141,7 +141,7 @@
                     <!--todo: hint を動的に変更するとアニメーションが消える不具合を直す                        -->
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_other_4"
-                        style="@style/MyEditTextSingleLine"
+                        style="@style/MyEditTextMultiLine"
                         android:enabled="@{!viewModel.isCheckedAuto}"
                         android:hint="@{viewModel.isCheckedAuto ? @string/hint_auto : @string/hint_other}"
                         android:text="@={viewModel.others[3]}" />
@@ -159,7 +159,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_other_5"
-                        style="@style/MyEditTextSingleLine"
+                        style="@style/MyEditTextMultiLine"
                         android:enabled="@{!viewModel.isCheckedAuto}"
                         android:hint="@{viewModel.isCheckedAuto ? @string/hint_auto : @string/hint_other}"
                         android:text="@={viewModel.others[4]}" />
@@ -199,7 +199,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_explanation"
-                        style="@style/MyEditTextSingleLine"
+                        style="@style/MyEditTextMultiLine"
                         android:hint="@string/hint_explanation"
                         android:text="@={viewModel.explanation}" />
 

@@ -87,7 +87,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_explanation"
-                        style="@style/MyEditTextSingleLine"
+                        style="@style/MyEditTextMultiLine"
                         android:hint="@string/hint_explanation"
                         android:text="@={viewModel.explanation}" />
 
