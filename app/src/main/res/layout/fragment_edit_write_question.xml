@@ -8,8 +8,12 @@
         <import type="android.view.View" />
 
         <variable
-            name="viewModel"
+            name="commonViewModel"
             type="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionViewModel" />
+
+        <variable
+            name="viewModel"
+            type="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditWriteQuestionViewModel" />
 
     </data>
 
@@ -53,7 +57,7 @@
                     android:animatedVisibility="@{viewModel.isCheckedImage}"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_insert_photo_white_24dp"
-                    android:srcWithGlide="@{viewModel.imagePath}"
+                    android:srcWithGlide="@{commonViewModel.imagePath}"
                     app:layout_constraintBottom_toBottomOf="@id/textInputLayout_question_write"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/textInputLayout_question_write" />

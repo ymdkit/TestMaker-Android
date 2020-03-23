@@ -122,7 +122,6 @@ class EditSelectCompleteQuestionViewModel : ViewModel() {
         }
     }
 
-    //todo: アンラップをもっと綺麗にしたい
     fun mutateSizeOfAnswers(num: Int) {
         val result = sizeOfTotal + num
         if (result < SIZE_TOTAL_MIN) return

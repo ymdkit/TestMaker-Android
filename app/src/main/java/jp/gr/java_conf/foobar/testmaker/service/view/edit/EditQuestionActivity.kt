@@ -17,10 +17,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditQuestionActivity : BaseActivity() {
 
-    private val editQuestionViewModel: EditQuestionViewModel by viewModel()
+    private val editWriteQuestionViewModel: EditWriteQuestionViewModel by viewModel()
     private val editSelectQuestionViewModel: EditSelectQuestionViewModel by viewModel()
     private val editCompleteQuestionViewModel: EditCompleteQuestionViewModel by viewModel()
     private val editSelectCompleteQuestionViewModel: EditSelectCompleteQuestionViewModel by viewModel()
+    private val editQuestionViewModel: EditQuestionViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
 
     private val binding by lazy {
@@ -49,22 +50,23 @@ class EditQuestionActivity : BaseActivity() {
         }.attach()
 
         //todo: テストの受け渡し方法どうする
-        editQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
+        editWriteQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
         editSelectQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
         editCompleteQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
         editSelectCompleteQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
 
 
-        testViewModel.get(editQuestionViewModel.testId).questions.find { it.id == intent.getLongExtra(ARGUMENT_QUESTION_ID, -1L) }?.let {
+        testViewModel.get(editWriteQuestionViewModel.testId).questions.find { it.id == intent.getLongExtra(ARGUMENT_QUESTION_ID, -1L) }?.let {
             //todo: 出題形式による条件分岐
             binding.tabLayout.getTabAt(it.type)?.select()
-            editQuestionViewModel.selectedQuestion = it
+            editWriteQuestionViewModel.selectedQuestion = it
             editSelectQuestionViewModel.selectedQuestion = it
             editCompleteQuestionViewModel.selectedQuestion = it
             editSelectCompleteQuestionViewModel.selectedQuestion = it
         }
 
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem) =
             when (item.itemId) {
