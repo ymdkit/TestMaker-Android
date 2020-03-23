@@ -250,4 +250,6 @@
     <string name="message_auto">選択肢を自動生成する（他の問題の答え）</string>
     <string name="hint_auto">自動生成</string>
     <string name="message_check_order">解答順を正誤判定に含める</string>
+    <string name="num_others">選択肢数</string>
+    <string name="num_answers">解答数</string>
 </resources>

@@ -125,6 +125,14 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/button_remove_answer"
+                    app:layout_constraintBottom_toBottomOf="@id/button_remove_answer"
+                    app:layout_constraintEnd_toStartOf="@id/button_remove_answer"
+                    android:text="@string/num_answers" />
+
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/button_remove_answer"
                     android:layout_width="48dp"

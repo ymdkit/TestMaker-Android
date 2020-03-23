@@ -257,4 +257,6 @@
     <string name="message_auto">auto create selections</string>
     <string name="hint_auto">auto generate</string>
     <string name="message_check_order">check order</string>
+    <string name="num_others">size of others</string>
+    <string name="num_answers">size of answer</string>
 </resources>

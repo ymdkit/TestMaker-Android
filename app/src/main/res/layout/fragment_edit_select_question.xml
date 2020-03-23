@@ -164,6 +164,14 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/button_remove_other"
+                    app:layout_constraintBottom_toBottomOf="@id/button_remove_other"
+                    app:layout_constraintEnd_toStartOf="@id/button_remove_other"
+                    android:text="@string/num_others" />
+
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/button_remove_other"
                     app:layout_constraintTop_toBottomOf="@id/text_input_other_5"
