@@ -27,6 +27,7 @@ class EditSelectCompleteQuestionViewModel : ViewModel() {
     val imagePath = MutableLiveData("")
     val sizeOfOthers = MutableLiveData(2)
     val sizeOfAnswers = MutableLiveData(2)
+    val isVisibleSetting = MutableLiveData(false)
 
     private val sizeOfTotal: Int
         get() {
@@ -134,6 +135,10 @@ class EditSelectCompleteQuestionViewModel : ViewModel() {
                 sizeOfAnswers.value = it + num
             }
         }
+    }
+
+    fun onClickSetting() {
+        isVisibleSetting.value = !(isVisibleSetting.value ?: false)
     }
 
     companion object {

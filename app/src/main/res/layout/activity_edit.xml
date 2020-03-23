@@ -274,12 +274,12 @@
                                 android:gravity="center_vertical"
                                 android:text="@string/message_explanation"
                                 android:textSize="@dimen/text_size_medium"
-                                app:layout_constraintBottom_toBottomOf="@id/change_explanation"
+                                app:layout_constraintBottom_toBottomOf="@id/switch_explanation"
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/change_check_order" />
 
                             <androidx.appcompat.widget.SwitchCompat
-                                android:id="@+id/change_explanation"
+                                android:id="@+id/switch_explanation"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical|end"
@@ -296,7 +296,7 @@
                                 android:text="@string/ok"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/change_explanation" />
+                                app:layout_constraintTop_toBottomOf="@id/switch_explanation" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 

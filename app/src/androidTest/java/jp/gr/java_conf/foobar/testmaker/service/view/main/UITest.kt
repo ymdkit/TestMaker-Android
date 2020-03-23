@@ -117,7 +117,7 @@ class UITest {
         appCompatImageButton6.perform(click())
 
         val switchCompat = onView(
-                allOf(withId(R.id.change_explanation),
+                allOf(withId(R.id.switch_explanation),
                         childAtPosition(
                                 allOf(withId(R.id.layout_config),
                                         childAtPosition(

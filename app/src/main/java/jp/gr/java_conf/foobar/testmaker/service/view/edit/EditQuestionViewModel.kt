@@ -22,6 +22,7 @@ class EditQuestionViewModel : ViewModel() {
     val isCheckedExplanation = MutableLiveData(false)
     val isResetForm = MutableLiveData(true)
     val imagePath = MutableLiveData("")
+    val isVisibleSetting = MutableLiveData(false)
 
     val isValidated = MediatorLiveData<Boolean>().also { result ->
         result.addSource(question) { result.value = isValid }
@@ -46,6 +47,10 @@ class EditQuestionViewModel : ViewModel() {
             explanation.value = ""
             imagePath.value = ""
         }
+    }
+
+    fun onClickSetting() {
+        isVisibleSetting.value = !(isVisibleSetting.value ?: false)
     }
 
     private fun inputForm(question: Question) {

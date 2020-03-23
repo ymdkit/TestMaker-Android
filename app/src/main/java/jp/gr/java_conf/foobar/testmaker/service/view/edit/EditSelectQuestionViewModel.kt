@@ -25,7 +25,7 @@ class EditSelectQuestionViewModel : ViewModel() {
     val isResetForm = MutableLiveData(true)
     val imagePath = MutableLiveData("")
     val sizeOfOthers = MutableLiveData(3)
-
+    val isVisibleSetting = MutableLiveData(false)
 
     val isValidated = MediatorLiveData<Boolean>().also { result ->
         result.addSource(question) { result.value = isValid }
@@ -86,6 +86,10 @@ class EditSelectQuestionViewModel : ViewModel() {
                 sizeOfOthers.value = it + num
             }
         }
+    }
+
+    fun onClickSetting() {
+        isVisibleSetting.value = !(isVisibleSetting.value ?: false)
     }
 
     companion object {
