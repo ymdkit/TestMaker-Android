@@ -68,7 +68,7 @@ class EditSelectQuestionViewModel : ViewModel() {
     private fun inputForm(question: Question) {
         this.question.value = question.question
         answer.value = question.answer
-        sizeOfOthers.value = question.others.size
+        sizeOfOthers.value = question.others.size.coerceAtLeast(SIZE_OTHER_MIN)
         explanation.value = question.explanation
         isCheckedExplanation.value = question.explanation.isNotEmpty()
         imagePath.value = question.imagePath

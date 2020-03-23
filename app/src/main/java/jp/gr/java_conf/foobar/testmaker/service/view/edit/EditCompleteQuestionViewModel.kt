@@ -64,7 +64,7 @@ class EditCompleteQuestionViewModel : ViewModel() {
 
     private fun inputForm(question: Question) {
         this.question.value = question.question
-        sizeOfAnswers.value = question.answers.size
+        sizeOfAnswers.value = question.answers.size.coerceAtLeast(SIZE_ANSWER_MIN)
         explanation.value = question.explanation
         isCheckedExplanation.value = question.explanation.isNotEmpty()
         imagePath.value = question.imagePath

@@ -28,7 +28,7 @@ class EditSelectCompleteQuestionViewModel : ViewModel() {
     val sizeOfOthers = MutableLiveData(2)
     val sizeOfAnswers = MutableLiveData(2)
 
-    val sizeOfTotal: Int
+    private val sizeOfTotal: Int
         get() {
             return (sizeOfAnswers.value ?: SIZE_ANSWER_MAX) + (sizeOfOthers.value ?: SIZE_OTHER_MAX)
         }
@@ -86,8 +86,9 @@ class EditSelectCompleteQuestionViewModel : ViewModel() {
     private fun inputForm(question: Question) {
         this.question.value = question.question
         answer.value = question.answer
-        sizeOfOthers.value = question.others.size
         explanation.value = question.explanation
+        sizeOfOthers.value = question.others.size.coerceAtLeast(SIZE_OTHER_MIN)
+        sizeOfAnswers.value = question.answers.size.coerceAtLeast(SIZE_ANSWER_MIN)
         isCheckedExplanation.value = question.explanation.isNotEmpty()
         imagePath.value = question.imagePath
         isCheckedImage.value = question.imagePath.isNotEmpty()
@@ -99,6 +100,9 @@ class EditSelectCompleteQuestionViewModel : ViewModel() {
         question.answers.forEachIndexed { index, s ->
             if (index >= SIZE_ANSWER_MAX) return@forEachIndexed
             answers[index].value = s
+        }
+        if (sizeOfTotal == 0) {
+            sizeOfAnswers.value = 1
         }
     }
 
