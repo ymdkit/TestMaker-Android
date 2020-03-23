@@ -13,6 +13,7 @@ class EditSelectCompleteQuestionViewModel : EditQuestionViewModel() {
             inputForm(field)
         }
 
+    val question = MutableLiveData("")
     val answer = MutableLiveData("")
     val answers = List(SIZE_ANSWER_MAX) { MutableLiveData("") }
     val others = List(SIZE_OTHER_MAX) { MutableLiveData("") }

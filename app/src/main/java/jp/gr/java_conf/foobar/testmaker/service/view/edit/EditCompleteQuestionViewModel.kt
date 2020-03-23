@@ -13,6 +13,7 @@ class EditCompleteQuestionViewModel : EditQuestionViewModel() {
             inputForm(field)
         }
 
+    val question = MutableLiveData("")
     val answers = List(SIZE_ANSWER_MAX) { MutableLiveData("") }
     val isCheckedImage = MutableLiveData(false)
     val isCheckedExplanation = MutableLiveData(false)

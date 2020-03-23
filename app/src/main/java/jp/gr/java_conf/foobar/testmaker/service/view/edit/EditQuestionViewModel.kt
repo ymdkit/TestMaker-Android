@@ -7,7 +7,6 @@ open class EditQuestionViewModel : ViewModel() {
 
     var testId = -1L
 
-    val question = MutableLiveData("")
     val explanation = MutableLiveData("")
     val isResetForm = MutableLiveData(true)
     val imagePath = MutableLiveData("")
