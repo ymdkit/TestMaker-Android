@@ -16,13 +16,12 @@ import androidx.lifecycle.lifecycleScope
 import com.isseiaoki.simplecropview.CropImageView
 import jp.gr.java_conf.foobar.testmaker.service.R
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 
-open class EditQuestionFragment : Fragment() {
-    val editQuestionViewModel: EditQuestionViewModel by sharedViewModel()
+abstract class EditQuestionFragment : Fragment() {
+    abstract val editQuestionViewModel: EditQuestionViewModel
 
     private val fileName: String
         get() {
@@ -56,10 +55,8 @@ open class EditQuestionFragment : Fragment() {
 
                         val name = fileName
                         lifecycleScope.launch {
-                            editQuestionViewModel.imagePath.value?.let {
-                                saveImage(name, cropView.croppedBitmap)
-                                editQuestionViewModel.imagePath.value = name
-                            }
+                            saveImage(name, cropView.croppedBitmap)
+                            editQuestionViewModel.imagePath.postValue(name)
                         }
                     }
                     .setNegativeButton(android.R.string.cancel, null)

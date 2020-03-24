@@ -13,7 +13,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class EditCompleteQuestionFragment : EditQuestionFragment() {
-    private val editCompleteQuestionViewModel: EditCompleteQuestionViewModel by sharedViewModel()
+    override val editQuestionViewModel: EditCompleteQuestionViewModel by sharedViewModel()
     private val testViewModel: TestViewModel by sharedViewModel()
 
     private var binding: FragmentEditCompleteQuestionBinding? = null
@@ -24,27 +24,26 @@ class EditCompleteQuestionFragment : EditQuestionFragment() {
         return DataBindingUtil.inflate<FragmentEditCompleteQuestionBinding>(inflater, R.layout.fragment_edit_complete_question, container, false).apply {
             binding = this
             lifecycleOwner = viewLifecycleOwner
-            viewModel = editCompleteQuestionViewModel
-            commonViewModel = editQuestionViewModel
+            viewModel = editQuestionViewModel
 
             buttonAdd.setOnClickListener {
                 requireContext().showToast(getString(R.string.msg_save))
-                if (editCompleteQuestionViewModel.selectedQuestion.id == Question().id) {
-                    testViewModel.create(testViewModel.get(editCompleteQuestionViewModel.testId), editCompleteQuestionViewModel.createQuestion())
+                if (editQuestionViewModel.selectedQuestion.id == Question().id) {
+                    testViewModel.create(testViewModel.get(editQuestionViewModel.testId), editQuestionViewModel.createQuestion())
                 } else {
-                    testViewModel.update(editCompleteQuestionViewModel.createQuestion())
+                    testViewModel.update(editQuestionViewModel.createQuestion())
                     requireActivity().finish()
                 }
 
-                editCompleteQuestionViewModel.formReset()
+                editQuestionViewModel.formReset()
             }
 
             buttonAddAnswer.setOnClickListener {
-                editCompleteQuestionViewModel.mutateSizeOfOthers(1)
+                editQuestionViewModel.mutateSizeOfOthers(1)
             }
 
             buttonRemoveAnswer.setOnClickListener {
-                editCompleteQuestionViewModel.mutateSizeOfOthers(-1)
+                editQuestionViewModel.mutateSizeOfOthers(-1)
             }
 
             buttonImage.setOnClickListener {

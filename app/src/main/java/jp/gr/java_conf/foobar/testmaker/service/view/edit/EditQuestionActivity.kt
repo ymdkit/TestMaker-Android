@@ -21,7 +21,6 @@ class EditQuestionActivity : BaseActivity() {
     private val editSelectQuestionViewModel: EditSelectQuestionViewModel by viewModel()
     private val editCompleteQuestionViewModel: EditCompleteQuestionViewModel by viewModel()
     private val editSelectCompleteQuestionViewModel: EditSelectCompleteQuestionViewModel by viewModel()
-    private val editQuestionViewModel: EditQuestionViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
 
     private val binding by lazy {

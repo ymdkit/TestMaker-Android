@@ -14,7 +14,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class EditSelectCompleteQuestionFragment : EditQuestionFragment() {
-    private val editSelectCompleteQuestionViewModel: EditSelectCompleteQuestionViewModel by sharedViewModel()
+    override val editQuestionViewModel: EditSelectCompleteQuestionViewModel by sharedViewModel()
     private val testViewModel: TestViewModel by sharedViewModel()
 
     private var binding: FragmentEditSelectCompleteQuestionBinding? = null
@@ -22,8 +22,8 @@ class EditSelectCompleteQuestionFragment : EditQuestionFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        editSelectCompleteQuestionViewModel.isCheckedAuto.observeNonNull(viewLifecycleOwner) { isAuto ->
-            editSelectCompleteQuestionViewModel.others.forEach {
+        editQuestionViewModel.isCheckedAuto.observeNonNull(viewLifecycleOwner) { isAuto ->
+            editQuestionViewModel.others.forEach {
                 if (isAuto) {
                     it.value = getString(R.string.hint_other)
                 } else if (it.value == getString(R.string.hint_other)) {
@@ -35,35 +35,34 @@ class EditSelectCompleteQuestionFragment : EditQuestionFragment() {
         return DataBindingUtil.inflate<FragmentEditSelectCompleteQuestionBinding>(inflater, R.layout.fragment_edit_select_complete_question, container, false).apply {
             binding = this
             lifecycleOwner = viewLifecycleOwner
-            viewModel = editSelectCompleteQuestionViewModel
-            commonViewModel = editQuestionViewModel
+            viewModel = editQuestionViewModel
 
             buttonAdd.setOnClickListener {
                 requireContext().showToast(getString(R.string.msg_save))
-                if (editSelectCompleteQuestionViewModel.selectedQuestion.id == Question().id) {
-                    testViewModel.create(testViewModel.get(editSelectCompleteQuestionViewModel.testId), editSelectCompleteQuestionViewModel.createQuestion())
+                if (editQuestionViewModel.selectedQuestion.id == Question().id) {
+                    testViewModel.create(testViewModel.get(editQuestionViewModel.testId), editQuestionViewModel.createQuestion())
                 } else {
-                    testViewModel.update(editSelectCompleteQuestionViewModel.createQuestion())
+                    testViewModel.update(editQuestionViewModel.createQuestion())
                     requireActivity().finish()
                 }
 
-                editSelectCompleteQuestionViewModel.formReset()
+                editQuestionViewModel.formReset()
             }
 
             buttonAddOther.setOnClickListener {
-                editSelectCompleteQuestionViewModel.mutateSizeOfOthers(1)
+                editQuestionViewModel.mutateSizeOfOthers(1)
             }
 
             buttonRemoveOther.setOnClickListener {
-                editSelectCompleteQuestionViewModel.mutateSizeOfOthers(-1)
+                editQuestionViewModel.mutateSizeOfOthers(-1)
             }
 
             buttonAddAnswer.setOnClickListener {
-                editSelectCompleteQuestionViewModel.mutateSizeOfAnswers(1)
+                editQuestionViewModel.mutateSizeOfAnswers(1)
             }
 
             buttonRemoveAnswer.setOnClickListener {
-                editSelectCompleteQuestionViewModel.mutateSizeOfAnswers(-1)
+                editQuestionViewModel.mutateSizeOfAnswers(-1)
             }
 
             buttonImage.setOnClickListener {
