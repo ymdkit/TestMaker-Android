@@ -1,16 +1,18 @@
 package jp.gr.java_conf.foobar.testmaker.service.domain
 
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
-
-open class Category : RealmObject() {
-
-    @PrimaryKey
-    var id: Long = 0
-    @Required
-    var name: String = ""
-    var color = 0
-    var order = 0
-
+data class Category(
+        val id: Long = -1L,
+        val name: String = "",
+        val color: Int = 0,
+        val order: Int = 0
+) {
+    companion object {
+        fun createFromRealmCategory(from: RealmCategory) =
+                Category(
+                        id = from.id,
+                        name = from.name,
+                        color = from.color,
+                        order = from.order
+                )
+    }
 }

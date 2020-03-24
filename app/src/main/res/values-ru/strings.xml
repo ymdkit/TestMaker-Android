@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ТестМейкер</string>
-    <string name="add_exam">Добавить новый тест</string>
+    <string name="add_test">Добавить новый тест</string>
     <string name="edit_exam">редактирование тест</string>
     <string name="delete_exam">делеция тест</string>
     <string name="message_delete_exam">делеция: %1$s ?</string>

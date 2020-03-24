@@ -108,7 +108,6 @@ class FirebaseActivity : BaseActivity() {
             builder.show()
         }
 
-        binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = pagingAdapter
         pagingAdapter.startLoading = {
             binding.swipeRefresh.isRefreshing = true
@@ -121,7 +120,7 @@ class FirebaseActivity : BaseActivity() {
             pagingAdapter.refresh()
         }
 
-        binding.buttonUpload.setOnClickListener {
+        binding.fab.setOnClickListener {
 
             viewModel.getUser()?.let {
 

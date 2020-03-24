@@ -15,7 +15,7 @@
     <string name="action_paste">load by copying and pasting</string>
     <string name="action_right">correct</string>
     <string name="action_wrong">incorrect</string>
-    <string name="add_exam">add test</string>
+    <string name="add_test">add test</string>
     <string name="add_question">add question</string>
     <string name="answer">A. %1$s</string>
     <string name="app_name">TestMaker</string>
@@ -236,4 +236,28 @@
     <string name="contact_email">testmaker.contact@gmail.com</string>
     <string name="email_subject_feedback">feedback</string>
     <string name="email_body_feedback">It would be very helpful if you could provide a description of what you did and what you did with the screenshot. \n\n\n\n\n Android SDK%1$d </string>
+    <string name="label_color">color</string>
+    <string name="label_category">category</string>
+    <string name="text_add_category">new category</string>
+    <string name="add_category">new category</string>
+    <string name="text_header_category">category setting</string>
+    <string name="save_test">save test</string>
+    <string name="save_category">save category</string>
+    <string name="msg_save_test">saved test</string>
+    <string name="empty_test">make your first test</string>
+    <string name="title_activity_edit_test">edit test</string>
+    <string name="title_activity_edit_category">edit category</string>
+    <string name="title_activity_edit_question">edit question</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="message_image">add image</string>
+    <string name="label_setting_question">setting</string>
+    <string name="message_reset_form">reset form when you saved</string>
+    <string name="message_auto">auto create selections</string>
+    <string name="hint_auto">auto generate</string>
+    <string name="message_check_order">check order</string>
+    <string name="num_others">size of others</string>
+    <string name="num_answers">size of answer</string>
+    <string name="empty_question">make your first question</string>
 </resources>

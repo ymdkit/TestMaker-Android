@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">暗記メーカー</string>
-    <string name="add_exam">問題集の追加</string>
+    <string name="add_test">問題集の追加</string>
     <string name="edit_exam">問題集の編集</string>
     <string name="delete_exam">問題集の削除</string>
     <string name="message_delete_exam">問題集: %1$s を削除しますか？</string>
@@ -15,7 +15,7 @@
     <string name="add_question">問題の追加</string>
     <string name="edit_question">問題の編集</string>
     <string name="delete_question">問題の削除</string>
-    <string name="save_question">変更を保存</string>
+    <string name="save_question">問題を保存</string>
     <string name="number_answers">・解答の数(完答)</string>
     <string name="number_choosers">・選択肢の数</string>
     <string name="number_questions">出題数</string>
@@ -49,7 +49,7 @@
     <string name="message_delete">問題 %1$s を削除しますか</string>
     <string name="message_answer">正解\n%1$s</string>
     <string name="message_not_auto">問題数不足で自動生成できません</string>
-    <string name="message_explanation">・解説文を入れる</string>
+    <string name="message_explanation">解説文を入れる</string>
     <string name="is_check_order">・解答順を正誤判定に含める</string>
     <string name="message_paste">共有機能で作成したテキストを\nここに貼り付けてください</string>
     <string name="message_random">出題順をランダムにする</string>
@@ -69,7 +69,7 @@
     <string name="image">画像</string>
     <string name="title_activity_edit">編集</string>
     <string name="add">add</string>
-    <string name="hint_name">問題集の名前</string>
+    <string name="hint_name">タイトル</string>
     <string name="hint_explanation">解説</string>
     <string name="hint_answer">解答</string>
     <string name="hint_answer1">解答1</string>
@@ -232,4 +232,25 @@
     <string name="menu_feedback">お問い合わせ</string>
     <string name="email_subject_feedback">「暗記メーカー」に関するお問い合わせ</string>
     <string name="email_body_feedback">お問い合わせの内容について、どのような操作を行ったかや画面のスクリーンショットの添付をしていただけるととても助かります\n\n\n\n\n Android SDK%1$d より送信</string>
+    <string name="label_color">カラー</string>
+    <string name="label_category">カテゴリ</string>
+    <string name="text_add_category">新しいカテゴリを追加</string>
+    <string name="add_category">カテゴリの追加</string>
+    <string name="text_header_category">カテゴリ設定</string>
+    <string name="save_test">問題集を保存</string>
+    <string name="save_category">カテゴリを保存</string>
+    <string name="msg_save_test">問題集を保存しました</string>
+    <string name="empty_test">保存している問題集はありません。\n右下の+ボタンから問題集を追加してください</string>
+    <string name="title_activity_edit_test">問題集の編集</string>
+    <string name="title_activity_edit_category">カテゴリの編集</string>
+    <string name="title_activity_edit_question">問題の編集</string>
+    <string name="message_image">問題中に画像を使用する</string>
+    <string name="label_setting_question">詳細設定</string>
+    <string name="message_reset_form">保存時に入力値をリセットする</string>
+    <string name="message_auto">選択肢を自動生成する（他の問題の答え）</string>
+    <string name="hint_auto">自動生成</string>
+    <string name="message_check_order">解答順を正誤判定に含める</string>
+    <string name="num_others">選択肢数</string>
+    <string name="num_answers">解答数</string>
+    <string name="empty_question">保存している問題はありません。\n右下の+ボタンから問題を追加してください</string>
 </resources>

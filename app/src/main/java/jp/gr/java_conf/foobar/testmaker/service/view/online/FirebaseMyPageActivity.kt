@@ -45,7 +45,6 @@ class FirebaseMyPageActivity : BaseActivity(), FirebaseMyPageController.OnClickL
         controller = FirebaseMyPageController(this)
         controller.setOnClickListener(this)
 
-        recycler_view.setHasFixedSize(true)
         recycler_view.adapter = controller.adapter
 
         viewModel.getMyTests().observeNonNull(this) {

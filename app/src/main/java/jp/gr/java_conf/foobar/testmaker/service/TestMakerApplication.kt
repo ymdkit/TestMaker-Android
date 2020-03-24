@@ -3,8 +3,8 @@ package jp.gr.java_conf.foobar.testmaker.service
 import androidx.multidex.MultiDexApplication
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.Migration
 import jp.gr.java_conf.foobar.testmaker.service.di.getTestMakerModules
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.Migration
 import org.koin.android.ext.android.startKoin
 import java.io.FileNotFoundException
 
@@ -18,10 +18,12 @@ class TestMakerApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
+        instance = this
+
         Realm.init(this)
 
         config = RealmConfiguration.Builder()
-                .schemaVersion(16)
+                .schemaVersion(17)
                 .build()
 
         try {
@@ -33,7 +35,9 @@ class TestMakerApplication : MultiDexApplication() {
         startKoin(this, listOf(
                 getTestMakerModules(Realm.getInstance(config))
         ))
+    }
 
-
+    companion object {
+        lateinit var instance: TestMakerApplication private set  // <- これ
     }
 }

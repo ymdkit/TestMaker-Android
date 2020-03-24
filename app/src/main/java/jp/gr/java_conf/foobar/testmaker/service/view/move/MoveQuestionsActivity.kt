@@ -108,8 +108,6 @@ class MoveQuestionsActivity : BaseActivity() {
 
                 questionAdapter = CheckBoxQuestionAdapter(baseContext, tests[position].questions.toTypedArray())
 
-                list_questions.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(applicationContext)
-                list_questions.setHasFixedSize(true)
                 list_questions.adapter = questionAdapter
 
                 check_all.setOnCheckedChangeListener { _, bool ->

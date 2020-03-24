@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="jp.gr.java_conf.foobar.testmaker.service.view.category.EditCategoryViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            android:layout_width="match_parent"
+            android:elevation="@dimen/element_spacing_normal"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+            app:popupTheme="@style/Theme.AppCompat.DayNight"
+            app:title="@string/title_activity_edit_category" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="@dimen/element_spacing_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_title"
+                style="@style/MyTextInputLayoutStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/element_spacing_large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edit_title"
+                    style="@style/MyEditTextSingleLine"
+                    android:hint="@string/hint_name"
+                    android:imeOptions="actionDone"
+                    android:text="@={viewModel.titleCategory}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/label_color"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/element_spacing_large"
+                android:layout_marginStart="@dimen/element_spacing_small"
+                android:text="@string/label_color"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayout_title" />
+
+            <jp.gr.java_conf.foobar.testmaker.service.view.share.ColorChooser
+                android:id="@+id/color_chooser"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/label_color" />
+
+            <Button
+                android:id="@+id/button_add"
+                style="@style/Button.Accent"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="@dimen/element_spacing_large"
+                android:text="@string/save_category"
+                android:textSize="@dimen/text_size_medium"
+                app:layout_constraintTop_toBottomOf="@id/color_chooser" />
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/element_spacing_large"
+                app:adSize="BANNER"
+                app:adUnitId="ca-app-pub-8942090726462263/8420884238"
+                app:layout_constraintTop_toBottomOf="@id/button_add"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

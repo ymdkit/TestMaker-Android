@@ -8,7 +8,9 @@
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:name=".TestMakerApplication"
@@ -18,12 +20,18 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.preference.SettingsActivity"
-            android:configChanges="uiMode"/>
-        <activity android:name=".view.online.FirebaseMyPageActivity"
-            android:configChanges="uiMode"/>
-        <activity android:name=".view.online.FirebaseActivity"
-            android:configChanges="uiMode"/>
+        <activity android:name=".view.edit.EditQuestionActivity" />
+        <activity android:name=".view.category.EditCategoryActivity" />
+        <activity android:name=".view.edit.EditTestActivity" />
+        <activity
+            android:name=".view.preference.SettingsActivity"
+            android:configChanges="uiMode" />
+        <activity
+            android:name=".view.online.FirebaseMyPageActivity"
+            android:configChanges="uiMode" />
+        <activity
+            android:name=".view.online.FirebaseActivity"
+            android:configChanges="uiMode" />
 
         <meta-data
             android:name="studyplus_comsumer_key"
@@ -47,48 +55,53 @@
 
         <activity
             android:name=".view.main.MainActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="uiMode">
+            android:configChanges="uiMode"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="testmaker-1cb29.com"
-                    android:scheme="https"/>
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
             android:name=".view.play.PlayActivity"
+            android:configChanges="uiMode"
             android:label="解答"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            android:configChanges="uiMode"/>
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".view.edit.EditActivity"
+            android:configChanges="uiMode"
             android:label="編集"
-            android:screenOrientation="portrait"
-            android:configChanges="uiMode"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.result.ResultActivity"
+            android:configChanges="uiMode"
             android:label="結果"
-            android:screenOrientation="portrait"
-            android:configChanges="uiMode"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.edit.EditProActivity"
+            android:configChanges="uiMode"
             android:label="@string/title_activity_edit_pro"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:configChanges="uiMode"/>
-        <activity android:name=".view.share.ShowTestsActivity"
-            android:configChanges="uiMode"/>
-        <activity android:name=".view.share.BaseActivity"
-            android:configChanges="uiMode"/>
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".view.share.ShowTestsActivity"
+            android:configChanges="uiMode" />
+        <activity
+            android:name=".view.share.BaseActivity"
+            android:configChanges="uiMode" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -96,9 +109,9 @@
 
         <activity
             android:name=".view.move.MoveQuestionsActivity"
+            android:configChanges="uiMode"
             android:label="@string/title_activity_move_questions"
-            android:theme="@style/AppTheme"
-            android:configChanges="uiMode"/>
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

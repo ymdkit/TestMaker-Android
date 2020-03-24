@@ -39,6 +39,16 @@ class SharedPreferenceManager(private val context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("isCheckOrder", f)
                 .apply()
 
+    var isShowImageSetting: Boolean
+        get() = sharedPreferences.getBoolean("isShowImageSetting", false)
+        set(f) = sharedPreferences.edit().putBoolean("isShowImageSetting", f)
+                .apply()
+
+    var isResetForm: Boolean
+        get() = sharedPreferences.getBoolean("isResetForm", true)
+        set(f) = sharedPreferences.edit().putBoolean("isResetForm", f)
+                .apply()
+
     var confirmSave: Boolean
         get() = sharedPreferences.getBoolean("confirmSave", false)
         set(f) = sharedPreferences.edit().putBoolean("confirmSave", f)

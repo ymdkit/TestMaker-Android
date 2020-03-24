@@ -11,13 +11,16 @@ class CategoryViewModel(private val repository: CategoryRepository) : ViewModel(
 
     var hasTestsCategories: LiveData<List<Category>> = repository.getHasTests()
 
+    fun get(id: Long): Category = repository.get(id)
+
     fun refresh() {
         repository.refresh()
     }
 
-    fun create(category: Category) {
-        repository.create(category)
+    fun create(category: Category): Long {
+        val id = repository.create(category)
         repository.refresh()
+        return id
     }
 
     fun delete(category: Category) {

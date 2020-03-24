@@ -13,22 +13,24 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
 
     var tests: List<Test> = repository.get()
 
+    fun get(id: Long) = repository.get(id)
+
     fun refresh() {
         repository.refresh()
     }
 
-    fun create(title: String, color: Int, category: String): Long {
+    fun create(title: String, color: Int, category: String?): Long {
         return repository.create(Test(
                 title = title,
                 color = color,
-                category = category
+                category = category ?: ""
         ))
     }
 
     fun create(test: Test): Long = repository.create(test)
 
-    fun update(test: Test, title: String, color: Int, category: String) {
-        repository.update(test.copy(title = title, color = color, category = category))
+    fun update(test: Test, title: String, color: Int, category: String?) {
+        repository.update(test.copy(title = title, color = color, category = category ?: ""))
     }
 
     fun update(test: Test) = repository.update(test)
