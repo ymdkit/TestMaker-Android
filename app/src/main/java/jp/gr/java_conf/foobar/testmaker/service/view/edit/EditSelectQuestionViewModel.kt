@@ -13,12 +13,8 @@ class EditSelectQuestionViewModel : EditQuestionViewModel() {
             inputForm(field)
         }
 
-    val question = MutableLiveData("")
     val answer = MutableLiveData("")
-    val explanation = MutableLiveData("")
     val others = List(SIZE_OTHER_MAX) { MutableLiveData("") }
-    val isCheckedImage = MutableLiveData(false)
-    val isCheckedExplanation = MutableLiveData(false)
     val isCheckedAuto = MutableLiveData(false)
     val sizeOfOthers = MutableLiveData(3)
 

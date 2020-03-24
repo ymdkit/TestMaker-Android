@@ -13,11 +13,7 @@ class EditWriteQuestionViewModel : EditQuestionViewModel() {
             inputForm(field)
         }
 
-    val question = MutableLiveData("")
     val answer = MutableLiveData("")
-    val explanation = MutableLiveData("")
-    val isCheckedImage = MutableLiveData(false)
-    val isCheckedExplanation = MutableLiveData(false)
 
     val isValidated = MediatorLiveData<Boolean>().also { result ->
         result.addSource(question) { result.value = isValid }

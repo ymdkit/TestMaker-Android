@@ -13,13 +13,9 @@ class EditSelectCompleteQuestionViewModel : EditQuestionViewModel() {
             inputForm(field)
         }
 
-    val question = MutableLiveData("")
     val answer = MutableLiveData("")
     val answers = List(SIZE_ANSWER_MAX) { MutableLiveData("") }
     val others = List(SIZE_OTHER_MAX) { MutableLiveData("") }
-    val explanation = MutableLiveData("")
-    val isCheckedImage = MutableLiveData(false)
-    val isCheckedExplanation = MutableLiveData(false)
     val isCheckedAuto = MutableLiveData(false)
     val sizeOfOthers = MutableLiveData(2)
     val sizeOfAnswers = MutableLiveData(2)
