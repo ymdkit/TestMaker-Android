@@ -42,7 +42,7 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         if (info != null) {
-            MobileAds.initialize(this, info.metaData.getString("testmaker_admob_key"))
+            MobileAds.initialize(this, info.metaData.getString("com.google.android.gms.ads.jp.gr.java_conf.foobar.testmaker.service"))
             Studyplus.instance.setup(info.metaData.getString("studyplus_comsumer_key")!!, info.metaData.getString("secret_studyplus_comsumer_key")!!)
 
             if (info.metaData.getBoolean("removeAd")) {
