@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
@@ -51,17 +52,19 @@ class PlayActivity : BaseActivity() {
 
     private lateinit var test: Test
 
+    private val binding by lazy { DataBindingUtil.setContentView<ActivityPlayBinding>(this, R.layout.activity_play) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
             test = it
-            supportActionBar?.title = test.title
+            supportActionBar?.setTitle(test.title)
         }
 
-        initToolBar()
-
-        val binding = DataBindingUtil.setContentView<ActivityPlayBinding>(this, R.layout.activity_play)
         createAd(binding.adView)
 
         soundMistake = SePlayer(applicationContext, R.raw.mistake)
@@ -91,6 +94,17 @@ class PlayActivity : BaseActivity() {
 
         super.onPause()
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+            when (item.itemId) {
+                android.R.id.home -> {
+                    finish()
+                    true
+                }
+                else -> {
+                    super.onOptionsItemSelected(item)
+                }
+            }
 
     private fun initQuestions() {
 

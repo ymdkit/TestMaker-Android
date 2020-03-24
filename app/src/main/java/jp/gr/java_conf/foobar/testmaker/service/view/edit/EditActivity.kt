@@ -42,7 +42,6 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit)
 
         testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
             test = it
@@ -154,9 +153,9 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
                 .setTitle(getString(R.string.delete_question))
                 .setMessage(getString(R.string.message_delete, question.question))
                 .setPositiveButton(android.R.string.ok) { _, _ ->
-            if (question.imagePath != "") deleteFile(question.imagePath)
-            testViewModel.delete(question)
-        }
+                    if (question.imagePath != "") deleteFile(question.imagePath)
+                    testViewModel.delete(question)
+                }
                 .setNegativeButton(android.R.string.cancel, null)
                 .show()
     }
