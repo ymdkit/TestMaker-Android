@@ -7,7 +7,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 
 class EditSelectQuestionViewModel : EditQuestionViewModel() {
 
-    var selectedQuestion = Question()
+    override var selectedQuestion = Question()
         set(value) {
             field = value
             inputForm(field)
@@ -34,7 +34,7 @@ class EditSelectQuestionViewModel : EditQuestionViewModel() {
                     it.value.isNullOrEmpty()
                 }
 
-    fun createQuestion() = selectedQuestion.copy(
+    override fun createQuestion() = selectedQuestion.copy(
             question = question.value ?: "",
             answer = answer.value ?: "",
             others = others.map { it.value ?: "" }.take(sizeOfOthers.value ?: 0),

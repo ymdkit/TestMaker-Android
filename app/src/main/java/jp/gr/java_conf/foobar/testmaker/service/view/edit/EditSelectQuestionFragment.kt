@@ -7,15 +7,11 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentEditSelectQuestionBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class EditSelectQuestionFragment : EditQuestionFragment() {
     override val editQuestionViewModel: EditSelectQuestionViewModel by sharedViewModel()
-    private val testViewModel: TestViewModel by sharedViewModel()
 
     private var binding: FragmentEditSelectQuestionBinding? = null
 
@@ -38,15 +34,7 @@ class EditSelectQuestionFragment : EditQuestionFragment() {
             viewModel = editQuestionViewModel
 
             buttonAdd.setOnClickListener {
-                requireContext().showToast(getString(R.string.msg_save))
-                if (editQuestionViewModel.selectedQuestion.id == Question().id) {
-                    testViewModel.create(testViewModel.get(editQuestionViewModel.testId), editQuestionViewModel.createQuestion())
-                } else {
-                    testViewModel.update(editQuestionViewModel.createQuestion())
-                    requireActivity().finish()
-                }
-
-                editQuestionViewModel.resetForm()
+                saveQuestion()
             }
 
             buttonAddOther.setOnClickListener {

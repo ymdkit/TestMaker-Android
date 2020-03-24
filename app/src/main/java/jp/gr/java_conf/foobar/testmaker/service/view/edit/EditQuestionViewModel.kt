@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 
 open class EditQuestionViewModel : ViewModel() {
+    open var selectedQuestion = Question()
 
     var testId = -1L
 
@@ -29,6 +30,8 @@ open class EditQuestionViewModel : ViewModel() {
         imagePath.value = question.imagePath
         isCheckedImage.value = question.imagePath.isNotEmpty()
     }
+
+    open fun createQuestion(): Question = Question()
 
     fun onClickSetting() {
         isVisibleSetting.value = !(isVisibleSetting.value ?: false)

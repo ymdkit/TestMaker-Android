@@ -7,7 +7,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 
 class EditWriteQuestionViewModel : EditQuestionViewModel() {
 
-    var selectedQuestion = Question()
+    override var selectedQuestion = Question()
         set(value) {
             field = value
             inputForm(field)
@@ -23,7 +23,7 @@ class EditWriteQuestionViewModel : EditQuestionViewModel() {
     private val isValid: Boolean
         get() = !question.value.isNullOrEmpty() && !answer.value.isNullOrEmpty()
 
-    fun createQuestion() = selectedQuestion.copy(
+    override fun createQuestion() = selectedQuestion.copy(
             question = question.value ?: "",
             answer = answer.value ?: "",
             explanation = explanation.value ?: "",
