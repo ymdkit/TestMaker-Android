@@ -3,17 +3,18 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 
-open class EditQuestionViewModel : ViewModel() {
+open class EditQuestionViewModel(val preferences: SharedPreferenceManager) : ViewModel() {
     open var selectedQuestion = Question()
 
     var testId = -1L
 
     val question = MutableLiveData("")
     val explanation = MutableLiveData("")
-    val isResetForm = MutableLiveData(true)
-    val isCheckedImage = MutableLiveData(false)
-    val isCheckedExplanation = MutableLiveData(false)
+    val isResetForm = MutableLiveData(preferences.isResetForm)
+    val isCheckedImage = MutableLiveData(preferences.isShowImageSetting)
+    val isCheckedExplanation = MutableLiveData(preferences.explanation)
     val imagePath = MutableLiveData("")
     val isVisibleSetting = MutableLiveData(false)
 

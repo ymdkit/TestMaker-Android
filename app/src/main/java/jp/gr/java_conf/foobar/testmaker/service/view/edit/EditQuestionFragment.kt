@@ -7,8 +7,10 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -16,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import com.isseiaoki.simplecropview.CropImageView
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
+import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import kotlinx.coroutines.launch
@@ -33,6 +36,19 @@ abstract class EditQuestionFragment : Fragment() {
             val c = Calendar.getInstance()
             return c.get(Calendar.YEAR).toString() + "_" + (c.get(Calendar.MONTH) + 1) + "_" + c.get(Calendar.DAY_OF_MONTH) + "_" + c.get(Calendar.HOUR_OF_DAY) + "_" + c.get(Calendar.MINUTE) + "_" + c.get(Calendar.SECOND) + "_" + c.get(Calendar.MILLISECOND) + ".png"
         }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        editQuestionViewModel.isCheckedImage.observeNonNull(viewLifecycleOwner) {
+            editQuestionViewModel.preferences.isShowImageSetting = it
+        }
+        editQuestionViewModel.isCheckedExplanation.observeNonNull(viewLifecycleOwner) {
+            editQuestionViewModel.preferences.explanation = it
+        }
+        editQuestionViewModel.isResetForm.observeNonNull(viewLifecycleOwner) {
+            editQuestionViewModel.preferences.isResetForm = it
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

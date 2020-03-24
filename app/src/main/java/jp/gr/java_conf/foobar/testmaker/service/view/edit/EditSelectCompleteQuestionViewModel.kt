@@ -4,8 +4,9 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 
-class EditSelectCompleteQuestionViewModel : EditQuestionViewModel() {
+class EditSelectCompleteQuestionViewModel(preferences: SharedPreferenceManager) : EditQuestionViewModel(preferences) {
 
     override var selectedQuestion = Question()
         set(value) {
