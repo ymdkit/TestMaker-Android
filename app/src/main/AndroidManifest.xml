@@ -40,11 +40,8 @@
             android:name="secret_studyplus_comsumer_key"
             android:value="${secret_studyplus_consumer_key}" />
         <meta-data
-            android:name="testmaker_admob_key"
-            android:value="${testmaker_admob_key}" />
-        <meta-data
             android:name="com.google.android.gms.ads.jp.gr.java_conf.foobar.testmaker.service"
-            android:value="hogehoge" />
+            android:value="${testmaker_admob_key}" />
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
             android:value="true" />
