@@ -199,7 +199,7 @@
     <string name="share_multiple_answers_order">multiple answers order,%1$s,</string>
     <string name="load_multiple_answers_order">multiple answers order</string>
     <string name="format_question" />
-    <string name="normal">normal</string>
+    <string name="write">write</string>
     <string name="select">select</string>
     <string name="complete">answers</string>
     <string name="select_complete">select answers</string>

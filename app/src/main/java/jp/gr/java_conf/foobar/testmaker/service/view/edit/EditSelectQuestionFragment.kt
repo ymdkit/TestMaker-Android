@@ -21,8 +21,8 @@ class EditSelectQuestionFragment : EditQuestionFragment() {
         editQuestionViewModel.isCheckedAuto.observeNonNull(viewLifecycleOwner) { isAuto ->
             editQuestionViewModel.others.forEach {
                 if (isAuto) {
-                    it.value = getString(R.string.hint_other)
-                } else if (it.value == getString(R.string.hint_other)) {
+                    it.value = getString(R.string.hint_auto)
+                } else if (it.value == getString(R.string.hint_auto)) {
                     it.value = ""
                 }
             }

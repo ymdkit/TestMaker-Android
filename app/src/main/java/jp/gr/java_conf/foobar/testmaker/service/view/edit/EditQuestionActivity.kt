@@ -36,7 +36,7 @@ class EditQuestionActivity : BaseActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.viewPager.offscreenPageLimit = 4
+        binding.viewPager.offscreenPageLimit = 3
         binding.viewPager.adapter = ViewPagerAdapter(this, listOf(
                 EditWriteQuestionFragment(),
                 EditSelectQuestionFragment(),
@@ -44,19 +44,16 @@ class EditQuestionActivity : BaseActivity() {
                 EditSelectCompleteQuestionFragment()))
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            //todo: 出題形式のENUMを作ろう
-            tab.text = listOf("記述", "選択", "完答", "選択完答")[position]
+            tab.text = listOf(getString(R.string.write), getString(R.string.select), getString(R.string.complete), getString(R.string.select_complete))[position]
         }.attach()
 
-        //todo: テストの受け渡し方法どうする
         editWriteQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
         editSelectQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
         editCompleteQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
         editSelectCompleteQuestionViewModel.testId = intent.getLongExtra(ARGUMENT_TEST_ID, -1L)
 
-
+        //todo: 安全に渡したい
         testViewModel.get(editWriteQuestionViewModel.testId).questions.find { it.id == intent.getLongExtra(ARGUMENT_QUESTION_ID, -1L) }?.let {
-            //todo: 出題形式による条件分岐
             binding.tabLayout.getTabAt(it.type)?.select()
             editWriteQuestionViewModel.selectedQuestion = it
             editSelectQuestionViewModel.selectedQuestion = it
