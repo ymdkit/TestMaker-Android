@@ -42,7 +42,7 @@ class PlayActivity : BaseActivity() {
 
     internal lateinit var questions: List<Question>
 
-    private lateinit var inputMethodManager: InputMethodManager
+    private val inputMethodManager: InputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
 
     private var startTime: Long = 0
 
@@ -56,9 +56,8 @@ class PlayActivity : BaseActivity() {
 
         testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
             test = it
+            supportActionBar?.title = test.title
         }
-
-        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         initToolBar()
 

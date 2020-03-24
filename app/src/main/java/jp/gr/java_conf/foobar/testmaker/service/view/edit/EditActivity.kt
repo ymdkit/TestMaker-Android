@@ -64,7 +64,7 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
             it.find { test.id == it.id }?.let {
                 test = it
             }
-            supportActionBar?.title = "${getString(R.string.title_activity_edit)}: ${test.title}"
+            supportActionBar?.title = test.title
             controller.questions = test.questions
         }
     }
