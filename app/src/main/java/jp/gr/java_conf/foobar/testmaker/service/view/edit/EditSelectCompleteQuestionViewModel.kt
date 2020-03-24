@@ -60,12 +60,10 @@ class EditSelectCompleteQuestionViewModel : EditQuestionViewModel() {
             imagePath = imagePath.value ?: ""
     )
 
-    fun formReset() {
+    override fun resetForm() {
         if (isResetForm.value == true) {
-            question.value = ""
+            super.resetForm()
             answer.value = ""
-            explanation.value = ""
-            imagePath.value = ""
             others.forEach {
                 it.value = ""
             }
@@ -75,15 +73,11 @@ class EditSelectCompleteQuestionViewModel : EditQuestionViewModel() {
         }
     }
 
-    private fun inputForm(question: Question) {
-        this.question.value = question.question
+    override fun inputForm(question: Question) {
+        super.inputForm(question)
         answer.value = question.answer
-        explanation.value = question.explanation
         sizeOfOthers.value = question.others.size.coerceAtLeast(SIZE_OTHER_MIN)
         sizeOfAnswers.value = question.answers.size.coerceAtLeast(SIZE_ANSWER_MIN)
-        isCheckedExplanation.value = question.explanation.isNotEmpty()
-        imagePath.value = question.imagePath
-        isCheckedImage.value = question.imagePath.isNotEmpty()
         isCheckedAuto.value = question.isAutoGenerateOthers
         question.others.forEachIndexed { index, s ->
             if (index >= SIZE_OTHER_MAX) return@forEachIndexed

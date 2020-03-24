@@ -31,21 +31,15 @@ class EditWriteQuestionViewModel : EditQuestionViewModel() {
             imagePath = imagePath.value ?: ""
     )
 
-    fun formReset() {
+    override fun resetForm() {
         if (isResetForm.value == true) {
-            question.value = ""
+            super.resetForm()
             answer.value = ""
-            explanation.value = ""
-            imagePath.value = ""
         }
     }
 
-    private fun inputForm(question: Question) {
-        this.question.value = question.question
+    override fun inputForm(question: Question) {
+        super.inputForm(question)
         answer.value = question.answer
-        explanation.value = question.explanation
-        isCheckedExplanation.value = question.explanation.isNotEmpty()
-        imagePath.value = question.imagePath
-        isCheckedImage.value = question.imagePath.isNotEmpty()
     }
 }

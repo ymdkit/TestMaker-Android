@@ -35,7 +35,7 @@ class EditWriteQuestionFragment : EditQuestionFragment() {
                     requireActivity().finish()
                 }
 
-                editQuestionViewModel.formReset()
+                editQuestionViewModel.resetForm()
             }
 
             buttonImage.setOnClickListener {

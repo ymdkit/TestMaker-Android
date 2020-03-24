@@ -46,7 +46,7 @@ class EditSelectCompleteQuestionFragment : EditQuestionFragment() {
                     requireActivity().finish()
                 }
 
-                editQuestionViewModel.formReset()
+                editQuestionViewModel.resetForm()
             }
 
             buttonAddOther.setOnClickListener {

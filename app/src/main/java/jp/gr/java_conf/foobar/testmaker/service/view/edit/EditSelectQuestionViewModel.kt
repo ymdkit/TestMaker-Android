@@ -44,26 +44,20 @@ class EditSelectQuestionViewModel : EditQuestionViewModel() {
             imagePath = imagePath.value ?: ""
     )
 
-    fun formReset() {
+    override fun resetForm() {
         if (isResetForm.value == true) {
-            question.value = ""
+            super.resetForm()
             answer.value = ""
-            explanation.value = ""
-            imagePath.value = ""
             others.forEach {
                 it.value = ""
             }
         }
     }
 
-    private fun inputForm(question: Question) {
-        this.question.value = question.question
+    override fun inputForm(question: Question) {
+        super.inputForm(question)
         answer.value = question.answer
         sizeOfOthers.value = question.others.size.coerceAtLeast(SIZE_OTHER_MIN)
-        explanation.value = question.explanation
-        isCheckedExplanation.value = question.explanation.isNotEmpty()
-        imagePath.value = question.imagePath
-        isCheckedImage.value = question.imagePath.isNotEmpty()
         isCheckedAuto.value = question.isAutoGenerateOthers
         question.others.forEachIndexed { index, s ->
             if (index >= SIZE_OTHER_MAX) return@forEachIndexed

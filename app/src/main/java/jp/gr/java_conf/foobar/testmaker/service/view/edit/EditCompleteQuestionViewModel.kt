@@ -42,24 +42,18 @@ class EditCompleteQuestionViewModel : EditQuestionViewModel() {
             imagePath = imagePath.value ?: ""
     )
 
-    fun formReset() {
+    override fun resetForm() {
         if (isResetForm.value == true) {
-            question.value = ""
-            explanation.value = ""
-            imagePath.value = ""
+            super.resetForm()
             answers.forEach {
                 it.value = ""
             }
         }
     }
 
-    private fun inputForm(question: Question) {
-        this.question.value = question.question
+    override fun inputForm(question: Question) {
+        super.inputForm(question)
         sizeOfAnswers.value = question.answers.size.coerceAtLeast(SIZE_ANSWER_MIN)
-        explanation.value = question.explanation
-        isCheckedExplanation.value = question.explanation.isNotEmpty()
-        imagePath.value = question.imagePath
-        isCheckedImage.value = question.imagePath.isNotEmpty()
         isCheckedCheckOrder.value = question.isCheckOrder
         question.answers.forEachIndexed { index, s ->
             if (index >= SIZE_ANSWER_MAX) return@forEachIndexed
