@@ -193,7 +193,7 @@
                         android:id="@+id/edit_other_1"
                         style="@style/MyEditTextMultiLine"
                         android:enabled="@{!viewModel.isCheckedAuto}"
-                        android:hint="@{viewModel.isCheckedAuto ? @string/hint_auto : @string/hint_other}"
+                        android:hint="@string/hint_other"
                         android:text="@={viewModel.others[0]}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -211,7 +211,7 @@
                         android:id="@+id/edit_other_2"
                         style="@style/MyEditTextMultiLine"
                         android:enabled="@{!viewModel.isCheckedAuto}"
-                        android:hint="@{viewModel.isCheckedAuto ? @string/hint_auto : @string/hint_other}"
+                        android:hint="@string/hint_other"
                         android:text="@={viewModel.others[1]}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -229,7 +229,7 @@
                         android:id="@+id/edit_other_3"
                         style="@style/MyEditTextMultiLine"
                         android:enabled="@{!viewModel.isCheckedAuto}"
-                        android:hint="@{viewModel.isCheckedAuto ? @string/hint_auto : @string/hint_other}"
+                        android:hint="@string/hint_other"
                         android:text="@={viewModel.others[2]}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -248,7 +248,7 @@
                         android:id="@+id/edit_other_4"
                         style="@style/MyEditTextMultiLine"
                         android:enabled="@{!viewModel.isCheckedAuto}"
-                        android:hint="@{viewModel.isCheckedAuto ? @string/hint_auto : @string/hint_other}"
+                        android:hint="@string/hint_other"
                         android:text="@={viewModel.others[3]}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -266,7 +266,7 @@
                         android:id="@+id/edit_other_5"
                         style="@style/MyEditTextMultiLine"
                         android:enabled="@{!viewModel.isCheckedAuto}"
-                        android:hint="@{viewModel.isCheckedAuto ? @string/hint_auto : @string/hint_other}"
+                        android:hint="@string/hint_other"
                         android:text="@={viewModel.others[4]}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -284,7 +284,7 @@
                         android:id="@+id/edit_other_6"
                         style="@style/MyEditTextMultiLine"
                         android:enabled="@{!viewModel.isCheckedAuto}"
-                        android:hint="@{viewModel.isCheckedAuto ? @string/hint_auto : @string/hint_other}"
+                        android:hint="@string/hint_other"
                         android:text="@={viewModel.others[5]}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
