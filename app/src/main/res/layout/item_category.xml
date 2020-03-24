@@ -66,28 +66,26 @@
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/button_delete"
+            style="@style/ImageButton"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="@android:color/transparent"
             android:isVisible="@{!selected}"
             android:onClick="@{onClickDelete}"
             android:padding="@dimen/element_spacing_normal"
             android:src="@drawable/ic_delete"
-            android:tint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/button_remove"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/button_remove"
+            style="@style/ImageButton"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="@android:color/transparent"
             android:isVisible="@{selected}"
             android:onClick="@{onClickCancel}"
             android:padding="@dimen/element_spacing_normal"
             android:src="@drawable/ic_cancel"
-            android:tint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
