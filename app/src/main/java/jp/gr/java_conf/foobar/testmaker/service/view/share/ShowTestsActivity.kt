@@ -21,7 +21,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.play.NewPlayActivity
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -252,7 +252,7 @@ open class ShowTestsActivity : BaseActivity() {
                     startPosition = Integer.parseInt(start) - 1,
                     history = Calendar.getInstance().timeInMillis)
 
-            PlayActivity.startActivity(this@ShowTestsActivity, result.id)
+            NewPlayActivity.startActivity(this@ShowTestsActivity, result.id)
 
             testViewModel.update(result)
         }

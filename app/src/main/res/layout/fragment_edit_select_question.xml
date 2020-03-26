@@ -134,7 +134,6 @@
                     android:animatedVisibility="@{viewModel.sizeOfOthers >= 4}"
                     app:layout_constraintTop_toBottomOf="@id/text_input_other_3">
 
-                    <!--todo: hint を動的に変更するとアニメーションが消える不具合を直す                        -->
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_other_4"
                         style="@style/MyEditTextMultiLine"
@@ -200,7 +199,6 @@
                         android:text="@={viewModel.explanation}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
-
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/label_setting"

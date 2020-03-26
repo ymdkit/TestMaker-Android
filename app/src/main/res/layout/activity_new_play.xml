@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="jp.gr.java_conf.foobar.testmaker.service.view.play.NewPlayViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/element_spacing_normal"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"
+                android:layout_width="match_parent"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:layout_constraintTop_toTopOf="parent"
+                app:popupTheme="@style/Theme.AppCompat.DayNight"
+                tools:title="問題集" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="@dimen/element_spacing_normal"
+            app:layout_constraintBottom_toTopOf="@id/adView"
+            app:layout_constraintTop_toBottomOf="@id/app_bar">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_judge"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="@dimen/element_spacing_large"
+                android:text="@string/save_question"
+                android:textSize="@dimen/text_size_medium"
+                android:theme="@style/ThemeOverlay.Button.Accent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@id/button_judge"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/number"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/element_spacing_small"
+                        android:layout_marginTop="@dimen/element_spacing_very_large"
+                        android:text="@{@string/number(viewModel.index + 1)}"
+                        android:textColor="@color/colorPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="No.1" />
+
+                    <com.github.chrisbanes.photoview.PhotoView
+                        android:id="@+id/image_problem"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:layout_margin="@dimen/element_spacing_normal"
+                        android:animatedVisibility="@{!viewModel.selectedQuestion.imagePath.isEmpty()}"
+                        android:background="@null"
+                        android:clickable="false"
+                        android:contentDescription="@string/image"
+                        android:scaleType="fitCenter"
+                        android:srcWithGlide="@{viewModel.selectedQuestion.imagePath}"
+                        app:layout_constraintTop_toBottomOf="@id/number" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/question"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/element_spacing_small"
+                        android:layout_marginTop="@dimen/element_spacing_very_large"
+                        android:text="@{viewModel.selectedQuestion.question}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/image_problem"
+                        tools:text="@tools:sample/lorem/random" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayout_answer"
+                        style="@style/MyTextInputLayoutStyle"
+                        android:layout_marginTop="@dimen/element_spacing_very_large"
+                        android:animatedVisibility="@{viewModel.selectedQuestion.type == 0}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/question">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_answer"
+                            style="@style/MyEditTextSingleLine"
+                            android:hint="@string/hint_answer"
+                            android:text="@={viewModel.answer}"
+                            android:imeOptions="actionDone" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.core.widget.NestedScrollView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-8942090726462263/8420884238"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
