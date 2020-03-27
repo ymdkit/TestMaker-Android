@@ -253,4 +253,7 @@
     <string name="num_others">選択肢数</string>
     <string name="num_answers">解答数</string>
     <string name="empty_question">保存している問題はありません。\n右下の+ボタンから問題を追加してください</string>
+    <string name="judge_question">OK</string>
+    <string name="label_answer">正解</string>
+    <string name="label_explanation">解説</string>
 </resources>

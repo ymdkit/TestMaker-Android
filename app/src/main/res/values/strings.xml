@@ -260,4 +260,7 @@
     <string name="num_others">size of others</string>
     <string name="num_answers">size of answer</string>
     <string name="empty_question">make your first question</string>
+    <string name="judge_question">OK</string>
+    <string name="label_answer">answer</string>
+    <string name="label_explanation">explanation</string>
 </resources>

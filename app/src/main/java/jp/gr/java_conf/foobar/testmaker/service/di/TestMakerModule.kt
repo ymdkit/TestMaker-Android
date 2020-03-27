@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.di
 
 import io.realm.Realm
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.CategoryDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
@@ -45,7 +46,7 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { FirebaseViewModel(get(), get()) }
     viewModel { FirebaseMyPageViewModel(get(), get()) }
     viewModel { PlayViewModel(get()) }
-    viewModel { NewPlayViewModel() }
+    viewModel { (test: Test) -> NewPlayViewModel(test) }
     viewModel { ShowTestsViewModel(get(), get(), get()) }
 
 }

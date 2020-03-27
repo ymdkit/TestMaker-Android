@@ -8,6 +8,7 @@ import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
@@ -52,6 +53,13 @@ object CustomBindingAdapter {
     @JvmStatic
     fun setAnimatedVisibility(view: View, isVisible: Boolean) {
         TransitionManager.beginDelayedTransition(view.rootView as ViewGroup)
+        view.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
+
+    @BindingAdapter("android:customAnimatedVisibility", "android:duration")
+    @JvmStatic
+    fun setCustomAnimatedVisibility(view: View, isVisible: Boolean, duration: Int = 500) {
+        TransitionManager.beginDelayedTransition(view.rootView as ViewGroup, AutoTransition().apply { this.duration = duration.toLong() })
         view.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
