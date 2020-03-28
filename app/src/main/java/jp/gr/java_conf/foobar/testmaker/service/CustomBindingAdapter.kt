@@ -58,7 +58,7 @@ object CustomBindingAdapter {
 
     @BindingAdapter("android:customAnimatedVisibility", "android:duration")
     @JvmStatic
-    fun setCustomAnimatedVisibility(view: View, isVisible: Boolean, duration: Int = 500) {
+    fun setCustomAnimatedVisibility(view: View, isVisible: Boolean, duration: Int) {
         TransitionManager.beginDelayedTransition(view.rootView as ViewGroup, AutoTransition().apply { this.duration = duration.toLong() })
         view.visibility = if (isVisible) View.VISIBLE else View.GONE
     }

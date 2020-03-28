@@ -263,4 +263,5 @@
     <string name="judge_question">OK</string>
     <string name="label_answer">answer</string>
     <string name="label_explanation">explanation</string>
+    <string name="empty" />
 </resources>
