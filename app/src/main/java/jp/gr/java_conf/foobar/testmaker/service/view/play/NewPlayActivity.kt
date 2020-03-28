@@ -1,15 +1,14 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.play
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityNewPlayBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionsBuilder
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
@@ -19,9 +18,17 @@ import org.koin.core.parameter.parametersOf
 
 class NewPlayActivity : BaseActivity() {
 
-    private val inputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
-
-    private val playViewModel: NewPlayViewModel by viewModel { parametersOf(test) }
+    private val playViewModel: NewPlayViewModel by viewModel {
+        parametersOf(
+                QuestionsBuilder(test.questions)
+                        .retry(intent.hasExtra("isRetry"))
+                        .startPosition(test.startPosition)
+                        .mistakeOnly(sharedPreferenceManager.refine)
+                        .shuffle(sharedPreferenceManager.random)
+                        .limit(test.limit)
+                        .build()
+        )
+    }
     private val testViewModel: TestViewModel by viewModel()
 
     private lateinit var test: Test

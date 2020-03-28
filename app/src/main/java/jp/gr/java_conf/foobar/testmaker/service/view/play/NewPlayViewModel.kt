@@ -5,11 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class NewPlayViewModel(private val test: Test) : ViewModel() {
+class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
 
     val index = MutableLiveData(0)
 
@@ -28,12 +27,12 @@ class NewPlayViewModel(private val test: Test) : ViewModel() {
 
     fun loadNext() {
         index.value?.let {
-            if (it >= test.questions.size) {
+            if (it >= questions.size) {
 
                 finish.value = Unit
 
             } else {
-                val question = test.questions[it]
+                val question = questions[it]
                 when (question.type) {
                     Constants.WRITE -> {
                         state.value = State.WRITE
