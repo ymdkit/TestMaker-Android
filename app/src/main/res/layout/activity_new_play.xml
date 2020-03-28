@@ -181,6 +181,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
+                        android:animatedVisibility="@{viewModel.selectedQuestion.type == 1}"
                         android:orientation="vertical"
                         app:layout_constraintTop_toBottomOf="@id/text_input_answer_4">
 
@@ -216,59 +217,46 @@
 
                     </LinearLayout>
 
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/check_select_1"
-                        style="@style/MyCheckBoxStyle"
+                    <LinearLayout
+                        android:id="@+id/layout_play_select_complete"
                         android:layout_width="match_parent"
-                        android:customAnimatedVisibility="@{viewModel.selectedQuestion.type == 3 &amp;&amp; !viewModel.selections[0].isEmpty()}"
-                        android:duration="@{300}"
-                        android:text="@{viewModel.selections[0]}"
-                        app:layout_constraintTop_toBottomOf="@id/layout_play_select" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/element_spacing_very_large"
+                        android:animatedVisibility="@{viewModel.selectedQuestion.type == 3}"
+                        android:orientation="vertical"
+                        app:layout_constraintTop_toBottomOf="@id/layout_play_select">
 
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/check_select_2"
-                        style="@style/MyCheckBoxStyle"
-                        android:layout_width="match_parent"
-                        android:customAnimatedVisibility="@{viewModel.selectedQuestion.type == 3 &amp;&amp; !viewModel.selections[1].isEmpty()}"
-                        android:duration="@{300}"
-                        android:text="@{viewModel.selections[1]}"
-                        app:layout_constraintTop_toBottomOf="@id/check_select_1" />
+                        <include
+                            layout="@layout/button_play_select_complete"
+                            app:index="@{0}"
+                            app:viewModel="@{viewModel}" />
 
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/check_select_3"
-                        style="@style/MyCheckBoxStyle"
-                        android:layout_width="match_parent"
-                        android:customAnimatedVisibility="@{viewModel.selectedQuestion.type == 3 &amp;&amp; !viewModel.selections[2].isEmpty()}"
-                        android:duration="@{300}"
-                        android:text="@{viewModel.selections[2]}"
-                        app:layout_constraintTop_toBottomOf="@id/check_select_2" />
+                        <include
+                            layout="@layout/button_play_select_complete"
+                            app:index="@{1}"
+                            app:viewModel="@{viewModel}" />
 
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/check_select_4"
-                        style="@style/MyCheckBoxStyle"
-                        android:layout_width="match_parent"
-                        android:customAnimatedVisibility="@{viewModel.selectedQuestion.type == 3 &amp;&amp; !viewModel.selections[3].isEmpty()}"
-                        android:duration="@{300}"
-                        android:text="@{viewModel.selections[3]}"
-                        app:layout_constraintTop_toBottomOf="@id/check_select_3" />
+                        <include
+                            layout="@layout/button_play_select_complete"
+                            app:index="@{2}"
+                            app:viewModel="@{viewModel}" />
 
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/check_select_5"
-                        style="@style/MyCheckBoxStyle"
-                        android:layout_width="match_parent"
-                        android:customAnimatedVisibility="@{viewModel.selectedQuestion.type == 3 &amp;&amp; !viewModel.selections[4].isEmpty()}"
-                        android:duration="@{300}"
-                        android:text="@{viewModel.selections[4]}"
-                        app:layout_constraintTop_toBottomOf="@id/check_select_4" />
+                        <include
+                            layout="@layout/button_play_select_complete"
+                            app:index="@{3}"
+                            app:viewModel="@{viewModel}" />
 
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/check_select_6"
-                        style="@style/MyCheckBoxStyle"
-                        android:layout_width="match_parent"
-                        android:customAnimatedVisibility="@{viewModel.selectedQuestion.type == 3 &amp;&amp; !viewModel.selections[5].isEmpty()}"
-                        android:duration="@{300}"
-                        android:text="@{viewModel.selections[5]}"
-                        app:layout_constraintTop_toBottomOf="@id/check_select_5" />
+                        <include
+                            layout="@layout/button_play_select_complete"
+                            app:index="@{4}"
+                            app:viewModel="@{viewModel}" />
+
+                        <include
+                            layout="@layout/button_play_select_complete"
+                            app:index="@{5}"
+                            app:viewModel="@{viewModel}" />
+
+                    </LinearLayout>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/label_your_answer"
@@ -281,7 +269,7 @@
                         android:textColor="@color/colorPrimary"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/check_select_6" />
+                        app:layout_constraintTop_toBottomOf="@id/layout_play_select_complete" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/text_your_answer"

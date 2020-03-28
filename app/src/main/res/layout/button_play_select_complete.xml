@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="jp.gr.java_conf.foobar.testmaker.service.view.play.NewPlayViewModel" />
+
+        <variable
+            name="index"
+            type="Integer" />
+
+
+    </data>
+
+    <merge>
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_select_1"
+            style="@style/MyCheckBoxStyle"
+            android:layout_width="match_parent"
+            android:customAnimatedVisibility="@{!viewModel.selections[0].isEmpty()}"
+            android:duration="@{300}"
+            android:text="@{viewModel.selections[0]}" />
+    </merge>
+</layout>

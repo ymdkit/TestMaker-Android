@@ -21,7 +21,7 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:customAnimatedVisibility="@{viewModel.selectedQuestion.type == 1 &amp;&amp; !viewModel.selections[index].isEmpty()}"
+            android:customAnimatedVisibility="@{ !viewModel.selections[index].isEmpty()}"
             android:duration="@{300}"
             android:gravity="start|center_vertical"
             android:onClick="@{() -> viewModel.judge()}"
