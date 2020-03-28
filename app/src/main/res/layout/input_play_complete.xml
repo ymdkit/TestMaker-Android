@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="jp.gr.java_conf.foobar.testmaker.service.view.play.NewPlayViewModel" />
+
+        <variable
+            name="index"
+            type="Integer" />
+
+
+    </data>
+
+    <merge>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_answer_1"
+            style="@style/MyTextInputLayoutStyle"
+            android:layout_marginTop="@dimen/element_spacing_very_large"
+            android:animatedVisibility="@{viewModel.selectedQuestion.type == 2}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayout_answer">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_answer_1"
+                style="@style/MyEditTextSingleLine"
+                android:hint="@string/hint_answer"
+                android:imeOptions="actionDone"
+                android:text="@={viewModel.answers[0]}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </merge>
+</layout>
