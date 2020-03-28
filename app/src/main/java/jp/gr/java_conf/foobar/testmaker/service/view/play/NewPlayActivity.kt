@@ -47,16 +47,6 @@ class NewPlayActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-
-
-        binding.editAnswer.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED)
-            } else {
-                inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
-            }
-        }
-
         playViewModel.finish.observeNonNull(this) {
             finish()
         }
@@ -67,9 +57,10 @@ class NewPlayActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        playViewModel.selectedQuestion.value?.let {
+        playViewModel.selectedQuestion.observeNonNull(this) {
             when (it.type) {
                 Constants.WRITE -> binding.editAnswer.requestFocus()
+                Constants.COMPLETE -> binding.editAnswersFirst.editAnswer.requestFocus()
                 else -> {
                 }
             }

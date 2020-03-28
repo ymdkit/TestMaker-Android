@@ -1,8 +1,11 @@
 package jp.gr.java_conf.foobar.testmaker.service
 
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
@@ -12,6 +15,9 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 object CustomBindingAdapter {
 
@@ -77,5 +83,29 @@ object CustomBindingAdapter {
                 setImageWithGlide(context, context.getFileStreamPath(src))
             }
         }
+    }
+
+    @BindingAdapter("android:syncKeyBoard")
+    @JvmStatic
+    fun EditText.setSyncKeyBoard(isSync: Boolean) {
+        if (!isSync) return
+
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        setOnFocusChangeListener { v, hasFocus ->
+
+            if (hasFocus) {
+                GlobalScope.launch {
+                    delay(200)
+                    inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED)
+                }
+            } else {
+                GlobalScope.launch {
+                    delay(200)
+                    inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
+                }
+            }
+        }
+
     }
 }
