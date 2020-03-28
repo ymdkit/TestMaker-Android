@@ -20,8 +20,8 @@
             android:id="@+id/check_select_1"
             style="@style/MyCheckBoxStyle"
             android:layout_width="match_parent"
-            android:customAnimatedVisibility="@{!viewModel.selections[0].isEmpty()}"
+            android:customAnimatedVisibility="@{!viewModel.selections[index].isEmpty()}"
             android:duration="@{300}"
-            android:text="@{viewModel.selections[0]}" />
+            android:text="@{viewModel.selections[index]}" />
     </merge>
 </layout>

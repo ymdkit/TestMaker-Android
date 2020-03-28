@@ -27,12 +27,30 @@ class NewPlayViewModel(private val test: Test) : ViewModel() {
                 finish.value = Unit
 
             } else {
-                selectedQuestion.value = test.questions[it]
+                val question = test.questions[it]
+                when (question.type) {
+                    Constants.WRITE -> {
+                        state.value = State.WRITE
+                    }
+                    Constants.SELECT -> {
+                        state.value = State.SELECT
+                    }
+                    Constants.COMPLETE -> {
+                        state.value = State.COMPLETE
+                    }
+                    Constants.SELECT_COMPLETE -> {
+                        state.value = State.SELECT_COMPLETE
+                    }
+                    else -> {
+                    }
+                }
+
+                selectedQuestion.value = question
                 index.value = it + 1
-                state.value = State.getStateFromType(test.questions[it])
+                state.value = State.getStateFromType(question)
                 // todo 自動生成モードの対応 選択完答に対応
                 selections.forEach { it.value = "" }
-                (test.questions[it].others + listOf(test.questions[it].answer)).shuffled().forEachIndexed { index, it ->
+                (question.others + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
                     selections[index].value = it
                 }
             }

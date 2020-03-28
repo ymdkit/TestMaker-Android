@@ -95,7 +95,8 @@
                         android:id="@+id/textInputLayout_answer"
                         style="@style/MyTextInputLayoutStyle"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:animatedVisibility="@{viewModel.selectedQuestion.type == 0}"
+                        android:customAnimatedVisibility="@{viewModel.state == State.WRITE}"
+                        android:duration="@{200}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/question">
@@ -113,7 +114,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:animatedVisibility="@{viewModel.selectedQuestion.type == 1}"
+                        android:customAnimatedVisibility="@{viewModel.state == State.COMPLETE}"
+                        android:duration="@{200}"
                         android:orientation="vertical"
                         app:layout_constraintTop_toBottomOf="@id/textInputLayout_answer">
 
@@ -144,7 +146,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:animatedVisibility="@{viewModel.selectedQuestion.type == 1}"
+                        android:customAnimatedVisibility="@{viewModel.state == State.SELECT}"
+                        android:duration="@{200}"
                         android:orientation="vertical"
                         app:layout_constraintTop_toBottomOf="@id/layout_play_complete">
 
@@ -185,7 +188,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:animatedVisibility="@{viewModel.selectedQuestion.type == 3}"
+                        android:customAnimatedVisibility="@{viewModel.state == State.SELECT_COMPLETE}"
+                        android:duration="@{200}"
                         android:orientation="vertical"
                         app:layout_constraintTop_toBottomOf="@id/layout_play_select">
 
@@ -297,7 +301,7 @@
                         android:layout_marginStart="@dimen/element_spacing_small"
                         android:layout_marginTop="@dimen/element_spacing_small"
                         android:customAnimatedVisibility="@{viewModel.state == State.REVIEW}"
-                        android:duration="@{300}"
+                        android:duration="@{200}"
                         android:text="@{viewModel.selectedQuestion.explanation}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -315,7 +319,7 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="@dimen/element_spacing_large"
                 android:customAnimatedVisibility="@{viewModel.state == State.REVIEW}"
-                android:duration="@{300}"
+                android:duration="@{200}"
                 android:onClick="@{() -> viewModel.loadNext()}"
                 android:text="@string/action_next"
                 android:textSize="@dimen/text_size_medium"
@@ -329,7 +333,7 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="@dimen/element_spacing_large"
                 android:customAnimatedVisibility="@{viewModel.state == State.WRITE || viewModel.state == State.COMPLETE || viewModel.state == State.SELECT_COMPLETE }"
-                android:duration="@{300}"
+                android:duration="@{200}"
                 android:onClick="@{() -> viewModel.judge()}"
                 android:text="@string/judge_question"
                 android:textSize="@dimen/text_size_medium"
