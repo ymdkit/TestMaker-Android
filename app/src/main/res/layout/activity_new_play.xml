@@ -181,6 +181,19 @@
                             app:index="@{5}"
                             app:viewModel="@{viewModel}" />
 
+                        <androidx.appcompat.widget.AppCompatButton
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="start|center_vertical"
+                            android:onClick="@{() -> viewModel.judge()}"
+                            android:padding="24dp"
+                            android:text="@string/pass"
+                            android:textAllCaps="false"
+                            android:textSize="@dimen/text_size_medium"
+                            android:theme="@style/ThemeOverlay.Button.Primary"
+                            tools:text="わからない" />
+
                     </LinearLayout>
 
                     <LinearLayout

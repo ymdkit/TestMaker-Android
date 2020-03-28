@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.Constants
@@ -74,6 +75,15 @@ class NewPlayActivity : BaseActivity() {
             }
         }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem) =
+            when (item.itemId) {
+                android.R.id.home -> {
+                    finish()
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
+            }
 
     companion object {
 
