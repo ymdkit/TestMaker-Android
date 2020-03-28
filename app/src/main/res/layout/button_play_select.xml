@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="jp.gr.java_conf.foobar.testmaker.service.view.play.NewPlayViewModel" />
+
+        <variable
+            name="index"
+            type="Integer" />
+
+
+    </data>
+
+    <merge>
+
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:customAnimatedVisibility="@{viewModel.selectedQuestion.type == 1 &amp;&amp; !viewModel.selections[index].isEmpty()}"
+            android:duration="@{300}"
+            android:gravity="start|center_vertical"
+            android:onClick="@{() -> viewModel.judge()}"
+            android:padding="24dp"
+            android:text="@{viewModel.selections[index]}"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_size_medium"
+            android:theme="@style/ThemeOverlay.Button.Primary"
+            tools:text="選択肢" />
+
+    </merge>
+</layout>

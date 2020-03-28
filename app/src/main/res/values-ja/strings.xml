@@ -257,4 +257,5 @@
     <string name="label_answer">正解</string>
     <string name="label_explanation">解説</string>
     <string name="empty" />
+    <string name="label_your_answer">あなたの解答</string>
 </resources>

@@ -13,6 +13,8 @@ class NewPlayViewModel(private val test: Test) : ViewModel() {
     val selectedQuestion = MutableLiveData(Question())
 
     val answer = MutableLiveData("")
+    val answers = List(COMPLETE_ANSWER_MAX) { MutableLiveData("") }
+    val selections = List(SELECTION_MAX) { MutableLiveData("") }
 
     val state = MutableLiveData(State.INITIAL)
 
@@ -28,6 +30,11 @@ class NewPlayViewModel(private val test: Test) : ViewModel() {
                 selectedQuestion.value = test.questions[it]
                 index.value = it + 1
                 state.value = State.getStateFromType(test.questions[it])
+                // todo 自動生成モードの対応 選択完答に対応
+                selections.forEach { it.value = "" }
+                (test.questions[it].others + listOf(test.questions[it].answer)).shuffled().forEachIndexed { index, it ->
+                    selections[index].value = it
+                }
             }
         }
     }
@@ -40,10 +47,30 @@ class NewPlayViewModel(private val test: Test) : ViewModel() {
                         state.value = State.REVIEW
                     }
                 }
+                Constants.SELECT -> {
+                    answer.value?.let {
+                        state.value = State.REVIEW
+                    }
+                }
+                Constants.COMPLETE -> {
+                    answer.value?.let {
+                        state.value = State.REVIEW
+                    }
+                }
+                Constants.SELECT_COMPLETE -> {
+                    answer.value?.let {
+                        state.value = State.REVIEW
+                    }
+                }
                 else -> {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val COMPLETE_ANSWER_MAX = 4
+        private const val SELECTION_MAX = 6
     }
 
 }
