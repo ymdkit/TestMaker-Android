@@ -2,9 +2,12 @@ package jp.gr.java_conf.foobar.testmaker.service.view.play
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class NewPlayViewModel(private val test: Test) : ViewModel() {
 
@@ -17,6 +20,9 @@ class NewPlayViewModel(private val test: Test) : ViewModel() {
     val selections = List(SELECTION_MAX) { MutableLiveData("") }
 
     val state = MutableLiveData(State.INITIAL)
+    val judgeState = MutableLiveData(JudgeState.NONE)
+
+    val yourAnswer = MutableLiveData("")
 
     val finish = MutableLiveData<Unit>()
 
@@ -62,28 +68,37 @@ class NewPlayViewModel(private val test: Test) : ViewModel() {
             when (it.type) {
                 Constants.WRITE -> {
                     answer.value?.let {
-                        state.value = State.REVIEW
+                        yourAnswer.value = it
                     }
                 }
                 Constants.SELECT -> {
                     answer.value?.let {
-                        state.value = State.REVIEW
+                        yourAnswer.value = it
                     }
                 }
                 Constants.COMPLETE -> {
-                    answer.value?.let {
-                        state.value = State.REVIEW
-                    }
+                    yourAnswer.value = answers.take(selectedQuestion.value?.answers?.size
+                            ?: 0).map { it.value ?: "" }.joinToString(separator = "\n")
+
                 }
                 Constants.SELECT_COMPLETE -> {
                     answer.value?.let {
-                        state.value = State.REVIEW
                     }
                 }
                 else -> {
                 }
             }
         }
+
+        state.value = State.REVIEW
+        //todo: activityでやった方が良さそう
+        viewModelScope.launch {
+            judgeState.value = JudgeState.INCORRECT
+            delay(1000)
+            judgeState.value = JudgeState.NONE
+        }
+
+
     }
 
     companion object {
@@ -112,6 +127,10 @@ enum class State {
                 }
 
     }
+}
 
-
+enum class JudgeState {
+    NONE,
+    CORRECT,
+    INCORRECT
 }

@@ -265,4 +265,6 @@
     <string name="label_explanation">explanation</string>
     <string name="empty" />
     <string name="label_your_answer">your answer</string>
+    <string name="judge_correct">Good!</string>
+    <string name="judge_incorrect">oops!</string>
 </resources>

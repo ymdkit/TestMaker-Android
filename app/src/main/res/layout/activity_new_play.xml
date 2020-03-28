@@ -11,6 +11,8 @@
 
         <import type="jp.gr.java_conf.foobar.testmaker.service.view.play.State" />
 
+        <import type="jp.gr.java_conf.foobar.testmaker.service.view.play.JudgeState" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -260,8 +262,8 @@
                         android:layout_marginStart="@dimen/element_spacing_small"
                         android:layout_marginTop="@dimen/element_spacing_small"
                         android:customAnimatedVisibility="@{viewModel.state == State.REVIEW}"
-                        android:duration="@{0}"
-                        android:text="@{viewModel.state == State.REVIEW ? viewModel.selectedQuestion.answer : @string/empty}"
+                        android:duration="@{200}"
+                        android:text="@{viewModel.yourAnswer}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/label_your_answer"
@@ -326,6 +328,60 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.core.widget.NestedScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:customAnimatedVisibility="@{viewModel.judgeState == JudgeState.CORRECT}"
+                android:duration="@{200}"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="@dimen/element_spacing_very_large"
+                    android:paddingTop="@dimen/element_spacing_very_large"
+                    android:src="@drawable/ic_circle"
+                    android:tint="@color/colorAccent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/judge_correct"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:customAnimatedVisibility="@{viewModel.judgeState == JudgeState.INCORRECT}"
+                android:duration="@{200}"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="@dimen/element_spacing_very_large"
+                    android:paddingTop="@dimen/element_spacing_very_large"
+                    android:src="@drawable/ic_close_white"
+                    android:tint="@color/colorPrimary" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/judge_incorrect"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_next"
