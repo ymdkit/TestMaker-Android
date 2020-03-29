@@ -12,7 +12,7 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityResultBindin
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.play.NewPlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.SelfJudgePlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.studyplus.android.sdk.Studyplus
@@ -63,7 +63,7 @@ class ResultActivity : BaseActivity() {
                                 if (sharedPreferenceManager.manual) {
                                     SelfJudgePlayActivity.startActivity(this@ResultActivity, test.id, true)
                                 } else {
-                                    PlayActivity.startActivity(this@ResultActivity, test.id, true)
+                                    NewPlayActivity.startActivity(this@ResultActivity, test.id, true)
                                 }
                             }
 
@@ -75,7 +75,7 @@ class ResultActivity : BaseActivity() {
                                     if (sharedPreferenceManager.manual) {
                                         SelfJudgePlayActivity.startActivity(this@ResultActivity, test.id, true)
                                     } else {
-                                        PlayActivity.startActivity(this@ResultActivity, test.id, true)
+                                        NewPlayActivity.startActivity(this@ResultActivity, test.id, true)
                                     }
                                 } else {
 

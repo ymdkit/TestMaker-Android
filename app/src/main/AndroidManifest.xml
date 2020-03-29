@@ -20,7 +20,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.play.SelfJudgePlayActivity"></activity>
+        <activity android:name=".view.play.SelfJudgePlayActivity" />
         <activity android:name=".view.play.NewPlayActivity" />
         <activity android:name=".view.edit.EditQuestionActivity" />
         <activity android:name=".view.category.EditCategoryActivity" />
@@ -73,12 +73,6 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.play.PlayActivity"
-            android:configChanges="uiMode"
-            android:label="解答"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".view.edit.EditActivity"
             android:configChanges="uiMode"
