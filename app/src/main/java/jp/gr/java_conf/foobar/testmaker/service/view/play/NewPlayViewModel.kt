@@ -24,14 +24,15 @@ class NewPlayViewModel(private val questions: List<Question>, preferences: Share
 
     val yourAnswer = MutableLiveData("")
 
-    val isReversible = MutableLiveData(preferences.reverse)
+    val isReversible = preferences.reverse
+    val isCaseInsensitive = preferences.isCaseInsensitive
 
     fun loadNext() {
         index.value?.let {
             if (it >= questions.size) {
                 viewModelScope.launch {
-                    state.value = State.FINISH
                     delay(500)
+                    state.value = State.FINISH
                 }
             } else {
                 val question = questions[it]
@@ -43,7 +44,7 @@ class NewPlayViewModel(private val questions: List<Question>, preferences: Share
                 answer.value = ""
                 index.value = it + 1
                 state.value = State.getStateFromType(question)
-                if (isReversible.value == true) state.value = State.WRITE
+                if (isReversible) state.value = State.WRITE
                 // todo 自動生成モードの対応 選択完答に対応
                 selections.forEach { it.value = "" }
                 (question.others + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
@@ -57,7 +58,7 @@ class NewPlayViewModel(private val questions: List<Question>, preferences: Share
         this.yourAnswer.value = yourAnswer
 
         selectedQuestion.value?.let { question ->
-            judgeResult(question.isCorrect(yourAnswer, isReverse = isReversible.value == true, isCaseInsensitive = false))
+            judgeResult(question.isCorrect(yourAnswer, isReverse = isReversible, isCaseInsensitive = isCaseInsensitive))
         }
     }
 
@@ -65,47 +66,42 @@ class NewPlayViewModel(private val questions: List<Question>, preferences: Share
 
         var isCorrect = false
         selectedQuestion.value?.let { question ->
-            if (isReversible.value == true) {
-                answer.value?.let {
-                    isCorrect = question.isCorrect(it, isReverse = true, isCaseInsensitive = false)
-                    yourAnswer.value = it
+
+            when (question.type) {
+                Constants.WRITE -> {
+                    answer.value?.let {
+                        isCorrect = question.isCorrect(it, isReversible, isCaseInsensitive = isCaseInsensitive)
+                        yourAnswer.value = it
+                    }
                 }
-            } else {
-                when (question.type) {
-                    Constants.WRITE -> {
-                        answer.value?.let {
-                            isCorrect = question.isCorrect(it, isReverse = false, isCaseInsensitive = false)
-                            yourAnswer.value = it
-                        }
-                    }
-                    Constants.COMPLETE -> {
-                        answers.take(selectedQuestion.value?.answers?.size ?: 0)
-                                .map {
-                                    it.value ?: ""
-                                }
-                                .let {
-                                    yourAnswer.value = it.joinToString(separator = "\n")
-                                    isCorrect = question.isCorrect(it, false)
-                                }
-                    }
-                    Constants.SELECT_COMPLETE -> {
-                        selections
-                                .take(selectedQuestion.value?.totalSize ?: 0)
-                                .map {
-                                    it.value ?: ""
-                                }
-                                .filterIndexed { index, it ->
-                                    checkLists[index].value ?: false
-                                }
-                                .let {
-                                    yourAnswer.value = it.joinToString(separator = "\n")
-                                    isCorrect = question.isCorrect(it, false)
-                                }
-                    }
-                    else -> {
-                    }
+                Constants.COMPLETE -> {
+                    answers.take(selectedQuestion.value?.answers?.size ?: 0)
+                            .map {
+                                it.value ?: ""
+                            }
+                            .let {
+                                yourAnswer.value = it.joinToString(separator = "\n")
+                                isCorrect = question.isCorrect(it, isCaseInsensitive)
+                            }
+                }
+                Constants.SELECT_COMPLETE -> {
+                    selections
+                            .take(selectedQuestion.value?.totalSize ?: 0)
+                            .map {
+                                it.value ?: ""
+                            }
+                            .filterIndexed { index, it ->
+                                checkLists[index].value ?: false
+                            }
+                            .let {
+                                yourAnswer.value = it.joinToString(separator = "\n")
+                                isCorrect = question.isCorrect(it, isCaseInsensitive)
+                            }
+                }
+                else -> {
                 }
             }
+
         }
 
         judgeResult(isCorrect)
