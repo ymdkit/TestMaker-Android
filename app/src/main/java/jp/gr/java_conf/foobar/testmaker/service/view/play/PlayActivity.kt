@@ -71,6 +71,13 @@ class PlayActivity : BaseActivity() {
                 ))
             }
         }
+
+        testViewModel.update(test.copy(
+                questions = test.questions.map {
+                    it.copy(isSolved = false)
+                }
+        ))
+
         playViewModel.loadNext()
     }
 
