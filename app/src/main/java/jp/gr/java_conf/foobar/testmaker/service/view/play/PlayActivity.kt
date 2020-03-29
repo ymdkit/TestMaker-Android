@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.play
 
 import android.app.Activity
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
@@ -44,8 +45,14 @@ class PlayActivity : BaseActivity() {
         }
     }
 
+    private var soundCorrect: MediaPlayer? = null
+    private var soundIncorrect: MediaPlayer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        soundCorrect = MediaPlayer.create(this, R.raw.correct)
+        soundIncorrect = MediaPlayer.create(this, R.raw.mistake)
 
         testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
             test = it
@@ -64,6 +71,16 @@ class PlayActivity : BaseActivity() {
         }
 
         playViewModel.judgeState.observeNonNull(this) {
+            if (it == JudgeState.NONE) return@observeNonNull
+            if (sharedPreferenceManager.audio) {
+                when (it) {
+                    JudgeState.CORRECT -> soundCorrect?.start()
+                    JudgeState.INCORRECT -> soundIncorrect?.start()
+                    else -> {
+                    }
+                }
+            }
+
             playViewModel.selectedQuestion.value?.let { question ->
                 testViewModel.update(question.copy(
                         isSolved = true,
@@ -91,6 +108,14 @@ class PlayActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        soundCorrect?.release()
+        soundCorrect = null
+        soundIncorrect?.release()
+        soundIncorrect = null
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =

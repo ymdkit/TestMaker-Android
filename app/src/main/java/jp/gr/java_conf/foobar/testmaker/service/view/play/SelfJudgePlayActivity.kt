@@ -62,6 +62,7 @@ class SelfJudgePlayActivity : BaseActivity() {
         }
 
         selfJudgePlayViewModel.judgeState.observeNonNull(this) {
+            if (it == SelfJudgeJudgeState.NONE) return@observeNonNull
             selfJudgePlayViewModel.selectedQuestion.value?.let { question ->
                 testViewModel.update(question.copy(
                         isSolved = true,
