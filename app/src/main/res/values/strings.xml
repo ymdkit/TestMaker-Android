@@ -267,4 +267,6 @@
     <string name="label_your_answer">your answer</string>
     <string name="judge_correct">Good!</string>
     <string name="judge_incorrect">oops!</string>
+    <string name="self_judge_correct">correct</string>
+    <string name="self_judge_incorrect">incorrect</string>
 </resources>

@@ -13,6 +13,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.play.SelfJudgePlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.studyplus.android.sdk.Studyplus
 import jp.studyplus.android.sdk.record.StudyRecord
@@ -59,7 +60,11 @@ class ResultActivity : BaseActivity() {
                             0 -> {//全問やり直し
 
                                 sharedPreferenceManager.refine = false
-                                PlayActivity.startActivity(this@ResultActivity, test.id, true)
+                                if (sharedPreferenceManager.manual) {
+                                    SelfJudgePlayActivity.startActivity(this@ResultActivity, test.id, true)
+                                } else {
+                                    PlayActivity.startActivity(this@ResultActivity, test.id, true)
+                                }
                             }
 
                             1 -> { //不正解のみやり直し
@@ -67,8 +72,11 @@ class ResultActivity : BaseActivity() {
                                 if (questions.any { !it.isCorrect }) {
 
                                     sharedPreferenceManager.refine = true
-                                    PlayActivity.startActivity(this@ResultActivity, test.id, true)
-
+                                    if (sharedPreferenceManager.manual) {
+                                        SelfJudgePlayActivity.startActivity(this@ResultActivity, test.id, true)
+                                    } else {
+                                        PlayActivity.startActivity(this@ResultActivity, test.id, true)
+                                    }
                                 } else {
 
                                     Toast.makeText(applicationContext, getString(R.string.message_null_wrongs), Toast.LENGTH_SHORT).show()

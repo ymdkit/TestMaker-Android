@@ -20,6 +20,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".view.play.SelfJudgePlayActivity"></activity>
         <activity android:name=".view.play.NewPlayActivity" />
         <activity android:name=".view.edit.EditQuestionActivity" />
         <activity android:name=".view.category.EditCategoryActivity" />

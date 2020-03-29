@@ -260,4 +260,6 @@
     <string name="label_your_answer">あなたの解答</string>
     <string name="judge_correct">正解！</string>
     <string name="judge_incorrect">不正解…</string>
+    <string name="self_judge_correct">正解</string>
+    <string name="self_judge_incorrect">不正解</string>
 </resources>
