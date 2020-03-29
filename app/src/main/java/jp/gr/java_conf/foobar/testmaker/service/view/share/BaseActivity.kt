@@ -14,6 +14,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.studyplus.android.sdk.Studyplus
+import org.koin.android.ext.android.inject
 
 /**
  * Created by keita on 2016/08/19.
@@ -21,14 +22,12 @@ import jp.studyplus.android.sdk.Studyplus
 
 open class BaseActivity : AppCompatActivity() {
 
-    lateinit var sharedPreferenceManager: SharedPreferenceManager
+    val sharedPreferenceManager: SharedPreferenceManager by inject()
 
     private lateinit var firebaseAnalytic: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        sharedPreferenceManager = SharedPreferenceManager(this)
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             firebaseAnalytic = FirebaseAnalytics.getInstance(this)
