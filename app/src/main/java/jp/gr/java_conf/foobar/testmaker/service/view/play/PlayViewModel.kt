@@ -43,9 +43,8 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
                 index.value = it + 1
                 state.value = State.getStateFromType(question)
                 if (isReversible) state.value = State.WRITE
-                // todo 自動生成モードの対応 選択完答に対応
                 if (question.isAutoGenerateOthers) {
-                    (test.getChoices(question.others.size, question.answer)).shuffled().forEachIndexed { index, it ->
+                    (test.getChoices(question.others.size, question.answer) + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
                         selections[index].value = it
                     }
                 } else {
@@ -60,6 +59,7 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
     private fun formReset() {
         judgeState.value = JudgeState.NONE
         answer.value = ""
+        answers.forEach { it.value = "" }
         checkLists.forEach { it.value = false }
         selections.forEach { it.value = "" }
     }
@@ -123,7 +123,6 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
             state.value = State.REVIEW
         }
 
-        //todo: activityでやった方が良さそう
         viewModelScope.launch {
             judgeState.value = if (isCorrect) JudgeState.CORRECT else JudgeState.INCORRECT
             delay(1000)

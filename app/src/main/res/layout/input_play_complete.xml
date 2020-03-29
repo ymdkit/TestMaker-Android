@@ -29,7 +29,6 @@
                 style="@style/MyEditTextSingleLine"
                 android:hint="@string/hint_answer"
                 android:imeOptions="actionNext"
-                android:syncKeyBoard="@{true}"
                 android:text="@={viewModel.answers[index]}" />
         </com.google.android.material.textfield.TextInputLayout>
 
