@@ -354,7 +354,7 @@ class PlayActivity : BaseActivity() {
     }
 
     private fun makeChoice(num: Int): ArrayList<String> {
-        return test.getChoices(num, questions[number].answer, baseContext)
+        return test.getChoices(num, questions[number].answer)
     }
 
     private fun initViews() {

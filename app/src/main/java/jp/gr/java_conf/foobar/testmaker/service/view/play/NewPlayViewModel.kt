@@ -7,11 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class NewPlayViewModel(private val questions: List<Question>, private val preferences: SharedPreferenceManager) : ViewModel() {
+class NewPlayViewModel(private val test: Test, private val questions: List<Question>, private val preferences: SharedPreferenceManager) : ViewModel() {
 
     val index = MutableLiveData(0)
     val selectedQuestion = MutableLiveData(Question())
@@ -36,22 +37,31 @@ class NewPlayViewModel(private val questions: List<Question>, private val prefer
             } else {
                 val question = questions[it]
 
-                judgeState.value = JudgeState.NONE
+                formReset()
+
                 selectedQuestion.value = question
-                checkLists.forEach {
-                    it.value = false
-                }
-                answer.value = ""
                 index.value = it + 1
                 state.value = State.getStateFromType(question)
                 if (isReversible) state.value = State.WRITE
                 // todo 自動生成モードの対応 選択完答に対応
-                selections.forEach { it.value = "" }
-                (question.others + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
-                    selections[index].value = it
+                if (question.isAutoGenerateOthers) {
+                    (test.getChoices(question.others.size, question.answer)).shuffled().forEachIndexed { index, it ->
+                        selections[index].value = it
+                    }
+                } else {
+                    (question.others + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
+                        selections[index].value = it
+                    }
                 }
             }
         }
+    }
+
+    private fun formReset() {
+        judgeState.value = JudgeState.NONE
+        answer.value = ""
+        checkLists.forEach { it.value = false }
+        selections.forEach { it.value = "" }
     }
 
     fun judge(view: View) {
@@ -64,15 +74,13 @@ class NewPlayViewModel(private val questions: List<Question>, private val prefer
     }
 
     fun judge() {
-
-        var isCorrect = false
         selectedQuestion.value?.let { question ->
 
             when (question.type) {
                 Constants.WRITE -> {
                     answer.value?.let {
-                        isCorrect = question.isCorrect(it, isReversible, isCaseInsensitive = isCaseInsensitive)
                         yourAnswer.value = it
+                        judgeResult(question.isCorrect(it, isReversible, isCaseInsensitive = isCaseInsensitive))
                     }
                 }
                 Constants.COMPLETE -> {
@@ -82,7 +90,7 @@ class NewPlayViewModel(private val questions: List<Question>, private val prefer
                             }
                             .let {
                                 yourAnswer.value = it.joinToString(separator = "\n")
-                                isCorrect = question.isCorrect(it, isCaseInsensitive)
+                                judgeResult(question.isCorrect(it, isCaseInsensitive))
                             }
                 }
                 Constants.SELECT_COMPLETE -> {
@@ -96,16 +104,13 @@ class NewPlayViewModel(private val questions: List<Question>, private val prefer
                             }
                             .let {
                                 yourAnswer.value = it.joinToString(separator = "\n")
-                                isCorrect = question.isCorrect(it, isCaseInsensitive)
+                                judgeResult(question.isCorrect(it, isCaseInsensitive))
                             }
                 }
                 else -> {
                 }
             }
-
         }
-
-        judgeResult(isCorrect)
     }
 
     private fun judgeResult(isCorrect: Boolean) {

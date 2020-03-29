@@ -1,9 +1,9 @@
 package jp.gr.java_conf.foobar.testmaker.service.domain
 
-import android.content.Context
 import android.os.Parcelable
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.TestMakerApplication
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -24,7 +24,7 @@ data class Test(
     val questionsCorrectCount
         get() = questions.count { it.isCorrect }
 
-    fun getChoices(size: Int, answer: String, context: Context): ArrayList<String> {
+    fun getChoices(size: Int, answer: String): ArrayList<String> {
 
         val result = arrayListOf<String>()
 
@@ -44,7 +44,7 @@ data class Test(
         }
 
         while (result.size < size) {
-            result.add(context.getString(R.string.message_not_auto))
+            result.add(TestMakerApplication.instance.applicationContext.getString(R.string.message_not_auto))
         }
 
         return result

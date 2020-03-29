@@ -21,6 +21,7 @@ class NewPlayActivity : BaseActivity() {
 
     private val playViewModel: NewPlayViewModel by viewModel {
         parametersOf(
+                test,
                 QuestionsBuilder(test.questions)
                         .retry(intent.hasExtra("isRetry"))
                         .startPosition(test.startPosition)
