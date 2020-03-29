@@ -9,7 +9,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class NewPlayViewModel(private val questions: List<Question>, preferences: SharedPreferenceManager) : ViewModel() {
+class NewPlayViewModel(private val questions: List<Question>, private val preferences: SharedPreferenceManager) : ViewModel() {
 
     val index = MutableLiveData(0)
     val selectedQuestion = MutableLiveData(Question())
@@ -106,7 +106,7 @@ class NewPlayViewModel(private val questions: List<Question>, preferences: Share
     }
 
     private fun judgeResult(isCorrect: Boolean) {
-        if (isCorrect) {
+        if (isCorrect && !preferences.alwaysReview) {
             viewModelScope.launch {
                 delay(1000)
                 loadNext()

@@ -69,11 +69,8 @@ class NewPlayActivity : BaseActivity() {
                         isCorrect = it == JudgeState.CORRECT
                 ))
             }
-
         }
-
         playViewModel.loadNext()
-
     }
 
     override fun onStart() {
