@@ -12,6 +12,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionsBuilder
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.result.ResultActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -32,6 +33,8 @@ class NewPlayActivity : BaseActivity() {
     private val testViewModel: TestViewModel by viewModel()
 
     private lateinit var test: Test
+
+    private val startTime = System.currentTimeMillis()
 
     private val binding by lazy {
         DataBindingUtil.setContentView<ActivityNewPlayBinding>(this, R.layout.activity_new_play).apply {
@@ -55,8 +58,18 @@ class NewPlayActivity : BaseActivity() {
 
         playViewModel.state.observeNonNull(this) {
             if (it == State.FINISH) {
-                finish()
+                ResultActivity.startActivity(this, test.id, System.currentTimeMillis() - startTime)
             }
+        }
+
+        playViewModel.judgeState.observeNonNull(this) {
+            playViewModel.selectedQuestion.value?.let { question ->
+                testViewModel.update(question.copy(
+                        isSolved = true,
+                        isCorrect = it == JudgeState.CORRECT
+                ))
+            }
+
         }
 
         playViewModel.loadNext()
