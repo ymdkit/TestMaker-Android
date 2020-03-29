@@ -23,7 +23,7 @@
             android:customAnimatedVisibility="@{ !viewModel.selections[index].isEmpty()}"
             android:duration="@{300}"
             android:gravity="start|center_vertical"
-            android:onClick="@{() -> viewModel.judge()}"
+            android:onClick="@{() -> viewModel.judge(viewModel.selections[index])}"
             android:padding="24dp"
             android:text="@{viewModel.selections[index]}"
             android:textAllCaps="false"

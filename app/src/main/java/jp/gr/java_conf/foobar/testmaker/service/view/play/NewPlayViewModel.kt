@@ -23,14 +23,13 @@ class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
 
     val yourAnswer = MutableLiveData("")
 
-    val finish = MutableLiveData<Unit>()
-
     fun loadNext() {
         index.value?.let {
             if (it >= questions.size) {
-
-                finish.value = Unit
-
+                viewModelScope.launch {
+                    state.value = State.FINISH
+                    delay(300)
+                }
             } else {
                 val question = questions[it]
                 when (question.type) {
@@ -62,16 +61,30 @@ class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
         }
     }
 
+    fun judge(yourAnswer: String) {
+        this.yourAnswer.value = yourAnswer
+
+        selectedQuestion.value?.let { question ->
+
+            if (question.isCorrect(yourAnswer, isReverse = false, isCaseInsensitive = false)) {
+                loadNext()
+            } else {
+
+            }
+        }
+    }
+
     fun judge() {
-        selectedQuestion.value?.let {
-            when (it.type) {
+
+        var isCorrect = false
+
+        selectedQuestion.value?.let { question ->
+            when (question.type) {
                 Constants.WRITE -> {
                     answer.value?.let {
-                        yourAnswer.value = it
-                    }
-                }
-                Constants.SELECT -> {
-                    answer.value?.let {
+                        if (question.isCorrect(it, isReverse = false, isCaseInsensitive = false)) {
+                            isCorrect = true
+                        }
                         yourAnswer.value = it
                     }
                 }
@@ -89,14 +102,17 @@ class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
             }
         }
 
-        state.value = State.REVIEW
-        //todo: activityでやった方が良さそう
-        viewModelScope.launch {
-            judgeState.value = JudgeState.INCORRECT
-            delay(1000)
-            judgeState.value = JudgeState.NONE
+        if (isCorrect) {
+            //todo: activityでやった方が良さそう
+            viewModelScope.launch {
+                judgeState.value = if (isCorrect) JudgeState.CORRECT else JudgeState.INCORRECT
+                delay(1000)
+                loadNext()
+                judgeState.value = JudgeState.NONE
+            }
+        } else {
+            state.value = State.REVIEW
         }
-
 
     }
 
@@ -113,7 +129,8 @@ enum class State {
     SELECT,
     COMPLETE,
     SELECT_COMPLETE,
-    REVIEW;
+    REVIEW,
+    FINISH;
 
     companion object {
         fun getStateFromType(question: Question): State =

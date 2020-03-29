@@ -15,8 +15,7 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -91,17 +90,16 @@ object CustomBindingAdapter {
     fun EditText.setSyncKeyBoard(isSync: Boolean) {
         if (!isSync) return
         val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        val scope = CoroutineScope(Dispatchers.Main)
 
         setOnFocusChangeListener { v, hasFocus ->
 
             if (hasFocus) {
-                scope.launch {
+                GlobalScope.launch {
                     delay(200)
                     inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED)
                 }
             } else {
-                scope.launch {
+                GlobalScope.launch {
                     delay(200)
                     inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
                 }
