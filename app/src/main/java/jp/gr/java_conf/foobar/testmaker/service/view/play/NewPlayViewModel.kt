@@ -1,5 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.play
 
+import android.view.View
+import android.widget.Button
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -52,11 +54,12 @@ class NewPlayViewModel(private val questions: List<Question>, private val prefer
         }
     }
 
-    fun judge(yourAnswer: String) {
-        this.yourAnswer.value = yourAnswer
-
-        selectedQuestion.value?.let { question ->
-            judgeResult(question.isCorrect(yourAnswer, isReverse = isReversible, isCaseInsensitive = isCaseInsensitive))
+    fun judge(view: View) {
+        (view as Button).text.toString().let {
+            yourAnswer.value = it
+            selectedQuestion.value?.let { question ->
+                judgeResult(question.isCorrect(it, isReverse = isReversible, isCaseInsensitive = isCaseInsensitive))
+            }
         }
     }
 

@@ -192,7 +192,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="start|center_vertical"
-                            android:onClick="@{() -> viewModel.judge()}"
+                            android:onClick="@{viewModel::judge}"
                             android:padding="24dp"
                             android:text="@string/pass"
                             android:textAllCaps="false"
