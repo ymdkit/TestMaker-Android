@@ -17,7 +17,7 @@ class NewPlayViewModel(private val questions: List<Question>, preferences: Share
     val answer = MutableLiveData("")
     val answers = List(COMPLETE_ANSWER_MAX) { MutableLiveData("") }
     val selections = List(SELECTION_MAX) { MutableLiveData("") }
-    val checkLists = List(SELECTION_MAX) { MutableLiveData(Pair("", false)) }
+    val checkLists = List(SELECTION_MAX) { MutableLiveData(false) }
 
     val state = MutableLiveData(State.INITIAL)
     val judgeState = MutableLiveData(JudgeState.NONE)
@@ -38,7 +38,7 @@ class NewPlayViewModel(private val questions: List<Question>, preferences: Share
 
                 selectedQuestion.value = question
                 checkLists.forEach {
-                    it.value = Pair("", false)
+                    it.value = false
                 }
                 answer.value = ""
                 index.value = it + 1
@@ -48,7 +48,6 @@ class NewPlayViewModel(private val questions: List<Question>, preferences: Share
                 selections.forEach { it.value = "" }
                 (question.others + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
                     selections[index].value = it
-                    checkLists[index].value = Pair(it, false)
                 }
             }
         }
@@ -90,17 +89,15 @@ class NewPlayViewModel(private val questions: List<Question>, preferences: Share
                                 }
                     }
                     Constants.SELECT_COMPLETE -> {
-                        checkLists
+                        selections
                                 .take(selectedQuestion.value?.totalSize ?: 0)
                                 .map {
-                                    it.value ?: Pair("", false)
+                                    it.value ?: ""
                                 }
-                                .filter {
-                                    it.second
+                                .filterIndexed { index, it ->
+                                    checkLists[index].value ?: false
                                 }
-                                .map {
-                                    it.first
-                                }.let {
+                                .let {
                                     yourAnswer.value = it.joinToString(separator = "\n")
                                     isCorrect = question.isCorrect(it, false)
                                 }
