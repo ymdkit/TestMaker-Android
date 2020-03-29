@@ -25,18 +25,16 @@ class NewPlayViewModel(private val questions: List<Question>, preferences: Share
     val yourAnswer = MutableLiveData("")
 
     val isReversible = preferences.reverse
-    val isCaseInsensitive = preferences.isCaseInsensitive
+    private val isCaseInsensitive = preferences.isCaseInsensitive
 
     fun loadNext() {
         index.value?.let {
             if (it >= questions.size) {
-                viewModelScope.launch {
-                    delay(500)
-                    state.value = State.FINISH
-                }
+                state.value = State.FINISH
             } else {
                 val question = questions[it]
 
+                judgeState.value = JudgeState.NONE
                 selectedQuestion.value = question
                 checkLists.forEach {
                     it.value = false
@@ -109,15 +107,19 @@ class NewPlayViewModel(private val questions: List<Question>, preferences: Share
 
     private fun judgeResult(isCorrect: Boolean) {
         if (isCorrect) {
-            //todo: activityでやった方が良さそう
             viewModelScope.launch {
-                judgeState.value = if (isCorrect) JudgeState.CORRECT else JudgeState.INCORRECT
                 delay(1000)
                 loadNext()
-                judgeState.value = JudgeState.NONE
             }
         } else {
             state.value = State.REVIEW
+        }
+
+        //todo: activityでやった方が良さそう
+        viewModelScope.launch {
+            judgeState.value = if (isCorrect) JudgeState.CORRECT else JudgeState.INCORRECT
+            delay(1000)
+            judgeState.value = JudgeState.NONE
         }
     }
 
