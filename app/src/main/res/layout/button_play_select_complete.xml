@@ -25,6 +25,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:customAnimatedVisibility="@{!viewModel.selections[index].isEmpty()}"
             android:duration="@{300}"
+            android:checked="@={viewModel.checkLists[index]}"
             android:text="@{viewModel.selections[index]}"
             android:textColor="?android:textColorSecondary"
             tools:text="@tools:sample/lorem/random" />

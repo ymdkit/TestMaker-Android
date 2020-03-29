@@ -17,6 +17,7 @@ class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
     val answer = MutableLiveData("")
     val answers = List(COMPLETE_ANSWER_MAX) { MutableLiveData("") }
     val selections = List(SELECTION_MAX) { MutableLiveData("") }
+    val checkLists = List(SELECTION_MAX) { MutableLiveData(false) }
 
     val state = MutableLiveData(State.INITIAL)
     val judgeState = MutableLiveData(JudgeState.NONE)
@@ -28,26 +29,10 @@ class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
             if (it >= questions.size) {
                 viewModelScope.launch {
                     state.value = State.FINISH
-                    delay(300)
+                    delay(500)
                 }
             } else {
                 val question = questions[it]
-                when (question.type) {
-                    Constants.WRITE -> {
-                        state.value = State.WRITE
-                    }
-                    Constants.SELECT -> {
-                        state.value = State.SELECT
-                    }
-                    Constants.COMPLETE -> {
-                        state.value = State.COMPLETE
-                    }
-                    Constants.SELECT_COMPLETE -> {
-                        state.value = State.SELECT_COMPLETE
-                    }
-                    else -> {
-                    }
-                }
 
                 selectedQuestion.value = question
                 index.value = it + 1
@@ -65,12 +50,7 @@ class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
         this.yourAnswer.value = yourAnswer
 
         selectedQuestion.value?.let { question ->
-
-            if (question.isCorrect(yourAnswer, isReverse = false, isCaseInsensitive = false)) {
-                loadNext()
-            } else {
-
-            }
+            judgeResult(question.isCorrect(yourAnswer, isReverse = false, isCaseInsensitive = false))
         }
     }
 
@@ -82,26 +62,46 @@ class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
             when (question.type) {
                 Constants.WRITE -> {
                     answer.value?.let {
-                        if (question.isCorrect(it, isReverse = false, isCaseInsensitive = false)) {
-                            isCorrect = true
-                        }
+                        isCorrect = question.isCorrect(it, isReverse = false, isCaseInsensitive = false)
                         yourAnswer.value = it
                     }
                 }
                 Constants.COMPLETE -> {
+
                     yourAnswer.value = answers.take(selectedQuestion.value?.answers?.size
                             ?: 0).map { it.value ?: "" }.joinToString(separator = "\n")
 
+                    isCorrect = question.isCorrect(answers.take(selectedQuestion.value?.answers?.size
+                            ?: 0).map { it.value ?: "" }, false)
+
                 }
                 Constants.SELECT_COMPLETE -> {
-                    answer.value?.let {
-                    }
+                    yourAnswer.value = selections
+                            .take((selectedQuestion.value?.others?.size ?: 0) + 1)
+                            .map {
+                                it.value ?: ""
+                            }
+                            .filterIndexed { index, s ->
+                                checkLists[index].value ?: false
+                            }
+                            .joinToString(separator = "\n")
+
+                    isCorrect = question.isCorrect(selections
+                            .take((selectedQuestion.value?.others?.size ?: 0) + 1)
+                            .map { it.value ?: "" }
+                            .filterIndexed { index, s ->
+                                checkLists[index].value ?: false
+                            }, false)
                 }
                 else -> {
                 }
             }
         }
 
+        judgeResult(isCorrect)
+    }
+
+    private fun judgeResult(isCorrect: Boolean) {
         if (isCorrect) {
             //todo: activityでやった方が良さそう
             viewModelScope.launch {
@@ -113,7 +113,6 @@ class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
         } else {
             state.value = State.REVIEW
         }
-
     }
 
     companion object {
