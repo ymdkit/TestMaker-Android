@@ -53,7 +53,6 @@ class NewPlayActivity : BaseActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
         playViewModel.finish.observeNonNull(this) {
             finish()
         }
