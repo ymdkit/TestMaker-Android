@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".view.play.SelfJudgePlayActivity" />
-        <activity android:name=".view.play.NewPlayActivity" />
+        <activity android:name=".view.play.PlayActivity" />
         <activity android:name=".view.edit.EditQuestionActivity" />
         <activity android:name=".view.category.EditCategoryActivity" />
         <activity android:name=".view.edit.EditTestActivity" />

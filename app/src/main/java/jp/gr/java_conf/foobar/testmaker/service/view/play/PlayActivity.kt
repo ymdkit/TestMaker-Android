@@ -17,9 +17,9 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class NewPlayActivity : BaseActivity() {
+class PlayActivity : BaseActivity() {
 
-    private val playViewModel: NewPlayViewModel by viewModel {
+    private val playViewModel: PlayViewModel by viewModel {
         parametersOf(
                 test,
                 QuestionsBuilder(test.questions)
@@ -39,7 +39,7 @@ class NewPlayActivity : BaseActivity() {
 
     private val binding by lazy {
         DataBindingUtil.setContentView<ActivityNewPlayBinding>(this, R.layout.activity_new_play).apply {
-            lifecycleOwner = this@NewPlayActivity
+            lifecycleOwner = this@PlayActivity
             viewModel = playViewModel
         }
     }
@@ -98,14 +98,14 @@ class NewPlayActivity : BaseActivity() {
     companion object {
 
         fun startActivity(activity: Activity, id: Long) {
-            val intent = Intent(activity, NewPlayActivity::class.java).apply {
+            val intent = Intent(activity, PlayActivity::class.java).apply {
                 putExtra("id", id)
             }
             activity.startActivity(intent)
         }
 
         fun startActivity(activity: Activity, id: Long, isRetry: Boolean) {
-            val intent = Intent(activity, NewPlayActivity::class.java).apply {
+            val intent = Intent(activity, PlayActivity::class.java).apply {
                 putExtra("id", id)
                 putExtra("isRetry", isRetry)
             }

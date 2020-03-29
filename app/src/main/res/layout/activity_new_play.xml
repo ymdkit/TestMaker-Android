@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="jp.gr.java_conf.foobar.testmaker.service.view.play.NewPlayViewModel" />
+            type="jp.gr.java_conf.foobar.testmaker.service.view.play.PlayViewModel" />
 
         <import type="jp.gr.java_conf.foobar.testmaker.service.view.play.State" />
 

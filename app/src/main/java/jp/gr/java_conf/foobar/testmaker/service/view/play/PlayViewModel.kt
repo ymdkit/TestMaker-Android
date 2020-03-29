@@ -12,7 +12,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class NewPlayViewModel(private val test: Test, private val questions: List<Question>, private val preferences: SharedPreferenceManager) : ViewModel() {
+class PlayViewModel(private val test: Test, private val questions: List<Question>, private val preferences: SharedPreferenceManager) : ViewModel() {
 
     val index = MutableLiveData(0)
     val selectedQuestion = MutableLiveData(Question())

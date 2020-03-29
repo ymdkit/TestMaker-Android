@@ -21,7 +21,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.play.NewPlayActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.SelfJudgePlayActivity
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -258,7 +258,7 @@ open class ShowTestsActivity : BaseActivity() {
             if (sharedPreferenceManager.manual) {
                 SelfJudgePlayActivity.startActivity(this@ShowTestsActivity, result.id)
             } else {
-                NewPlayActivity.startActivity(this@ShowTestsActivity, result.id)
+                PlayActivity.startActivity(this@ShowTestsActivity, result.id)
             }
         }
     }
