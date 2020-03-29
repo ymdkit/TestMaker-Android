@@ -5,24 +5,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
+class NewPlayViewModel(private val questions: List<Question>, preferences: SharedPreferenceManager) : ViewModel() {
 
     val index = MutableLiveData(0)
-
     val selectedQuestion = MutableLiveData(Question())
 
     val answer = MutableLiveData("")
     val answers = List(COMPLETE_ANSWER_MAX) { MutableLiveData("") }
     val selections = List(SELECTION_MAX) { MutableLiveData("") }
-    val checkLists = List(SELECTION_MAX) { MutableLiveData(false) }
+    val checkLists = List(SELECTION_MAX) { MutableLiveData(Pair("", false)) }
 
     val state = MutableLiveData(State.INITIAL)
     val judgeState = MutableLiveData(JudgeState.NONE)
 
     val yourAnswer = MutableLiveData("")
+
+    val isReversible = MutableLiveData(preferences.reverse)
 
     fun loadNext() {
         index.value?.let {
@@ -35,12 +37,18 @@ class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
                 val question = questions[it]
 
                 selectedQuestion.value = question
+                checkLists.forEach {
+                    it.value = Pair("", false)
+                }
+                answer.value = ""
                 index.value = it + 1
                 state.value = State.getStateFromType(question)
+                if (isReversible.value == true) state.value = State.WRITE
                 // todo 自動生成モードの対応 選択完答に対応
                 selections.forEach { it.value = "" }
                 (question.others + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
                     selections[index].value = it
+                    checkLists[index].value = Pair(it, false)
                 }
             }
         }
@@ -50,50 +58,55 @@ class NewPlayViewModel(private val questions: List<Question>) : ViewModel() {
         this.yourAnswer.value = yourAnswer
 
         selectedQuestion.value?.let { question ->
-            judgeResult(question.isCorrect(yourAnswer, isReverse = false, isCaseInsensitive = false))
+            judgeResult(question.isCorrect(yourAnswer, isReverse = isReversible.value == true, isCaseInsensitive = false))
         }
     }
 
     fun judge() {
 
         var isCorrect = false
-
         selectedQuestion.value?.let { question ->
-            when (question.type) {
-                Constants.WRITE -> {
-                    answer.value?.let {
-                        isCorrect = question.isCorrect(it, isReverse = false, isCaseInsensitive = false)
-                        yourAnswer.value = it
+            if (isReversible.value == true) {
+                answer.value?.let {
+                    isCorrect = question.isCorrect(it, isReverse = true, isCaseInsensitive = false)
+                    yourAnswer.value = it
+                }
+            } else {
+                when (question.type) {
+                    Constants.WRITE -> {
+                        answer.value?.let {
+                            isCorrect = question.isCorrect(it, isReverse = false, isCaseInsensitive = false)
+                            yourAnswer.value = it
+                        }
                     }
-                }
-                Constants.COMPLETE -> {
-
-                    yourAnswer.value = answers.take(selectedQuestion.value?.answers?.size
-                            ?: 0).map { it.value ?: "" }.joinToString(separator = "\n")
-
-                    isCorrect = question.isCorrect(answers.take(selectedQuestion.value?.answers?.size
-                            ?: 0).map { it.value ?: "" }, false)
-
-                }
-                Constants.SELECT_COMPLETE -> {
-                    yourAnswer.value = selections
-                            .take((selectedQuestion.value?.others?.size ?: 0) + 1)
-                            .map {
-                                it.value ?: ""
-                            }
-                            .filterIndexed { index, s ->
-                                checkLists[index].value ?: false
-                            }
-                            .joinToString(separator = "\n")
-
-                    isCorrect = question.isCorrect(selections
-                            .take((selectedQuestion.value?.others?.size ?: 0) + 1)
-                            .map { it.value ?: "" }
-                            .filterIndexed { index, s ->
-                                checkLists[index].value ?: false
-                            }, false)
-                }
-                else -> {
+                    Constants.COMPLETE -> {
+                        answers.take(selectedQuestion.value?.answers?.size ?: 0)
+                                .map {
+                                    it.value ?: ""
+                                }
+                                .let {
+                                    yourAnswer.value = it.joinToString(separator = "\n")
+                                    isCorrect = question.isCorrect(it, false)
+                                }
+                    }
+                    Constants.SELECT_COMPLETE -> {
+                        checkLists
+                                .take(selectedQuestion.value?.totalSize ?: 0)
+                                .map {
+                                    it.value ?: Pair("", false)
+                                }
+                                .filter {
+                                    it.second
+                                }
+                                .map {
+                                    it.first
+                                }.let {
+                                    yourAnswer.value = it.joinToString(separator = "\n")
+                                    isCorrect = question.isCorrect(it, false)
+                                }
+                    }
+                    else -> {
+                    }
                 }
             }
         }

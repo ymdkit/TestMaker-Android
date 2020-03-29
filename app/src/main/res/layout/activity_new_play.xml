@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/element_spacing_small"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:text="@{viewModel.selectedQuestion.question}"
+                        android:text="@{viewModel.isReversible ? viewModel.selectedQuestion.answer : viewModel.selectedQuestion.question}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/image_problem"

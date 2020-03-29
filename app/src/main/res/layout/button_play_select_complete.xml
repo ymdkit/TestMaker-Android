@@ -21,12 +21,12 @@
             style="@style/Widget.AppCompat.CompoundButton.CheckBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="24dp"
-            android:foreground="?attr/selectableItemBackground"
+            android:checked="@={viewModel.checkLists[index].second}"
             android:customAnimatedVisibility="@{!viewModel.selections[index].isEmpty()}"
             android:duration="@{300}"
-            android:checked="@={viewModel.checkLists[index]}"
-            android:text="@{viewModel.selections[index]}"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="24dp"
+            android:text="@{viewModel.checkLists[index].first}"
             android:textColor="?android:textColorSecondary"
             tools:text="@tools:sample/lorem/random" />
     </merge>
