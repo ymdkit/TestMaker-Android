@@ -68,7 +68,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="No.1" />
 
-                    <!--  todo: ダークモードの時、プレースホルダ邪魔-->
                     <com.github.chrisbanes.photoview.PhotoView
                         android:id="@+id/image_problem"
                         android:layout_width="match_parent"
@@ -77,8 +76,7 @@
                         android:background="@null"
                         android:clickable="false"
                         android:contentDescription="@string/image"
-                        android:customAnimatedVisibility="@{!viewModel.selectedQuestion.imagePath.isEmpty()}"
-                        android:duration="@{200}"
+                        android:isVisible="@{!viewModel.selectedQuestion.imagePath.isEmpty()}"
                         android:scaleType="fitCenter"
                         android:srcPlayWithGlide="@{viewModel.selectedQuestion.imagePath}"
                         app:layout_constraintTop_toBottomOf="@id/number" />
@@ -99,8 +97,7 @@
                         android:id="@+id/textInputLayout_answer"
                         style="@style/MyTextInputLayoutStyle"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:customAnimatedVisibility="@{viewModel.state == State.WRITE}"
-                        android:duration="@{200}"
+                        android:isVisible="@{viewModel.state == State.WRITE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/question">
@@ -119,8 +116,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:customAnimatedVisibility="@{viewModel.state == State.COMPLETE}"
-                        android:duration="@{200}"
+                        android:isVisible="@{viewModel.state == State.COMPLETE}"
                         android:orientation="vertical"
                         app:layout_constraintTop_toBottomOf="@id/textInputLayout_answer">
 
@@ -152,8 +148,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:customAnimatedVisibility="@{viewModel.state == State.SELECT}"
-                        android:duration="@{200}"
+                        android:isVisible="@{viewModel.state == State.SELECT}"
                         android:orientation="vertical"
                         app:layout_constraintTop_toBottomOf="@id/layout_play_complete">
 
@@ -207,8 +202,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:customAnimatedVisibility="@{viewModel.state == State.SELECT_COMPLETE}"
-                        android:duration="@{200}"
+                        android:isVisible="@{viewModel.state == State.SELECT_COMPLETE}"
                         android:orientation="vertical"
                         app:layout_constraintTop_toBottomOf="@id/layout_play_select">
 
@@ -250,8 +244,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/element_spacing_small"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:customAnimatedVisibility="@{viewModel.state == State.REVIEW}"
-                        android:duration="@{200}"
+                        android:isVisible="@{viewModel.state == State.REVIEW}"
                         android:text="@string/label_your_answer"
                         android:textColor="@color/colorPrimary"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -264,8 +257,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/element_spacing_small"
                         android:layout_marginTop="@dimen/element_spacing_small"
-                        android:customAnimatedVisibility="@{viewModel.state == State.REVIEW}"
-                        android:duration="@{200}"
+                        android:isVisible="@{viewModel.state == State.REVIEW}"
                         android:text="@{viewModel.yourAnswer}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -279,8 +271,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/element_spacing_small"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:customAnimatedVisibility="@{viewModel.state == State.REVIEW}"
-                        android:duration="@{200}"
+                        android:isVisible="@{viewModel.state == State.REVIEW}"
                         android:text="@string/label_answer"
                         android:textColor="@color/colorPrimary"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -293,8 +284,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/element_spacing_small"
                         android:layout_marginTop="@dimen/element_spacing_small"
-                        android:customAnimatedVisibility="@{viewModel.state == State.REVIEW}"
-                        android:duration="@{200}"
+                        android:isVisible="@{viewModel.state == State.REVIEW}"
                         android:text="@{viewModel.state == State.REVIEW ? viewModel.selectedQuestion.answer : @string/empty}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -307,8 +297,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/element_spacing_small"
                         android:layout_marginTop="@dimen/element_spacing_very_large"
-                        android:customAnimatedVisibility="@{viewModel.state == State.REVIEW &amp;&amp; !viewModel.selectedQuestion.explanation.isEmpty() }"
-                        android:duration="@{200}"
+                        android:isVisible="@{viewModel.state == State.REVIEW &amp;&amp; !viewModel.selectedQuestion.explanation.isEmpty() }"
                         android:text="@string/label_explanation"
                         android:textColor="@color/colorPrimary"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -321,8 +310,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/element_spacing_small"
                         android:layout_marginTop="@dimen/element_spacing_small"
-                        android:customAnimatedVisibility="@{viewModel.state == State.REVIEW}"
-                        android:duration="@{200}"
+                        android:isVisible="@{viewModel.state == State.REVIEW}"
                         android:text="@{viewModel.selectedQuestion.explanation}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -339,6 +327,7 @@
                 android:customAnimatedVisibility="@{viewModel.judgeState == JudgeState.CORRECT}"
                 android:duration="@{200}"
                 android:orientation="vertical"
+                android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -366,6 +355,7 @@
                 android:customAnimatedVisibility="@{viewModel.judgeState == JudgeState.INCORRECT}"
                 android:duration="@{200}"
                 android:orientation="vertical"
+                android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.AppCompatImageView
