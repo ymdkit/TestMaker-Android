@@ -61,6 +61,8 @@ class EditQuestionActivity : BaseActivity() {
             editSelectCompleteQuestionViewModel.selectedQuestion = it
         }
 
+        supportActionBar?.title = testViewModel.get(editWriteQuestionViewModel.testId).title
+
     }
 
 
