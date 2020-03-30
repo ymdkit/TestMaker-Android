@@ -11,7 +11,6 @@ import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
@@ -65,7 +64,6 @@ object CustomBindingAdapter {
     @BindingAdapter("android:customAnimatedVisibility", "android:duration")
     @JvmStatic
     fun setCustomAnimatedVisibility(view: View, isVisible: Boolean, duration: Int) {
-        TransitionManager.beginDelayedTransition(view.rootView as ViewGroup, AutoTransition().apply { this.duration = duration.toLong() })
         view.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
@@ -74,6 +72,22 @@ object CustomBindingAdapter {
     fun ImageView.setSrcWithGlide(src: String) {
         if (src.isEmpty()) {
             setImageResource(R.drawable.ic_insert_photo_white_24dp)
+        } else {
+            if (src.contains("/")) {
+                val storage = FirebaseStorage.getInstance()
+                val storageRef = storage.reference.child(src)
+                setImageWithGlide(context, storageRef)
+            } else {
+                setImageWithGlide(context, context.getFileStreamPath(src))
+            }
+        }
+    }
+
+    @BindingAdapter("android:srcPlayWithGlide")
+    @JvmStatic
+    fun ImageView.setSrcPlayWithGlide(src: String) {
+        if (src.isEmpty()) {
+            setImageBitmap(null)
         } else {
             if (src.contains("/")) {
                 val storage = FirebaseStorage.getInstance()
@@ -95,12 +109,12 @@ object CustomBindingAdapter {
 
             if (hasFocus) {
                 GlobalScope.launch {
-                    delay(200)
+                    delay(300)
                     inputMethodManager.showSoftInput(v, InputMethodManager.SHOW_FORCED)
                 }
             } else {
                 GlobalScope.launch {
-                    delay(200)
+                    delay(300)
                     inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
                 }
             }

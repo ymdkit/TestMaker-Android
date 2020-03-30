@@ -80,7 +80,7 @@
                         android:customAnimatedVisibility="@{!viewModel.selectedQuestion.imagePath.isEmpty()}"
                         android:duration="@{200}"
                         android:scaleType="fitCenter"
-                        android:srcWithGlide="@{viewModel.selectedQuestion.imagePath}"
+                        android:srcPlayWithGlide="@{viewModel.selectedQuestion.imagePath}"
                         app:layout_constraintTop_toBottomOf="@id/number" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -110,6 +110,7 @@
                             style="@style/MyEditTextSingleLine"
                             android:hint="@string/hint_answer"
                             android:imeOptions="actionDone"
+                            android:syncKeyBoard="@{true}"
                             android:text="@={viewModel.answer}" />
                     </com.google.android.material.textfield.TextInputLayout>
 
