@@ -17,7 +17,7 @@ class EditSelectQuestionViewModel(preferences: SharedPreferenceManager) : EditQu
     val answer = MutableLiveData("")
     val others = List(SIZE_OTHER_MAX) { MutableLiveData("") }
     val isCheckedAuto = MutableLiveData(false)
-    val sizeOfOthers = MutableLiveData(3)
+    val sizeOfOthers = MutableLiveData(preferences.numOthers)
 
     val isValidated = MediatorLiveData<Boolean>().also { result ->
         result.addSource(question) { result.value = isValid }
@@ -70,6 +70,7 @@ class EditSelectQuestionViewModel(preferences: SharedPreferenceManager) : EditQu
         sizeOfOthers.value?.let {
             if (it + num in SIZE_OTHER_MIN..SIZE_OTHER_MAX) {
                 sizeOfOthers.value = it + num
+                preferences.numOthers = it + num
             }
         }
     }

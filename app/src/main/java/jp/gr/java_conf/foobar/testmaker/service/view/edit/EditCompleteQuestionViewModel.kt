@@ -16,7 +16,7 @@ class EditCompleteQuestionViewModel(preferences: SharedPreferenceManager) : Edit
 
     val answers = List(SIZE_ANSWER_MAX) { MutableLiveData("") }
     val isCheckedCheckOrder = MutableLiveData(false)
-    val sizeOfAnswers = MutableLiveData(3)
+    val sizeOfAnswers = MutableLiveData(preferences.numAnswers)
 
     val isValidated = MediatorLiveData<Boolean>().also { result ->
         result.addSource(question) { result.value = isValid }
@@ -66,6 +66,7 @@ class EditCompleteQuestionViewModel(preferences: SharedPreferenceManager) : Edit
         sizeOfAnswers.value?.let {
             if (it + num in SIZE_ANSWER_MIN..SIZE_ANSWER_MAX) {
                 sizeOfAnswers.value = it + num
+                preferences.numAnswers = it + num
             }
         }
     }

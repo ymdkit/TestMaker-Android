@@ -18,8 +18,8 @@ class EditSelectCompleteQuestionViewModel(preferences: SharedPreferenceManager) 
     val answers = List(SIZE_ANSWER_MAX) { MutableLiveData("") }
     val others = List(SIZE_OTHER_MAX) { MutableLiveData("") }
     val isCheckedAuto = MutableLiveData(false)
-    val sizeOfOthers = MutableLiveData(2)
-    val sizeOfAnswers = MutableLiveData(2)
+    val sizeOfOthers = MutableLiveData(preferences.numOthersSelectComplete)
+    val sizeOfAnswers = MutableLiveData(preferences.numAnswersSelectComplete)
 
     private val sizeOfTotal: Int
         get() {
@@ -104,6 +104,7 @@ class EditSelectCompleteQuestionViewModel(preferences: SharedPreferenceManager) 
         sizeOfOthers.value?.let {
             if (it + num in SIZE_OTHER_MIN..SIZE_OTHER_MAX) {
                 sizeOfOthers.value = it + num
+                preferences.numOthersSelectComplete = it + num
             }
         }
     }
@@ -118,6 +119,7 @@ class EditSelectCompleteQuestionViewModel(preferences: SharedPreferenceManager) 
         sizeOfAnswers.value?.let {
             if (it + num in SIZE_ANSWER_MIN..SIZE_ANSWER_MAX) {
                 sizeOfAnswers.value = it + num
+                preferences.numAnswersSelectComplete = it + num
             }
         }
     }

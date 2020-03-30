@@ -15,12 +15,17 @@ class SharedPreferenceManager(private val context: Context) {
                 .apply()
 
     var numAnswers: Int
-        get() = sharedPreferences.getInt("num_write", 1)
+        get() = sharedPreferences.getInt("num_write", 2)
         set(num) = sharedPreferences.edit().putInt("num_write", num)
                 .apply()
 
-    var numAnswersSelect: Int
-        get() = sharedPreferences.getInt("num_answers_select", 1)
+    var numAnswersSelectComplete: Int
+        get() = sharedPreferences.getInt("num_answers_select", 2)
+        set(num) = sharedPreferences.edit().putInt("num_answers_select", num)
+                .apply()
+
+    var numOthersSelectComplete: Int
+        get() = sharedPreferences.getInt("num_answers_select", 2)
         set(num) = sharedPreferences.edit().putInt("num_answers_select", num)
                 .apply()
 
