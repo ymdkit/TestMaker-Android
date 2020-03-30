@@ -2,9 +2,11 @@ package jp.gr.java_conf.foobar.testmaker.service
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
+import android.os.Handler
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -114,6 +116,15 @@ object CustomBindingAdapter {
                 inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
             }
         }
+    }
 
+    @BindingAdapter("android:debounceClick")
+    @JvmStatic
+    fun Button.debounceClick(execute: () -> Unit) {
+        setOnClickListener {
+            isEnabled = false
+            execute()
+            Handler().postDelayed({ isEnabled = true }, 600)
+        }
     }
 }

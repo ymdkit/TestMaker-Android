@@ -385,7 +385,7 @@
                 android:layout_marginTop="@dimen/element_spacing_large"
                 android:customAnimatedVisibility="@{viewModel.state == State.REVIEW}"
                 android:duration="@{200}"
-                android:onClick="@{() -> viewModel.loadNext()}"
+                android:debounceClick="@{() -> viewModel.loadNext()}"
                 android:text="@string/action_next"
                 android:textSize="@dimen/text_size_medium"
                 android:theme="@style/ThemeOverlay.Button.Accent"
