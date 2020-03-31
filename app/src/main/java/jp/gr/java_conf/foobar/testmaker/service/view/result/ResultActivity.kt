@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.activity_result.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ResultActivity : BaseActivity() {
-    private lateinit var resultAdapter: ResultAdapter
 
     private lateinit var test: Test
     private val testViewModel: TestViewModel by viewModel()
@@ -42,10 +41,9 @@ class ResultActivity : BaseActivity() {
 
         val questions = test.questions.filter { it.isSolved }
 
-        resultAdapter = ResultAdapter(this)
-        resultAdapter.questions = questions
-
-        recycler_view.adapter = resultAdapter
+        recycler_view.adapter = ResultController().also {
+            it.setData(questions)
+        }.adapter
 
         result.text = getString(R.string.message_ratio, questions.count { it.isCorrect }, questions.size)
 
