@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
@@ -38,7 +37,7 @@ class ResultAdapter(context: Context) : androidx.recyclerview.widget.RecyclerVie
         holder.problem.text = data.question
         holder.answer.text = data.answer
 
-        holder.mark.setImageResource(if (data.isCorrect) R.drawable.right else R.drawable.mistake)
+        //holder.mark.setImageResource(if (data.isCorrect) R.drawable.right else R.drawable.mistake)
 
     }
 
@@ -47,7 +46,6 @@ class ResultAdapter(context: Context) : androidx.recyclerview.widget.RecyclerVie
         val number: TextView = v.findViewById(R.id.number)
         val problem: TextView = v.findViewById(R.id.problem)
         val answer: TextView = v.findViewById(R.id.answer)
-        val mark: ImageView = v.findViewById(R.id.mark)
 
     }
 
