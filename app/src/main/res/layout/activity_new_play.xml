@@ -335,7 +335,7 @@
                     android:layout_height="150dp"
                     android:layout_marginTop="@dimen/element_spacing_very_large"
                     android:paddingTop="@dimen/element_spacing_very_large"
-                    android:src="@drawable/ic_circle"
+                    android:src="@drawable/ic_correct"
                     android:tint="@color/colorAccent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
