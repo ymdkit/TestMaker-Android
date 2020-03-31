@@ -44,13 +44,33 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
                 state.value = State.getStateFromType(question)
                 if (isReversible) state.value = State.WRITE
                 if (question.isAutoGenerateOthers) {
-                    (test.getChoices(question.others.size, question.answer) + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
-                        selections[index].value = it
+                    when (question.type) {
+                        Constants.SELECT -> {
+                            (test.getChoices(question.others.size, question.answer) + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
+                                selections[index].value = it
+                            }
+                        }
+                        Constants.SELECT_COMPLETE -> {
+                            (test.getChoices(question.others.size, question.answer) + question.answers).shuffled().forEachIndexed { index, it ->
+                                selections[index].value = it
+                            }
+                        }
                     }
+
                 } else {
-                    (question.others + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
-                        selections[index].value = it
+                    when (question.type) {
+                        Constants.SELECT -> {
+                            (question.others + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
+                                selections[index].value = it
+                            }
+                        }
+                        Constants.SELECT_COMPLETE -> {
+                            (question.others + question.answers).shuffled().forEachIndexed { index, it ->
+                                selections[index].value = it
+                            }
+                        }
                     }
+
                 }
             }
         }
