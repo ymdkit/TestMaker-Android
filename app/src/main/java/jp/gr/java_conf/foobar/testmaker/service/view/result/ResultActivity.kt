@@ -26,6 +26,8 @@ class ResultActivity : BaseActivity() {
     private lateinit var test: Test
     private val testViewModel: TestViewModel by viewModel()
 
+    private val binding by lazy { DataBindingUtil.setContentView<ActivityResultBinding>(this, R.layout.activity_result) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
@@ -34,9 +36,8 @@ class ResultActivity : BaseActivity() {
             test = it
         }
 
-        setSupportActionBar(toolbar)
-
-        val binding = DataBindingUtil.setContentView<ActivityResultBinding>(this, R.layout.activity_result)
+        setSupportActionBar(binding.toolbar)
+        binding.toolbar.title = test.title
         createAd(binding.adView)
 
         val questions = test.questions.filter { it.isSolved }
@@ -126,9 +127,9 @@ class ResultActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-
-        startActivity(Intent(this@ResultActivity, MainActivity::class.java))
-
+        startActivity(Intent(this@ResultActivity, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        })
         super.onBackPressed()
     }
 

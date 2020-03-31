@@ -1,7 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -10,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -52,8 +50,6 @@ import java.io.*
 
 class MainActivity : ShowTestsActivity() {
 
-    private lateinit var inputMethodManager: InputMethodManager
-
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
     private lateinit var binding: ActivityMainBinding
@@ -72,8 +68,6 @@ class MainActivity : ShowTestsActivity() {
         }
 
         createAd(binding.adView)
-
-        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         initNavigationView()
 
@@ -287,16 +281,6 @@ class MainActivity : ShowTestsActivity() {
 
         binding.drawerLayout.addDrawerListener(drawerToggle)
 
-    }
-
-    override fun onBackPressed() {
-        moveTaskToBack(true)
-        super.onBackPressed()
-    }
-
-    override fun onPause() {
-        //inputMethodManager.hideSoftInputFromWindow(binding.test.editTitle.windowToken, 0)
-        super.onPause()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
