@@ -8,7 +8,7 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityNewPlayBinding
+import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityPlayBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionsBuilder
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
@@ -39,7 +39,7 @@ class PlayActivity : BaseActivity() {
     private val startTime = System.currentTimeMillis()
 
     private val binding by lazy {
-        DataBindingUtil.setContentView<ActivityNewPlayBinding>(this, R.layout.activity_new_play).apply {
+        DataBindingUtil.setContentView<ActivityPlayBinding>(this, R.layout.activity_play).apply {
             lifecycleOwner = this@PlayActivity
             viewModel = playViewModel
         }
