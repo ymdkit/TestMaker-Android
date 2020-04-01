@@ -10,11 +10,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat.animate
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionManager
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setImageWithGlide
 
@@ -126,5 +129,23 @@ object CustomBindingAdapter {
             execute()
             Handler().postDelayed({ isEnabled = true }, 600)
         }
+    }
+
+    @BindingAdapter("android:data")
+    @JvmStatic
+    fun PieChart.setData(data: PieData) {
+        this.data = data
+        animateXY(500, 500)
+        description.isEnabled = false
+        setCenterTextSize(24f)
+        setCenterTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
+        setDrawEntryLabels(false)
+        legend.formSize = 14f
+    }
+
+    @BindingAdapter("android:centerText")
+    @JvmStatic
+    fun PieChart.setCenterText(text: String) {
+        centerText = text
     }
 }

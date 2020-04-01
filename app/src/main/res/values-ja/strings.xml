@@ -262,4 +262,5 @@
     <string name="judge_incorrect">不正解…</string>
     <string name="self_judge_correct">正解</string>
     <string name="self_judge_incorrect">不正解</string>
+    <string name="label_result">解答結果</string>
 </resources>

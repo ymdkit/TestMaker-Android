@@ -269,4 +269,5 @@
     <string name="judge_incorrect">oops!</string>
     <string name="self_judge_correct">correct</string>
     <string name="self_judge_incorrect">incorrect</string>
+    <string name="label_result">result</string>
 </resources>

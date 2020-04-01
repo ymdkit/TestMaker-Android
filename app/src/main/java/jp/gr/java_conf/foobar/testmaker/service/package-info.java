@@ -7,7 +7,8 @@
         R.layout.item_add_category,
         R.layout.item_category_header,
         R.layout.item_empty,
-        R.layout.card_result
+        R.layout.card_result,
+        R.layout.item_pie_chart,
 })
 package jp.gr.java_conf.foobar.testmaker.service;
 
