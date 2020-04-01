@@ -121,7 +121,6 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
                     }
                     Constants.SELECT_COMPLETE -> {
                         selections
-                                .take(selectedQuestion.value?.totalSize ?: 0)
                                 .map {
                                     it.value ?: ""
                                 }
