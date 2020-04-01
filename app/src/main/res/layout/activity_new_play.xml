@@ -285,7 +285,7 @@
                         android:layout_marginStart="@dimen/element_spacing_small"
                         android:layout_marginTop="@dimen/element_spacing_small"
                         android:isVisible="@{viewModel.state == State.REVIEW}"
-                        android:text="@{viewModel.state == State.REVIEW ? viewModel.selectedQuestion.answer : @string/empty}"
+                        android:text="@{viewModel.state == State.REVIEW ? (viewModel.isReversible ? viewModel.selectedQuestion.question : viewModel.selectedQuestion.answer) : @string/empty}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/label_answer"

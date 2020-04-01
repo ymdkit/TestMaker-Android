@@ -87,7 +87,7 @@ class SharedPreferenceManager(private val context: Context) {
 
     var reverse: Boolean
         get() = defaultPreferences.getBoolean("reverse", oldReverse)
-        set(f) = sharedPreferences.edit().putBoolean("reverse", f)
+        set(f) = defaultPreferences.edit().putBoolean("reverse", f)
                 .apply()
 
     var refine: Boolean
