@@ -68,14 +68,16 @@
                 android:layout_height="0dp"
                 app:layout_constraintTop_toBottomOf="@id/label_color" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_add"
-                style="@style/Button.Accent"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="@dimen/element_spacing_large"
                 android:text="@string/save_category"
+                android:enabled="@{!viewModel.titleCategory.isEmpty()}"
                 android:textSize="@dimen/text_size_medium"
+                android:theme="@style/ThemeOverlay.Button.Accent"
                 app:layout_constraintTop_toBottomOf="@id/color_chooser" />
 
             <com.google.android.gms.ads.AdView

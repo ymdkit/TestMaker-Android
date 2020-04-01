@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditCategoryBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
-import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -33,10 +32,6 @@ class EditCategoryActivity : BaseActivity() {
         createAd(binding.adView)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        editCategoryViewModel.titleCategory.observeNonNull(this) {
-            binding.buttonAdd.isClickable = it.isNotEmpty()
-        }
 
         binding.editTitle.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
