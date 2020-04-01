@@ -272,4 +272,5 @@
     <string name="label_result">result</string>
     <string name="home">home</string>
     <string name="label_result_questions">questions</string>
+    <string name="menu_upload_studyplus">upload studyplus</string>
 </resources>

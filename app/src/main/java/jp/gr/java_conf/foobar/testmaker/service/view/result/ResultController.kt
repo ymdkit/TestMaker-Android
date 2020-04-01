@@ -14,7 +14,11 @@ class ResultController(private val context: Context, private val listener: OnCli
     interface OnClickQuestionListener {
         fun onClickQuestion(question: Question)
         fun onClickHome()
+        fun onClickRetry()
+        fun onClickStudyPlus()
     }
+
+    var isManualStudyPlus = false
 
     override fun buildModels(questions: List<Question>) {
 
@@ -45,7 +49,16 @@ class ResultController(private val context: Context, private val listener: OnCli
             id("retry")
             text(context.getString(R.string.retry))
             icon(ContextCompat.getDrawable(context, R.drawable.ic_refresh_white))
-            onClick { _ -> listener.onClickHome() }
+            onClick { _ -> listener.onClickRetry() }
+        }
+
+        if (isManualStudyPlus) {
+            itemResultMenu {
+                id("study_plus")
+                text(context.getString(R.string.menu_upload_studyplus))
+                icon(ContextCompat.getDrawable(context, R.drawable.ic_studyplus))
+                onClick { _ -> listener.onClickStudyPlus() }
+            }
         }
 
         itemSection {
