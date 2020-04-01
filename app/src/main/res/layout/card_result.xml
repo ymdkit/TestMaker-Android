@@ -20,7 +20,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/element_spacing_normal"
+        android:paddingTop="@dimen/element_spacing_normal"
+        android:paddingBottom="@dimen/element_spacing_normal"
         android:foreground="?android:attr/selectableItemBackground"
         android:onClick="@{onClick}">
 
@@ -30,6 +31,7 @@
             android:layout_height="wrap_content"
             android:text="@{String.valueOf(index + 1)}"
             android:textSize="@dimen/text_size_small"
+            android:layout_marginStart="@dimen/element_spacing_normal"
             android:gravity="start"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -67,8 +69,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/correct"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="@string/image"
             android:focusable="false"
@@ -83,8 +85,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/incorrect"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="@string/image"
             android:focusable="false"

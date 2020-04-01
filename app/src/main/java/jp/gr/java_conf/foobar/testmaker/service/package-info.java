@@ -9,6 +9,8 @@
         R.layout.item_empty,
         R.layout.card_result,
         R.layout.item_pie_chart,
+        R.layout.item_result_menu,
+        R.layout.item_section
 })
 package jp.gr.java_conf.foobar.testmaker.service;
 

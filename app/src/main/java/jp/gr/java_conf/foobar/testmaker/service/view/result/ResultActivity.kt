@@ -43,13 +43,16 @@ class ResultActivity : BaseActivity() {
             override fun onClickQuestion(question: Question) {
                 EditQuestionActivity.startActivity(this@ResultActivity, test.id, question.id)
             }
+
+            override fun onClickHome() {
+                startActivity(Intent(this@ResultActivity, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                })
+            }
         }).also {
             it.setData(questions)
         }.adapter
 
-        //result.text = getString(R.string.message_ratio, questions.count { it.isCorrect }, questions.size)
-
-        //top.setOnClickListener { startActivity(Intent(this@ResultActivity, MainActivity::class.java)) }
 
 //        retry.setOnClickListener {
 //

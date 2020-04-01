@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="text"
+            type="String" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/element_spacing_large"
+        android:layout_marginBottom="@dimen/element_spacing_normal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/label_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{text}"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

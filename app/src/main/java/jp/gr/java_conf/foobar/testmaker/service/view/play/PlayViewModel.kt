@@ -96,38 +96,45 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
     fun judge() {
         selectedQuestion.value?.let { question ->
 
-            when (question.type) {
-                Constants.WRITE -> {
-                    answer.value?.let {
-                        yourAnswer.value = it
-                        judgeResult(question.isCorrect(it, isReversible, isCaseInsensitive = isCaseInsensitive))
+            if (state.value == State.WRITE) { //todo 問題と回答の入れ替えに対応
+                answer.value?.let {
+                    yourAnswer.value = it
+                    judgeResult(question.isCorrect(it, isReversible, isCaseInsensitive = isCaseInsensitive))
+                }
+            } else {
+                when (question.type) {
+                    Constants.WRITE -> {
+                        answer.value?.let {
+                            yourAnswer.value = it
+                            judgeResult(question.isCorrect(it, isReversible, isCaseInsensitive = isCaseInsensitive))
+                        }
                     }
-                }
-                Constants.COMPLETE -> {
-                    answers.take(selectedQuestion.value?.answers?.size ?: 0)
-                            .map {
-                                it.value ?: ""
-                            }
-                            .let {
-                                yourAnswer.value = it.joinToString(separator = "\n")
-                                judgeResult(question.isCorrect(it, isCaseInsensitive))
-                            }
-                }
-                Constants.SELECT_COMPLETE -> {
-                    selections
-                            .take(selectedQuestion.value?.totalSize ?: 0)
-                            .map {
-                                it.value ?: ""
-                            }
-                            .filterIndexed { index, it ->
-                                checkLists[index].value ?: false
-                            }
-                            .let {
-                                yourAnswer.value = it.joinToString(separator = "\n")
-                                judgeResult(question.isCorrect(it, isCaseInsensitive))
-                            }
-                }
-                else -> {
+                    Constants.COMPLETE -> {
+                        answers.take(selectedQuestion.value?.answers?.size ?: 0)
+                                .map {
+                                    it.value ?: ""
+                                }
+                                .let {
+                                    yourAnswer.value = it.joinToString(separator = "\n")
+                                    judgeResult(question.isCorrect(it, isCaseInsensitive))
+                                }
+                    }
+                    Constants.SELECT_COMPLETE -> {
+                        selections
+                                .take(selectedQuestion.value?.totalSize ?: 0)
+                                .map {
+                                    it.value ?: ""
+                                }
+                                .filterIndexed { index, it ->
+                                    checkLists[index].value ?: false
+                                }
+                                .let {
+                                    yourAnswer.value = it.joinToString(separator = "\n")
+                                    judgeResult(question.isCorrect(it, isCaseInsensitive))
+                                }
+                    }
+                    else -> {
+                    }
                 }
             }
         }

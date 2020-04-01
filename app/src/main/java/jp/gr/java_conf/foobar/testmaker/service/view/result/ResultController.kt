@@ -6,18 +6,22 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.cardResult
+import jp.gr.java_conf.foobar.testmaker.service.*
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
-import jp.gr.java_conf.foobar.testmaker.service.itemPieChart
 
 class ResultController(private val context: Context, private val listener: OnClickQuestionListener) : TypedEpoxyController<List<Question>>() {
 
     interface OnClickQuestionListener {
         fun onClickQuestion(question: Question)
+        fun onClickHome()
     }
 
     override fun buildModels(questions: List<Question>) {
+
+        itemSection {
+            id("header")
+            text(context.getString(R.string.label_result))
+        }
 
         val result: Float = questions.count { it.isCorrect }.toFloat() / questions.size.toFloat()
 
@@ -28,6 +32,25 @@ class ResultController(private val context: Context, private val listener: OnCli
                 colors = listOf(ContextCompat.getColor(context, R.color.colorAccent), ContextCompat.getColor(context, R.color.colorPrimary))
             }))
             centerText("${questions.count { it.isCorrect }}/${questions.size}")
+        }
+
+        itemResultMenu {
+            id("home")
+            text(context.getString(R.string.home))
+            icon(ContextCompat.getDrawable(context, R.drawable.ic_home))
+            onClick { _ -> listener.onClickHome() }
+        }
+
+        itemResultMenu {
+            id("retry")
+            text(context.getString(R.string.retry))
+            icon(ContextCompat.getDrawable(context, R.drawable.ic_refresh_white))
+            onClick { _ -> listener.onClickHome() }
+        }
+
+        itemSection {
+            id("header_questions")
+            text(context.getString(R.string.label_result_questions))
         }
 
         questions.forEachIndexed { index, it ->
