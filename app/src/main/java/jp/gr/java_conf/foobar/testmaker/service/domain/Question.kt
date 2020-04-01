@@ -24,11 +24,6 @@ data class Question(
         var documentId: String = ""
 ) : Parcelable {
 
-    val totalSize
-        get() = answers.size + others.size
-
-    fun getReversibleProblem(isReverse: Boolean = false) = if (isReversible() && isReverse) answer else question
-
     fun getReversibleAnswer(isReverse: Boolean = false) = if (isReversible() && isReverse) question else answer
 
     fun isCorrect(yourAnswer: String, isReverse: Boolean, isCaseInsensitive: Boolean): Boolean =
