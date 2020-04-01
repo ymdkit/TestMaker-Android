@@ -31,7 +31,7 @@ class ResultController(private val context: Context, private val listener: OnCli
 
         itemPieChart {
             id("pie_chart")
-            data(PieData(PieDataSet(listOf(PieEntry(result * 100f, "正解"), PieEntry((1 - result) * 100f, "不正解")), "").apply {
+            data(PieData(PieDataSet(listOf(PieEntry(result * 100f, context.getString(R.string.self_judge_correct)), PieEntry((1 - result) * 100f, context.getString(R.string.self_judge_incorrect))), "").apply {
                 setDrawValues(false)
                 colors = listOf(ContextCompat.getColor(context, R.color.colorAccent), ContextCompat.getColor(context, R.color.colorPrimary))
             }))
