@@ -48,6 +48,7 @@
                     style="@style/MyEditTextSingleLine"
                     android:hint="@string/hint_name"
                     android:imeOptions="actionDone"
+                    android:syncKeyBoard="@{true}"
                     android:text="@={viewModel.titleCategory}" />
 
             </com.google.android.material.textfield.TextInputLayout>
