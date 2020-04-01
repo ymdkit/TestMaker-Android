@@ -8,7 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityNewResultBinding
+import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityResultBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionActivity
@@ -32,7 +32,7 @@ class ResultActivity : BaseActivity() {
 
     private val questions by lazy { test.questions.filter { it.isSolved } }
 
-    private val binding by lazy { DataBindingUtil.setContentView<ActivityNewResultBinding>(this, R.layout.activity_new_result) }
+    private val binding by lazy { DataBindingUtil.setContentView<ActivityResultBinding>(this, R.layout.activity_result) }
 
     private val controller by lazy {
         ResultController(this, object : ResultController.OnClickQuestionListener {
