@@ -8,7 +8,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="@style/Toolbar"
@@ -18,11 +17,10 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:title="@string/title_activity_edit" />
 
-        <EditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/edit_test"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:background="@null"
             android:ems="10"
             android:gravity="start|top"
@@ -30,10 +28,14 @@
             app:layout_constraintBottom_toTopOf="@id/button_save"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_save"
-            style="@style/Button.Primary.TextWide"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
             android:text="@string/save"
+            android:textSize="@dimen/text_size_medium"
+            android:theme="@style/ThemeOverlay.Button.Accent"
             app:layout_constraintBottom_toTopOf="@id/adView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
