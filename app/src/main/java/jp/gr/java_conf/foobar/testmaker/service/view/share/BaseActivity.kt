@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.share
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -36,7 +37,7 @@ open class BaseActivity : AppCompatActivity() {
         var info: ApplicationInfo? = null
         try {
             info = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
-        } catch (e: PackageManager.NameNotFoundException) {
+        } catch (e: NameNotFoundException) {
             e.printStackTrace()
         }
 
