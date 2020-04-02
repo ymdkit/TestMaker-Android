@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.firebase.analytics.FirebaseAnalytics
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
@@ -43,6 +44,13 @@ open class BaseActivity : AppCompatActivity() {
 
         if (info != null) {
             MobileAds.initialize(this, info.metaData.getString("com.google.android.gms.ads.jp.gr.java_conf.foobar.testmaker.service"))
+            MobileAds.setRequestConfiguration(RequestConfiguration.Builder().setTestDeviceIds(
+                    listOf(AdRequest.DEVICE_ID_EMULATOR,
+                            "DA539D38B08126EBEF7E059DCA26831C",
+                            "4C3BA6538C8F304A33859DC20F66316E",
+                            "BDB57B5078A79B87345E711A52F0F995",
+                            "BE05B66A799F19F3AF6808EAD82F69F6")
+            ).build())
             Studyplus.instance.setup(info.metaData.getString("studyplus_comsumer_key")!!, info.metaData.getString("secret_studyplus_comsumer_key")!!)
 
             if (info.metaData.getBoolean("removeAd")) {
@@ -72,14 +80,7 @@ open class BaseActivity : AppCompatActivity() {
             return
         }
 
-        val adRequest = AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("DA539D38B08126EBEF7E059DCA26831C")
-                .addTestDevice("4C3BA6538C8F304A33859DC20F66316E")
-                .addTestDevice("BDB57B5078A79B87345E711A52F0F995")
-                .addTestDevice("BE05B66A799F19F3AF6808EAD82F69F6").build()
-        adView.loadAd(adRequest)
+        adView.loadAd(AdRequest.Builder().build())
 
     }
-
 }
