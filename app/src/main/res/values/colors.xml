@@ -3,7 +3,7 @@
     <color name="colorPrimary">@android:color/holo_blue_light</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ffa144</color>
-    <color name="grey">#7c7c7c</color>
+
     <array name="color_list">
         <item>@color/red</item>
         <item>@color/orange</item>
@@ -26,5 +26,4 @@
 
     <color name="white">#ffffff</color>
 
-    <color name="background">#eeeeee</color>
 </resources>

@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:text="@string/show_never"
         android:textSize="@dimen/text_size_medium"
-        android:textColor="@color/grey"
+        android:textColor="?android:attr/textColorSecondary"
         android:checked="false"
         android:layout_margin="@dimen/element_spacing_normal"/>
 </LinearLayout>
