@@ -273,4 +273,5 @@
     <string name="home">home</string>
     <string name="label_result_questions">questions</string>
     <string name="menu_upload_studyplus">upload studyplus</string>
+    <string name="msg_loading">now loading</string>
 </resources>

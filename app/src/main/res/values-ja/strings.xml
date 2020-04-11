@@ -266,4 +266,5 @@
     <string name="home">ホームに戻る</string>
     <string name="label_result_questions">問題一覧</string>
     <string name="menu_upload_studyplus">勉強結果をStudyPlusに投稿する</string>
+    <string name="msg_loading">読み込み中</string>
 </resources>
