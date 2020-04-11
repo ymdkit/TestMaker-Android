@@ -9,6 +9,6 @@ interface CloudFunctionsService {
 
     @FormUrlEncoded
     @POST("textToTest")
-    suspend fun textToTest(@Field("text") text: String): Test
+    suspend fun textToTest(@Field("text") text: String, @Field("lang") lang: String): Test
 
 }

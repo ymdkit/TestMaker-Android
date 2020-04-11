@@ -48,6 +48,7 @@ import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.*
+import java.util.*
 
 
 class MainActivity : ShowTestsActivity() {
@@ -356,7 +357,7 @@ class MainActivity : ShowTestsActivity() {
             showProgress()
             runCatching {
                 withContext(Dispatchers.IO) {
-                    service.textToTest(text.replace("\n", "¥n"))
+                    service.textToTest(text.replace("\n", "¥n"), if (Locale.getDefault().language == "ja") "ja" else "en")
                 }
             }.onSuccess {
                 testViewModel.create(it)

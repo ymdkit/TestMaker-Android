@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class EditProActivity : BaseActivity() {
 
@@ -78,7 +79,7 @@ class EditProActivity : BaseActivity() {
             showProgress()
             runCatching {
                 withContext(Dispatchers.IO) {
-                    service.textToTest(text.replace("\n", "¥n"))
+                    service.textToTest(text.replace("\n", "¥n"), if (Locale.getDefault().language == "ja") "ja" else "en")
                 }
             }.onSuccess {
                 testViewModel.update(it.copy(id = test.id, order = test.order))
