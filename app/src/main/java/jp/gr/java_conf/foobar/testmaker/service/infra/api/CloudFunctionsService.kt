@@ -11,4 +11,8 @@ interface CloudFunctionsService {
     @POST("textToTest")
     suspend fun textToTest(@Field("text") text: String, @Field("lang") lang: String): Test
 
+    @FormUrlEncoded
+    @POST("testToText")
+    suspend fun textToTest(@Field("test") text: Test, @Field("lang") lang: String): String
+
 }
