@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.api
 
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -11,8 +12,9 @@ interface CloudFunctionsService {
     @POST("textToTest")
     suspend fun textToTest(@Field("text") text: String, @Field("lang") lang: String): Test
 
-    @FormUrlEncoded
     @POST("testToText")
-    suspend fun textToTest(@Field("test") text: Test, @Field("lang") lang: String): String
+    suspend fun testToText(@Body test: Test): CSVTest
 
 }
+
+data class CSVTest(val text: String)

@@ -18,7 +18,8 @@ data class Test(
         val history: Long = 0,
         val questions: List<Question> = emptyList(),
         val documentId: String = "",
-        val order: Int = 0
+        val order: Int = 0,
+        val lang: String = "ja"
 ) : Parcelable {
 
     val questionsCorrectCount
@@ -49,6 +50,19 @@ data class Test(
 
         return result
     }
+
+    val escapedTest: Test
+        get() {
+            return copy(questions =
+            questions.map {
+                it.copy(
+                        question = it.question.replace("\n", "¥n"),
+                        answers = it.answers.map { it.replace("\n", "¥n") },
+                        others = it.others.map { it.replace("\n", "¥n") },
+                        explanation = it.explanation.replace("\n", "¥n")
+                )
+            })
+        }
 
     companion object {
         fun createFromRealmTest(realmTest: RealmTest) = Test(

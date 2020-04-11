@@ -13,7 +13,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditProBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
@@ -69,8 +68,19 @@ class EditProActivity : BaseActivity() {
 
         }
 
-        edit_test.setText(RealmTest.createFromTest(test).testToString(this, false))
-
+        lifecycleScope.launch {
+            showProgress()
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
+                }
+            }.onSuccess {
+                edit_test.setText(it.text)
+            }.onFailure {
+                showErrorToast(it)
+            }
+            hideProgress()
+        }
     }
 
     private fun saveText() {
