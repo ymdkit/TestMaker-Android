@@ -357,7 +357,7 @@ class MainActivity : ShowTestsActivity() {
             showProgress()
             runCatching {
                 withContext(Dispatchers.IO) {
-                    service.textToTest(text.replace("\n", "¥n"), if (Locale.getDefault().language == "ja") "ja" else "en")
+                    service.textToTest(text.replace("\n", "¥n").replace("<", "&lt;"), if (Locale.getDefault().language == "ja") "ja" else "en")
                 }
             }.onSuccess {
                 testViewModel.create(it)
