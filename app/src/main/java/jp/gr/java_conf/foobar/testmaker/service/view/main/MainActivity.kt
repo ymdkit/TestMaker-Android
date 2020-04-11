@@ -30,7 +30,6 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
@@ -45,9 +44,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.*
+import java.util.*
 
 
 class MainActivity : ShowTestsActivity() {
@@ -55,9 +54,6 @@ class MainActivity : ShowTestsActivity() {
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
     private lateinit var binding: ActivityMainBinding
-
-    private val service: CloudFunctionsService by inject()
-
     private val viewModel: MainViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
@@ -356,7 +352,7 @@ class MainActivity : ShowTestsActivity() {
             showProgress()
             runCatching {
                 withContext(Dispatchers.IO) {
-                    service.textToTest(text.replace("\n", "¥n"))
+                    service.textToTest(text.replace("\n", "¥n").replace("<", "&lt;"), if (Locale.getDefault().language == "ja") "ja" else "en")
                 }
             }.onSuccess {
                 testViewModel.create(it)

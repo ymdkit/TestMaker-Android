@@ -17,19 +17,26 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
+import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.SelfJudgePlayActivity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 open class ShowTestsActivity : BaseActivity() {
 
     internal lateinit var mainController: MainController
+
+    protected val service: CloudFunctionsService by inject()
 
     private val showTestsViewModel: ShowTestsViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
@@ -104,13 +111,22 @@ open class ShowTestsActivity : BaseActivity() {
                                         intent.action = Intent.ACTION_SEND
                                         intent.type = "text/plain"
 
-                                        intent.putExtra(Intent.EXTRA_TEXT, RealmTest.createFromTest(test).testToString(baseContext, false))
-                                        startActivity(intent)
-
+                                        lifecycleScope.launch {
+                                            showProgress()
+                                            runCatching {
+                                                withContext(Dispatchers.IO) {
+                                                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
+                                                }
+                                            }.onSuccess {
+                                                intent.putExtra(Intent.EXTRA_TEXT, it.text)
+                                                startActivity(intent)
+                                            }.onFailure {
+                                                showErrorToast(it)
+                                            }
+                                            hideProgress()
+                                        }
                                     } catch (e: Exception) {
-
                                         sendFirebaseEvent("export error: $e")
-
                                     }
                                 }
                             }
