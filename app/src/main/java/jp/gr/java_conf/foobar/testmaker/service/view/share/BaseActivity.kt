@@ -5,7 +5,9 @@ import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.ads.AdRequest
@@ -27,6 +29,8 @@ open class BaseActivity : AppCompatActivity() {
     val sharedPreferenceManager: SharedPreferenceManager by inject()
 
     private lateinit var firebaseAnalytic: FirebaseAnalytics
+
+    private var progress: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +85,19 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         adView.loadAd(AdRequest.Builder().build())
+    }
 
+    protected fun showProgress(title: String = "") {
+        progress = AlertDialog.Builder(this)
+                .setTitle(title)
+                .setCancelable(false)
+                .setView(LayoutInflater.from(this).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress)))
+                .create().also {
+                    it.show()
+                }
+    }
+
+    protected fun hideProgress() {
+        progress?.dismiss()
     }
 }

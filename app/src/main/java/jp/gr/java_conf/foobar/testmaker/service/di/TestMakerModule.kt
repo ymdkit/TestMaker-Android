@@ -1,8 +1,11 @@
 package jp.gr.java_conf.foobar.testmaker.service.di
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.CategoryDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
@@ -24,6 +27,8 @@ import jp.gr.java_conf.foobar.testmaker.service.view.play.SelfJudgePlayViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsViewModel
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 fun getTestMakerModules(realm: Realm) = module {
     single { TestMakerRepository(get(), get()) }
@@ -35,6 +40,15 @@ fun getTestMakerModules(realm: Realm) = module {
     single { Auth() }
     single { RemoteDataSource(get(), get()) }
     single { SharedPreferenceManager(get()) }
+    single {
+        Retrofit.Builder()
+                .baseUrl("https://us-central1-testmaker-1cb29.cloudfunctions.net/")
+                .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .build()))
+                .build()
+    }
+    single { get<Retrofit>().create(CloudFunctionsService::class.java) }
     viewModel { CategoryViewModel(get()) }
     viewModel { TestViewModel(get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }

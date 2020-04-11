@@ -10,7 +10,7 @@ import java.util.*
 @Parcelize
 data class Test(
         val id: Long = -1,
-        val color: Int,
+        val color: Int = TestMakerApplication.instance.applicationContext.resources.getIntArray(R.array.color_list)[0],
         val limit: Int = 100,
         val startPosition: Int = 0,
         val title: String,

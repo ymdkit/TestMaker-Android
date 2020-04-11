@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
@@ -16,16 +15,22 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditProBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.extensions.toTest
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
+import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_edit_pro.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditProActivity : BaseActivity() {
 
     private val testViewModel: TestViewModel by viewModel()
+    private val service: CloudFunctionsService by inject()
 
     private lateinit var test: Test
 
@@ -68,15 +73,20 @@ class EditProActivity : BaseActivity() {
     }
 
     private fun saveText() {
-
         val text = edit_test.text.toString()
-
         lifecycleScope.launch {
-
-            val result = text.toTest(baseContext)
-
-            Toast.makeText(baseContext, baseContext.getString(R.string.message_success_update), Toast.LENGTH_LONG).show()
-            testViewModel.update(result.copy(id = test.id, order = test.order))
+            showProgress()
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    service.textToTest(text.replace("\n", "¥n"))
+                }
+            }.onSuccess {
+                testViewModel.update(it.copy(id = test.id, order = test.order))
+                showToast(getString(R.string.message_success_update))
+            }.onFailure {
+                showErrorToast(it)
+            }
+            hideProgress()
 
         }
     }
