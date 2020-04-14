@@ -78,7 +78,7 @@ class EditSelectCompleteQuestionViewModel(preferences: SharedPreferenceManager) 
         super.inputForm(question)
         answer.value = question.answer
         sizeOfOthers.value = question.others.size.coerceAtLeast(SIZE_OTHER_MIN)
-        sizeOfAnswers.value = question.answers.size.coerceAtLeast(SIZE_ANSWER_MIN)
+        sizeOfAnswers.value = question.answers.size.coerceIn(SIZE_ANSWER_MIN..SIZE_TOTAL_MAX - question.others.size)
         isCheckedAuto.value = question.isAutoGenerateOthers
         question.others.forEachIndexed { index, s ->
             if (index >= SIZE_OTHER_MAX) return@forEachIndexed
@@ -98,7 +98,8 @@ class EditSelectCompleteQuestionViewModel(preferences: SharedPreferenceManager) 
         val result = sizeOfTotal + num
         if (result < SIZE_TOTAL_MIN) return
         if (result > SIZE_TOTAL_MAX) {
-            sizeOfAnswers.value = (sizeOfAnswers.value ?: SIZE_ANSWER_MAX) - 1
+            sizeOfAnswers.value = ((sizeOfAnswers.value
+                    ?: SIZE_ANSWER_MAX) - 1).coerceAtLeast(SIZE_ANSWER_MIN)
         }
 
         sizeOfOthers.value?.let {
@@ -113,7 +114,8 @@ class EditSelectCompleteQuestionViewModel(preferences: SharedPreferenceManager) 
         val result = sizeOfTotal + num
         if (result < SIZE_TOTAL_MIN) return
         if (result > SIZE_TOTAL_MAX) {
-            sizeOfOthers.value = (sizeOfOthers.value ?: SIZE_OTHER_MAX) - 1
+            sizeOfOthers.value = ((sizeOfOthers.value
+                    ?: SIZE_OTHER_MAX) - 1).coerceAtLeast(SIZE_OTHER_MIN)
         }
 
         sizeOfAnswers.value?.let {
