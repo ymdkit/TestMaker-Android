@@ -56,72 +56,35 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/textInputLayout_question_write" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/text_input_answer_1"
-                    style="@style/MyTextInputLayoutStyle"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/layout_edit_answers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/element_spacing_normal"
+                    android:layout_marginTop="@dimen/element_spacing_very_large"
+                    android:orientation="vertical"
                     app:layout_constraintTop_toBottomOf="@id/textInputLayout_question_write">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_other_1"
-                        style="@style/MyEditTextSingleLine"
-                        android:hint="@string/hint_answer"
-                        android:text="@={viewModel.answers[0]}" />
+                    <include
+                        layout="@layout/input_edit_answers"
+                        app:index="@{0}"
+                        app:viewModel="@{viewModel}" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                    <include
+                        layout="@layout/input_edit_answers"
+                        app:index="@{1}"
+                        app:viewModel="@{viewModel}" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/text_input_answer_2"
-                    style="@style/MyTextInputLayoutStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/element_spacing_normal"
-                    android:animatedVisibility="@{viewModel.sizeOfAnswers >= 2}"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_answer_1">
+                    <include
+                        layout="@layout/input_edit_answers"
+                        app:index="@{2}"
+                        app:viewModel="@{viewModel}" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_other_2"
-                        style="@style/MyEditTextSingleLine"
-                        android:hint="@string/hint_answer"
-                        android:text="@={viewModel.answers[1]}" />
+                    <include
+                        layout="@layout/input_edit_answers"
+                        app:index="@{3}"
+                        app:viewModel="@{viewModel}" />
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/text_input_answer_3"
-                    style="@style/MyTextInputLayoutStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/element_spacing_normal"
-                    android:animatedVisibility="@{viewModel.sizeOfAnswers >= 3}"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_answer_2">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_other_3"
-                        style="@style/MyEditTextSingleLine"
-                        android:hint="@string/hint_answer"
-                        android:text="@={viewModel.answers[2]}" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/text_input_answer_4"
-                    style="@style/MyTextInputLayoutStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/element_spacing_normal"
-                    android:animatedVisibility="@{viewModel.sizeOfAnswers >= 4}"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_answer_3">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/set_answer_write"
-                        style="@style/MyEditTextSingleLine"
-                        android:hint="@string/hint_answer"
-                        android:text="@={viewModel.answers[3]}" />
-
-                </com.google.android.material.textfield.TextInputLayout>
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
@@ -136,14 +99,14 @@
                     style="@style/ImageButton.Operator"
                     android:src="@drawable/ic_remove"
                     app:layout_constraintEnd_toStartOf="@id/button_add_answer"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_answer_4" />
+                    app:layout_constraintTop_toBottomOf="@id/layout_edit_answers" />
 
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/button_add_answer"
                     style="@style/ImageButton.Operator"
                     android:src="@drawable/ic_add_white"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_answer_4" />
+                    app:layout_constraintTop_toBottomOf="@id/layout_edit_answers" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_explanation"
