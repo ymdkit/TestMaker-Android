@@ -322,7 +322,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_explanation"
-                        style="@style/MyEditTextMultiLine"
+                        style="@style/EditText.MultiLine"
                         android:hint="@string/hint_explanation"
                         android:text="@={viewModel.explanation}" />
 

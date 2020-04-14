@@ -38,8 +38,6 @@
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/set_problem"
                         style="@style/EditText.MultiLine"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:hint="@string/hint_question"
                         android:text="@={viewModel.question}" />
 
@@ -83,7 +81,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_explanation"
-                        style="@style/MyEditTextMultiLine"
+                        style="@style/EditText.MultiLine"
                         android:hint="@string/hint_explanation"
                         android:text="@={viewModel.explanation}" />
 
