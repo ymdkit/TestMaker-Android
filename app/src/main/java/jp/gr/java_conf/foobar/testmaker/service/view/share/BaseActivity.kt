@@ -3,7 +3,6 @@ package jp.gr.java_conf.foobar.testmaker.service.view.share
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,9 +34,7 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            firebaseAnalytic = FirebaseAnalytics.getInstance(this)
-        }
+        firebaseAnalytic = FirebaseAnalytics.getInstance(this)
 
         var info: ApplicationInfo? = null
         try {
@@ -64,10 +61,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     protected fun sendFirebaseEvent(event: String) {
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            firebaseAnalytic.logEvent(event, Bundle())
-        }
+        firebaseAnalytic.logEvent(event, Bundle())
     }
 
     protected fun initToolBar() {

@@ -82,6 +82,7 @@ class PlayActivity : BaseActivity() {
             }
 
             playViewModel.selectedQuestion.value?.let { question ->
+                sendFirebaseEvent(question.getFirebaseEvent())
                 testViewModel.update(question.copy(
                         isSolved = true,
                         isCorrect = it == JudgeState.CORRECT
