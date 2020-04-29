@@ -41,7 +41,7 @@ data class Question(
 
         if (isCorrect) isCorrect = yourAnswers.size == answers.size //必要条件だけ答えてもダメ
 
-        if (isCheckOrder && type == Constants.COMPLETE) {
+        if (isCheckOrder) {
             isCorrect = yourAnswers.allIndexed { index, it ->
                 it == answers[index]
             }

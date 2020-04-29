@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -19,16 +20,39 @@
 
     <merge>
 
-        <com.google.android.material.checkbox.MaterialCheckBox
-            style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="@={viewModel.checkLists[index]}"
-            android:isVisible="@{!viewModel.selections[index].isEmpty()}"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="24dp"
-            android:text="@{viewModel.selections[index]}"
-            android:textColor="?android:textColorSecondary"
-            tools:text="@tools:sample/lorem/random" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/text_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/element_spacing_normal"
+                android:gravity="center"
+                android:text="@{viewModel.checkListOrders[index].toString()}"
+                android:isVisible="@{!viewModel.selections[index].isEmpty() &amp;&amp; viewModel.selectedQuestion.checkOrder &amp;&amp; viewModel.checkListOrders[index] != 0}"
+                app:layout_constraintTop_toTopOf="@+id/check_box"
+                app:layout_constraintBottom_toBottomOf="@id/check_box"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <jp.gr.java_conf.foobar.testmaker.service.view.play.PlaySelectCompleteCheckBox
+                android:id="@+id/check_box"
+                style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:checked="@={viewModel.checkLists[index]}"
+                android:isVisible="@{!viewModel.selections[index].isEmpty()}"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="24dp"
+                android:text="@{viewModel.selections[index]}"
+                android:textColor="?android:textColorSecondary"
+                lastCheckedTime="@={viewModel.lastCheckedTimes[index]}"
+                app:layout_constraintStart_toEndOf="@id/text_order"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="@tools:sample/lorem/random" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </merge>
 </layout>
