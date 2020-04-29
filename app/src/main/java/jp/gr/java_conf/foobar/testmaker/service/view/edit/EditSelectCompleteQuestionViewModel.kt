@@ -18,6 +18,7 @@ class EditSelectCompleteQuestionViewModel(preferences: SharedPreferenceManager) 
     val answers = List(SIZE_ANSWER_MAX) { MutableLiveData("") }
     val others = List(SIZE_OTHER_MAX) { MutableLiveData("") }
     val isCheckedAuto = MutableLiveData(false)
+    val isCheckedCheckOrder = MutableLiveData(false)
     val sizeOfOthers = MutableLiveData(preferences.numOthersSelectComplete)
     val sizeOfAnswers = MutableLiveData(preferences.numAnswersSelectComplete)
 
@@ -57,6 +58,7 @@ class EditSelectCompleteQuestionViewModel(preferences: SharedPreferenceManager) 
             others = others.map { it.value ?: "" }.take(sizeOfOthers.value ?: 0),
             explanation = explanation.value ?: "",
             isAutoGenerateOthers = isCheckedAuto.value ?: false,
+            isCheckOrder = isCheckedCheckOrder.value ?: false,
             type = Constants.SELECT_COMPLETE,
             imagePath = imagePath.value ?: ""
     )
@@ -80,6 +82,7 @@ class EditSelectCompleteQuestionViewModel(preferences: SharedPreferenceManager) 
         sizeOfOthers.value = question.others.size.coerceAtLeast(SIZE_OTHER_MIN)
         sizeOfAnswers.value = question.answers.size.coerceIn(SIZE_ANSWER_MIN..SIZE_TOTAL_MAX - question.others.size)
         isCheckedAuto.value = question.isAutoGenerateOthers
+        isCheckedCheckOrder.value = question.isCheckOrder
         question.others.forEachIndexed { index, s ->
             if (index >= SIZE_OTHER_MAX) return@forEachIndexed
             others[index].value = s

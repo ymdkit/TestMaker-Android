@@ -221,6 +221,16 @@
                     app:layout_constraintTop_toBottomOf="@id/label_setting" />
 
                 <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_check_order"
+                    style="@style/Switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:checked="@={viewModel.isCheckedCheckOrder}"
+                    android:text="@string/message_check_order"
+                    app:layout_constraintTop_toBottomOf="@id/switch_auto" />
+
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_explanation"
                     style="@style/Switch"
                     android:layout_width="match_parent"
@@ -229,7 +239,7 @@
                     android:layout_marginTop="@dimen/element_spacing_normal"
                     android:checked="@={viewModel.isCheckedExplanation}"
                     android:text="@string/message_explanation"
-                    app:layout_constraintTop_toBottomOf="@id/switch_auto" />
+                    app:layout_constraintTop_toBottomOf="@id/switch_check_order" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_image"
@@ -257,7 +267,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:animatedVisibility="@{viewModel.isVisibleSetting}"
-                    app:constraint_referenced_ids="switch_auto,switch_image,switch_explanation,switch_reset_form" />
+                    app:constraint_referenced_ids="switch_auto,switch_check_order,switch_image,switch_explanation,switch_reset_form" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
