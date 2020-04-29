@@ -26,6 +26,14 @@ data class Question(
 
     fun getReversibleAnswer(isReverse: Boolean = false) = if (isReversible() && isReverse) question else answer
 
+    fun getAnswerForReview() =
+            when (type) {
+                Constants.WRITE, Constants.SELECT -> answer
+                Constants.COMPLETE, Constants.SELECT_COMPLETE -> answers.joinToString("\n")
+                else -> answer
+            }
+
+
     fun isCorrect(yourAnswer: String, isReverse: Boolean, isCaseInsensitive: Boolean): Boolean =
             if (isCaseInsensitive)
                 yourAnswer.toLowerCase(Locale.ENGLISH) == this.getReversibleAnswer(isReverse).toLowerCase(Locale.ENGLISH)
