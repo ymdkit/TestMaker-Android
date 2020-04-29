@@ -226,6 +226,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginStart="@dimen/element_spacing_small"
+                    android:layout_marginTop="@dimen/element_spacing_normal"
                     android:checked="@={viewModel.isCheckedCheckOrder}"
                     android:text="@string/message_check_order"
                     app:layout_constraintTop_toBottomOf="@id/switch_auto" />
