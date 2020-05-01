@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.play
 
 import android.view.View
 import android.widget.Button
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,6 +22,23 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
     val answers = List(COMPLETE_ANSWER_MAX) { MutableLiveData("") }
     val selections = List(SELECTION_MAX) { MutableLiveData("") }
     val checkLists = List(SELECTION_MAX) { MutableLiveData(false) }
+    val lastCheckedTimes = List(SELECTION_MAX) { MutableLiveData(0L) }
+    val checkListOrders = List(SELECTION_MAX) { i ->
+        MediatorLiveData<Int>().also { result ->
+            lastCheckedTimes.forEach {
+                result.addSource(it) {
+                    result.value = lastCheckedTimes
+                            .filterIndexed { index, mutableLiveData ->
+                                checkLists[index].value ?: false
+                            }
+                            .map { it.value ?: 0L }
+                            .sorted()
+                            .indexOf(lastCheckedTimes[i].value) + 1
+                }
+            }
+        }
+    }
+
 
     val state = MutableLiveData(State.INITIAL)
     val judgeState = MutableLiveData(JudgeState.NONE)
@@ -60,12 +78,12 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
                 } else {
                     when (question.type) {
                         Constants.SELECT -> {
-                            (question.others + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
+                            (question.others + listOf(question.answer)).shuffled().take(SELECTION_MAX).forEachIndexed { index, it ->
                                 selections[index].value = it
                             }
                         }
                         Constants.SELECT_COMPLETE -> {
-                            (question.others + question.answers).shuffled().forEachIndexed { index, it ->
+                            (question.others + question.answers).shuffled().take(SELECTION_MAX).forEachIndexed { index, it ->
                                 selections[index].value = it
                             }
                         }
@@ -120,16 +138,20 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
                                 }
                     }
                     Constants.SELECT_COMPLETE -> {
-                        selections
-                                .map {
-                                    it.value ?: ""
-                                }
-                                .filterIndexed { index, it ->
-                                    checkLists[index].value ?: false
-                                }
+
+                        val list = List(SELECTION_MAX) { i ->
+                            PlaySelectCompleteSelection(
+                                    selections[i].value ?: "",
+                                    lastCheckedTimes[i].value ?: 0L,
+                                    checkLists[i].value ?: false)
+                        }
+
+                        list
+                                .filter { it.checked }
+                                .sortedBy { it.lastCheckedTime }
                                 .let {
-                                    yourAnswer.value = it.joinToString(separator = "\n")
-                                    judgeResult(question.isCorrect(it, isCaseInsensitive))
+                                    yourAnswer.value = it.joinToString(separator = "\n") { it.content }
+                                    judgeResult(question.isCorrect(it.map { it.content }, isCaseInsensitive))
                                 }
                     }
                     else -> {
