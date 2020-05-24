@@ -23,7 +23,6 @@ import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.play.SelfJudgePlayViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsViewModel
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
@@ -61,7 +60,6 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { FirebaseViewModel(get(), get()) }
     viewModel { FirebaseMyPageViewModel(get(), get()) }
     viewModel { (test: Test, questions: List<Question>) -> PlayViewModel(test, questions, get()) }
-    viewModel { (questions: List<Question>) -> SelfJudgePlayViewModel(questions, get()) }
     viewModel { ShowTestsViewModel(get(), get(), get()) }
 
 }
