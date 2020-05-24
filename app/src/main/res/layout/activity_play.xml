@@ -324,7 +324,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:customAnimatedVisibility="@{viewModel.judgeState == JudgeState.CORRECT}"
+                android:customAnimatedVisibility="@{viewModel.judgeState == JudgeState.CORRECT &amp;&amp; !viewModel.isManual}"
                 android:duration="@{200}"
                 android:orientation="vertical"
                 android:visibility="gone"
@@ -352,7 +352,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:customAnimatedVisibility="@{viewModel.judgeState == JudgeState.INCORRECT}"
+                android:customAnimatedVisibility="@{viewModel.judgeState == JudgeState.INCORRECT &amp;&amp; !viewModel.isManual}"
                 android:duration="@{200}"
                 android:orientation="vertical"
                 android:visibility="gone"
@@ -378,13 +378,52 @@
             </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_self_judge"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="@dimen/element_spacing_large"
+                android:isVisible="@{viewModel.state == State.MANUAL}"
+                android:onClick="@{() -> viewModel.confirm()}"
+                android:text="@string/confirm"
+                android:textSize="@dimen/text_size_medium"
+                android:theme="@style/ThemeOverlay.Button.Accent"
+                app:layout_constraintBottom_toTopOf="@id/button_correct" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_correct"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="@dimen/element_spacing_large"
+                android:isVisible="@{viewModel.state == State.REVIEW &amp;&amp; viewModel.isManual}"
+                android:onClick="@{() -> viewModel.selfJudge(true)}"
+                android:text="@string/self_judge_correct"
+                android:textSize="@dimen/text_size_medium"
+                android:theme="@style/ThemeOverlay.Button.Accent"
+                app:layout_constraintBottom_toTopOf="@id/button_incorrect" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_incorrect"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="@dimen/element_spacing_large"
+                android:isVisible="@{viewModel.state == State.REVIEW &amp;&amp; viewModel.isManual}"
+                android:onClick="@{() -> viewModel.selfJudge(false)}"
+                android:text="@string/self_judge_incorrect"
+                android:textSize="@dimen/text_size_medium"
+                android:theme="@style/ThemeOverlay.Button.Primary"
+                app:layout_constraintBottom_toTopOf="@id/button_next" />
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_next"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="@dimen/element_spacing_large"
-                android:isVisible="@{viewModel.state == State.REVIEW}"
-                android:debounceClick="@{() -> viewModel.loadNext()}"
+                android:isVisible="@{viewModel.state == State.REVIEW &amp;&amp; !viewModel.isManual}"
+                android:debounceClick="@{() -> viewModel.loadNextQuestion()}"
                 android:text="@string/action_next"
                 android:textSize="@dimen/text_size_medium"
                 android:theme="@style/ThemeOverlay.Button.Accent"

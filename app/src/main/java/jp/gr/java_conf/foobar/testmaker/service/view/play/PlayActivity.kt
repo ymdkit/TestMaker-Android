@@ -72,7 +72,7 @@ class PlayActivity : BaseActivity() {
 
         playViewModel.judgeState.observeNonNull(this) {
             if (it == JudgeState.NONE) return@observeNonNull
-            if (sharedPreferenceManager.audio) {
+            if (sharedPreferenceManager.audio && !playViewModel.isManual) {
                 when (it) {
                     JudgeState.CORRECT -> soundCorrect?.start()
                     JudgeState.INCORRECT -> soundIncorrect?.start()
@@ -96,12 +96,13 @@ class PlayActivity : BaseActivity() {
                 }
         ))
 
-        playViewModel.loadNext()
+        playViewModel.loadNextQuestion()
     }
 
     override fun onStart() {
         super.onStart()
         playViewModel.selectedQuestion.observeNonNull(this) {
+            if (playViewModel.isManual) return@observeNonNull
             when (it.type) {
                 Constants.WRITE -> binding.editAnswer.requestFocus()
                 Constants.COMPLETE -> binding.editAnswersFirst.editAnswer.requestFocus()

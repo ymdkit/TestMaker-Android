@@ -24,7 +24,6 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.play.SelfJudgePlayActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -271,11 +270,8 @@ open class ShowTestsActivity : BaseActivity() {
 
             testViewModel.update(result)
 
-            if (sharedPreferenceManager.manual) {
-                SelfJudgePlayActivity.startActivity(this@ShowTestsActivity, result.id)
-            } else {
-                PlayActivity.startActivity(this@ShowTestsActivity, result.id)
-            }
+            PlayActivity.startActivity(this@ShowTestsActivity, result.id)
+
         }
     }
 
