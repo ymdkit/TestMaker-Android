@@ -31,8 +31,8 @@
     <string name="message_paste">共有機能で作成したテキストを\nここに貼り付けてください</string>
     <string name="message_random">出題順をランダムにする</string>
     <string name="message_wrong_only">間違えた問題のみ出題する</string>
-    <string name="message_switch_question">問題文と解答を入れ替える</string>
-    <string name="message_self">自己採点モード</string>
+    <string name="message_switch_question">問題文と解答を入れ替える（記述問題のみ）</string>
+    <string name="message_self">自己採点モード（記述問題のみ）</string>
     <string name="message_delete_sound">効果音</string>
     <string name="message_success_load">%1$s を読み込みました</string>
     <string name="message_null_questions">問題が登録されていません</string>

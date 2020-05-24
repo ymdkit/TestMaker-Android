@@ -45,51 +45,60 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
 
     val yourAnswer = MutableLiveData("")
 
-    val isReversible = preferences.reverse
+    val isReversible: Boolean
+        get() {
+            return preferences.reverse && (selectedQuestion.value?.type == Constants.WRITE || selectedQuestion.value?.type == Constants.COMPLETE)
+        }
+
+    val isManual: Boolean
+        get() {
+            return preferences.manual && (selectedQuestion.value?.type == Constants.WRITE || selectedQuestion.value?.type == Constants.COMPLETE)
+        }
+
     private val isCaseInsensitive = preferences.isCaseInsensitive
 
-    fun loadNext() {
-        index.value?.let {
-            if (it >= questions.size) {
-                state.value = State.FINISH
-            } else {
-                val question = questions[it]
+    fun loadNextQuestion() {
+        val questionIndex = index.value ?: 0
 
-                formReset()
+        if (questionIndex >= questions.size) {
+            state.value = State.FINISH
+            return
+        }
 
-                selectedQuestion.value = question
-                index.value = it + 1
-                state.value = State.getStateFromType(question)
-                if (isReversible) state.value = State.WRITE
+        formReset()
+        val question = questions[questionIndex]
+        selectedQuestion.value = question
+        index.value = questionIndex + 1
+        state.value = State.getStateFromType(question)
+
+        when {
+            question.type == Constants.SELECT -> {
                 if (question.isAutoGenerateOthers) {
-                    when (question.type) {
-                        Constants.SELECT -> {
-                            (test.getChoices(question.others.size, question.answer) + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
-                                selections[index].value = it
-                            }
-                        }
-                        Constants.SELECT_COMPLETE -> {
-                            (test.getChoices(question.others.size, question.answer) + question.answers).shuffled().forEachIndexed { index, it ->
-                                selections[index].value = it
-                            }
-                        }
+                    (test.getChoices(question.others.size, question.answer) + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
+                        selections[index].value = it
                     }
-
                 } else {
-                    when (question.type) {
-                        Constants.SELECT -> {
-                            (question.others + listOf(question.answer)).shuffled().take(SELECTION_MAX).forEachIndexed { index, it ->
-                                selections[index].value = it
-                            }
-                        }
-                        Constants.SELECT_COMPLETE -> {
-                            (question.others + question.answers).shuffled().take(SELECTION_MAX).forEachIndexed { index, it ->
-                                selections[index].value = it
-                            }
-                        }
+                    (question.others + listOf(question.answer)).shuffled().take(SELECTION_MAX).forEachIndexed { index, it ->
+                        selections[index].value = it
                     }
-
                 }
+            }
+            question.type == Constants.SELECT_COMPLETE -> {
+                if (question.isAutoGenerateOthers) {
+                    (test.getChoices(question.others.size, question.answer) + question.answers).shuffled().forEachIndexed { index, it ->
+                        selections[index].value = it
+                    }
+                } else {
+                    (question.others + question.answers).shuffled().take(SELECTION_MAX).forEachIndexed { index, it ->
+                        selections[index].value = it
+                    }
+                }
+            }
+            isManual -> {
+                state.value = State.MANUAL
+            }
+            isReversible -> {
+                state.value = State.WRITE
             }
         }
     }
@@ -161,11 +170,20 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
         }
     }
 
+    fun confirm() {
+        state.value = State.REVIEW
+    }
+
+    fun selfJudge(isCorrect: Boolean) {
+        judgeState.value = if (isCorrect) JudgeState.CORRECT else JudgeState.INCORRECT
+        loadNextQuestion()
+    }
+
     private fun judgeResult(isCorrect: Boolean) {
         if (isCorrect && !preferences.alwaysReview) {
             viewModelScope.launch {
                 delay(1000)
-                loadNext()
+                loadNextQuestion()
             }
         } else {
             state.value = State.REVIEW
@@ -191,6 +209,7 @@ enum class State {
     SELECT,
     COMPLETE,
     SELECT_COMPLETE,
+    MANUAL,
     REVIEW,
     FINISH;
 
