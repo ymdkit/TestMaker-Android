@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.firebase.ui.auth.IdpResponse
@@ -36,13 +37,16 @@ class FirebaseActivity : BaseActivity() {
         FirebaseTestController(this)
     }
 
+    private val binding: ActivityOnlineMainBinding by lazy {
+        DataBindingUtil.setContentView<ActivityOnlineMainBinding>(this, R.layout.activity_online_main).also {
+            it.viewModel = viewModel
+            it.lifecycleOwner = this
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val binding = DataBindingUtil.setContentView<ActivityOnlineMainBinding>(this, R.layout.activity_online_main)
         createAd(binding.adView)
-
-        binding.swipeRefresh.isRefreshing = true
         binding.recyclerView.adapter = controller.adapter
 
         initToolBar()
@@ -51,7 +55,6 @@ class FirebaseActivity : BaseActivity() {
 
         viewModel.tests.observeNonNull(this) {
             controller.tests = it
-            binding.swipeRefresh.isRefreshing = false
         }
 
         controller.setOnClickListener(object : FirebaseTestController.OnClickListener {
@@ -130,6 +133,22 @@ class FirebaseActivity : BaseActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_firebase, menu)
+        val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(s: String): Boolean {
+                viewModel.getTests(s)
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+                return false
+            }
+        })
+
+        searchView.setOnCloseListener {
+            viewModel.getTests()
+            false
+        }
         return true
     }
 

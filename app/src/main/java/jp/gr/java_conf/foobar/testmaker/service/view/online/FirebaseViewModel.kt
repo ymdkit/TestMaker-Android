@@ -30,10 +30,13 @@ class FirebaseViewModel(private val repository: TestMakerRepository, private val
     fun getUser(): FirebaseUser? = auth.getUser()
 
     val tests = MutableLiveData<List<FirebaseTest>>()
+    val loading = MutableLiveData<Boolean>()
 
-    fun getTests() {
+    fun getTests(keyword: String = "") {
         viewModelScope.launch {
-            tests.postValue(service.tests(""))
+            loading.value = true
+            tests.postValue(service.tests(keyword))
+            loading.value = false
         }
     }
 
