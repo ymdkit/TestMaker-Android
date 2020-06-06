@@ -14,6 +14,7 @@ import com.firebase.ui.firestore.paging.LoadingState
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
+import kotlin.math.abs
 
 
 open class FirebaseTestPagingAdapter(private val context: Context,options: FirestorePagingOptions<FirebaseTest>) : FirestorePagingAdapter<FirebaseTest, FirebaseTestPagingAdapter.ViewHolder>(options) {
@@ -60,7 +61,7 @@ open class FirebaseTestPagingAdapter(private val context: Context,options: Fires
         }
 
         val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle,null) as GradientDrawable
-        drawable.setColor(context.resources.getIntArray(R.array.color_list)[Math.min(Math.abs(data.color), 7)])
+        drawable.setColor(context.resources.getIntArray(R.array.color_list)[abs(data.color).coerceAtMost(7)])
         holder.cate.background = drawable
 
     }
