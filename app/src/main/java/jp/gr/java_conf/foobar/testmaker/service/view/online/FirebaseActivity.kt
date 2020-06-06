@@ -36,8 +36,6 @@ class FirebaseActivity : BaseActivity() {
         FirebaseTestController(this)
     }
 
-    private lateinit var pagingAdapter: FirebaseTestPagingAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -242,7 +240,7 @@ class FirebaseActivity : BaseActivity() {
                         viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[position]), editOverView.text.toString())
 
                         Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-                        pagingAdapter.refresh()
+                        viewModel.getTests()
                         dialog.dismiss()
                         progress.dismiss()
 
