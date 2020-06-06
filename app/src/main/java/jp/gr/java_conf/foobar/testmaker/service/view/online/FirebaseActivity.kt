@@ -19,6 +19,7 @@ import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
@@ -44,6 +45,12 @@ class FirebaseActivity : BaseActivity() {
         binding.swipeRefresh.isRefreshing = true
 
         initToolBar()
+
+        viewModel.getTests()
+
+        viewModel.tests.observeNonNull(this) {
+            println(it)
+        }
 
         val config = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
