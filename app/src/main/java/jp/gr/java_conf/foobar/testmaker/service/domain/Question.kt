@@ -40,24 +40,19 @@ data class Question(
             else
                 yourAnswer == this.getReversibleAnswer(isReverse)
 
-    fun isCorrect(yourAnswers: List<String>, isCaseInsensitive: Boolean): Boolean {
+    fun isCorrect(yourAnswers: List<String>, isCaseInsensitive: Boolean = false): Boolean {
+        val yours = if (isCaseInsensitive) yourAnswers.map { it.toLowerCase(Locale.ENGLISH) } else yourAnswers
+        val original = if (isCaseInsensitive) answers.map { it.toLowerCase(Locale.ENGLISH) } else answers
 
-        var isCorrect = if (isCaseInsensitive)
-            yourAnswers.all { yourAnswer -> answers.map { it.toLowerCase(Locale.ENGLISH) }.contains(yourAnswer.toLowerCase(Locale.ENGLISH)) }
-        else
-            yourAnswers.all { yourAnswer -> answers.map { it }.contains(yourAnswer) }
-
-        if (isCorrect) isCorrect = yourAnswers.size == answers.size //必要条件だけ答えてもダメ
+        if (yours.size != original.size) return false
 
         if (isCheckOrder) {
-            isCorrect = yourAnswers.allIndexed { index, it ->
-                it == answers[index]
-            }
+            if (!yours.allIndexed { index, it -> it == original[index] }) return false
         } else {
-            if (isCorrect) isCorrect = yourAnswers.distinct().size == answers.size //同じ解答を繰り返してもダメ
+            if (!yours.all { yourAnswer -> original.map { it }.contains(yourAnswer) }) return false
+            if (yours.distinct().size != original.size) return false
         }
-
-        return isCorrect
+        return true
     }
 
     fun getFirebaseEvent() =

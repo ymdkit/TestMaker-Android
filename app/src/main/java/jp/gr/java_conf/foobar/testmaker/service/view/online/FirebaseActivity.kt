@@ -19,6 +19,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
@@ -55,6 +56,10 @@ class FirebaseActivity : BaseActivity() {
 
         viewModel.tests.observeNonNull(this) {
             controller.tests = it
+        }
+
+        viewModel.error.observeNonNull(this) {
+            showErrorToast(it)
         }
 
         controller.setOnClickListener(object : FirebaseTestController.OnClickListener {

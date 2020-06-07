@@ -11,7 +11,9 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FirebaseViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val service: SearchService) : ViewModel() {
 
@@ -31,11 +33,20 @@ class FirebaseViewModel(private val repository: TestMakerRepository, private val
 
     val tests = MutableLiveData<List<FirebaseTest>>()
     val loading = MutableLiveData<Boolean>()
+    val error = MutableLiveData<Throwable>()
 
     fun getTests(keyword: String = "") {
         viewModelScope.launch {
             loading.value = true
-            tests.postValue(service.tests(keyword))
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    service.tests(keyword)
+                }
+            }.onSuccess {
+                tests.postValue(it)
+            }.onFailure {
+                error.postValue(it)
+            }
             loading.value = false
         }
     }
