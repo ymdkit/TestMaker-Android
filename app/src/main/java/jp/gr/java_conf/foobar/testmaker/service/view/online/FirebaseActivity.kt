@@ -11,14 +11,14 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.PagedList
 import com.firebase.ui.auth.IdpResponse
-import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
@@ -33,91 +33,81 @@ class FirebaseActivity : BaseActivity() {
     private val viewModel: FirebaseViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
 
-    private lateinit var pagingAdapter: FirebaseTestPagingAdapter
+    private val controller: FirebaseTestController by lazy {
+        FirebaseTestController(this)
+    }
+
+    private val binding: ActivityOnlineMainBinding by lazy {
+        DataBindingUtil.setContentView<ActivityOnlineMainBinding>(this, R.layout.activity_online_main).also {
+            it.viewModel = viewModel
+            it.lifecycleOwner = this
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val binding = DataBindingUtil.setContentView<ActivityOnlineMainBinding>(this, R.layout.activity_online_main)
         createAd(binding.adView)
-
-        binding.swipeRefresh.isRefreshing = true
+        binding.recyclerView.adapter = controller.adapter
 
         initToolBar()
 
-        val config = PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPrefetchDistance(10)
-                .setPageSize(20)
-                .build()
+        viewModel.getTests()
 
-        val options = FirestorePagingOptions.Builder<FirebaseTest>()
-                .setLifecycleOwner(this)
-                .setQuery(viewModel.getTestsQuery(), config) {
-                    val test = it.toObject(FirebaseTest::class.java) ?: FirebaseTest()
-                    test.documentId = it.id
-                    test
-                }
-                .build()
-
-        pagingAdapter = FirebaseTestPagingAdapter(baseContext, options)
-        pagingAdapter.download = { id: String ->
-            lifecycleScope.launch {
-
-                val dialog = AlertDialog.Builder(this@FirebaseActivity)
-                        .setTitle(getString(R.string.downloading))
-                        .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
-
-                when (val result = viewModel.downloadTest(id)) {
-                    is FirebaseTestResult.Success -> {
-                        viewModel.convert(result.test)
-
-                        Toast.makeText(this@FirebaseActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@FirebaseActivity, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                        startActivity(intent)
-                    }
-                    is FirebaseTestResult.Failure -> {
-                        Toast.makeText(this@FirebaseActivity, result.message, Toast.LENGTH_SHORT).show()
-                    }
-                }
-                dialog.dismiss()
-            }
+        viewModel.tests.observeNonNull(this) {
+            controller.tests = it
         }
 
-        pagingAdapter.showInfo = { data: FirebaseTest ->
-            val dialogLayout = LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
+        controller.setOnClickListener(object : FirebaseTestController.OnClickListener {
+            override fun onClickDownloadTest(test: FirebaseTest) {
+                lifecycleScope.launch {
 
-            val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
-            textInfo.text = getString(R.string.info_firebase_test, data.userName, data.getDate(), data.overview)
+                    val dialog = AlertDialog.Builder(this@FirebaseActivity)
+                            .setTitle(getString(R.string.downloading))
+                            .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
-            val buttonReport = dialogLayout.findViewById<Button>(R.id.button_report)
-            buttonReport.setOnClickListener {
+                    when (val result = viewModel.downloadTest(test.documentId)) {
+                        is FirebaseTestResult.Success -> {
+                            viewModel.convert(result.test)
 
-                val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "testmaker.contact@gmail.com", null))
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_subject))
-                emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_body))
-                startActivity(Intent.createChooser(emailIntent, null))
+                            Toast.makeText(this@FirebaseActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@FirebaseActivity, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                            startActivity(intent)
+                        }
+                        is FirebaseTestResult.Failure -> {
+                            Toast.makeText(this@FirebaseActivity, result.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    dialog.dismiss()
+                }
             }
 
-            val builder = AlertDialog.Builder(this@FirebaseActivity, R.style.MyAlertDialogStyle)
-            builder.setView(dialogLayout)
-            builder.setTitle(data.name)
-            builder.show()
-        }
+            override fun onClickShowInfoTest(test: FirebaseTest) {
+                val dialogLayout = LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
 
-        binding.recyclerView.adapter = pagingAdapter
-        pagingAdapter.startLoading = {
-            binding.swipeRefresh.isRefreshing = true
-        }
-        pagingAdapter.finishLoading = {
-            binding.swipeRefresh.isRefreshing = false
-        }
+                val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
+                textInfo.text = getString(R.string.info_firebase_test, test.userName, test.getDate(), test.overview)
+
+                val buttonReport = dialogLayout.findViewById<Button>(R.id.button_report)
+                buttonReport.setOnClickListener {
+
+                    val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                            "mailto", "testmaker.contact@gmail.com", null))
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_subject))
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_body))
+                    startActivity(Intent.createChooser(emailIntent, null))
+                }
+
+                val builder = AlertDialog.Builder(this@FirebaseActivity, R.style.MyAlertDialogStyle)
+                builder.setView(dialogLayout)
+                builder.setTitle(test.name)
+                builder.show()
+            }
+        })
 
         binding.swipeRefresh.setOnRefreshListener {
-            pagingAdapter.refresh()
+            viewModel.getTests()
         }
 
         binding.fab.setOnClickListener {
@@ -138,13 +128,27 @@ class FirebaseActivity : BaseActivity() {
                 login()
             }
         }
-
-        pagingAdapter.refresh()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_firebase, menu)
+        val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(s: String): Boolean {
+                viewModel.getTests(s)
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+                return false
+            }
+        })
+
+        searchView.setOnCloseListener {
+            viewModel.getTests()
+            false
+        }
         return true
     }
 
@@ -255,7 +259,7 @@ class FirebaseActivity : BaseActivity() {
                         viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[position]), editOverView.text.toString())
 
                         Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-                        pagingAdapter.refresh()
+                        viewModel.getTests()
                         dialog.dismiss()
                         progress.dismiss()
 

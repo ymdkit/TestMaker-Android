@@ -6,6 +6,7 @@ import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
+import jp.gr.java_conf.foobar.testmaker.service.infra.api.SearchClient
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.CategoryDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
@@ -48,6 +49,8 @@ fun getTestMakerModules(realm: Realm) = module {
                 .build()
     }
     single { get<Retrofit>().create(CloudFunctionsService::class.java) }
+    single { SearchClient() }
+    single { get<SearchClient>().create() }
     viewModel { CategoryViewModel(get()) }
     viewModel { TestViewModel(get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }
@@ -57,7 +60,7 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { EditCompleteQuestionViewModel(get()) }
     viewModel { EditSelectCompleteQuestionViewModel(get()) }
     viewModel { EditCategoryViewModel() }
-    viewModel { FirebaseViewModel(get(), get()) }
+    viewModel { FirebaseViewModel(get(), get(), get()) }
     viewModel { FirebaseMyPageViewModel(get(), get()) }
     viewModel { (test: Test, questions: List<Question>) -> PlayViewModel(test, questions, get()) }
     viewModel { ShowTestsViewModel(get(), get(), get()) }
