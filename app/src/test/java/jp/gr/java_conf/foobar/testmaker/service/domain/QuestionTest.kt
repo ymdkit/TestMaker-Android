@@ -17,9 +17,7 @@ class QuestionTest {
         assertFalse(question.copy(isCheckOrder = true).isCorrect(listOf("a", "a", "a"))) //同じ答え複数はダメ
         assertFalse(question.isCorrect(listOf("a", "b"))) //足りない
         assertFalse(question.copy(isCheckOrder = true).isCorrect(listOf("a", "b"))) //足りない
-
         assertTrue(question.copy(answers = listOf("a", "a", "b"), isCheckOrder = true).isCorrect(listOf("a", "a", "b")))//順序指定時は同じ回答複数でもOK
-
 
         assertFalse(question.isCorrect(listOf("A", "b", "c")))
         assertFalse(question.copy(isCheckOrder = true).isCorrect(listOf("A", "b", "c")))
