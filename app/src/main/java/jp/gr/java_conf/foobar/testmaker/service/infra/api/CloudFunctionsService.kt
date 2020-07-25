@@ -10,7 +10,7 @@ interface CloudFunctionsService {
 
     @FormUrlEncoded
     @POST("textToTest")
-    suspend fun textToTest(@Field("text") text: String, @Field("lang") lang: String): Test
+    suspend fun textToTest(@Field("title") title: String = "no title", @Field("text") text: String, @Field("lang") lang: String): Test
 
     @POST("testToText")
     suspend fun testToText(@Body test: Test): CSVTest

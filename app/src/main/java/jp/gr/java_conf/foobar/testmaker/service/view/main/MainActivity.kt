@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -252,7 +253,7 @@ class MainActivity : ShowTestsActivity() {
 
                     buttonImport.setOnClickListener {
 
-                        loadTestByText(editPaste.text.toString())
+                        loadTestByText(text = editPaste.text.toString())
 
                         dialog.dismiss()
                     }
@@ -333,9 +334,15 @@ class MainActivity : ShowTestsActivity() {
                     text = text.substring(1)
                 }
 
-                loadTestByText(text)
+                val cursor = contentResolver.query(uri, null, null, null, null)
+                cursor?.let { cur ->
+                    val nameIndex = cur.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    cur.moveToFirst()
+                    val title = cur.getString(nameIndex)
+                    loadTestByText(title = title, text = text)
+                    cur.close()
+                }
             }
-
         } catch (e: FileNotFoundException) {
             throw RuntimeException(e)
         } catch (e: UnsupportedEncodingException) {
@@ -347,12 +354,12 @@ class MainActivity : ShowTestsActivity() {
         }
     }
 
-    private fun loadTestByText(text: String) {
+    private fun loadTestByText(title: String = "", text: String) {
         lifecycleScope.launch {
             showProgress()
             runCatching {
                 withContext(Dispatchers.IO) {
-                    service.textToTest(text.replace("\n", "¥n").replace("<", "&lt;"), if (Locale.getDefault().language == "ja") "ja" else "en")
+                    service.textToTest(title, text.replace("\n", "¥n").replace("<", "&lt;"), if (Locale.getDefault().language == "ja") "ja" else "en")
                 }
             }.onSuccess {
                 testViewModel.create(it)
