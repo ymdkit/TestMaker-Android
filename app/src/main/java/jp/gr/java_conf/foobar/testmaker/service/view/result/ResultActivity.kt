@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.google.android.play.core.review.ReviewManagerFactory
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityResultBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
@@ -112,6 +113,22 @@ class ResultActivity : BaseActivity() {
                 controller.setData(questions)
             }
         }
+
+        sharedPreferenceManager.playCount += 1
+        if (sharedPreferenceManager.playCount == COUNT_REQUEST_REVIEW) {
+            requestReview()
+        }
+    }
+
+    private fun requestReview() {
+        val manager = ReviewManagerFactory.create(this)
+        val request = manager.requestReviewFlow()
+        request.addOnCompleteListener {
+            if (it.isSuccessful) {
+                val reviewInfo = it.result
+                manager.launchReviewFlow(this@ResultActivity, reviewInfo)
+            }
+        }
     }
 
     private fun uploadStudyPlus(record: StudyRecord) {
@@ -149,6 +166,8 @@ class ResultActivity : BaseActivity() {
     }
 
     companion object {
+
+        const val COUNT_REQUEST_REVIEW = 5
 
         fun startActivity(activity: Activity, id: Long, duration: Long) {
             val intent = Intent(activity, ResultActivity::class.java).apply {

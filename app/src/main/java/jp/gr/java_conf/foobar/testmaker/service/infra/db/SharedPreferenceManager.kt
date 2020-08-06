@@ -111,8 +111,14 @@ class SharedPreferenceManager(private val context: Context) {
                 .apply()
 
     var uploadStudyPlus: String
-        get() = defaultPreferences.getString("study_plus", context.resources.getStringArray(R.array.upload_setting_study_plus_values)[oldUploadStudyPlus]) ?: "auto"
-        set(i) = defaultPreferences.edit().putString("study_plus",i).apply()
+        get() = defaultPreferences.getString("study_plus", context.resources.getStringArray(R.array.upload_setting_study_plus_values)[oldUploadStudyPlus])
+                ?: "auto"
+        set(i) = defaultPreferences.edit().putString("study_plus", i).apply()
+
+    var playCount: Int
+        get() = defaultPreferences.getInt("play_count", 0)
+        set(i) = defaultPreferences.edit().putInt("play_count", i).apply()
+
 
     //preferencesと連携させるため古いフラグを退避
 
