@@ -116,6 +116,7 @@ class ResultActivity : BaseActivity() {
 
         sharedPreferenceManager.playCount += 1
         if (sharedPreferenceManager.playCount == COUNT_REQUEST_REVIEW) {
+            sendFirebaseEvent("request-review")
             requestReview()
         }
     }
