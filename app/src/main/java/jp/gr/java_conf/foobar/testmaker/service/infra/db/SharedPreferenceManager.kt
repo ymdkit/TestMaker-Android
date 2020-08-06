@@ -76,32 +76,32 @@ class SharedPreferenceManager(private val context: Context) {
     private val defaultPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     var audio: Boolean
-        get() = defaultPreferences.getBoolean("audio", !oldAudio)
+        get() = defaultPreferences.getBoolean("audio", true)
         set(f) = defaultPreferences.edit().putBoolean("audio", f)
                 .apply()
 
     var random: Boolean
-        get() = defaultPreferences.getBoolean("random", oldRandom)
+        get() = defaultPreferences.getBoolean("random", true)
         set(f) = defaultPreferences.edit().putBoolean("random", f).apply()
 
 
     var reverse: Boolean
-        get() = defaultPreferences.getBoolean("reverse", oldReverse)
+        get() = defaultPreferences.getBoolean("reverse", false)
         set(f) = defaultPreferences.edit().putBoolean("reverse", f)
                 .apply()
 
     var refine: Boolean
-        get() = defaultPreferences.getBoolean("refine", oldRefine)
+        get() = defaultPreferences.getBoolean("refine", false)
         set(f) = defaultPreferences.edit().putBoolean("refine", f)
                 .apply()
 
     var manual: Boolean
-        get() = defaultPreferences.getBoolean("manual", oldManual)
+        get() = defaultPreferences.getBoolean("manual", false)
         set(f) = defaultPreferences.edit().putBoolean("manual", f)
                 .apply()
 
     var alwaysReview: Boolean
-        get() = defaultPreferences.getBoolean("alwaysReview", oldAlwaysReview)
+        get() = defaultPreferences.getBoolean("alwaysReview", false)
         set(f) = defaultPreferences.edit().putBoolean("alwaysReview", f)
                 .apply()
 
@@ -111,44 +111,11 @@ class SharedPreferenceManager(private val context: Context) {
                 .apply()
 
     var uploadStudyPlus: String
-        get() = defaultPreferences.getString("study_plus", context.resources.getStringArray(R.array.upload_setting_study_plus_values)[oldUploadStudyPlus]) ?: "auto"
-        set(i) = defaultPreferences.edit().putString("study_plus",i).apply()
+        get() = defaultPreferences.getString("study_plus", context.resources.getStringArray(R.array.upload_setting_study_plus_values)[1])
+                ?: "auto"
+        set(i) = defaultPreferences.edit().putString("study_plus", i).apply()
 
-    //preferencesと連携させるため古いフラグを退避
-
-    private var oldRandom: Boolean
-        get() = sharedPreferences.getBoolean("random", false)
-        set(f) = sharedPreferences.edit().putBoolean("random", f)
-                .apply()
-
-    private var oldReverse: Boolean
-        get() = sharedPreferences.getBoolean("reverse", false)
-        set(f) = sharedPreferences.edit().putBoolean("reverse", f)
-                .apply()
-
-    private var oldRefine: Boolean
-        get() = sharedPreferences.getBoolean("refine", false)
-        set(f) = sharedPreferences.edit().putBoolean("refine", f)
-                .apply()
-
-    private var oldAudio: Boolean
-        get() = sharedPreferences.getBoolean("audio", false)
-        set(f) = sharedPreferences.edit().putBoolean("audio", f)
-                .apply()
-
-    private var oldAlwaysReview: Boolean
-        get() = sharedPreferences.getBoolean("alwaysReview", false)
-        set(f) = sharedPreferences.edit().putBoolean("alwaysReview", f)
-                .apply()
-
-    private var oldManual: Boolean
-        get() = sharedPreferences.getBoolean("manual", false)
-        set(f) = sharedPreferences.edit().putBoolean("manual", f)
-                .apply()
-
-    private var oldUploadStudyPlus: Int
-        get() = sharedPreferences.getInt("study_plus", 1)
-        set(i) = sharedPreferences.edit().putInt("study_plus", i)
-                .apply()
-
+    var playCount: Int
+        get() = defaultPreferences.getInt("play_count", 0)
+        set(i) = defaultPreferences.edit().putInt("play_count", i).apply()
 }
