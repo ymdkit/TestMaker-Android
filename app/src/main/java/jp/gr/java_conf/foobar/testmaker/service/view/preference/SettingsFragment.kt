@@ -17,8 +17,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
+        initFontSizePreferences()
         initStudyPlusPreferences()
         initOtherPreferences()
+    }
+
+    private fun initFontSizePreferences() {
+        val preference = findPreference<Preference>("play_font_size")
+        preference?.apply {
+            summaryProvider = Preference.SummaryProvider<ListPreference> {
+                it.entry
+            }
+        }
     }
 
     fun initStudyPlusPreferences() {

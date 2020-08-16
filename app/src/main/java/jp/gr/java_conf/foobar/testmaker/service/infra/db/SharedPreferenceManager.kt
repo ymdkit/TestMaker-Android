@@ -118,4 +118,10 @@ class SharedPreferenceManager(private val context: Context) {
     var playCount: Int
         get() = defaultPreferences.getInt("play_count", 0)
         set(i) = defaultPreferences.edit().putInt("play_count", i).apply()
+
+    var playFontSize: String
+        get() = defaultPreferences.getString("play_font_size", context.resources.getStringArray(R.array.play_font_size_values)[0])
+                ?: "normal"
+        set(i) = defaultPreferences.edit().putString("play_font_size", i).apply()
+
 }

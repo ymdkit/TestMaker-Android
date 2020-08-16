@@ -39,4 +39,9 @@
         <item>manual</item>
     </string-array>
 
+    <string-array name="play_font_size_values">
+        <item>normal</item>
+        <item>large</item>
+    </string-array>
+
 </resources>
