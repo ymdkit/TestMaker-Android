@@ -90,6 +90,10 @@
         <item>manual upload</item>
     </string-array>
 
+    <string-array name="play_font_size">
+        <item>normal</item>
+        <item>large</item>
+    </string-array>
 
     <string name="msg_save">saved</string>
     <string name="save">save</string>
@@ -214,4 +218,5 @@
     <string name="menu_upload_studyplus">upload studyplus</string>
     <string name="msg_loading">now loading</string>
     <string name="network_error">network error</string>
+    <string name="play_font_size">font size (answering)</string>
 </resources>
