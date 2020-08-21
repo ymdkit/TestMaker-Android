@@ -45,4 +45,16 @@ class TestTest {
         test = test.copy(questions = listOf(Question(answers = listOf("answer1", "answer2"), type = Constants.SELECT_COMPLETE), Question(answer = "answer2")))
         assertEquals(listOf("answer1", "answer2"), test.randomExtractedAnswers.sorted())
     }
+
+    @Test
+    fun testGetChoicesSelect() {
+        var test = MyTest(title = "", color = 0)
+
+        assertEquals(listOf("empty", "empty"), test.getChoices(2, "answer1", "empty"))
+
+        test = test.copy(questions = listOf(Question(answer = "answer1")))
+        assertEquals(listOf("answer1", "empty"), test.getChoices(2, "answer2", "empty"))
+        assertEquals(listOf("empty", "empty"), test.getChoices(2, "answer1", "empty"))
+
+    }
 }

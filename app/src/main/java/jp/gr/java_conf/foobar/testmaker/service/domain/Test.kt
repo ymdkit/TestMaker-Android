@@ -38,29 +38,11 @@ data class Test(
     val questionsCorrectCount
         get() = questions.count { it.isCorrect }
 
-    fun getChoices(size: Int, answer: String, emptyString: String): ArrayList<String> {
-
-        val result = arrayListOf<String>()
-
-        for (q in questions.take(100).shuffled()) {
-            if (result.size >= size) break
-
-            when (q.type) {
-                Constants.WRITE, Constants.SELECT -> {
-                    if (q.answer != answer) result.add(q.answer)
-                }
-                Constants.COMPLETE, Constants.SELECT_COMPLETE -> {
-                    if (q.answers.isNotEmpty()) {
-                        if (q.answers[0] != answer) result.add(q.answers[0])
-                    }
-                }
+    fun getChoices(size: Int, answer: String, emptyString: String) =
+            List(size) { emptyString }.mapIndexed { index, value ->
+                if (index < randomExtractedAnswers.size && randomExtractedAnswers[index] != answer) randomExtractedAnswers[index] else value
             }
-        }
-        while (result.size < size) {
-            result.add(emptyString)
-        }
-        return result
-    }
+
 
     fun getChoices(size: Int, answers: List<String>, emptyString: String): ArrayList<String> {
 
