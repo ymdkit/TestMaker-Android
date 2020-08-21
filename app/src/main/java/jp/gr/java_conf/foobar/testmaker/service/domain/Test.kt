@@ -22,6 +22,19 @@ data class Test(
         val lang: String = "ja"
 ) : Parcelable {
 
+    val randomExtractedAnswers
+        get() = questions.take(100).map {
+            when (it.type) {
+                Constants.WRITE, Constants.SELECT -> {
+                    listOf(it.answer)
+                }
+                Constants.COMPLETE, Constants.SELECT_COMPLETE -> {
+                    it.answers
+                }
+                else -> emptyList()
+            }
+        }.flatten().distinct().shuffled()
+
     val questionsCorrectCount
         get() = questions.count { it.isCorrect }
 
