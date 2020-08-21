@@ -5,7 +5,6 @@ import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.TestMakerApplication
 import kotlinx.android.parcel.Parcelize
-import java.util.*
 
 @Parcelize
 data class Test(
@@ -43,30 +42,10 @@ data class Test(
                 if (index < randomExtractedAnswers.size && randomExtractedAnswers[index] != answer) randomExtractedAnswers[index] else value
             }
 
-
-    fun getChoices(size: Int, answers: List<String>, emptyString: String): ArrayList<String> {
-
-        val result = arrayListOf<String>()
-
-        for (q in questions.take(100).shuffled()) {
-            if (result.size >= size) break
-
-            when (q.type) {
-                Constants.WRITE, Constants.SELECT -> {
-                    if (!answers.contains(q.answer)) result.add(q.answer)
-                }
-                Constants.COMPLETE, Constants.SELECT_COMPLETE -> {
-                    if (q.answers.isNotEmpty()) {
-                        if (!answers.contains(q.answers[0])) result.add(q.answers[0])
-                    }
-                }
+    fun getChoices(size: Int, answers: List<String>, emptyString: String) =
+            List(size) { emptyString }.mapIndexed { index, value ->
+                if (index < randomExtractedAnswers.size && !answers.contains(randomExtractedAnswers[index])) randomExtractedAnswers[index] else value
             }
-        }
-        while (result.size < size) {
-            result.add(emptyString)
-        }
-        return result
-    }
 
     val escapedTest: Test
         get() {

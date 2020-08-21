@@ -57,4 +57,21 @@ class TestTest {
         assertEquals(listOf("empty", "empty"), test.getChoices(2, "answer1", "empty"))
 
     }
+
+    @Test
+    fun testGetChoicesSelectComplete() {
+        var test = MyTest(title = "", color = 0)
+
+        assertEquals(listOf("empty", "empty"), test.getChoices(2, listOf("answer1"), "empty"))
+
+        test = test.copy(questions = listOf(Question(answer = "answer1")))
+        assertEquals(listOf("answer1", "empty"), test.getChoices(2, listOf("answer2", "answer3"), "empty"))
+        assertEquals(listOf("empty", "empty"), test.getChoices(2, listOf("answer1", "answer3"), "empty"))
+
+        test = test.copy(questions = listOf(Question(answer = "answer1"), Question(answer = "answer2")))
+        assertEquals(listOf("answer1", "answer2"), test.getChoices(2, listOf("answer3", "answer4"), "empty"))
+        assertEquals(listOf("answer1", "empty"), test.getChoices(2, listOf("answer2", "answer3"), "empty"))
+        assertEquals(listOf("empty", "empty"), test.getChoices(2, listOf("answer1", "answer2"), "empty"))
+
+    }
 }
