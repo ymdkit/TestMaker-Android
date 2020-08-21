@@ -38,7 +38,7 @@ data class Test(
     val questionsCorrectCount
         get() = questions.count { it.isCorrect }
 
-    fun getChoices(size: Int, answer: String): ArrayList<String> {
+    fun getChoices(size: Int, answer: String, emptyString: String): ArrayList<String> {
 
         val result = arrayListOf<String>()
 
@@ -56,11 +56,33 @@ data class Test(
                 }
             }
         }
-
         while (result.size < size) {
-            result.add(TestMakerApplication.instance.applicationContext.getString(R.string.message_not_auto))
+            result.add(emptyString)
         }
+        return result
+    }
 
+    fun getChoices(size: Int, answers: List<String>, emptyString: String): ArrayList<String> {
+
+        val result = arrayListOf<String>()
+
+        for (q in questions.take(100).shuffled()) {
+            if (result.size >= size) break
+
+            when (q.type) {
+                Constants.WRITE, Constants.SELECT -> {
+                    if (!answers.contains(q.answer)) result.add(q.answer)
+                }
+                Constants.COMPLETE, Constants.SELECT_COMPLETE -> {
+                    if (q.answers.isNotEmpty()) {
+                        if (!answers.contains(q.answers[0])) result.add(q.answers[0])
+                    }
+                }
+            }
+        }
+        while (result.size < size) {
+            result.add(emptyString)
+        }
         return result
     }
 
