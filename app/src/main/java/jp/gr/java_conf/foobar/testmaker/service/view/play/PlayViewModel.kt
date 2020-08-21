@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import jp.gr.java_conf.foobar.testmaker.service.Constants
+import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.TestMakerApplication
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
@@ -74,7 +76,7 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
         when {
             question.type == Constants.SELECT -> {
                 if (question.isAutoGenerateOthers) {
-                    (test.getChoices(question.others.size, question.answer) + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
+                    (test.getChoices(question.others.size, question.answer, TestMakerApplication.instance.applicationContext.getString(R.string.message_not_auto)) + listOf(question.answer)).shuffled().forEachIndexed { index, it ->
                         selections[index].value = it
                     }
                 } else {
@@ -85,7 +87,7 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
             }
             question.type == Constants.SELECT_COMPLETE -> {
                 if (question.isAutoGenerateOthers) {
-                    (test.getChoices(question.others.size, question.answer) + question.answers).shuffled().forEachIndexed { index, it ->
+                    (test.getChoices(question.others.size, question.answers,TestMakerApplication.instance.applicationContext.getString(R.string.message_not_auto)) + question.answers).shuffled().forEachIndexed { index, it ->
                         selections[index].value = it
                     }
                 } else {
