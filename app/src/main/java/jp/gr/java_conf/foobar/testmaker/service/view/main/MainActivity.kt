@@ -28,6 +28,7 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
+import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
@@ -35,23 +36,25 @@ import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.*
 import java.util.*
 
 
-class MainActivity : ShowTestsActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
+    private val service: CloudFunctionsService by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,8 +72,6 @@ class MainActivity : ShowTestsActivity() {
 
         createAd(binding.adView)
         initNavigationView()
-
-        initTestAndFolderAdapter()
 
         viewModel.startConnection()
         viewModel.billingStatus.observeNonNull(this) {
@@ -331,6 +332,7 @@ class MainActivity : ShowTestsActivity() {
     }
 
     companion object {
+        const val REQUEST_EDIT = 11111
         const val REQUEST_IMPORT = 12345
         const val REQUEST_SIGN_IN = 12346
     }
