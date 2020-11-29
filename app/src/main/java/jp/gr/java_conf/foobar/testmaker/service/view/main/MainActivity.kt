@@ -166,25 +166,6 @@ class MainActivity : ShowTestsActivity() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_compare) {
-            AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setTitle(getString(R.string.sort))
-                    .setItems(resources.getStringArray(R.array.sort_exam)) { _, which ->
-                        testViewModel.sort(SortTest.values()[which])
-                    }.show()
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
-
     private fun initNavigationView() {
 
         setSupportActionBar(binding.toolbar)
