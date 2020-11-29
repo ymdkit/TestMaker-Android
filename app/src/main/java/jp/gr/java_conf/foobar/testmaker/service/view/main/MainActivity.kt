@@ -7,8 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -16,17 +14,16 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.airbnb.epoxy.EpoxyModel
-import com.airbnb.epoxy.EpoxyTouchHelper
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.android.billingclient.api.BillingClient
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
-import jp.gr.java_conf.foobar.testmaker.service.CardTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
@@ -34,8 +31,6 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
-import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageActivity
@@ -57,30 +52,25 @@ class MainActivity : ShowTestsActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
-    private val categoryViewModel: CategoryViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        binding.fab.setOnClickListener {
-            EditTestActivity.startActivity(this)
-        }
+        binding.viewPager.offscreenPageLimit = 1
+        binding.viewPager.adapter = ViewPagerAdapter(this, listOf(
+                LocalMainFragment(),
+                LocalMainFragment()))
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = listOf(getString(R.string.tab_local), getString(R.string.tab_remote))[position]
+        }.attach()
 
         createAd(binding.adView)
-
         initNavigationView()
 
         initTestAndFolderAdapter()
-
-        categoryViewModel.hasTestsCategories.observeNonNull(this) {
-            mainController.categories = it
-        }
-
-        testViewModel.testsLiveData.observeNonNull(this) {
-            mainController.tests = it
-        }
 
         viewModel.startConnection()
         viewModel.billingStatus.observeNonNull(this) {
@@ -113,28 +103,6 @@ class MainActivity : ShowTestsActivity() {
                 }
             }
         }
-
-        binding.recyclerView.adapter = mainController.adapter
-
-        EpoxyTouchHelper
-                .initDragging(mainController)
-                .withRecyclerView(binding.recyclerView)
-                .forVerticalList()
-                .forAllModels()
-                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<EpoxyModel<*>>() {
-                    override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: EpoxyModel<*>?, itemView: View?) {
-                        val from = mainController.adapter.getModelAtPosition(fromPosition)
-                        val to = mainController.adapter.getModelAtPosition(toPosition)
-
-                        if (from is CardTestBindingModel_ && to is CardTestBindingModel_) {
-                            testViewModel.swap(from.test(), to.test())
-                        } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
-                            categoryViewModel.swap(from.category(), to.category())
-                        }
-                    }
-
-                })
-
 
         lifecycleScope.launch {
             val pendingDynamicLinkData = withContext(Dispatchers.Default) {
@@ -357,10 +325,9 @@ class MainActivity : ShowTestsActivity() {
         drawerToggle.syncState()
     }
 
-    override fun onResume() {
-        super.onResume()
-        testViewModel.refresh()
-        categoryViewModel.refresh()
+    private inner class ViewPagerAdapter(activity: FragmentActivity, private val fragments: List<Fragment>) : FragmentStateAdapter(activity) {
+        override fun getItemCount(): Int = fragments.size
+        override fun createFragment(position: Int): Fragment = fragments[position]
     }
 
     companion object {
