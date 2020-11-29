@@ -12,50 +12,43 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.coordinatorlayout.widget.CoordinatorLayout
-                android:id="@+id/layout_coordinator"
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/app_bar"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@id/adView"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.appbar.AppBarLayout
-                    android:id="@+id/app_bar"
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    style="@style/Toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                    app:popupTheme="@style/Theme.AppCompat.DayNight"
+                    app:title="@string/app_name" />
 
-                    <androidx.appcompat.widget.Toolbar
-                        android:id="@+id/toolbar"
-                        style="@style/Toolbar"
-                        android:layout_width="match_parent"
-                        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-                        app:popupTheme="@style/Theme.AppCompat.DayNight"
-                        app:title="@string/app_name" />
-
-                </com.google.android.material.appbar.AppBarLayout>
-
-                <com.airbnb.epoxy.EpoxyRecyclerView
-                    android:id="@+id/recycler_view"
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:isHasFixedSize="@{true}"
-                    android:padding="@dimen/element_spacing_small"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fab"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/element_spacing_very_large"
-                    android:src="@drawable/ic_add_white"
-                    app:layout_anchor="@id/recycler_view"
-                    app:layout_anchorGravity="bottom|end"
-                    app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
+                    android:background="?attr/colorPrimary"
+                    app:tabTextColor="@color/white" />
 
-            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:padding="@dimen/element_spacing_normal"
+                app:layout_constraintBottom_toTopOf="@id/adView"
+                app:layout_constraintTop_toBottomOf="@id/app_bar">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adView"
