@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.di
 
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.realm.Realm
@@ -50,6 +51,7 @@ fun getTestMakerModules(realm: Realm) = module {
                 .build()
     }
     single { get<Retrofit>().create(CloudFunctionsService::class.java) }
+    single { FirebaseAnalytics.getInstance(get()) }
     single { SearchClient() }
     single { get<SearchClient>().create() }
     viewModel { CategoryViewModel(get()) }

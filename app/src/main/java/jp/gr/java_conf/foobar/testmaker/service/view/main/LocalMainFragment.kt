@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.firebase.ui.auth.AuthUI
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
@@ -48,6 +49,7 @@ class LocalMainFragment : Fragment() {
 
     internal lateinit var mainController: MainController
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
+    private val firebaseAnalytic: FirebaseAnalytics by inject()
 
     private var binding: LocalMainFragmentBinding? = null
 
@@ -65,7 +67,7 @@ class LocalMainFragment : Fragment() {
 
             override fun onClickPlayTest(test: Test) {
 
-                // sendFirebaseEvent("play")
+                firebaseAnalytic.logEvent("play", Bundle())
 
                 if (test.questions.isEmpty()) {
 
@@ -80,7 +82,7 @@ class LocalMainFragment : Fragment() {
 
             override fun onClickEditTest(test: Test) {
 
-                // sendFirebaseEvent("edit")
+                firebaseAnalytic.logEvent("edit", Bundle())
 
                 EditActivity.startActivity(requireActivity(), test.id)
 
@@ -88,7 +90,8 @@ class LocalMainFragment : Fragment() {
 
             override fun onClickDeleteTest(test: Test) {
 
-                // sendFirebaseEvent("delete")
+                firebaseAnalytic.logEvent("delete", Bundle())
+
                 val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
                 builder.setTitle(getString(R.string.delete_exam))
                 builder.setMessage(getString(R.string.message_delete_exam, test.title))
@@ -141,8 +144,7 @@ class LocalMainFragment : Fragment() {
                                             // hideProgress()
                                         }
                                     } catch (e: Exception) {
-                                        // todo
-                                        // sendFirebaseEvent("export error: $e")
+                                        firebaseAnalytic.logEvent("export_error", Bundle())
                                     }
                                 }
                             }
@@ -220,9 +222,8 @@ class LocalMainFragment : Fragment() {
                 startActivity(intent)
 
             } catch (e: Exception) {
-                // sendFirebaseEvent("export error: $e")
+                firebaseAnalytic.logEvent("export_error", Bundle())
             }
-
         }
     }
 

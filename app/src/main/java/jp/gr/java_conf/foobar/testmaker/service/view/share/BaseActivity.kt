@@ -27,14 +27,12 @@ open class BaseActivity : AppCompatActivity() {
 
     val sharedPreferenceManager: SharedPreferenceManager by inject()
 
-    private lateinit var firebaseAnalytic: FirebaseAnalytics
+    private val firebaseAnalytic: FirebaseAnalytics by inject()
 
     private var progress: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        firebaseAnalytic = FirebaseAnalytics.getInstance(this)
 
         var info: ApplicationInfo? = null
         try {
