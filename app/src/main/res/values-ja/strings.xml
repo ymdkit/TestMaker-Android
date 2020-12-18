@@ -215,5 +215,5 @@
     <string name="network_error">サーバに接続できません</string>
     <string name="play_font_size">解答画面でのフォントサイズ</string>
     <string name="tab_local">端末内</string>
-    <string name="tab_remote">クラウド</string>
+    <string name="tab_remote">アカウント</string>
 </resources>

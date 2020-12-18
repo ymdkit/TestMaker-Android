@@ -129,8 +129,7 @@ class LocalMainFragment : Fragment() {
                                         intent.type = "text/plain"
 
                                         lifecycleScope.launch {
-                                            // todo
-                                            // showProgress()
+                                           binding?.progress?.isRefreshing = true
                                             runCatching {
                                                 withContext(Dispatchers.IO) {
                                                     service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
@@ -141,7 +140,7 @@ class LocalMainFragment : Fragment() {
                                             }.onFailure {
                                                 requireContext().showErrorToast(it)
                                             }
-                                            // hideProgress()
+                                            binding?.progress?.isRefreshing = false
                                         }
                                     } catch (e: Exception) {
                                         firebaseAnalytic.logEvent("export_error", Bundle())
@@ -167,6 +166,10 @@ class LocalMainFragment : Fragment() {
 
             fab.setOnClickListener {
                 EditTestActivity.startActivity(requireActivity())
+            }
+
+            progress.setOnRefreshListener {
+                progress.isRefreshing = false
             }
 
             recyclerView.adapter = mainController.adapter

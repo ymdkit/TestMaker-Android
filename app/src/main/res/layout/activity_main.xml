@@ -24,7 +24,6 @@
                     android:layout_width="match_parent"
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
                     app:popupTheme="@style/Theme.AppCompat.DayNight"
                     app:title="@string/app_name" />
 
@@ -37,18 +36,12 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:padding="@dimen/element_spacing_normal"
-                app:layout_constraintBottom_toTopOf="@id/adView"
-                app:layout_constraintTop_toBottomOf="@id/app_bar">
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/view_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@id/app_bar"
+                app:layout_constraintBottom_toTopOf="@id/adView" />
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adView"
