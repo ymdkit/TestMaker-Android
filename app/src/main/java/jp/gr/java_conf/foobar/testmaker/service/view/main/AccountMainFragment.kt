@@ -66,6 +66,12 @@ class AccountMainFragment : Fragment() {
             }
 
             progress.setOnRefreshListener {
+                viewModel.getUser() ?: run {
+                    controller.tests = emptyList()
+                    layoutNotLogin.visibility = View.VISIBLE
+                    progress.isRefreshing = false
+                    return@setOnRefreshListener
+                }
                 viewModel.fetchMyTests()
             }
 

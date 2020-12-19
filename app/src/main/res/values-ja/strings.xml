@@ -216,4 +216,5 @@
     <string name="play_font_size">解答画面でのフォントサイズ</string>
     <string name="tab_local">端末</string>
     <string name="tab_remote">アカウント</string>
+    <string name="msg_please_login">アカウントに問題集を紐づけることで、\n複数端末で問題集を共有することができます。</string>
 </resources>

@@ -221,4 +221,5 @@
     <string name="play_font_size">font size (answering)</string>
     <string name="tab_local">device</string>
     <string name="tab_remote">online</string>
+    <string name="msg_please_login">please login</string>
 </resources>

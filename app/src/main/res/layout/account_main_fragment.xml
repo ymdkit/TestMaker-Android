@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/element_spacing_small"
                 android:gravity="center"
-                android:text="@string/msg_not_login"
+                android:text="@string/msg_please_login"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
