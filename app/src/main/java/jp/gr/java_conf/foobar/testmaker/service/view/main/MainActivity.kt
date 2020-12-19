@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -64,10 +65,12 @@ class MainActivity : BaseActivity() {
         binding.viewPager.offscreenPageLimit = 1
         binding.viewPager.adapter = ViewPagerAdapter(this, listOf(
                 LocalMainFragment(),
-                LocalMainFragment()))
+                AccountMainFragment()))
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = listOf(getString(R.string.tab_local), getString(R.string.tab_remote))[position]
+            tab.icon = listOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_device_24, null),
+                    ResourcesCompat.getDrawable(resources, R.drawable.ic_account, null))[position]
         }.attach()
 
         createAd(binding.adView)
@@ -335,5 +338,12 @@ class MainActivity : BaseActivity() {
         const val REQUEST_EDIT = 11111
         const val REQUEST_IMPORT = 12345
         const val REQUEST_SIGN_IN = 12346
+
+        fun startActivityWithClear(activity: Activity) {
+            val intent = Intent(activity, MainActivity::class.java).apply {
+
+            }
+            activity.startActivity(intent)
+        }
     }
 }
