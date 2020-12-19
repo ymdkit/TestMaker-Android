@@ -63,9 +63,15 @@ class MainActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.viewPager.offscreenPageLimit = 1
+
         binding.viewPager.adapter = ViewPagerAdapter(this, listOf(
                 LocalMainFragment(),
-                AccountMainFragment()))
+                AccountMainFragment(object : AccountMainFragment.OnTestDownloadedListener {
+                    override fun onDownloaded() {
+                        binding.viewPager.setCurrentItem(0, true)
+                    }
+
+                })))
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = listOf(getString(R.string.tab_local), getString(R.string.tab_remote))[position]
@@ -335,6 +341,9 @@ class MainActivity : BaseActivity() {
     }
 
     companion object {
+        const val PAGE_LOCAL = 0
+        const val PAGE_REMOTE = 1
+
         const val REQUEST_EDIT = 11111
         const val REQUEST_IMPORT = 12345
         const val REQUEST_SIGN_IN = 12346

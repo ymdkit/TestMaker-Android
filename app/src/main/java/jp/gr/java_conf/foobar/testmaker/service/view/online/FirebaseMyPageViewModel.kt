@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
+import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
@@ -31,4 +32,6 @@ class FirebaseMyPageViewModel(private val repository: TestMakerRepository,privat
     fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
 
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
+
+    suspend fun uploadTest(test: RealmTest, overview: String) = repository.createTest(test, overview, "")
 }

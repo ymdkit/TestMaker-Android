@@ -115,14 +115,14 @@
     <string name="hint_user_name">ユーザー名</string>
     <string name="login">ログイン</string>
     <string name="login_successed">ログインしました</string>
-    <string name="message_upload_test">投稿する問題集の選択</string>
+    <string name="message_upload_test">アップロードする問題集の選択</string>
     <string name="profile">マイページ</string>
     <string name="title_activity_online_my_page">マイページ</string>
     <string name="hint_overview">概要(問題集についての説明)</string>
     <string name="tests_my_page">投稿した問題集</string>
     <string name="creator_name">ユーザー名: %1$s</string>
     <string name="download_test">読込</string>
-    <string name="message_non_exist_test">問題を一つ以上作成してください</string>
+    <string name="message_non_exist_test">端末内に問題集が存在しません。「端末」タブから問題集を追加してください</string>
     <string name="message_edit_profile">プロフィールの編集</string>
     <string name="num_questions">問題数 %1$d</string>
     <string name="always_review">正解時も解説を表示する</string>
