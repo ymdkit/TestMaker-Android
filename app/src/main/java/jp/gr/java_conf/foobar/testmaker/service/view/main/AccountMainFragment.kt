@@ -3,6 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.firebase.ui.auth.IdpResponse
+import com.google.firebase.dynamiclinks.DynamicLink
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.AccountMainFragmentBinding
@@ -71,18 +74,24 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
                 }
             }
 
-            override fun onClickDetailTest(document: DocumentSnapshot) {
+            override fun onClickShareTest(document: DocumentSnapshot) {
                 val data = document.toObject(FirebaseTest::class.java) ?: return
 
-                val dialogLayout = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_online_test_info, requireActivity().findViewById(R.id.layout_dialog_info))
+                val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                        .setLink(Uri.parse("https://testmaker-1cb29.com/${document.id}"))
+                        .setDomainUriPrefix("https://testmaker.page.link")
+                        .setAndroidParameters(DynamicLink.AndroidParameters.Builder().setMinimumVersion(87).build())
+                        .setIosParameters(DynamicLink.IosParameters.Builder("jp.gr.java-conf.foobar.testmaker.service").setAppStoreId("1201200202").setMinimumVersion("2.1.5").build())
+                        .buildDynamicLink()
 
-                val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
-                textInfo.text = getString(R.string.info_firebase_test, data.userName, data.getDate(), data.overview)
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, dynamicLink.uri))
+                    type = "text/plain"
+                }
 
-                AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
-                        .setView(dialogLayout)
-                        .setTitle(data.name)
-                        .show()
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
             }
 
             override fun onClickDeleteTest(document: DocumentSnapshot) {

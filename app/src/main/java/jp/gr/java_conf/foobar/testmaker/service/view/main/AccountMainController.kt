@@ -20,7 +20,7 @@ class AccountMainController(private val context: Context) : EpoxyController() {
 
     interface OnClickListener {
         fun onClickDownloadTest(document: DocumentSnapshot)
-        fun onClickDetailTest(document: DocumentSnapshot)
+        fun onClickShareTest(document: DocumentSnapshot)
         fun onClickDeleteTest(document: DocumentSnapshot)
     }
 
