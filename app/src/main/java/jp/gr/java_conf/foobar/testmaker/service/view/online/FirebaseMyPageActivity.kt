@@ -105,9 +105,8 @@ class FirebaseMyPageActivity : BaseActivity(), FirebaseMyPageController.OnClickL
                         .setTitle(getString(R.string.logout))
                         .setMessage(getString(R.string.msg_logout))
                         .setPositiveButton(getString(R.string.ok)) { _, _ ->
-
                             viewModel.logOut()
-                            finish()
+                            MainActivity.startActivityWithClear(this)
                         }
                         .setNegativeButton(getString(R.string.cancel), null)
                         .show()

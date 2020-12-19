@@ -11,7 +11,8 @@
         R.layout.item_pie_chart,
         R.layout.item_result_menu,
         R.layout.item_section,
-        R.layout.card_test_online
+        R.layout.card_test_online,
+        R.layout.card_test_account
 })
 package jp.gr.java_conf.foobar.testmaker.service;
 

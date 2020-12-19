@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.online
 
+import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
@@ -26,4 +27,8 @@ class FirebaseMyPageViewModel(private val repository: TestMakerRepository,privat
     fun getUser(): FirebaseUser? = auth.getUser()
 
     fun logOut() = auth.logOut()
+
+    fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
+
+    fun createUser(user: FirebaseUser?) = repository.setUser(user)
 }
