@@ -1,15 +1,15 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.online
 
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
@@ -17,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import com.firebase.ui.auth.IdpResponse
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
@@ -197,58 +196,6 @@ class FirebaseActivity : BaseActivity() {
                 }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
-    }
-
-    private fun showDialogUpload() {
-
-        var position = 0
-
-        val dialogLayout = LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_upload, findViewById(R.id.layout_dialog_upload))
-
-        val spinner = dialogLayout.findViewById<Spinner>(R.id.spinner)
-        val editOverView = dialogLayout.findViewById<EditText>(R.id.edit_overview)
-        val adapter = ArrayAdapter(baseContext,
-                android.R.layout.simple_spinner_item, testViewModel.tests.map { it.title }.toTypedArray())
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        spinner.adapter = adapter
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            //　アイテムが選択された時
-            override fun onItemSelected(parent: AdapterView<*>?,
-                                        view: View?, positionSpinner: Int, id: Long) {
-                position = positionSpinner
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-
-        val dialog = AlertDialog.Builder(this@FirebaseActivity, R.style.MyAlertDialogStyle)
-                .setView(dialogLayout)
-                .setTitle(getString(R.string.message_upload_test))
-                .setPositiveButton(android.R.string.ok, null)
-                .setNegativeButton(android.R.string.cancel, null)
-                .show()
-
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                .setOnClickListener { it ->
-                    it.isEnabled = false
-
-                    lifecycleScope.launch {
-
-                        val progress = AlertDialog.Builder(this@FirebaseActivity)
-                                .setTitle(getString(R.string.uploading))
-                                .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
-
-                        viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[position]), editOverView.text.toString())
-
-                        Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-                        viewModel.getTests()
-                        dialog.dismiss()
-                        progress.dismiss()
-
-                    }
-                }
     }
 
     companion object {
