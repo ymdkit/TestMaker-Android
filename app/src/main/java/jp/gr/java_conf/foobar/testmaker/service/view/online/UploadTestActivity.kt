@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAdCallback
@@ -17,6 +18,7 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityUploadTestBi
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.extensions.isConnectedInternet
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinkCreator
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +45,10 @@ class UploadTestActivity : BaseActivity() {
                 android.R.layout.simple_spinner_item, testViewModel.tests.map { it.title }.toTypedArray())
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinner.adapter = adapter
+
+        val index = testViewModel.tests.find { it.id == intent.getLongExtra(ARGUMENT_ID, 0) }?.id
+                ?: 0
+        binding.spinner.setSelection(index.toInt())
         initToolBar()
 
         binding.buttonUpload.setOnClickListener {
@@ -51,10 +57,18 @@ class UploadTestActivity : BaseActivity() {
                         .setTitle(getString(R.string.uploading))
                         .setView(LayoutInflater.from(this@UploadTestActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
-                viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]), binding.editOverview.text.toString(), !binding.checkPrivate.isChecked)
+                val documentId = viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]), binding.editOverview.text.toString(), !binding.checkPrivate.isChecked)
 
                 Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
                 progress.dismiss()
+
+                if (intent.hasExtra(ARGUMENT_ID)) {
+                    setResult(Activity.RESULT_OK, Intent().apply {
+                        putExtra("result", getString(R.string.msg_share_test,
+                                testViewModel.tests[binding.spinner.selectedItemPosition].title,
+                                DynamicLinkCreator.createDynamicLink(documentId)))
+                    })
+                }
                 finish()
             }
         }
@@ -122,9 +136,17 @@ class UploadTestActivity : BaseActivity() {
 
     companion object {
         const val LIMIT_AD_ATTEMPT_NUM = 3L
+        const val ARGUMENT_ID = "id"
 
         fun startActivity(activity: Activity) {
             activity.startActivity(Intent(activity, UploadTestActivity::class.java))
+        }
+
+        fun startActivityForResult(fragment: Fragment, requestCode: Int, id: Long) {
+            val intent = Intent(fragment.requireContext(), UploadTestActivity::class.java).apply {
+                putExtra(ARGUMENT_ID, id)
+            }
+            fragment.startActivityForResult(intent, requestCode)
         }
     }
 }

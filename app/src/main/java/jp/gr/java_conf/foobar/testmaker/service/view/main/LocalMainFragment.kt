@@ -28,10 +28,10 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinkCreator
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -183,35 +183,12 @@ class LocalMainFragment : Fragment() {
                                 categoryViewModel.swap(from.category(), to.category())
                             }
                         }
-
                     })
-
         }.root
     }
 
     private fun uploadTest(test: RealmTest) {
-
-        lifecycleScope.launch {
-
-            val progress = AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.uploading))
-                    .setView(LayoutInflater.from(requireContext()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).create()
-
-            progress.show()
-
-            val documentId = localMainViewModel.uploadTest(test, test.documentId)
-
-            progress.dismiss()
-
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, test.title, DynamicLinkCreator.createDynamicLink(documentId)))
-                type = "text/plain"
-            }
-
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
-        }
+        UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
     }
 
     private fun initDialogPlayStart(test: Test) {
@@ -354,6 +331,15 @@ class LocalMainFragment : Fragment() {
                 uploadTest(it)
                 selectedTest = null
             }
+        } else if (requestCode == REQUEST_UPLOAD_TEST && resultCode == Activity.RESULT_OK) {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, data?.getStringExtra("result") ?: "")
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
         }
 
     }
@@ -366,5 +352,6 @@ class LocalMainFragment : Fragment() {
 
     companion object {
         const val REQUEST_SIGN_IN_UPLOAD = 54321
+        const val REQUEST_UPLOAD_TEST = 54322
     }
 }
