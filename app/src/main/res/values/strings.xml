@@ -222,4 +222,7 @@
     <string name="tab_local">device</string>
     <string name="tab_remote">online</string>
     <string name="msg_please_login">please login</string>
+    <string name="preference_group_account">account</string>
+    <string name="setting_user_name">user name</string>
+    <string name="msg_update_user_name">update user name</string>
 </resources>

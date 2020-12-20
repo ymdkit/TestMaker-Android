@@ -217,4 +217,7 @@
     <string name="tab_local">端末</string>
     <string name="tab_remote">アカウント</string>
     <string name="msg_please_login">アカウントに問題集を紐づけることで、\n複数端末で問題集を共有することができます。</string>
+    <string name="preference_group_account">アカウント設定</string>
+    <string name="setting_user_name">ユーザー名の変更</string>
+    <string name="msg_update_user_name">ユーザ名を変更しました</string>
 </resources>

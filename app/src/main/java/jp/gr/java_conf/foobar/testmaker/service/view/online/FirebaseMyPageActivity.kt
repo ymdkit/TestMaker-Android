@@ -56,7 +56,6 @@ class FirebaseMyPageActivity : BaseActivity(), FirebaseMyPageController.OnClickL
         edit_profile.setOnClickListener {
 
             val user = viewModel.getUser() ?: return@setOnClickListener
-
             val dialogLayout = LayoutInflater.from(this@FirebaseMyPageActivity).inflate(R.layout.dialog_edit_user_name, findViewById(R.id.layout_dialog_edit_user))
             val editUsername = dialogLayout.findViewById<EditText>(R.id.edit_user_name)
             editUsername.setText(user.displayName)
