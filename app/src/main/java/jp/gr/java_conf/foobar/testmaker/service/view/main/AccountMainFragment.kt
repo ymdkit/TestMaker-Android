@@ -76,6 +76,7 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
             }
 
             override fun onClickShareTest(document: DocumentSnapshot) {
+                firebaseAnalytic.logEvent("upload_from_share_remote", Bundle())
                 val data = document.toObject(FirebaseTest::class.java) ?: return
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND

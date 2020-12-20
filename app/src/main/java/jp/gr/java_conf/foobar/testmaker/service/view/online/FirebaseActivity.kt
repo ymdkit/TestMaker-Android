@@ -122,6 +122,7 @@ class FirebaseActivity : BaseActivity() {
                     Toast.makeText(baseContext, getString(R.string.message_non_exist_test), Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
+                sendFirebaseEvent("upload_from_firebase_activity")
                 UploadTestActivity.startActivity(this)
             } ?: run {
                 login()

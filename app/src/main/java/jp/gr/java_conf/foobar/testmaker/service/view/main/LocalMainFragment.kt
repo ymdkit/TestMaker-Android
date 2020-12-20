@@ -188,6 +188,7 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun uploadTest(test: RealmTest) {
+        firebaseAnalytic.logEvent("upload_from_share_local", Bundle())
         UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
     }
 
