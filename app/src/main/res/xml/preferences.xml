@@ -34,14 +34,29 @@
 
         <SwitchPreferenceCompat
             app:key="show_setting_dialog"
-            app:title="@string/setting_show_dialog"
-            app:summary="@string/setting_show_setting_dialog" />
+            app:summary="@string/setting_show_setting_dialog"
+            app:title="@string/setting_show_dialog" />
 
         <ListPreference
-            app:key="play_font_size"
-            app:title="@string/play_font_size"
             app:entries="@array/play_font_size"
-            app:entryValues="@array/play_font_size_values" />
+            app:entryValues="@array/play_font_size_values"
+            app:key="play_font_size"
+            app:title="@string/play_font_size" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="preference_group_account"
+        app:title="@string/preference_group_account"
+        app:isPreferenceVisible="false">
+
+        <Preference
+            app:key="setting_user_name"
+            app:title="@string/setting_user_name" />
+
+        <Preference
+            app:key="setting_logout"
+            app:title="@string/logout" />
 
     </PreferenceCategory>
 
@@ -54,12 +69,11 @@
             app:title="@string/preference_study_plus" />
 
         <ListPreference
-            app:key="study_plus"
-            app:title="@string/preference_post_study_plus"
             app:entries="@array/upload_setting_study_plus"
             app:entryValues="@array/upload_setting_study_plus_values"
-            app:isPreferenceVisible="false"/>
-
+            app:isPreferenceVisible="false"
+            app:key="study_plus"
+            app:title="@string/preference_post_study_plus" />
 
     </PreferenceCategory>
 
@@ -77,13 +91,11 @@
 
         <Preference
             app:key="license"
-            app:title="@string/action_license">
-        </Preference>
+            app:title="@string/action_license"></Preference>
 
         <Preference
             app:key="version"
-            app:title="@string/version_app">
-        </Preference>
+            app:title="@string/version_app"></Preference>
 
     </PreferenceCategory>
 

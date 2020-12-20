@@ -9,10 +9,9 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.firebase.analytics.FirebaseAnalytics
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
@@ -27,14 +26,14 @@ open class BaseActivity : AppCompatActivity() {
 
     val sharedPreferenceManager: SharedPreferenceManager by inject()
 
-    private lateinit var firebaseAnalytic: FirebaseAnalytics
+    private val firebaseAnalytic: FirebaseAnalytics by inject()
 
     private var progress: AlertDialog? = null
 
+    lateinit var rewardedAd: RewardedAd
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        firebaseAnalytic = FirebaseAnalytics.getInstance(this)
 
         var info: ApplicationInfo? = null
         try {
@@ -79,6 +78,19 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         adView.loadAd(AdRequest.Builder().build())
+    }
+
+    protected fun loadRewardedAd() {
+        runCatching {
+            packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+        }.onSuccess {
+            rewardedAd = RewardedAd(this, it.metaData.getString("admob_rewarded_key"))
+            val adLoadCallback = object : RewardedAdLoadCallback() {
+                override fun onRewardedAdLoaded() {}
+                override fun onRewardedAdFailedToLoad(adError: LoadAdError) {}
+            }
+            rewardedAd.loadAd(AdRequest.Builder().build(), adLoadCallback)
+        }
     }
 
     protected fun showProgress(title: String = "") {

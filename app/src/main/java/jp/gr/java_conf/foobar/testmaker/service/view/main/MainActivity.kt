@@ -7,80 +7,79 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.airbnb.epoxy.EpoxyModel
-import com.airbnb.epoxy.EpoxyTouchHelper
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.android.billingclient.api.BillingClient
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
-import jp.gr.java_conf.foobar.testmaker.service.CardTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
+import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
-import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.*
 import java.util.*
 
 
-class MainActivity : ShowTestsActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
-    private val categoryViewModel: CategoryViewModel by viewModel()
+    private val service: CloudFunctionsService by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        binding.fab.setOnClickListener {
-            EditTestActivity.startActivity(this)
-        }
+        binding.viewPager.offscreenPageLimit = 1
+
+        binding.viewPager.adapter = ViewPagerAdapter(this, listOf(
+                LocalMainFragment(),
+                AccountMainFragment(object : AccountMainFragment.OnTestDownloadedListener {
+                    override fun onDownloaded() {
+                        binding.viewPager.setCurrentItem(PAGE_LOCAL, true)
+                    }
+
+                })))
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = listOf(getString(R.string.tab_local), getString(R.string.tab_remote))[position]
+            tab.icon = listOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_device_24, null),
+                    ResourcesCompat.getDrawable(resources, R.drawable.ic_account, null))[position]
+        }.attach()
 
         createAd(binding.adView)
-
         initNavigationView()
-
-        initTestAndFolderAdapter()
-
-        categoryViewModel.hasTestsCategories.observeNonNull(this) {
-            mainController.categories = it
-        }
-
-        testViewModel.testsLiveData.observeNonNull(this) {
-            mainController.tests = it
-        }
 
         viewModel.startConnection()
         viewModel.billingStatus.observeNonNull(this) {
@@ -114,28 +113,6 @@ class MainActivity : ShowTestsActivity() {
             }
         }
 
-        binding.recyclerView.adapter = mainController.adapter
-
-        EpoxyTouchHelper
-                .initDragging(mainController)
-                .withRecyclerView(binding.recyclerView)
-                .forVerticalList()
-                .forAllModels()
-                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<EpoxyModel<*>>() {
-                    override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: EpoxyModel<*>?, itemView: View?) {
-                        val from = mainController.adapter.getModelAtPosition(fromPosition)
-                        val to = mainController.adapter.getModelAtPosition(toPosition)
-
-                        if (from is CardTestBindingModel_ && to is CardTestBindingModel_) {
-                            testViewModel.swap(from.test(), to.test())
-                        } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
-                            categoryViewModel.swap(from.category(), to.category())
-                        }
-                    }
-
-                })
-
-
         lifecycleScope.launch {
             val pendingDynamicLinkData = withContext(Dispatchers.Default) {
                 FirebaseDynamicLinks.getInstance()
@@ -166,25 +143,6 @@ class MainActivity : ShowTestsActivity() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_compare) {
-            AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setTitle(getString(R.string.sort))
-                    .setItems(resources.getStringArray(R.array.sort_exam)) { _, which ->
-                        testViewModel.sort(SortTest.values()[which])
-                    }.show()
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
-
     private fun initNavigationView() {
 
         setSupportActionBar(binding.toolbar)
@@ -193,23 +151,6 @@ class MainActivity : ShowTestsActivity() {
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
-                R.id.nav_my_page -> {
-
-                    if (viewModel.getUser() != null) {
-                        startActivityForResult(Intent(this@MainActivity, FirebaseMyPageActivity::class.java), 0)
-                    } else {
-                        AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                                .setTitle(getString(R.string.login))
-                                .setMessage(getString(R.string.msg_not_login))
-                                .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                                    startActivityForResult(
-                                            viewModel.getAuthUIIntent(),
-                                            REQUEST_SIGN_IN)
-                                }
-                                .setNegativeButton(getString(R.string.cancel), null)
-                                .show()
-                    }
-                }
                 R.id.nav_help //editProActivityにも同様の記述
                 -> {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri
@@ -376,14 +317,24 @@ class MainActivity : ShowTestsActivity() {
         drawerToggle.syncState()
     }
 
-    override fun onResume() {
-        super.onResume()
-        testViewModel.refresh()
-        categoryViewModel.refresh()
+    private inner class ViewPagerAdapter(activity: FragmentActivity, private val fragments: List<Fragment>) : FragmentStateAdapter(activity) {
+        override fun getItemCount(): Int = fragments.size
+        override fun createFragment(position: Int): Fragment = fragments[position]
     }
 
     companion object {
+        const val PAGE_LOCAL = 0
+        const val PAGE_REMOTE = 1
+
+        const val REQUEST_EDIT = 11111
         const val REQUEST_IMPORT = 12345
         const val REQUEST_SIGN_IN = 12346
+
+        fun startActivityWithClear(activity: Activity) {
+            val intent = Intent(activity, MainActivity::class.java).apply {
+
+            }
+            activity.startActivity(intent)
+        }
     }
 }

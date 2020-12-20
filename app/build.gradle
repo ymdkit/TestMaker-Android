@@ -26,8 +26,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 127
-        versionName "3.7.02"
+        versionCode 128
+        versionName "3.8"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -41,7 +41,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [studyplus_consumer_key       : System.getenv("STUDYPLUS_CONSUMER_KEY"),
                                     secret_studyplus_consumer_key: System.getenv("SECRET_STUDYPLUS_CONSUMER_KEY"),
-                                    testmaker_admob_key          : System.getenv("TESTMAKER_ADMOB_KEY")]
+                                    testmaker_admob_key          : System.getenv("TESTMAKER_ADMOB_KEY"),
+                                    testmaker_admob_rewarded_key          : System.getenv("TESTMAKER_ADMOB_REWARDED_KEY")]
             signingConfig signingConfigs.release
         }
         debug {
@@ -127,6 +128,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.2.0'
     implementation 'com.squareup.moshi:moshi:1.9.2'
     implementation 'com.squareup.moshi:moshi-kotlin:1.9.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.2'
     kapt 'com.airbnb.android:epoxy-processor:3.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'

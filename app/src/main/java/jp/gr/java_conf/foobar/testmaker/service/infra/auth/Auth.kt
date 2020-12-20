@@ -4,6 +4,7 @@ import android.content.Intent
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 
 class Auth {
 
@@ -24,6 +25,17 @@ class Auth {
                         "https://testmaker-1cb29.firebaseapp.com/terms",
                         "https://testmaker-1cb29.firebaseapp.com/privacy")
                 .build()
+    }
+
+    fun updateProfile(userName: String, completion: () -> Unit) {
+        val user = getUser() ?: return
+
+        val profileUpdates = UserProfileChangeRequest.Builder()
+                .setDisplayName(userName).build()
+
+        user.updateProfile(profileUpdates).addOnSuccessListener {
+            completion()
+        }
     }
 
 }

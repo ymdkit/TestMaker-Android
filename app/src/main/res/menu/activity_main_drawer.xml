@@ -2,10 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_my_page"
-            android:icon="@drawable/ic_account_circle"
-            android:title="@string/my_page" />
-        <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_help_outline_white"
             android:title="@string/help" />

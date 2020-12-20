@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.di
 
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.realm.Realm
@@ -19,6 +20,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.category.EditCategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.*
+import jp.gr.java_conf.foobar.testmaker.service.view.main.LocalMainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
@@ -49,6 +51,7 @@ fun getTestMakerModules(realm: Realm) = module {
                 .build()
     }
     single { get<Retrofit>().create(CloudFunctionsService::class.java) }
+    single { FirebaseAnalytics.getInstance(get()) }
     single { SearchClient() }
     single { get<SearchClient>().create() }
     viewModel { CategoryViewModel(get()) }
@@ -63,6 +66,7 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { FirebaseViewModel(get(), get(), get()) }
     viewModel { FirebaseMyPageViewModel(get(), get()) }
     viewModel { (test: Test, questions: List<Question>) -> PlayViewModel(test, questions, get()) }
+    viewModel { LocalMainViewModel(get(), get()) }
     viewModel { ShowTestsViewModel(get(), get(), get()) }
 
 }

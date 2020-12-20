@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/layout_coordinator"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/adView"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    style="@style/Toolbar"
+                    android:layout_width="match_parent"
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                    app:popupTheme="@style/Theme.AppCompat.DayNight"
+                    app:title="@string/title_activity_upload_test" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/element_spacing_normal"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/label_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:layout_marginTop="@dimen/element_spacing_large"
+                    android:text="@string/label_spinner_tests_for_upload"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_height_large"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    app:layout_constraintTop_toBottomOf="@id/label_spinner" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_overview"
+                    style="@style/MyTextInputLayoutStyle"
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:layout_marginTop="@dimen/element_spacing_small"
+                    app:layout_constraintTop_toBottomOf="@id/spinner">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/edit_overview"
+                        style="@style/MyEditTextMultiLine"
+                        android:hint="@string/hint_overview"
+                        android:maxLength="140" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/label_setting_public"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/element_spacing_small"
+                    android:layout_marginTop="@dimen/element_spacing_large"
+                    android:text="@string/label_setting_public"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintTop_toBottomOf="@id/input_overview" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/check_private"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/element_spacing_large"
+                    android:text="@string/check_private"
+                    app:layout_constraintTop_toBottomOf="@id/label_setting_public" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <Button
+            android:id="@+id/button_upload"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_margin="@dimen/element_spacing_normal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/upload_test"
+            android:theme="@style/ThemeOverlay.Button.Accent"
+            app:layout_constraintBottom_toTopOf="@id/adView" />
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-8942090726462263/8420884238"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

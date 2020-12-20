@@ -59,7 +59,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
 
     }
 
-    suspend fun createTest(test: RealmTest, overview: String, documentId: String): String {
+    suspend fun createTest(test: RealmTest, overview: String, documentId: String, isPublic: Boolean = true): String {
 
         val firebaseTest = test.toFirebaseTest(context)
         val user = auth.getUser() ?: return ""
@@ -69,6 +69,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
         firebaseTest.overview = overview
         firebaseTest.size = test.questionsNonNull().size
         firebaseTest.locale = Locale.getDefault().language
+        firebaseTest.public = isPublic
 
         val ref = if(documentId != "") db.collection("tests").document(documentId) else db.collection("tests").document()
 

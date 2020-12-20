@@ -1,60 +1,75 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.share
+package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.airbnb.epoxy.EpoxyModel
+import com.airbnb.epoxy.EpoxyTouchHelper
 import com.firebase.ui.auth.AuthUI
-import com.google.firebase.dynamiclinks.DynamicLink
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.google.firebase.analytics.FirebaseAnalytics
+import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
+import jp.gr.java_conf.foobar.testmaker.service.CardTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.main.MainController
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-open class ShowTestsActivity : BaseActivity() {
+class LocalMainFragment : Fragment() {
+
+    private val localMainViewModel: LocalMainViewModel by viewModel()
 
     internal lateinit var mainController: MainController
+    private val sharedPreferenceManager: SharedPreferenceManager by inject()
+    private val firebaseAnalytic: FirebaseAnalytics by inject()
 
-    protected val service: CloudFunctionsService by inject()
+    private var binding: LocalMainFragmentBinding? = null
 
-    private val showTestsViewModel: ShowTestsViewModel by viewModel()
-    private val testViewModel: TestViewModel by viewModel()
+    private val testViewModel: TestViewModel by sharedViewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
+    private val service: CloudFunctionsService by inject()
 
     private var selectedTest: RealmTest? = null //ログイン時に一度画面から離れるので選択中の値を保持
 
-    protected fun initTestAndFolderAdapter() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
 
-        mainController = MainController(this)
+        mainController = MainController(requireContext())
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
             override fun onClickPlayTest(test: Test) {
 
-                sendFirebaseEvent("play")
+                firebaseAnalytic.logEvent("play", Bundle())
 
                 if (test.questions.isEmpty()) {
 
-                    Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
 
                 } else {
 
@@ -65,16 +80,17 @@ open class ShowTestsActivity : BaseActivity() {
 
             override fun onClickEditTest(test: Test) {
 
-                sendFirebaseEvent("edit")
+                firebaseAnalytic.logEvent("edit", Bundle())
 
-                EditActivity.startActivity(this@ShowTestsActivity, test.id)
+                EditActivity.startActivity(requireActivity(), test.id)
 
             }
 
             override fun onClickDeleteTest(test: Test) {
 
-                sendFirebaseEvent("delete")
-                val builder = AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
+                firebaseAnalytic.logEvent("delete", Bundle())
+
+                val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
                 builder.setTitle(getString(R.string.delete_exam))
                 builder.setMessage(getString(R.string.message_delete_exam, test.title))
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->
@@ -87,13 +103,13 @@ open class ShowTestsActivity : BaseActivity() {
 
             override fun onClickShareTest(test: Test) {
 
-                AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
+                AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
                         .setTitle(getString(R.string.title_dialog_share))
                         .setItems(resources.getStringArray(R.array.action_share)) { dialog, which ->
 
                             when (which) {
                                 0 -> { //リンクの共有
-                                    showTestsViewModel.getUser()?.let {
+                                    localMainViewModel.getUser()?.let {
                                         dialog.dismiss()
                                         uploadTest(RealmTest.createFromTest(test))
                                     } ?: run {
@@ -102,30 +118,29 @@ open class ShowTestsActivity : BaseActivity() {
                                 }
 
                                 1 -> { //テキスト変換
+                                    lifecycleScope.launch {
+                                        val progress = AlertDialog.Builder(requireContext())
+                                                .setTitle(getString(R.string.converting))
+                                                .setView(LayoutInflater.from(requireContext()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).create()
 
-                                    Toast.makeText(baseContext, getString(R.string.message_share_exam, test.title), Toast.LENGTH_LONG).show()
-
-                                    try {
-                                        val intent = Intent()
-                                        intent.action = Intent.ACTION_SEND
-                                        intent.type = "text/plain"
-
-                                        lifecycleScope.launch {
-                                            showProgress()
-                                            runCatching {
-                                                withContext(Dispatchers.IO) {
-                                                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
-                                                }
-                                            }.onSuccess {
-                                                intent.putExtra(Intent.EXTRA_TEXT, it.text)
-                                                startActivity(intent)
-                                            }.onFailure {
-                                                showErrorToast(it)
+                                        progress.show()
+                                        runCatching {
+                                            withContext(Dispatchers.IO) {
+                                                service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
                                             }
-                                            hideProgress()
+                                        }.onSuccess {
+                                            val sendIntent: Intent = Intent().apply {
+                                                action = Intent.ACTION_SEND
+                                                putExtra(Intent.EXTRA_TEXT, it.text)
+                                                type = "text/plain"
+                                            }
+
+                                            val shareIntent = Intent.createChooser(sendIntent, null)
+                                            startActivity(shareIntent)
+                                        }.onFailure {
+                                            requireContext().showErrorToast(it)
                                         }
-                                    } catch (e: Exception) {
-                                        sendFirebaseEvent("export error: $e")
+                                        progress.dismiss()
                                     }
                                 }
                             }
@@ -133,46 +148,53 @@ open class ShowTestsActivity : BaseActivity() {
                         }.show()
             }
         })
+
+        categoryViewModel.hasTestsCategories.observeNonNull(this) {
+            mainController.categories = it
+        }
+
+        testViewModel.testsLiveData.observeNonNull(this) {
+            mainController.tests = it
+        }
+
+        return DataBindingUtil.inflate<LocalMainFragmentBinding>(inflater, R.layout.local_main_fragment, container, false).apply {
+            binding = this
+            lifecycleOwner = viewLifecycleOwner
+
+            fab.setOnClickListener {
+                EditTestActivity.startActivity(requireActivity())
+            }
+
+            recyclerView.adapter = mainController.adapter
+
+            EpoxyTouchHelper
+                    .initDragging(mainController)
+                    .withRecyclerView(recyclerView)
+                    .forVerticalList()
+                    .forAllModels()
+                    .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<EpoxyModel<*>>() {
+                        override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: EpoxyModel<*>?, itemView: View?) {
+                            val from = mainController.adapter.getModelAtPosition(fromPosition)
+                            val to = mainController.adapter.getModelAtPosition(toPosition)
+
+                            if (from is CardTestBindingModel_ && to is CardTestBindingModel_) {
+                                testViewModel.swap(from.test(), to.test())
+                            } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
+                                categoryViewModel.swap(from.category(), to.category())
+                            }
+                        }
+                    })
+        }.root
     }
 
     private fun uploadTest(test: RealmTest) {
-
-        lifecycleScope.launch {
-
-            val progress = AlertDialog.Builder(this@ShowTestsActivity)
-                    .setTitle(getString(R.string.uploading))
-                    .setView(LayoutInflater.from(this@ShowTestsActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).create()
-
-            progress.show()
-
-            val documentId = showTestsViewModel.uploadTest(test, test.documentId)
-
-            progress.dismiss()
-            val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                    .setLink(Uri.parse("https://testmaker-1cb29.com/$documentId"))
-                    .setDomainUriPrefix("https://testmaker.page.link")
-                    .setAndroidParameters(DynamicLink.AndroidParameters.Builder().setMinimumVersion(87).build())
-                    .setIosParameters(DynamicLink.IosParameters.Builder("jp.gr.java-conf.foobar.testmaker.service").setAppStoreId("1201200202").setMinimumVersion("2.1.5").build())
-                    .buildDynamicLink()
-
-            try {
-                val intent = Intent()
-                intent.action = Intent.ACTION_SEND
-                intent.type = "text/plain"
-
-                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, test.title, dynamicLink.uri))
-                startActivity(intent)
-
-            } catch (e: Exception) {
-                sendFirebaseEvent("export error: $e")
-            }
-
-        }
+        firebaseAnalytic.logEvent("upload_from_share_local", Bundle())
+        UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
     }
 
     private fun initDialogPlayStart(test: Test) {
 
-        val dialogLayout = LayoutInflater.from(this@ShowTestsActivity).inflate(R.layout.dialog_start, findViewById(R.id.layout_dialog_start))
+        val dialogLayout = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_start, requireActivity().findViewById(R.id.layout_dialog_start))
 
         val editLimit = dialogLayout.findViewById<EditText>(R.id.set_limit)
         editLimit.setText(test.limit.toString())
@@ -214,7 +236,7 @@ open class ShowTestsActivity : BaseActivity() {
             startAnswer(test, editStart.text.toString(), editLimit.text.toString())
         }
 
-        val builder = AlertDialog.Builder(this@ShowTestsActivity, R.style.MyAlertDialogStyle)
+        val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
         builder.setView(dialogLayout)
         builder.setTitle(getString(R.string.way))
         builder.setPositiveButton(android.R.string.ok, null)
@@ -251,15 +273,15 @@ open class ShowTestsActivity : BaseActivity() {
 
         if (!incorrect && sharedPreferenceManager.refine) {
 
-            Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_wrongs), Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.message_null_wrongs), Toast.LENGTH_SHORT).show()
 
         } else if (limit == "") {
 
-            Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_number), Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.message_null_number), Toast.LENGTH_SHORT).show()
 
         } else if (start == "" || start.toInt() > test.questions.size || start.toInt() < 1) {
 
-            Toast.makeText(this@ShowTestsActivity, getString(R.string.message_null_start), Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.message_null_start), Toast.LENGTH_SHORT).show()
 
         } else {
 
@@ -270,7 +292,7 @@ open class ShowTestsActivity : BaseActivity() {
 
             testViewModel.update(result)
 
-            PlayActivity.startActivity(this@ShowTestsActivity, result.id)
+            PlayActivity.startActivity(requireActivity(), result.id)
 
         }
     }
@@ -279,7 +301,7 @@ open class ShowTestsActivity : BaseActivity() {
 
         selectedTest = test
 
-        AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+        AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
                 .setTitle(getString(R.string.login))
                 .setMessage(getString(R.string.msg_not_login))
                 .setPositiveButton(getString(R.string.ok)) { _, _ ->
@@ -310,13 +332,27 @@ open class ShowTestsActivity : BaseActivity() {
                 uploadTest(it)
                 selectedTest = null
             }
+        } else if (requestCode == REQUEST_UPLOAD_TEST && resultCode == Activity.RESULT_OK) {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, data?.getStringExtra("result") ?: "")
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
         }
 
     }
 
-    companion object {
-        const val REQUEST_EDIT = 11111
-        const val REQUEST_SIGN_IN_UPLOAD = 54321
+    override fun onResume() {
+        super.onResume()
+        testViewModel.refresh()
+        categoryViewModel.refresh()
     }
 
+    companion object {
+        const val REQUEST_SIGN_IN_UPLOAD = 54321
+        const val REQUEST_UPLOAD_TEST = 54322
+    }
 }
