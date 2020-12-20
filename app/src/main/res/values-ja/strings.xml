@@ -222,4 +222,8 @@
     <string name="msg_update_user_name">ユーザ名を変更しました</string>
     <string name="empty_uploaded_test"> アップロードしている問題集はありません。\n右下のボタンから問題集をアップロードしてください</string>
     <string name="converting">テキスト形式に変換中（※画像情報は変換されません）</string>
+    <string name="title_activity_upload_test">問題集のアップロード</string>
+    <string name="upload_test">アップロード</string>
+    <string name="label_spinner_tests_for_upload">アップロードする問題集</string>
+    <string name="label_overview">概要</string>
 </resources>

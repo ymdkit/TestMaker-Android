@@ -227,4 +227,8 @@
     <string name="msg_update_user_name">update user name</string>
     <string name="empty_uploaded_test">upload your first test</string>
     <string name="converting">convert to csv</string>
+    <string name="title_activity_upload_test">upload test</string>
+    <string name="upload_test">upload</string>
+    <string name="label_spinner_tests_for_upload">select test</string>
+    <string name="label_overview">overview</string>
 </resources>
