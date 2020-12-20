@@ -71,19 +71,37 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <Button
-                    android:id="@+id/button_upload"
-                    style="@style/Widget.AppCompat.Button.Colored"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/label_setting_public"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/element_spacing_small"
                     android:layout_marginTop="@dimen/element_spacing_large"
-                    android:text="@string/upload_test"
-                    android:theme="@style/ThemeOverlay.Button.Accent"
+                    android:text="@string/label_setting_public"
+                    android:textColor="@color/colorPrimary"
                     app:layout_constraintTop_toBottomOf="@id/input_overview" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/check_private"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/element_spacing_large"
+                    android:text="@string/check_private"
+                    app:layout_constraintTop_toBottomOf="@id/label_setting_public" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <Button
+            android:id="@+id/button_upload"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_margin="@dimen/element_spacing_normal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/upload_test"
+            android:theme="@style/ThemeOverlay.Button.Accent"
+            app:layout_constraintBottom_toTopOf="@id/adView" />
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"

@@ -17,15 +17,13 @@ import kotlinx.coroutines.withContext
 
 class FirebaseViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val service: SearchService) : ViewModel() {
 
-    fun getTestsQuery() = repository.getTestsQuery()
-
     suspend fun downloadTest(testId: String): FirebaseTestResult = repository.downloadTest(testId)
 
     fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test)
 
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
 
-    suspend fun uploadTest(test: RealmTest, overview: String) = repository.createTest(test, overview, "")
+    suspend fun uploadTest(test: RealmTest, overview: String, isPublic: Boolean) = repository.createTest(test, overview, "", isPublic)
 
     fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
 

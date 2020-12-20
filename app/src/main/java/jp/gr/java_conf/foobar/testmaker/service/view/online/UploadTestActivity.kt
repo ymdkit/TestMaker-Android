@@ -10,11 +10,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAdCallback
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityUploadTestBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.extensions.isConnectedInternet
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -22,6 +28,7 @@ class UploadTestActivity : BaseActivity() {
 
     private val testViewModel: TestViewModel by viewModel()
     private val viewModel: FirebaseViewModel by viewModel()
+    private var ablePrivateUpload = false
 
     private val binding: ActivityUploadTestBinding by lazy {
         DataBindingUtil.setContentView<ActivityUploadTestBinding>(this, R.layout.activity_upload_test)
@@ -30,6 +37,7 @@ class UploadTestActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createAd(binding.adView)
+        loadRewardedAd()
 
         val adapter = ArrayAdapter(this,
                 android.R.layout.simple_spinner_item, testViewModel.tests.map { it.title }.toTypedArray())
@@ -43,14 +51,63 @@ class UploadTestActivity : BaseActivity() {
                         .setTitle(getString(R.string.uploading))
                         .setView(LayoutInflater.from(this@UploadTestActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
-                viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]), binding.editOverview.text.toString())
+                viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]), binding.editOverview.text.toString(), !binding.checkPrivate.isChecked)
 
                 Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
                 progress.dismiss()
                 finish()
-
             }
         }
+
+        binding.checkPrivate.setOnCheckedChangeListener { checkBox, isChecked ->
+            if (sharedPreferenceManager.isRemovedAd) return@setOnCheckedChangeListener
+            if (ablePrivateUpload) return@setOnCheckedChangeListener
+
+            if (isChecked) {
+                checkBox.isChecked = false
+
+                AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                        .setTitle(getString(R.string.title_dialog_private))
+                        .setMessage(getString(R.string.msg_dialog_private))
+                        .setPositiveButton(android.R.string.ok) { dialog, _ ->
+
+                            if (!isConnectedInternet()) {
+                                showToast(getString(R.string.client_network_error))
+                                return@setPositiveButton
+                            }
+
+                            lifecycleScope.launch(Dispatchers.Main) {
+                                showProgress(getString(R.string.load_ad))
+                                var count = 0L
+                                while (count <= LIMIT_AD_ATTEMPT_NUM) {
+                                    if (rewardedAd.isLoaded) {
+                                        val activityContext: Activity = this@UploadTestActivity
+                                        val adCallback = object : RewardedAdCallback() {
+                                            override fun onRewardedAdClosed() {
+                                                loadRewardedAd()
+                                            }
+
+                                            override fun onUserEarnedReward(reword: RewardItem) {
+                                                ablePrivateUpload = true
+                                                binding.checkPrivate.isChecked = true
+                                                dialog.dismiss()
+                                            }
+                                        }
+                                        rewardedAd.show(activityContext, adCallback)
+                                        break
+                                    } else {
+                                        count += 1
+                                        delay(count * 1000)
+                                    }
+                                }
+                                hideProgress()
+                            }
+                        }
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create().show()
+            }
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -64,6 +121,8 @@ class UploadTestActivity : BaseActivity() {
     }
 
     companion object {
+        const val LIMIT_AD_ATTEMPT_NUM = 3L
+
         fun startActivity(activity: Activity) {
             activity.startActivity(Intent(activity, UploadTestActivity::class.java))
         }
