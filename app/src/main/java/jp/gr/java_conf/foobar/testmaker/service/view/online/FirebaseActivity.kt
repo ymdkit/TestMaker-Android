@@ -118,18 +118,13 @@ class FirebaseActivity : BaseActivity() {
         binding.fab.setOnClickListener {
 
             viewModel.getUser()?.let {
-
                 if (testViewModel.tests.isEmpty() || testViewModel.tests.all { it.questions.isEmpty() }) {
 
                     Toast.makeText(baseContext, getString(R.string.message_non_exist_test), Toast.LENGTH_SHORT).show()
-
                     return@setOnClickListener
                 }
-
                 showDialogUpload()
-
             } ?: run {
-
                 login()
             }
         }

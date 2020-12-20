@@ -20,16 +20,12 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.play.SelfJudgePlayActivity" />
         <activity android:name=".view.play.PlayActivity" />
         <activity android:name=".view.edit.EditQuestionActivity" />
         <activity android:name=".view.category.EditCategoryActivity" />
         <activity android:name=".view.edit.EditTestActivity" />
         <activity
             android:name=".view.preference.SettingsActivity"
-            android:configChanges="uiMode" />
-        <activity
-            android:name=".view.online.FirebaseMyPageActivity"
             android:configChanges="uiMode" />
         <activity
             android:name=".view.online.FirebaseActivity"
@@ -89,9 +85,6 @@
             android:label="@string/title_activity_edit_pro"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".view.share.ShowTestsActivity"
-            android:configChanges="uiMode" />
         <activity
             android:name=".view.share.BaseActivity"
             android:configChanges="uiMode" />
