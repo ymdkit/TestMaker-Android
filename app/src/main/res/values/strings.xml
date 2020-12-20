@@ -231,4 +231,10 @@
     <string name="upload_test">upload</string>
     <string name="label_spinner_tests_for_upload">select test</string>
     <string name="label_overview">overview</string>
+    <string name="label_setting_public">publicity</string>
+    <string name="check_private">private (need to watch Ad)</string>
+    <string name="load_ad">loading_ad</string>
+    <string name="client_network_error">connect internet</string>
+    <string name="title_dialog_private">Publishing Setting</string>
+    <string name="msg_dialog_private">you can use this function by watching Ad</string>
 </resources>

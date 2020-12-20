@@ -226,4 +226,10 @@
     <string name="upload_test">アップロード</string>
     <string name="label_spinner_tests_for_upload">アップロードする問題集</string>
     <string name="label_overview">概要</string>
+    <string name="label_setting_public">公開設定</string>
+    <string name="check_private">限定公開（リンクを知っている人のみ利用可能）</string>
+    <string name="load_ad">広告を読み込み中</string>
+    <string name="client_network_error">インターネット接続がありません</string>
+    <string name="title_dialog_private">公開設定の変更</string>
+    <string name="msg_dialog_private">動画広告を視聴することで、公開設定の変更が可能になります</string>
 </resources>
