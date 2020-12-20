@@ -2,7 +2,6 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,8 +18,6 @@ import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.dynamiclinks.DynamicLink
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.CardTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -31,6 +28,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinkCreator
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
@@ -209,24 +207,15 @@ class LocalMainFragment : Fragment() {
             val documentId = localMainViewModel.uploadTest(test, test.documentId)
 
             progress.dismiss()
-            val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                    .setLink(Uri.parse("https://testmaker-1cb29.com/$documentId"))
-                    .setDomainUriPrefix("https://testmaker.page.link")
-                    .setAndroidParameters(DynamicLink.AndroidParameters.Builder().setMinimumVersion(87).build())
-                    .setIosParameters(DynamicLink.IosParameters.Builder("jp.gr.java-conf.foobar.testmaker.service").setAppStoreId("1201200202").setMinimumVersion("2.1.5").build())
-                    .buildDynamicLink()
 
-            try {
-                val intent = Intent()
-                intent.action = Intent.ACTION_SEND
-                intent.type = "text/plain"
-
-                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, test.title, dynamicLink.uri))
-                startActivity(intent)
-
-            } catch (e: Exception) {
-                firebaseAnalytic.logEvent("export_error", Bundle())
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, test.title, DynamicLinkCreator.createDynamicLink(documentId)))
+                type = "text/plain"
             }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
         }
     }
 

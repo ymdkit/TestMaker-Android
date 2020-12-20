@@ -3,7 +3,6 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +13,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.firebase.ui.auth.IdpResponse
-import com.google.firebase.dynamiclinks.DynamicLink
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.AccountMainFragmentBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinkCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
@@ -31,10 +29,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AccountMainFragment(private val listener: OnTestDownloadedListener) : Fragment() {
 
     private val viewModel: FirebaseMyPageViewModel by viewModel()
-    internal lateinit var controller: AccountMainController
     private val testViewModel: TestViewModel by sharedViewModel()
 
     private var binding: AccountMainFragmentBinding? = null
+
+    private val controller: AccountMainController by lazy {
+        AccountMainController(requireContext())
+    }
 
     interface OnTestDownloadedListener {
         fun onDownloaded()
@@ -49,7 +50,6 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
             binding?.progress?.isRefreshing = false
         }
 
-        controller = AccountMainController(requireContext())
         controller.setOnClickListener(object : AccountMainController.OnClickListener {
             override fun onClickDownloadTest(document: DocumentSnapshot) {
                 lifecycleScope.launch {
@@ -76,17 +76,9 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
 
             override fun onClickShareTest(document: DocumentSnapshot) {
                 val data = document.toObject(FirebaseTest::class.java) ?: return
-
-                val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                        .setLink(Uri.parse("https://testmaker-1cb29.com/${document.id}"))
-                        .setDomainUriPrefix("https://testmaker.page.link")
-                        .setAndroidParameters(DynamicLink.AndroidParameters.Builder().setMinimumVersion(87).build())
-                        .setIosParameters(DynamicLink.IosParameters.Builder("jp.gr.java-conf.foobar.testmaker.service").setAppStoreId("1201200202").setMinimumVersion("2.1.5").build())
-                        .buildDynamicLink()
-
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, dynamicLink.uri))
+                    putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, DynamicLinkCreator.createDynamicLink(document.id)))
                     type = "text/plain"
                 }
 
@@ -110,6 +102,7 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
 
         return DataBindingUtil.inflate<AccountMainFragmentBinding>(inflater, R.layout.account_main_fragment, container, false).apply {
             binding = this
+            recyclerView.adapter = controller.adapter
             lifecycleOwner = viewLifecycleOwner
 
             viewModel.getUser() ?: run {
@@ -154,8 +147,6 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
                 }
                 viewModel.fetchMyTests()
             }
-
-            recyclerView.adapter = controller.adapter
 
         }.root
     }
@@ -204,7 +195,7 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
                         viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[position]), editOverView.text.toString())
 
                         Toast.makeText(requireContext(), getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-                        viewModel.getMyTests()
+                        viewModel.fetchMyTests()
                         dialog.dismiss()
                         progress.dismiss()
 
