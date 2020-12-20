@@ -157,7 +157,7 @@
     <string name="report">報告</string>
     <string name="report_subject">問題集の報告</string>
     <string name="report_body">以下に報告する理由を記載してください</string>
-    <string name="msg_test_upload">問題集を投稿しました</string>
+    <string name="msg_test_upload">問題集をアップロードしました</string>
     <string name="setting">設定</string>
     <string name="setting_sound">効果音</string>
     <string name="preference_group_other">その他</string>
@@ -220,4 +220,5 @@
     <string name="preference_group_account">アカウント設定</string>
     <string name="setting_user_name">ユーザー名の変更</string>
     <string name="msg_update_user_name">ユーザ名を変更しました</string>
+    <string name="empty_uploaded_test"> アップロードしている問題集はありません。\n右下のボタンから問題集をアップロードしてください</string>
 </resources>

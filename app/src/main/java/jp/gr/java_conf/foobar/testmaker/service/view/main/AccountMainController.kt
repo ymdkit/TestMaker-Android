@@ -6,6 +6,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.cardTestAccount
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
+import jp.gr.java_conf.foobar.testmaker.service.itemEmpty
 import kotlin.math.abs
 
 class AccountMainController(private val context: Context) : EpoxyController() {
@@ -29,6 +30,14 @@ class AccountMainController(private val context: Context) : EpoxyController() {
     }
 
     override fun buildModels() {
+
+        if (tests.isEmpty()) {
+            itemEmpty {
+                id("empty")
+                message(context.getString(R.string.empty_uploaded_test))
+            }
+            return
+        }
 
         tests.forEach {
 
