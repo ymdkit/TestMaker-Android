@@ -41,7 +41,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [studyplus_consumer_key       : System.getenv("STUDYPLUS_CONSUMER_KEY"),
                                     secret_studyplus_consumer_key: System.getenv("SECRET_STUDYPLUS_CONSUMER_KEY"),
-                                    testmaker_admob_key          : System.getenv("TESTMAKER_ADMOB_KEY")]
+                                    testmaker_admob_key          : System.getenv("TESTMAKER_ADMOB_KEY"),
+                                    testmaker_admob_rewarded_key          : System.getenv("TESTMAKER_ADMOB_REWARDED_KEY")]
             signingConfig signingConfigs.release
         }
         debug {

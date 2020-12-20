@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="jp.gr.java_conf.foobar.testmaker.service">
 
-    <application
-        android:icon="@drawable/icon_small">
+    <application android:icon="@drawable/icon_small">
+        <meta-data
+            android:name="admob_rewarded_key"
+            android:value="${testmaker_admob_rewarded_key}" />
     </application>
 
 </manifest>

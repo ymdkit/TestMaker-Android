@@ -10,8 +10,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <application
-        android:icon="@color/colorPrimary">
+    <application android:icon="@color/colorPrimary">
+
+        <meta-data
+            android:name="admob_rewarded_key"
+            android:value="ca-app-pub-3940256099942544/5224354917" />
 
     </application>
 
