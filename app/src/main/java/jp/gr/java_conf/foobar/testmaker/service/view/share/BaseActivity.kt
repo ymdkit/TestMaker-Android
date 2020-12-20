@@ -6,7 +6,6 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -44,7 +43,6 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         if (info != null) {
-            rewardedAd = RewardedAd(this, info.metaData.getString("admob_rewarded_key"))
             MobileAds.initialize(this, info.metaData.getString("com.google.android.gms.ads.jp.gr.java_conf.foobar.testmaker.service"))
             MobileAds.setRequestConfiguration(RequestConfiguration.Builder().setTestDeviceIds(
                     listOf(AdRequest.DEVICE_ID_EMULATOR,
@@ -83,16 +81,16 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     protected fun loadRewardedAd() {
-        val adLoadCallback = object : RewardedAdLoadCallback() {
-            override fun onRewardedAdLoaded() {
-                Toast.makeText(this@BaseActivity, "広告の読み込みに成功しました", Toast.LENGTH_SHORT).show()
+        runCatching {
+            packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+        }.onSuccess {
+            rewardedAd = RewardedAd(this, it.metaData.getString("admob_rewarded_key"))
+            val adLoadCallback = object : RewardedAdLoadCallback() {
+                override fun onRewardedAdLoaded() {}
+                override fun onRewardedAdFailedToLoad(adError: LoadAdError) {}
             }
-
-            override fun onRewardedAdFailedToLoad(adError: LoadAdError) {
-                Toast.makeText(this@BaseActivity, "広告の読み込みに失敗しました：${adError}", Toast.LENGTH_SHORT).show()
-            }
+            rewardedAd.loadAd(AdRequest.Builder().build(), adLoadCallback)
         }
-        rewardedAd.loadAd(AdRequest.Builder().build(), adLoadCallback)
     }
 
     protected fun showProgress(title: String = "") {
