@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.firebase.ui.auth.IdpResponse
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.AccountMainFragmentBinding
@@ -23,6 +24,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -30,6 +32,7 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
 
     private val viewModel: FirebaseMyPageViewModel by viewModel()
     private val testViewModel: TestViewModel by sharedViewModel()
+    private val firebaseAnalytic: FirebaseAnalytics by inject()
 
     private var binding: AccountMainFragmentBinding? = null
 
@@ -110,6 +113,7 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
             }
 
             buttonLogin.setOnClickListener {
+                firebaseAnalytic.logEvent("login_from_account_tab", Bundle())
                 startActivityForResult(
                         viewModel.getAuthUIIntent(),
                         REQUEST_SIGN_IN)
