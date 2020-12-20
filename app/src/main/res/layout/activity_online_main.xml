@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/element_spacing_very_large"
-                android:src="@drawable/ic_add_white"
+                android:src="@drawable/ic_baseline_cloud_upload_24"
                 app:layout_anchor="@id/swipe_refresh"
                 app:layout_anchorGravity="bottom|end"
                 app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
