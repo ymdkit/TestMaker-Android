@@ -35,7 +35,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.coroutines.Dispatchers
@@ -152,23 +151,6 @@ class MainActivity : BaseActivity() {
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
-                R.id.nav_my_page -> {
-
-                    if (viewModel.getUser() != null) {
-                        startActivityForResult(Intent(this@MainActivity, FirebaseMyPageActivity::class.java), 0)
-                    } else {
-                        AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                                .setTitle(getString(R.string.login))
-                                .setMessage(getString(R.string.msg_not_login))
-                                .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                                    startActivityForResult(
-                                            viewModel.getAuthUIIntent(),
-                                            REQUEST_SIGN_IN)
-                                }
-                                .setNegativeButton(getString(R.string.cancel), null)
-                                .show()
-                    }
-                }
                 R.id.nav_help //editProActivityにも同様の記述
                 -> {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri

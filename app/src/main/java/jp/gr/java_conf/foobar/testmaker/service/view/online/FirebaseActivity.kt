@@ -158,28 +158,12 @@ class FirebaseActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
         when (item.itemId) {
-            R.id.action_profile -> {
-
-                viewModel.getUser()?.let {
-                    startActivityForResult(Intent(this@FirebaseActivity, FirebaseMyPageActivity::class.java), 0)
-                } ?: run {
-                    login()
-                }
-            }
-
             android.R.id.home -> {
-
                 finish()
-
                 return true
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
