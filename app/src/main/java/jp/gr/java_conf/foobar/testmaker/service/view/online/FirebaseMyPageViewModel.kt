@@ -11,7 +11,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 
-class FirebaseMyPageViewModel(private val repository: TestMakerRepository,private val auth: Auth) : ViewModel() {
+class FirebaseMyPageViewModel(private val repository: TestMakerRepository, private val auth: Auth) : ViewModel() {
 
     fun fetchMyTests() = repository.fetchMyTests()
 
@@ -33,5 +33,5 @@ class FirebaseMyPageViewModel(private val repository: TestMakerRepository,privat
 
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
 
-    suspend fun uploadTest(test: RealmTest, overview: String) = repository.createTest(test, overview, "")
+    suspend fun uploadTest(test: RealmTest, overview: String, isPublic: Boolean) = repository.createTest(test, overview, "", isPublic)
 }

@@ -8,6 +8,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import java.text.SimpleDateFormat
 import java.util.*
 
+// フィールド名に is を含めるとフィールド名が正しく保存されない場合があります（2020/12/20）
 data class FirebaseTest(var name: String = "",
                         var color: Int = 0,
                         @Json(name = "user_id") var userId: String = "",
@@ -16,7 +17,8 @@ data class FirebaseTest(var name: String = "",
                         var locale: String = "",
                         var size: Int = 0,
                         var created_at: Timestamp = Timestamp(Date()),
-                        @Json(name = "document_id") var documentId: String = ""
+                        @Json(name = "document_id") var documentId: String = "",
+                        var public: Boolean = true
 ) {
 
 
@@ -42,7 +44,7 @@ data class FirebaseTest(var name: String = "",
 }
 
 sealed class FirebaseTestResult {
-    data class Success(val test: FirebaseTest): FirebaseTestResult()
+    data class Success(val test: FirebaseTest) : FirebaseTestResult()
 
-    data class Failure(val message: String): FirebaseTestResult()
+    data class Failure(val message: String) : FirebaseTestResult()
 }

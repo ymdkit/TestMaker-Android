@@ -196,7 +196,7 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
                                 .setTitle(getString(R.string.uploading))
                                 .setView(LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).show()
 
-                        viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[position]), editOverView.text.toString())
+                        viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[position]), editOverView.text.toString(), false)
 
                         Toast.makeText(requireContext(), getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
                         viewModel.fetchMyTests()
