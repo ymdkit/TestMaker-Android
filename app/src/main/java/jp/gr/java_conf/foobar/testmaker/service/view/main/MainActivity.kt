@@ -67,7 +67,7 @@ class MainActivity : BaseActivity() {
                 LocalMainFragment(),
                 AccountMainFragment(object : AccountMainFragment.OnTestDownloadedListener {
                     override fun onDownloaded() {
-                        binding.viewPager.setCurrentItem(0, true)
+                        binding.viewPager.setCurrentItem(PAGE_LOCAL, true)
                     }
 
                 })))
