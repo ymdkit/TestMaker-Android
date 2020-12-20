@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
+    <data>
+
+        <variable
+            name="vM"
+            type="jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel" />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -11,7 +19,8 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/progress"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:animatedVisibility="@{vM.isLogin}">
 
             <com.airbnb.epoxy.EpoxyRecyclerView
                 android:id="@+id/recycler_view"
@@ -27,6 +36,7 @@
             android:id="@+id/layout_not_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animatedVisibility="@{!vM.isLogin}"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -61,6 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/element_spacing_very_large"
+            android:animatedVisibility="@{vM.isLogin}"
             android:src="@drawable/ic_baseline_cloud_upload_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

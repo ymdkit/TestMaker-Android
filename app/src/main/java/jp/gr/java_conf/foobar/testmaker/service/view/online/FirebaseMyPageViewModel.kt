@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.online
 
 import android.content.Intent
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
@@ -13,6 +14,8 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerReposi
 
 class FirebaseMyPageViewModel(private val repository: TestMakerRepository, private val auth: Auth) : ViewModel() {
 
+    val isLogin = MutableLiveData(false)
+
     fun fetchMyTests() = repository.fetchMyTests()
 
     fun getMyTests(): LiveData<List<DocumentSnapshot>> = repository.getMyTests()
@@ -23,11 +26,7 @@ class FirebaseMyPageViewModel(private val repository: TestMakerRepository, priva
 
     fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test)
 
-    fun updateProfile(userName: String, completion: () -> Unit) = repository.updateProfile(userName, completion)
-
     fun getUser(): FirebaseUser? = auth.getUser()
-
-    fun logOut() = auth.logOut()
 
     fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
 

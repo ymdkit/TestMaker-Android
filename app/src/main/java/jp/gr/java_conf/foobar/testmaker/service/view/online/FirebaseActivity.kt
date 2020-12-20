@@ -123,7 +123,7 @@ class FirebaseActivity : BaseActivity() {
                     Toast.makeText(baseContext, getString(R.string.message_non_exist_test), Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-                showDialogUpload()
+                UploadTestActivity.startActivity(this)
             } ?: run {
                 login()
             }

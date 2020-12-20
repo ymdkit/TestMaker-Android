@@ -13,6 +13,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdCallback
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -23,12 +26,13 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinkCreato
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AccountMainFragment(private val listener: OnTestDownloadedListener) : Fragment() {
+class AccountMainFragment(private val listener: OnTestDownloadedListener, private val rewardedAd: RewardedAd) : Fragment() {
 
     private val viewModel: FirebaseMyPageViewModel by viewModel()
     private val testViewModel: TestViewModel by sharedViewModel()
@@ -49,7 +53,6 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
 
         viewModel.getMyTests().observeNonNull(this) {
             controller.tests = it
-            binding?.layoutNotLogin?.visibility = View.GONE
             binding?.progress?.isRefreshing = false
         }
 
@@ -107,9 +110,10 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
             binding = this
             recyclerView.adapter = controller.adapter
             lifecycleOwner = viewLifecycleOwner
+            vm = viewModel
 
-            viewModel.getUser() ?: run {
-                layoutNotLogin.visibility = View.VISIBLE
+            viewModel.getUser()?.let {
+                viewModel.isLogin.value = true
             }
 
             buttonLogin.setOnClickListener {
@@ -126,7 +130,8 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
                         return@setOnClickListener
                     }
 
-                    showDialogUpload()
+                    UploadTestActivity.startActivity(requireActivity())
+                    //showDialogUpload()
 
                 } ?: run {
                     AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
@@ -145,7 +150,7 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
             progress.setOnRefreshListener {
                 viewModel.getUser() ?: run {
                     controller.tests = emptyList()
-                    layoutNotLogin.visibility = View.VISIBLE
+                    viewModel.isLogin.value = false
                     progress.isRefreshing = false
                     return@setOnRefreshListener
                 }
@@ -190,19 +195,35 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
                 .setOnClickListener { it ->
                     it.isEnabled = false
 
-                    lifecycleScope.launch {
+                    if (rewardedAd.isLoaded) {
+                        val activityContext: Activity = requireActivity()
+                        val adCallback = object : RewardedAdCallback() {
+                            override fun onRewardedAdOpened() {
+                            }
 
-                        val progress = AlertDialog.Builder(requireActivity())
-                                .setTitle(getString(R.string.uploading))
-                                .setView(LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).show()
+                            override fun onRewardedAdClosed() {
 
-                        viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[position]), editOverView.text.toString(), false)
+                            }
 
-                        Toast.makeText(requireContext(), getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-                        viewModel.fetchMyTests()
-                        dialog.dismiss()
-                        progress.dismiss()
+                            override fun onUserEarnedReward(reword: RewardItem) {
+                                lifecycleScope.launch {
+                                    val progress = AlertDialog.Builder(requireActivity())
+                                            .setTitle(getString(R.string.uploading))
+                                            .setView(LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).show()
 
+                                    viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[position]), editOverView.text.toString(), false)
+
+                                    Toast.makeText(requireContext(), getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
+                                    viewModel.fetchMyTests()
+                                    dialog.dismiss()
+                                    progress.dismiss()
+
+                                }
+                            }
+                        }
+                        rewardedAd.show(activityContext, adCallback)
+                    } else {
+                        Toast.makeText(requireContext(), "広告の読み込みが完了していません", Toast.LENGTH_SHORT).show()
                     }
                 }
     }
@@ -216,6 +237,7 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
 
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
+                viewModel.isLogin.value = true
                 viewModel.createUser(viewModel.getUser())
                 binding?.progress?.isRefreshing = true
                 viewModel.fetchMyTests()
