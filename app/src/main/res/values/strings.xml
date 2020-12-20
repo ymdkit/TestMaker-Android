@@ -226,4 +226,5 @@
     <string name="setting_user_name">user name</string>
     <string name="msg_update_user_name">update user name</string>
     <string name="empty_uploaded_test">upload your first test</string>
+    <string name="converting">convert to csv</string>
 </resources>

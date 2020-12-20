@@ -8,20 +8,14 @@
         android:layout_height="match_parent"
         tools:context="jp.gr.java_conf.foobar.testmaker.service.view.main.LocalMainFragment">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        <com.airbnb.epoxy.EpoxyRecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/progress">
-
-            <com.airbnb.epoxy.EpoxyRecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:isHasFixedSize="@{true}"
-                android:padding="@dimen/element_spacing_small"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:isHasFixedSize="@{true}"
+            android:padding="@dimen/element_spacing_small"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"

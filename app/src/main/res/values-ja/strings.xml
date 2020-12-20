@@ -221,4 +221,5 @@
     <string name="setting_user_name">ユーザー名の変更</string>
     <string name="msg_update_user_name">ユーザ名を変更しました</string>
     <string name="empty_uploaded_test"> アップロードしている問題集はありません。\n右下のボタンから問題集をアップロードしてください</string>
+    <string name="converting">テキスト形式に変換中（※画像情報は変換されません）</string>
 </resources>

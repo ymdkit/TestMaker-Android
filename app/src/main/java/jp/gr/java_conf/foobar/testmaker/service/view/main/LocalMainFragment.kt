@@ -118,30 +118,29 @@ class LocalMainFragment : Fragment() {
                                 }
 
                                 1 -> { //テキスト変換
+                                    lifecycleScope.launch {
+                                        val progress = AlertDialog.Builder(requireContext())
+                                                .setTitle(getString(R.string.converting))
+                                                .setView(LayoutInflater.from(requireContext()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).create()
 
-                                    Toast.makeText(requireContext(), getString(R.string.message_share_exam, test.title), Toast.LENGTH_LONG).show()
-
-                                    try {
-                                        val intent = Intent()
-                                        intent.action = Intent.ACTION_SEND
-                                        intent.type = "text/plain"
-
-                                        lifecycleScope.launch {
-                                           binding?.progress?.isRefreshing = true
-                                            runCatching {
-                                                withContext(Dispatchers.IO) {
-                                                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
-                                                }
-                                            }.onSuccess {
-                                                intent.putExtra(Intent.EXTRA_TEXT, it.text)
-                                                startActivity(intent)
-                                            }.onFailure {
-                                                requireContext().showErrorToast(it)
+                                        progress.show()
+                                        runCatching {
+                                            withContext(Dispatchers.IO) {
+                                                service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
                                             }
-                                            binding?.progress?.isRefreshing = false
+                                        }.onSuccess {
+                                            val sendIntent: Intent = Intent().apply {
+                                                action = Intent.ACTION_SEND
+                                                putExtra(Intent.EXTRA_TEXT, it.text)
+                                                type = "text/plain"
+                                            }
+
+                                            val shareIntent = Intent.createChooser(sendIntent, null)
+                                            startActivity(shareIntent)
+                                        }.onFailure {
+                                            requireContext().showErrorToast(it)
                                         }
-                                    } catch (e: Exception) {
-                                        firebaseAnalytic.logEvent("export_error", Bundle())
+                                        progress.dismiss()
                                     }
                                 }
                             }
@@ -164,10 +163,6 @@ class LocalMainFragment : Fragment() {
 
             fab.setOnClickListener {
                 EditTestActivity.startActivity(requireActivity())
-            }
-
-            progress.setOnRefreshListener {
-                progress.isRefreshing = false
             }
 
             recyclerView.adapter = mainController.adapter
