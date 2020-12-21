@@ -46,9 +46,8 @@ class UploadTestActivity : BaseActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinner.adapter = adapter
 
-        val index = testViewModel.tests.find { it.id == intent.getLongExtra(ARGUMENT_ID, 0) }?.id
-                ?: 0
-        binding.spinner.setSelection(index.toInt())
+        val index = testViewModel.tests.indexOfFirst { it.id == intent.getLongExtra(ARGUMENT_ID, 0) }.coerceAtLeast(0)
+        binding.spinner.setSelection(index)
         initToolBar()
 
         binding.buttonUpload.setOnClickListener {
