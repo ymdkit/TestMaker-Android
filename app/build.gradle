@@ -18,7 +18,7 @@ android {
             keyPassword System.getenv("TESTMAKER_KEY_PASS")
         }
     }
-    compileSdkVersion 28
+    compileSdkVersion 30
     buildToolsVersion '28.0.3'
 
     defaultConfig {
@@ -26,8 +26,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         multiDexEnabled true
-        versionCode 128
-        versionName "3.8"
+        versionCode 129
+        versionName "3.8.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
