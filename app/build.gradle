@@ -24,7 +24,7 @@ android {
     defaultConfig {
         applicationId "jp.gr.java_conf.foobar.testmaker.service"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 30
         multiDexEnabled true
         versionCode 128
         versionName "3.8"
