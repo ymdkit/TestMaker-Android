@@ -214,8 +214,8 @@
     <string name="msg_loading">読み込み中</string>
     <string name="network_error">サーバに接続できません</string>
     <string name="play_font_size">解答画面でのフォントサイズ</string>
-    <string name="tab_local">端末</string>
-    <string name="tab_remote">アカウント</string>
+    <string name="tab_local">問題集（端末）</string>
+    <string name="tab_remote">問題集（共有）</string>
     <string name="msg_please_login">アカウントに問題集を紐づけることで、\n複数端末で問題集を共有することができます。</string>
     <string name="preference_group_account">アカウント設定</string>
     <string name="setting_user_name">ユーザー名の変更</string>
@@ -232,4 +232,6 @@
     <string name="client_network_error">インターネット接続がありません</string>
     <string name="title_dialog_private">公開設定の変更</string>
     <string name="msg_dialog_private">動画広告を視聴することで、公開設定の変更が可能になります</string>
+    <string name="label_public">全体公開</string>
+    <string name="label_private">限定公開</string>
 </resources>

@@ -48,6 +48,7 @@ class AccountMainController(private val context: Context) : EpoxyController() {
                 title(data.name)
                 id(it.id)
                 document(it)
+                publicity(if (data.public) context.getString(R.string.label_public) else context.getString(R.string.label_private))
                 colorId(context.resources.getIntArray(R.array.color_list)[abs(data.color).coerceAtMost(7)])
                 listener(listener)
             }
