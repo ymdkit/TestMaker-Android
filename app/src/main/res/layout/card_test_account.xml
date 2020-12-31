@@ -17,6 +17,10 @@
             type="String" />
 
         <variable
+            name="publicity"
+            type="String" />
+
+        <variable
             name="colorId"
             type="Integer" />
 
@@ -74,7 +78,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/element_spacing_normal"
                     android:layout_marginBottom="@dimen/element_spacing_small"
-                    android:layout_weight="2"
                     android:orientation="horizontal"
                     custom:layout_constraintBottom_toBottomOf="parent"
                     custom:layout_constraintLeft_toRightOf="@id/color"
@@ -82,12 +85,20 @@
 
                     <TextView
                         android:id="@+id/num_questions"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/element_spacing_small"
-                        android:layout_weight="2"
+                        android:layout_marginEnd="@dimen/element_spacing_large"
                         android:gravity="start"
                         android:text="@{size}"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <TextView
+                        android:id="@+id/text_publicity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/element_spacing_small"
+                        android:gravity="start"
+                        android:text="@{publicity}"
                         android:textSize="@dimen/text_size_small" />
 
                 </LinearLayout>

@@ -237,4 +237,6 @@
     <string name="client_network_error">connect internet</string>
     <string name="title_dialog_private">Publishing Setting</string>
     <string name="msg_dialog_private">you can use this function by watching Ad</string>
+    <string name="label_public">public</string>
+    <string name="label_private">private</string>
 </resources>
