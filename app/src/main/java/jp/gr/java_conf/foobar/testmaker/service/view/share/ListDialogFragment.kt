@@ -12,7 +12,9 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.DialogListMenusBindi
 class ListDialogFragment(private val title: String = "", private val menus: List<MenuItem>) : BottomSheetDialogFragment() {
 
     val controller: ListDialogController by lazy {
-        ListDialogController()
+        ListDialogController {
+            dismiss()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

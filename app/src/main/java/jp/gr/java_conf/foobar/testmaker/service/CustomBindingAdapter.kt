@@ -113,6 +113,12 @@ object CustomBindingAdapter {
         setImageResource(resourceId)
     }
 
+    @BindingAdapter("android:tintARGB")
+    @JvmStatic
+    fun ImageView.setTintARGB(color: Int) {
+        setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN)
+    }
+
     @BindingAdapter("android:syncKeyBoard")
     @JvmStatic
     fun EditText.setSyncKeyBoard(isSync: Boolean) {

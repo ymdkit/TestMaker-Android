@@ -3,7 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.share
 import com.airbnb.epoxy.EpoxyController
 import jp.gr.java_conf.foobar.testmaker.service.itemMenu
 
-class ListDialogController : EpoxyController() {
+class ListDialogController(private val onItemSelected: () -> Unit) : EpoxyController() {
 
     var menus = emptyList<MenuItem>()
         set(value) {
@@ -21,6 +21,7 @@ class ListDialogController : EpoxyController() {
                 iconRes(it.iconRes)
                 onClick { _, _, _, _ ->
                     it.action()
+                    onItemSelected()
                 }
             }
         }
