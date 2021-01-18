@@ -4,10 +4,10 @@ import android.content.Context
 import com.airbnb.epoxy.EpoxyController
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.cardCategory
-import jp.gr.java_conf.foobar.testmaker.service.cardTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.itemEmpty
+import jp.gr.java_conf.foobar.testmaker.service.itemTest
 
 class MainController(private val context: Context) : EpoxyController() {
 
@@ -54,10 +54,7 @@ class MainController(private val context: Context) : EpoxyController() {
     private var categorizedTests: List<Test> = emptyList()
 
     interface OnClickListener {
-        fun onClickPlayTest(test: Test)
-        fun onClickEditTest(test: Test)
-        fun onClickDeleteTest(test: Test)
-        fun onClickShareTest(test: Test)
+        fun onClickTest(test: Test)
     }
 
     fun setOnClickListener(listener: OnClickListener) {
@@ -89,24 +86,28 @@ class MainController(private val context: Context) : EpoxyController() {
             if (categorizedTests.isNotEmpty() && categorizedTests.first().category == it.name) {
 
                 categorizedTests.forEach {
-                    cardTest {
+                    itemTest {
                         isCategorized(true)
                         id(it.id)
                         test(it)
                         size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
-                        listener(listener)
+                        onClick { _, _, _, _ ->
+                            listener?.onClickTest(it)
+                        }
                     }
                 }
             }
         }
 
         nonCategorizedTests.forEach {
-            cardTest {
+            itemTest {
                 isCategorized(false)
                 id(it.id)
                 test(it)
                 size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
-                listener(listener)
+                onClick { _, _, _, _ ->
+                    listener?.onClickTest(it)
+                }
             }
         }
     }

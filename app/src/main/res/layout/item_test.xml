@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="isCategorized"
+            type="Boolean" />
+
+        <variable
+            name="test"
+            type="jp.gr.java_conf.foobar.testmaker.service.domain.Test" />
+
+        <variable
+            name="size"
+            type="String" />
+
+        <variable
+            name="onClick"
+            type="android.view.View.OnClickListener" />
+
+        <import type="jp.gr.java_conf.foobar.testmaker.service.R" />
+
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{onClick}"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingStart="@{isCategorized ? @dimen/element_spacing_normal : @dimen/element_spacing_none}"
+        android:paddingEnd="0dp">
+
+        <ImageView
+            android:id="@+id/color"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="@dimen/element_spacing_large"
+            android:src="@drawable/ic_baseline_description_24"
+            app:tint="@color/red"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/text_title_test"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/element_spacing_large"
+            android:layout_marginEnd="@dimen/element_spacing_large"
+            android:maxLines="1"
+            android:text="@{test.title}"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_large"
+            app:layout_constraintStart_toEndOf="@id/color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/color" />
+
+        <TextView
+            android:id="@+id/num_questions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/element_spacing_large"
+            android:layout_marginEnd="@dimen/element_spacing_large"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:layout_marginBottom="@dimen/element_spacing_small"
+            android:gravity="start"
+            android:text="@{size}"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintTop_toBottomOf="@id/text_title_test"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/color"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+

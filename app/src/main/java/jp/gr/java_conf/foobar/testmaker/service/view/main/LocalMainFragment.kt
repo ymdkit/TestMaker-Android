@@ -19,7 +19,7 @@ import com.airbnb.epoxy.EpoxyTouchHelper
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.analytics.FirebaseAnalytics
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
-import jp.gr.java_conf.foobar.testmaker.service.CardTestBindingModel_
+import jp.gr.java_conf.foobar.testmaker.service.ItemTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
@@ -33,6 +33,8 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.MenuItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -63,89 +65,16 @@ class LocalMainFragment : Fragment() {
         mainController = MainController(requireContext())
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
-            override fun onClickPlayTest(test: Test) {
-
-                firebaseAnalytic.logEvent("play", Bundle())
-
-                if (test.questions.isEmpty()) {
-
-                    Toast.makeText(requireContext(), getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
-
-                } else {
-
-                    initDialogPlayStart(test)
-
-                }
-            }
-
-            override fun onClickEditTest(test: Test) {
-
-                firebaseAnalytic.logEvent("edit", Bundle())
-
-                EditActivity.startActivity(requireActivity(), test.id)
-
-            }
-
-            override fun onClickDeleteTest(test: Test) {
-
-                firebaseAnalytic.logEvent("delete", Bundle())
-
-                val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-                builder.setTitle(getString(R.string.delete_exam))
-                builder.setMessage(getString(R.string.message_delete_exam, test.title))
-                builder.setPositiveButton(android.R.string.ok) { _, _ ->
-                    testViewModel.delete(test)
-                    categoryViewModel.refresh()
-                }
-                builder.setNegativeButton(android.R.string.cancel, null)
-                builder.create().show()
-            }
-
-            override fun onClickShareTest(test: Test) {
-
-                AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-                        .setTitle(getString(R.string.title_dialog_share))
-                        .setItems(resources.getStringArray(R.array.action_share)) { dialog, which ->
-
-                            when (which) {
-                                0 -> { //リンクの共有
-                                    localMainViewModel.getUser()?.let {
-                                        dialog.dismiss()
-                                        uploadTest(RealmTest.createFromTest(test))
-                                    } ?: run {
-                                        login(RealmTest.createFromTest(test))
-                                    }
-                                }
-
-                                1 -> { //テキスト変換
-                                    lifecycleScope.launch {
-                                        val progress = AlertDialog.Builder(requireContext())
-                                                .setTitle(getString(R.string.converting))
-                                                .setView(LayoutInflater.from(requireContext()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).create()
-
-                                        progress.show()
-                                        runCatching {
-                                            withContext(Dispatchers.IO) {
-                                                service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
-                                            }
-                                        }.onSuccess {
-                                            val sendIntent: Intent = Intent().apply {
-                                                action = Intent.ACTION_SEND
-                                                putExtra(Intent.EXTRA_TEXT, it.text)
-                                                type = "text/plain"
-                                            }
-
-                                            val shareIntent = Intent.createChooser(sendIntent, null)
-                                            startActivity(shareIntent)
-                                        }.onFailure {
-                                            requireContext().showErrorToast(it)
-                                        }
-                                        progress.dismiss()
-                                    }
-                                }
-                            }
-
-                        }.show()
+            override fun onClickTest(test: Test) {
+                ListDialogFragment(
+                        test.title,
+                        listOf(
+                                MenuItem(title = getString(R.string.play), iconRes = R.drawable.ic_play_arrow_white_24dp, action = { playTest(test) }),
+                                MenuItem(title = getString(R.string.edit), iconRes = R.drawable.ic_edit_white, action = { editTest(test) }),
+                                MenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteTest(test) }),
+                                MenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(test) })
+                        )
+                ).show(requireActivity().supportFragmentManager, "TAG")
             }
         })
 
@@ -177,7 +106,7 @@ class LocalMainFragment : Fragment() {
                             val from = mainController.adapter.getModelAtPosition(fromPosition)
                             val to = mainController.adapter.getModelAtPosition(toPosition)
 
-                            if (from is CardTestBindingModel_ && to is CardTestBindingModel_) {
+                            if (from is ItemTestBindingModel_ && to is ItemTestBindingModel_) {
                                 testViewModel.swap(from.test(), to.test())
                             } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
                                 categoryViewModel.swap(from.category(), to.category())
@@ -185,6 +114,89 @@ class LocalMainFragment : Fragment() {
                         }
                     })
         }.root
+    }
+
+    private fun playTest(test: Test) {
+        firebaseAnalytic.logEvent("play", Bundle())
+
+        if (test.questions.isEmpty()) {
+
+            Toast.makeText(requireContext(), getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
+
+        } else {
+
+            initDialogPlayStart(test)
+
+        }
+    }
+
+    private fun editTest(test: Test) {
+        firebaseAnalytic.logEvent("edit", Bundle())
+
+        EditActivity.startActivity(requireActivity(), test.id)
+
+    }
+
+    private fun deleteTest(test: Test) {
+        firebaseAnalytic.logEvent("delete", Bundle())
+
+        val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
+        builder.setTitle(getString(R.string.delete_exam))
+        builder.setMessage(getString(R.string.message_delete_exam, test.title))
+        builder.setPositiveButton(android.R.string.ok) { _, _ ->
+            testViewModel.delete(test)
+            categoryViewModel.refresh()
+        }
+        builder.setNegativeButton(android.R.string.cancel, null)
+        builder.create().show()
+
+    }
+
+    private fun shareTest(test: Test) {
+
+        AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
+                .setTitle(getString(R.string.title_dialog_share))
+                .setItems(resources.getStringArray(R.array.action_share)) { dialog, which ->
+
+                    when (which) {
+                        0 -> { //リンクの共有
+                            localMainViewModel.getUser()?.let {
+                                dialog.dismiss()
+                                uploadTest(RealmTest.createFromTest(test))
+                            } ?: run {
+                                login(RealmTest.createFromTest(test))
+                            }
+                        }
+
+                        1 -> { //テキスト変換
+                            lifecycleScope.launch {
+                                val progress = AlertDialog.Builder(requireContext())
+                                        .setTitle(getString(R.string.converting))
+                                        .setView(LayoutInflater.from(requireContext()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).create()
+
+                                progress.show()
+                                runCatching {
+                                    withContext(Dispatchers.IO) {
+                                        service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
+                                    }
+                                }.onSuccess {
+                                    val sendIntent: Intent = Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        putExtra(Intent.EXTRA_TEXT, it.text)
+                                        type = "text/plain"
+                                    }
+
+                                    val shareIntent = Intent.createChooser(sendIntent, null)
+                                    startActivity(shareIntent)
+                                }.onFailure {
+                                    requireContext().showErrorToast(it)
+                                }
+                                progress.dismiss()
+                            }
+                        }
+                    }
+
+                }.show()
     }
 
     private fun uploadTest(test: RealmTest) {
