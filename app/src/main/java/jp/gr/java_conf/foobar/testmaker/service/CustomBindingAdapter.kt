@@ -107,6 +107,12 @@ object CustomBindingAdapter {
         }
     }
 
+    @BindingAdapter("android:srcResource")
+    @JvmStatic
+    fun ImageView.setSrcResource(resourceId: Int) {
+        setImageResource(resourceId)
+    }
+
     @BindingAdapter("android:syncKeyBoard")
     @JvmStatic
     fun EditText.setSyncKeyBoard(isSync: Boolean) {
