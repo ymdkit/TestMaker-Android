@@ -234,4 +234,11 @@
     <string name="msg_dialog_private">動画広告を視聴することで、公開設定の変更が可能になります</string>
     <string name="label_public">全体公開</string>
     <string name="label_private">限定公開</string>
+
+    <string-array name="menus_test">
+        <item>解答する</item>
+        <item>編集する</item>
+        <item>削除する</item>
+        <item>共有する</item>
+    </string-array>
 </resources>

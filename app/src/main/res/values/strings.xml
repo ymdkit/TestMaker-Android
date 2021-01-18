@@ -239,4 +239,11 @@
     <string name="msg_dialog_private">you can use this function by watching Ad</string>
     <string name="label_public">public</string>
     <string name="label_private">private</string>
+
+    <string-array name="menus_test">
+        <item>play</item>
+        <item>edit</item>
+        <item>delete</item>
+        <item>share</item>
+    </string-array>
 </resources>
