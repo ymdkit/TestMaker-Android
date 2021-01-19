@@ -154,6 +154,7 @@
         <item name="android:layout_gravity">start</item>
         <item name="android:layout_marginTop">@dimen/element_spacing_small</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
 
     </style>
 </resources>

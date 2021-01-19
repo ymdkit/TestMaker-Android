@@ -6,9 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
@@ -206,75 +203,13 @@ class LocalMainFragment : Fragment() {
 
     private fun initDialogPlayStart(test: Test) {
 
-        val dialogLayout = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_start, requireActivity().findViewById(R.id.layout_dialog_start))
-
-        val editLimit = dialogLayout.findViewById<EditText>(R.id.set_limit)
-        editLimit.setText(test.limit.toString())
-
-        val editStart = dialogLayout.findViewById<EditText>(R.id.set_start_position)
-        editStart.setText((test.startPosition + 1).toString())
-
-        val checkRandom = dialogLayout.findViewById<CheckBox>(R.id.check_random)
-        checkRandom.isChecked = sharedPreferenceManager.random
-        checkRandom.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.random = isChecked }
-
-        val checkReverse = dialogLayout.findViewById<CheckBox>(R.id.check_reverse)
-        checkReverse.isChecked = sharedPreferenceManager.reverse
-        checkReverse.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.reverse = isChecked }
-
-        val checkManual = dialogLayout.findViewById<CheckBox>(R.id.check_manual)
-        checkManual.isChecked = sharedPreferenceManager.manual
-        checkManual.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.manual = isChecked }
-
-        val checkAudio = dialogLayout.findViewById<CheckBox>(R.id.check_audio)
-        checkAudio.isChecked = sharedPreferenceManager.audio
-        checkAudio.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.audio = isChecked }
-
-        val checkRefine = dialogLayout.findViewById<CheckBox>(R.id.check_refine)
-        checkRefine.isChecked = sharedPreferenceManager.refine
-        checkRefine.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.refine = isChecked }
-
-        val checkAlwaysReview = dialogLayout.findViewById<CheckBox>(R.id.check_always_review)
-        checkAlwaysReview.isChecked = sharedPreferenceManager.alwaysReview
-        checkAlwaysReview.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.alwaysReview = isChecked }
-
-        val checkCaseInsensitive = dialogLayout.findViewById<CheckBox>(R.id.check_case_insensitive)
-        checkCaseInsensitive.isChecked = sharedPreferenceManager.isCaseInsensitive
-        checkCaseInsensitive.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.isCaseInsensitive = isChecked }
-        if (Locale.getDefault().language != "en") checkCaseInsensitive.visibility = View.GONE
-
-        val buttonStart = dialogLayout.findViewById<Button>(R.id.button_start)
-        buttonStart.setOnClickListener {
-            startAnswer(test, editStart.text.toString(), editLimit.text.toString())
-        }
-
-        val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-        builder.setView(dialogLayout)
-        builder.setTitle(getString(R.string.way))
-        builder.setPositiveButton(android.R.string.ok, null)
-        builder.setNegativeButton(android.R.string.cancel, null)
-
         if (!sharedPreferenceManager.isShowPlaySettingDialog) {
-            startAnswer(test, editStart.text.toString(), editLimit.text.toString())
+            startAnswer(test, (test.startPosition + 1).toString(), test.limit.toString())
         } else {
-            val dialog = builder.show()
-            hideDefaultButtonsFromDialog(dialog)
-
+            PlayConfigDialogFragment(test) { position, limit ->
+                startAnswer(test, position, limit)
+            }.show(requireActivity().supportFragmentManager, "TAG")
         }
-
-
-    }
-
-    private fun hideDefaultButtonsFromDialog(dialog: AlertDialog) {
-
-        val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-
-        if (positiveButton != null) positiveButton.visibility = View.GONE
-
-        val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-
-        if (negativeButton != null) negativeButton.visibility = View.GONE
-
     }
 
     private fun startAnswer(test: Test, start: String, limit: String) {
