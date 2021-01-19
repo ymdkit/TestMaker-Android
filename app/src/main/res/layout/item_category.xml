@@ -60,7 +60,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/color"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="カテゴリ" />
+                tools:text="フォルダ" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

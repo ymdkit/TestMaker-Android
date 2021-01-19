@@ -32,7 +32,7 @@
         android:focusable="true"
         android:onClick="@{onClick}"
         android:background="?android:attr/selectableItemBackground"
-        android:paddingStart="@{isCategorized ? @dimen/element_spacing_normal : @dimen/element_spacing_none}"
+        android:paddingStart="@{isCategorized ? @dimen/element_spacing_very_large : @dimen/element_spacing_none}"
         android:paddingEnd="0dp">
 
         <ImageView
@@ -41,7 +41,7 @@
             android:layout_height="24dp"
             android:layout_marginStart="@dimen/element_spacing_large"
             android:src="@drawable/ic_baseline_description_24"
-            app:tint="@color/red"
+            android:tintARGB="@{test.color}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

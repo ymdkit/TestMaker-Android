@@ -12,13 +12,13 @@
     <string name="number_existing_questions">達成率: %1$d / %2$d</string>
     <string name="number_exams">問題集数 %1$d</string>
     <string name="confirm">確認</string>
-    <string name="play">解く</string>
-    <string name="share">共有</string>
+    <string name="play">解答する</string>
+    <string name="share">共有する</string>
     <string name="help">よくある質問</string>
     <string name="menu">メニュー</string>
     <string name="retry">解き直す</string>
-    <string name="edit">編集</string>
-    <string name="delete">削除</string>
+    <string name="edit">編集する</string>
+    <string name="delete">削除する</string>
     <string name="way">出題設定</string>
     <string name="load">読み込む</string>
     <string name="trim">トリミング</string>
@@ -179,15 +179,15 @@
     <string name="email_subject_feedback">「暗記メーカー」に関するお問い合わせ</string>
     <string name="email_body_feedback">お問い合わせの内容について、どのような操作を行ったかや画面のスクリーンショットの添付をしていただけるととても助かります\n\n\n\n\n Android SDK%1$d より送信</string>
     <string name="label_color">カラー</string>
-    <string name="label_category">カテゴリ</string>
-    <string name="text_add_category">新しいカテゴリを追加</string>
-    <string name="text_header_category">カテゴリ設定</string>
+    <string name="label_category">フォルダ</string>
+    <string name="text_add_category">新しいフォルダを追加</string>
+    <string name="text_header_category">フォルダ設定</string>
     <string name="save_test">問題集を保存</string>
-    <string name="save_category">カテゴリを保存</string>
+    <string name="save_category">フォルダを保存</string>
     <string name="msg_save_test">問題集を保存しました</string>
     <string name="empty_test">保存している問題集はありません。\n右下の+ボタンから問題集を追加してください</string>
     <string name="title_activity_edit_test">問題集の編集</string>
-    <string name="title_activity_edit_category">カテゴリの編集</string>
+    <string name="title_activity_edit_category">フォルダの編集</string>
     <string name="title_activity_edit_question">問題の編集</string>
     <string name="message_image">問題中に画像を使用する</string>
     <string name="label_setting_question">詳細設定</string>
@@ -235,10 +235,4 @@
     <string name="label_public">全体公開</string>
     <string name="label_private">限定公開</string>
 
-    <string-array name="menus_test">
-        <item>解答する</item>
-        <item>編集する</item>
-        <item>削除する</item>
-        <item>共有する</item>
-    </string-array>
 </resources>

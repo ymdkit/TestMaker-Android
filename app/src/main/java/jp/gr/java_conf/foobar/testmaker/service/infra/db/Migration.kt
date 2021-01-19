@@ -42,7 +42,7 @@ class Migration : RealmMigration {
             oldVersion++
             val cateSchema = schema.create("Cate")
             cateSchema?.addField("category", String::class.java, FieldAttribute.REQUIRED)
-                    ?.transform { obj: DynamicRealmObject -> obj["category"] = "カテゴリー" }
+                    ?.transform { obj: DynamicRealmObject -> obj["category"] = "フォルダー" }
                     ?.addField("color", Int::class.java, FieldAttribute.REQUIRED)
                     ?.transform { obj: DynamicRealmObject -> obj["color"] = 0 }
         }
