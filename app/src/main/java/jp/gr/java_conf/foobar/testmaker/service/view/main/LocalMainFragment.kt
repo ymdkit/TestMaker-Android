@@ -97,7 +97,7 @@ class LocalMainFragment : Fragment() {
                     .initDragging(mainController)
                     .withRecyclerView(recyclerView)
                     .forVerticalList()
-                    .forAllModels()
+                    .withTargets(CardCategoryBindingModel_::class.java, ItemTestBindingModel_::class.java)
                     .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<EpoxyModel<*>>() {
                         override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: EpoxyModel<*>?, itemView: View?) {
                             val from = mainController.adapter.getModelAtPosition(fromPosition)

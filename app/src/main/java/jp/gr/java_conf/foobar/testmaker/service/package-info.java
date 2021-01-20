@@ -7,6 +7,7 @@
         R.layout.item_test,
         R.layout.item_menu,
         R.layout.item_empty,
+        R.layout.item_section_header,
         R.layout.card_result,
         R.layout.item_pie_chart,
         R.layout.item_result_menu,

@@ -236,5 +236,6 @@
     <string name="label_private">限定公開</string>
     <string name="button_convert_to_csv">テキスト形式に変換して共有</string>
     <string name="button_upload">アップロードしてリンクを共有</string>
+    <string name="folder">フォルダ</string>
 
 </resources>

@@ -241,5 +241,6 @@
     <string name="label_private">private</string>
     <string name="button_convert_to_csv">convert to csv</string>
     <string name="button_upload">share link</string>
+    <string name="folder">Folder</string>
 
 </resources>

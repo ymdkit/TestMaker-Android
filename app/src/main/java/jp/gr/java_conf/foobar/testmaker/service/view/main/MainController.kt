@@ -2,12 +2,9 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import android.content.Context
 import com.airbnb.epoxy.EpoxyController
-import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.cardCategory
+import jp.gr.java_conf.foobar.testmaker.service.*
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.itemEmpty
-import jp.gr.java_conf.foobar.testmaker.service.itemTest
 
 class MainController(private val context: Context) : EpoxyController() {
 
@@ -71,6 +68,11 @@ class MainController(private val context: Context) : EpoxyController() {
             return
         }
 
+        itemSectionHeader {
+            id("Folder")
+            title(context.getString(R.string.folder))
+        }
+
         categories.forEach {
             cardCategory {
                 id(it.name)
@@ -95,6 +97,11 @@ class MainController(private val context: Context) : EpoxyController() {
                     }
                 }
             }
+        }
+
+        itemSectionHeader {
+            id("Test")
+            title(context.getString(R.string.test))
         }
 
         nonCategorizedTests.forEach {
