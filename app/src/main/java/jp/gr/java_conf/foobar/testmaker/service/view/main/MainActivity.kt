@@ -47,7 +47,7 @@ import java.io.*
 import java.util.*
 
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListener {
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
@@ -65,12 +65,8 @@ class MainActivity : BaseActivity() {
 
         binding.viewPager.adapter = ViewPagerAdapter(this, listOf(
                 LocalMainFragment(),
-                AccountMainFragment(object : AccountMainFragment.OnTestDownloadedListener {
-                    override fun onDownloaded() {
-                        binding.viewPager.setCurrentItem(PAGE_LOCAL, true)
-                    }
-
-                })))
+                AccountMainFragment()
+        ))
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = listOf(getString(R.string.tab_local), getString(R.string.tab_remote))[position]
@@ -336,5 +332,9 @@ class MainActivity : BaseActivity() {
             }
             activity.startActivity(intent)
         }
+    }
+
+    override fun onDownloaded() {
+        binding.viewPager.setCurrentItem(PAGE_LOCAL, true)
     }
 }

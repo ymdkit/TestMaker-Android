@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,11 +28,13 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AccountMainFragment(private val listener: OnTestDownloadedListener) : Fragment() {
+class AccountMainFragment : Fragment() {
 
     private val viewModel: FirebaseMyPageViewModel by viewModel()
     private val testViewModel: TestViewModel by sharedViewModel()
     private val firebaseAnalytic: FirebaseAnalytics by inject()
+
+    var listener: OnTestDownloadedListener? = null
 
     private var binding: AccountMainFragmentBinding? = null
 
@@ -41,6 +44,14 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
 
     interface OnTestDownloadedListener {
         fun onDownloaded()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        listener = context as? OnTestDownloadedListener
+        if (listener == null) {
+            throw ClassCastException("$context must implement OnArticleSelectedListener")
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +75,7 @@ class AccountMainFragment(private val listener: OnTestDownloadedListener) : Frag
                             viewModel.convert(result.test)
 
                             Toast.makeText(requireActivity(), getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
-                            listener.onDownloaded()
+                            listener?.onDownloaded()
                         }
                         is FirebaseTestResult.Failure -> {
                             Toast.makeText(requireActivity(), result.message, Toast.LENGTH_SHORT).show()
