@@ -234,5 +234,7 @@
     <string name="msg_dialog_private">動画広告を視聴することで、公開設定の変更が可能になります</string>
     <string name="label_public">全体公開</string>
     <string name="label_private">限定公開</string>
+    <string name="button_convert_to_csv">テキスト形式に変換して共有</string>
+    <string name="button_upload">アップロードしてリンクを共有</string>
 
 </resources>

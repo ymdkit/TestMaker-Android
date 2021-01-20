@@ -239,5 +239,7 @@
     <string name="msg_dialog_private">you can use this function by watching Ad</string>
     <string name="label_public">public</string>
     <string name="label_private">private</string>
+    <string name="button_convert_to_csv">convert to csv</string>
+    <string name="button_upload">share link</string>
 
 </resources>

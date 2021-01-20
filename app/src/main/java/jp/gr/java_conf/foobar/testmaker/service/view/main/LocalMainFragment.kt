@@ -19,7 +19,6 @@ import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.ItemTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
@@ -55,7 +54,7 @@ class LocalMainFragment : Fragment() {
     private val categoryViewModel: CategoryViewModel by viewModel()
     private val service: CloudFunctionsService by inject()
 
-    private var selectedTest: RealmTest? = null //ログイン時に一度画面から離れるので選択中の値を保持
+    private var selectedTest: Test? = null //ログイン時に一度画面から離れるので選択中の値を保持
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -139,55 +138,49 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun shareTest(test: Test) {
-
-        AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-                .setTitle(getString(R.string.title_dialog_share))
-                .setItems(resources.getStringArray(R.array.action_share)) { dialog, which ->
-
-                    when (which) {
-                        0 -> { //リンクの共有
-                            localMainViewModel.getUser()?.let {
-                                dialog.dismiss()
-                                uploadTest(RealmTest.createFromTest(test))
-                            } ?: run {
-                                login(RealmTest.createFromTest(test))
-                            }
-                        }
-
-                        1 -> { //テキスト変換
-                            lifecycleScope.launch {
-                                val progress = AlertDialog.Builder(requireContext())
-                                        .setTitle(getString(R.string.converting))
-                                        .setView(LayoutInflater.from(requireContext()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).create()
-
-                                progress.show()
-                                runCatching {
-                                    withContext(Dispatchers.IO) {
-                                        service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
-                                    }
-                                }.onSuccess {
-                                    val sendIntent: Intent = Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        putExtra(Intent.EXTRA_TEXT, it.text)
-                                        type = "text/plain"
-                                    }
-
-                                    val shareIntent = Intent.createChooser(sendIntent, null)
-                                    startActivity(shareIntent)
-                                }.onFailure {
-                                    requireContext().showErrorToast(it)
-                                }
-                                progress.dismiss()
-                            }
-                        }
-                    }
-
-                }.show()
+        ListDialogFragment(
+                getString(R.string.title_dialog_share),
+                listOf(
+                        MenuItem(title = getString(R.string.button_upload), iconRes = R.drawable.ic_baseline_cloud_upload_24, action = { uploadTest(test) }),
+                        MenuItem(title = getString(R.string.button_convert_to_csv), iconRes = R.drawable.ic_edit_white, action = { convertTestToCSV(test) })
+                )
+        ).show(requireActivity().supportFragmentManager, "TAG")
     }
 
-    private fun uploadTest(test: RealmTest) {
-        firebaseAnalytic.logEvent("upload_from_share_local", Bundle())
-        UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
+    private fun uploadTest(test: Test) {
+        localMainViewModel.getUser()?.let {
+            firebaseAnalytic.logEvent("upload_from_share_local", Bundle())
+            UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
+        } ?: run {
+            login(test)
+        }
+    }
+
+    private fun convertTestToCSV(test: Test) {
+        lifecycleScope.launch {
+            val progress = AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.converting))
+                    .setView(LayoutInflater.from(requireContext()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).create()
+
+            progress.show()
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
+                }
+            }.onSuccess {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, it.text)
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
+            }.onFailure {
+                requireContext().showErrorToast(it)
+            }
+            progress.dismiss()
+        }
     }
 
     private fun initDialogPlayStart(test: Test) {
@@ -233,7 +226,7 @@ class LocalMainFragment : Fragment() {
         }
     }
 
-    private fun login(test: RealmTest) {
+    private fun login(test: Test) {
 
         selectedTest = test
 
