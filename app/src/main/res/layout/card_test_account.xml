@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -30,115 +31,74 @@
 
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{() -> listener.onClickTest(document)}"
+        android:background="?android:attr/selectableItemBackground">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
-            style="@style/Card">
+        <ImageView
+            android:id="@+id/color"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_baseline_description_24"
+            android:tintARGB="@{colorId}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/element_spacing_very_small"
-                android:splitMotionEvents="false">
+        <TextView
+            android:id="@+id/text_title_test"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/element_spacing_large"
+            android:layout_marginEnd="@dimen/element_spacing_large"
+            android:maxLines="1"
+            android:text="@{title}"
+            tools:text="サンプル問題集"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_large"
+            app:layout_constraintStart_toEndOf="@id/color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/color" />
 
-                <ImageButton
-                    android:id="@+id/color"
-                    android:layout_width="@dimen/element_spacing_small"
-                    android:layout_height="0dp"
-                    android:layout_margin="@dimen/element_spacing_normal"
-                    android:background="@drawable/circle"
-                    android:contentDescription="@null"
-                    android:testColor="@{colorId}"
-                    custom:layout_constraintTop_toTopOf="parent"
-                    custom:layout_constraintBottom_toBottomOf="parent"
-                    custom:layout_constraintLeft_toLeftOf="parent" />
+        <TextView
+            android:id="@+id/num_questions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/element_spacing_large"
+            android:layout_marginEnd="@dimen/element_spacing_large"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:layout_marginBottom="@dimen/element_spacing_large"
+            android:gravity="start"
+            android:text="@{size}"
+            tools:text="問題数 3"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintTop_toBottomOf="@id/text_title_test"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/color" />
 
-                <TextView
-                    android:id="@+id/text_title_category"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/element_spacing_normal"
-                    android:layout_marginTop="@dimen/element_spacing_normal"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="@{title}"
-                    android:maxLines="2"
-                    android:textSize="@dimen/text_size_medium"
-                    custom:layout_constraintLeft_toRightOf="@id/color"
-                    custom:layout_constraintRight_toLeftOf="@id/play"
-                    custom:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/text_publicity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/element_spacing_large"
+            android:layout_marginEnd="@dimen/element_spacing_large"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:layout_marginBottom="@dimen/element_spacing_large"
+            android:gravity="start"
+            android:text="@{publicity}"
+            tools:text="限定公開"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintStart_toEndOf="@id/num_questions"
+            app:layout_constraintTop_toBottomOf="@id/text_title_test"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-                <LinearLayout
-                    android:id="@+id/info"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/element_spacing_normal"
-                    android:layout_marginBottom="@dimen/element_spacing_small"
-                    android:orientation="horizontal"
-                    custom:layout_constraintBottom_toBottomOf="parent"
-                    custom:layout_constraintLeft_toRightOf="@id/color"
-                    custom:layout_constraintRight_toLeftOf="@id/play">
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
-                        android:id="@+id/num_questions"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/element_spacing_large"
-                        android:gravity="start"
-                        android:text="@{size}"
-                        android:textSize="@dimen/text_size_small" />
-
-                    <TextView
-                        android:id="@+id/text_publicity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/element_spacing_small"
-                        android:gravity="start"
-                        android:text="@{publicity}"
-                        android:textSize="@dimen/text_size_small" />
-
-                </LinearLayout>
-
-                <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
-                    android:id="@+id/play"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickDownloadTest(document)}"
-                    custom:image="@drawable/ic_file_download_white"
-                    custom:layout_constraintBottom_toBottomOf="parent"
-                    custom:layout_constraintRight_toLeftOf="@id/delete"
-                    custom:layout_constraintTop_toTopOf="parent"
-                    custom:text="@string/download_test" />
-
-                <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
-                    android:id="@+id/delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickDeleteTest(document)}"
-                    custom:image="@drawable/ic_delete_white"
-                    custom:layout_constraintBottom_toBottomOf="parent"
-                    custom:layout_constraintRight_toLeftOf="@id/share"
-                    custom:layout_constraintTop_toTopOf="parent"
-                    custom:text="@string/delete" />
-
-                <jp.gr.java_conf.foobar.testmaker.service.view.share.ImageTextButton
-                    android:id="@+id/share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{() -> listener.onClickShareTest(document)}"
-                    custom:image="@drawable/ic_share_white"
-                    custom:layout_constraintBottom_toBottomOf="parent"
-                    custom:layout_constraintRight_toRightOf="parent"
-                    custom:layout_constraintTop_toTopOf="parent"
-                    custom:text="@string/share" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
 </layout>

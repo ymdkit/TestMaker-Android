@@ -23,6 +23,9 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.MenuItem
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -63,54 +66,17 @@ class AccountMainFragment : Fragment() {
         }
 
         controller.setOnClickListener(object : AccountMainController.OnClickListener {
-            override fun onClickDownloadTest(document: DocumentSnapshot) {
-                lifecycleScope.launch {
 
-                    val dialog = AlertDialog.Builder(requireActivity())
-                            .setTitle(getString(R.string.downloading))
-                            .setView(LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).show()
-
-                    when (val result = viewModel.downloadTest(document.id)) {
-                        is FirebaseTestResult.Success -> {
-                            viewModel.convert(result.test)
-
-                            Toast.makeText(requireActivity(), getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
-                            listener?.onDownloaded()
-                        }
-                        is FirebaseTestResult.Failure -> {
-                            Toast.makeText(requireActivity(), result.message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    dialog.dismiss()
-
-                }
+            override fun onClickTest(document: DocumentSnapshot) {
+                ListDialogFragment(
+                        document.toObject(FirebaseTest::class.java)?.name ?: "",
+                        listOf(
+                                MenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(document) }),
+                                MenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(document) }),
+                                MenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteTest(document) })
+                        )
+                ).show(requireActivity().supportFragmentManager, "TAG")
             }
-
-            override fun onClickShareTest(document: DocumentSnapshot) {
-                firebaseAnalytic.logEvent("upload_from_share_remote", Bundle())
-                val data = document.toObject(FirebaseTest::class.java) ?: return
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, DynamicLinkCreator.createDynamicLink(document.id)))
-                    type = "text/plain"
-                }
-
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                startActivity(shareIntent)
-            }
-
-            override fun onClickDeleteTest(document: DocumentSnapshot) {
-                AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
-                        .setTitle(getString(R.string.delete_exam))
-                        .setMessage(getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name))
-                        .setPositiveButton(android.R.string.ok) { _, _ ->
-                            viewModel.deleteTest(document.id)
-                            viewModel.fetchMyTests()
-                        }
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .create().show()
-            }
-
         })
 
         return DataBindingUtil.inflate<AccountMainFragmentBinding>(inflater, R.layout.account_main_fragment, container, false).apply {
@@ -163,6 +129,50 @@ class AccountMainFragment : Fragment() {
             }
 
         }.root
+    }
+
+    fun downloadTest(document: DocumentSnapshot) {
+        lifecycleScope.launch {
+
+            val dialog = AlertDialog.Builder(requireActivity())
+                    .setTitle(getString(R.string.downloading))
+                    .setView(LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).show()
+
+            when (val result = viewModel.downloadTest(document.id)) {
+                is FirebaseTestResult.Success -> {
+                    viewModel.convert(result.test)
+
+                    Toast.makeText(requireActivity(), getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
+                    listener?.onDownloaded()
+                }
+                is FirebaseTestResult.Failure -> {
+                    Toast.makeText(requireActivity(), result.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+            dialog.dismiss()
+
+        }
+    }
+
+    fun shareTest(document: DocumentSnapshot) {
+        firebaseAnalytic.logEvent("upload_from_share_remote", Bundle())
+        val data = document.toObject(FirebaseTest::class.java) ?: return
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, DynamicLinkCreator.createDynamicLink(document.id)))
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
+
+    }
+
+    fun deleteTest(document: DocumentSnapshot) {
+        ConfirmDangerDialogFragment(getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name)) {
+            viewModel.deleteTest(document.id)
+            viewModel.fetchMyTests()
+        }.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

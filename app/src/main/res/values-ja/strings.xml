@@ -237,5 +237,6 @@
     <string name="button_convert_to_csv">テキスト形式に変換して共有</string>
     <string name="button_upload">アップロードしてリンクを共有</string>
     <string name="folder">フォルダ</string>
+    <string name="download">ダウンロードする</string>
 
 </resources>
