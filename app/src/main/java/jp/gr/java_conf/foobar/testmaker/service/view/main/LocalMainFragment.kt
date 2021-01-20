@@ -30,6 +30,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.MenuItem
 import kotlinx.coroutines.Dispatchers
@@ -131,16 +132,10 @@ class LocalMainFragment : Fragment() {
     private fun deleteTest(test: Test) {
         firebaseAnalytic.logEvent("delete", Bundle())
 
-        val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-        builder.setTitle(getString(R.string.delete_exam))
-        builder.setMessage(getString(R.string.message_delete_exam, test.title))
-        builder.setPositiveButton(android.R.string.ok) { _, _ ->
+        ConfirmDangerDialogFragment(getString(R.string.message_delete_exam, test.title)) {
             testViewModel.delete(test)
             categoryViewModel.refresh()
-        }
-        builder.setNegativeButton(android.R.string.cancel, null)
-        builder.create().show()
-
+        }.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun shareTest(test: Test) {
