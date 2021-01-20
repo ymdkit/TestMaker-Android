@@ -91,9 +91,7 @@ class MainController(private val context: Context) : EpoxyController() {
                         id(it.id)
                         test(it)
                         size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
-                        onClick { _, _, _, _ ->
-                            listener?.onClickTest(it)
-                        }
+                        listener(listener)
                     }
                 }
             }
@@ -105,9 +103,7 @@ class MainController(private val context: Context) : EpoxyController() {
                 id(it.id)
                 test(it)
                 size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
-                onClick { _, _, _, _ ->
-                    listener?.onClickTest(it)
-                }
+                listener(listener)
             }
         }
     }

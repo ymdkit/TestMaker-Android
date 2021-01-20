@@ -117,21 +117,15 @@ class LocalMainFragment : Fragment() {
         firebaseAnalytic.logEvent("play", Bundle())
 
         if (test.questions.isEmpty()) {
-
             Toast.makeText(requireContext(), getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
-
         } else {
-
             initDialogPlayStart(test)
-
         }
     }
 
     private fun editTest(test: Test) {
         firebaseAnalytic.logEvent("edit", Bundle())
-
         EditActivity.startActivity(requireActivity(), test.id)
-
     }
 
     private fun deleteTest(test: Test) {
