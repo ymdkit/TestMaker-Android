@@ -73,4 +73,9 @@ class TestRepository(private val dataSource: TestDataSource) {
         refresh()
     }
 
+    fun insertAt(test: Test, question: Question, index: Int) {
+        dataSource.insertAt(test, question, index)
+        refresh()
+    }
+
 }

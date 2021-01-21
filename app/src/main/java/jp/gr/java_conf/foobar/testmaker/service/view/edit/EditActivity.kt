@@ -40,6 +40,7 @@ class EditActivity : BaseActivity() {
                             question.question,
                             listOf(
                                     DialogMenuItem(title = getString(R.string.edit), iconRes = R.drawable.ic_edit_white, action = { editQuestion(question) }),
+                                    DialogMenuItem(title = getString(R.string.copy_question), iconRes = R.drawable.ic_baseline_file_copy_24, action = { copyQuestion(question) }),
                                     DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteQuestion(question) })
                             )
                     ).show(supportFragmentManager, "TAG")
@@ -76,7 +77,7 @@ class EditActivity : BaseActivity() {
                 test = it
             }
             supportActionBar?.title = test.title
-            controller.questions = test.questions
+            controller.questions = test.questions.sortedBy { it.order }
         }
     }
 
@@ -160,9 +161,12 @@ class EditActivity : BaseActivity() {
         EditQuestionActivity.startActivity(this, test.id, question.id)
     }
 
+    fun copyQuestion(question: Question) {
+        testViewModel.insertAt(test, question.copy(), question.order)
+    }
+
     fun deleteQuestion(question: Question) {
         ConfirmDangerDialogFragment(getString(R.string.message_delete, question.question)) {
-            if (question.imagePath != "") deleteFile(question.imagePath)
             testViewModel.delete(question)
         }.show(supportFragmentManager, "TAG")
     }

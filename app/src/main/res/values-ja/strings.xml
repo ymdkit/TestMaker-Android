@@ -238,5 +238,6 @@
     <string name="button_upload">アップロードしてリンクを共有</string>
     <string name="folder">フォルダ</string>
     <string name="download">ダウンロードする</string>
+    <string name="copy_question">コピーする</string>
 
 </resources>

@@ -243,5 +243,6 @@
     <string name="button_upload">share link</string>
     <string name="folder">Folder</string>
     <string name="download">download</string>
+    <string name="copy_question">copy</string>
 
 </resources>

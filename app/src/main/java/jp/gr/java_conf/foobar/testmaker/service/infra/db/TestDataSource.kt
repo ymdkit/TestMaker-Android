@@ -111,4 +111,19 @@ class TestDataSource(private val realm: Realm) {
         }
     }
 
+    fun insertAt(test: Test, question: Question, index: Int) {
+        test.questions
+                .filter {
+                    it.order >= index
+                }.forEach {
+                    update(it.copy(order = it.order + 1))
+                }
+
+        val id = create(test, question)
+        update(getQuestion(id).copy(order = index))
+    }
+
+    private fun getQuestion(id: Long): Question = Question.createFromRealmQuestion(realm.copyFromRealm(realm.where(Quest::class.java)
+            .equalTo("id", id).findFirst() ?: Quest()))
+
 }
