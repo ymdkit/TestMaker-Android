@@ -9,6 +9,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="android:windowAnimationStyle">@style/ActivityTransitionAnimation</item>
+        <item name="bottomSheetDialogTheme">
+            @style/Theme.MaterialComponents.DayNight.BottomSheetDialog
+        </item>
     </style>
 
     <style name="ActivityTransitionAnimation">
@@ -156,7 +159,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">start</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
 
     </style>
