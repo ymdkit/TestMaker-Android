@@ -9,7 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.DialogListMenusBinding
 
-class ListDialogFragment(private val title: String = "", private val menus: List<MenuItem>) : BottomSheetDialogFragment() {
+class ListDialogFragment(private val title: String = "", private val menus: List<DialogMenuItem>) : BottomSheetDialogFragment() {
 
     val controller: ListDialogController by lazy {
         ListDialogController {

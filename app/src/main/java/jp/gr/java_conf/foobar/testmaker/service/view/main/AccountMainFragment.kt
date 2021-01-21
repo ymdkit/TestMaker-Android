@@ -24,8 +24,8 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResul
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.MenuItem
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -71,9 +71,9 @@ class AccountMainFragment : Fragment() {
                 ListDialogFragment(
                         document.toObject(FirebaseTest::class.java)?.name ?: "",
                         listOf(
-                                MenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(document) }),
-                                MenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(document) }),
-                                MenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteTest(document) })
+                                DialogMenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(document) }),
+                                DialogMenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(document) }),
+                                DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteTest(document) })
                         )
                 ).show(requireActivity().supportFragmentManager, "TAG")
             }

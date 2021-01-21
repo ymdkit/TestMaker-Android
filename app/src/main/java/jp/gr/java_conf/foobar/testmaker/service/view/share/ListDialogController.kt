@@ -5,7 +5,7 @@ import jp.gr.java_conf.foobar.testmaker.service.itemMenu
 
 class ListDialogController(private val onItemSelected: () -> Unit) : EpoxyController() {
 
-    var menus = emptyList<MenuItem>()
+    var menus = emptyList<DialogMenuItem>()
         set(value) {
             field = value
             requestModelBuild()

@@ -30,8 +30,8 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.MenuItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -66,10 +66,10 @@ class LocalMainFragment : Fragment() {
                 ListDialogFragment(
                         test.title,
                         listOf(
-                                MenuItem(title = getString(R.string.play), iconRes = R.drawable.ic_play_arrow_white_24dp, action = { playTest(test) }),
-                                MenuItem(title = getString(R.string.edit), iconRes = R.drawable.ic_edit_white, action = { editTest(test) }),
-                                MenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteTest(test) }),
-                                MenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(test) })
+                                DialogMenuItem(title = getString(R.string.play), iconRes = R.drawable.ic_play_arrow_white_24dp, action = { playTest(test) }),
+                                DialogMenuItem(title = getString(R.string.edit), iconRes = R.drawable.ic_edit_white, action = { editTest(test) }),
+                                DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteTest(test) }),
+                                DialogMenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(test) })
                         )
                 ).show(requireActivity().supportFragmentManager, "TAG")
             }
@@ -141,8 +141,8 @@ class LocalMainFragment : Fragment() {
         ListDialogFragment(
                 getString(R.string.title_dialog_share),
                 listOf(
-                        MenuItem(title = getString(R.string.button_upload), iconRes = R.drawable.ic_baseline_cloud_upload_24, action = { uploadTest(test) }),
-                        MenuItem(title = getString(R.string.button_convert_to_csv), iconRes = R.drawable.ic_edit_white, action = { convertTestToCSV(test) })
+                        DialogMenuItem(title = getString(R.string.button_upload), iconRes = R.drawable.ic_baseline_cloud_upload_24, action = { uploadTest(test) }),
+                        DialogMenuItem(title = getString(R.string.button_convert_to_csv), iconRes = R.drawable.ic_edit_white, action = { convertTestToCSV(test) })
                 )
         ).show(requireActivity().supportFragmentManager, "TAG")
     }

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import com.airbnb.epoxy.EpoxyTouchHelper
@@ -20,19 +19,32 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by keita on 2017/02/12.
  */
 
-open class EditActivity : BaseActivity(), EditController.OnClickListener {
+class EditActivity : BaseActivity() {
 
     private val testViewModel: TestViewModel by viewModel()
 
     private val controller: EditController by lazy {
         EditController(this).apply {
-            setOnClickListener(this@EditActivity)
+            setOnClickListener(object : EditController.OnClickListener {
+                override fun onClickQuestion(question: Question) {
+                    ListDialogFragment(
+                            question.question,
+                            listOf(
+                                    DialogMenuItem(title = getString(R.string.edit), iconRes = R.drawable.ic_edit_white, action = { editQuestion(question) }),
+                                    DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteQuestion(question) })
+                            )
+                    ).show(supportFragmentManager, "TAG")
+                }
+            })
         }
     }
 
@@ -144,20 +156,15 @@ open class EditActivity : BaseActivity(), EditController.OnClickListener {
                 })
     }
 
-    override fun onClickEditQuestion(question: Question) {
+    fun editQuestion(question: Question) {
         EditQuestionActivity.startActivity(this, test.id, question.id)
     }
 
-    override fun onClickDeleteQuestion(question: Question) {
-        AlertDialog.Builder(this@EditActivity, R.style.MyAlertDialogStyle)
-                .setTitle(getString(R.string.delete_question))
-                .setMessage(getString(R.string.message_delete, question.question))
-                .setPositiveButton(android.R.string.ok) { _, _ ->
-                    if (question.imagePath != "") deleteFile(question.imagePath)
-                    testViewModel.delete(question)
-                }
-                .setNegativeButton(android.R.string.cancel, null)
-                .show()
+    fun deleteQuestion(question: Question) {
+        ConfirmDangerDialogFragment(getString(R.string.message_delete, question.question)) {
+            if (question.imagePath != "") deleteFile(question.imagePath)
+            testViewModel.delete(question)
+        }.show(supportFragmentManager, "TAG")
     }
 
     companion object {

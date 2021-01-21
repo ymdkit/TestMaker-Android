@@ -25,8 +25,7 @@ class EditController(private val context: Context) : EpoxyController() {
         }
 
     interface OnClickListener {
-        fun onClickEditQuestion(question: Question)
-        fun onClickDeleteQuestion(question: Question)
+        fun onClickQuestion(question: Question)
     }
 
     fun setOnClickListener(listener: OnClickListener) {

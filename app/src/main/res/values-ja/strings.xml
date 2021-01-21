@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">暗記メーカー</string>
     <string name="delete_exam">問題集の削除</string>
-    <string name="message_delete_exam">問題集: %1$s を削除しますか？</string>
+    <string name="message_delete_exam">「 %1$s 」 を削除してもよろしいですか？</string>
     <string name="message_share_exam">「 %1$s 」をテキストデータに変換します　　※現在 画像は変換できないのでご注意下さい. また，作成したテキストデータは「コピペで読み込む」機能で問題集に復元できます．</string>
     <string name="action_paste">コピペで読み込む</string>
     <string name="action_next">次へ</string>
@@ -25,7 +25,7 @@
     <string name="cancel">キャンセル</string>
     <string name="sort">並び替え</string>
     <string name="message_shortage">全項目を入力してください</string>
-    <string name="message_delete">問題 %1$s を削除しますか</string>
+    <string name="message_delete">「 %1$s 」を削除してもよろしいですか？</string>
     <string name="message_not_auto">問題数不足で自動生成できません</string>
     <string name="message_explanation">解説文を入れる</string>
     <string name="message_paste">共有機能で作成したテキストを\nここに貼り付けてください</string>
