@@ -154,16 +154,14 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                 }
                 R.id.nav_feedback
                 -> {
-                    val addresses = arrayOf<String>(getString(R.string.contact_email))
-                    val intent = Intent(Intent.ACTION_SENDTO).apply {
-                        data = Uri.parse("mailto:")
-                        putExtra(Intent.EXTRA_EMAIL, addresses)
-                        putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject_feedback))
-                        putExtra(Intent.EXTRA_TEXT, getString(R.string.email_body_feedback, Build.VERSION.SDK_INT))
-                    }
-                    if (intent.resolveActivity(packageManager) != null) {
-                        startActivity(intent)
-                    }
+
+                    val emailIntent = Intent(Intent.ACTION_SENDTO)
+                    emailIntent.data = Uri.parse("mailto:")
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("testmaker.contact@gmail.com"))
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject_feedback))
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_body_feedback, Build.VERSION.SDK_INT))
+                    startActivity(Intent.createChooser(emailIntent, null))
+
                 }
                 R.id.nav_review -> {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri

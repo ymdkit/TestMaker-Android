@@ -155,7 +155,7 @@
     <string name="logout">logout</string>
     <string name="msg_logout">logout this service?</string>
     <string name="report">report</string>
-    <string name="report_subject">report of test</string>
+    <string name="report_subject">report of test [id: %1$s]</string>
     <string name="report_body" />
     <string name="msg_test_upload">upload success</string>
     <string name="setting">setting</string>

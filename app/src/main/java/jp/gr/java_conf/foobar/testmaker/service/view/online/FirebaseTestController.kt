@@ -18,8 +18,7 @@ class FirebaseTestController(private val context: Context) : EpoxyController() {
         }
 
     interface OnClickListener {
-        fun onClickDownloadTest(test: FirebaseTest)
-        fun onClickShowInfoTest(test: FirebaseTest)
+        fun onClickTest(test: FirebaseTest)
     }
 
     fun setOnClickListener(listener: OnClickListener) {

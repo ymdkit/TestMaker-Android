@@ -24,6 +24,8 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResul
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -62,51 +64,17 @@ class FirebaseActivity : BaseActivity() {
         }
 
         controller.setOnClickListener(object : FirebaseTestController.OnClickListener {
-            override fun onClickDownloadTest(test: FirebaseTest) {
-                lifecycleScope.launch {
+            override fun onClickTest(test: FirebaseTest) {
 
-                    val dialog = AlertDialog.Builder(this@FirebaseActivity)
-                            .setTitle(getString(R.string.downloading))
-                            .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
+                ListDialogFragment(
+                        test.name,
+                        listOf(
+                                DialogMenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(test) }),
+                                DialogMenuItem(title = getString(R.string.info), iconRes = R.drawable.ic_info_white, action = { showInfoTest(test) }),
+                                DialogMenuItem(title = getString(R.string.report), iconRes = R.drawable.ic_baseline_flag_24, action = { reportTest(test) })
+                        )
+                ).show(supportFragmentManager, "TAG")
 
-                    when (val result = viewModel.downloadTest(test.documentId)) {
-                        is FirebaseTestResult.Success -> {
-                            viewModel.convert(result.test)
-
-                            Toast.makeText(this@FirebaseActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this@FirebaseActivity, MainActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                            startActivity(intent)
-                        }
-                        is FirebaseTestResult.Failure -> {
-                            Toast.makeText(this@FirebaseActivity, result.message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    dialog.dismiss()
-                }
-            }
-
-            override fun onClickShowInfoTest(test: FirebaseTest) {
-                val dialogLayout = LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
-
-                val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
-                textInfo.text = getString(R.string.info_firebase_test, test.userName, test.getDate(), test.overview)
-
-                val buttonReport = dialogLayout.findViewById<Button>(R.id.button_report)
-                buttonReport.setOnClickListener {
-
-                    val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                            "mailto", "testmaker.contact@gmail.com", null))
-                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_subject))
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_body))
-                    startActivity(Intent.createChooser(emailIntent, null))
-                }
-
-                val builder = AlertDialog.Builder(this@FirebaseActivity, R.style.MyAlertDialogStyle)
-                builder.setView(dialogLayout)
-                builder.setTitle(test.name)
-                builder.show()
             }
         })
 
@@ -183,6 +151,66 @@ class FirebaseActivity : BaseActivity() {
                 // ...
             }
         }
+    }
+
+    fun downloadTest(test: FirebaseTest) {
+        lifecycleScope.launch {
+
+            val dialog = AlertDialog.Builder(this@FirebaseActivity)
+                    .setTitle(getString(R.string.downloading))
+                    .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
+
+            when (val result = viewModel.downloadTest(test.documentId)) {
+                is FirebaseTestResult.Success -> {
+                    viewModel.convert(result.test)
+
+                    Toast.makeText(this@FirebaseActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@FirebaseActivity, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    startActivity(intent)
+                }
+                is FirebaseTestResult.Failure -> {
+                    Toast.makeText(this@FirebaseActivity, result.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+            dialog.dismiss()
+        }
+    }
+
+    fun showInfoTest(test: FirebaseTest) {
+
+        val dialogLayout = LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
+
+        val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
+        textInfo.text = getString(R.string.info_firebase_test, test.userName, test.getDate(), test.overview)
+
+        val buttonReport = dialogLayout.findViewById<Button>(R.id.button_report)
+        buttonReport.setOnClickListener {
+
+            val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "testmaker.contact@gmail.com", null))
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_subject))
+            emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_body))
+            startActivity(Intent.createChooser(emailIntent, null))
+        }
+
+        val builder = AlertDialog.Builder(this@FirebaseActivity, R.style.MyAlertDialogStyle)
+        builder.setView(dialogLayout)
+        builder.setTitle(test.name)
+        builder.show()
+
+    }
+
+    fun reportTest(test: FirebaseTest) {
+
+        val emailIntent = Intent(Intent.ACTION_SENDTO)
+        emailIntent.data = Uri.parse("mailto:")
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("testmaker.contact@gmail.com"))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_subject, test.documentId))
+        emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_body))
+        startActivity(Intent.createChooser(emailIntent, null))
+
     }
 
     private fun login() {
