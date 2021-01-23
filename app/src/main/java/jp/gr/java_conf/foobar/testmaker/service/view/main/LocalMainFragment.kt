@@ -33,6 +33,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -159,12 +160,9 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun convertTestToCSV(test: Test) {
-        lifecycleScope.launch {
-            val progress = AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.converting))
-                    .setView(LayoutInflater.from(requireContext()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).create()
 
-            progress.show()
+        var dialog: LoadingDialogFragment? = null
+        val job = lifecycleScope.launch {
             runCatching {
                 withContext(Dispatchers.IO) {
                     service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
@@ -181,8 +179,18 @@ class LocalMainFragment : Fragment() {
             }.onFailure {
                 requireContext().showErrorToast(it)
             }
-            progress.dismiss()
+            withContext(Dispatchers.Main) {
+                dialog?.dismiss()
+            }
         }
+
+        dialog = LoadingDialogFragment(
+                title = getString(R.string.converting),
+                onCanceled = {
+                    job.cancel()
+                }
+        )
+        dialog.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun initDialogPlayStart(test: Test) {
