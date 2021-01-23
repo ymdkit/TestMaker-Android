@@ -3,6 +3,9 @@
     <color name="colorPrimary">@android:color/holo_blue_light</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ffa144</color>
+    <color name="colorIcon">#8a000000</color>
+    <color name="colorText">#8a000000</color>
+    <color name="colorDanger">#e57373</color>
 
     <array name="color_list">
         <item>@color/red</item>

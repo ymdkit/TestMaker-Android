@@ -34,7 +34,7 @@
             app:layout_constraintEnd_toStartOf="@id/button_remove"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="新しいカテゴリを追加" />
+            tools:text="新しいフォルダを追加" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/button_remove"

@@ -26,8 +26,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         multiDexEnabled true
-        versionCode 130
-        versionName "3.8.2"
+        versionCode 131
+        versionName "3.8.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -118,8 +118,8 @@ dependencies {
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-    implementation 'com.airbnb.android:epoxy:3.8.0'
-    implementation 'com.airbnb.android:epoxy-databinding:3.8.0'
+    implementation 'com.airbnb.android:epoxy:3.11.0'
+    implementation 'com.airbnb.android:epoxy-databinding:3.11.0'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
@@ -130,7 +130,7 @@ dependencies {
     implementation 'com.squareup.moshi:moshi-kotlin:1.9.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.2'
-    kapt 'com.airbnb.android:epoxy-processor:3.8.0'
+    kapt 'com.airbnb.android:epoxy-processor:3.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
     api 'com.isseiaoki:simplecropview:1.1.4'

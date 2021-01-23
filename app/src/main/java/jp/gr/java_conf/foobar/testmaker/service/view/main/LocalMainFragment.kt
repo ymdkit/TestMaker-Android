@@ -6,9 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
@@ -16,13 +13,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
+import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.analytics.FirebaseAnalytics
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
-import jp.gr.java_conf.foobar.testmaker.service.CardTestBindingModel_
+import jp.gr.java_conf.foobar.testmaker.service.ItemTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
@@ -33,6 +30,10 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -55,7 +56,7 @@ class LocalMainFragment : Fragment() {
     private val categoryViewModel: CategoryViewModel by viewModel()
     private val service: CloudFunctionsService by inject()
 
-    private var selectedTest: RealmTest? = null //ログイン時に一度画面から離れるので選択中の値を保持
+    private var selectedTest: Test? = null //ログイン時に一度画面から離れるので選択中の値を保持
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -63,89 +64,16 @@ class LocalMainFragment : Fragment() {
         mainController = MainController(requireContext())
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
-            override fun onClickPlayTest(test: Test) {
-
-                firebaseAnalytic.logEvent("play", Bundle())
-
-                if (test.questions.isEmpty()) {
-
-                    Toast.makeText(requireContext(), getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
-
-                } else {
-
-                    initDialogPlayStart(test)
-
-                }
-            }
-
-            override fun onClickEditTest(test: Test) {
-
-                firebaseAnalytic.logEvent("edit", Bundle())
-
-                EditActivity.startActivity(requireActivity(), test.id)
-
-            }
-
-            override fun onClickDeleteTest(test: Test) {
-
-                firebaseAnalytic.logEvent("delete", Bundle())
-
-                val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-                builder.setTitle(getString(R.string.delete_exam))
-                builder.setMessage(getString(R.string.message_delete_exam, test.title))
-                builder.setPositiveButton(android.R.string.ok) { _, _ ->
-                    testViewModel.delete(test)
-                    categoryViewModel.refresh()
-                }
-                builder.setNegativeButton(android.R.string.cancel, null)
-                builder.create().show()
-            }
-
-            override fun onClickShareTest(test: Test) {
-
-                AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-                        .setTitle(getString(R.string.title_dialog_share))
-                        .setItems(resources.getStringArray(R.array.action_share)) { dialog, which ->
-
-                            when (which) {
-                                0 -> { //リンクの共有
-                                    localMainViewModel.getUser()?.let {
-                                        dialog.dismiss()
-                                        uploadTest(RealmTest.createFromTest(test))
-                                    } ?: run {
-                                        login(RealmTest.createFromTest(test))
-                                    }
-                                }
-
-                                1 -> { //テキスト変換
-                                    lifecycleScope.launch {
-                                        val progress = AlertDialog.Builder(requireContext())
-                                                .setTitle(getString(R.string.converting))
-                                                .setView(LayoutInflater.from(requireContext()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).create()
-
-                                        progress.show()
-                                        runCatching {
-                                            withContext(Dispatchers.IO) {
-                                                service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
-                                            }
-                                        }.onSuccess {
-                                            val sendIntent: Intent = Intent().apply {
-                                                action = Intent.ACTION_SEND
-                                                putExtra(Intent.EXTRA_TEXT, it.text)
-                                                type = "text/plain"
-                                            }
-
-                                            val shareIntent = Intent.createChooser(sendIntent, null)
-                                            startActivity(shareIntent)
-                                        }.onFailure {
-                                            requireContext().showErrorToast(it)
-                                        }
-                                        progress.dismiss()
-                                    }
-                                }
-                            }
-
-                        }.show()
+            override fun onClickTest(test: Test) {
+                ListDialogFragment(
+                        test.title,
+                        listOf(
+                                DialogMenuItem(title = getString(R.string.play), iconRes = R.drawable.ic_play_arrow_white_24dp, action = { playTest(test) }),
+                                DialogMenuItem(title = getString(R.string.edit), iconRes = R.drawable.ic_edit_white, action = { editTest(test) }),
+                                DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteTest(test) }),
+                                DialogMenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(test) })
+                        )
+                ).show(requireActivity().supportFragmentManager, "TAG")
             }
         })
 
@@ -165,19 +93,20 @@ class LocalMainFragment : Fragment() {
                 EditTestActivity.startActivity(requireActivity())
             }
 
+            recyclerView.layoutManager = StickyHeaderLinearLayoutManager(requireContext())
             recyclerView.adapter = mainController.adapter
 
             EpoxyTouchHelper
                     .initDragging(mainController)
                     .withRecyclerView(recyclerView)
                     .forVerticalList()
-                    .forAllModels()
+                    .withTargets(CardCategoryBindingModel_::class.java, ItemTestBindingModel_::class.java)
                     .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<EpoxyModel<*>>() {
                         override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: EpoxyModel<*>?, itemView: View?) {
                             val from = mainController.adapter.getModelAtPosition(fromPosition)
                             val to = mainController.adapter.getModelAtPosition(toPosition)
 
-                            if (from is CardTestBindingModel_ && to is CardTestBindingModel_) {
+                            if (from is ItemTestBindingModel_ && to is ItemTestBindingModel_) {
                                 testViewModel.swap(from.test(), to.test())
                             } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
                                 categoryViewModel.swap(from.category(), to.category())
@@ -187,82 +116,92 @@ class LocalMainFragment : Fragment() {
         }.root
     }
 
-    private fun uploadTest(test: RealmTest) {
-        firebaseAnalytic.logEvent("upload_from_share_local", Bundle())
-        UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
+    private fun playTest(test: Test) {
+        firebaseAnalytic.logEvent("play", Bundle())
+
+        if (test.questions.isEmpty()) {
+            Toast.makeText(requireContext(), getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
+        } else {
+            initDialogPlayStart(test)
+        }
+    }
+
+    private fun editTest(test: Test) {
+        firebaseAnalytic.logEvent("edit", Bundle())
+        EditActivity.startActivity(requireActivity(), test.id)
+    }
+
+    private fun deleteTest(test: Test) {
+        firebaseAnalytic.logEvent("delete", Bundle())
+
+        ConfirmDangerDialogFragment(getString(R.string.message_delete_exam, test.title)) {
+            testViewModel.delete(test)
+            categoryViewModel.refresh()
+        }.show(requireActivity().supportFragmentManager, "TAG")
+    }
+
+    private fun shareTest(test: Test) {
+        ListDialogFragment(
+                getString(R.string.title_dialog_share),
+                listOf(
+                        DialogMenuItem(title = getString(R.string.button_upload), iconRes = R.drawable.ic_baseline_cloud_upload_24, action = { uploadTest(test) }),
+                        DialogMenuItem(title = getString(R.string.button_convert_to_csv), iconRes = R.drawable.ic_edit_white, action = { convertTestToCSV(test) })
+                )
+        ).show(requireActivity().supportFragmentManager, "TAG")
+    }
+
+    private fun uploadTest(test: Test) {
+        localMainViewModel.getUser()?.let {
+            firebaseAnalytic.logEvent("upload_from_share_local", Bundle())
+            UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
+        } ?: run {
+            login(test)
+        }
+    }
+
+    private fun convertTestToCSV(test: Test) {
+
+        var dialog: LoadingDialogFragment? = null
+        val job = lifecycleScope.launch {
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
+                }
+            }.onSuccess {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, it.text)
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
+            }.onFailure {
+                requireContext().showErrorToast(it)
+            }
+            withContext(Dispatchers.Main) {
+                dialog?.dismiss()
+            }
+        }
+
+        dialog = LoadingDialogFragment(
+                title = getString(R.string.converting),
+                onCanceled = {
+                    job.cancel()
+                }
+        )
+        dialog.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun initDialogPlayStart(test: Test) {
 
-        val dialogLayout = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_start, requireActivity().findViewById(R.id.layout_dialog_start))
-
-        val editLimit = dialogLayout.findViewById<EditText>(R.id.set_limit)
-        editLimit.setText(test.limit.toString())
-
-        val editStart = dialogLayout.findViewById<EditText>(R.id.set_start_position)
-        editStart.setText((test.startPosition + 1).toString())
-
-        val checkRandom = dialogLayout.findViewById<CheckBox>(R.id.check_random)
-        checkRandom.isChecked = sharedPreferenceManager.random
-        checkRandom.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.random = isChecked }
-
-        val checkReverse = dialogLayout.findViewById<CheckBox>(R.id.check_reverse)
-        checkReverse.isChecked = sharedPreferenceManager.reverse
-        checkReverse.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.reverse = isChecked }
-
-        val checkManual = dialogLayout.findViewById<CheckBox>(R.id.check_manual)
-        checkManual.isChecked = sharedPreferenceManager.manual
-        checkManual.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.manual = isChecked }
-
-        val checkAudio = dialogLayout.findViewById<CheckBox>(R.id.check_audio)
-        checkAudio.isChecked = sharedPreferenceManager.audio
-        checkAudio.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.audio = isChecked }
-
-        val checkRefine = dialogLayout.findViewById<CheckBox>(R.id.check_refine)
-        checkRefine.isChecked = sharedPreferenceManager.refine
-        checkRefine.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.refine = isChecked }
-
-        val checkAlwaysReview = dialogLayout.findViewById<CheckBox>(R.id.check_always_review)
-        checkAlwaysReview.isChecked = sharedPreferenceManager.alwaysReview
-        checkAlwaysReview.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.alwaysReview = isChecked }
-
-        val checkCaseInsensitive = dialogLayout.findViewById<CheckBox>(R.id.check_case_insensitive)
-        checkCaseInsensitive.isChecked = sharedPreferenceManager.isCaseInsensitive
-        checkCaseInsensitive.setOnCheckedChangeListener { _, isChecked -> sharedPreferenceManager.isCaseInsensitive = isChecked }
-        if (Locale.getDefault().language != "en") checkCaseInsensitive.visibility = View.GONE
-
-        val buttonStart = dialogLayout.findViewById<Button>(R.id.button_start)
-        buttonStart.setOnClickListener {
-            startAnswer(test, editStart.text.toString(), editLimit.text.toString())
-        }
-
-        val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-        builder.setView(dialogLayout)
-        builder.setTitle(getString(R.string.way))
-        builder.setPositiveButton(android.R.string.ok, null)
-        builder.setNegativeButton(android.R.string.cancel, null)
-
         if (!sharedPreferenceManager.isShowPlaySettingDialog) {
-            startAnswer(test, editStart.text.toString(), editLimit.text.toString())
+            startAnswer(test, (test.startPosition + 1).toString(), test.limit.toString())
         } else {
-            val dialog = builder.show()
-            hideDefaultButtonsFromDialog(dialog)
-
+            PlayConfigDialogFragment(test) { position, limit ->
+                startAnswer(test, position, limit)
+            }.show(requireActivity().supportFragmentManager, "TAG")
         }
-
-
-    }
-
-    private fun hideDefaultButtonsFromDialog(dialog: AlertDialog) {
-
-        val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-
-        if (positiveButton != null) positiveButton.visibility = View.GONE
-
-        val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-
-        if (negativeButton != null) negativeButton.visibility = View.GONE
-
     }
 
     private fun startAnswer(test: Test, start: String, limit: String) {
@@ -297,7 +236,7 @@ class LocalMainFragment : Fragment() {
         }
     }
 
-    private fun login(test: RealmTest) {
+    private fun login(test: Test) {
 
         selectedTest = test
 

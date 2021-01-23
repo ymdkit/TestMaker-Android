@@ -9,6 +9,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="android:windowAnimationStyle">@style/ActivityTransitionAnimation</item>
+        <item name="bottomSheetDialogTheme">
+            @style/Theme.MaterialComponents.DayNight.BottomSheetDialog
+        </item>
     </style>
 
     <style name="ActivityTransitionAnimation">
@@ -29,12 +32,20 @@
         <item name="colorControlActivated">@color/colorPrimary</item><!-- フォーカス時の下線の色 -->
     </style>
 
+    <style name="ThemeOverlay.Button.Danger" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@color/colorDanger</item>
+    </style>
+
     <style name="ThemeOverlay.Button.Accent" parent="ThemeOverlay.AppCompat">
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="ThemeOverlay.Button.Primary" parent="ThemeOverlay.AppCompat">
         <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="Widget.AppCompat.ProgressBar.Normal">
+        <item name="colorAccent">@color/colorText</item>
     </style>
 
     <!--ボタン関連のスタイル-->
@@ -152,8 +163,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">start</item>
-        <item name="android:layout_marginTop">@dimen/element_spacing_small</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
 
     </style>
 </resources>

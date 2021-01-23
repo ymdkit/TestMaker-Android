@@ -58,4 +58,8 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
     fun swap(from: Question, to: Question) {
         repository.swap(from, to)
     }
+
+    fun insertAt(test: Test, question: Question, index: Int) {
+        repository.insertAt(test, question, index)
+    }
 }

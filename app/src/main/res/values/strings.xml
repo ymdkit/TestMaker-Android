@@ -151,11 +151,14 @@
     <string name="start">start</string>
     <string name="is_random">random order</string>
     <string name="info_firebase_test">creator: %1$s\n\nupload: %2$s\n\noverview: %3$s</string>
+    <string name="text_info_creator">creator: %1$s</string>
+    <string name="text_info_created_at">upload: %1$s</string>
+    <string name="text_info_overview">overview: %1$s</string>
     <string name="msg_not_login">please login</string>
     <string name="logout">logout</string>
     <string name="msg_logout">logout this service?</string>
     <string name="report">report</string>
-    <string name="report_subject">report of test</string>
+    <string name="report_subject">report of test [id: %1$s]</string>
     <string name="report_body" />
     <string name="msg_test_upload">upload success</string>
     <string name="setting">setting</string>
@@ -239,4 +242,11 @@
     <string name="msg_dialog_private">you can use this function by watching Ad</string>
     <string name="label_public">public</string>
     <string name="label_private">private</string>
+    <string name="button_convert_to_csv">convert to csv</string>
+    <string name="button_upload">share link</string>
+    <string name="folder">Folder</string>
+    <string name="download">download</string>
+    <string name="copy_question">copy</string>
+    <string name="msg_canceled">canceled</string>
+
 </resources>

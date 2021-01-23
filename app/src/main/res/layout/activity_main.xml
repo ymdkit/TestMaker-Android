@@ -23,6 +23,8 @@
                     style="@style/Toolbar"
                     android:layout_width="match_parent"
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    app:logo="@drawable/logo_text"
+                    app:contentInsetEnd="@dimen/view_width_normal"
                     app:layout_constraintTop_toTopOf="parent"
                     app:popupTheme="@style/Theme.AppCompat.DayNight"
                     app:title="@string/app_name" />

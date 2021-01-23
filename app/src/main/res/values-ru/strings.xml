@@ -144,7 +144,7 @@
     <string name="logout">выйти</string>
     <string name="msg_logout">выйти?</string>
     <string name="report">отчет</string>
-    <string name="report_subject">Отчет о сборе проблем</string>
+    <string name="report_subject">Отчет о сборе проблем [%1$s]</string>
     <string name="report_body" />
     <string name="msg_test_upload">upload success</string>
     <string name="setting">setting</string>

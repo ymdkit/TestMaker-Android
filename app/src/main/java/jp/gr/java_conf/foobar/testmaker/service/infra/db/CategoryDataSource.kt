@@ -18,13 +18,17 @@ class CategoryDataSource(private val realm: Realm) {
                 realm.copyToRealm(category)
                 it.deleteFromRealm()
             }
+
+            realm.where(RealmCategory::class.java).findAll().forEachIndexed { index, it ->
+                it.order = index
+            }
         }
     }
 
     fun create(category: Category): Long {
         val result = RealmCategory.createFromCategory(category)
         result.id = realm.where(RealmCategory::class.java).max("id")?.toLong()?.plus(1) ?: 0
-        result.order = category.id.toInt()
+        result.order = result.id.toInt()
         realm.executeTransaction {
             it.copyToRealm(result)
         }
