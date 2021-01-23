@@ -58,6 +58,10 @@ class MainController(private val context: Context) : EpoxyController() {
         this.listener = listener
     }
 
+    override fun isStickyHeader(position: Int): Boolean {
+        return adapter.getModelAtPosition(position)::class == ItemSectionHeaderBindingModel_::class
+    }
+
     override fun buildModels() {
 
         if (tests.isEmpty()) {

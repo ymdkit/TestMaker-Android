@@ -3,10 +3,8 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 import android.content.Context
 import com.airbnb.epoxy.EpoxyController
 import com.google.firebase.firestore.DocumentSnapshot
-import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.cardTestAccount
+import jp.gr.java_conf.foobar.testmaker.service.*
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import jp.gr.java_conf.foobar.testmaker.service.itemEmpty
 import kotlin.math.abs
 
 class AccountMainController(private val context: Context) : EpoxyController() {
@@ -27,6 +25,10 @@ class AccountMainController(private val context: Context) : EpoxyController() {
         this.listener = listener
     }
 
+    override fun isStickyHeader(position: Int): Boolean {
+        return adapter.getModelAtPosition(position)::class == ItemSectionHeaderBindingModel_::class
+    }
+
     override fun buildModels() {
 
         if (tests.isEmpty()) {
@@ -35,6 +37,11 @@ class AccountMainController(private val context: Context) : EpoxyController() {
                 message(context.getString(R.string.empty_uploaded_test))
             }
             return
+        }
+
+        itemSectionHeader {
+            id("Test")
+            title(context.getString(R.string.test))
         }
 
         tests.forEach {

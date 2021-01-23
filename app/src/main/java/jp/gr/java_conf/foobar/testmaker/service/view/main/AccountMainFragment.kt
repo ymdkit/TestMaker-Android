@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.DocumentSnapshot
@@ -81,6 +82,7 @@ class AccountMainFragment : Fragment() {
 
         return DataBindingUtil.inflate<AccountMainFragmentBinding>(inflater, R.layout.account_main_fragment, container, false).apply {
             binding = this
+            recyclerView.layoutManager = StickyHeaderLinearLayoutManager(requireContext())
             recyclerView.adapter = controller.adapter
             lifecycleOwner = viewLifecycleOwner
             vm = viewModel

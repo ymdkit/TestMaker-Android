@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
+import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.analytics.FirebaseAnalytics
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
@@ -91,6 +92,7 @@ class LocalMainFragment : Fragment() {
                 EditTestActivity.startActivity(requireActivity())
             }
 
+            recyclerView.layoutManager = StickyHeaderLinearLayoutManager(requireContext())
             recyclerView.adapter = mainController.adapter
 
             EpoxyTouchHelper
