@@ -19,6 +19,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.AccountMainFragmentBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinkCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
@@ -27,7 +28,10 @@ import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -134,12 +138,9 @@ class AccountMainFragment : Fragment() {
     }
 
     fun downloadTest(document: DocumentSnapshot) {
-        lifecycleScope.launch {
 
-            val dialog = AlertDialog.Builder(requireActivity())
-                    .setTitle(getString(R.string.downloading))
-                    .setView(LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_progress, requireActivity().findViewById(R.id.layout_progress))).show()
-
+        var dialog: LoadingDialogFragment? = null
+        val job = lifecycleScope.launch {
             when (val result = viewModel.downloadTest(document.id)) {
                 is FirebaseTestResult.Success -> {
                     viewModel.convert(result.test)
@@ -151,9 +152,18 @@ class AccountMainFragment : Fragment() {
                     Toast.makeText(requireActivity(), result.message, Toast.LENGTH_SHORT).show()
                 }
             }
-            dialog.dismiss()
-
+            withContext(Dispatchers.Main) {
+                dialog?.dismiss()
+            }
         }
+        dialog = LoadingDialogFragment(
+                title = getString(R.string.downloading),
+                onCanceled = {
+                    requireContext().showToast(getString(R.string.msg_canceled))
+                    job.cancel()
+                }
+        )
+        dialog.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     fun shareTest(document: DocumentSnapshot) {
