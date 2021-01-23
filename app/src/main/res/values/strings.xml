@@ -151,6 +151,9 @@
     <string name="start">start</string>
     <string name="is_random">random order</string>
     <string name="info_firebase_test">creator: %1$s\n\nupload: %2$s\n\noverview: %3$s</string>
+    <string name="text_info_creator">creator: %1$s</string>
+    <string name="text_info_created_at">upload: %1$s</string>
+    <string name="text_info_overview">overview: %1$s</string>
     <string name="msg_not_login">please login</string>
     <string name="logout">logout</string>
     <string name="msg_logout">logout this service?</string>

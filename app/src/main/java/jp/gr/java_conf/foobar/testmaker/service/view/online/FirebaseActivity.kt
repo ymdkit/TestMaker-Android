@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
@@ -180,25 +178,14 @@ class FirebaseActivity : BaseActivity() {
 
     fun showInfoTest(test: FirebaseTest) {
 
-        val dialogLayout = LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_online_test_info, findViewById(R.id.layout_dialog_info))
-
-        val textInfo = dialogLayout.findViewById<TextView>(R.id.text_info)
-        textInfo.text = getString(R.string.info_firebase_test, test.userName, test.getDate(), test.overview)
-
-        val buttonReport = dialogLayout.findViewById<Button>(R.id.button_report)
-        buttonReport.setOnClickListener {
-
-            val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                    "mailto", "testmaker.contact@gmail.com", null))
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_subject))
-            emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_body))
-            startActivity(Intent.createChooser(emailIntent, null))
-        }
-
-        val builder = AlertDialog.Builder(this@FirebaseActivity, R.style.MyAlertDialogStyle)
-        builder.setView(dialogLayout)
-        builder.setTitle(test.name)
-        builder.show()
+        ListDialogFragment(
+                test.name,
+                listOf(
+                        DialogMenuItem(title = getString(R.string.text_info_creator, test.userName), iconRes = R.drawable.ic_account, action = { }),
+                        DialogMenuItem(title = getString(R.string.text_info_created_at, test.getDate()), iconRes = R.drawable.ic_baseline_calendar_today_24, action = { }),
+                        DialogMenuItem(title = getString(R.string.text_info_overview, test.overview), iconRes = R.drawable.ic_baseline_description_24, action = { })
+                )
+        ).show(supportFragmentManager, "TAG")
 
     }
 

@@ -151,6 +151,9 @@
     <string name="start">スタート</string>
     <string name="is_random">出題順をランダムにする</string>
     <string name="info_firebase_test">作者: %1$s\n\n投稿日: %2$s\n\n概要: %3$s</string>
+    <string name="text_info_creator">作者: %1$s</string>
+    <string name="text_info_created_at">作成日: %1$s</string>
+    <string name="text_info_overview">概要: %1$s</string>
     <string name="msg_not_login">この機能を利用するにはログインが必要です</string>
     <string name="logout">ログアウト</string>
     <string name="msg_logout">ログアウトしますか？</string>
