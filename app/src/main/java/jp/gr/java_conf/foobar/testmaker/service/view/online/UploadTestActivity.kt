@@ -3,7 +3,6 @@ package jp.gr.java_conf.foobar.testmaker.service.view.online
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -21,9 +20,11 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinkCreator
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UploadTestActivity : BaseActivity() {
@@ -51,15 +52,12 @@ class UploadTestActivity : BaseActivity() {
         initToolBar()
 
         binding.buttonUpload.setOnClickListener {
-            lifecycleScope.launch {
-                val progress = AlertDialog.Builder(this@UploadTestActivity)
-                        .setTitle(getString(R.string.uploading))
-                        .setView(LayoutInflater.from(this@UploadTestActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
 
+            var dialog: LoadingDialogFragment? = null
+
+            val job = lifecycleScope.launch {
                 val documentId = viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]), binding.editOverview.text.toString(), !binding.checkPrivate.isChecked)
-
                 Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-                progress.dismiss()
 
                 if (intent.hasExtra(ARGUMENT_ID)) {
                     setResult(Activity.RESULT_OK, Intent().apply {
@@ -68,8 +66,19 @@ class UploadTestActivity : BaseActivity() {
                                 DynamicLinkCreator.createDynamicLink(documentId)))
                     })
                 }
+                withContext(Dispatchers.Main) {
+                    dialog?.dismiss()
+                }
                 finish()
             }
+            dialog = LoadingDialogFragment(
+                    title = getString(R.string.uploading),
+                    onCanceled = {
+                        Toast.makeText(baseContext, getString(R.string.msg_canceled), Toast.LENGTH_SHORT).show()
+                        job.cancel()
+                    }
+            )
+            dialog.show(supportFragmentManager, "TAG")
         }
 
         binding.checkPrivate.setOnCheckedChangeListener { checkBox, isChecked ->

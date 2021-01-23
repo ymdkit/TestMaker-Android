@@ -247,5 +247,6 @@
     <string name="folder">Folder</string>
     <string name="download">download</string>
     <string name="copy_question">copy</string>
+    <string name="msg_canceled">canceled</string>
 
 </resources>

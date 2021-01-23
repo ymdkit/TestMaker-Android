@@ -242,5 +242,6 @@
     <string name="folder">フォルダ</string>
     <string name="download">ダウンロードする</string>
     <string name="copy_question">コピーする</string>
+    <string name="msg_canceled">キャンセルしました</string>
 
 </resources>
