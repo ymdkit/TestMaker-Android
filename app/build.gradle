@@ -19,7 +19,7 @@ android {
         }
     }
     compileSdkVersion 30
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         applicationId "jp.gr.java_conf.foobar.testmaker.service"
@@ -76,8 +76,8 @@ android {
         }
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding true
     }
 
     kapt {
