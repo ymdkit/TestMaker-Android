@@ -49,7 +49,7 @@
     <string name="title_activity_edit">edit</string>
     <string name="trim">trim</string>
     <string name="way">option</string>
-    <string name="help_url">https://testmaker-1cb29.firebaseapp.com/help</string>
+    <string name="help_url">https://ankimaker.com/guide</string>
 
     <string-array name="sort_exam">
         <item>alphabetical(descending)</item>

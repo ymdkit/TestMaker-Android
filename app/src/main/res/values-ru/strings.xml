@@ -96,7 +96,7 @@
     <string name="search">поиск</string>
     <string name="ok">оК</string>
     <string name="number">%1$s</string>
-    <string name="help_url">https://testmaker-1cb29.firebaseapp.com/help</string>
+    <string name="help_url">https://ankimaker.com/guide</string>
     <string name="show_never">никогда не показывать снова</string>
     <string name="alert_save_text">Поддержание этого стиля приведет к потере данных и данных изображения по результатам этого теста</string>
     <string name="action_online">Интернет</string>
