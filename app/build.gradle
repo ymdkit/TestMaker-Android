@@ -143,8 +143,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'com.jraska:falcon:2.1.1'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-
 }
 repositories {
     mavenCentral()
