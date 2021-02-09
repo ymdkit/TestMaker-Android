@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -17,6 +16,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
@@ -24,7 +24,10 @@ import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -152,12 +155,9 @@ class FirebaseActivity : BaseActivity() {
     }
 
     fun downloadTest(test: FirebaseTest) {
-        lifecycleScope.launch {
 
-            val dialog = AlertDialog.Builder(this@FirebaseActivity)
-                    .setTitle(getString(R.string.downloading))
-                    .setView(LayoutInflater.from(this@FirebaseActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
-
+        var dialog: LoadingDialogFragment? = null
+        val job = lifecycleScope.launch {
             when (val result = viewModel.downloadTest(test.documentId)) {
                 is FirebaseTestResult.Success -> {
                     viewModel.convert(result.test)
@@ -167,13 +167,25 @@ class FirebaseActivity : BaseActivity() {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     startActivity(intent)
+
                 }
                 is FirebaseTestResult.Failure -> {
                     Toast.makeText(this@FirebaseActivity, result.message, Toast.LENGTH_SHORT).show()
                 }
             }
-            dialog.dismiss()
+            withContext(Dispatchers.Main) {
+                dialog?.dismiss()
+            }
         }
+        dialog = LoadingDialogFragment(
+                title = getString(R.string.downloading),
+                onCanceled = {
+                    showToast(getString(R.string.msg_canceled))
+                    job.cancel()
+                }
+        )
+        dialog.show(supportFragmentManager, "TAG")
+
     }
 
     fun showInfoTest(test: FirebaseTest) {
