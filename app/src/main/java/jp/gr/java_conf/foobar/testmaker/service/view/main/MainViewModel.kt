@@ -47,9 +47,14 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
                 .build()
 
         billingClient.querySkuDetailsAsync(skuDetailsParams) { result, skuDetailList ->
-            if (result.responseCode == BillingClient.BillingResponseCode.OK && skuDetailList.isNotEmpty()) {
-                onResponse(skuDetailList[0])
-            } else {
+
+            skuDetailList?.let {
+                if (result.responseCode == BillingClient.BillingResponseCode.OK && it.isNotEmpty()) {
+                    onResponse(it[0])
+                } else {
+                    _billingStatus.value = BillingStatus.Error(result.responseCode)
+                }
+            } ?: run {
                 _billingStatus.value = BillingStatus.Error(result.responseCode)
             }
         }
