@@ -248,5 +248,7 @@
     <string name="download">download</string>
     <string name="copy_question">copy</string>
     <string name="msg_canceled">canceled</string>
+    <string name="edit_category_name">edit name</string>
+    <string name="message_delete_category">delete %1$s ?</string>
 
 </resources>

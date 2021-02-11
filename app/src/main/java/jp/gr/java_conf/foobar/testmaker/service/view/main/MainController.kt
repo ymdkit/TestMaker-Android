@@ -52,6 +52,7 @@ class MainController(private val context: Context) : EpoxyController() {
 
     interface OnClickListener {
         fun onClickTest(test: Test)
+        fun onClickCategoryMenu(category: Category)
     }
 
     fun setOnClickListener(listener: OnClickListener) {
@@ -72,9 +73,11 @@ class MainController(private val context: Context) : EpoxyController() {
             return
         }
 
-        itemSectionHeader {
-            id("Folder")
-            title(context.getString(R.string.folder))
+        if (categories.isNotEmpty()) {
+            itemSectionHeader {
+                id("Folder")
+                title(context.getString(R.string.folder))
+            }
         }
 
         categories.forEach {
@@ -84,6 +87,9 @@ class MainController(private val context: Context) : EpoxyController() {
                 size(context.getString(R.string.number_exams, tests.filter { test -> it.name == test.category }.size))
                 onClick { _, _, _, _ ->
                     selectedCategory = if (selectedCategory == it.name) "" else it.name
+                }
+                onClickMenu { _, _, _, _ ->
+                    listener?.onClickCategoryMenu(it)
                 }
                 selected(categorizedTests.isNotEmpty() && categorizedTests.first().category == it.name)
 
@@ -103,9 +109,11 @@ class MainController(private val context: Context) : EpoxyController() {
             }
         }
 
-        itemSectionHeader {
-            id("Test")
-            title(context.getString(R.string.test))
+        if (nonCategorizedTests.isNotEmpty()) {
+            itemSectionHeader {
+                id("Test")
+                title(context.getString(R.string.test))
+            }
         }
 
         nonCategorizedTests.forEach {

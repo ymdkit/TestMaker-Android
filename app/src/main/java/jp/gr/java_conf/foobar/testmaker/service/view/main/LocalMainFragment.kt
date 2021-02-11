@@ -20,6 +20,7 @@ import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.ItemTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
@@ -75,6 +76,19 @@ class LocalMainFragment : Fragment() {
                         )
                 ).show(requireActivity().supportFragmentManager, "TAG")
             }
+
+            override fun onClickCategoryMenu(category: Category) {
+
+                ListDialogFragment(
+                        category.name,
+                        listOf(
+                                DialogMenuItem(title = getString(R.string.edit_category_name), iconRes = R.drawable.ic_edit_white, action = { editCategory(category) }),
+                                DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteCategory(category) })
+                        )
+                ).show(requireActivity().supportFragmentManager, "TAG")
+
+            }
+
         })
 
         categoryViewModel.hasTestsCategories.observeNonNull(this) {
@@ -261,6 +275,18 @@ class LocalMainFragment : Fragment() {
                 }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
+    }
+
+    private fun editCategory(category: Category) {
+
+    }
+
+    private fun deleteCategory(category: Category) {
+
+        ConfirmDangerDialogFragment(getString(R.string.message_delete_category, category.name)) {
+            testViewModel.deleteAllInCategory(category.name)
+            categoryViewModel.delete(category)
+        }.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
