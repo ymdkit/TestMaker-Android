@@ -91,7 +91,7 @@ class LocalMainFragment : Fragment() {
 
         })
 
-        categoryViewModel.hasTestsCategories.observeNonNull(this) {
+        categoryViewModel.categories.observeNonNull(this) {
             mainController.categories = it
         }
 
