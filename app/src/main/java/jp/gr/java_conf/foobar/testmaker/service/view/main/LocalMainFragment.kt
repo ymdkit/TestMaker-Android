@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
@@ -278,6 +280,26 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun editCategory(category: Category) {
+
+        val dialogLayout = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_edit_category_name, requireActivity().findViewById(R.id.layout_dialog_edit_category))
+        val editCategory = dialogLayout.findViewById<EditText>(R.id.edit_category_name)
+        editCategory.setText(category.name)
+        val buttonSave = dialogLayout.findViewById<Button>(R.id.button_save)
+        val dialog = AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
+                .setView(dialogLayout)
+                .setTitle(getString(R.string.title_dialog_edit_category))
+                .show()
+
+        buttonSave.setOnClickListener {
+            val categoryName = editCategory.text.toString()
+            if (categoryName.isEmpty()) {
+                Toast.makeText(requireContext(), getString(R.string.message_shortage), Toast.LENGTH_SHORT).show()
+            } else {
+
+                categoryViewModel.update(category.copy(name = categoryName))
+                dialog.dismiss()
+            }
+        }
 
     }
 

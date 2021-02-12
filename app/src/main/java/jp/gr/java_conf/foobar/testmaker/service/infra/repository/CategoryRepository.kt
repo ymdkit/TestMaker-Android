@@ -34,4 +34,8 @@ class CategoryRepository(private val dataSource: CategoryDataSource, private val
         refresh()
     }
 
+    fun update(category: Category) {
+        dataSource.update(category)
+        refresh()
+    }
 }

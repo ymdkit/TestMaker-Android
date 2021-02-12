@@ -250,5 +250,7 @@
     <string name="msg_canceled">canceled</string>
     <string name="edit_category_name">edit name</string>
     <string name="message_delete_category">delete %1$s ?</string>
+    <string name="hint_category">folder name</string>
+    <string name="title_dialog_edit_category">edit folder name</string>
 
 </resources>

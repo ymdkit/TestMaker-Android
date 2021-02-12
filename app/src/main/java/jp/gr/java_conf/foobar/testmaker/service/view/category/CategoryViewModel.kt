@@ -21,6 +21,8 @@ class CategoryViewModel(private val repository: CategoryRepository) : ViewModel(
         return id
     }
 
+    fun update(category: Category) = repository.update(category)
+
     fun delete(category: Category) {
         repository.delete(category)
         repository.refresh()
