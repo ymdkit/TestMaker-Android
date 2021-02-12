@@ -62,4 +62,13 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
     fun insertAt(test: Test, question: Question, index: Int) {
         repository.insertAt(test, question, index)
     }
+
+    fun deleteAllInCategory(name: String) {
+        repository.refresh()
+        repository.get().filter {
+            it.category == name
+        }.forEach {
+            repository.delete(it)
+        }
+    }
 }

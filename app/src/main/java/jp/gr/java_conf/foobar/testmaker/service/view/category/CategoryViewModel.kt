@@ -9,8 +9,6 @@ class CategoryViewModel(private val repository: CategoryRepository) : ViewModel(
 
     var categories: LiveData<List<Category>> = repository.get()
 
-    var hasTestsCategories: LiveData<List<Category>> = repository.getHasTests()
-
     fun get(id: Long): Category = repository.get(id)
 
     fun refresh() {
@@ -22,6 +20,8 @@ class CategoryViewModel(private val repository: CategoryRepository) : ViewModel(
         repository.refresh()
         return id
     }
+
+    fun update(category: Category) = repository.update(category)
 
     fun delete(category: Category) {
         repository.delete(category)

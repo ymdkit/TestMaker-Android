@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
@@ -20,6 +22,7 @@ import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.ItemTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
@@ -75,9 +78,22 @@ class LocalMainFragment : Fragment() {
                         )
                 ).show(requireActivity().supportFragmentManager, "TAG")
             }
+
+            override fun onClickCategoryMenu(category: Category) {
+
+                ListDialogFragment(
+                        category.name,
+                        listOf(
+                                DialogMenuItem(title = getString(R.string.edit_category_name), iconRes = R.drawable.ic_edit_white, action = { editCategory(category) }),
+                                DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteCategory(category) })
+                        )
+                ).show(requireActivity().supportFragmentManager, "TAG")
+
+            }
+
         })
 
-        categoryViewModel.hasTestsCategories.observeNonNull(this) {
+        categoryViewModel.categories.observeNonNull(this) {
             mainController.categories = it
         }
 
@@ -261,6 +277,38 @@ class LocalMainFragment : Fragment() {
                 }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
+    }
+
+    private fun editCategory(category: Category) {
+
+        val dialogLayout = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_edit_category_name, requireActivity().findViewById(R.id.layout_dialog_edit_category))
+        val editCategory = dialogLayout.findViewById<EditText>(R.id.edit_category_name)
+        editCategory.setText(category.name)
+        val buttonSave = dialogLayout.findViewById<Button>(R.id.button_save)
+        val dialog = AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
+                .setView(dialogLayout)
+                .setTitle(getString(R.string.title_dialog_edit_category))
+                .show()
+
+        buttonSave.setOnClickListener {
+            val categoryName = editCategory.text.toString()
+            if (categoryName.isEmpty()) {
+                Toast.makeText(requireContext(), getString(R.string.message_shortage), Toast.LENGTH_SHORT).show()
+            } else {
+
+                categoryViewModel.update(category.copy(name = categoryName))
+                dialog.dismiss()
+            }
+        }
+
+    }
+
+    private fun deleteCategory(category: Category) {
+
+        ConfirmDangerDialogFragment(getString(R.string.message_delete_category, category.name)) {
+            testViewModel.deleteAllInCategory(category.name)
+            categoryViewModel.delete(category)
+        }.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
