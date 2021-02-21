@@ -296,6 +296,7 @@ class LocalMainFragment : Fragment() {
                 Toast.makeText(requireContext(), getString(R.string.message_shortage), Toast.LENGTH_SHORT).show()
             } else {
 
+                testViewModel.renameAllInCategory(category.name, categoryName)
                 categoryViewModel.update(category.copy(name = categoryName))
                 dialog.dismiss()
             }
