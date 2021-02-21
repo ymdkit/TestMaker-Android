@@ -71,4 +71,14 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
             repository.delete(it)
         }
     }
+
+    fun renameAllInCategory(oldCategory: String, newCategory: String) {
+        repository.refresh()
+        repository.get().filter {
+            it.category == oldCategory
+        }.forEach {
+            repository.update(it.copy(category = newCategory))
+        }
+
+    }
 }
