@@ -33,6 +33,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
+import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
@@ -199,6 +200,9 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
 
                 R.id.nav_online -> {
                     startActivityForResult(Intent(this@MainActivity, FirebaseActivity::class.java), REQUEST_EDIT)
+                }
+                R.id.nav_group -> {
+                    startActivity(Intent(this@MainActivity, GroupActivity::class.java))
                 }
                 R.id.nav_move_questions -> {
                     startActivityForResult(Intent(this@MainActivity, MoveQuestionsActivity::class.java), REQUEST_EDIT)

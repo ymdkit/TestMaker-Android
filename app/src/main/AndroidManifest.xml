@@ -20,7 +20,11 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.online.UploadTestActivity"></activity>
+        <activity
+            android:name=".view.group.GroupActivity"
+            android:label="@string/title_activity_group"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".view.online.UploadTestActivity" />
         <activity android:name=".view.play.PlayActivity" />
         <activity android:name=".view.edit.EditQuestionActivity" />
         <activity android:name=".view.category.EditCategoryActivity" />
