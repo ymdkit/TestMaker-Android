@@ -21,22 +21,29 @@ class GroupListFragment : Fragment() {
     private val viewModel: GroupListViewModel by viewModel()
     private val auth: Auth by inject()
 
+    private lateinit var binding: FragmentGroupListBinding
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
 
-        val user = auth.getUser()
-        val uid = user?.uid
-
-        lifecycleScope.launch {
-            auth.getUser()?.uid?.let {
-                controller.groups = viewModel.getGroups(it)
-            }
-        }
+        refresh()
 
         return DataBindingUtil.inflate<FragmentGroupListBinding>(inflater, R.layout.fragment_group_list, container, false).apply {
+            binding = this
             recyclerView.adapter = controller.adapter
+
+            swipeRefresh.setOnRefreshListener {
+                refresh()
+            }
         }.root
+    }
+
+    private fun refresh() = lifecycleScope.launch {
+        auth.getUser()?.uid?.let {
+            controller.groups = viewModel.getGroups(it)
+        }
+        binding.swipeRefresh.isRefreshing = false
     }
 }
