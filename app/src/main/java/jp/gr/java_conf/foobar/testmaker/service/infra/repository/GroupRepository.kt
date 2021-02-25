@@ -11,5 +11,5 @@ class GroupRepository(private val dataSource: RemoteDataSource) {
     suspend fun joinGroup(userId: String, group: Group) = dataSource.joinGroup(userId, group)
     fun createUser(user: FirebaseUser) = dataSource.setUser(user)
     suspend fun getTests(groupId: String) = dataSource.getTests(groupId = groupId)
-
+    suspend fun downloadTest(documentId: String) = dataSource.downloadTest(documentId)
 }

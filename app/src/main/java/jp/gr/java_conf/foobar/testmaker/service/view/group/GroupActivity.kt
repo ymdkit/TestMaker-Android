@@ -20,7 +20,6 @@ class GroupActivity : BaseActivity() {
         supportFragmentManager.findFragmentById(binding.fragmentNav.id)?.let {
             val appBarConfiguration = AppBarConfiguration(it.findNavController().graph)
             binding.toolbar.setupWithNavController(it.findNavController(), appBarConfiguration)
-            initToolBar()
         }
 
         createAd(binding.adView)

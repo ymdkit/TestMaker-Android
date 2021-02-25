@@ -73,6 +73,6 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { LocalMainViewModel(get(), get()) }
     viewModel { ShowTestsViewModel(get(), get(), get()) }
     viewModel { GroupListViewModel(get()) }
-    viewModel { GroupDetailViewModel(get()) }
+    viewModel { GroupDetailViewModel(get(), get()) }
 
 }
