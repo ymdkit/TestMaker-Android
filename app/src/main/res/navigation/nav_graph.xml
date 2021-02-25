@@ -3,26 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/fragment_group_list">
 
     <fragment
-        android:id="@+id/FirstFragment"
+        android:id="@+id/fragment_group_list"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListFragment"
         android:label="@string/group_list_fragment_label"
         tools:layout="@layout/fragment_group_list">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_group_list_to_group_detail"
+            app:destination="@id/fragment_group_detail" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/fragment_group_detail"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupDetailFragment"
+        android:label="@string/group_detail_fragment_label"
+        tools:layout="@layout/fragment_group_detail">
 
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+        <argument
+            android:name="groupId"
+            app:argType="string"
+            android:defaultValue="" />
+
     </fragment>
 </navigation>

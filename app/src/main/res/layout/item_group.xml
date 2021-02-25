@@ -10,7 +10,7 @@
 
         <variable
             name="listener"
-            type="jp.gr.java_conf.foobar.testmaker.service.view.main.MainController.OnClickListener" />
+            type="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListController.OnClickListener" />
 
         <import type="jp.gr.java_conf.foobar.testmaker.service.R" />
 
@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
+        android:onClick="@{() -> listener.onClickGroup(group)}"
         android:background="?android:attr/selectableItemBackground">
 
         <ImageView

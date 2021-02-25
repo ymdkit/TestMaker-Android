@@ -10,9 +10,11 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.IdpResponse
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupListBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.view.main.AccountMainFragment
@@ -37,6 +39,12 @@ class GroupListFragment : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
+
+        controller.setOnClickListener(object : GroupListController.OnClickListener {
+            override fun onClickGroup(group: Group) {
+                findNavController().navigate(GroupListFragmentDirections.actionGroupListToGroupDetail(groupId = group.id))
+            }
+        })
 
         return DataBindingUtil.inflate<FragmentGroupListBinding>(inflater, R.layout.fragment_group_list, container, false).apply {
             binding = this

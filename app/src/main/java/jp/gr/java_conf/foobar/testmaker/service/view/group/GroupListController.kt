@@ -9,6 +9,16 @@ import jp.gr.java_conf.foobar.testmaker.service.itemSectionHeader
 
 class GroupListController(private val context: Context) : EpoxyController() {
 
+    interface OnClickListener {
+        fun onClickGroup(group: Group)
+    }
+
+    private var listener: OnClickListener? = null
+
+    fun setOnClickListener(listener: OnClickListener) {
+        this.listener = listener
+    }
+
     var groups = emptyList<Group>()
         set(value) {
             field = value
@@ -27,6 +37,7 @@ class GroupListController(private val context: Context) : EpoxyController() {
             itemGroup {
                 id(it.id)
                 group(it)
+                listener(listener)
             }
         }
     }
