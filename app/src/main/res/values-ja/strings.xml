@@ -253,5 +253,6 @@
     <string name="title_create_group">新規グループ作成</string>
     <string name="hint_group_name">グループ名を入力</string>
     <string name="msg_success_create_group">グループを作成しました</string>
+    <string name="msg_not_login_in_group">「グループ」機能は複数人で問題集を共有する機能です。\nこの機能を利用するにはログインを行ってください</string>
 
 </resources>

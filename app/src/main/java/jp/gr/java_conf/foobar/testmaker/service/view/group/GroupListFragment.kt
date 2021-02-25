@@ -1,16 +1,22 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.group
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.firebase.ui.auth.IdpResponse
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupListBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
+import jp.gr.java_conf.foobar.testmaker.service.view.main.AccountMainFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,10 +38,16 @@ class GroupListFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
 
-        refresh()
-
         return DataBindingUtil.inflate<FragmentGroupListBinding>(inflater, R.layout.fragment_group_list, container, false).apply {
             binding = this
+            isLogin = (auth.getUser() != null)
+
+            buttonLogin.setOnClickListener {
+                startActivityForResult(
+                        auth.getAuthUIIntent(),
+                        AccountMainFragment.REQUEST_SIGN_IN)
+            }
+
             recyclerView.adapter = controller.adapter
 
             swipeRefresh.setOnRefreshListener {
@@ -54,6 +66,11 @@ class GroupListFragment : Fragment() {
         }.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        refresh()
+    }
+
     private fun refresh() = lifecycleScope.launch {
         auth.getUser()?.uid?.let {
             controller.groups = viewModel.getGroups(it)
@@ -69,6 +86,28 @@ class GroupListFragment : Fragment() {
 
             withContext(Dispatchers.Main) {
                 requireContext().showToast(getString(R.string.msg_success_create_group))
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+
+        if (requestCode == MainActivity.REQUEST_SIGN_IN) {
+            val response = IdpResponse.fromResultIntent(data)
+
+            if (resultCode == Activity.RESULT_OK) {
+
+                auth.getUser()?.let {
+                    binding.isLogin = true
+                    viewModel.createUser(it)
+                    refresh()
+                    Toast.makeText(requireContext(), getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
+                }
+
+            } else {
+                response?.error?.errorCode
             }
         }
     }

@@ -266,6 +266,7 @@
     <string name="title_create_group">create group</string>
     <string name="hint_group_name">group name</string>
     <string name="msg_success_create_group">group created</string>
+    <string name="msg_not_login_in_group">if you login, you can create groups</string>
 
 
 </resources>
