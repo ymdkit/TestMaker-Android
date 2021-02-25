@@ -30,7 +30,7 @@
             android:layout_height="24dp"
             android:layout_marginStart="16dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_baseline_description_24"
+            android:src="@drawable/ic_baseline_group_24"
             app:tint="@color/red"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

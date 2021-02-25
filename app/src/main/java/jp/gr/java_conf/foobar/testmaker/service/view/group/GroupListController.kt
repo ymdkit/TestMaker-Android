@@ -1,10 +1,13 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.group
 
+import android.content.Context
 import com.airbnb.epoxy.EpoxyController
+import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.itemGroup
+import jp.gr.java_conf.foobar.testmaker.service.itemSectionHeader
 
-class GroupListController : EpoxyController() {
+class GroupListController(private val context: Context) : EpoxyController() {
 
     var groups = emptyList<Group>()
         set(value) {
@@ -13,6 +16,11 @@ class GroupListController : EpoxyController() {
         }
 
     override fun buildModels() {
+
+        itemSectionHeader {
+            id("Group")
+            title(context.getString(R.string.group))
+        }
 
         groups.forEach {
 

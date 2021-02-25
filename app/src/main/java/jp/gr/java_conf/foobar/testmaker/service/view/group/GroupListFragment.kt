@@ -16,7 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GroupListFragment : Fragment() {
 
-    private val controller: GroupListController by lazy { GroupListController() }
+    private val controller: GroupListController by lazy { GroupListController(requireContext()) }
 
     private val viewModel: GroupListViewModel by viewModel()
     private val auth: Auth by inject()
