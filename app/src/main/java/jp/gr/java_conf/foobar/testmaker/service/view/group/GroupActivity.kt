@@ -3,6 +3,9 @@ package jp.gr.java_conf.foobar.testmaker.service.view.group
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityGroupBinding
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
@@ -14,11 +17,13 @@ class GroupActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        supportFragmentManager.findFragmentById(binding.fragmentNav.id)?.let {
+            val appBarConfiguration = AppBarConfiguration(it.findNavController().graph)
+            binding.toolbar.setupWithNavController(it.findNavController(), appBarConfiguration)
+            initToolBar()
+        }
 
         createAd(binding.adView)
-
-        initToolBar()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =

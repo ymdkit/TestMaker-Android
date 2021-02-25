@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListFragment"
+        android:label="@string/group_list_fragment_label"
+        tools:layout="@layout/fragment_group_list">
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
