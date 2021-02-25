@@ -1,21 +1,34 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.group
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import android.view.MenuItem
+import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityGroupBinding
+import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 
-class GroupActivity : AppCompatActivity() {
+class GroupActivity : BaseActivity() {
+
+    private val binding by lazy { DataBindingUtil.setContentView<ActivityGroupBinding>(this, R.layout.activity_group) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_group)
-        setSupportActionBar(findViewById(R.id.toolbar))
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+
+
+        createAd(binding.adView)
+
+        initToolBar()
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+            when (item.itemId) {
+                android.R.id.home -> {
+                    finish()
+                    true
+                }
+                else -> {
+                    true
+                }
+            }
 }
