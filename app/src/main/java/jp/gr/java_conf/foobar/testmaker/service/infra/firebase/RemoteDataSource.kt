@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import kotlinx.coroutines.tasks.await
@@ -20,7 +21,7 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 
 
-class RemoteDataSource(val context: Context,val auth: Auth) {
+class RemoteDataSource(val context: Context, val auth: Auth) {
 
     private var myTests: MutableLiveData<List<DocumentSnapshot>>? = null
 
@@ -71,7 +72,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
         firebaseTest.locale = Locale.getDefault().language
         firebaseTest.public = isPublic
 
-        val ref = if(documentId != "") db.collection("tests").document(documentId) else db.collection("tests").document()
+        val ref = if (documentId != "") db.collection("tests").document(documentId) else db.collection("tests").document()
 
         ref.set(firebaseTest).await()
 
@@ -90,7 +91,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
 
         val batch = db.batch()
         firebaseQuestions.forEach {
-            val questionRef = if(it.documentId.isEmpty()) testRef.collection("questions").document() else testRef.collection("questions").document(it.documentId)
+            val questionRef = if (it.documentId.isEmpty()) testRef.collection("questions").document() else testRef.collection("questions").document(it.documentId)
             batch.set(questionRef, it.toFirebaseQuestions(user))
 
             questionRefs.add(questionRef.id)
@@ -166,5 +167,14 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
     }
 
     fun getTestsQuery() = db.collection("tests").orderBy("created_at", Query.Direction.DESCENDING)
+
+    suspend fun getGroups(userId: String): List<Group> = db.collection("users")
+            .document(userId)
+            .collection("groups")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(100)
+            .get()
+            .await()
+            .toObjects(Group::class.java)
 
 }

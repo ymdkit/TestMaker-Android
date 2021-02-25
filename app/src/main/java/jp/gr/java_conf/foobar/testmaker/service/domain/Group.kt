@@ -6,10 +6,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 data class Group(
-        val id: String,
-        val name: String,
-        val userId: String,
-        val createdAt: Timestamp
+        val id: String = "",
+        val name: String = "",
+        val userId: String = "",
+        val createdAt: Timestamp = Timestamp.now()
 ) {
     fun getDate(): String {
         val local = Locale.getDefault()
