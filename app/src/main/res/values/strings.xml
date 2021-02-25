@@ -268,6 +268,10 @@
     <string name="msg_success_create_group">group created</string>
     <string name="msg_not_login_in_group">if you login, you can create groups</string>
     <string name="msg_success_delete_test">test deleted</string>
+    <string name="upload_group_test_fragment_label">upload test</string>
+    <string name="history_test_fragment_label">history</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
