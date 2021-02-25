@@ -21,6 +21,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.category.EditCategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.*
+import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupDetailViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.LocalMainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainViewModel
@@ -72,5 +73,6 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { LocalMainViewModel(get(), get()) }
     viewModel { ShowTestsViewModel(get(), get(), get()) }
     viewModel { GroupListViewModel(get()) }
+    viewModel { GroupDetailViewModel(get()) }
 
 }

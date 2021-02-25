@@ -180,7 +180,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
     suspend fun createGroup(group: Group): Group {
         val ref = db.collection("groups").document()
         val newGroup = group.copy(id = ref.id)
-        ref.set(newGroup)
+        ref.set(newGroup).await()
         return newGroup
     }
 
@@ -190,5 +190,15 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                     .collection("groups")
                     .document(group.id)
                     .set(group)
+                    .await()
+
+    suspend fun getTests(groupId: String) =
+            db.collection("tests")
+                    .whereEqualTo("groupId", groupId)
+                    .orderBy("created_at", Query.Direction.DESCENDING)
+                    .limit(100)
+                    .get()
+                    .await()
+                    .documents
 
 }
