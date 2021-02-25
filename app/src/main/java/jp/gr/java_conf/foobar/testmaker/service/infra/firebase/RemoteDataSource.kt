@@ -177,4 +177,18 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
             .await()
             .toObjects(Group::class.java)
 
+    suspend fun createGroup(group: Group): Group {
+        val ref = db.collection("groups").document()
+        val newGroup = group.copy(id = ref.id)
+        ref.set(newGroup)
+        return newGroup
+    }
+
+    suspend fun joinGroup(userId: String, group: Group) =
+            db.collection("users")
+                    .document(userId)
+                    .collection("groups")
+                    .document(group.id)
+                    .set(group)
+
 }

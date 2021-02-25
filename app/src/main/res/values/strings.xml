@@ -263,6 +263,9 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="action_group">group</string>
     <string name="group">group</string>
+    <string name="title_create_group">create group</string>
+    <string name="hint_group_name">group name</string>
+    <string name="msg_success_create_group">group created</string>
 
 
 </resources>

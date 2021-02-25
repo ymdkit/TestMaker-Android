@@ -250,6 +250,8 @@
     <string name="action_group">グループ</string>
     <string name="group_list_fragment_label">グループ一覧</string>
     <string name="group">グループ</string>
-
+    <string name="title_create_group">新規グループ作成</string>
+    <string name="hint_group_name">グループ名を入力</string>
+    <string name="msg_success_create_group">グループを作成しました</string>
 
 </resources>
