@@ -210,6 +210,13 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                     .set(group)
                     .await()
 
+    suspend fun exitGroup(userId: String, groupId: String) =
+            db.collection("users")
+                    .document(userId)
+                    .collection("groups")
+                    .document(groupId)
+                    .delete()
+
     suspend fun getTests(groupId: String) =
             db.collection("tests")
                     .whereEqualTo("groupId", groupId)
@@ -218,5 +225,24 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                     .get()
                     .await()
                     .documents
+
+    suspend fun getGroup(groupId: String) =
+            db.collection("groups")
+                    .document(groupId)
+                    .get()
+                    .await()
+                    .toObject(Group::class.java)
+
+    suspend fun updateGroup(group: Group) =
+            db.collection("groups")
+                    .document(group.id)
+                    .set(group)
+                    .await()
+
+    suspend fun deleteGroup(documentId: String) =
+            db.collection("groups")
+                    .document(documentId)
+                    .delete()
+                    .await()
 
 }

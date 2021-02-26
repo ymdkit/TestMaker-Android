@@ -18,7 +18,14 @@ class GroupActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         supportFragmentManager.findFragmentById(binding.fragmentNav.id)?.let {
-            val appBarConfiguration = AppBarConfiguration(it.findNavController().graph)
+            val appBarConfiguration = AppBarConfiguration
+                    .Builder()
+                    .setFallbackOnNavigateUpListener {
+                        onBackPressed()
+                        true
+                    }.build()
+
+            setSupportActionBar(binding.toolbar)
             binding.toolbar.setupWithNavController(it.findNavController(), appBarConfiguration)
         }
 
@@ -32,7 +39,7 @@ class GroupActivity : BaseActivity() {
                     true
                 }
                 else -> {
-                    true
+                    super.onOptionsItemSelected(item)
                 }
             }
 }

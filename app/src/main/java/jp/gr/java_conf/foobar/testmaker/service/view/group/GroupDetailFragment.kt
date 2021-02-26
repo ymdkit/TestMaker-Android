@@ -2,9 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.group
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -14,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupDetailBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinkCreator
@@ -40,6 +39,8 @@ class GroupDetailFragment : Fragment() {
     private val controller: GroupDetailController by lazy { GroupDetailController(requireContext()) }
     private val viewModel: GroupDetailViewModel by viewModel()
     private val auth: Auth by inject()
+
+    private var group: Group? = null
 
     private lateinit var binding: FragmentGroupDetailBinding
 
@@ -96,12 +97,72 @@ class GroupDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         refresh()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_group_detail_guest, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+
+        auth.getUser()?.uid?.let { userId ->
+            group?.let { group ->
+                if (group.userId == userId) {
+                    menu.clear()
+                    requireActivity().menuInflater.inflate(R.menu.menu_group_detail_owner, menu)
+                }
+            }
+        }
+
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_invite_group -> {
+
+            }
+            R.id.menu_rename_group -> {
+
+
+            }
+            R.id.menu_delete_group -> {
+
+                group?.let {
+
+                    ConfirmDangerDialogFragment(getString(R.string.msg_delete_group, it.name)) {
+                        deleteAndExitGroup(it)
+
+                    }.show(requireActivity().supportFragmentManager, "TAG")
+
+                }
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun refresh() = lifecycleScope.launch {
         controller.tests = viewModel.getTests(args.groupId)
+        group = viewModel.getGroup(args.groupId)
         binding.swipeRefresh.isRefreshing = false
+        requireActivity().invalidateOptionsMenu()
+    }
+
+    private fun deleteAndExitGroup(group: Group) = lifecycleScope.launch {
+
+        auth.getUser()?.uid?.let {
+            viewModel.exitGroup(it, group.id)
+            viewModel.deleteGroup(group.id)
+        }
+
+        withContext(Dispatchers.Main) {
+            requireContext().showToast(getString(R.string.msg_success_delete_group))
+            findNavController().popBackStack()
+        }
     }
 
     fun downloadTest(document: DocumentSnapshot) {

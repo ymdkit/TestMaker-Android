@@ -275,6 +275,8 @@
     <string name="invite_group">invite group</string>
     <string name="rename_group">rename group</string>
     <string name="delete_group">delete group</string>
+    <string name="msg_delete_group">delete group %1$s</string>
+    <string name="msg_success_delete_group">delete succeess</string>
 
 
 </resources>
