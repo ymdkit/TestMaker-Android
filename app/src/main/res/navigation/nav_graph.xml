@@ -26,12 +26,20 @@
             app:argType="string"
             android:defaultValue="" />
 
+        <action
+            android:id="@+id/action_group_detail_to_upload_test"
+            app:destination="@id/fragment_upload_group_test" />
+
+        <action
+            android:id="@+id/action_group_detail_to_history_test"
+            app:destination="@id/fragment_history_test" />
+
     </fragment>
     <fragment
         android:id="@+id/fragment_upload_group_test"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.UploadGroupTestFragment"
         android:label="@string/upload_group_test_fragment_label"
-        tools:layout="@layout/fragment_group_detail">
+        tools:layout="@layout/fragment_upload_group_test">
 
         <argument
             android:name="groupId"

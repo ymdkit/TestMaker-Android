@@ -79,6 +79,24 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
         return ref.id
     }
 
+    // グループ内に問題集を保存する
+    suspend fun createTest(test: RealmTest, overview: String, groupId: String) {
+
+        val firebaseTest = test.toFirebaseTest(context)
+        val user = auth.getUser() ?: return
+
+        firebaseTest.userId = user.uid
+        firebaseTest.userName = user.displayName ?: "guest"
+        firebaseTest.overview = overview
+        firebaseTest.size = test.questionsNonNull().size
+        firebaseTest.locale = Locale.getDefault().language
+        firebaseTest.public = false
+        firebaseTest.groupId = groupId
+
+        db.collection("tests").document().set(firebaseTest).await()
+
+    }
+
     suspend fun uploadQuestions(test: RealmTest, documentId: String): List<String> {
 
         val questionRefs = arrayListOf<String>()

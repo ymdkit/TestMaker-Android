@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -87,7 +88,7 @@ class GroupDetailFragment : Fragment() {
             }
 
             buttonAdd.setOnClickListener {
-                //todo
+                findNavController().navigate(GroupDetailFragmentDirections.actionGroupDetailToUploadTest(groupId = args.groupId))
             }
 
         }.root

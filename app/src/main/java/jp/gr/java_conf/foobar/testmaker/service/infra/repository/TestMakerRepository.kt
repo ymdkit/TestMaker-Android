@@ -54,6 +54,8 @@ class TestMakerRepository(private val local: LocalDataSource,
         return newDocumentId
     }
 
+    suspend fun createTestInGroup(test: RealmTest, overview: String, groupId: String) = remote.createTest(test, overview, groupId)
+
     fun getMyTests(): LiveData<List<DocumentSnapshot>> {
         return remote.getMyTests()
     }
