@@ -123,7 +123,7 @@ class GroupDetailFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_invite_group -> {
-
+                inviteGroup()
             }
             R.id.menu_rename_group -> {
 
@@ -150,6 +150,20 @@ class GroupDetailFragment : Fragment() {
         group = viewModel.getGroup(args.groupId)
         binding.swipeRefresh.isRefreshing = false
         requireActivity().invalidateOptionsMenu()
+    }
+
+    private fun inviteGroup() = lifecycleScope.launch {
+
+        group?.let {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_invite_group, it.name, DynamicLinkCreator.createInviteGroupDynamicLink(it.id)))
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+        }
     }
 
     private fun deleteAndExitGroup(group: Group) = lifecycleScope.launch {
