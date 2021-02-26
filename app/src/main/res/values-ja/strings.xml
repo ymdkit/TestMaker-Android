@@ -265,5 +265,6 @@
     <string name="msg_delete_group">グループ「 %1$s 」を削除しますか？</string>
     <string name="msg_success_delete_group">グループを削除しました</string>
     <string name="msg_invite_group">グループ「 %1$s 」に招待されました。下記のリンクからグループ内の問題集にアクセスできます \n %2$s</string>
+    <string name="empty_group">参加しているグループはありません。右下の+ボタンからグループを作成してください</string>
 
 </resources>

@@ -278,6 +278,7 @@
     <string name="msg_delete_group">delete group %1$s</string>
     <string name="msg_success_delete_group">delete succeess</string>
     <string name="msg_invite_group">please join group %1$s \n %2$s</string>
+    <string name="empty_group">make your first group!</string>
 
 
 </resources>
