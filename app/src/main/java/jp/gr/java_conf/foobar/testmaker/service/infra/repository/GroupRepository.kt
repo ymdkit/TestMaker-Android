@@ -16,5 +16,6 @@ class GroupRepository(private val dataSource: RemoteDataSource) {
     suspend fun deleteGroup(groupId: String) = dataSource.deleteGroup(groupId)
     suspend fun joinGroup(userId: String, group: Group) = dataSource.joinGroup(userId, group)
     suspend fun exitGroup(userId: String, groupId: String) = dataSource.exitGroup(userId, groupId)
+    suspend fun updateGroup(group: Group) = dataSource.updateGroup(group)
 
 }

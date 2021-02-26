@@ -9,14 +9,14 @@ import androidx.fragment.app.DialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.DialogEditTextBinding
 
-class EditTextDialogFragment(private val title: String = "", private val hint: String, private val completion: (String) -> Unit) : DialogFragment() {
+class EditTextDialogFragment(private val title: String = "", private val defaultText: String = "", private val hint: String, private val completion: (String) -> Unit) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
 
             val binding = DataBindingUtil.inflate<DialogEditTextBinding>(LayoutInflater.from(activity), R.layout.dialog_edit_text, null, false).apply {
                 placeholder = hint
-
+                editText.setText(defaultText)
             }
 
             AlertDialog.Builder(it, R.style.MyAlertDialogStyle)

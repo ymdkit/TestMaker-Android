@@ -20,10 +20,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.main.AccountMainFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -127,6 +124,19 @@ class GroupDetailFragment : Fragment() {
             }
             R.id.menu_rename_group -> {
 
+                group?.let {
+
+                    EditTextDialogFragment(
+                            title = getString(R.string.title_rename_group),
+                            defaultText = it.name,
+                            hint = getString(R.string.hint_group_name))
+                    { text ->
+
+                        renameGroup(text, it)
+
+                    }.show(requireActivity().supportFragmentManager, "TAG")
+
+                }
 
             }
             R.id.menu_delete_group -> {
@@ -148,6 +158,13 @@ class GroupDetailFragment : Fragment() {
     private fun refresh() = lifecycleScope.launch {
         controller.tests = viewModel.getTests(args.groupId)
         group = viewModel.getGroup(args.groupId)
+
+        group?.let { group ->
+            auth.getUser()?.uid?.let { userId ->
+                viewModel.joinGroup(userId, group)
+            }
+        }
+
         binding.swipeRefresh.isRefreshing = false
         requireActivity().invalidateOptionsMenu()
     }
@@ -164,6 +181,11 @@ class GroupDetailFragment : Fragment() {
             val shareIntent = Intent.createChooser(sendIntent, null)
             startActivity(shareIntent)
         }
+    }
+
+    private fun renameGroup(name: String, group: Group) = lifecycleScope.launch {
+        viewModel.renameGroup(name, group)
+        requireContext().showToast(getString(R.string.msg_success_rename_group))
     }
 
     private fun deleteAndExitGroup(group: Group) = lifecycleScope.launch {
