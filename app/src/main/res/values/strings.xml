@@ -272,6 +272,9 @@
     <string name="history_test_fragment_label">history</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="invite_group">invite group</string>
+    <string name="rename_group">rename group</string>
+    <string name="delete_group">delete group</string>
 
 
 </resources>

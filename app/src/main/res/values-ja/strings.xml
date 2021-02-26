@@ -258,5 +258,8 @@
     <string name="msg_success_delete_test">問題集を削除しました</string>
     <string name="upload_group_test_fragment_label">問題集のアップロード</string>
     <string name="history_test_fragment_label">解答履歴</string>
+    <string name="invite_group">招待する</string>
+    <string name="rename_group">グループ名を変更する</string>
+    <string name="delete_group">グループを削除する</string>
 
 </resources>
