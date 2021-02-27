@@ -30,6 +30,7 @@ data class FirebaseTest(var name: String = "",
         test.limit = 100
         test.title = name
         test.color = context.resources.getIntArray(R.array.color_list)[Math.min(Math.abs(color), 7)]
+        test.documentId = documentId
         return test
     }
 

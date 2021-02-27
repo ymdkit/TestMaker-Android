@@ -8,7 +8,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerReposi
 
 class LocalMainViewModel(private val repository: TestMakerRepository, private val auth: Auth) : ViewModel() {
 
-    suspend fun uploadTest(test: RealmTest, documentId: String): String = repository.createTest(test, "", documentId)
+    suspend fun uploadTest(test: RealmTest, documentId: String): String = repository.createTest(test, "")
 
     fun getUser(): FirebaseUser? = auth.getUser()
 

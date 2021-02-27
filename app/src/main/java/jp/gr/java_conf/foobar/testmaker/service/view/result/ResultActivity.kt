@@ -10,8 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.review.ReviewManagerFactory
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityResultBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.History
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
@@ -23,12 +25,15 @@ import jp.studyplus.android.sdk.record.StudyRecordAmountTotal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ResultActivity : BaseActivity() {
 
     private lateinit var test: Test
     private val testViewModel: TestViewModel by viewModel()
+    private val resultViewModel: ResultViewModel by viewModel()
+    private val auth: Auth by inject()
 
     private val questions by lazy { test.questions.filter { it.isSolved } }
 
@@ -55,7 +60,7 @@ class ResultActivity : BaseActivity() {
 
                                     sharedPreferenceManager.refine = false
                                     PlayActivity.startActivity(this@ResultActivity, test.id, true)
-                                    
+
                                 }
 
                                 1 -> { //不正解のみやり直し
@@ -118,6 +123,24 @@ class ResultActivity : BaseActivity() {
         if (sharedPreferenceManager.playCount == COUNT_REQUEST_REVIEW) {
             sendFirebaseEvent("request-review")
             requestReview()
+        }
+
+        auth.getUser()?.let { user ->
+            testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
+
+                if (it.documentId != "") {
+                    val history = History(
+                            userId = user.uid,
+                            userName = user.displayName ?: "",
+                            numCorrect = questions.count { it.isCorrect },
+                            numSolved = questions.size)
+
+                    lifecycleScope.launch {
+                        resultViewModel.createHistory(it.documentId, history)
+                    }
+                }
+
+            }
         }
     }
 

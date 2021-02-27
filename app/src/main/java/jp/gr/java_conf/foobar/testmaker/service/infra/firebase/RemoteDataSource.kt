@@ -34,6 +34,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                 ?: return FirebaseTestResult.Failure(context.getString(
                         R.string.msg_test_not_exist))
 
+        test.documentId = testId
         test.questions = downloadQuestions(testId)
 
         return FirebaseTestResult.Success(test)
@@ -61,7 +62,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
 
     }
 
-    suspend fun createTest(test: RealmTest, overview: String, documentId: String, isPublic: Boolean = true): String {
+    suspend fun createTest(test: RealmTest, overview: String, isPublic: Boolean = true): String {
 
         val firebaseTest = test.toFirebaseTest(context)
         val user = auth.getUser() ?: return ""
@@ -73,7 +74,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
         firebaseTest.locale = Locale.getDefault().language
         firebaseTest.public = isPublic
 
-        val ref = if (documentId != "") db.collection("tests").document(documentId) else db.collection("tests").document()
+        val ref = db.collection("tests").document()
 
         ref.set(firebaseTest).await()
 
@@ -253,5 +254,13 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                     .get()
                     .await()
                     .toObjects(History::class.java)
+
+    suspend fun createHistory(documentId: String, history: History) {
+        val ref = db.collection("tests")
+                .document(documentId)
+                .collection("histories")
+                .document()
+        ref.set(history.copy(id = ref.id)).await()
+    }
 
 }

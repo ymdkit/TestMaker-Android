@@ -23,7 +23,7 @@ class FirebaseViewModel(private val repository: TestMakerRepository, private val
 
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
 
-    suspend fun uploadTest(test: RealmTest, overview: String, isPublic: Boolean) = repository.createTest(test, overview, test.documentId, isPublic)
+    suspend fun uploadTest(test: RealmTest, overview: String, isPublic: Boolean) = repository.createTest(test, overview, isPublic)
     suspend fun uploadTestInGroup(test: RealmTest, overview: String, groupId: String) = repository.createTestInGroup(test, overview, groupId)
 
     fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()

@@ -44,8 +44,8 @@ class TestMakerRepository(private val local: LocalDataSource,
         remote.updateProfile(userName, completion)
     }
 
-    suspend fun createTest(test: RealmTest, overview: String, oldDocumentId: String, isPublic: Boolean = true): String {
-        val newDocumentId = withContext(Dispatchers.Default) { remote.createTest(test, overview, oldDocumentId, isPublic) }
+    suspend fun createTest(test: RealmTest, overview: String, isPublic: Boolean = true): String {
+        val newDocumentId = withContext(Dispatchers.Default) { remote.createTest(test, overview, isPublic) }
         local.updateDocumentId(getTest(test.id), newDocumentId)
         val newDocumentIds = withContext(Dispatchers.Default) { remote.uploadQuestions(test, newDocumentId) }
         getTest(test.id).questionsNonNull().forEachIndexed { index, quest ->
