@@ -150,6 +150,15 @@ class GroupDetailFragment : Fragment() {
 
                 }
             }
+            R.id.menu_exit_group -> {
+
+                group?.let {
+
+                    ConfirmDangerDialogFragment(getString(R.string.msg_exit_group, it.name)) {
+                        exitGroup(it)
+                    }.show(requireActivity().supportFragmentManager, "TAG")
+                }
+            }
         }
 
         return super.onOptionsItemSelected(item)
@@ -197,6 +206,18 @@ class GroupDetailFragment : Fragment() {
 
         withContext(Dispatchers.Main) {
             requireContext().showToast(getString(R.string.msg_success_delete_group))
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun exitGroup(group: Group) = lifecycleScope.launch {
+
+        auth.getUser()?.uid?.let {
+            viewModel.exitGroup(it, group.id)
+        }
+
+        withContext(Dispatchers.Main) {
+            requireContext().showToast(getString(R.string.msg_success_exit_group))
             findNavController().popBackStack()
         }
     }

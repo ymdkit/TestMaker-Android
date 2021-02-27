@@ -281,6 +281,9 @@
     <string name="empty_group">make your first group!</string>
     <string name="title_rename_group">rename group</string>
     <string name="msg_success_rename_group">rename success</string>
+    <string name="exit_group">exit</string>
+    <string name="msg_exit_group">exit %1$s ?</string>
+    <string name="msg_success_exit_group">exit group success</string>
 
 
 </resources>
