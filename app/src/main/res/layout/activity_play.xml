@@ -448,7 +448,7 @@
             android:id="@+id/adView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:adSize="BANNER"
+            app:adSize="LARGE_BANNER"
             app:adUnitId="ca-app-pub-8942090726462263/8420884238"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -34,7 +34,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="@dimen/element_spacing_normal"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -89,25 +89,25 @@
                     android:text="@string/check_private"
                     app:layout_constraintTop_toBottomOf="@id/label_setting_public" />
 
+                <Button
+                    android:id="@+id/button_upload"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_marginTop="@dimen/element_spacing_large"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="@string/upload_test"
+                    android:theme="@style/ThemeOverlay.Button.Accent"
+                    app:layout_constraintTop_toBottomOf="@id/check_private" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-        <Button
-            android:id="@+id/button_upload"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_margin="@dimen/element_spacing_normal"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="@string/upload_test"
-            android:theme="@style/ThemeOverlay.Button.Accent"
-            app:layout_constraintBottom_toTopOf="@id/adView" />
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:adSize="BANNER"
+            app:adSize="MEDIUM_RECTANGLE"
             app:adUnitId="ca-app-pub-8942090726462263/8420884238"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
