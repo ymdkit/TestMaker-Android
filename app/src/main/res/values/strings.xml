@@ -285,6 +285,10 @@
     <string name="msg_exit_group">exit %1$s ?</string>
     <string name="msg_success_exit_group">exit group success</string>
     <string name="msg_group_deleted">this group already deleted</string>
+    <string name="history">history</string>
+    <string name="empty_histories">no histories</string>
+    <string name="section_history">histories</string>
+    <string name="item_title_history"> %1$s corrects %3$d / %2$d</string>
 
 
 </resources>

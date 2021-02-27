@@ -272,5 +272,8 @@
     <string name="msg_exit_group">グループ「 %1$s 」から退出しますか?</string>
     <string name="msg_success_exit_group">グループから退出しました</string>
     <string name="msg_group_deleted">このグループは既に存在しません</string>
-
+    <string name="history">解答履歴を見る</string>
+    <string name="empty_histories">この問題集の解答記録はありません</string>
+    <string name="section_history">解答履歴</string>
+    <string name="item_title_history"> %1$s さんが %2$d 問中 %3$d 問正解しました</string>
 </resources>

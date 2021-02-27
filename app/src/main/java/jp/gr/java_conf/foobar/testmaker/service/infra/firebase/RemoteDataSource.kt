@@ -14,6 +14,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
+import jp.gr.java_conf.foobar.testmaker.service.domain.History
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import kotlinx.coroutines.tasks.await
@@ -242,5 +243,15 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                     .document(documentId)
                     .delete()
                     .await()
+
+    suspend fun getHistories(documentId: String) =
+            db.collection("tests")
+                    .document(documentId)
+                    .collection("histories")
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
+                    .limit(100)
+                    .get()
+                    .await()
+                    .toObjects(History::class.java)
 
 }

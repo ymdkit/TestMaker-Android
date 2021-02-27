@@ -14,15 +14,13 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.TestDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
-import jp.gr.java_conf.foobar.testmaker.service.infra.repository.CategoryRepository
-import jp.gr.java_conf.foobar.testmaker.service.infra.repository.GroupRepository
-import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
-import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
+import jp.gr.java_conf.foobar.testmaker.service.infra.repository.*
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.category.EditCategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.*
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupDetailViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.group.HistoryTestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.LocalMainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
@@ -40,6 +38,7 @@ fun getTestMakerModules(realm: Realm) = module {
     single { TestRepository(get()) }
     single { CategoryRepository(get(), get()) }
     single { GroupRepository(get()) }
+    single { HistoryRepository(get()) }
     single { LocalDataSource(realm, get(), get()) }
     single { CategoryDataSource(realm) }
     single { TestDataSource(realm) }
@@ -74,5 +73,6 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { ShowTestsViewModel(get(), get(), get()) }
     viewModel { GroupListViewModel(get()) }
     viewModel { GroupDetailViewModel(get(), get()) }
+    viewModel { HistoryTestViewModel(get()) }
 
 }

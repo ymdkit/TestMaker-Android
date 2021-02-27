@@ -55,6 +55,7 @@ class GroupDetailFragment : Fragment() {
                 val actions = if (user != null && user.uid == document.toObject(FirebaseTest::class.java)?.userId)
                     listOf(
                             DialogMenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(document) }),
+                            DialogMenuItem(title = getString(R.string.history), iconRes = R.drawable.ic_baseline_history_24, action = { actionShowHistory(document) }),
                             DialogMenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(document) }),
                             DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteTest(document) })
                     )
@@ -287,6 +288,10 @@ class GroupDetailFragment : Fragment() {
             refresh()
             requireContext().showToast(getString(R.string.msg_success_delete_test))
         }.show(requireActivity().supportFragmentManager, "TAG")
+    }
+
+    private fun actionShowHistory(document: DocumentSnapshot) {
+        findNavController().navigate(GroupDetailFragmentDirections.actionGroupDetailToHistoryTest(documentId = document.id))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
