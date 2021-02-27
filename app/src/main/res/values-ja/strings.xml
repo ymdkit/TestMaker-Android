@@ -247,5 +247,33 @@
     <string name="message_delete_category">「 %1$s 」を削除してもよろしいですか？（フォルダ内の問題集も全て削除されます）</string>
     <string name="hint_category">フォルダ名</string>
     <string name="title_dialog_edit_category">フォルダ名の変更</string>
-
+    <string name="action_group">グループ</string>
+    <string name="group_list_fragment_label">グループ一覧</string>
+    <string name="group_detail_fragment_label">グループ詳細</string>
+    <string name="group">グループ</string>
+    <string name="title_create_group">新規グループ作成</string>
+    <string name="hint_group_name">グループ名を入力</string>
+    <string name="msg_success_create_group">グループを作成しました</string>
+    <string name="msg_not_login_in_group">「グループ」機能は複数人で問題集を共有する機能です。\nこの機能を利用するにはログインを行ってください</string>
+    <string name="msg_success_delete_test">問題集を削除しました</string>
+    <string name="upload_group_test_fragment_label">問題集のアップロード</string>
+    <string name="history_test_fragment_label">解答履歴</string>
+    <string name="invite_group">招待する</string>
+    <string name="rename_group">グループ名を変更する</string>
+    <string name="delete_group">グループを削除する</string>
+    <string name="title_activity_group">グループ</string>
+    <string name="msg_delete_group">グループ「 %1$s 」を削除しますか？</string>
+    <string name="msg_success_delete_group">グループを削除しました</string>
+    <string name="msg_invite_group">グループ「 %1$s 」に招待されました。下記のリンクからグループ内の問題集にアクセスできます \n %2$s</string>
+    <string name="empty_group">参加しているグループはありません。右下の+ボタンからグループを作成してください</string>
+    <string name="title_rename_group">グループ名の変更</string>
+    <string name="msg_success_rename_group">グループ名を変更しました</string>
+    <string name="exit_group">グループを退出する</string>
+    <string name="msg_exit_group">グループ「 %1$s 」から退出しますか?</string>
+    <string name="msg_success_exit_group">グループから退出しました</string>
+    <string name="msg_group_deleted">このグループは既に存在しません</string>
+    <string name="history">解答履歴を見る</string>
+    <string name="empty_histories">この問題集の解答記録はありません</string>
+    <string name="section_history">解答履歴</string>
+    <string name="item_title_history"> %1$s さんが %2$d 問中 %3$d 問正解しました</string>
 </resources>

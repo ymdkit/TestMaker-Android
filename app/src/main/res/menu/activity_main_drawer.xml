@@ -24,13 +24,15 @@
         <item
             android:id="@+id/nav_online"
             android:icon="@drawable/ic_public_white"
-            android:title="@string/action_online"
-            />
+            android:title="@string/action_online" />
+        <item
+            android:id="@+id/nav_group"
+            android:icon="@drawable/ic_baseline_group_24"
+            android:title="@string/action_group" />
         <item
             android:id="@+id/nav_move_questions"
             android:icon="@drawable/ic_swap_calls_white"
-            android:title="@string/action_move"
-            />
+            android:title="@string/action_move" />
         <item
             android:id="@+id/nav_remove_ad"
             android:icon="@drawable/ic_remove_ad_white"

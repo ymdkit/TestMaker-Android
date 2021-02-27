@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_group_list">
+
+    <action
+        android:id="@+id/action_global_group_detail"
+        app:destination="@id/fragment_group_detail" />
+
+    <fragment
+        android:id="@+id/fragment_group_list"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListFragment"
+        android:label="@string/group_list_fragment_label"
+        tools:layout="@layout/fragment_group_list">
+
+        <action
+            android:id="@+id/action_group_list_to_group_detail"
+            app:destination="@id/fragment_group_detail" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_group_detail"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupDetailFragment"
+        android:label="@string/group_detail_fragment_label"
+        tools:layout="@layout/fragment_group_detail">
+
+        <argument
+            android:name="groupId"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <action
+            android:id="@+id/action_group_detail_to_upload_test"
+            app:destination="@id/fragment_upload_group_test" />
+
+        <action
+            android:id="@+id/action_group_detail_to_history_test"
+            app:destination="@id/fragment_history_test" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_upload_group_test"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.UploadGroupTestFragment"
+        android:label="@string/upload_group_test_fragment_label"
+        tools:layout="@layout/fragment_upload_group_test">
+
+        <argument
+            android:name="groupId"
+            app:argType="string"
+            android:defaultValue="" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_history_test"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.HistoryTestFragment"
+        android:label="@string/history_test_fragment_label"
+        tools:layout="@layout/fragment_group_detail">
+
+        <argument
+            android:name="documentId"
+            app:argType="string"
+            android:defaultValue="" />
+
+    </fragment>
+</navigation>

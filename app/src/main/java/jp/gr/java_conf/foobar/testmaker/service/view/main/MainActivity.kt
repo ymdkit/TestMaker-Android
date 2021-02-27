@@ -33,6 +33,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
+import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
@@ -116,28 +117,52 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
             }
 
             pendingDynamicLinkData ?: return@launch
-
-            val dialog = AlertDialog.Builder(this@MainActivity)
-                    .setTitle(getString(R.string.downloading))
-                    .setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
-
             val deepLink = pendingDynamicLinkData.link
-
-            when (val result = viewModel.downloadTest(deepLink.toString().split("/").last())) {
-                is FirebaseTestResult.Success -> {
-                    viewModel.convert(result.test)
-                    testViewModel.refresh()
-                    showToast(getString(R.string.msg_success_download_test, result.test.name))
-                }
-                is FirebaseTestResult.Failure -> {
-                    showToast(result.message)
-                }
-            }
-            dialog.dismiss()
-
+            handleDynamicLink(deepLink.toString())
         }
-
     }
+
+    private fun handleDynamicLink(link: String) {
+
+        val regex = Regex("""(?<=https://testmaker-1cb29\.com/).*""")
+        val result = regex.find(link, 0)
+
+        result?.value?.let {
+
+            val params = it.split("/")
+
+            if (params.first() == "groups") {
+
+                if (params.size != 2) return@let
+
+                val groupId = params[1]
+                GroupActivity.startActivityWithGroupId(this, groupId)
+
+            } else {
+                actionDownload(params[0])
+            }
+        }
+    }
+
+    private fun actionDownload(documentId: String) = lifecycleScope.launch {
+
+        val dialog = AlertDialog.Builder(this@MainActivity)
+                .setTitle(getString(R.string.downloading))
+                .setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
+
+        when (val result = viewModel.downloadTest(documentId)) {
+            is FirebaseTestResult.Success -> {
+                viewModel.convert(result.test)
+                testViewModel.refresh()
+                showToast(getString(R.string.msg_success_download_test, result.test.name))
+            }
+            is FirebaseTestResult.Failure -> {
+                showToast(result.message)
+            }
+        }
+        dialog.dismiss()
+    }
+
 
     private fun initNavigationView() {
 
@@ -199,6 +224,9 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
 
                 R.id.nav_online -> {
                     startActivityForResult(Intent(this@MainActivity, FirebaseActivity::class.java), REQUEST_EDIT)
+                }
+                R.id.nav_group -> {
+                    startActivity(Intent(this@MainActivity, GroupActivity::class.java))
                 }
                 R.id.nav_move_questions -> {
                     startActivityForResult(Intent(this@MainActivity, MoveQuestionsActivity::class.java), REQUEST_EDIT)

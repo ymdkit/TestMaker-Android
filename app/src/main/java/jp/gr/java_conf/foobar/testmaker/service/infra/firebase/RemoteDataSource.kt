@@ -13,6 +13,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.domain.Group
+import jp.gr.java_conf.foobar.testmaker.service.domain.History
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import kotlinx.coroutines.tasks.await
@@ -20,7 +22,7 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 
 
-class RemoteDataSource(val context: Context,val auth: Auth) {
+class RemoteDataSource(val context: Context, val auth: Auth) {
 
     private var myTests: MutableLiveData<List<DocumentSnapshot>>? = null
 
@@ -32,6 +34,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
                 ?: return FirebaseTestResult.Failure(context.getString(
                         R.string.msg_test_not_exist))
 
+        test.documentId = testId
         test.questions = downloadQuestions(testId)
 
         return FirebaseTestResult.Success(test)
@@ -59,7 +62,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
 
     }
 
-    suspend fun createTest(test: RealmTest, overview: String, documentId: String, isPublic: Boolean = true): String {
+    suspend fun createTest(test: RealmTest, overview: String, isPublic: Boolean = true): String {
 
         val firebaseTest = test.toFirebaseTest(context)
         val user = auth.getUser() ?: return ""
@@ -71,11 +74,29 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
         firebaseTest.locale = Locale.getDefault().language
         firebaseTest.public = isPublic
 
-        val ref = if(documentId != "") db.collection("tests").document(documentId) else db.collection("tests").document()
+        val ref = db.collection("tests").document()
 
         ref.set(firebaseTest).await()
 
         return ref.id
+    }
+
+    // グループ内に問題集を保存する
+    suspend fun createTest(test: RealmTest, overview: String, groupId: String) {
+
+        val firebaseTest = test.toFirebaseTest(context)
+        val user = auth.getUser() ?: return
+
+        firebaseTest.userId = user.uid
+        firebaseTest.userName = user.displayName ?: "guest"
+        firebaseTest.overview = overview
+        firebaseTest.size = test.questionsNonNull().size
+        firebaseTest.locale = Locale.getDefault().language
+        firebaseTest.public = false
+        firebaseTest.groupId = groupId
+
+        db.collection("tests").document().set(firebaseTest).await()
+
     }
 
     suspend fun uploadQuestions(test: RealmTest, documentId: String): List<String> {
@@ -90,7 +111,7 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
 
         val batch = db.batch()
         firebaseQuestions.forEach {
-            val questionRef = if(it.documentId.isEmpty()) testRef.collection("questions").document() else testRef.collection("questions").document(it.documentId)
+            val questionRef = if (it.documentId.isEmpty()) testRef.collection("questions").document() else testRef.collection("questions").document(it.documentId)
             batch.set(questionRef, it.toFirebaseQuestions(user))
 
             questionRefs.add(questionRef.id)
@@ -166,5 +187,80 @@ class RemoteDataSource(val context: Context,val auth: Auth) {
     }
 
     fun getTestsQuery() = db.collection("tests").orderBy("created_at", Query.Direction.DESCENDING)
+
+    suspend fun getGroups(userId: String): List<Group> = db.collection("users")
+            .document(userId)
+            .collection("groups")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(100)
+            .get()
+            .await()
+            .toObjects(Group::class.java)
+
+    suspend fun createGroup(group: Group): Group {
+        val ref = db.collection("groups").document()
+        val newGroup = group.copy(id = ref.id)
+        ref.set(newGroup).await()
+        return newGroup
+    }
+
+    suspend fun joinGroup(userId: String, group: Group) =
+            db.collection("users")
+                    .document(userId)
+                    .collection("groups")
+                    .document(group.id)
+                    .set(group)
+                    .await()
+
+    suspend fun exitGroup(userId: String, groupId: String) =
+            db.collection("users")
+                    .document(userId)
+                    .collection("groups")
+                    .document(groupId)
+                    .delete()
+
+    suspend fun getTests(groupId: String) =
+            db.collection("tests")
+                    .whereEqualTo("groupId", groupId)
+                    .orderBy("created_at", Query.Direction.DESCENDING)
+                    .limit(100)
+                    .get()
+                    .await()
+                    .documents
+
+    suspend fun getGroup(groupId: String) =
+            db.collection("groups")
+                    .document(groupId)
+                    .get()
+
+    suspend fun updateGroup(group: Group) =
+            db.collection("groups")
+                    .document(group.id)
+                    .set(group)
+                    .await()
+
+    suspend fun deleteGroup(documentId: String) =
+            db.collection("groups")
+                    .document(documentId)
+                    .delete()
+                    .await()
+
+    suspend fun getHistories(documentId: String) =
+            db.collection("tests")
+                    .document(documentId)
+                    .collection("histories")
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
+                    .limit(100)
+                    .get()
+                    .await()
+                    .toObjects(History::class.java)
+
+    suspend fun createHistory(documentId: String, history: History) {
+        val ref = db.collection("tests")
+                .document(documentId)
+                .collection("histories")
+                .document()
+        ref.set(history.copy(id = ref.id)).await()
+    }
 
 }

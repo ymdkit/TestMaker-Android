@@ -18,7 +18,8 @@ data class FirebaseTest(var name: String = "",
                         var size: Int = 0,
                         var created_at: Timestamp = Timestamp(Date()),
                         @Json(name = "document_id") var documentId: String = "",
-                        var public: Boolean = true
+                        var public: Boolean = true,
+                        var groupId: String = ""
 ) {
 
 
@@ -29,6 +30,7 @@ data class FirebaseTest(var name: String = "",
         test.limit = 100
         test.title = name
         test.color = context.resources.getIntArray(R.array.color_list)[Math.min(Math.abs(color), 7)]
+        test.documentId = documentId
         return test
     }
 

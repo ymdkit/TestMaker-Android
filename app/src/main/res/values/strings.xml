@@ -252,5 +252,43 @@
     <string name="message_delete_category">delete %1$s ?</string>
     <string name="hint_category">folder name</string>
     <string name="title_dialog_edit_category">edit folder name</string>
+    <string name="title_activity_group">GroupActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="group_list_fragment_label">GroupList</string>
+    <string name="group_detail_fragment_label">Group</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="action_group">group</string>
+    <string name="group">group</string>
+    <string name="title_create_group">create group</string>
+    <string name="hint_group_name">group name</string>
+    <string name="msg_success_create_group">group created</string>
+    <string name="msg_not_login_in_group">if you login, you can create groups</string>
+    <string name="msg_success_delete_test">test deleted</string>
+    <string name="upload_group_test_fragment_label">upload test</string>
+    <string name="history_test_fragment_label">history</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="invite_group">invite group</string>
+    <string name="rename_group">rename group</string>
+    <string name="delete_group">delete group</string>
+    <string name="msg_delete_group">delete group %1$s</string>
+    <string name="msg_success_delete_group">delete succeess</string>
+    <string name="msg_invite_group">please join group %1$s \n %2$s</string>
+    <string name="empty_group">make your first group!</string>
+    <string name="title_rename_group">rename group</string>
+    <string name="msg_success_rename_group">rename success</string>
+    <string name="exit_group">exit</string>
+    <string name="msg_exit_group">exit %1$s ?</string>
+    <string name="msg_success_exit_group">exit group success</string>
+    <string name="msg_group_deleted">this group already deleted</string>
+    <string name="history">history</string>
+    <string name="empty_histories">no histories</string>
+    <string name="section_history">histories</string>
+    <string name="item_title_history"> %1$s corrects %3$d / %2$d</string>
+
 
 </resources>

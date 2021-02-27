@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="history"
+            type="jp.gr.java_conf.foobar.testmaker.service.domain.History" />
+
+        <import type="jp.gr.java_conf.foobar.testmaker.service.R" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_title_test"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/element_spacing_large"
+            android:layout_marginEnd="@dimen/element_spacing_large"
+            android:maxLines="1"
+            android:text="@{@string/item_title_history(history.userName, history.numSolved, history.numCorrect)}"
+            android:textSize="@dimen/text_size_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
+
+        <TextView
+            android:id="@+id/text_created_at"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/element_spacing_large"
+            android:layout_marginTop="@dimen/element_spacing_small"
+            android:layout_marginEnd="@dimen/element_spacing_large"
+            android:layout_marginBottom="@dimen/element_spacing_large"
+            android:gravity="start"
+            android:text="@{history.getDate()}"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_title_test" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+
