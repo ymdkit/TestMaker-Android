@@ -261,7 +261,7 @@
     <string name="invite_group">招待する</string>
     <string name="rename_group">グループ名を変更する</string>
     <string name="delete_group">グループを削除する</string>
-    <string name="title_activity_group">グループ一覧</string>
+    <string name="title_activity_group">グループ</string>
     <string name="msg_delete_group">グループ「 %1$s 」を削除しますか？</string>
     <string name="msg_success_delete_group">グループを削除しました</string>
     <string name="msg_invite_group">グループ「 %1$s 」に招待されました。下記のリンクからグループ内の問題集にアクセスできます \n %2$s</string>

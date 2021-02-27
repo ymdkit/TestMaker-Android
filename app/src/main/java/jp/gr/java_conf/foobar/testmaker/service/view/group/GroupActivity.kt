@@ -1,5 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.group
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
@@ -16,6 +18,7 @@ class GroupActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createAd(binding.adView)
 
         supportFragmentManager.findFragmentById(binding.fragmentNav.id)?.let {
             val appBarConfiguration = AppBarConfiguration
@@ -27,9 +30,13 @@ class GroupActivity : BaseActivity() {
 
             setSupportActionBar(binding.toolbar)
             binding.toolbar.setupWithNavController(it.findNavController(), appBarConfiguration)
-        }
 
-        createAd(binding.adView)
+            if (intent.hasExtra(EXTRA_GROUP_ID)) {
+                intent.getStringExtra(EXTRA_GROUP_ID)?.let { groupId ->
+                    it.findNavController().navigate(GroupDetailFragmentDirections.actionGlobalGroupDetail(groupId = groupId))
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -42,4 +49,16 @@ class GroupActivity : BaseActivity() {
                     super.onOptionsItemSelected(item)
                 }
             }
+
+    companion object {
+
+        const val EXTRA_GROUP_ID = "groupId"
+
+        fun startActivityWithGroupId(activity: Activity, groupId: String) {
+            val intent = Intent(activity, GroupActivity::class.java).apply {
+                putExtra(EXTRA_GROUP_ID, groupId)
+            }
+            activity.startActivity(intent)
+        }
+    }
 }

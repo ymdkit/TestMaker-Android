@@ -5,6 +5,10 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/fragment_group_list">
 
+    <action
+        android:id="@+id/action_global_group_detail"
+        app:destination="@id/fragment_group_detail" />
+
     <fragment
         android:id="@+id/fragment_group_list"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListFragment"
