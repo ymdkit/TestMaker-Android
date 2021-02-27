@@ -155,7 +155,7 @@ class GroupDetailFragment : Fragment() {
                 group?.let {
 
                     ConfirmDangerDialogFragment(getString(R.string.msg_exit_group, it.name)) {
-                        exitGroup(it)
+                        exitGroup(it.id)
                     }.show(requireActivity().supportFragmentManager, "TAG")
                 }
             }
@@ -166,16 +166,25 @@ class GroupDetailFragment : Fragment() {
 
     private fun refresh() = lifecycleScope.launch {
         controller.tests = viewModel.getTests(args.groupId)
-        group = viewModel.getGroup(args.groupId)
+        viewModel.getGroup(args.groupId)
+                .addOnSuccessListener {
+                    it.toObject(Group::class.java)?.let {
+                        joinGroup()
+                        binding.swipeRefresh.isRefreshing = false
+                        requireActivity().invalidateOptionsMenu()
+                    } ?: run {
+                        requireContext().showToast(getString(R.string.msg_group_deleted))
+                        exitGroup(args.groupId)
+                    }
+                }
+    }
 
+    private fun joinGroup() = lifecycleScope.launch {
         group?.let { group ->
             auth.getUser()?.uid?.let { userId ->
                 viewModel.joinGroup(userId, group)
             }
         }
-
-        binding.swipeRefresh.isRefreshing = false
-        requireActivity().invalidateOptionsMenu()
     }
 
     private fun inviteGroup() = lifecycleScope.launch {
@@ -210,10 +219,10 @@ class GroupDetailFragment : Fragment() {
         }
     }
 
-    private fun exitGroup(group: Group) = lifecycleScope.launch {
+    private fun exitGroup(groupId: String) = lifecycleScope.launch {
 
         auth.getUser()?.uid?.let {
-            viewModel.exitGroup(it, group.id)
+            viewModel.exitGroup(it, groupId)
         }
 
         withContext(Dispatchers.Main) {

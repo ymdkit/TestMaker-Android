@@ -230,8 +230,6 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
             db.collection("groups")
                     .document(groupId)
                     .get()
-                    .await()
-                    .toObject(Group::class.java)
 
     suspend fun updateGroup(group: Group) =
             db.collection("groups")

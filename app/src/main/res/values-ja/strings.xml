@@ -271,5 +271,6 @@
     <string name="exit_group">グループを退出する</string>
     <string name="msg_exit_group">グループ「 %1$s 」から退出しますか?</string>
     <string name="msg_success_exit_group">グループから退出しました</string>
+    <string name="msg_group_deleted">このグループは既に存在しません</string>
 
 </resources>
