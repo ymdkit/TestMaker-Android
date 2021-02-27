@@ -124,7 +124,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-    implementation 'com.airbnb.android:epoxy:3.11.0'
+    implementation 'com.airbnb.android:epoxy:4.4.1'
     implementation 'com.airbnb.android:epoxy-databinding:3.11.0'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
