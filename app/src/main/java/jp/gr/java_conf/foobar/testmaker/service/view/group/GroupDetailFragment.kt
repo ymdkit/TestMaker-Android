@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.group
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupDetailBinding
@@ -169,6 +171,7 @@ class GroupDetailFragment : Fragment() {
         viewModel.getGroup(args.groupId)
                 .addOnSuccessListener {
                     it.toObject(Group::class.java)?.let {
+                        group = it
                         joinGroup()
                         binding.swipeRefresh.isRefreshing = false
                         requireActivity().invalidateOptionsMenu()
@@ -284,5 +287,27 @@ class GroupDetailFragment : Fragment() {
             refresh()
             requireContext().showToast(getString(R.string.msg_success_delete_test))
         }.show(requireActivity().supportFragmentManager, "TAG")
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+
+        if (requestCode == MainActivity.REQUEST_SIGN_IN) {
+            val response = IdpResponse.fromResultIntent(data)
+
+            if (resultCode == Activity.RESULT_OK) {
+
+                auth.getUser()?.let {
+                    binding.isLogin = true
+                    viewModel.createUser(it)
+                    refresh()
+                    Toast.makeText(requireContext(), getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
+                }
+
+            } else {
+                response?.error?.errorCode
+            }
+        }
     }
 }
