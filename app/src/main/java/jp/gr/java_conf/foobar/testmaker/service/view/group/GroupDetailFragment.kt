@@ -196,7 +196,7 @@ class GroupDetailFragment : Fragment() {
         group?.let {
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_invite_group, it.name, DynamicLinkCreator.createInviteGroupDynamicLink(it.id)))
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_invite_group, it.name, DynamicLinkCreator.createInviteGroupDynamicLinks(it.id)))
                 type = "text/plain"
             }
 
