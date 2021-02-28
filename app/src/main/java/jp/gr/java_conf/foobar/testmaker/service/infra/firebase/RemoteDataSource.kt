@@ -28,7 +28,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
     private val db = FirebaseFirestore.getInstance()
 
     suspend fun downloadTest(testId: String): FirebaseTest =
-            db.collection("tests")
+            db.collection(TESTS)
                     .document(testId)
                     .get().await()
                     .toObject(FirebaseTest::class.java)?.apply {
@@ -37,7 +37,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                     } ?: throw Exception()
 
     private suspend fun downloadQuestions(testId: String): List<FirebaseQuestion> {
-        return db.collection("tests")
+        return db.collection(TESTS)
                 .document(testId)
                 .collection("questions")
                 .get()
@@ -70,7 +70,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
         firebaseTest.locale = Locale.getDefault().language
         firebaseTest.public = isPublic
 
-        val ref = db.collection("tests").document()
+        val ref = db.collection(TESTS).document()
 
         ref.set(firebaseTest).await()
 
@@ -91,7 +91,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
         firebaseTest.public = false
         firebaseTest.groupId = groupId
 
-        db.collection("tests").document().set(firebaseTest).await()
+        db.collection(TESTS).document().set(firebaseTest).await()
 
     }
 
@@ -101,7 +101,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
 
         val firebaseQuestions = test.questionsNonNull()
 
-        val testRef = db.collection("tests").document(documentId)
+        val testRef = db.collection(TESTS).document(documentId)
 
         val user = auth.getUser() ?: return emptyList()
 
@@ -146,9 +146,10 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
 
         val user = auth.getUser() ?: return
 
-        db.collection("tests")
+        db.collection(TESTS)
                 .whereEqualTo("userId", user.uid)
                 .orderBy("created_at", Query.Direction.DESCENDING)
+                .limit(300)
                 .get()
                 .addOnSuccessListener { query ->
 
@@ -157,17 +158,6 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                 }
                 .addOnFailureListener {
                     Log.d("Debug", "fetch myTests failure: $it")
-                }
-    }
-
-    fun deleteTest(id: String) {
-        db.collection("tests").document(id).delete()
-                .addOnSuccessListener {
-                    fetchMyTests()
-                    Log.d("Debug", "delete success")
-                }
-                .addOnFailureListener {
-                    Log.d("Debug", "delete failure: $it")
                 }
     }
 
@@ -185,7 +175,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
 
     }
 
-    fun getTestsQuery() = db.collection("tests").orderBy("created_at", Query.Direction.DESCENDING)
+    fun getTestsQuery() = db.collection(TESTS).orderBy("created_at", Query.Direction.DESCENDING)
 
     suspend fun getGroups(userId: String): List<Group> = db.collection("users")
             .document(userId)
@@ -203,6 +193,12 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
         return newGroup
     }
 
+    suspend fun deleteTest(documentId: String) =
+            db.collection(TESTS)
+                    .document(documentId)
+                    .delete()
+                    .await()
+
     suspend fun joinGroup(userId: String, group: Group) =
             db.collection("users")
                     .document(userId)
@@ -219,7 +215,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                     .delete()
 
     suspend fun getTests(groupId: String) =
-            db.collection("tests")
+            db.collection(TESTS)
                     .whereEqualTo("groupId", groupId)
                     .orderBy("created_at", Query.Direction.DESCENDING)
                     .limit(100)
@@ -245,7 +241,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                     .await()
 
     suspend fun getHistories(documentId: String) =
-            db.collection("tests")
+            db.collection(TESTS)
                     .document(documentId)
                     .collection("histories")
                     .orderBy("createdAt", Query.Direction.DESCENDING)
@@ -255,11 +251,18 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                     .toObjects(History::class.java)
 
     suspend fun createHistory(documentId: String, history: History) {
-        val ref = db.collection("tests")
+        val ref = db.collection(TESTS)
                 .document(documentId)
                 .collection("histories")
                 .document()
         ref.set(history.copy(id = ref.id)).await()
+    }
+
+    companion object {
+        const val TESTS = "tests"
+        const val GROUPS = "groups"
+        const val USERS = "users"
+        const val HISTORIES = "histories"
     }
 
 }

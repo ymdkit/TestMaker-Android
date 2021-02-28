@@ -63,7 +63,7 @@ class TestMakerRepository(private val local: LocalDataSource,
         remote.fetchMyTests()
     }
 
-    fun deleteTest(id: String) {
+    suspend fun deleteTest(id: String) {
         remote.deleteTest(id)
     }
 

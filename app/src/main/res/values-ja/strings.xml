@@ -282,4 +282,5 @@
     <string name="msg_failure_share_test">共有用リンクの生成に失敗しました。端末がネットワークに接続されていない可能性があります。</string>
     <string name="msg_creating_share_test_link">共有用リンク生成中</string>
     <string name="msg_failure_download_test">問題集のダウンロードに失敗しました。端末がネットワークに接続されていないか、この問題集が既に削除されている可能性があります。</string>
+    <string name="msg_failure_delete_test">問題集の削除に失敗しました。端末がネットワークに接続されていないか、この問題集が既に削除されている可能性があります。</string>
 </resources>

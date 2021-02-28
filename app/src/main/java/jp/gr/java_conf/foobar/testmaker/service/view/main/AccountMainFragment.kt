@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -27,6 +28,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -178,10 +180,21 @@ class AccountMainFragment : Fragment() {
     }
 
     fun deleteTest(document: DocumentSnapshot) {
-        ConfirmDangerDialogFragment(getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name)) {
-            viewModel.deleteTest(document.id)
-            viewModel.fetchMyTests()
-        }.show(requireActivity().supportFragmentManager, "TAG")
+        ConfirmDangerDialogFragment(
+                title = getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name),
+                completion = {
+                    lifecycleScope.launch {
+                        runCatching {
+                            viewModel.deleteTest(document.id)
+                        }.onSuccess {
+                            viewModel.fetchMyTests()
+                            requireContext().showToast(getString(R.string.msg_success_delete_test))
+                        }.onFailure {
+                            requireContext().showToast(getString(R.string.msg_failure_delete_test))
+                        }
+                    }
+                }).show(requireActivity().supportFragmentManager, "TAG")
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -300,11 +300,20 @@ class GroupDetailFragment : Fragment() {
     }
 
     fun deleteTest(document: DocumentSnapshot) {
-        ConfirmDangerDialogFragment(getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name)) {
-            viewModel.deleteTest(document.id)
-            refresh()
-            requireContext().showToast(getString(R.string.msg_success_delete_test))
-        }.show(requireActivity().supportFragmentManager, "TAG")
+        ConfirmDangerDialogFragment(
+                title = getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name),
+                completion = {
+                    lifecycleScope.launch {
+                        runCatching {
+                            viewModel.deleteTest(document.id)
+                        }.onSuccess {
+                            refresh()
+                            requireContext().showToast(getString(R.string.msg_success_delete_test))
+                        }.onFailure {
+                            requireContext().showToast(getString(R.string.msg_failure_delete_test))
+                        }
+                    }
+                }).show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun actionShowHistory(document: DocumentSnapshot) {

@@ -19,7 +19,7 @@ class FirebaseMyPageViewModel(private val repository: TestMakerRepository, priva
 
     fun getMyTests(): LiveData<List<DocumentSnapshot>> = repository.getMyTests()
 
-    fun deleteTest(id: String) = repository.deleteTest(id)
+    suspend fun deleteTest(id: String) = repository.deleteTest(id)
 
     suspend fun downloadTest(id: String): FirebaseTest = repository.downloadTest(id)
 
