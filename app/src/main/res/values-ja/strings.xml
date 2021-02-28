@@ -285,4 +285,5 @@
     <string name="msg_failure_delete_test">問題集の削除に失敗しました。端末がネットワークに接続されていないか、この問題集が既に削除されている可能性があります。</string>
     <string name="hint_category_name">フォルダ名を入力</string>
     <string name="msg_empty_text">入力欄が空です</string>
+    <string name="title_dialog_edit_user_name">ユーザ名の変更</string>
 </resources>

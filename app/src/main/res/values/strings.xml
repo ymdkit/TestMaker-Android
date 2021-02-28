@@ -298,6 +298,7 @@
     <string name="msg_failure_delete_test">failure to delete test</string>
     <string name="hint_category_name">folder name</string>
     <string name="msg_empty_text">please input</string>
+    <string name="title_dialog_edit_user_name">edit username</string>
 
 
 </resources>
