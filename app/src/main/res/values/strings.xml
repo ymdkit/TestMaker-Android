@@ -294,6 +294,7 @@
     <string name="msg_failure_share_group">failure to create link</string>
     <string name="msg_failure_share_test">failure to create link</string>
     <string name="msg_creating_share_test_link">creating link</string>
+    <string name="msg_failure_download_test">failure to download test</string>
 
 
 </resources>

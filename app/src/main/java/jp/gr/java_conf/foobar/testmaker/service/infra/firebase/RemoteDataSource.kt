@@ -12,7 +12,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.domain.History
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
@@ -28,17 +27,14 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
 
     private val db = FirebaseFirestore.getInstance()
 
-    suspend fun downloadTest(testId: String): FirebaseTestResult {
-
-        val test = db.collection("tests").document(testId).get().await().toObject(FirebaseTest::class.java)
-                ?: return FirebaseTestResult.Failure(context.getString(
-                        R.string.msg_test_not_exist))
-
-        test.documentId = testId
-        test.questions = downloadQuestions(testId)
-
-        return FirebaseTestResult.Success(test)
-    }
+    suspend fun downloadTest(testId: String): FirebaseTest =
+            db.collection("tests")
+                    .document(testId)
+                    .get().await()
+                    .toObject(FirebaseTest::class.java)?.apply {
+                        documentId = testId
+                        questions = downloadQuestions(testId)
+                    } ?: throw Exception()
 
     private suspend fun downloadQuestions(testId: String): List<FirebaseQuestion> {
         return db.collection("tests")

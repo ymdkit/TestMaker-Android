@@ -7,7 +7,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -32,7 +31,7 @@ class TestMakerRepository(private val local: LocalDataSource,
         return local.isCheckOrder()
     }
 
-    suspend fun downloadTest(testId: String): FirebaseTestResult = withContext(Dispatchers.Default) {
+    suspend fun downloadTest(testId: String): FirebaseTest = withContext(Dispatchers.Default) {
         remote.downloadTest(testId)
     }
 

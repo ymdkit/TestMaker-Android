@@ -9,7 +9,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 
 class FirebaseMyPageViewModel(private val repository: TestMakerRepository, private val auth: Auth) : ViewModel() {
@@ -22,7 +21,7 @@ class FirebaseMyPageViewModel(private val repository: TestMakerRepository, priva
 
     fun deleteTest(id: String) = repository.deleteTest(id)
 
-    suspend fun downloadTest(id: String): FirebaseTestResult = repository.downloadTest(id)
+    suspend fun downloadTest(id: String): FirebaseTest = repository.downloadTest(id)
 
     fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test)
 
