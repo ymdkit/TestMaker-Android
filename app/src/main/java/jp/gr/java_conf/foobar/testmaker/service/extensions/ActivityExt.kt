@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 fun <T> FragmentActivity.executeJobWithDialog(
+        title: String,
         task: suspend CoroutineScope.() -> T,
         onSuccess: (T) -> Unit,
         onFailure: (Throwable) -> Unit
@@ -25,7 +26,7 @@ fun <T> FragmentActivity.executeJobWithDialog(
         dialog?.dismiss()
     }
     dialog = LoadingDialogFragment(
-            title = getString(R.string.msg_creating_invite_group_link),
+            title = title,
             onCanceled = {
                 showToast(getString(R.string.msg_canceled))
                 job.cancel()

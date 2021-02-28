@@ -197,6 +197,7 @@ class GroupDetailFragment : Fragment() {
         val group = group ?: return
 
         requireActivity().executeJobWithDialog(
+                title = getString(R.string.msg_creating_invite_group_link),
                 task = {
                     DynamicLinksCreator.createInviteGroupDynamicLinks(group.id)
                 },
@@ -284,16 +285,26 @@ class GroupDetailFragment : Fragment() {
     fun shareTest(document: DocumentSnapshot) {
         val data = document.toObject(FirebaseTest::class.java) ?: return
 
-        lifecycleScope.launch {
-            val dynamicLinks = DynamicLinksCreator.createShareTestDynamicLinks(document.id)
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, dynamicLinks))
-                type = "text/plain"
-            }
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
-        }
+        requireActivity().executeJobWithDialog(
+                title = getString(R.string.msg_creating_share_test_link),
+                task = {
+                    DynamicLinksCreator.createShareTestDynamicLinks(document.id)
+                },
+                onSuccess = {
+                    it.shortLink?.let {
+                        val sendIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, it))
+                            type = "text/plain"
+                        }
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        startActivity(shareIntent)
+                    }
+                },
+                onFailure = {
+                    requireContext().showToast(getString(R.string.msg_failure_share_test))
+                }
+        )
     }
 
     fun deleteTest(document: DocumentSnapshot) {

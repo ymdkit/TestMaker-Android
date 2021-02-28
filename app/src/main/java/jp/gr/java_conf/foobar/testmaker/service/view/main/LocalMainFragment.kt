@@ -24,10 +24,13 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
@@ -321,16 +324,31 @@ class LocalMainFragment : Fragment() {
                 selectedTest = null
             }
         } else if (requestCode == REQUEST_UPLOAD_TEST && resultCode == Activity.RESULT_OK) {
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, data?.getStringExtra("result") ?: "")
-                type = "text/plain"
-            }
 
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
+            val documentId = data?.getStringExtra(EXTRA_DOCUMENT_ID) ?: return
+            val testName = data.getStringExtra(EXTRA_TEST_NAME) ?: return
+
+            requireActivity().executeJobWithDialog(
+                    title = getString(R.string.msg_creating_share_test_link),
+                    task = {
+                        DynamicLinksCreator.createShareTestDynamicLinks(documentId)
+                    },
+                    onSuccess = {
+                        it.shortLink?.let {
+                            val sendIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, testName, it))
+                                type = "text/plain"
+                            }
+                            val shareIntent = Intent.createChooser(sendIntent, null)
+                            startActivity(shareIntent)
+                        }
+                    },
+                    onFailure = {
+                        requireContext().showToast(getString(R.string.msg_failure_share_test))
+                    }
+            )
         }
-
     }
 
     override fun onResume() {
@@ -342,5 +360,8 @@ class LocalMainFragment : Fragment() {
     companion object {
         const val REQUEST_SIGN_IN_UPLOAD = 54321
         const val REQUEST_UPLOAD_TEST = 54322
+
+        const val EXTRA_DOCUMENT_ID = "documentId"
+        const val EXTRA_TEST_NAME = "testName"
     }
 }

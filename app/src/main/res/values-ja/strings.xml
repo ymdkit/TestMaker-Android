@@ -278,4 +278,7 @@
     <string name="item_title_history"> %1$s さんが %2$d 問中 %3$d 問正解しました</string>
     <string name="msg_failure_invite_group">招待リンクの生成に失敗しました。端末がネットワークに接続されていないか、このグループが既に削除されている可能性があります。</string>
     <string name="msg_creating_invite_group_link">招待リンク生成中</string>
+    <string name="msg_failure_share_group">failure to create link</string>
+    <string name="msg_failure_share_test">共有用リンクの生成に失敗しました。端末がネットワークに接続されていない可能性があります。</string>
+    <string name="msg_creating_share_test_link">共有用リンク生成中</string>
 </resources>

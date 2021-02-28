@@ -18,6 +18,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.AccountMainFragmentBinding
+import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
@@ -170,17 +171,26 @@ class AccountMainFragment : Fragment() {
         firebaseAnalytic.logEvent("upload_from_share_remote", Bundle())
         val data = document.toObject(FirebaseTest::class.java) ?: return
 
-        lifecycleScope.launch {
-            val dynamicLinks = DynamicLinksCreator.createShareTestDynamicLinks(document.id)
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, dynamicLinks))
-                type = "text/plain"
-            }
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
-        }
-
+        requireActivity().executeJobWithDialog(
+                title = getString(R.string.msg_creating_share_test_link),
+                task = {
+                    DynamicLinksCreator.createShareTestDynamicLinks(document.id)
+                },
+                onSuccess = {
+                    it.shortLink?.let {
+                        val sendIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, it))
+                            type = "text/plain"
+                        }
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        startActivity(shareIntent)
+                    }
+                },
+                onFailure = {
+                    requireContext().showToast(getString(R.string.msg_failure_share_test))
+                }
+        )
     }
 
     fun deleteTest(document: DocumentSnapshot) {

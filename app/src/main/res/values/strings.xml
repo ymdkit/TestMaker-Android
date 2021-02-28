@@ -291,6 +291,9 @@
     <string name="item_title_history"> %1$s corrects %3$d / %2$d</string>
     <string name="msg_failure_invite_group">faikure to create link</string>
     <string name="msg_creating_invite_group_link">creating link</string>
+    <string name="msg_failure_share_group">failure to create link</string>
+    <string name="msg_failure_share_test">failure to create link</string>
+    <string name="msg_creating_share_test_link">creating link</string>
 
 
 </resources>
