@@ -146,7 +146,10 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
 
         val user = auth.getUser() ?: return
 
-        db.collection("tests").whereEqualTo("userId", user.uid).get()
+        db.collection("tests")
+                .whereEqualTo("userId", user.uid)
+                .orderBy("created_at", Query.Direction.DESCENDING)
+                .get()
                 .addOnSuccessListener { query ->
 
                     myTests?.postValue(query.documents)
