@@ -17,7 +17,7 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityUploadTestBi
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.extensions.isConnectedInternet
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinkCreator
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
@@ -60,10 +60,12 @@ class UploadTestActivity : BaseActivity() {
                 Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
 
                 if (intent.hasExtra(ARGUMENT_ID)) {
+
+                    val links = DynamicLinksCreator.createShareTestDynamicLinks(documentId)
                     setResult(Activity.RESULT_OK, Intent().apply {
                         putExtra("result", getString(R.string.msg_share_test,
                                 testViewModel.tests[binding.spinner.selectedItemPosition].title,
-                                DynamicLinkCreator.createDynamicLink(documentId)))
+                                links))
                     })
                 }
                 withContext(Dispatchers.Main) {
