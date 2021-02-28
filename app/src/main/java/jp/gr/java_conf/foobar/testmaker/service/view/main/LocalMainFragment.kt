@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
@@ -34,9 +33,11 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.share.*
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
+import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -47,7 +48,7 @@ class LocalMainFragment : Fragment() {
 
     private val localMainViewModel: LocalMainViewModel by viewModel()
 
-    internal lateinit var mainController: MainController
+    private val mainController by lazy { MainController(requireContext()) }
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
     private val firebaseAnalytic: FirebaseAnalytics by inject()
 
@@ -62,7 +63,6 @@ class LocalMainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        mainController = MainController(requireContext())
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
             override fun onClickTest(test: Test) {
@@ -176,36 +176,27 @@ class LocalMainFragment : Fragment() {
 
     private fun convertTestToCSV(test: Test) {
 
-        var dialog: LoadingDialogFragment? = null
-        val job = lifecycleScope.launch {
-            runCatching {
-                withContext(Dispatchers.IO) {
-                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
-                }
-            }.onSuccess {
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, it.text)
-                    type = "text/plain"
-                }
-
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                startActivity(shareIntent)
-            }.onFailure {
-                requireContext().showErrorToast(it)
-            }
-            withContext(Dispatchers.Main) {
-                dialog?.dismiss()
-            }
-        }
-
-        dialog = LoadingDialogFragment(
+        requireActivity().executeJobWithDialog(
                 title = getString(R.string.converting),
-                onCanceled = {
-                    job.cancel()
+                task = {
+                    withContext(Dispatchers.IO) {
+                        service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
+                    }
+                },
+                onSuccess = {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, it.text)
+                        type = "text/plain"
+                    }
+
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
+                },
+                onFailure = {
+                    requireContext().showErrorToast(it)
                 }
         )
-        dialog.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun initDialogPlayStart(test: Test) {
