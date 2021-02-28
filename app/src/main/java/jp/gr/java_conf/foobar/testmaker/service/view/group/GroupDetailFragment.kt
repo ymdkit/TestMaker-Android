@@ -15,6 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupDetailBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
+import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
@@ -191,18 +192,29 @@ class GroupDetailFragment : Fragment() {
         }
     }
 
-    private fun inviteGroup() = lifecycleScope.launch {
+    private fun inviteGroup() {
 
-        group?.let {
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_invite_group, it.name, DynamicLinksCreator.createInviteGroupDynamicLinks(it.id)))
-                type = "text/plain"
-            }
+        val group = group ?: return
 
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
-        }
+        requireActivity().executeJobWithDialog(
+                task = {
+                    DynamicLinksCreator.createInviteGroupDynamicLinks(group.id)
+                },
+                onSuccess = {
+                    it.shortLink?.let {
+                        val sendIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_invite_group, group.name, it))
+                            type = "text/plain"
+                        }
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        startActivity(shareIntent)
+                    }
+                },
+                onFailure = {
+                    requireContext().showToast(getString(R.string.msg_failure_invite_group))
+                }
+        )
     }
 
     private fun renameGroup(name: String, group: Group) = lifecycleScope.launch {

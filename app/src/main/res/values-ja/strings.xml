@@ -276,4 +276,6 @@
     <string name="empty_histories">この問題集の解答記録はありません</string>
     <string name="section_history">解答履歴</string>
     <string name="item_title_history"> %1$s さんが %2$d 問中 %3$d 問正解しました</string>
+    <string name="msg_failure_invite_group">招待リンクの生成に失敗しました。端末がネットワークに接続されていないか、このグループが既に削除されている可能性があります。</string>
+    <string name="msg_creating_invite_group_link">招待リンク生成中</string>
 </resources>
