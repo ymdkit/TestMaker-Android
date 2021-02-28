@@ -296,6 +296,8 @@
     <string name="msg_creating_share_test_link">creating link</string>
     <string name="msg_failure_download_test">failure to download test</string>
     <string name="msg_failure_delete_test">failure to delete test</string>
+    <string name="hint_category_name">folder name</string>
+    <string name="msg_empty_text">please input</string>
 
 
 </resources>

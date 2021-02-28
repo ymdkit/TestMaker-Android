@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
@@ -36,10 +34,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -285,27 +280,16 @@ class LocalMainFragment : Fragment() {
 
     private fun editCategory(category: Category) {
 
-        val dialogLayout = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_edit_category_name, requireActivity().findViewById(R.id.layout_dialog_edit_category))
-        val editCategory = dialogLayout.findViewById<EditText>(R.id.edit_category_name)
-        editCategory.setText(category.name)
-        val buttonSave = dialogLayout.findViewById<Button>(R.id.button_save)
-        val dialog = AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
-                .setView(dialogLayout)
-                .setTitle(getString(R.string.title_dialog_edit_category))
-                .show()
+        EditTextDialogFragment(
+                title = getString(R.string.title_dialog_edit_category),
+                defaultText = category.name,
+                hint = getString(R.string.hint_category_name))
+        { text ->
 
-        buttonSave.setOnClickListener {
-            val categoryName = editCategory.text.toString()
-            if (categoryName.isEmpty()) {
-                Toast.makeText(requireContext(), getString(R.string.message_shortage), Toast.LENGTH_SHORT).show()
-            } else {
+            testViewModel.renameAllInCategory(category.name, text)
+            categoryViewModel.update(category.copy(name = text))
 
-                testViewModel.renameAllInCategory(category.name, categoryName)
-                categoryViewModel.update(category.copy(name = categoryName))
-                dialog.dismiss()
-            }
-        }
-
+        }.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun deleteCategory(category: Category) {

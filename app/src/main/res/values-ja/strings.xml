@@ -283,4 +283,6 @@
     <string name="msg_creating_share_test_link">共有用リンク生成中</string>
     <string name="msg_failure_download_test">問題集のダウンロードに失敗しました。端末がネットワークに接続されていないか、この問題集が既に削除されている可能性があります。</string>
     <string name="msg_failure_delete_test">問題集の削除に失敗しました。端末がネットワークに接続されていないか、この問題集が既に削除されている可能性があります。</string>
+    <string name="hint_category_name">フォルダ名を入力</string>
+    <string name="msg_empty_text">入力欄が空です</string>
 </resources>
