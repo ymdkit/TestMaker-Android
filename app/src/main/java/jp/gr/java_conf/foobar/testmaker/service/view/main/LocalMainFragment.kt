@@ -156,6 +156,7 @@ class LocalMainFragment : Fragment() {
         ConfirmDangerDialogFragment(getString(R.string.message_delete_exam, test.title)) {
             testViewModel.delete(test)
             categoryViewModel.refresh()
+            requireContext().showToast(getString(R.string.msg_success_delete_test))
         }.show(requireActivity().supportFragmentManager, "TAG")
     }
 
