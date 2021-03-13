@@ -188,7 +188,7 @@
     <string name="save_test">問題集を保存</string>
     <string name="save_category">フォルダを保存</string>
     <string name="msg_save_test">問題集を保存しました</string>
-    <string name="empty_test">保存している問題集はありません。\n右下の+ボタンから問題集を追加してください</string>
+    <string name="empty_test">保存している問題集はありません。\n画面下部のボタンから問題集を追加してください</string>
     <string name="title_activity_edit_test">問題集の編集</string>
     <string name="title_activity_edit_category">フォルダの編集</string>
     <string name="title_activity_edit_question">問題の編集</string>
@@ -200,7 +200,7 @@
     <string name="message_check_order">解答順を正誤判定に含める</string>
     <string name="num_others">選択肢数</string>
     <string name="num_answers">解答数</string>
-    <string name="empty_question">保存している問題はありません。\n右下の+ボタンから問題を追加してください</string>
+    <string name="empty_question">保存している問題はありません。\n画面下部のボタンから問題を追加してください</string>
     <string name="judge_question">OK</string>
     <string name="label_answer">正解</string>
     <string name="label_explanation">解説</string>
@@ -223,7 +223,7 @@
     <string name="preference_group_account">アカウント設定</string>
     <string name="setting_user_name">ユーザー名の変更</string>
     <string name="msg_update_user_name">ユーザ名を変更しました</string>
-    <string name="empty_uploaded_test"> アップロードしている問題集はありません。\n右下のボタンから問題集をアップロードしてください</string>
+    <string name="empty_uploaded_test"> アップロードしている問題集はありません。\n画面下部のボタンから問題集をアップロードしてください</string>
     <string name="converting">テキスト形式に変換中（※画像情報は変換されません）</string>
     <string name="title_activity_upload_test">問題集のアップロード</string>
     <string name="upload_test">アップロード</string>
@@ -265,7 +265,7 @@
     <string name="msg_delete_group">グループ「 %1$s 」を削除しますか？</string>
     <string name="msg_success_delete_group">グループを削除しました</string>
     <string name="msg_invite_group">グループ「 %1$s 」に招待されました。下記のリンクからグループ内の問題集にアクセスできます \n %2$s</string>
-    <string name="empty_group">参加しているグループはありません。右下の+ボタンからグループを作成してください</string>
+    <string name="empty_group">参加しているグループはありません。画面下部のボタンからグループを作成してください</string>
     <string name="title_rename_group">グループ名の変更</string>
     <string name="msg_success_rename_group">グループ名を変更しました</string>
     <string name="exit_group">グループを退出する</string>
