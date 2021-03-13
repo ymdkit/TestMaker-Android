@@ -9,7 +9,7 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import com.airbnb.epoxy.EpoxyTouchHelper
-import jp.gr.java_conf.foobar.testmaker.service.CardQuestionBindingModel_
+import jp.gr.java_conf.foobar.testmaker.service.ItemQuestionBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
@@ -144,13 +144,13 @@ class EditActivity : BaseActivity() {
                 .initDragging(controller)
                 .withRecyclerView(binding.recyclerView)
                 .forVerticalList()
-                .withTarget(CardQuestionBindingModel_::class.java)
-                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<CardQuestionBindingModel_>() {
-                    override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: CardQuestionBindingModel_, itemView: View?) {
+                .withTarget(ItemQuestionBindingModel_::class.java)
+                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<ItemQuestionBindingModel_>() {
+                    override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: ItemQuestionBindingModel_, itemView: View?) {
                         val from = controller.adapter.getModelAtPosition(fromPosition)
                         val to = controller.adapter.getModelAtPosition(toPosition)
 
-                        if (from is CardQuestionBindingModel_ && to is CardQuestionBindingModel_) {
+                        if (from is ItemQuestionBindingModel_ && to is ItemQuestionBindingModel_) {
                             testViewModel.swap(from.question(), to.question())
                         }
                     }

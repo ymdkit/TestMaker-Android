@@ -3,10 +3,10 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 import android.content.Context
 import com.airbnb.epoxy.EpoxyController
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.cardQuestion
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.extensions.filteredList
 import jp.gr.java_conf.foobar.testmaker.service.itemEmpty
+import jp.gr.java_conf.foobar.testmaker.service.itemQuestion
 
 class EditController(private val context: Context) : EpoxyController() {
 
@@ -43,9 +43,9 @@ class EditController(private val context: Context) : EpoxyController() {
         } else {
             val result = if (searchWord.isNotEmpty()) questions.filteredList(searchWord) else questions
             result.forEachIndexed { index, it ->
-                cardQuestion {
+                itemQuestion {
                     id(it.id)
-                    index(index + 1)
+                    index((index + 1).toString())
                     question(it)
                     listener(listener)
                 }
