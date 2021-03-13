@@ -4,13 +4,11 @@
 /.idea/workspace.xml
 /.idea/libraries
 .idea/caches/build_file_checksums.ser
-.DS_Store
 /build
 /captures
 /release
 /app/release
 /.idea
-buildSrc/
 /fastlane/*.json
 google-services.json
 *.aab
