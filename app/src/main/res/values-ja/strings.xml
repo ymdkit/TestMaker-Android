@@ -12,13 +12,13 @@
     <string name="number_existing_questions">達成率: %1$d / %2$d</string>
     <string name="number_exams">問題集数 %1$d</string>
     <string name="confirm">確認</string>
-    <string name="play">解答する</string>
-    <string name="share">共有する</string>
+    <string name="play">解答</string>
+    <string name="share">共有</string>
     <string name="help">よくある質問</string>
     <string name="menu">メニュー</string>
     <string name="retry">解き直す</string>
-    <string name="edit">編集する</string>
-    <string name="delete">削除する</string>
+    <string name="edit">編集</string>
+    <string name="delete">削除</string>
     <string name="way">出題設定</string>
     <string name="load">読み込む</string>
     <string name="trim">トリミング</string>
@@ -51,7 +51,7 @@
     <string name="action_import">ファイルのインポート</string>
     <string name="action_license">ライセンス</string>
     <string name="msg_save">保存しました</string>
-    <string name="save">保存する</string>
+    <string name="save">保存</string>
     <string name="edit_pro">テキストエディタで編集</string>
     <string name="pass">分からない</string>
 
@@ -259,8 +259,8 @@
     <string name="upload_group_test_fragment_label">問題集のアップロード</string>
     <string name="history_test_fragment_label">解答履歴</string>
     <string name="invite_group">招待する</string>
-    <string name="rename_group">グループ名を変更する</string>
-    <string name="delete_group">グループを削除する</string>
+    <string name="rename_group">グループ名の変更</string>
+    <string name="delete_group">グループの削除</string>
     <string name="title_activity_group">グループ</string>
     <string name="msg_delete_group">グループ「 %1$s 」を削除しますか？</string>
     <string name="msg_success_delete_group">グループを削除しました</string>
