@@ -299,6 +299,7 @@
     <string name="hint_category_name">folder name</string>
     <string name="msg_empty_text">please input</string>
     <string name="title_dialog_edit_user_name">edit username</string>
+    <string name="button_create_test">create test</string>
 
 
 </resources>
