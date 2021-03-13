@@ -1,7 +1,7 @@
 *.iml
 .gradle
 /local.properties
-/build
+**/build
 /captures
 /release
 /app/release

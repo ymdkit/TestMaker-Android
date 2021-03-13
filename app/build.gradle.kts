@@ -20,13 +20,13 @@ android {
             keyPassword = System.getenv("TESTMAKER_KEY_PASS")
         }
     }
-    compileSdkVersion(30)
+    compileSdkVersion(Deps.compileSdkVersion)
     buildToolsVersion = "29.0.2"
 
     defaultConfig {
         applicationId = "jp.gr.java_conf.foobar.testmaker.service"
-        minSdkVersion(21)
-        targetSdkVersion(30)
+        minSdkVersion(Deps.minSdkVersion)
+        targetSdkVersion(Deps.targetSdkVersion)
         multiDexEnabled = true
         versionCode = 135
         versionName = "4.0.0"
@@ -130,7 +130,7 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.9.2")
     implementation("com.squareup.moshi:moshi-kotlin:1.9.2")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.72")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Deps.kotlinVersion}")
     implementation("androidx.navigation:navigation-fragment-ktx:2.2.2")
     implementation("androidx.navigation:navigation-ui-ktx:2.2.2")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")

@@ -1,19 +1,16 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    val kotlin_version by extra("1.3.72")
     val nav_version by extra("2.3.3")
     repositories {
         jcenter()
         google()
-        maven {
-            url = uri("https://plugins.gradle.org/m2/")
-        }
+        maven("https://plugins.gradle.org/m2/")
     }
     dependencies {
         classpath("com.android.tools.build:gradle:4.1.2")
         classpath("io.realm:realm-gradle-plugin:6.0.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Deps.kotlinVersion}")
         classpath("com.google.gms:google-services:4.3.5")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.2")
         classpath("gradle.plugin.com.github.konifar.gradle:plugin:0.3.3")
@@ -28,8 +25,6 @@ allprojects {
     repositories {
         jcenter()
         google()
-        maven {
-            url = uri("https://jitpack.io")
-        }
+        maven("https://jitpack.io")
     }
 }
