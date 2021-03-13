@@ -1,7 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    val nav_version by extra("2.3.3")
     repositories {
         jcenter()
         google()
@@ -15,7 +14,7 @@ buildscript {
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.2")
         classpath("gradle.plugin.com.github.konifar.gradle:plugin:0.3.3")
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.4.1")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Deps.navVersion}")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

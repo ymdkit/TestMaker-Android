@@ -4,4 +4,5 @@ object Deps {
     const val targetSdkVersion = 30
 
     const val kotlinVersion = "1.4.30"
+    const val navVersion = "2.3.3"
 }
