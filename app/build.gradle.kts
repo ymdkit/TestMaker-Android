@@ -28,8 +28,8 @@ android {
         minSdkVersion(Deps.minSdkVersion)
         targetSdkVersion(Deps.targetSdkVersion)
         multiDexEnabled = true
-        versionCode = 135
-        versionName = "4.0.0"
+        versionCode = 136
+        versionName = "4.0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
