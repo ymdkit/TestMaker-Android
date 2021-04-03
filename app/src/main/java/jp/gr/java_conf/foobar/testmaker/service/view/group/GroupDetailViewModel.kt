@@ -12,7 +12,7 @@ class GroupDetailViewModel(private val repository: GroupRepository, private val 
     suspend fun getTests(groupId: String) = repository.getTests(groupId)
     suspend fun downloadTest(documentId: String) = repository.downloadTest(documentId)
     fun convert(test: FirebaseTest) = testMakerRepository.createObjectFromFirebase(test)
-    fun deleteTest(documentId: String) = testMakerRepository.deleteTest(documentId)
+    suspend fun deleteTest(documentId: String) = testMakerRepository.deleteTest(documentId)
 
     suspend fun getGroup(groupId: String) = repository.getGroup(groupId)
     suspend fun deleteGroup(groupId: String) = repository.deleteGroup(groupId)

@@ -12,13 +12,13 @@
     <string name="number_existing_questions">達成率: %1$d / %2$d</string>
     <string name="number_exams">問題集数 %1$d</string>
     <string name="confirm">確認</string>
-    <string name="play">解答する</string>
-    <string name="share">共有する</string>
+    <string name="play">解答</string>
+    <string name="share">共有</string>
     <string name="help">よくある質問</string>
     <string name="menu">メニュー</string>
     <string name="retry">解き直す</string>
-    <string name="edit">編集する</string>
-    <string name="delete">削除する</string>
+    <string name="edit">編集</string>
+    <string name="delete">削除</string>
     <string name="way">出題設定</string>
     <string name="load">読み込む</string>
     <string name="trim">トリミング</string>
@@ -51,7 +51,7 @@
     <string name="action_import">ファイルのインポート</string>
     <string name="action_license">ライセンス</string>
     <string name="msg_save">保存しました</string>
-    <string name="save">保存する</string>
+    <string name="save">保存</string>
     <string name="edit_pro">テキストエディタで編集</string>
     <string name="pass">分からない</string>
 
@@ -188,7 +188,7 @@
     <string name="save_test">問題集を保存</string>
     <string name="save_category">フォルダを保存</string>
     <string name="msg_save_test">問題集を保存しました</string>
-    <string name="empty_test">保存している問題集はありません。\n右下の+ボタンから問題集を追加してください</string>
+    <string name="empty_test">保存している問題集はありません。\n画面下部のボタンから問題集を追加してください</string>
     <string name="title_activity_edit_test">問題集の編集</string>
     <string name="title_activity_edit_category">フォルダの編集</string>
     <string name="title_activity_edit_question">問題の編集</string>
@@ -200,7 +200,7 @@
     <string name="message_check_order">解答順を正誤判定に含める</string>
     <string name="num_others">選択肢数</string>
     <string name="num_answers">解答数</string>
-    <string name="empty_question">保存している問題はありません。\n右下の+ボタンから問題を追加してください</string>
+    <string name="empty_question">保存している問題はありません。\n画面下部のボタンから問題を追加してください</string>
     <string name="judge_question">OK</string>
     <string name="label_answer">正解</string>
     <string name="label_explanation">解説</string>
@@ -223,7 +223,7 @@
     <string name="preference_group_account">アカウント設定</string>
     <string name="setting_user_name">ユーザー名の変更</string>
     <string name="msg_update_user_name">ユーザ名を変更しました</string>
-    <string name="empty_uploaded_test"> アップロードしている問題集はありません。\n右下のボタンから問題集をアップロードしてください</string>
+    <string name="empty_uploaded_test"> アップロードしている問題集はありません。\n画面下部のボタンから問題集をアップロードしてください</string>
     <string name="converting">テキスト形式に変換中（※画像情報は変換されません）</string>
     <string name="title_activity_upload_test">問題集のアップロード</string>
     <string name="upload_test">アップロード</string>
@@ -259,13 +259,13 @@
     <string name="upload_group_test_fragment_label">問題集のアップロード</string>
     <string name="history_test_fragment_label">解答履歴</string>
     <string name="invite_group">招待する</string>
-    <string name="rename_group">グループ名を変更する</string>
-    <string name="delete_group">グループを削除する</string>
+    <string name="rename_group">グループ名の変更</string>
+    <string name="delete_group">グループの削除</string>
     <string name="title_activity_group">グループ</string>
     <string name="msg_delete_group">グループ「 %1$s 」を削除しますか？</string>
     <string name="msg_success_delete_group">グループを削除しました</string>
     <string name="msg_invite_group">グループ「 %1$s 」に招待されました。下記のリンクからグループ内の問題集にアクセスできます \n %2$s</string>
-    <string name="empty_group">参加しているグループはありません。右下の+ボタンからグループを作成してください</string>
+    <string name="empty_group">参加しているグループはありません。画面下部のボタンからグループを作成してください</string>
     <string name="title_rename_group">グループ名の変更</string>
     <string name="msg_success_rename_group">グループ名を変更しました</string>
     <string name="exit_group">グループを退出する</string>
@@ -276,4 +276,15 @@
     <string name="empty_histories">この問題集の解答記録はありません</string>
     <string name="section_history">解答履歴</string>
     <string name="item_title_history"> %1$s さんが %2$d 問中 %3$d 問正解しました</string>
+    <string name="msg_failure_invite_group">招待リンクの生成に失敗しました。端末がネットワークに接続されていないか、このグループが既に削除されている可能性があります。</string>
+    <string name="msg_creating_invite_group_link">招待リンク生成中</string>
+    <string name="msg_failure_share_group">failure to create link</string>
+    <string name="msg_failure_share_test">共有用リンクの生成に失敗しました。端末がネットワークに接続されていない可能性があります。</string>
+    <string name="msg_creating_share_test_link">共有用リンク生成中</string>
+    <string name="msg_failure_download_test">問題集のダウンロードに失敗しました。端末がネットワークに接続されていないか、この問題集が既に削除されている可能性があります。</string>
+    <string name="msg_failure_delete_test">問題集の削除に失敗しました。端末がネットワークに接続されていないか、この問題集が既に削除されている可能性があります。</string>
+    <string name="hint_category_name">フォルダ名を入力</string>
+    <string name="msg_empty_text">入力欄が空です</string>
+    <string name="title_dialog_edit_user_name">ユーザ名の変更</string>
+    <string name="button_create_test">問題集の作成</string>
 </resources>

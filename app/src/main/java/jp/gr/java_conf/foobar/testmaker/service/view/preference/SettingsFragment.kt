@@ -3,9 +3,6 @@ package jp.gr.java_conf.foobar.testmaker.service.view.preference
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.ListPreference
@@ -17,6 +14,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
 import jp.studyplus.android.sdk.Studyplus
 import org.koin.android.ext.android.inject
 
@@ -44,29 +42,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val userNamePreference = findPreference<Preference>("setting_user_name")
         userNamePreference?.apply {
             setOnPreferenceClickListener {
-                val dialogLayout = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_edit_user_name, requireActivity().findViewById(R.id.layout_dialog_edit_user))
-                val editUsername = dialogLayout.findViewById<EditText>(R.id.edit_user_name)
-                editUsername.setText(user.displayName)
-                val buttonSaveProfile = dialogLayout.findViewById<Button>(R.id.button_save_profile)
-                val dialog = AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
-                        .setView(dialogLayout)
-                        .setTitle(getString(R.string.message_edit_profile))
-                        .show()
 
-                buttonSaveProfile.setOnClickListener {
-                    val userName = editUsername.text.toString()
-                    if (userName.isEmpty()) {
-                        Toast.makeText(requireContext(), getString(R.string.message_shortage), Toast.LENGTH_SHORT).show()
-                    } else {
-                        auth.updateProfile(userName) {
-                            requireContext().showToast(getString(R.string.msg_update_user_name))
-                            summaryProvider = Preference.SummaryProvider<Preference> {
-                                userName
-                            }
+                EditTextDialogFragment(
+                        title = getString(R.string.title_dialog_edit_user_name),
+                        defaultText = user.displayName ?: "",
+                        hint = getString(R.string.hint_user_name))
+                { text ->
+
+                    auth.updateProfile(text) {
+                        requireContext().showToast(getString(R.string.msg_update_user_name))
+                        summaryProvider = Preference.SummaryProvider<Preference> {
+                            text
                         }
-                        dialog.dismiss()
                     }
-                }
+
+                }.show(requireActivity().supportFragmentManager, "TAG")
                 true
             }
             summaryProvider = Preference.SummaryProvider<Preference> {

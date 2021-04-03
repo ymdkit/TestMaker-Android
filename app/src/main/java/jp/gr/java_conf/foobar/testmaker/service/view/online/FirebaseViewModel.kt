@@ -9,7 +9,6 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.SearchService
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +16,7 @@ import kotlinx.coroutines.withContext
 
 class FirebaseViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val service: SearchService) : ViewModel() {
 
-    suspend fun downloadTest(testId: String): FirebaseTestResult = repository.downloadTest(testId)
+    suspend fun downloadTest(testId: String): FirebaseTest = repository.downloadTest(testId)
 
     fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test)
 

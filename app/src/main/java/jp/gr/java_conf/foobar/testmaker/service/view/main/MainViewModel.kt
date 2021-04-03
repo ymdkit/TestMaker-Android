@@ -14,12 +14,11 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 
 class MainViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val preference: SharedPreferenceManager, context: Context) : ViewModel(), PurchasesUpdatedListener, BillingClientStateListener, LifecycleObserver {
 
-    suspend fun downloadTest(testId: String): FirebaseTestResult = repository.downloadTest(testId)
+    suspend fun downloadTest(testId: String): FirebaseTest = repository.downloadTest(testId)
 
     fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test)
 

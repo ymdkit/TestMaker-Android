@@ -289,6 +289,17 @@
     <string name="empty_histories">no histories</string>
     <string name="section_history">histories</string>
     <string name="item_title_history"> %1$s corrects %3$d / %2$d</string>
+    <string name="msg_failure_invite_group">faikure to create link</string>
+    <string name="msg_creating_invite_group_link">creating link</string>
+    <string name="msg_failure_share_group">failure to create link</string>
+    <string name="msg_failure_share_test">failure to create link</string>
+    <string name="msg_creating_share_test_link">creating link</string>
+    <string name="msg_failure_download_test">failure to download test</string>
+    <string name="msg_failure_delete_test">failure to delete test</string>
+    <string name="hint_category_name">folder name</string>
+    <string name="msg_empty_text">please input</string>
+    <string name="title_dialog_edit_user_name">edit username</string>
+    <string name="button_create_test">create test</string>
 
 
 </resources>

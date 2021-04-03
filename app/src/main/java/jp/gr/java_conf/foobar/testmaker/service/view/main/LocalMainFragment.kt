@@ -6,13 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
@@ -24,10 +21,13 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
@@ -35,10 +35,9 @@ import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
+import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -49,7 +48,7 @@ class LocalMainFragment : Fragment() {
 
     private val localMainViewModel: LocalMainViewModel by viewModel()
 
-    internal lateinit var mainController: MainController
+    private val mainController by lazy { MainController(requireContext()) }
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
     private val firebaseAnalytic: FirebaseAnalytics by inject()
 
@@ -64,7 +63,6 @@ class LocalMainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        mainController = MainController(requireContext())
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
             override fun onClickTest(test: Test) {
@@ -153,6 +151,7 @@ class LocalMainFragment : Fragment() {
         ConfirmDangerDialogFragment(getString(R.string.message_delete_exam, test.title)) {
             testViewModel.delete(test)
             categoryViewModel.refresh()
+            requireContext().showToast(getString(R.string.msg_success_delete_test))
         }.show(requireActivity().supportFragmentManager, "TAG")
     }
 
@@ -177,36 +176,27 @@ class LocalMainFragment : Fragment() {
 
     private fun convertTestToCSV(test: Test) {
 
-        var dialog: LoadingDialogFragment? = null
-        val job = lifecycleScope.launch {
-            runCatching {
-                withContext(Dispatchers.IO) {
-                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
-                }
-            }.onSuccess {
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, it.text)
-                    type = "text/plain"
-                }
-
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                startActivity(shareIntent)
-            }.onFailure {
-                requireContext().showErrorToast(it)
-            }
-            withContext(Dispatchers.Main) {
-                dialog?.dismiss()
-            }
-        }
-
-        dialog = LoadingDialogFragment(
+        requireActivity().executeJobWithDialog(
                 title = getString(R.string.converting),
-                onCanceled = {
-                    job.cancel()
+                task = {
+                    withContext(Dispatchers.IO) {
+                        service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
+                    }
+                },
+                onSuccess = {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, it.text)
+                        type = "text/plain"
+                    }
+
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
+                },
+                onFailure = {
+                    requireContext().showErrorToast(it)
                 }
         )
-        dialog.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun initDialogPlayStart(test: Test) {
@@ -281,27 +271,16 @@ class LocalMainFragment : Fragment() {
 
     private fun editCategory(category: Category) {
 
-        val dialogLayout = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_edit_category_name, requireActivity().findViewById(R.id.layout_dialog_edit_category))
-        val editCategory = dialogLayout.findViewById<EditText>(R.id.edit_category_name)
-        editCategory.setText(category.name)
-        val buttonSave = dialogLayout.findViewById<Button>(R.id.button_save)
-        val dialog = AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
-                .setView(dialogLayout)
-                .setTitle(getString(R.string.title_dialog_edit_category))
-                .show()
+        EditTextDialogFragment(
+                title = getString(R.string.title_dialog_edit_category),
+                defaultText = category.name,
+                hint = getString(R.string.hint_category_name))
+        { text ->
 
-        buttonSave.setOnClickListener {
-            val categoryName = editCategory.text.toString()
-            if (categoryName.isEmpty()) {
-                Toast.makeText(requireContext(), getString(R.string.message_shortage), Toast.LENGTH_SHORT).show()
-            } else {
+            testViewModel.renameAllInCategory(category.name, text)
+            categoryViewModel.update(category.copy(name = text))
 
-                testViewModel.renameAllInCategory(category.name, categoryName)
-                categoryViewModel.update(category.copy(name = categoryName))
-                dialog.dismiss()
-            }
-        }
-
+        }.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun deleteCategory(category: Category) {
@@ -321,16 +300,31 @@ class LocalMainFragment : Fragment() {
                 selectedTest = null
             }
         } else if (requestCode == REQUEST_UPLOAD_TEST && resultCode == Activity.RESULT_OK) {
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, data?.getStringExtra("result") ?: "")
-                type = "text/plain"
-            }
 
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
+            val documentId = data?.getStringExtra(EXTRA_DOCUMENT_ID) ?: return
+            val testName = data.getStringExtra(EXTRA_TEST_NAME) ?: return
+
+            requireActivity().executeJobWithDialog(
+                    title = getString(R.string.msg_creating_share_test_link),
+                    task = {
+                        DynamicLinksCreator.createShareTestDynamicLinks(documentId)
+                    },
+                    onSuccess = {
+                        it.shortLink?.let {
+                            val sendIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, testName, it))
+                                type = "text/plain"
+                            }
+                            val shareIntent = Intent.createChooser(sendIntent, null)
+                            startActivity(shareIntent)
+                        }
+                    },
+                    onFailure = {
+                        requireContext().showToast(getString(R.string.msg_failure_share_test))
+                    }
+            )
         }
-
     }
 
     override fun onResume() {
@@ -342,5 +336,8 @@ class LocalMainFragment : Fragment() {
     companion object {
         const val REQUEST_SIGN_IN_UPLOAD = 54321
         const val REQUEST_UPLOAD_TEST = 54322
+
+        const val EXTRA_DOCUMENT_ID = "documentId"
+        const val EXTRA_TEST_NAME = "testName"
     }
 }

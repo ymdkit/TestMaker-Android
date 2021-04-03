@@ -10,24 +10,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
 import com.firebase.ui.auth.IdpResponse
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityOnlineMainBinding
+import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -156,36 +151,24 @@ class FirebaseActivity : BaseActivity() {
 
     fun downloadTest(test: FirebaseTest) {
 
-        var dialog: LoadingDialogFragment? = null
-        val job = lifecycleScope.launch {
-            when (val result = viewModel.downloadTest(test.documentId)) {
-                is FirebaseTestResult.Success -> {
-                    viewModel.convert(result.test)
+        executeJobWithDialog(
+                title = getString(R.string.downloading),
+                task = {
+                    viewModel.downloadTest(test.documentId)
+                },
+                onSuccess = {
+                    viewModel.convert(it)
 
-                    Toast.makeText(this@FirebaseActivity, getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this@FirebaseActivity, MainActivity::class.java)
+                    Toast.makeText(this, getString(R.string.msg_success_download_test, it.name), Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     startActivity(intent)
-
-                }
-                is FirebaseTestResult.Failure -> {
-                    Toast.makeText(this@FirebaseActivity, result.message, Toast.LENGTH_SHORT).show()
-                }
-            }
-            withContext(Dispatchers.Main) {
-                dialog?.dismiss()
-            }
-        }
-        dialog = LoadingDialogFragment(
-                title = getString(R.string.downloading),
-                onCanceled = {
-                    showToast(getString(R.string.msg_canceled))
-                    job.cancel()
+                },
+                onFailure = {
+                    showToast(getString(R.string.msg_failure_download_test))
                 }
         )
-        dialog.show(supportFragmentManager, "TAG")
-
     }
 
     fun showInfoTest(test: FirebaseTest) {

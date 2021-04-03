@@ -15,14 +15,17 @@ import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupDetailBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
+import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinkCreator
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.main.AccountMainFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.share.*
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
+import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -191,18 +194,30 @@ class GroupDetailFragment : Fragment() {
         }
     }
 
-    private fun inviteGroup() = lifecycleScope.launch {
+    private fun inviteGroup() {
 
-        group?.let {
-            val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_invite_group, it.name, DynamicLinkCreator.createInviteGroupDynamicLink(it.id)))
-                type = "text/plain"
-            }
+        val group = group ?: return
 
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
-        }
+        requireActivity().executeJobWithDialog(
+                title = getString(R.string.msg_creating_invite_group_link),
+                task = {
+                    DynamicLinksCreator.createInviteGroupDynamicLinks(group.id)
+                },
+                onSuccess = {
+                    it.shortLink?.let {
+                        val sendIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_invite_group, group.name, it))
+                            type = "text/plain"
+                        }
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        startActivity(shareIntent)
+                    }
+                },
+                onFailure = {
+                    requireContext().showToast(getString(R.string.msg_failure_invite_group))
+                }
+        )
     }
 
     private fun renameGroup(name: String, group: Group) = lifecycleScope.launch {
@@ -237,57 +252,68 @@ class GroupDetailFragment : Fragment() {
 
     fun downloadTest(document: DocumentSnapshot) {
 
-        var dialog: LoadingDialogFragment? = null
-        val job = lifecycleScope.launch {
-            when (val result = viewModel.downloadTest(document.id)) {
-                is FirebaseTestResult.Success -> {
-                    viewModel.convert(result.test)
+        requireActivity().executeJobWithDialog(
+                title = getString(R.string.downloading),
+                task = {
+                    viewModel.downloadTest(document.id)
+                },
+                onSuccess = {
+                    viewModel.convert(it)
 
-                    Toast.makeText(requireActivity(), getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), getString(R.string.msg_success_download_test, it.name), Toast.LENGTH_SHORT).show()
 
-                    Toast.makeText(requireContext(), getString(R.string.msg_success_download_test, result.test.name), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.msg_success_download_test, it.name), Toast.LENGTH_SHORT).show()
                     val intent = Intent(requireActivity(), MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     startActivity(intent)
-                }
-                is FirebaseTestResult.Failure -> {
-                    Toast.makeText(requireActivity(), result.message, Toast.LENGTH_SHORT).show()
-                }
-            }
-            withContext(Dispatchers.Main) {
-                dialog?.dismiss()
-            }
-        }
-        dialog = LoadingDialogFragment(
-                title = getString(R.string.downloading),
-                onCanceled = {
-                    requireContext().showToast(getString(R.string.msg_canceled))
-                    job.cancel()
+                },
+                onFailure = {
+                    requireContext().showToast(getString(R.string.msg_failure_download_test))
                 }
         )
-        dialog.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     fun shareTest(document: DocumentSnapshot) {
         val data = document.toObject(FirebaseTest::class.java) ?: return
-        val sendIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, DynamicLinkCreator.createDynamicLink(document.id)))
-            type = "text/plain"
-        }
 
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivity(shareIntent)
-
+        requireActivity().executeJobWithDialog(
+                title = getString(R.string.msg_creating_share_test_link),
+                task = {
+                    DynamicLinksCreator.createShareTestDynamicLinks(document.id)
+                },
+                onSuccess = {
+                    it.shortLink?.let {
+                        val sendIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, it))
+                            type = "text/plain"
+                        }
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        startActivity(shareIntent)
+                    }
+                },
+                onFailure = {
+                    requireContext().showToast(getString(R.string.msg_failure_share_test))
+                }
+        )
     }
 
     fun deleteTest(document: DocumentSnapshot) {
-        ConfirmDangerDialogFragment(getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name)) {
-            viewModel.deleteTest(document.id)
-            refresh()
-            requireContext().showToast(getString(R.string.msg_success_delete_test))
-        }.show(requireActivity().supportFragmentManager, "TAG")
+        ConfirmDangerDialogFragment(
+                title = getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name),
+                completion = {
+                    lifecycleScope.launch {
+                        runCatching {
+                            viewModel.deleteTest(document.id)
+                        }.onSuccess {
+                            refresh()
+                            requireContext().showToast(getString(R.string.msg_success_delete_test))
+                        }.onFailure {
+                            requireContext().showToast(getString(R.string.msg_failure_delete_test))
+                        }
+                    }
+                }).show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun actionShowHistory(document: DocumentSnapshot) {

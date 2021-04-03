@@ -44,9 +44,3 @@ data class FirebaseTest(var name: String = "",
     }
 
 }
-
-sealed class FirebaseTestResult {
-    data class Success(val test: FirebaseTest) : FirebaseTestResult()
-
-    data class Failure(val message: String) : FirebaseTestResult()
-}

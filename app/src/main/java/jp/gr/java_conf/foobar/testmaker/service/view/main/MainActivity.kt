@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -26,13 +25,13 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
+import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTestResult
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
@@ -146,21 +145,20 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
 
     private fun actionDownload(documentId: String) = lifecycleScope.launch {
 
-        val dialog = AlertDialog.Builder(this@MainActivity)
-                .setTitle(getString(R.string.downloading))
-                .setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_progress, findViewById(R.id.layout_progress))).show()
-
-        when (val result = viewModel.downloadTest(documentId)) {
-            is FirebaseTestResult.Success -> {
-                viewModel.convert(result.test)
-                testViewModel.refresh()
-                showToast(getString(R.string.msg_success_download_test, result.test.name))
-            }
-            is FirebaseTestResult.Failure -> {
-                showToast(result.message)
-            }
-        }
-        dialog.dismiss()
+        executeJobWithDialog(
+                title = getString(R.string.downloading),
+                task = {
+                    viewModel.downloadTest(documentId)
+                },
+                onSuccess = {
+                    viewModel.convert(it)
+                    testViewModel.refresh()
+                    showToast(getString(R.string.msg_success_download_test, it.name))
+                },
+                onFailure = {
+                    showToast(getString(R.string.msg_failure_download_test))
+                }
+        )
     }
 
 

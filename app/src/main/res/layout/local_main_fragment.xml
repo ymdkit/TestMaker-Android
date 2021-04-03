@@ -10,20 +10,33 @@
 
         <com.airbnb.epoxy.EpoxyRecyclerView
             android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:isHasFixedSize="@{true}"
-            android:padding="@dimen/element_spacing_small"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:layout_marginBottom="@dimen/element_spacing_large"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toTopOf="@id/fab"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/element_spacing_very_large"
-            android:src="@drawable/ic_add_white"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="@dimen/element_spacing_large"
+            android:layout_marginEnd="@dimen/element_spacing_large"
+            android:layout_marginBottom="@dimen/element_spacing_large"
+            android:text="@string/button_create_test"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:theme="@style/ThemeOverlay.Button.Accent"
+            app:icon="@drawable/ic_baseline_add_24"
+            app:iconGravity="textStart"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
