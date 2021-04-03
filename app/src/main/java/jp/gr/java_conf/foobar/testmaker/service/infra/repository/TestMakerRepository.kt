@@ -1,6 +1,5 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 
-import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
@@ -14,18 +13,6 @@ import kotlinx.coroutines.withContext
 
 class TestMakerRepository(private val local: LocalDataSource,
                           private val remote: RemoteDataSource) {
-
-    suspend fun loadImage(imagePath: String): Bitmap? = withContext(Dispatchers.IO) {
-        local.loadImage(imagePath)
-    }
-
-    suspend fun saveImage(fileName: String, bitmap: Bitmap) = withContext(Dispatchers.IO) {
-        local.saveImage(fileName, bitmap)
-    }
-
-    fun isAuto(): Boolean {
-        return local.isAuto()
-    }
 
     fun isCheckOrder(): Boolean {
         return local.isCheckOrder()
