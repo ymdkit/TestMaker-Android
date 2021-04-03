@@ -34,12 +34,6 @@ class TestDataSource(private val realm: Realm) {
     fun get(id: Long): Test = Test.createFromRealmTest(realm.copyFromRealm(realm.where(RealmTest::class.java)
             .equalTo("id", id).findFirst() ?: RealmTest()))
 
-    private fun update(test: RealmTest) {
-        realm.executeTransaction {
-            it.copyToRealmOrUpdate(test)
-        }
-    }
-
     fun update(test: Test) {
         var result = test
         val questionId = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
@@ -111,4 +105,9 @@ class TestDataSource(private val realm: Realm) {
     private fun getQuestion(id: Long): Question = Question.createFromRealmQuestion(realm.copyFromRealm(realm.where(Quest::class.java)
             .equalTo("id", id).findFirst() ?: Quest()))
 
+    private fun update(test: RealmTest) {
+        realm.executeTransaction {
+            it.copyToRealmOrUpdate(test)
+        }
+    }
 }
