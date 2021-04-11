@@ -36,12 +36,16 @@ class PlayConfigDialogFragment : BottomSheetDialogFragment() {
 
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private val test: Test by lazy {
+        arguments?.getParcelable<Test>(ARG_TEST) ?: throw RuntimeException("test does not exist")
+    }
+    private val requestKey: String by lazy {
+        arguments?.getString(ARG_REQUEST_KEY) ?: throw RuntimeException("requestKey does not exist")
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return DataBindingUtil.inflate<DialogStartBinding>(inflater, R.layout.dialog_start, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
-
-            val test = arguments?.getParcelable<Test>(ARG_TEST) ?: return@apply
-            val requestKey = arguments?.getString(ARG_REQUEST_KEY) ?: return@apply
 
             title = test.title
 
