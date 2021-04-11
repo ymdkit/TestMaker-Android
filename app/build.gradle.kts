@@ -133,6 +133,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Deps.kotlinVersion}")
     implementation("androidx.navigation:navigation-fragment-ktx:2.2.2")
     implementation("androidx.navigation:navigation-ui-ktx:2.2.2")
+    implementation("androidx.fragment:fragment-ktx:${Deps.fragmentVersion}")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")
     kapt("com.airbnb.android:epoxy-processor:3.11.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.9.0")
