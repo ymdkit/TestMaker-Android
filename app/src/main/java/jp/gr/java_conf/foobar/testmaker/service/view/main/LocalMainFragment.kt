@@ -202,15 +202,23 @@ class LocalMainFragment : Fragment() {
     private fun initDialogPlayStart(test: Test) {
 
         if (!sharedPreferenceManager.isShowPlaySettingDialog) {
-            startAnswer(test, (test.startPosition + 1).toString(), test.limit.toString())
+            startAnswer(test, (test.startPosition + 1), test.limit)
         } else {
-            PlayConfigDialogFragment(test) { position, limit ->
+
+            childFragmentManager.setFragmentResultListener(REQUEST_PLAY_CONFIG, viewLifecycleOwner) { requestKey, bundle ->
+                if (requestKey != REQUEST_PLAY_CONFIG) return@setFragmentResultListener
+
+                val position = bundle.getInt(PlayConfigDialogFragment.RESULT_START_POSITION)
+                val limit = bundle.getInt(PlayConfigDialogFragment.RESULT_LIMIT)
                 startAnswer(test, position, limit)
-            }.show(requireActivity().supportFragmentManager, "TAG")
+            }
+
+            PlayConfigDialogFragment.newInstance(test, REQUEST_PLAY_CONFIG)
+                    .show(childFragmentManager, "TAG")
         }
     }
 
-    private fun startAnswer(test: Test, start: String, limit: String) {
+    private fun startAnswer(test: Test, start: Int, limit: Int) {
 
         var incorrect = false
 
@@ -220,19 +228,11 @@ class LocalMainFragment : Fragment() {
 
             Toast.makeText(requireContext(), getString(R.string.message_null_wrongs), Toast.LENGTH_SHORT).show()
 
-        } else if (limit == "") {
-
-            Toast.makeText(requireContext(), getString(R.string.message_null_number), Toast.LENGTH_SHORT).show()
-
-        } else if (start == "" || start.toInt() > test.questions.size || start.toInt() < 1) {
-
-            Toast.makeText(requireContext(), getString(R.string.message_null_start), Toast.LENGTH_SHORT).show()
-
         } else {
 
             val result = test.copy(
-                    limit = Integer.parseInt(limit),
-                    startPosition = Integer.parseInt(start) - 1,
+                    limit = limit,
+                    startPosition = start - 1,
                     history = Calendar.getInstance().timeInMillis)
 
             testViewModel.update(result)
@@ -336,6 +336,7 @@ class LocalMainFragment : Fragment() {
     companion object {
         const val REQUEST_SIGN_IN_UPLOAD = 54321
         const val REQUEST_UPLOAD_TEST = 54322
+        const val REQUEST_PLAY_CONFIG = "request_play_config"
 
         const val EXTRA_DOCUMENT_ID = "documentId"
         const val EXTRA_TEST_NAME = "testName"

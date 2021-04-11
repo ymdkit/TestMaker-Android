@@ -60,6 +60,7 @@ class MainController(private val context: Context) : EpoxyController() {
     }
 
     override fun isStickyHeader(position: Int): Boolean {
+        if (position >= adapter.itemCount) return false
         return adapter.getModelAtPosition(position)::class == ItemSectionHeaderBindingModel_::class
     }
 

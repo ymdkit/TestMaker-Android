@@ -215,6 +215,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                     .collection("groups")
                     .document(groupId)
                     .delete()
+                    .await()
 
     suspend fun getTests(groupId: String) =
             db.collection(TESTS)

@@ -1,8 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.db
 
 import io.realm.Realm
-import io.realm.Sort
-import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
@@ -36,12 +34,6 @@ class TestDataSource(private val realm: Realm) {
     fun get(id: Long): Test = Test.createFromRealmTest(realm.copyFromRealm(realm.where(RealmTest::class.java)
             .equalTo("id", id).findFirst() ?: RealmTest()))
 
-    private fun update(test: RealmTest) {
-        realm.executeTransaction {
-            it.copyToRealmOrUpdate(test)
-        }
-    }
-
     fun update(test: Test) {
         var result = test
         val questionId = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
@@ -53,10 +45,7 @@ class TestDataSource(private val realm: Realm) {
                         order = index)
             })
         }
-
-        realm.executeTransaction {
-            it.copyToRealmOrUpdate(RealmTest.createFromTest(result))
-        }
+        update(RealmTest.createFromTest(result))
     }
 
     fun swap(from: Test, to: Test) {
@@ -68,16 +57,6 @@ class TestDataSource(private val realm: Realm) {
     fun delete(test: Test) {
         realm.executeTransaction {
             realm.where(RealmTest::class.java).equalTo("id", test.id).findFirst()?.deleteFromRealm()
-        }
-    }
-
-    fun sort(mode: SortTest) {
-        val tests = realm.copyFromRealm(realm.where(RealmTest::class.java).findAll().sort("category", Sort.ASCENDING, mode.column, mode.sort))
-
-        tests.forEachIndexed { index, test ->
-            update(test.apply {
-                order = index
-            })
         }
     }
 
@@ -126,4 +105,9 @@ class TestDataSource(private val realm: Realm) {
     private fun getQuestion(id: Long): Question = Question.createFromRealmQuestion(realm.copyFromRealm(realm.where(Quest::class.java)
             .equalTo("id", id).findFirst() ?: Quest()))
 
+    private fun update(test: RealmTest) {
+        realm.executeTransaction {
+            it.copyToRealmOrUpdate(test)
+        }
+    }
 }

@@ -1,14 +1,10 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.db
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import java.io.FileNotFoundException
-import java.io.IOException
 
 class LocalDataSource(private val realm: Realm, private val preference: SharedPreferenceManager, private val context: Context) {
 
@@ -16,43 +12,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         return realm.where(RealmTest::class.java).equalTo("id", testId).findFirst() ?: RealmTest()
     }
 
-    fun loadImage(imagePath: String): Bitmap? {
-        val imageOptions = BitmapFactory.Options()
-        imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-        try {
-
-            val input = context.openFileInput(imagePath)
-            val bm = BitmapFactory.decodeStream(input, null, imageOptions)
-
-            input.close()
-
-            return bm
-
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return null
-    }
-
-    fun saveImage(fileName: String, bitmap: Bitmap) {
-        val imageOptions = BitmapFactory.Options()
-        imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-        try {
-
-            val outStream = context.openFileOutput(fileName, 0)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream)
-            outStream.close()
-
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    fun isAuto(): Boolean = preference.auto
     fun isCheckOrder(): Boolean = preference.isCheckOrder
 
     fun createObjectFromFirebase(firebaseTest: FirebaseTest) {

@@ -2,7 +2,6 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import jp.gr.java_conf.foobar.testmaker.service.SortTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.TestDataSource
@@ -44,11 +43,6 @@ class TestRepository(private val dataSource: TestDataSource) {
 
     fun swap(from: Test, to: Test) {
         dataSource.swap(from, to)
-        refresh()
-    }
-
-    fun sort(mode: SortTest) {
-        dataSource.sort(mode)
         refresh()
     }
 
