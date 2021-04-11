@@ -8,18 +8,14 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentUploadGroupTestBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UploadGroupTestFragment : Fragment() {
@@ -41,29 +37,23 @@ class UploadGroupTestFragment : Fragment() {
             spinner.adapter = adapter
 
             buttonUpload.setOnClickListener {
-
-                var dialog: LoadingDialogFragment? = null
-
-                val job = lifecycleScope.launch {
-                    viewModel.uploadTestInGroup(
-                            RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]),
-                            binding.editOverview.text.toString(),
-                            args.groupId)
-                    Toast.makeText(requireContext(), getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-
-                    withContext(Dispatchers.Main) {
-                        dialog?.dismiss()
-                        findNavController().popBackStack()
-                    }
-                }
-                dialog = LoadingDialogFragment(
+                requireActivity().executeJobWithDialog(
                         title = getString(R.string.uploading),
-                        onCanceled = {
+                        task = {
+                            viewModel.uploadTestInGroup(
+                                    RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]),
+                                    binding.editOverview.text.toString(),
+                                    args.groupId)
+                        },
+                        onSuccess = {
+                            Toast.makeText(requireContext(), getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
+                            findNavController().popBackStack()
+
+                        },
+                        onFailure = {
                             Toast.makeText(requireContext(), getString(R.string.msg_canceled), Toast.LENGTH_SHORT).show()
-                            job.cancel()
                         }
                 )
-                dialog.show(requireActivity().supportFragmentManager, "TAG")
             }
 
         }.root

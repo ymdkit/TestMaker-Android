@@ -15,16 +15,15 @@ import com.google.android.gms.ads.rewarded.RewardedAdCallback
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityUploadTestBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.isConnectedInternet
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.view.main.LocalMainFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UploadTestActivity : BaseActivity() {
@@ -53,31 +52,25 @@ class UploadTestActivity : BaseActivity() {
 
         binding.buttonUpload.setOnClickListener {
 
-            var dialog: LoadingDialogFragment? = null
-
-            val job = lifecycleScope.launch {
-                val documentId = viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]), binding.editOverview.text.toString(), !binding.checkPrivate.isChecked)
-                Toast.makeText(baseContext, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-
-                if (intent.hasExtra(ARGUMENT_ID)) {
-                    setResult(Activity.RESULT_OK, Intent().apply {
-                        putExtra(LocalMainFragment.EXTRA_TEST_NAME, testViewModel.tests[binding.spinner.selectedItemPosition].title)
-                        putExtra(LocalMainFragment.EXTRA_DOCUMENT_ID, documentId)
-                    })
-                }
-                withContext(Dispatchers.Main) {
-                    dialog?.dismiss()
-                }
-                finish()
-            }
-            dialog = LoadingDialogFragment(
+            executeJobWithDialog(
                     title = getString(R.string.uploading),
-                    onCanceled = {
+                    task = {
+                        viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]), binding.editOverview.text.toString(), !binding.checkPrivate.isChecked)
+                    },
+                    onSuccess = { documentId ->
+                        if (intent.hasExtra(ARGUMENT_ID)) {
+                            setResult(Activity.RESULT_OK, Intent().apply {
+                                putExtra(LocalMainFragment.EXTRA_TEST_NAME, testViewModel.tests[binding.spinner.selectedItemPosition].title)
+                                putExtra(LocalMainFragment.EXTRA_DOCUMENT_ID, documentId)
+                            })
+                        }
+                        Toast.makeText(this, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
+                        finish()
+                    },
+                    onFailure = {
                         Toast.makeText(baseContext, getString(R.string.msg_canceled), Toast.LENGTH_SHORT).show()
-                        job.cancel()
                     }
             )
-            dialog.show(supportFragmentManager, "TAG")
         }
 
         binding.checkPrivate.setOnCheckedChangeListener { checkBox, isChecked ->
