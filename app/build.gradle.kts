@@ -9,15 +9,16 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("com.github.konifar.gradle.unused-resources-remover")
     id("androidx.navigation.safeargs.kotlin")
+    id("co.uzzu.dotenv.gradle")
 }
 
 android {
     signingConfigs {
         create("release") {
-            storeFile = file(System.getenv("TESTMAKER_STORE_PATH"))
-            keyAlias = System.getenv("TESTMAKER_KEY_ALIAS")
-            storePassword = System.getenv("TESTMAKER_KEY_STORE_PASS")
-            keyPassword = System.getenv("TESTMAKER_KEY_PASS")
+            storeFile = file(env.TESTMAKER_STORE_PATH.value)
+            keyAlias = env.TESTMAKER_KEY_ALIAS.value
+            storePassword = env.TESTMAKER_KEY_STORE_PASS.value
+            keyPassword = env.TESTMAKER_KEY_PASS.value
         }
     }
     compileSdkVersion(Deps.compileSdkVersion)
@@ -41,16 +42,16 @@ android {
         getByName("release") {
             minifyEnabled(false)
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            manifestPlaceholders["studyplus_consumer_key"] = System.getenv("STUDYPLUS_CONSUMER_KEY")
-            manifestPlaceholders["secret_studyplus_consumer_key"] = System.getenv("SECRET_STUDYPLUS_CONSUMER_KEY")
-            manifestPlaceholders["testmaker_admob_key"] = System.getenv("TESTMAKER_ADMOB_KEY")
-            manifestPlaceholders["testmaker_admob_rewarded_key"] = System.getenv("TESTMAKER_ADMOB_REWARDED_KEY")
+            manifestPlaceholders["studyplus_consumer_key"] = env.STUDYPLUS_CONSUMER_KEY.value
+            manifestPlaceholders["secret_studyplus_consumer_key"] = env.SECRET_STUDYPLUS_CONSUMER_KEY.value
+            manifestPlaceholders["testmaker_admob_key"] = env.TESTMAKER_ADMOB_KEY.value
+            manifestPlaceholders["testmaker_admob_rewarded_key"] = env.TESTMAKER_ADMOB_REWARDED_KEY.value
             signingConfig = signingConfigs.getByName("release")
         }
         getByName("debug") {
-            manifestPlaceholders["studyplus_consumer_key"] = System.getenv("STUDYPLUS_CONSUMER_KEY")
-            manifestPlaceholders["secret_studyplus_consumer_key"] = System.getenv("SECRET_STUDYPLUS_CONSUMER_KEY")
-            manifestPlaceholders["testmaker_admob_key"] = System.getenv("TESTMAKER_ADMOB_KEY")
+            manifestPlaceholders["studyplus_consumer_key"] = env.STUDYPLUS_CONSUMER_KEY.value
+            manifestPlaceholders["secret_studyplus_consumer_key"] = env.SECRET_STUDYPLUS_CONSUMER_KEY.value
+            manifestPlaceholders["testmaker_admob_key"] = env.TESTMAKER_ADMOB_KEY.value
             setApplicationIdSuffix(".debug")
         }
     }
