@@ -26,9 +26,6 @@ object DynamicLinksCreator {
                 appStoreId = "1201200202"
                 minimumVersion = "2.1.5"
             }
-            navigationInfoParameters {
-                forcedRedirectEnabled = true
-            }
         }.await()
     }
 }
