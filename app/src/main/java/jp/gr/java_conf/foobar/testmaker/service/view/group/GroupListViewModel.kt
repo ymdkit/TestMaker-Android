@@ -14,7 +14,7 @@ class GroupListViewModel(private val repository: GroupRepository) : ViewModel() 
         return repository.createGroup(group)
     }
 
-    suspend fun joinGroup(userId: String, group: Group) = repository.joinGroup(userId, group)
+    suspend fun joinGroup(userId: String, group: Group) = repository.joinGroup(userId, group, group.id)
 
     fun createUser(user: FirebaseUser) = repository.createUser(user)
 

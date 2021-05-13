@@ -17,7 +17,7 @@ class GroupDetailViewModel(private val repository: GroupRepository, private val 
     suspend fun getGroup(groupId: String) = repository.getGroup(groupId)
     suspend fun deleteGroup(groupId: String) = repository.deleteGroup(groupId)
     suspend fun exitGroup(userId: String, groupId: String) = repository.exitGroup(userId, groupId)
-    suspend fun joinGroup(userId: String, group: Group) = repository.joinGroup(userId, group)
+    suspend fun joinGroup(userId: String, group: Group, groupId: String) = repository.joinGroup(userId, group, groupId)
     suspend fun renameGroup(name: String, group: Group) = repository.updateGroup(group.copy(name = name))
 
     fun createUser(user: FirebaseUser) = repository.createUser(user)

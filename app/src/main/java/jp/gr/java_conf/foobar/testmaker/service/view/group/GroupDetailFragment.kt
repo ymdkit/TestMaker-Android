@@ -172,7 +172,8 @@ class GroupDetailFragment : Fragment() {
 
     private fun refresh() = lifecycleScope.launch {
         controller.tests = viewModel.getTests(args.groupId)
-        viewModel.getGroup(args.groupId)
+        viewModel.getGroup(args.
+        groupId)
                 .addOnSuccessListener {
                     it.toObject(Group::class.java)?.let {
                         group = it
@@ -189,7 +190,7 @@ class GroupDetailFragment : Fragment() {
     private fun joinGroup() = lifecycleScope.launch {
         group?.let { group ->
             auth.getUser()?.uid?.let { userId ->
-                viewModel.joinGroup(userId, group)
+                viewModel.joinGroup(userId, group, args.groupId)
             }
         }
     }
