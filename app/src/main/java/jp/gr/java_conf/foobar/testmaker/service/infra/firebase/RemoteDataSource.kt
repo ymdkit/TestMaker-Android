@@ -188,11 +188,11 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
             .await()
             .toObjects(Group::class.java)
 
-    suspend fun createGroup(group: Group): Group {
+    suspend fun createGroup(userId: String, groupName: String): Group {
         val ref = db.collection("groups").document()
-        val newGroup = group.copy(id = ref.id)
-        ref.set(newGroup).await()
-        return newGroup
+        val group = Group(id = ref.id, userId = userId, name = groupName)
+        ref.set(group).await()
+        return group
     }
 
     suspend fun deleteTest(documentId: String) =

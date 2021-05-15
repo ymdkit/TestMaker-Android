@@ -9,10 +9,8 @@ class GroupListViewModel(private val repository: GroupRepository) : ViewModel() 
 
     suspend fun getGroups(userId: String) = repository.getGroups(userId)
 
-    suspend fun createGroup(userId: String, name: String): Group {
-        val group = Group(userId = userId, name = name)
-        return repository.createGroup(group)
-    }
+    suspend fun createGroup(userId: String, groupName: String): Group = repository.createGroup(userId, groupName)
+
 
     suspend fun joinGroup(userId: String, group: Group) = repository.joinGroup(userId, group, group.id)
 

@@ -7,7 +7,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 class GroupRepository(private val dataSource: RemoteDataSource) {
 
     suspend fun getGroups(userId: String) = dataSource.getGroups(userId)
-    suspend fun createGroup(group: Group) = dataSource.createGroup(group)
+    suspend fun createGroup(userId: String, groupName: String) = dataSource.createGroup(userId, groupName)
     fun createUser(user: FirebaseUser) = dataSource.setUser(user)
     suspend fun getTests(groupId: String) = dataSource.getTests(groupId = groupId)
     suspend fun downloadTest(documentId: String) = dataSource.downloadTest(documentId)
