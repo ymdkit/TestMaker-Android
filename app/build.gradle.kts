@@ -21,13 +21,13 @@ android {
             keyPassword = env.TESTMAKER_KEY_PASS.value
         }
     }
-    compileSdkVersion(Deps.compileSdkVersion)
+    compileSdk = Deps.compileSdkVersion
     buildToolsVersion = "29.0.2"
 
     defaultConfig {
         applicationId = "jp.gr.java_conf.foobar.testmaker.service"
-        minSdkVersion(Deps.minSdkVersion)
-        targetSdkVersion(Deps.targetSdkVersion)
+        minSdk = Deps.minSdkVersion
+        targetSdk = Deps.targetSdkVersion
         multiDexEnabled = true
         versionCode = 139
         versionName = "4.0.4"
@@ -35,12 +35,14 @@ android {
     }
 
     packagingOptions {
-        exclude("META-INF/atomicfu.kotlin_module")
+        resources{
+            excludes.add("META-INF/atomicfu.kotlin_module")
+        }
     }
 
     buildTypes {
         getByName("release") {
-            minifyEnabled(false)
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             manifestPlaceholders["studyplus_consumer_key"] = env.STUDYPLUS_CONSUMER_KEY.value
             manifestPlaceholders["secret_studyplus_consumer_key"] = env.SECRET_STUDYPLUS_CONSUMER_KEY.value
@@ -52,7 +54,7 @@ android {
             manifestPlaceholders["studyplus_consumer_key"] = env.STUDYPLUS_CONSUMER_KEY.value
             manifestPlaceholders["secret_studyplus_consumer_key"] = env.SECRET_STUDYPLUS_CONSUMER_KEY.value
             manifestPlaceholders["testmaker_admob_key"] = env.TESTMAKER_ADMOB_KEY.value
-            setApplicationIdSuffix(".debug")
+            applicationIdSuffix = ".debug"
         }
     }
 
@@ -60,11 +62,11 @@ android {
 
     productFlavors {
         create("normal") {
-            dimension("pay")
+            dimension = "pay"
         }
         create("premium") {
-            dimension("pay")
-            setApplicationIdSuffix(".premium")
+            dimension = "pay"
+            applicationIdSuffix = ".premium"
         }
     }
 
