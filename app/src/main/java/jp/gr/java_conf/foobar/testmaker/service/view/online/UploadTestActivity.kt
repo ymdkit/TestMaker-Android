@@ -21,9 +21,12 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.view.main.LocalMainFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UploadTestActivity : BaseActivity() {
@@ -33,7 +36,10 @@ class UploadTestActivity : BaseActivity() {
     private var ablePrivateUpload = false
 
     private val binding: ActivityUploadTestBinding by lazy {
-        DataBindingUtil.setContentView<ActivityUploadTestBinding>(this, R.layout.activity_upload_test)
+        DataBindingUtil.setContentView<ActivityUploadTestBinding>(
+            this,
+            R.layout.activity_upload_test
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,36 +47,46 @@ class UploadTestActivity : BaseActivity() {
         createAd(binding.adView)
         loadRewardedAd()
 
-        val adapter = ArrayAdapter(this,
-                android.R.layout.simple_spinner_item, testViewModel.tests.map { it.title }.toTypedArray())
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            testViewModel.tests.map { it.title }.toTypedArray()
+        )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinner.adapter = adapter
 
-        val index = testViewModel.tests.indexOfFirst { it.id == intent.getLongExtra(ARGUMENT_ID, 0) }.coerceAtLeast(0)
+        val index =
+            testViewModel.tests.indexOfFirst { it.id == intent.getLongExtra(ARGUMENT_ID, 0) }
+                .coerceAtLeast(0)
         binding.spinner.setSelection(index)
         initToolBar()
 
         binding.buttonUpload.setOnClickListener {
 
-            executeJobWithDialog(
-                    title = getString(R.string.uploading),
-                    task = {
-                        viewModel.uploadTest(RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]), binding.editOverview.text.toString(), !binding.checkPrivate.isChecked)
-                    },
-                    onSuccess = { documentId ->
-                        if (intent.hasExtra(ARGUMENT_ID)) {
-                            setResult(Activity.RESULT_OK, Intent().apply {
-                                putExtra(LocalMainFragment.EXTRA_TEST_NAME, testViewModel.tests[binding.spinner.selectedItemPosition].title)
-                                putExtra(LocalMainFragment.EXTRA_DOCUMENT_ID, documentId)
-                            })
-                        }
-                        Toast.makeText(this, getString(R.string.msg_test_upload), Toast.LENGTH_SHORT).show()
-                        finish()
-                    },
-                    onFailure = {
-                        Toast.makeText(baseContext, getString(R.string.msg_canceled), Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch(Dispatchers.Default) {
+
+                viewModel.isAlreadyUploaded(testViewModel.tests[binding.spinner.selectedItemPosition].title)?.let {
+
+                    withContext(Dispatchers.Main) {
+
+                        ListDialogFragment(
+                            "同名の問題集がすでにアップロードされています",
+                            listOf(
+                                DialogMenuItem(title = "内容を上書きする", iconRes = R.drawable.ic_baseline_update_24, action = {
+                                    overwriteTest(it.documentId)
+                                }),
+                                DialogMenuItem(title = "別の問題集としてアップロードする", iconRes = R.drawable.ic_baseline_file_copy_24, action = {
+                                    uploadTest()
+                                }),
+                            )
+                        ).show(supportFragmentManager, "TAG")
                     }
-            )
+                } ?: run {
+                    withContext(Dispatchers.Main) {
+                        uploadTest()
+                    }
+                }
+            }
         }
 
         binding.checkPrivate.setOnCheckedChangeListener { checkBox, isChecked ->
@@ -81,44 +97,44 @@ class UploadTestActivity : BaseActivity() {
                 checkBox.isChecked = false
 
                 AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                        .setTitle(getString(R.string.title_dialog_private))
-                        .setMessage(getString(R.string.msg_dialog_private))
-                        .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                    .setTitle(getString(R.string.title_dialog_private))
+                    .setMessage(getString(R.string.msg_dialog_private))
+                    .setPositiveButton(android.R.string.ok) { dialog, _ ->
 
-                            if (!isConnectedInternet()) {
-                                showToast(getString(R.string.client_network_error))
-                                return@setPositiveButton
-                            }
-
-                            lifecycleScope.launch(Dispatchers.Main) {
-                                showProgress(getString(R.string.load_ad))
-                                var count = 0L
-                                while (count <= LIMIT_AD_ATTEMPT_NUM) {
-                                    if (rewardedAd.isLoaded) {
-                                        val activityContext: Activity = this@UploadTestActivity
-                                        val adCallback = object : RewardedAdCallback() {
-                                            override fun onRewardedAdClosed() {
-                                                loadRewardedAd()
-                                            }
-
-                                            override fun onUserEarnedReward(reword: RewardItem) {
-                                                ablePrivateUpload = true
-                                                binding.checkPrivate.isChecked = true
-                                                dialog.dismiss()
-                                            }
-                                        }
-                                        rewardedAd.show(activityContext, adCallback)
-                                        break
-                                    } else {
-                                        count += 1
-                                        delay(count * 1000)
-                                    }
-                                }
-                                hideProgress()
-                            }
+                        if (!isConnectedInternet()) {
+                            showToast(getString(R.string.client_network_error))
+                            return@setPositiveButton
                         }
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .create().show()
+
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            showProgress(getString(R.string.load_ad))
+                            var count = 0L
+                            while (count <= LIMIT_AD_ATTEMPT_NUM) {
+                                if (rewardedAd.isLoaded) {
+                                    val activityContext: Activity = this@UploadTestActivity
+                                    val adCallback = object : RewardedAdCallback() {
+                                        override fun onRewardedAdClosed() {
+                                            loadRewardedAd()
+                                        }
+
+                                        override fun onUserEarnedReward(reword: RewardItem) {
+                                            ablePrivateUpload = true
+                                            binding.checkPrivate.isChecked = true
+                                            dialog.dismiss()
+                                        }
+                                    }
+                                    rewardedAd.show(activityContext, adCallback)
+                                    break
+                                } else {
+                                    count += 1
+                                    delay(count * 1000)
+                                }
+                            }
+                            hideProgress()
+                        }
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .create().show()
             }
         }
 
@@ -132,6 +148,84 @@ class UploadTestActivity : BaseActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun uploadTest(){
+
+        executeJobWithDialog(
+            title = getString(R.string.uploading),
+            task = {
+                viewModel.uploadTest(
+                    RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]),
+                    binding.editOverview.text.toString(),
+                    !binding.checkPrivate.isChecked
+                )
+            },
+            onSuccess = { documentId ->
+                if (intent.hasExtra(ARGUMENT_ID)) {
+                    setResult(Activity.RESULT_OK, Intent().apply {
+                        putExtra(
+                            LocalMainFragment.EXTRA_TEST_NAME,
+                            testViewModel.tests[binding.spinner.selectedItemPosition].title
+                        )
+                        putExtra(LocalMainFragment.EXTRA_DOCUMENT_ID, documentId)
+                    })
+                }
+                Toast.makeText(
+                    baseContext,
+                    getString(R.string.msg_test_upload),
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            },
+            onFailure = {
+                Toast.makeText(
+                    baseContext,
+                    getString(R.string.msg_canceled),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        )
+    }
+
+    fun overwriteTest(id: String){
+
+        executeJobWithDialog(
+            title = getString(R.string.uploading),
+            task = {
+                viewModel.overwriteTest(
+                    id,
+                    RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]),
+                    binding.editOverview.text.toString(),
+                    !binding.checkPrivate.isChecked
+                )
+            },
+            onSuccess = { documentId ->
+                if (intent.hasExtra(ARGUMENT_ID)) {
+                    setResult(Activity.RESULT_OK, Intent().apply {
+                        putExtra(
+                            LocalMainFragment.EXTRA_TEST_NAME,
+                            testViewModel.tests[binding.spinner.selectedItemPosition].title
+                        )
+                        putExtra(LocalMainFragment.EXTRA_DOCUMENT_ID, documentId)
+                    })
+                }
+                Toast.makeText(
+                    baseContext,
+                    getString(R.string.msg_test_upload),
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            },
+            onFailure = {
+                Toast.makeText(
+                    baseContext,
+                    it.toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        )
+
     }
 
     companion object {

@@ -65,4 +65,6 @@ class TestMakerRepository(private val local: LocalDataSource,
 
     fun getTest(testId: Long): RealmTest = local.getTest(testId)
 
+    suspend fun getTestsByUserId(userId: String) = remote.getTestsByUserId(userId)
+
 }

@@ -28,33 +28,35 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
     private val db = FirebaseFirestore.getInstance()
 
     suspend fun downloadTest(testId: String): FirebaseTest =
-            db.collection(TESTS)
-                    .document(testId)
-                    .get().await()
-                    .toObject(FirebaseTest::class.java)?.apply {
-                        documentId = testId
-                        questions = downloadQuestions(testId)
-                    } ?: throw Exception()
+        db.collection(TESTS)
+            .document(testId)
+            .get().await()
+            .toObject(FirebaseTest::class.java)?.apply {
+                documentId = testId
+                questions = downloadQuestions(testId)
+            } ?: throw Exception()
 
     private suspend fun downloadQuestions(testId: String): List<FirebaseQuestion> {
         return db.collection(TESTS)
-                .document(testId)
-                .collection("questions")
-                .get()
-                .await()
-                .toObjects(FirebaseQuestion::class.java).sortedBy { q -> q.order }
+            .document(testId)
+            .collection("questions")
+            .get()
+            .await()
+            .toObjects(FirebaseQuestion::class.java).sortedBy { q -> q.order }
     }
 
     fun setUser(user: FirebaseUser?) {
 
         user ?: return
 
-        val myUser = MyFirebaseUser(name = user.displayName
-                ?: "guest", id = user.uid)
+        val myUser = MyFirebaseUser(
+            name = user.displayName
+                ?: "guest", id = user.uid
+        )
 
         db.collection("users")
-                .document(user.uid)
-                .set(myUser)
+            .document(user.uid)
+            .set(myUser)
 
     }
 
@@ -109,7 +111,8 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
 
         val batch = db.batch()
         firebaseQuestions.forEach {
-            val questionRef = if (it.documentId.isEmpty()) testRef.collection("questions").document() else testRef.collection("questions").document(it.documentId)
+            val questionRef = if (it.documentId.isEmpty()) testRef.collection("questions")
+                .document() else testRef.collection("questions").document(it.documentId)
             batch.set(questionRef, it.toFirebaseQuestions(user))
 
             questionRefs.add(questionRef.id)
@@ -149,18 +152,18 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
         val user = auth.getUser() ?: return
 
         db.collection(TESTS)
-                .whereEqualTo("userId", user.uid)
-                .orderBy("created_at", Query.Direction.DESCENDING)
-                .limit(300)
-                .get()
-                .addOnSuccessListener { query ->
+            .whereEqualTo("userId", user.uid)
+            .orderBy("created_at", Query.Direction.DESCENDING)
+            .limit(300)
+            .get()
+            .addOnSuccessListener { query ->
 
-                    myTests?.postValue(query.documents)
+                myTests?.postValue(query.documents)
 
-                }
-                .addOnFailureListener {
-                    Log.d("Debug", "fetch myTests failure: $it")
-                }
+            }
+            .addOnFailureListener {
+                Log.d("Debug", "fetch myTests failure: $it")
+            }
     }
 
     fun updateProfile(userName: String, completion: () -> Unit) {
@@ -168,7 +171,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
         val user = auth.getUser() ?: return
 
         val profileUpdates = UserProfileChangeRequest.Builder()
-                .setDisplayName(userName).build()
+            .setDisplayName(userName).build()
 
         user.updateProfile(profileUpdates).addOnSuccessListener {
             completion()
@@ -180,13 +183,13 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
     fun getTestsQuery() = db.collection(TESTS).orderBy("created_at", Query.Direction.DESCENDING)
 
     suspend fun getGroups(userId: String): List<Group> = db.collection("users")
-            .document(userId)
-            .collection("groups")
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(100)
-            .get()
-            .await()
-            .toObjects(Group::class.java)
+        .document(userId)
+        .collection("groups")
+        .orderBy("createdAt", Query.Direction.DESCENDING)
+        .limit(100)
+        .get()
+        .await()
+        .toObjects(Group::class.java)
 
     suspend fun createGroup(userId: String, groupName: String): Group {
         val ref = db.collection("groups").document()
@@ -196,70 +199,79 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
     }
 
     suspend fun deleteTest(documentId: String) =
-            db.collection(TESTS)
-                    .document(documentId)
-                    .delete()
-                    .await()
+        db.collection(TESTS)
+            .document(documentId)
+            .delete()
+            .await()
 
     suspend fun joinGroup(userId: String, group: Group) =
-            db.collection("users")
-                    .document(userId)
-                    .collection("groups")
-                    .document(group.id)
-                    .set(group)
-                    .await()
+        db.collection("users")
+            .document(userId)
+            .collection("groups")
+            .document(group.id)
+            .set(group)
+            .await()
 
     suspend fun exitGroup(userId: String, groupId: String) =
-            db.collection("users")
-                    .document(userId)
-                    .collection("groups")
-                    .document(groupId)
-                    .delete()
-                    .await()
+        db.collection("users")
+            .document(userId)
+            .collection("groups")
+            .document(groupId)
+            .delete()
+            .await()
 
     suspend fun getTests(groupId: String) =
-            db.collection(TESTS)
-                    .whereEqualTo("groupId", groupId)
-                    .orderBy("created_at", Query.Direction.DESCENDING)
-                    .limit(100)
-                    .get()
-                    .await()
-                    .documents
+        db.collection(TESTS)
+            .whereEqualTo("groupId", groupId)
+            .orderBy("created_at", Query.Direction.DESCENDING)
+            .limit(100)
+            .get()
+            .await()
+            .documents
 
     suspend fun getGroup(groupId: String) =
-            db.collection("groups")
-                    .document(groupId)
-                    .get()
+        db.collection("groups")
+            .document(groupId)
+            .get()
 
     suspend fun updateGroup(group: Group) =
-            db.collection("groups")
-                    .document(group.id)
-                    .set(group)
-                    .await()
+        db.collection("groups")
+            .document(group.id)
+            .set(group)
+            .await()
 
     suspend fun deleteGroup(documentId: String) =
-            db.collection("groups")
-                    .document(documentId)
-                    .delete()
-                    .await()
+        db.collection("groups")
+            .document(documentId)
+            .delete()
+            .await()
 
     suspend fun getHistories(documentId: String) =
-            db.collection(TESTS)
-                    .document(documentId)
-                    .collection("histories")
-                    .orderBy("createdAt", Query.Direction.DESCENDING)
-                    .limit(100)
-                    .get()
-                    .await()
-                    .toObjects(History::class.java)
+        db.collection(TESTS)
+            .document(documentId)
+            .collection("histories")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(100)
+            .get()
+            .await()
+            .toObjects(History::class.java)
 
     suspend fun createHistory(documentId: String, history: History) {
         val ref = db.collection(TESTS)
-                .document(documentId)
-                .collection("histories")
-                .document()
+            .document(documentId)
+            .collection("histories")
+            .document()
         ref.set(history.copy(id = ref.id)).await()
     }
+
+    suspend fun getTestsByUserId(userId: String) =
+        db.collection(TESTS)
+            .whereEqualTo("userId", userId)
+            .get()
+            .await()
+            .map{
+                it.toObject(FirebaseTest::class.java).copy(documentId = it.id)
+            }
 
     companion object {
         const val TESTS = "tests"

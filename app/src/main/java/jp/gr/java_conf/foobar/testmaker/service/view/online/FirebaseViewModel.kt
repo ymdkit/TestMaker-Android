@@ -14,7 +14,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class FirebaseViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val service: SearchService) : ViewModel() {
+class FirebaseViewModel(
+    private val repository: TestMakerRepository,
+    private val auth: Auth,
+    private val service: SearchService
+) : ViewModel() {
 
     suspend fun downloadTest(testId: String): FirebaseTest = repository.downloadTest(testId)
 
@@ -22,8 +26,11 @@ class FirebaseViewModel(private val repository: TestMakerRepository, private val
 
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
 
-    suspend fun uploadTest(test: RealmTest, overview: String, isPublic: Boolean) = repository.createTest(test, overview, isPublic)
-    suspend fun uploadTestInGroup(test: RealmTest, overview: String, groupId: String) = repository.createTestInGroup(test, overview, groupId)
+    suspend fun uploadTest(test: RealmTest, overview: String, isPublic: Boolean) =
+        repository.createTest(test, overview, isPublic)
+
+    suspend fun uploadTestInGroup(test: RealmTest, overview: String, groupId: String) =
+        repository.createTestInGroup(test, overview, groupId)
 
     fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
 
@@ -47,6 +54,16 @@ class FirebaseViewModel(private val repository: TestMakerRepository, private val
             }
             loading.value = false
         }
+    }
+
+    suspend fun isAlreadyUploaded(title: String): FirebaseTest? {
+        val userId = getUser()?.uid ?: return null
+        return repository.getTestsByUserId(userId).firstOrNull { it.name == title }
+    }
+
+    suspend fun overwriteTest(documentId: String, test: RealmTest,overview: String, isPublic: Boolean = true): String {
+        repository.deleteTest(documentId)
+        return repository.createTest(test, overview, isPublic)
     }
 
 }
