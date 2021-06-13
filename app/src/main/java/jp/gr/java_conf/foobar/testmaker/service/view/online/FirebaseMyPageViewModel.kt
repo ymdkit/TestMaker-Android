@@ -30,6 +30,4 @@ class FirebaseMyPageViewModel(private val repository: TestMakerRepository, priva
     fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
 
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
-
-    suspend fun uploadTest(test: RealmTest, overview: String, isPublic: Boolean) = repository.createTest(test, overview, isPublic)
 }
