@@ -2,16 +2,11 @@ package jp.gr.java_conf.foobar.testmaker.service.extensions
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 
 fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (T) -> Unit) {
-    this.observe(owner, Observer {
+    this.observe(owner, {
         if (it != null) {
             observer(it)
         }
     })
 }
-
-fun LiveData<String>.valueNonNull() = value ?: ""
-
-fun LiveData<Int>.valueNonNull() = value ?: -1
