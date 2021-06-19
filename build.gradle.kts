@@ -1,6 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    val compose_version by extra("1.0.0-beta07")
     repositories {
         jcenter()
         google()
@@ -9,7 +10,7 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:7.0.0-beta03")
         classpath("io.realm:realm-gradle-plugin:6.0.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Deps.kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32")
         classpath("com.google.gms:google-services:4.3.5")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.4")
         classpath("gradle.plugin.com.github.konifar.gradle:plugin:0.3.3")

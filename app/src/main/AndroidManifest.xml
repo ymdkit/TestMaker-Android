@@ -105,6 +105,12 @@
             android:configChanges="uiMode"
             android:label="@string/title_activity_move_questions"
             android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="jp.gr.java_conf.foobar.testmaker.service.view.result.ComposeResultActivity"
+            android:exported="true"
+            android:label="@string/title_activity_compose_result"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

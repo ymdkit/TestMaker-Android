@@ -32,6 +32,9 @@ android {
         versionCode = 139
         versionName = "4.0.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     packagingOptions {
@@ -73,6 +76,8 @@ android {
     compileOptions {
         sourceCompatibility(JavaVersion.VERSION_1_8)
         targetCompatibility(JavaVersion.VERSION_1_8)
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     buildFeatures {
@@ -85,6 +90,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        useIR = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = rootProject.extra["compose_version"] as String
+        kotlinCompilerVersion = "1.4.32"
     }
 }
 
@@ -145,6 +155,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.2.2")
     implementation("androidx.navigation:navigation-ui-ktx:2.2.2")
     implementation("androidx.fragment:fragment-ktx:${Deps.fragmentVersion}")
+    implementation("androidx.activity:activity-compose:1.3.0-beta01")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")
     kapt("com.airbnb.android:epoxy-processor:3.11.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.9.0")
