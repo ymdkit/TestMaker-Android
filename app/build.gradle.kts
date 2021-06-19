@@ -93,25 +93,24 @@ android {
         useIR = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = rootProject.extra["compose_version"] as String
-        kotlinCompilerVersion = "1.4.32"
+        kotlinCompilerExtensionVersion = "1.0.0-beta08"
     }
 }
 
 dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("androidx.core:core-ktx:1.3.2")
+    implementation("androidx.core:core-ktx:1.5.0")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.compose.ui:ui:1.0.0-beta07")
-    implementation("androidx.compose.ui:ui-tooling:1.0.0-beta07")
-    implementation("androidx.compose.foundation:foundation:1.0.0-beta07")
-    implementation("androidx.compose.material:material:1.0.0-beta07")
-    implementation("androidx.compose.material:material-icons-core:1.0.0-beta07")
-    implementation("androidx.compose.material:material-icons-extended:1.0.0-beta07")
-    implementation("androidx.compose.runtime:runtime-livedata:1.0.0-beta07")
+    implementation("androidx.compose.ui:ui:1.0.0-beta08")
+    implementation("androidx.compose.ui:ui-tooling:1.0.0-beta08")
+    implementation("androidx.compose.foundation:foundation:1.0.0-beta08")
+    implementation("androidx.compose.material:material:1.0.0-beta08")
+    implementation("androidx.compose.material:material-icons-core:1.0.0-beta08")
+    implementation("androidx.compose.material:material-icons-extended:1.0.0-beta08")
+    implementation("androidx.compose.runtime:runtime-livedata:1.0.0-beta08")
     implementation("com.google.android.gms:play-services-ads:19.3.0")
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("com.google.android.play:core-ktx:1.8.0")
