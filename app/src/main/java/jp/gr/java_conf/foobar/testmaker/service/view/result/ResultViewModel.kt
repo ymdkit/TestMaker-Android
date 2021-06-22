@@ -9,7 +9,9 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.History
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.HistoryRepository
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
+import jp.studyplus.android.sdk.PostCallback
 import jp.studyplus.android.sdk.Studyplus
+import jp.studyplus.android.sdk.StudyplusError
 import jp.studyplus.android.sdk.record.StudyRecord
 import jp.studyplus.android.sdk.record.StudyRecordAmountTotal
 import kotlinx.coroutines.CoroutineScope
@@ -20,12 +22,14 @@ class ResultViewModel(
     private val testId: Long,
     private val repository: HistoryRepository,
     private val testRepository: TestRepository,
+    private val studyPlus: Studyplus
 ) : ViewModel() {
 
     val test = testRepository.get().find { it.id == testId } ?: throw NullPointerException()
 
     val questions =
-        testRepository.get().find { it.id == testId }?.questions?.filter { it.isSolved } ?: throw NullPointerException()
+        testRepository.get().find { it.id == testId }?.questions?.filter { it.isSolved }
+            ?: throw NullPointerException()
 
     val scoreList = listOf(questions.count { it.isCorrect },
         questions.count { !it.isCorrect }).map(Int::toFloat)
@@ -51,34 +55,41 @@ class ResultViewModel(
         }
     }
 
-    fun createStudyPlusRecord(duration: Long, context: Context){
+    fun createStudyPlusRecord(duration: Long, context: Context) {
 
-        if (!Studyplus.instance.isAuthenticated(context)) return
+        if (!studyPlus.isAuthenticated()) return
 
         val record = StudyRecord(
             duration = (duration / 1000).toInt(),
             amount = StudyRecordAmountTotal(questions.size),
-            comment = "${test.title} で勉強しました")
+            comment = "${test.title} で勉強しました"
+        )
 
         viewModelScope.launch(Dispatchers.Default) {
-            Studyplus.instance.postRecord(context, record,
-                object : Studyplus.Companion.OnPostRecordListener {
-                    override fun onResult(success: Boolean, recordId: Long?, throwable: Throwable?) {
-                        if (success) {
-                            CoroutineScope(Dispatchers.Main).launch {
-                                Toast.makeText(context, context.getString(R.string.msg_upload_study_plus), Toast.LENGTH_LONG).show()
-                            }
-                        } else {
-                            throwable?.apply {
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    Toast.makeText(context, context.getString(R.string.msg_failed_upload_study_plus), Toast.LENGTH_LONG).show()
-                                }
-                            }
+            studyPlus.postRecord(record,
+                object : PostCallback {
+                    override fun onSuccess() {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.msg_upload_study_plus),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+
+                    }
+
+                    override fun onFailure(e: StudyplusError) {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.msg_upload_study_plus),
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
                 })
         }
-
     }
 
 }

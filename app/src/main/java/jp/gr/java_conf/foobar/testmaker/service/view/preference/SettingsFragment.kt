@@ -21,6 +21,7 @@ import org.koin.android.ext.android.inject
 class SettingsFragment : PreferenceFragmentCompat() {
 
     private val auth: Auth by inject()
+    private val studyPlus by inject<Studyplus>()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -94,12 +95,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val studyPlusPreference = findPreference<Preference>("setting_study_plus")
         studyPlusPreference?.apply {
             summaryProvider = Preference.SummaryProvider<Preference> {
-                if (Studyplus.instance.isAuthenticated(requireContext())) "連携中" else "未連携"
+                if (studyPlus.isAuthenticated()) "連携中" else "未連携"
             }
 
             setOnPreferenceClickListener {
                 try {
-                    Studyplus.instance.startAuth(requireActivity(), REQUEST_CODE_AUTH)
+                    studyPlus.startAuth(requireActivity(), REQUEST_CODE_AUTH)
                 } catch (e: ActivityNotFoundException) {
                     e.printStackTrace()
                     Toast.makeText(requireContext(), getString(R.string.msg_download_study_plus), Toast.LENGTH_LONG).show()
@@ -110,7 +111,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         val studyPlusPostPreference = findPreference<ListPreference>("study_plus")
         studyPlusPostPreference?.apply {
-            if (Studyplus.instance.isAuthenticated(requireContext())) {
+            if (studyPlus.isAuthenticated()) {
                 isVisible = true
                 summaryProvider = Preference.SummaryProvider<ListPreference> {
                     it.entry

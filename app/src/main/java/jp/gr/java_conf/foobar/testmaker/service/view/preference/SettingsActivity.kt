@@ -9,8 +9,11 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivitySettingsBinding
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.studyplus.android.sdk.Studyplus
+import org.koin.android.ext.android.inject
 
 class SettingsActivity : BaseActivity() {
+
+    private val studyPlus by inject<Studyplus>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +45,9 @@ class SettingsActivity : BaseActivity() {
 
         when (requestCode) {
             SettingsFragment.REQUEST_CODE_AUTH -> {
-                if (resultCode == RESULT_OK) {
-                    Studyplus.instance.setAuthResult(baseContext, data)
+                if (resultCode == RESULT_OK && data != null) {
+
+                    studyPlus.setAuthResult(data)
                     Toast.makeText(baseContext, getString(R.string.msg_connect_success), Toast.LENGTH_LONG).show()
 
                     supportFragmentManager.findFragmentById(R.id.settingsContainer)?.apply {

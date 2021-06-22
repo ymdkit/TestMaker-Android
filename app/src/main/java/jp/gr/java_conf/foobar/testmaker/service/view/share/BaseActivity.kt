@@ -15,7 +15,6 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.firebase.analytics.FirebaseAnalytics
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.studyplus.android.sdk.Studyplus
 import org.koin.android.ext.android.inject
 
 /**
@@ -52,7 +51,6 @@ open class BaseActivity : AppCompatActivity() {
                             "BE05B66A799F19F3AF6808EAD82F69F6",
                             "DC457DC275E092B11752A53455350569")
             ).build())
-            Studyplus.instance.setup(info.metaData.getString("studyplus_comsumer_key")!!, info.metaData.getString("secret_studyplus_comsumer_key")!!)
 
             if (info.metaData.getBoolean("removeAd")) {
                 sharedPreferenceManager.isRemovedAd = true
