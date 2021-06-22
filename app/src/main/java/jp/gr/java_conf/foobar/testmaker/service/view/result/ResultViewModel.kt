@@ -36,9 +36,6 @@ class ResultViewModel(
 
     val scoreText = "${questions.count { it.isCorrect }}/${questions.size}"
 
-    suspend fun createHistory(documentId: String, history: History) =
-        repository.createHistory(documentId, history)
-
     fun createAnswerHistory(user: FirebaseUser) {
         val test = testRepository.get().find { it.id == testId } ?: return
         if (test.documentId.isEmpty()) return
