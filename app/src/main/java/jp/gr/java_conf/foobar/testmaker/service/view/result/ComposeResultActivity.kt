@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -98,11 +100,13 @@ class ComposeResultActivity : BaseActivity() {
                                         text = getString(R.string.retry),
                                         modifier = Modifier.padding(vertical = 8.dp)
                                     )
+                                    
+                                    val studyPlusRecordStatus: ResultViewModel.StudyPlusRecordStatus by viewModel.studyPlusRecordStatus.collectAsState()
 
                                     AnimatedVisibility(
                                         visible = sharedPreferenceManager.uploadStudyPlus == resources.getStringArray(
                                             R.array.upload_setting_study_plus_values
-                                        )[2]
+                                        )[2] && studyPlusRecordStatus == ResultViewModel.StudyPlusRecordStatus.READY
                                     ) {
                                         WideOutlinedButton(
                                             onCLick = {
@@ -264,7 +268,7 @@ fun ItemPieChart(dataSet: PieDataSet, centerText: String) {
 
 @Composable
 fun ComposeAdView(isRemovedAd: Boolean) {
-    if(isRemovedAd) return
+    if (isRemovedAd) return
 
     AndroidView(
         factory = {

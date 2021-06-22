@@ -16,6 +16,7 @@ import jp.studyplus.android.sdk.record.StudyRecord
 import jp.studyplus.android.sdk.record.StudyRecordAmountTotal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class ResultViewModel(
@@ -24,6 +25,11 @@ class ResultViewModel(
     private val testRepository: TestRepository,
     private val studyPlus: Studyplus
 ) : ViewModel() {
+
+    enum class StudyPlusRecordStatus {
+        READY,
+        RECORDED
+    }
 
     val test = testRepository.get().find { it.id == testId } ?: throw NullPointerException()
 
@@ -35,6 +41,8 @@ class ResultViewModel(
         questions.count { !it.isCorrect }).map(Int::toFloat)
 
     val scoreText = "${questions.count { it.isCorrect }}/${questions.size}"
+
+    val studyPlusRecordStatus = MutableStateFlow(StudyPlusRecordStatus.READY)
 
     fun createAnswerHistory(user: FirebaseUser) {
         val test = testRepository.get().find { it.id == testId } ?: return
@@ -61,6 +69,8 @@ class ResultViewModel(
             amount = StudyRecordAmountTotal(questions.size),
             comment = "${test.title} で勉強しました"
         )
+
+        studyPlusRecordStatus.value = StudyPlusRecordStatus.RECORDED
 
         viewModelScope.launch(Dispatchers.Default) {
             studyPlus.postRecord(record,
