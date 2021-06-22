@@ -75,6 +75,6 @@ fun getTestMakerModules(realm: Realm) = module {
     viewModel { GroupListViewModel(get()) }
     viewModel { GroupDetailViewModel(get(), get()) }
     viewModel { HistoryTestViewModel(get()) }
-    viewModel { ResultViewModel(get()) }
+    viewModel { (testId: Long) -> ResultViewModel(testId = testId, get(), get()) }
 
 }
