@@ -287,4 +287,6 @@
     <string name="msg_empty_text">入力欄が空です</string>
     <string name="title_dialog_edit_user_name">ユーザ名の変更</string>
     <string name="button_create_test">問題集の作成</string>
+    <string name="result_dialog_item_retry_all">全ての問題</string>
+    <string name="result_dialog_item_retry_only_incorrect">不正解の問題のみ</string>
 </resources>

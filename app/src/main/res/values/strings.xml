@@ -301,6 +301,8 @@
     <string name="title_dialog_edit_user_name">edit username</string>
     <string name="button_create_test">create test</string>
     <string name="title_activity_compose_result">ComposeResultActivity</string>
+    <string name="result_dialog_item_retry_all">All Questions</string>
+    <string name="result_dialog_item_retry_only_incorrect">Only Incorect Questions</string>
 
 
 </resources>
