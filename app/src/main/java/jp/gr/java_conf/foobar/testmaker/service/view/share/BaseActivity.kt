@@ -49,7 +49,8 @@ open class BaseActivity : AppCompatActivity() {
                             "DA539D38B08126EBEF7E059DCA26831C",
                             "4C3BA6538C8F304A33859DC20F66316E",
                             "BDB57B5078A79B87345E711A52F0F995",
-                            "BE05B66A799F19F3AF6808EAD82F69F6")
+                            "BE05B66A799F19F3AF6808EAD82F69F6",
+                            "DC457DC275E092B11752A53455350569")
             ).build())
             Studyplus.instance.setup(info.metaData.getString("studyplus_comsumer_key")!!, info.metaData.getString("secret_studyplus_comsumer_key")!!)
 

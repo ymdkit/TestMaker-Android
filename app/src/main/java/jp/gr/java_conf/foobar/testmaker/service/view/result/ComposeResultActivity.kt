@@ -15,26 +15,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.play.core.review.ReviewManagerFactory
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ui.theme.TestMakerAndroidTheme
+import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class ComposeResultActivity : FragmentActivity() {
+class ComposeResultActivity : BaseActivity() {
 
     companion object {
         const val ARGUMENT_TEST_ID = "id"
@@ -54,7 +56,6 @@ class ComposeResultActivity : FragmentActivity() {
     private val testId: Long by lazy { intent.getLongExtra(ARGUMENT_TEST_ID, -1L) }
 
     private val viewModel: ResultViewModel by viewModel { parametersOf(testId) }
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
     private val auth: Auth by inject()
 
     @ExperimentalAnimationApi
@@ -68,58 +69,72 @@ class ComposeResultActivity : FragmentActivity() {
                     },
                     content = {
                         Surface(color = MaterialTheme.colors.surface) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .verticalScroll(state = ScrollState(0))
-                            ) {
-                                ItemPieChart(
-                                    dataSet =
-                                    PieDataSet(
-                                        viewModel.scoreList.map {
-                                            PieEntry(it)
-                                        }, ""
-                                    ),
-                                    centerText = viewModel.scoreText
-                                )
+                            Column {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .verticalScroll(state = ScrollState(0))
+                                        .weight(weight = 1f, fill = true)
+                                ) {
+                                    ItemPieChart(
+                                        dataSet =
+                                        PieDataSet(
+                                            viewModel.scoreList.map {
+                                                PieEntry(it)
+                                            }, ""
+                                        ),
+                                        centerText = viewModel.scoreText
+                                    )
 
-                                WideOutlinedButton(
-                                    onCLick = {
-                                        MainActivity.startActivityWithClear(this@ComposeResultActivity)
-                                    },
-                                    text = getString(R.string.home),
-                                    modifier = Modifier.padding(vertical = 8.dp)
-                                )
-                                WideOutlinedButton(
-                                    onCLick = { onCLickRetry() },
-                                    text = getString(R.string.retry),
-                                    modifier = Modifier.padding(vertical = 8.dp)
-                                )
-
-                                AnimatedVisibility(visible = sharedPreferenceManager.uploadStudyPlus == resources.getStringArray(R.array.upload_setting_study_plus_values)[2]) {
                                     WideOutlinedButton(
                                         onCLick = {
-                                            viewModel.createStudyPlusRecord(intent.getLongExtra("duration", 0), this@ComposeResultActivity)
+                                            MainActivity.startActivityWithClear(this@ComposeResultActivity)
                                         },
-                                        text = getString(R.string.menu_upload_studyplus),
+                                        text = getString(R.string.home),
                                         modifier = Modifier.padding(vertical = 8.dp)
                                     )
+                                    WideOutlinedButton(
+                                        onCLick = { onCLickRetry() },
+                                        text = getString(R.string.retry),
+                                        modifier = Modifier.padding(vertical = 8.dp)
+                                    )
+
+                                    AnimatedVisibility(
+                                        visible = sharedPreferenceManager.uploadStudyPlus == resources.getStringArray(
+                                            R.array.upload_setting_study_plus_values
+                                        )[2]
+                                    ) {
+                                        WideOutlinedButton(
+                                            onCLick = {
+                                                viewModel.createStudyPlusRecord(
+                                                    intent.getLongExtra(
+                                                        ARGUMENT_DURATION,
+                                                        0
+                                                    ), this@ComposeResultActivity
+                                                )
+                                            },
+                                            text = getString(R.string.menu_upload_studyplus),
+                                            modifier = Modifier.padding(vertical = 8.dp)
+                                        )
+                                    }
+
+                                    Text(
+                                        text = getString(R.string.label_result_questions),
+                                        color = MaterialTheme.colors.primary,
+                                        modifier = Modifier.padding(vertical = 4.dp)
+                                    )
+
+                                    viewModel.questions.mapIndexed { index, it ->
+                                        ItemResultModel(
+                                            index + 1,
+                                            it.question,
+                                            it.answer,
+                                            it.isCorrect
+                                        ).ItemResult()
+                                    }
                                 }
 
-                                Text(
-                                    text = getString(R.string.label_result_questions),
-                                    color = MaterialTheme.colors.primary,
-                                    modifier = Modifier.padding(vertical = 4.dp)
-                                )
-
-                                viewModel.questions.mapIndexed { index, it ->
-                                    ItemResultModel(
-                                        index + 1,
-                                        it.question,
-                                        it.answer,
-                                        it.isCorrect
-                                    ).ItemResult()
-                                }
+                                ComposeAdView(isRemovedAd = sharedPreferenceManager.isRemovedAd)
                             }
                         }
                     }
@@ -144,7 +159,7 @@ class ComposeResultActivity : FragmentActivity() {
         super.onBackPressed()
     }
 
-    private fun requestReview(){
+    private fun requestReview() {
 
         sharedPreferenceManager.playCount += 1
         if (sharedPreferenceManager.playCount != COUNT_REQUEST_REVIEW) return
@@ -244,5 +259,23 @@ fun ItemPieChart(dataSet: PieDataSet, centerText: String) {
             .fillMaxWidth()
             .height(200.dp)
             .padding(16.dp)
+    )
+}
+
+@Composable
+fun ComposeAdView(isRemovedAd: Boolean) {
+    if(isRemovedAd) return
+
+    AndroidView(
+        factory = {
+            AdView(it).apply {
+                adSize = AdSize.BANNER
+                adUnitId = "ca-app-pub-8942090726462263/8420884238"
+                loadAd(AdRequest.Builder().build())
+            }
+        },
+        modifier = Modifier
+            .height(56.dp)
+            .fillMaxWidth()
     )
 }
