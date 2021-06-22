@@ -14,7 +14,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setFontSize
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.result.ResultActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.result.ComposeResultActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -67,7 +67,7 @@ class PlayActivity : BaseActivity() {
 
         playViewModel.state.observeNonNull(this) {
             if (it == State.FINISH) {
-                ResultActivity.startActivity(this, test.id, System.currentTimeMillis() - startTime)
+                ComposeResultActivity.startActivity(this, test.id, System.currentTimeMillis() - startTime)
             }
         }
 
