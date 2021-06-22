@@ -352,7 +352,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
 
         fun startActivityWithClear(activity: Activity) {
             val intent = Intent(activity, MainActivity::class.java).apply {
-
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
             activity.startActivity(intent)
         }
