@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.result
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -23,9 +24,10 @@ data class ItemResultModel(
     val isCorrect: Boolean
 ) {
 
+    @ExperimentalMaterialApi
     @Composable
-    fun ItemResult() {
-        Surface(color = MaterialTheme.colors.surface) {
+    fun ItemResult(onClick: () -> Unit = {}) {
+        Surface(color = MaterialTheme.colors.surface, onClick = onClick) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

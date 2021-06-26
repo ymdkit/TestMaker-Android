@@ -28,6 +28,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ui.theme.TestMakerAndroidTheme
@@ -60,6 +61,7 @@ class ComposeResultActivity : BaseActivity() {
     private val viewModel: ResultViewModel by viewModel { parametersOf(testId) }
     private val auth: Auth by inject()
 
+    @ExperimentalMaterialApi
     @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +102,7 @@ class ComposeResultActivity : BaseActivity() {
                                         text = getString(R.string.retry),
                                         modifier = Modifier.padding(vertical = 8.dp)
                                     )
-                                    
+
                                     val studyPlusRecordStatus: ResultViewModel.StudyPlusRecordStatus by viewModel.studyPlusRecordStatus.collectAsState()
 
                                     AnimatedVisibility(
@@ -134,7 +136,13 @@ class ComposeResultActivity : BaseActivity() {
                                             it.question,
                                             it.answer,
                                             it.isCorrect
-                                        ).ItemResult()
+                                        ).ItemResult(onClick = {
+                                            EditQuestionActivity.startActivity(
+                                                this@ComposeResultActivity,
+                                                testId,
+                                                it.id
+                                            )
+                                        })
                                     }
                                 }
 
