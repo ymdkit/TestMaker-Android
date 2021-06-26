@@ -303,6 +303,7 @@
     <string name="title_activity_compose_result">ComposeResultActivity</string>
     <string name="result_dialog_item_retry_all">All Questions</string>
     <string name="result_dialog_item_retry_only_incorrect">Only Incorect Questions</string>
+    <string name="play_dialog_confirm_interrupt">Do you want to interrupt your answer?</string>
 
 
 </resources>

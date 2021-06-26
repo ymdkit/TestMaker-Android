@@ -16,6 +16,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.setFontSize
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ComposeResultActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -23,14 +24,14 @@ class PlayActivity : BaseActivity() {
 
     private val playViewModel: PlayViewModel by viewModel {
         parametersOf(
-                test,
-                QuestionsBuilder(test.questions)
-                        .retry(intent.hasExtra("isRetry"))
-                        .startPosition(test.startPosition)
-                        .mistakeOnly(sharedPreferenceManager.refine)
-                        .shuffle(sharedPreferenceManager.random)
-                        .limit(test.limit)
-                        .build()
+            test,
+            QuestionsBuilder(test.questions)
+                .retry(intent.hasExtra("isRetry"))
+                .startPosition(test.startPosition)
+                .mistakeOnly(sharedPreferenceManager.refine)
+                .shuffle(sharedPreferenceManager.random)
+                .limit(test.limit)
+                .build()
         )
     }
     private val testViewModel: TestViewModel by viewModel()
@@ -67,7 +68,11 @@ class PlayActivity : BaseActivity() {
 
         playViewModel.state.observeNonNull(this) {
             if (it == State.FINISH) {
-                ComposeResultActivity.startActivity(this, test.id, System.currentTimeMillis() - startTime)
+                ComposeResultActivity.startActivity(
+                    this,
+                    test.id,
+                    System.currentTimeMillis() - startTime
+                )
             }
         }
 
@@ -84,17 +89,19 @@ class PlayActivity : BaseActivity() {
 
             playViewModel.selectedQuestion.value?.let { question ->
                 sendFirebaseEvent(question.getFirebaseEvent())
-                testViewModel.update(question.copy(
+                testViewModel.update(
+                    question.copy(
                         isSolved = true,
                         isCorrect = it == JudgeState.CORRECT
-                ))
+                    )
+                )
             }
         }
 
         testViewModel.update(test.copy(
-                questions = test.questions.map {
-                    it.copy(isSolved = false)
-                }
+            questions = test.questions.map {
+                it.copy(isSolved = false)
+            }
         ))
 
         playViewModel.loadNextQuestion()
@@ -129,13 +136,22 @@ class PlayActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
-            when (item.itemId) {
-                android.R.id.home -> {
-                    finish()
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
             }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+    override fun onBackPressed() {
+        ConfirmDangerDialogFragment(
+            title = getString(R.string.play_dialog_confirm_interrupt),
+            buttonText = getString(R.string.ok)
+        ) {
+            super.onBackPressed()
+        }.show(supportFragmentManager, "TAG")
+    }
 
     companion object {
 

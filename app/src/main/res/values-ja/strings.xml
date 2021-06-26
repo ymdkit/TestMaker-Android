@@ -289,4 +289,5 @@
     <string name="button_create_test">問題集の作成</string>
     <string name="result_dialog_item_retry_all">全ての問題</string>
     <string name="result_dialog_item_retry_only_incorrect">不正解の問題のみ</string>
+    <string name="play_dialog_confirm_interrupt">解答を中断しますか？</string>
 </resources>
