@@ -14,10 +14,6 @@ import kotlinx.coroutines.withContext
 class TestMakerRepository(private val local: LocalDataSource,
                           private val remote: RemoteDataSource) {
 
-    fun isCheckOrder(): Boolean {
-        return local.isCheckOrder()
-    }
-
     suspend fun downloadTest(testId: String): FirebaseTest = withContext(Dispatchers.Default) {
         remote.downloadTest(testId)
     }

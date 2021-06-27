@@ -12,8 +12,6 @@ class LocalDataSource(private val realm: Realm, private val preference: SharedPr
         return realm.where(RealmTest::class.java).equalTo("id", testId).findFirst() ?: RealmTest()
     }
 
-    fun isCheckOrder(): Boolean = preference.isCheckOrder
-
     fun createObjectFromFirebase(firebaseTest: FirebaseTest) {
         realm.beginTransaction()
 
