@@ -25,7 +25,7 @@ class TestDataSource(private val realm: Realm) {
         return realmTest.id
     }
 
-    fun get(): List<Test> = realm.copyFromRealm(realm.where(RealmTest::class.java)
+    fun getAll(): List<Test> = realm.copyFromRealm(realm.where(RealmTest::class.java)
             .findAll())
             ?.sortedBy { it.order }
             ?.map { Test.createFromRealmTest(it) }
