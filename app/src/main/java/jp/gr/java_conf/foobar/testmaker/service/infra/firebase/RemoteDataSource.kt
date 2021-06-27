@@ -165,8 +165,6 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
             }
     }
 
-    fun getTestsQuery() = db.collection(TESTS).orderBy("created_at", Query.Direction.DESCENDING)
-
     suspend fun getGroups(userId: String): List<Group> = db.collection("users")
         .document(userId)
         .collection("groups")
