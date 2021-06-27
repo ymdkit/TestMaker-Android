@@ -50,20 +50,27 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
     single { SharedPreferenceManager(get()) }
     single {
         Retrofit.Builder()
-                .baseUrl("https://us-central1-testmaker-1cb29.cloudfunctions.net/")
-                .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder()
+            .baseUrl("https://us-central1-testmaker-1cb29.cloudfunctions.net/")
+            .addConverterFactory(
+                MoshiConverterFactory.create(
+                    Moshi.Builder()
                         .add(KotlinJsonAdapterFactory())
-                        .build()))
-                .build()
+                        .build()
+                )
+            )
+            .build()
     }
     single { get<Retrofit>().create(CloudFunctionsService::class.java) }
     single { FirebaseAnalytics.getInstance(get()) }
     single { SearchClient() }
     single { get<SearchClient>().create() }
-    single { Studyplus(
-        context = get(),
-        consumerKey = info.metaData.getString("studyplus_comsumer_key")!!,
-        consumerSecret = info.metaData.getString("secret_studyplus_comsumer_key")!!) }
+    single {
+        Studyplus(
+            context = get(),
+            consumerKey = info.metaData.getString("studyplus_comsumer_key")!!,
+            consumerSecret = info.metaData.getString("secret_studyplus_comsumer_key")!!
+        )
+    }
     viewModel { CategoryViewModel(get()) }
     viewModel { TestViewModel(get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }
