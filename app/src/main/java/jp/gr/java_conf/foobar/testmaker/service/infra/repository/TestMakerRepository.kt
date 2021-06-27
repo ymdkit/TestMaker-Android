@@ -26,10 +26,6 @@ class TestMakerRepository(private val local: LocalDataSource,
         local.createObjectFromFirebase(test)
     }
 
-    fun updateProfile(userName: String, completion: () -> Unit) {
-        remote.updateProfile(userName, completion)
-    }
-
     suspend fun createTest(test: RealmTest, overview: String, isPublic: Boolean = true): String {
         val newDocumentId = withContext(Dispatchers.Default) { remote.createTest(test, overview, isPublic) }
         local.updateDocumentId(getTest(test.id), newDocumentId)

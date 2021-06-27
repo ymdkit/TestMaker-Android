@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -164,20 +163,6 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
             .addOnFailureListener {
                 Log.d("Debug", "fetch myTests failure: $it")
             }
-    }
-
-    fun updateProfile(userName: String, completion: () -> Unit) {
-
-        val user = auth.getUser() ?: return
-
-        val profileUpdates = UserProfileChangeRequest.Builder()
-            .setDisplayName(userName).build()
-
-        user.updateProfile(profileUpdates).addOnSuccessListener {
-            completion()
-        }
-        setUser(user)
-
     }
 
     fun getTestsQuery() = db.collection(TESTS).orderBy("created_at", Query.Direction.DESCENDING)
