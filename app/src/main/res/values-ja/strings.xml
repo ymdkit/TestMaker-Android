@@ -290,4 +290,7 @@
     <string name="result_dialog_item_retry_all">全ての問題</string>
     <string name="result_dialog_item_retry_only_incorrect">不正解の問題のみ</string>
     <string name="play_dialog_confirm_interrupt">解答を中断しますか？</string>
+    <string name="upload_dialog_already_uploaded">同名の問題集がすでにアップロードされています</string>
+    <string name="upload_dialog_overwrite">内容を上書きする</string>
+    <string name="upload_dialog_upload_as_other_test">別の問題集としてアップロードする</string>
 </resources>

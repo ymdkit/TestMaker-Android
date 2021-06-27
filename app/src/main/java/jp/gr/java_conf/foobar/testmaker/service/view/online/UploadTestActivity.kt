@@ -70,12 +70,12 @@ class UploadTestActivity : BaseActivity() {
                     withContext(Dispatchers.Main) {
 
                         ListDialogFragment(
-                            "同名の問題集がすでにアップロードされています",
+                            getString(R.string.upload_dialog_already_uploaded),
                             listOf(
-                                DialogMenuItem(title = "内容を上書きする", iconRes = R.drawable.ic_baseline_update_24, action = {
+                                DialogMenuItem(title = getString(R.string.upload_dialog_overwrite), iconRes = R.drawable.ic_baseline_update_24, action = {
                                     overwriteTest(it.documentId)
                                 }),
-                                DialogMenuItem(title = "別の問題集としてアップロードする", iconRes = R.drawable.ic_baseline_file_copy_24, action = {
+                                DialogMenuItem(title = getString(R.string.upload_dialog_upload_as_other_test), iconRes = R.drawable.ic_baseline_file_copy_24, action = {
                                     uploadTest()
                                 }),
                             )
