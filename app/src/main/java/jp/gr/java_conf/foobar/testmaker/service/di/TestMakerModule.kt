@@ -42,7 +42,7 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
     single { CategoryRepository(get(), get()) }
     single { GroupRepository(get()) }
     single { HistoryRepository(get()) }
-    single { LocalDataSource(realm, get(), get()) }
+    single { LocalDataSource(realm, get()) }
     single { CategoryDataSource(realm) }
     single { TestDataSource(realm) }
     single { Auth() }
