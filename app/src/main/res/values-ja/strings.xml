@@ -45,7 +45,7 @@
     <string name="hint_explanation">解説</string>
     <string name="hint_answer">解答</string>
     <string name="hint_question">問題文</string>
-    <string name="hint_other">他の選択肢</string>
+    <string name="hint_other">不正解の選択肢</string>
     <string name="action_rev">レビューする</string>
     <string name="action_other">開発者の他のアプリ</string>
     <string name="action_import">ファイルのインポート</string>
@@ -290,4 +290,8 @@
     <string name="result_dialog_item_retry_all">全ての問題</string>
     <string name="result_dialog_item_retry_only_incorrect">不正解の問題のみ</string>
     <string name="play_dialog_confirm_interrupt">解答を中断しますか？</string>
+    <string name="upload_dialog_already_uploaded">同名の問題集がすでにアップロードされています</string>
+    <string name="upload_dialog_overwrite">内容を上書きする</string>
+    <string name="upload_dialog_upload_as_other_test">別の問題集としてアップロードする</string>
+    <string name="edit_hint_select_answer">正解の選択肢</string>
 </resources>

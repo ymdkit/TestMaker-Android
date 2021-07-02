@@ -32,6 +32,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
@@ -55,6 +56,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
     private val viewModel: MainViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
     private val service: CloudFunctionsService by inject()
+    private val logger: TestMakerLogger by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -154,6 +156,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                     viewModel.convert(it)
                     testViewModel.refresh()
                     showToast(getString(R.string.msg_success_download_test, it.name))
+                    logger.logCreateTestEvent(it.name, "dynamic_links")
                 },
                 onFailure = {
                     showToast(getString(R.string.msg_failure_download_test))
@@ -210,9 +213,8 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                     val buttonImport = dialogLayout.findViewById<Button>(R.id.button_paste)
 
                     buttonImport.setOnClickListener {
-
+                        logger.logEvent("paste_import")
                         loadTestByText(text = editPaste.text.toString())
-
                         dialog.dismiss()
                     }
                 }
@@ -324,6 +326,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                 }
             }.onSuccess {
                 testViewModel.create(it)
+                logger.logCreateTestEvent(it.title, "file")
                 Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
             }.onFailure {
                 showErrorToast(it)

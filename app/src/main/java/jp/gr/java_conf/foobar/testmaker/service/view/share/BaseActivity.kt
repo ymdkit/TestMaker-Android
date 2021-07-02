@@ -58,8 +58,8 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun sendFirebaseEvent(event: String) {
-        firebaseAnalytic.logEvent(event, Bundle())
+    protected fun sendFirebaseEvent(event: String, bundle: Bundle = Bundle()) {
+        firebaseAnalytic.logEvent(event, bundle)
     }
 
     protected fun initToolBar() {

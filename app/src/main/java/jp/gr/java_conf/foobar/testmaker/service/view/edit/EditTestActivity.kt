@@ -13,10 +13,12 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.category.EditCategoryActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditTestActivity : BaseActivity() {
@@ -26,6 +28,8 @@ class EditTestActivity : BaseActivity() {
     private val testViewModel: TestViewModel by viewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
     private val editTestViewModel: EditTestViewModel by viewModel()
+
+    private val logger: TestMakerLogger by inject()
 
     private val binding by lazy {
         DataBindingUtil.setContentView<ActivityEditTestBinding>(this, R.layout.activity_edit_test).apply {
@@ -87,6 +91,7 @@ class EditTestActivity : BaseActivity() {
                 testViewModel.update(it, binding.editTitle.text.toString(), binding.colorChooser.getColorId(), controller.selectedCategory?.name)
             } ?: run {
                 testViewModel.create(binding.editTitle.text.toString(), binding.colorChooser.getColorId(), controller.selectedCategory?.name)
+                logger.logCreateTestEvent(binding.editTitle.text.toString(), "self")
             }
 
             showToast(getString(R.string.msg_save_test))

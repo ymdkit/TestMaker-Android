@@ -6,13 +6,11 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 
-class LocalDataSource(private val realm: Realm, private val preference: SharedPreferenceManager, private val context: Context) {
+class LocalDataSource(private val realm: Realm, private val context: Context) {
 
     fun getTest(testId: Long): RealmTest {
         return realm.where(RealmTest::class.java).equalTo("id", testId).findFirst() ?: RealmTest()
     }
-
-    fun isCheckOrder(): Boolean = preference.isCheckOrder
 
     fun createObjectFromFirebase(firebaseTest: FirebaseTest) {
         realm.beginTransaction()

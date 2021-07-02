@@ -18,11 +18,13 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -30,6 +32,8 @@ class FirebaseActivity : BaseActivity() {
 
     private val viewModel: FirebaseViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
+
+    private val logger: TestMakerLogger by inject()
 
     private val controller: FirebaseTestController by lazy {
         FirebaseTestController(this)
@@ -100,6 +104,7 @@ class FirebaseActivity : BaseActivity() {
         val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String): Boolean {
+                logger.logSearchEvent(s)
                 viewModel.getTests(s)
                 return false
             }

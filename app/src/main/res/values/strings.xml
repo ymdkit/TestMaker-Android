@@ -304,6 +304,10 @@
     <string name="result_dialog_item_retry_all">All Questions</string>
     <string name="result_dialog_item_retry_only_incorrect">Only Incorect Questions</string>
     <string name="play_dialog_confirm_interrupt">Do you want to interrupt your answer?</string>
+    <string name="upload_dialog_already_uploaded">already uploaded this test</string>
+    <string name="upload_dialog_overwrite">overwrite</string>
+    <string name="upload_dialog_upload_as_other_test">upload as other question</string>
+    <string name="edit_hint_select_answer">answer</string>
 
 
 </resources>

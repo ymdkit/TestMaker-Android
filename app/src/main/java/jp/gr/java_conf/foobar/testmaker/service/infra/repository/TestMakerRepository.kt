@@ -14,20 +14,12 @@ import kotlinx.coroutines.withContext
 class TestMakerRepository(private val local: LocalDataSource,
                           private val remote: RemoteDataSource) {
 
-    fun isCheckOrder(): Boolean {
-        return local.isCheckOrder()
-    }
-
     suspend fun downloadTest(testId: String): FirebaseTest = withContext(Dispatchers.Default) {
         remote.downloadTest(testId)
     }
 
     fun createObjectFromFirebase(test: FirebaseTest) {
         local.createObjectFromFirebase(test)
-    }
-
-    fun updateProfile(userName: String, completion: () -> Unit) {
-        remote.updateProfile(userName, completion)
     }
 
     suspend fun createTest(test: RealmTest, overview: String, isPublic: Boolean = true): String {
@@ -60,8 +52,6 @@ class TestMakerRepository(private val local: LocalDataSource,
     fun setUser(user: FirebaseUser?) {
         remote.setUser(user)
     }
-
-    fun getTestsQuery() = remote.getTestsQuery()
 
     fun getTest(testId: Long): RealmTest = local.getTest(testId)
 

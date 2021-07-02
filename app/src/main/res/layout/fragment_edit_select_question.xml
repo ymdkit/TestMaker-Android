@@ -67,7 +67,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/set_answer_write"
                         style="@style/EditText.MultiLine"
-                        android:hint="@string/hint_answer"
+                        android:hint="@string/edit_hint_select_answer"
                         android:text="@={viewModel.answer}" />
 
                 </com.google.android.material.textfield.TextInputLayout>

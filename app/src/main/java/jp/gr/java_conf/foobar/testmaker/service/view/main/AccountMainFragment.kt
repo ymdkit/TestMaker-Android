@@ -23,6 +23,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
@@ -38,6 +39,8 @@ class AccountMainFragment : Fragment() {
     private val viewModel: FirebaseMyPageViewModel by viewModel()
     private val testViewModel: TestViewModel by sharedViewModel()
     private val firebaseAnalytic: FirebaseAnalytics by inject()
+
+    private val logger: TestMakerLogger by inject()
 
     var listener: OnTestDownloadedListener? = null
 
@@ -144,6 +147,7 @@ class AccountMainFragment : Fragment() {
                 onSuccess = {
                     viewModel.convert(it)
 
+                    logger.logCreateTestEvent(it.name, "self-download")
                     requireContext().showToast(getString(R.string.msg_success_download_test, it.name))
                     listener?.onDownloaded()
                 },

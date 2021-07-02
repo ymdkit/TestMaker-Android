@@ -17,6 +17,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.android.synthetic.main.activity_edit_pro.*
@@ -31,6 +32,7 @@ class EditProActivity : BaseActivity() {
 
     private val testViewModel: TestViewModel by viewModel()
     private val service: CloudFunctionsService by inject()
+    private val logger: TestMakerLogger by inject()
 
     private lateinit var test: Test
 
@@ -84,6 +86,7 @@ class EditProActivity : BaseActivity() {
     }
 
     private fun saveText() {
+        logger.logEvent("edit_by_raw_text")
         val text = edit_test.text.toString()
         lifecycleScope.launch {
             showProgress()
