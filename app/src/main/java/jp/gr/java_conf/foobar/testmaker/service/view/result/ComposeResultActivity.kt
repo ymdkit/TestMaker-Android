@@ -28,6 +28,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
@@ -60,11 +61,13 @@ class ComposeResultActivity : BaseActivity() {
 
     private val viewModel: ResultViewModel by viewModel { parametersOf(testId) }
     private val auth: Auth by inject()
+    private val logger: TestMakerLogger by inject()
 
     @ExperimentalMaterialApi
     @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             TestMakerAndroidTheme {
                 Scaffold(
@@ -164,6 +167,8 @@ class ComposeResultActivity : BaseActivity() {
             resources.getStringArray(R.array.upload_setting_study_plus_values)[1] ->
                 viewModel.createStudyPlusRecord(intent.getLongExtra("duration", 0), this)
         }
+
+        logger.logAnsweredTestEvent(viewModel.test.title, viewModel.questions.size)
     }
 
     override fun onBackPressed() {
