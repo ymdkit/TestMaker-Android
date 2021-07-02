@@ -15,6 +15,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.TestDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.*
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.category.EditCategoryViewModel
@@ -71,6 +72,7 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
             consumerSecret = info.metaData.getString("secret_studyplus_comsumer_key")!!
         )
     }
+    single { TestMakerLogger(get()) }
     viewModel { CategoryViewModel(get()) }
     viewModel { TestViewModel(get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }
