@@ -38,7 +38,7 @@ android {
     }
 
     packagingOptions {
-        resources{
+        resources {
             excludes.add("META-INF/atomicfu.kotlin_module")
         }
     }
@@ -48,14 +48,17 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             manifestPlaceholders["studyplus_consumer_key"] = env.STUDYPLUS_CONSUMER_KEY.value
-            manifestPlaceholders["secret_studyplus_consumer_key"] = env.SECRET_STUDYPLUS_CONSUMER_KEY.value
+            manifestPlaceholders["secret_studyplus_consumer_key"] =
+                env.SECRET_STUDYPLUS_CONSUMER_KEY.value
             manifestPlaceholders["testmaker_admob_key"] = env.TESTMAKER_ADMOB_KEY.value
-            manifestPlaceholders["testmaker_admob_rewarded_key"] = env.TESTMAKER_ADMOB_REWARDED_KEY.value
+            manifestPlaceholders["testmaker_admob_rewarded_key"] =
+                env.TESTMAKER_ADMOB_REWARDED_KEY.value
             signingConfig = signingConfigs.getByName("release")
         }
         getByName("debug") {
             manifestPlaceholders["studyplus_consumer_key"] = env.STUDYPLUS_CONSUMER_KEY.value
-            manifestPlaceholders["secret_studyplus_consumer_key"] = env.SECRET_STUDYPLUS_CONSUMER_KEY.value
+            manifestPlaceholders["secret_studyplus_consumer_key"] =
+                env.SECRET_STUDYPLUS_CONSUMER_KEY.value
             manifestPlaceholders["testmaker_admob_key"] = env.TESTMAKER_ADMOB_KEY.value
             applicationIdSuffix = ".debug"
         }
@@ -123,6 +126,7 @@ dependencies {
     implementation("com.google.firebase:firebase-dynamic-links")
     implementation("com.google.firebase:firebase-dynamic-links-ktx")
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.firebaseui:firebase-ui-auth:4.3.1")
     implementation("com.firebaseui:firebase-ui-storage:4.1.0")
