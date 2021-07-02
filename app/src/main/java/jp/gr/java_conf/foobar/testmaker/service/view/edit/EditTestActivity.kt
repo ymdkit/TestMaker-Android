@@ -85,8 +85,6 @@ class EditTestActivity : BaseActivity() {
         }
 
         binding.buttonAdd.setOnClickListener {
-            sendFirebaseEvent("add-test")
-
             test?.let {
                 testViewModel.update(it, binding.editTitle.text.toString(), binding.colorChooser.getColorId(), controller.selectedCategory?.name)
             } ?: run {

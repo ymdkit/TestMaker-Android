@@ -30,7 +30,6 @@ class EditCategoryActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.buttonAdd.setOnClickListener {
-            sendFirebaseEvent("add-category")
             editCategoryViewModel.titleCategory.value?.let {
                 categoryViewModel.create(Category(name = it, color = binding.colorChooser.getColorId())).also { id ->
                     setResult(Activity.RESULT_OK, Intent().apply {
