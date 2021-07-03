@@ -13,10 +13,12 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionsBuilder
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.setFontSize
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ComposeResultActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -35,6 +37,7 @@ class PlayActivity : BaseActivity() {
         )
     }
     private val testViewModel: TestViewModel by viewModel()
+    private val logger: TestMakerLogger by inject()
 
     private lateinit var test: Test
 
@@ -88,7 +91,7 @@ class PlayActivity : BaseActivity() {
             }
 
             playViewModel.selectedQuestion.value?.let { question ->
-                sendFirebaseEvent(question.getFirebaseEvent())
+                logger.logEvent(question.getFirebaseEvent())
                 testViewModel.update(
                     question.copy(
                         isSolved = true,

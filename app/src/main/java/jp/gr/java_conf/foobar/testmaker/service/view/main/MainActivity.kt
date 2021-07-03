@@ -65,15 +65,20 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
 
         binding.viewPager.offscreenPageLimit = 1
 
-        binding.viewPager.adapter = ViewPagerAdapter(this, listOf(
+        binding.viewPager.adapter = ViewPagerAdapter(
+            this, listOf(
                 LocalMainFragment(),
                 AccountMainFragment()
-        ))
+            )
+        )
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = listOf(getString(R.string.tab_local), getString(R.string.tab_remote))[position]
-            tab.icon = listOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_device_24, null),
-                    ResourcesCompat.getDrawable(resources, R.drawable.ic_account, null))[position]
+            tab.text =
+                listOf(getString(R.string.tab_local), getString(R.string.tab_remote))[position]
+            tab.icon = listOf(
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_device_24, null),
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_account, null)
+            )[position]
         }.attach()
 
         createAd(binding.adView)
@@ -85,12 +90,24 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                 is BillingStatus.Error -> {
                     when (it.responseCode) {
                         BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
-                            Toast.makeText(baseContext, getString(R.string.alrady_removed_ad), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                baseContext,
+                                getString(R.string.alrady_removed_ad),
+                                Toast.LENGTH_SHORT
+                            ).show()
                             binding.adView.visibility = View.GONE
                             viewModel.removeAd()
                         }
-                        BillingClient.BillingResponseCode.USER_CANCELED -> Toast.makeText(baseContext, getString(R.string.purchase_canceled), Toast.LENGTH_SHORT).show()
-                        else -> Toast.makeText(baseContext, getString(R.string.error), Toast.LENGTH_SHORT).show()
+                        BillingClient.BillingResponseCode.USER_CANCELED -> Toast.makeText(
+                            baseContext,
+                            getString(R.string.purchase_canceled),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        else -> Toast.makeText(
+                            baseContext,
+                            getString(R.string.error),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
                 is BillingStatus.PurchaseSuccess -> {
@@ -114,7 +131,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         lifecycleScope.launch {
             val pendingDynamicLinkData = withContext(Dispatchers.Default) {
                 FirebaseDynamicLinks.getInstance()
-                        .getDynamicLink(intent).await()
+                    .getDynamicLink(intent).await()
             }
 
             pendingDynamicLinkData ?: return@launch
@@ -148,19 +165,19 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
     private fun actionDownload(documentId: String) = lifecycleScope.launch {
 
         executeJobWithDialog(
-                title = getString(R.string.downloading),
-                task = {
-                    viewModel.downloadTest(documentId)
-                },
-                onSuccess = {
-                    viewModel.convert(it)
-                    testViewModel.refresh()
-                    showToast(getString(R.string.msg_success_download_test, it.name))
-                    logger.logCreateTestEvent(it.name, "dynamic_links")
-                },
-                onFailure = {
-                    showToast(getString(R.string.msg_failure_download_test))
-                }
+            title = getString(R.string.downloading),
+            task = {
+                viewModel.downloadTest(documentId)
+            },
+            onSuccess = {
+                viewModel.convert(it)
+                testViewModel.refresh()
+                showToast(getString(R.string.msg_success_download_test, it.name))
+                logger.logCreateTestEvent(it.name, "dynamic_links")
+            },
+            onFailure = {
+                showToast(getString(R.string.msg_failure_download_test))
+            }
         )
     }
 
@@ -175,8 +192,12 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
             when (menuItem.itemId) {
                 R.id.nav_help //editProActivityにも同様の記述
                 -> {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri
-                            .parse(getString(R.string.help_url))))
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW, Uri
+                                .parse(getString(R.string.help_url))
+                        )
+                    )
                 }
                 R.id.nav_feedback
                 -> {
@@ -184,14 +205,24 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                     val emailIntent = Intent(Intent.ACTION_SENDTO)
                     emailIntent.data = Uri.parse("mailto:")
                     emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("testmaker.contact@gmail.com"))
-                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject_feedback))
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_body_feedback, Build.VERSION.SDK_INT))
+                    emailIntent.putExtra(
+                        Intent.EXTRA_SUBJECT,
+                        getString(R.string.email_subject_feedback)
+                    )
+                    emailIntent.putExtra(
+                        Intent.EXTRA_TEXT,
+                        getString(R.string.email_body_feedback, Build.VERSION.SDK_INT)
+                    )
                     startActivity(Intent.createChooser(emailIntent, null))
 
                 }
                 R.id.nav_review -> {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri
-                            .parse("https://play.google.com/store/apps/details?id=jp.gr.java_conf.foobar.testmaker.service&amp;hl=ja")))
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW, Uri
+                                .parse("https://play.google.com/store/apps/details?id=jp.gr.java_conf.foobar.testmaker.service&amp;hl=ja")
+                        )
+                    )
                 }
                 R.id.nav_import -> {
 
@@ -202,7 +233,10 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                 }
                 R.id.nav_paste -> {
 
-                    val dialogLayout = layoutInflater.inflate(R.layout.dialog_paste, findViewById(R.id.layout_dialog_paste))
+                    val dialogLayout = layoutInflater.inflate(
+                        R.layout.dialog_paste,
+                        findViewById(R.id.layout_dialog_paste)
+                    )
 
                     val builder = AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                     builder.setView(dialogLayout)
@@ -223,25 +257,38 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                 }
 
                 R.id.nav_online -> {
-                    startActivityForResult(Intent(this@MainActivity, FirebaseActivity::class.java), REQUEST_EDIT)
+                    startActivityForResult(
+                        Intent(this@MainActivity, FirebaseActivity::class.java),
+                        REQUEST_EDIT
+                    )
                 }
                 R.id.nav_group -> {
                     startActivity(Intent(this@MainActivity, GroupActivity::class.java))
                 }
                 R.id.nav_move_questions -> {
-                    startActivityForResult(Intent(this@MainActivity, MoveQuestionsActivity::class.java), REQUEST_EDIT)
+                    startActivityForResult(
+                        Intent(
+                            this@MainActivity,
+                            MoveQuestionsActivity::class.java
+                        ), REQUEST_EDIT
+                    )
                 }
                 R.id.nav_remove_ad -> {
 
-                    viewModel.purchaseRemoveAd(this, BillingItem(getString(R.string.sku_remove_ad), BillingClient.SkuType.INAPP))
+                    viewModel.purchaseRemoveAd(
+                        this,
+                        BillingItem(getString(R.string.sku_remove_ad), BillingClient.SkuType.INAPP)
+                    )
                 }
             }
             false
         }
 
-        drawerToggle = ActionBarDrawerToggle(this, binding.drawerLayout,
-                binding.toolbar, R.string.add,
-                R.string.add)
+        drawerToggle = ActionBarDrawerToggle(
+            this, binding.drawerLayout,
+            binding.toolbar, R.string.add,
+            R.string.add
+        )
 
         binding.drawerLayout.addDrawerListener(drawerToggle)
 
@@ -318,21 +365,31 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
     }
 
     private fun loadTestByText(title: String = "", text: String) {
-        lifecycleScope.launch {
-            showProgress()
-            runCatching {
+
+        executeJobWithDialog(
+            title = getString(R.string.downloading),
+            task = {
                 withContext(Dispatchers.IO) {
-                    service.textToTest(title, text.replace("\n", "¥n").replace("<", "&lt;"), if (Locale.getDefault().language == "ja") "ja" else "en")
+                    service.textToTest(
+                        title,
+                        text.replace("\n", "¥n").replace("<", "&lt;"),
+                        if (Locale.getDefault().language == "ja") "ja" else "en"
+                    )
                 }
-            }.onSuccess {
+            },
+            onSuccess = {
                 testViewModel.create(it)
                 logger.logCreateTestEvent(it.title, "file")
-                Toast.makeText(baseContext, baseContext.getString(R.string.message_success_load, it.title), Toast.LENGTH_LONG).show()
-            }.onFailure {
+                Toast.makeText(
+                    baseContext,
+                    baseContext.getString(R.string.message_success_load, it.title),
+                    Toast.LENGTH_LONG
+                ).show()
+            },
+            onFailure = {
                 showErrorToast(it)
             }
-            hideProgress()
-        }
+        )
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -340,7 +397,10 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         drawerToggle.syncState()
     }
 
-    private inner class ViewPagerAdapter(activity: FragmentActivity, private val fragments: List<Fragment>) : FragmentStateAdapter(activity) {
+    private inner class ViewPagerAdapter(
+        activity: FragmentActivity,
+        private val fragments: List<Fragment>
+    ) : FragmentStateAdapter(activity) {
         override fun getItemCount(): Int = fragments.size
         override fun createFragment(position: Int): Fragment = fragments[position]
     }

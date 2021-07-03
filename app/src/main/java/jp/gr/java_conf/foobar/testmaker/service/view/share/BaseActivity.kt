@@ -12,7 +12,6 @@ import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import com.google.firebase.analytics.FirebaseAnalytics
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import org.koin.android.ext.android.inject
@@ -24,8 +23,6 @@ import org.koin.android.ext.android.inject
 open class BaseActivity : AppCompatActivity() {
 
     val sharedPreferenceManager: SharedPreferenceManager by inject()
-
-    private val firebaseAnalytic: FirebaseAnalytics by inject()
 
     private var progress: AlertDialog? = null
 
@@ -56,10 +53,6 @@ open class BaseActivity : AppCompatActivity() {
                 sharedPreferenceManager.isRemovedAd = true
             }
         }
-    }
-
-    protected fun sendFirebaseEvent(event: String, bundle: Bundle = Bundle()) {
-        firebaseAnalytic.logEvent(event, bundle)
     }
 
     protected fun initToolBar() {
