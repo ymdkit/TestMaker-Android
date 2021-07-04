@@ -3,7 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.domain
 import android.os.Parcelable
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.extensions.allIndexed
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
