@@ -41,6 +41,7 @@ class AccountMainFragment : Fragment() {
     private val firebaseAnalytic: FirebaseAnalytics by inject()
 
     private val logger: TestMakerLogger by inject()
+    private val dynamicLinksCreator: DynamicLinksCreator by inject()
 
     var listener: OnTestDownloadedListener? = null
 
@@ -164,7 +165,7 @@ class AccountMainFragment : Fragment() {
         requireActivity().executeJobWithDialog(
                 title = getString(R.string.msg_creating_share_test_link),
                 task = {
-                    DynamicLinksCreator.createShareTestDynamicLinks(document.id)
+                    dynamicLinksCreator.createShareTestDynamicLinks(document.id)
                 },
                 onSuccess = {
                     it.shortLink?.let {

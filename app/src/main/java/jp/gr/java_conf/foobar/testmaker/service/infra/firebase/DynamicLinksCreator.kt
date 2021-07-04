@@ -1,13 +1,15 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.firebase
 
+import android.content.Context
 import android.net.Uri
 import com.google.firebase.dynamiclinks.ktx.*
 import com.google.firebase.ktx.Firebase
+import jp.gr.java_conf.foobar.testmaker.service.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-object DynamicLinksCreator {
+class DynamicLinksCreator(private val context: Context) {
 
     suspend fun createShareTestDynamicLinks(documentId: String) =
             createDynamicLinks(link = Uri.parse("https://testmaker-1cb29.com/${documentId}"))
@@ -21,7 +23,9 @@ object DynamicLinksCreator {
             domainUriPrefix = ("https://testmaker.page.link")
 
             socialMetaTagParameters {
-                imageUrl = Uri.parse("https://ankimaker.com/img/logo-testmaker.png")
+                imageUrl = Uri.parse("https://ankimaker.com/img/ogp.png")
+                title = context.getString(R.string.app_name)
+                description = context.getString(R.string.app_description)
             }
 
             androidParameters {

@@ -294,4 +294,5 @@
     <string name="upload_dialog_overwrite">内容を上書きする</string>
     <string name="upload_dialog_upload_as_other_test">別の問題集としてアップロードする</string>
     <string name="edit_hint_select_answer">正解の選択肢</string>
+    <string name="app_description">「暗記メーカー」は、自学自習の効率化を目的とした問題集作成用のアプリです。資格習得のための勉強や、複数人への問題集の配布のために利用できます。</string>
 </resources>

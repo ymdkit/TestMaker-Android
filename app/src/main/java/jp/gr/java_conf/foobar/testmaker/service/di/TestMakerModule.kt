@@ -14,6 +14,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.CategoryDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.TestDataSource
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.*
@@ -73,6 +74,7 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
         )
     }
     single { TestMakerLogger(get()) }
+    single { DynamicLinksCreator(get()) }
     viewModel { CategoryViewModel(get()) }
     viewModel { TestViewModel(get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }
