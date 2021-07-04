@@ -22,7 +22,6 @@ android {
         }
     }
     compileSdk = Deps.compileSdkVersion
-    buildToolsVersion = "29.0.2"
 
     defaultConfig {
         applicationId = "jp.gr.java_conf.foobar.testmaker.service"
