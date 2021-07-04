@@ -141,7 +141,6 @@ dependencies {
     implementation("com.airbnb.android:epoxy:3.11.0")
     implementation("com.airbnb.android:epoxy-databinding:3.11.0")
     implementation("com.github.chrisbanes:PhotoView:2.0.0")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
