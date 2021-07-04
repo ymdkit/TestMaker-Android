@@ -45,6 +45,7 @@ class GroupDetailFragment : Fragment() {
     private var group: Group? = null
 
     private lateinit var binding: FragmentGroupDetailBinding
+    private val dynamicLinksCreator: DynamicLinksCreator by inject()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -202,7 +203,7 @@ class GroupDetailFragment : Fragment() {
         requireActivity().executeJobWithDialog(
                 title = getString(R.string.msg_creating_invite_group_link),
                 task = {
-                    DynamicLinksCreator.createInviteGroupDynamicLinks(group.id)
+                    dynamicLinksCreator.createInviteGroupDynamicLinks(group.id)
                 },
                 onSuccess = {
                     it.shortLink?.let {
@@ -281,7 +282,7 @@ class GroupDetailFragment : Fragment() {
         requireActivity().executeJobWithDialog(
                 title = getString(R.string.msg_creating_share_test_link),
                 task = {
-                    DynamicLinksCreator.createShareTestDynamicLinks(document.id)
+                    dynamicLinksCreator.createShareTestDynamicLinks(document.id)
                 },
                 onSuccess = {
                     it.shortLink?.let {

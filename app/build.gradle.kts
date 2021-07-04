@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-android-extensions")
+    id("kotlin-parcelize")
     id("kotlin-kapt")
     id("realm-android")
     id("com.google.android.gms.oss-licenses-plugin")
@@ -22,15 +22,14 @@ android {
         }
     }
     compileSdk = Deps.compileSdkVersion
-    buildToolsVersion = "29.0.2"
 
     defaultConfig {
         applicationId = "jp.gr.java_conf.foobar.testmaker.service"
         minSdk = Deps.minSdkVersion
         targetSdk = Deps.targetSdkVersion
         multiDexEnabled = true
-        versionCode = 142
-        versionName = "4.0.7"
+        versionCode = 143
+        versionName = "4.0.8"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -79,8 +78,6 @@ android {
     compileOptions {
         sourceCompatibility(JavaVersion.VERSION_1_8)
         targetCompatibility(JavaVersion.VERSION_1_8)
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     buildFeatures {
@@ -93,10 +90,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.0-beta08"
+        kotlinCompilerExtensionVersion = "1.0.0-rc01"
     }
 }
 
@@ -107,13 +103,13 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.compose.ui:ui:1.0.0-beta08")
-    implementation("androidx.compose.ui:ui-tooling:1.0.0-beta08")
-    implementation("androidx.compose.foundation:foundation:1.0.0-beta08")
-    implementation("androidx.compose.material:material:1.0.0-beta08")
-    implementation("androidx.compose.material:material-icons-core:1.0.0-beta08")
-    implementation("androidx.compose.material:material-icons-extended:1.0.0-beta08")
-    implementation("androidx.compose.runtime:runtime-livedata:1.0.0-beta08")
+    implementation("androidx.compose.ui:ui:1.0.0-rc01")
+    implementation("androidx.compose.ui:ui-tooling:1.0.0-rc01")
+    implementation("androidx.compose.foundation:foundation:1.0.0-rc01")
+    implementation("androidx.compose.material:material:1.0.0-rc01")
+    implementation("androidx.compose.material:material-icons-core:1.0.0-rc01")
+    implementation("androidx.compose.material:material-icons-extended:1.0.0-rc01")
+    implementation("androidx.compose.runtime:runtime-livedata:1.0.0-rc01")
     implementation("com.google.android.gms:play-services-ads:19.3.0")
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("com.google.android.play:core-ktx:1.8.0")
@@ -139,14 +135,12 @@ dependencies {
     implementation("org.koin:koin-android:1.0.2")
     implementation("org.koin:koin-java:1.0.2")
     implementation("org.koin:koin-androidx-viewmodel:1.0.2")
-    implementation("androidx.paging:paging-runtime:2.1.2")
     implementation("androidx.preference:preference:1.1.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
     implementation("com.airbnb.android:epoxy:3.11.0")
     implementation("com.airbnb.android:epoxy-databinding:3.11.0")
     implementation("com.github.chrisbanes:PhotoView:2.0.0")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")

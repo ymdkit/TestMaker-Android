@@ -3,7 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.domain
 import android.os.Parcelable
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.extensions.allIndexed
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
@@ -36,13 +36,14 @@ data class Question(
 
     fun isCorrect(yourAnswer: String, isReverse: Boolean, isCaseInsensitive: Boolean): Boolean =
             if (isCaseInsensitive)
-                yourAnswer.toLowerCase(Locale.ENGLISH) == this.getReversibleAnswer(isReverse).toLowerCase(Locale.ENGLISH)
+                yourAnswer.lowercase(Locale.ENGLISH) == this.getReversibleAnswer(isReverse)
+                    .lowercase(Locale.ENGLISH)
             else
                 yourAnswer == this.getReversibleAnswer(isReverse)
 
     fun isCorrect(yourAnswers: List<String>, isCaseInsensitive: Boolean = false): Boolean {
-        val yours = if (isCaseInsensitive) yourAnswers.map { it.toLowerCase(Locale.ENGLISH) } else yourAnswers
-        val original = if (isCaseInsensitive) answers.map { it.toLowerCase(Locale.ENGLISH) } else answers
+        val yours = if (isCaseInsensitive) yourAnswers.map { it.lowercase(Locale.ENGLISH) } else yourAnswers
+        val original = if (isCaseInsensitive) answers.map { it.lowercase(Locale.ENGLISH) } else answers
 
         if (yours.size != original.size) return false
 

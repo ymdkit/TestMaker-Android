@@ -57,6 +57,7 @@ class LocalMainFragment : Fragment() {
     private val testViewModel: TestViewModel by sharedViewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
     private val service: CloudFunctionsService by inject()
+    private val dynamicLinksCreator: DynamicLinksCreator by inject()
 
     private var selectedTest: Test? = null //ログイン時に一度画面から離れるので選択中の値を保持
 
@@ -307,7 +308,7 @@ class LocalMainFragment : Fragment() {
             requireActivity().executeJobWithDialog(
                     title = getString(R.string.msg_creating_share_test_link),
                     task = {
-                        DynamicLinksCreator.createShareTestDynamicLinks(documentId)
+                        dynamicLinksCreator.createShareTestDynamicLinks(documentId)
                     },
                     onSuccess = {
                         it.shortLink?.let {
