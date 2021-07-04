@@ -22,7 +22,6 @@
   * アーキテクチャ
     * DataBinding
     * LiveData
-    * Paging
     * ViewModel
   * 動作
     * Preference
