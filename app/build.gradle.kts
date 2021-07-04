@@ -136,7 +136,7 @@ dependencies {
     implementation("org.koin:koin-java:1.0.2")
     implementation("org.koin:koin-androidx-viewmodel:1.0.2")
     implementation("androidx.preference:preference:1.1.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
     implementation("com.airbnb.android:epoxy:3.11.0")
     implementation("com.airbnb.android:epoxy-databinding:3.11.0")
