@@ -13,7 +13,6 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMoveQuestion
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
-import kotlinx.android.synthetic.main.activity_move_questions.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MoveQuestionsActivity : BaseActivity() {
@@ -24,20 +23,21 @@ class MoveQuestionsActivity : BaseActivity() {
 
     lateinit var fromTest: Test
 
+    private val binding: ActivityMoveQuestionsBinding by lazy { DataBindingUtil.setContentView(this, R.layout.activity_move_questions)}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_move_questions)
 
-        val binding = DataBindingUtil.setContentView<ActivityMoveQuestionsBinding>(this, R.layout.activity_move_questions)
         createAd(binding.adView)
 
         initToolBar()
 
         initViews()
 
-        button_save.setOnClickListener {
+        binding.buttonSave.setOnClickListener {
 
-            if (spinner_to_test.selectedItemPosition - 1 == spinner_from_test.selectedItemPosition) {
+            if (binding.spinnerToTest.selectedItemPosition - 1 == binding.spinnerFromTest.selectedItemPosition) {
 
                 Toast.makeText(baseContext, getString(R.string.msg_same_test), Toast.LENGTH_SHORT).show()
 
@@ -48,7 +48,7 @@ class MoveQuestionsActivity : BaseActivity() {
 
             val selectedQuestions = questionAdapter.getItems().filterIndexed { index, _ -> questionAdapter.checkBoxStates[index] }
 
-            if (spinner_to_test.selectedItemPosition == 0) {
+            if (binding.spinnerToTest.selectedItemPosition == 0) {
 
                 testViewModel.create(Test(
                         title = getString(R.string.test),
@@ -58,13 +58,13 @@ class MoveQuestionsActivity : BaseActivity() {
 
             } else {
 
-                val test = testViewModel.tests[spinner_to_test.selectedItemPosition - 1]
+                val test = testViewModel.tests[binding.spinnerToTest.selectedItemPosition - 1]
                 testViewModel.update(
                         test.copy(questions = test.questions + selectedQuestions)
                 )
             }
 
-            if (spinner_actions.selectedItemPosition == 0) {//「移動先」の時
+            if (binding.spinnerActions.selectedItemPosition == 0) {//「移動先」の時
 
                 testViewModel.update(
                         fromTest.copy(questions = fromTest.questions.filterIndexed { index, _ -> !questionAdapter.checkBoxStates[index] })
@@ -88,7 +88,7 @@ class MoveQuestionsActivity : BaseActivity() {
 
         fromAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        spinner_from_test.adapter = fromAdapter
+        binding.spinnerFromTest.adapter = fromAdapter
 
         val toArray = Array(tests.size + 1) { i ->
             if (i == 0) getString(R.string.new_test) else tests[i - 1].title
@@ -99,18 +99,18 @@ class MoveQuestionsActivity : BaseActivity() {
 
         toAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        spinner_to_test.adapter = toAdapter
+        binding.spinnerToTest.adapter = toAdapter
 
-        spinner_from_test.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinnerFromTest.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                 fromTest = tests[position]
 
                 questionAdapter = CheckBoxQuestionAdapter(baseContext, tests[position].questions.toTypedArray())
 
-                list_questions.adapter = questionAdapter
+                binding.listQuestions.adapter = questionAdapter
 
-                check_all.setOnCheckedChangeListener { _, bool ->
+                binding.checkAll.setOnCheckedChangeListener { _, bool ->
 
                     questionAdapter.checkBoxStates = Array(questionAdapter.itemCount) { bool }
                     questionAdapter.notifyDataSetChanged()

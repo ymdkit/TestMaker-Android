@@ -20,7 +20,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
-import kotlinx.android.synthetic.main.activity_edit_pro.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,6 +35,13 @@ class EditProActivity : BaseActivity() {
 
     private lateinit var test: Test
 
+    private val binding: ActivityEditProBinding by lazy {
+        DataBindingUtil.setContentView(
+            this,
+            R.layout.activity_edit_pro
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_pro)
@@ -44,29 +50,29 @@ class EditProActivity : BaseActivity() {
             test = it
         }
 
-        val binding = DataBindingUtil.setContentView<ActivityEditProBinding>(this, R.layout.activity_edit_pro)
         createAd(binding.adView)
 
         initToolBar()
 
-        button_save.setOnClickListener {
+        binding.buttonSave.setOnClickListener {
             if (sharedPreferenceManager.confirmSave) {
                 saveText()
                 return@setOnClickListener
             }
 
-            val dialogLayout = LayoutInflater.from(this@EditProActivity).inflate(R.layout.dialog_alert_confirm, findViewById(R.id.layout_dialog_confirm))
+            val dialogLayout = LayoutInflater.from(this@EditProActivity)
+                .inflate(R.layout.dialog_alert_confirm, findViewById(R.id.layout_dialog_confirm))
             val checkBox = dialogLayout.findViewById<CheckBox>(R.id.check_alert)
 
             AlertDialog.Builder(this@EditProActivity, R.style.MyAlertDialogStyle)
-                    .setView(dialogLayout)
-                    .setTitle(getString(R.string.confirm))
-                    .setPositiveButton(android.R.string.ok) { _, _ ->
-                        if (checkBox.isChecked) sharedPreferenceManager.confirmSave = true
-                        saveText()
-                    }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show()
+                .setView(dialogLayout)
+                .setTitle(getString(R.string.confirm))
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    if (checkBox.isChecked) sharedPreferenceManager.confirmSave = true
+                    saveText()
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
 
         }
 
@@ -77,7 +83,7 @@ class EditProActivity : BaseActivity() {
                     service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
                 }
             }.onSuccess {
-                edit_test.setText(it.text)
+                binding.editTest.setText(it.text)
             }.onFailure {
                 showErrorToast(it)
             }
@@ -87,12 +93,15 @@ class EditProActivity : BaseActivity() {
 
     private fun saveText() {
         logger.logEvent("edit_by_raw_text")
-        val text = edit_test.text.toString()
+        val text = binding.editTest.text.toString()
         lifecycleScope.launch {
             showProgress()
             runCatching {
                 withContext(Dispatchers.IO) {
-                    service.textToTest(text = text.replace("\n", "¥n").replace("<", "&lt;"), lang = if (Locale.getDefault().language == "ja") "ja" else "en")
+                    service.textToTest(
+                        text = text.replace("\n", "¥n").replace("<", "&lt;"),
+                        lang = if (Locale.getDefault().language == "ja") "ja" else "en"
+                    )
                 }
             }.onSuccess {
                 testViewModel.update(it.copy(id = test.id, order = test.order))
@@ -123,8 +132,12 @@ class EditProActivity : BaseActivity() {
 
         } else if (actionId == R.id.nav_help) {
 
-            startActivity(Intent(Intent.ACTION_VIEW, Uri
-                    .parse(getString(R.string.help_url))))
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW, Uri
+                        .parse(getString(R.string.help_url))
+                )
+            )
 
         }
 
