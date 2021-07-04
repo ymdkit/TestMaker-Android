@@ -19,6 +19,11 @@ object DynamicLinksCreator {
         Firebase.dynamicLinks.shortLinkAsync {
             this.link = link
             domainUriPrefix = ("https://testmaker.page.link")
+
+            socialMetaTagParameters {
+                imageUrl = Uri.parse("https://ankimaker.com/img/logo-testmaker.png")
+            }
+
             androidParameters {
                 minimumVersion = 87
             }

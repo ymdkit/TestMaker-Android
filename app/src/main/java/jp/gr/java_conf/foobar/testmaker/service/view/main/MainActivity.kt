@@ -142,7 +142,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
 
     private fun handleDynamicLink(link: String) {
 
-        val regex = Regex("""(?<=https://testmaker-1cb29\.com/).*""")
+        val regex = Regex("""(?<=https://testmaker-1cb29\.com/).*|(?<=https://ankimaker\.com/).*""")
         val result = regex.find(link, 0)
 
         result?.value?.let {
