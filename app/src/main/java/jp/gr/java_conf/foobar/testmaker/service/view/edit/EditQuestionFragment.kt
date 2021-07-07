@@ -20,8 +20,10 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -30,11 +32,15 @@ import java.util.*
 abstract class EditQuestionFragment : Fragment() {
     abstract val editQuestionViewModel: EditQuestionViewModel
     private val testViewModel: TestViewModel by sharedViewModel()
+    private val logger: TestMakerLogger by inject()
 
     private val fileName: String
         get() {
             val c = Calendar.getInstance()
-            return c.get(Calendar.YEAR).toString() + "_" + (c.get(Calendar.MONTH) + 1) + "_" + c.get(Calendar.DAY_OF_MONTH) + "_" + c.get(Calendar.HOUR_OF_DAY) + "_" + c.get(Calendar.MINUTE) + "_" + c.get(Calendar.SECOND) + "_" + c.get(Calendar.MILLISECOND) + ".png"
+            return c.get(Calendar.YEAR)
+                .toString() + "_" + (c.get(Calendar.MONTH) + 1) + "_" + c.get(Calendar.DAY_OF_MONTH) + "_" + c.get(
+                Calendar.HOUR_OF_DAY
+            ) + "_" + c.get(Calendar.MINUTE) + "_" + c.get(Calendar.SECOND) + "_" + c.get(Calendar.MILLISECOND) + ".png"
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,34 +69,36 @@ abstract class EditQuestionFragment : Fragment() {
 
         try {
 
-            val dialogLayout = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_crop,
-                    requireActivity().findViewById(R.id.layout_dialog_crop_image))
+            val dialogLayout = LayoutInflater.from(requireActivity()).inflate(
+                R.layout.dialog_crop,
+                requireActivity().findViewById(R.id.layout_dialog_crop_image)
+            )
 
             val cropView = dialogLayout.findViewById<CropImageView>(R.id.cropImageView)
             cropView.imageBitmap = bitmap
 
             AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-                    .setView(dialogLayout)
-                    .setTitle(getString(R.string.trim))
-                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                .setView(dialogLayout)
+                .setTitle(getString(R.string.trim))
+                .setPositiveButton(android.R.string.ok) { _, _ ->
 
-                        val name = fileName
-                        lifecycleScope.launch {
-                            saveImage(name, cropView.croppedBitmap)
-                            editQuestionViewModel.imagePath.postValue(name)
-                        }
+                    val name = fileName
+                    lifecycleScope.launch {
+                        saveImage(name, cropView.croppedBitmap)
+                        editQuestionViewModel.imagePath.postValue(name)
                     }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show()
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
 
         } catch (e: IOException) {
             e.printStackTrace()
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>
-                                            , grantResults: IntArray
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
     ) {
         when (requestCode) {
             REQUEST_PERMISSION_CAMERA -> {
@@ -105,7 +113,9 @@ abstract class EditQuestionFragment : Fragment() {
     protected fun saveQuestion() {
         requireContext().showToast(getString(R.string.msg_save))
         if (editQuestionViewModel.selectedQuestion.id == Question().id) {
-            testViewModel.create(testViewModel.get(editQuestionViewModel.testId), editQuestionViewModel.createQuestion())
+            val question = editQuestionViewModel.createQuestion()
+            testViewModel.create(testViewModel.get(editQuestionViewModel.testId), question)
+            logger.logCreateQuestion(question, "self")
         } else {
             testViewModel.update(editQuestionViewModel.createQuestion())
             requireActivity().finish()
@@ -116,34 +126,41 @@ abstract class EditQuestionFragment : Fragment() {
 
     protected fun showAlertImage() {
         AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-                .setItems(
-                        if (!editQuestionViewModel.imagePath.value.isNullOrEmpty()) resources.getStringArray(R.array.action_image) else resources.getStringArray(R.array.action_image).take(2).toTypedArray()
-                ) { _, which ->
+            .setItems(
+                if (!editQuestionViewModel.imagePath.value.isNullOrEmpty()) resources.getStringArray(
+                    R.array.action_image
+                ) else resources.getStringArray(R.array.action_image).take(2).toTypedArray()
+            ) { _, which ->
 
-                    when (which) {
-                        CAMERA -> {
-                            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-                                    != PackageManager.PERMISSION_GRANTED) {
+                when (which) {
+                    CAMERA -> {
+                        if (ContextCompat.checkSelfPermission(
+                                requireContext(),
+                                Manifest.permission.CAMERA
+                            )
+                            != PackageManager.PERMISSION_GRANTED
+                        ) {
 
-                                requestPermissions(
-                                        arrayOf(Manifest.permission.CAMERA),
-                                        REQUEST_PERMISSION_CAMERA)
-                            } else {
-                                takePicture()
-                            }
-                        }
-                        GALLERY -> {
-                            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                            intent.addCategory(Intent.CATEGORY_OPENABLE)
-                            intent.type = "image/*"
-                            startActivityForResult(intent, REQUEST_SAF_PICK_IMAGE)
-                        }
-                        REMOVE -> {
-                            editQuestionViewModel.imagePath.value = ""
+                            requestPermissions(
+                                arrayOf(Manifest.permission.CAMERA),
+                                REQUEST_PERMISSION_CAMERA
+                            )
+                        } else {
+                            takePicture()
                         }
                     }
+                    GALLERY -> {
+                        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                        intent.addCategory(Intent.CATEGORY_OPENABLE)
+                        intent.type = "image/*"
+                        startActivityForResult(intent, REQUEST_SAF_PICK_IMAGE)
+                    }
+                    REMOVE -> {
+                        editQuestionViewModel.imagePath.value = ""
+                    }
                 }
-                .show()
+            }
+            .show()
 
     }
 

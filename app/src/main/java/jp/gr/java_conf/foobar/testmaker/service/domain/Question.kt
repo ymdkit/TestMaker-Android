@@ -56,15 +56,6 @@ data class Question(
         return true
     }
 
-    fun getFirebaseEvent() =
-            when (type) {
-                Constants.WRITE -> "play_write_question"
-                Constants.SELECT -> "play_select_question" + if (isAutoGenerateOthers) "_auto" else ""
-                Constants.COMPLETE -> "play_complete_question" + if (isCheckOrder) "_ordered" else ""
-                Constants.SELECT_COMPLETE -> "play_select_complete_question" + if (isCheckOrder) "_ordered" else "" + if (isAutoGenerateOthers) "_auto" else ""
-                else -> ""
-            } + if (imagePath.isNotEmpty()) "_image" else "" + if (explanation.isNotEmpty()) "_explanation" else ""
-
     private fun isReversible() = type == Constants.WRITE || type == Constants.COMPLETE
 
     companion object {
