@@ -165,6 +165,7 @@ class FirebaseActivity : BaseActivity() {
                     viewModel.convert(it)
 
                     Toast.makeText(this, getString(R.string.msg_success_download_test, it.name), Toast.LENGTH_SHORT).show()
+                    logger.logCreateTestEvent(it.name, "public-download")
                     val intent = Intent(this, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
