@@ -168,7 +168,7 @@ class ComposeResultActivity : BaseActivity() {
                 viewModel.createStudyPlusRecord(intent.getLongExtra("duration", 0), this)
         }
 
-        logger.logAnsweredTestEvent(viewModel.test.title, viewModel.questions.size)
+        logger.logAnsweredTestEvent(viewModel.test, viewModel.questions.size)
     }
 
     override fun onBackPressed() {
