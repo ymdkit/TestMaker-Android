@@ -2,7 +2,6 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,7 +22,6 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
 
     fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test, source = CreateTestSource.DYNAMIC_LINKS.title)
 
-    fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
     fun getUser(): FirebaseUser? = auth.getUser()
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
 
