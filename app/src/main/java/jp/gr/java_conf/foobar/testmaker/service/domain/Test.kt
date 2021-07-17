@@ -4,6 +4,7 @@ import android.os.Parcelable
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.TestMakerApplication
+import jp.gr.java_conf.foobar.testmaker.service.infra.api.TestResponse
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -74,6 +75,16 @@ data class Test(
             realmTest.documentId,
             realmTest.order,
             source = realmTest.source
+        )
+
+        fun createFromTestResponse(testResponse: TestResponse) = Test(
+            title = testResponse.title,
+            lang = testResponse.lang,
+            questions = testResponse.questions.mapIndexed { index, it ->
+                Question
+                    .createFromQuestionResponse(it, order = index)
+            },
+            source = CreateTestSource.FILE_IMPORT.title
         )
     }
 

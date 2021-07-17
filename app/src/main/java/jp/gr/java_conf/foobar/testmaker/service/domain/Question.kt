@@ -3,6 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.domain
 import android.os.Parcelable
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.extensions.allIndexed
+import jp.gr.java_conf.foobar.testmaker.service.infra.api.QuestionResponse
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -74,7 +75,19 @@ data class Question(
                 order = realmQuestion.order,
                 isCheckOrder = realmQuestion.isCheckOrder,
                 documentId = realmQuestion.documentId
+        )
 
+        fun createFromQuestionResponse(questionResponse: QuestionResponse, order: Int) = Question(
+            question = questionResponse.question,
+            answer = questionResponse.answer,
+            explanation = questionResponse.explanation,
+            answers = questionResponse.answers,
+            others = questionResponse.others,
+            type = questionResponse.type,
+            isCheckOrder = questionResponse.isCheckOrder,
+            isAutoGenerateOthers = questionResponse.isAutoGenerateOthers,
+            imagePath = questionResponse.imagePath,
+            order = order
         )
     }
 }

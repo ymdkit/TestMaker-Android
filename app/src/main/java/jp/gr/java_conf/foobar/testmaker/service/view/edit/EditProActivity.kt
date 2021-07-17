@@ -104,7 +104,7 @@ class EditProActivity : BaseActivity() {
                     )
                 }
             }.onSuccess {
-                testViewModel.update(it.copy(id = test.id, order = test.order))
+                testViewModel.update(Test.createFromTestResponse(it).copy(id = test.id, order = test.order))
                 showToast(getString(R.string.message_success_update))
             }.onFailure {
                 showErrorToast(it)

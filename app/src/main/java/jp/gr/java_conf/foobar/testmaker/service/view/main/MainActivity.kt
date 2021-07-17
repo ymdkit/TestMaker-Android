@@ -25,6 +25,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
@@ -378,7 +379,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                 }
             },
             onSuccess = {
-                testViewModel.create(it)
+                testViewModel.create(Test.createFromTestResponse(it))
                 logger.logCreateTestEvent(it.title, "file")
                 Toast.makeText(
                     baseContext,
