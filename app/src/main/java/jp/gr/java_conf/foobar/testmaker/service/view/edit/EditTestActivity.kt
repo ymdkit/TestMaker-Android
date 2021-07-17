@@ -94,7 +94,7 @@ class EditTestActivity : BaseActivity() {
                     color = binding.colorChooser.getColorId(),
                     category = controller.selectedCategory?.name,
                     source = CreateTestSource.SELF.title)
-                logger.logCreateTestEvent(binding.editTitle.text.toString(), "self")
+                logger.logCreateTestEvent(binding.editTitle.text.toString(), CreateTestSource.SELF.title)
             }
 
             showToast(getString(R.string.msg_save_test))

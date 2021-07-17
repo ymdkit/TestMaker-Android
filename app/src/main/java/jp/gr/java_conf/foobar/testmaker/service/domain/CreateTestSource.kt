@@ -4,7 +4,7 @@ enum class CreateTestSource(val title: String) {
     SELF("self"),
     DYNAMIC_LINKS("dynamic_links"),
     FILE_IMPORT("file"),
-    SELF_DOWNLOAD("self_download"),
-    PUBLIC_DOWNLOAD("public_download"),
-    GROUP_DOWNLOAD("group_download")
+    SELF_DOWNLOAD("self-download"),
+    PUBLIC_DOWNLOAD("public-download"),
+    GROUP_DOWNLOAD("group-download")
 }
