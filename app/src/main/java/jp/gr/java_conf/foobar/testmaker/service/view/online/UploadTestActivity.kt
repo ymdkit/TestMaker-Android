@@ -15,9 +15,11 @@ import com.google.android.gms.ads.rewarded.RewardedAdCallback
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityUploadTestBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.UploadTestDestination
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.isConnectedInternet
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.LocalMainFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
@@ -27,12 +29,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UploadTestActivity : BaseActivity() {
 
     private val testViewModel: TestViewModel by viewModel()
     private val viewModel: FirebaseViewModel by viewModel()
+    private val logger: TestMakerLogger by inject()
     private var ablePrivateUpload = false
 
     private val binding: ActivityUploadTestBinding by lazy {
@@ -65,23 +69,30 @@ class UploadTestActivity : BaseActivity() {
 
             lifecycleScope.launch(Dispatchers.Default) {
 
-                viewModel.isAlreadyUploaded(testViewModel.tests[binding.spinner.selectedItemPosition].title)?.let {
+                viewModel.isAlreadyUploaded(testViewModel.tests[binding.spinner.selectedItemPosition].title)
+                    ?.let {
 
-                    withContext(Dispatchers.Main) {
+                        withContext(Dispatchers.Main) {
 
-                        ListDialogFragment(
-                            getString(R.string.upload_dialog_already_uploaded),
-                            listOf(
-                                DialogMenuItem(title = getString(R.string.upload_dialog_overwrite), iconRes = R.drawable.ic_baseline_update_24, action = {
-                                    overwriteTest(it.documentId)
-                                }),
-                                DialogMenuItem(title = getString(R.string.upload_dialog_upload_as_other_test), iconRes = R.drawable.ic_baseline_file_copy_24, action = {
-                                    uploadTest()
-                                }),
-                            )
-                        ).show(supportFragmentManager, "TAG")
-                    }
-                } ?: run {
+                            ListDialogFragment(
+                                getString(R.string.upload_dialog_already_uploaded),
+                                listOf(
+                                    DialogMenuItem(
+                                        title = getString(R.string.upload_dialog_overwrite),
+                                        iconRes = R.drawable.ic_baseline_update_24,
+                                        action = {
+                                            overwriteTest(it.documentId)
+                                        }),
+                                    DialogMenuItem(
+                                        title = getString(R.string.upload_dialog_upload_as_other_test),
+                                        iconRes = R.drawable.ic_baseline_file_copy_24,
+                                        action = {
+                                            uploadTest()
+                                        }),
+                                )
+                            ).show(supportFragmentManager, "TAG")
+                        }
+                    } ?: run {
                     withContext(Dispatchers.Main) {
                         uploadTest()
                     }
@@ -150,7 +161,7 @@ class UploadTestActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun uploadTest(){
+    fun uploadTest() {
 
         executeJobWithDialog(
             title = getString(R.string.uploading),
@@ -162,6 +173,10 @@ class UploadTestActivity : BaseActivity() {
                 )
             },
             onSuccess = { documentId ->
+                logger.logUploadTestEvent(
+                    test = testViewModel.tests[binding.spinner.selectedItemPosition],
+                    destination = if (ablePrivateUpload) UploadTestDestination.PRIVATE.title else UploadTestDestination.PUBLIC.title
+                )
                 if (intent.hasExtra(ARGUMENT_ID)) {
                     setResult(Activity.RESULT_OK, Intent().apply {
                         putExtra(
@@ -188,7 +203,7 @@ class UploadTestActivity : BaseActivity() {
         )
     }
 
-    fun overwriteTest(id: String){
+    fun overwriteTest(id: String) {
 
         executeJobWithDialog(
             title = getString(R.string.uploading),
@@ -201,6 +216,10 @@ class UploadTestActivity : BaseActivity() {
                 )
             },
             onSuccess = { documentId ->
+                logger.logUploadTestEvent(
+                    test = testViewModel.tests[binding.spinner.selectedItemPosition],
+                    destination = if (ablePrivateUpload) UploadTestDestination.PRIVATE.title else UploadTestDestination.PUBLIC.title
+                )
                 if (intent.hasExtra(ARGUMENT_ID)) {
                     setResult(Activity.RESULT_OK, Intent().apply {
                         putExtra(
