@@ -18,8 +18,8 @@ class TestMakerRepository(private val local: LocalDataSource,
         remote.downloadTest(testId)
     }
 
-    fun createObjectFromFirebase(test: FirebaseTest) {
-        local.createObjectFromFirebase(test)
+    fun createObjectFromFirebase(test: FirebaseTest, source: String) {
+        local.createObjectFromFirebase(test, source = source)
     }
 
     suspend fun createTest(test: RealmTest, overview: String, isPublic: Boolean = true): String {

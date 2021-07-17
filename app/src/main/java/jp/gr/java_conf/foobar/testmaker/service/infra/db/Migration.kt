@@ -163,6 +163,14 @@ class Migration : RealmMigration {
 
             oldVersion++
         }
+        if (oldVersion == 17L) {
+            val testSchema = schema["RealmTest"]
+            testSchema
+                ?.addField("source", String::class.java, FieldAttribute.REQUIRED)
+                ?.transform { obj: DynamicRealmObject -> obj["source"] = "undefined" }
+
+            oldVersion++
+        }
         //schemaVersion変えるの忘れるな(TestMakerApplication内)
     }
 }
