@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
+import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.SearchService
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
@@ -22,7 +23,10 @@ class FirebaseViewModel(
 
     suspend fun downloadTest(testId: String): FirebaseTest = repository.downloadTest(testId)
 
-    fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test)
+    fun convert(test: FirebaseTest) =
+        repository.createObjectFromFirebase(
+            test = test,
+            source = CreateTestSource.PUBLIC_DOWNLOAD.title)
 
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
 

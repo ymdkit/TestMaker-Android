@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.billingclient.api.*
 import com.google.firebase.auth.FirebaseUser
+import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
@@ -20,7 +21,7 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
 
     suspend fun downloadTest(testId: String): FirebaseTest = repository.downloadTest(testId)
 
-    fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test)
+    fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test, source = CreateTestSource.DYNAMIC_LINKS.title)
 
     fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
     fun getUser(): FirebaseUser? = auth.getUser()

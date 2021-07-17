@@ -12,12 +12,13 @@ class LocalDataSource(private val realm: Realm, private val context: Context) {
         return realm.where(RealmTest::class.java).equalTo("id", testId).findFirst() ?: RealmTest()
     }
 
-    fun createObjectFromFirebase(firebaseTest: FirebaseTest) {
+    fun createObjectFromFirebase(firebaseTest: FirebaseTest, source: String) {
         realm.beginTransaction()
 
         val test = firebaseTest.toTest(context)
         test.id = realm.where(RealmTest::class.java).max("id")?.toLong()?.plus(1) ?: 1
         test.order = test.id.toInt()
+        test.source = source
 
         firebaseTest.questions.forEachIndexed { index, it ->
             val question = it.toQuest()

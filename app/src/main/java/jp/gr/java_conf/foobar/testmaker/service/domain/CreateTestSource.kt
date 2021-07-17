@@ -6,4 +6,5 @@ enum class CreateTestSource(val title: String) {
     FILE_IMPORT("file"),
     SELF_DOWNLOAD("self_download"),
     PUBLIC_DOWNLOAD("public_download"),
+    GROUP_DOWNLOAD("group_download")
 }

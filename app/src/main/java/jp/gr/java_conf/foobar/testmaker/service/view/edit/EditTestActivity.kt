@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditTestBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
+import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
@@ -88,7 +89,11 @@ class EditTestActivity : BaseActivity() {
             test?.let {
                 testViewModel.update(it, binding.editTitle.text.toString(), binding.colorChooser.getColorId(), controller.selectedCategory?.name)
             } ?: run {
-                testViewModel.create(binding.editTitle.text.toString(), binding.colorChooser.getColorId(), controller.selectedCategory?.name)
+                testViewModel.create(
+                    title = binding.editTitle.text.toString(),
+                    color = binding.colorChooser.getColorId(),
+                    category = controller.selectedCategory?.name,
+                    source = CreateTestSource.SELF.title)
                 logger.logCreateTestEvent(binding.editTitle.text.toString(), "self")
             }
 
