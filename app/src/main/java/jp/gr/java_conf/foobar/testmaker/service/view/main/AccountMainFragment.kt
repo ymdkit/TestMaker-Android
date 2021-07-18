@@ -18,6 +18,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.AccountMainFragmentBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
@@ -148,7 +149,7 @@ class AccountMainFragment : Fragment() {
                 onSuccess = {
                     viewModel.convert(it)
 
-                    logger.logCreateTestEvent(it.name, "self-download")
+                    logger.logCreateTestEvent(it.name, CreateTestSource.SELF_DOWNLOAD.title)
                     requireContext().showToast(getString(R.string.msg_success_download_test, it.name))
                     listener?.onDownloaded()
                 },

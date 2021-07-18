@@ -82,12 +82,6 @@
             android:label="編集"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.edit.EditProActivity"
-            android:configChanges="uiMode"
-            android:label="@string/title_activity_edit_pro"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".view.share.BaseActivity"
             android:configChanges="uiMode" />
 

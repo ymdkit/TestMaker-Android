@@ -24,6 +24,7 @@ open class RealmTest : RealmObject() {
     private var questions: RealmList<Quest>? = null
     var documentId: String = ""
     var order: Int = 0
+    var source: String = "undefined"
 
     fun setCategory(c: String) {
         category = c
@@ -75,6 +76,7 @@ open class RealmTest : RealmObject() {
             test.questions.forEach { realmTest.addQuestion(Quest.createQuestFromQuestion(it)) }
             realmTest.documentId = test.documentId
             realmTest.order = test.order
+            realmTest.source = test.source
 
             return realmTest
         }

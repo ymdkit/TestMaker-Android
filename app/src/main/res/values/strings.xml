@@ -97,8 +97,6 @@
 
     <string name="msg_save">saved</string>
     <string name="save">save</string>
-    <string name="edit_pro">edit texteditor</string>
-    <string name="title_activity_edit_pro">EditProActivity</string>
     <string name="message_success_update">saved</string>
     <string name="config">config</string>
     <string name="search">search</string>
@@ -107,7 +105,6 @@
     <string name="pass">I don\'t know</string>
     <string name="number_existing_questions">%1$d / %2$d solved</string>
     <string name="show_never">never show again</string>
-    <string name="alert_save_text">if you save this style, you lose image data and achievement data of this test</string>
     <string name="action_online">online tests</string>
     <string name="info">info</string>
     <string name="title_activity_online_main">online</string>

@@ -9,12 +9,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_edit_pro"
-        android:title="@string/edit_pro"
-        app:showAsAction="never"
-        />
-
-    <item
         android:id="@+id/action_reset_achievement"
         android:title="@string/reset_achievement"
         app:showAsAction="never"

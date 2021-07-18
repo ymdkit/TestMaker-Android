@@ -52,7 +52,6 @@
     <string name="action_license">ライセンス</string>
     <string name="msg_save">保存しました</string>
     <string name="save">保存</string>
-    <string name="edit_pro">テキストエディタで編集</string>
     <string name="pass">分からない</string>
 
 
@@ -100,7 +99,6 @@
         <item>大きめ</item>
     </string-array>
 
-    <string name="title_activity_edit_pro">編集</string>
     <string name="message_success_update">保存しました</string>
     <string name="config">問題集の設定</string>
     <string name="search">検索</string>
@@ -108,7 +106,6 @@
     <string name="number">No.%1$s</string>
     <string name="help_url">https://ankimaker.com/guide</string>
     <string name="show_never">次回からこのダイアログを表示しない</string>
-    <string name="alert_save_text">テキスト形式で保存した場合、画像データと達成率のデータは失われてしまいます。</string>
     <string name="action_online">みんなの問題集</string>
     <string name="info">詳細</string>
     <string name="title_activity_online_main">みんなの問題集</string>

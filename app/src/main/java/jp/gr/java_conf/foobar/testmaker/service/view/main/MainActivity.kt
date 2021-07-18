@@ -25,6 +25,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
+import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
@@ -173,7 +175,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                 viewModel.convert(it)
                 testViewModel.refresh()
                 showToast(getString(R.string.msg_success_download_test, it.name))
-                logger.logCreateTestEvent(it.name, "dynamic_links")
+                logger.logCreateTestEvent(it.name, CreateTestSource.DYNAMIC_LINKS.title)
             },
             onFailure = {
                 showToast(getString(R.string.msg_failure_download_test))
@@ -378,8 +380,8 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                 }
             },
             onSuccess = {
-                testViewModel.create(it)
-                logger.logCreateTestEvent(it.title, "file")
+                testViewModel.create(Test.createFromTestResponse(it))
+                logger.logCreateTestEvent(it.title, CreateTestSource.FILE_IMPORT.title)
                 Toast.makeText(
                     baseContext,
                     baseContext.getString(R.string.message_success_load, it.title),

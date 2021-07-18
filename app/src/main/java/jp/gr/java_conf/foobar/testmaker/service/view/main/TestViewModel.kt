@@ -18,12 +18,15 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
         repository.refresh()
     }
 
-    fun create(title: String, color: Int, category: String?): Long {
-        return repository.create(Test(
+    fun create(title: String, color: Int, category: String?, source: String): Long {
+        return repository.create(
+            Test(
                 title = title,
                 color = color,
-                category = category ?: ""
-        ))
+                category = category ?: "",
+                source = source
+            )
+        )
     }
 
     fun create(test: Test): Long = repository.create(test)
