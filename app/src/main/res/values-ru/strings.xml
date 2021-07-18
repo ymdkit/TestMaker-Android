@@ -52,7 +52,6 @@
     <string name="action_license">лицензия</string>
     <string name="msg_save">Сохранить</string>
     <string name="save">Сохранить</string>
-    <string name="edit_pro">Текстовый редактор</string>
     <string name="pass">Я не знаю</string>
 
 
@@ -90,7 +89,6 @@
         <item>сам</item>
     </string-array>
 
-    <string name="title_activity_edit_pro">редактирование</string>
     <string name="message_success_update">Сохранить</string>
     <string name="config">настройки</string>
     <string name="search">поиск</string>
@@ -98,7 +96,6 @@
     <string name="number">%1$s</string>
     <string name="help_url">https://ankimaker.com/guide</string>
     <string name="show_never">никогда не показывать снова</string>
-    <string name="alert_save_text">Поддержание этого стиля приведет к потере данных и данных изображения по результатам этого теста</string>
     <string name="action_online">Интернет</string>
     <string name="info">информация</string>
     <string name="title_activity_online_main">Интернет</string>
