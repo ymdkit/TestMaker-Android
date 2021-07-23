@@ -114,7 +114,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("com.google.android.play:core-ktx:1.8.0")
     implementation("com.github.studyplus:Studyplus-Android-SDK:3.0.0")
-    implementation(platform("com.google.firebase:firebase-bom:26.2.0"))
+    implementation(platform("com.google.firebase:firebase-bom:28.3.0"))
     implementation("com.google.firebase:firebase-core")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
