@@ -12,10 +12,10 @@ import kotlinx.coroutines.withContext
 class DynamicLinksCreator(private val context: Context) {
 
     suspend fun createShareTestDynamicLinks(documentId: String) =
-            createDynamicLinks(link = Uri.parse("https://testmaker-1cb29.com/${documentId}"))
+            createDynamicLinks(link = Uri.parse("https://ankimaker.com/${documentId}"))
 
     suspend fun createInviteGroupDynamicLinks(groupId: String) =
-            createDynamicLinks(link = Uri.parse("https://testmaker-1cb29.com/groups/${groupId}"))
+            createDynamicLinks(link = Uri.parse("https://ankimaker.com/groups/${groupId}"))
 
     private suspend fun createDynamicLinks(link: Uri) = withContext(Dispatchers.Default) {
         Firebase.dynamicLinks.shortLinkAsync {
