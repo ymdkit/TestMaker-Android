@@ -132,7 +132,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.3")
     implementation("com.github.bumptech.glide:glide:4.9.0")
     implementation("org.koin:koin-core:1.0.2")
-    implementation("org.koin:koin-android:1.0.2")
+    implementation("org.koin:koin-android:2.2.2")
     implementation("org.koin:koin-java:1.0.2")
     implementation("org.koin:koin-androidx-viewmodel:1.0.2")
     implementation("androidx.preference:preference:1.1.1")
