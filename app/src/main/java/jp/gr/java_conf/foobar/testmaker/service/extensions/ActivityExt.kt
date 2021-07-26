@@ -4,7 +4,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import jp.gr.java_conf.foobar.testmaker.service.view.share.LoadingDialogFragment
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 fun <T> FragmentActivity.executeJobWithDialog(
         title: String,
@@ -14,7 +13,7 @@ fun <T> FragmentActivity.executeJobWithDialog(
 ) {
 
     var dialog: LoadingDialogFragment? = null
-    val job = lifecycleScope.launch {
+    val job = lifecycleScope.launchWhenStarted {
         runCatching {
             task()
         }.onSuccess {
