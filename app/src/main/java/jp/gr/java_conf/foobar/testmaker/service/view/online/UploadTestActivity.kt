@@ -74,7 +74,7 @@ class UploadTestActivity : BaseActivity() {
 
                         withContext(Dispatchers.Main) {
 
-                            ListDialogFragment(
+                            ListDialogFragment.newInstance(
                                 getString(R.string.upload_dialog_already_uploaded),
                                 listOf(
                                     DialogMenuItem(

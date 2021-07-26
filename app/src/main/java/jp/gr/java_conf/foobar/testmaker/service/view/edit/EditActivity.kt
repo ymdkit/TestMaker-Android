@@ -36,7 +36,7 @@ class EditActivity : BaseActivity() {
         EditController(this).apply {
             setOnClickListener(object : EditController.OnClickListener {
                 override fun onClickQuestion(question: Question) {
-                    ListDialogFragment(
+                    ListDialogFragment.newInstance(
                             question.question,
                             listOf(
                                     DialogMenuItem(title = getString(R.string.edit), iconRes = R.drawable.ic_edit_white, action = { editQuestion(question) }),

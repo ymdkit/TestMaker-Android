@@ -192,7 +192,7 @@ class ComposeResultActivity : BaseActivity() {
     }
 
     private fun onCLickRetry() {
-        ListDialogFragment(
+        ListDialogFragment.newInstance(
             getString(R.string.retry),
             listOf(
                 DialogMenuItem(

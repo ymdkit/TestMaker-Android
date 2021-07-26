@@ -67,7 +67,7 @@ class FirebaseActivity : BaseActivity() {
         controller.setOnClickListener(object : FirebaseTestController.OnClickListener {
             override fun onClickTest(test: FirebaseTest) {
 
-                ListDialogFragment(
+                ListDialogFragment.newInstance(
                         test.name,
                         listOf(
                                 DialogMenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(test) }),
@@ -180,7 +180,7 @@ class FirebaseActivity : BaseActivity() {
 
     fun showInfoTest(test: FirebaseTest) {
 
-        ListDialogFragment(
+        ListDialogFragment.newInstance(
                 test.name,
                 listOf(
                         DialogMenuItem(title = getString(R.string.text_info_creator, test.userName), iconRes = R.drawable.ic_account, action = { }),
