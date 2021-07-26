@@ -144,7 +144,7 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.2.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
     implementation("com.squareup.moshi:moshi:1.9.2")
     implementation("com.squareup.moshi:moshi-kotlin:1.9.2")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
