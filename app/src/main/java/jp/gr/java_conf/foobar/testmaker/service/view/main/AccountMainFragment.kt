@@ -75,7 +75,7 @@ class AccountMainFragment : Fragment() {
         controller.setOnClickListener(object : AccountMainController.OnClickListener {
 
             override fun onClickTest(document: DocumentSnapshot) {
-                ListDialogFragment(
+                ListDialogFragment.newInstance(
                         document.toObject(FirebaseTest::class.java)?.name ?: "",
                         listOf(
                                 DialogMenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(document) }),

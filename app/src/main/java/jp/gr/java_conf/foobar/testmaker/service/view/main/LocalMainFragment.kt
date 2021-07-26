@@ -67,7 +67,7 @@ class LocalMainFragment : Fragment() {
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
             override fun onClickTest(test: Test) {
-                ListDialogFragment(
+                ListDialogFragment.newInstance(
                         test.title,
                         listOf(
                                 DialogMenuItem(title = getString(R.string.play), iconRes = R.drawable.ic_play_arrow_white_24dp, action = { playTest(test) }),
@@ -80,7 +80,7 @@ class LocalMainFragment : Fragment() {
 
             override fun onClickCategoryMenu(category: Category) {
 
-                ListDialogFragment(
+                ListDialogFragment.newInstance(
                         category.name,
                         listOf(
                                 DialogMenuItem(title = getString(R.string.edit_category_name), iconRes = R.drawable.ic_edit_white, action = { editCategory(category) }),
@@ -157,7 +157,7 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun shareTest(test: Test) {
-        ListDialogFragment(
+        ListDialogFragment.newInstance(
                 getString(R.string.title_dialog_share),
                 listOf(
                         DialogMenuItem(title = getString(R.string.button_upload), iconRes = R.drawable.ic_baseline_cloud_upload_24, action = { uploadTest(test) }),

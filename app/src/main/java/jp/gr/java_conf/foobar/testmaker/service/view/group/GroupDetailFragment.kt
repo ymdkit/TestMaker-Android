@@ -69,7 +69,7 @@ class GroupDetailFragment : Fragment() {
                             DialogMenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(document) })
                     )
 
-                ListDialogFragment(
+                ListDialogFragment.newInstance(
                         document.toObject(FirebaseTest::class.java)?.name ?: "",
                         actions
                 ).show(requireActivity().supportFragmentManager, "TAG")
