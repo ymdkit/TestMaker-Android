@@ -66,7 +66,6 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.viewPager.offscreenPageLimit = 1
-
         binding.viewPager.adapter = ViewPagerAdapter(
             this, listOf(
                 LocalMainFragment(),
@@ -86,7 +85,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         createAd(binding.adView)
         initNavigationView()
 
-        viewModel.startConnection()
+        viewModel.startBillingConnection()
         viewModel.billingStatus.observeNonNull(this) {
             when (it) {
                 is BillingStatus.Error -> {
