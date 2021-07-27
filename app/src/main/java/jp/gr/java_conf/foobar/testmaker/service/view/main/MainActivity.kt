@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
@@ -59,6 +60,10 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
     private val testViewModel: TestViewModel by viewModel()
     private val service: CloudFunctionsService by inject()
     private val logger: TestMakerLogger by inject()
+
+    private val importFile = registerForActivityResult(ActivityResultContracts.OpenDocument()){
+        launchEditorActivity(it)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -211,13 +216,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                     startActivity(Intent.createChooser(emailIntent, null))
 
                 }
-                R.id.nav_import -> {
-
-                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                    intent.type = "text/*"
-                    startActivityForResult(intent, REQUEST_IMPORT)
-
-                }
+                R.id.nav_import -> importFile.launch(arrayOf("text/*"))
                 R.id.nav_paste -> {
 
                     val dialogLayout = layoutInflater.inflate(
@@ -306,13 +305,6 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         }
 
         if (resultCode != Activity.RESULT_OK) return
-
-        if (requestCode == REQUEST_IMPORT) {
-
-            data?.also {
-                launchEditorActivity(it.data)
-            }
-        }
     }
 
     private fun launchEditorActivity(uri: Uri?) {
@@ -397,7 +389,6 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         const val PAGE_REMOTE = 1
 
         const val REQUEST_EDIT = 11111
-        const val REQUEST_IMPORT = 12345
         const val REQUEST_SIGN_IN = 12346
 
         fun startActivityWithClear(activity: Activity) {
