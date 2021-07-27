@@ -244,21 +244,31 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                         dialog.dismiss()
                     }
                 }
-                R.id.nav_settings -> {
-                    startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
-                }
-                R.id.nav_online -> startActivity(Intent(this@MainActivity, FirebaseActivity::class.java))
-                R.id.nav_group -> startActivity(Intent(this@MainActivity, GroupActivity::class.java))
-                R.id.nav_move_questions -> {
-                    startActivityForResult(
-                        Intent(
-                            this@MainActivity,
-                            MoveQuestionsActivity::class.java
-                        ), REQUEST_EDIT
+                R.id.nav_settings -> startActivity(
+                    Intent(
+                        this@MainActivity,
+                        SettingsActivity::class.java
                     )
-                }
+                )
+                R.id.nav_online -> startActivity(
+                    Intent(
+                        this@MainActivity,
+                        FirebaseActivity::class.java
+                    )
+                )
+                R.id.nav_group -> startActivity(
+                    Intent(
+                        this@MainActivity,
+                        GroupActivity::class.java
+                    )
+                )
+                R.id.nav_move_questions -> startActivity(
+                    Intent(
+                        this@MainActivity,
+                        MoveQuestionsActivity::class.java
+                    )
+                )
                 R.id.nav_remove_ad -> {
-
                     viewModel.purchaseRemoveAd(
                         this,
                         BillingItem(getString(R.string.sku_remove_ad), BillingClient.SkuType.INAPP)
