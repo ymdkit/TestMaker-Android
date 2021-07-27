@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -36,6 +35,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
+import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
@@ -61,8 +61,9 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
     private val service: CloudFunctionsService by inject()
     private val logger: TestMakerLogger by inject()
 
-    private val importFile = registerForActivityResult(ActivityResultContracts.OpenDocument()){
-        launchEditorActivity(it)
+    private val importFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
+        val (title, content) = TestMakerFileReader.readFileFromUri(it, this)
+        loadTestByText(title = title, text = content)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -198,7 +199,12 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
             when (menuItem.itemId) {
                 R.id.nav_help
                 -> {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.help_url))))
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(getString(R.string.help_url))
+                        )
+                    )
                 }
                 R.id.nav_feedback
                 -> {
@@ -305,42 +311,6 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         }
 
         if (resultCode != Activity.RESULT_OK) return
-    }
-
-    private fun launchEditorActivity(uri: Uri?) {
-
-        if (uri == null) return
-        var inputStream: InputStream? = null
-
-        try {
-
-            inputStream = contentResolver.openInputStream(uri)
-            inputStream?.also {
-
-                var text = it.bufferedReader().use(BufferedReader::readText)
-
-                if (text.isNotEmpty() && text[0].toString() == "\uFEFF") {
-                    text = text.substring(1)
-                }
-
-                val cursor = contentResolver.query(uri, null, null, null, null)
-                cursor?.let { cur ->
-                    val nameIndex = cur.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    cur.moveToFirst()
-                    val title = cur.getString(nameIndex)
-                    loadTestByText(title = title, text = text)
-                    cur.close()
-                }
-            }
-        } catch (e: FileNotFoundException) {
-            throw RuntimeException(e)
-        } catch (e: UnsupportedEncodingException) {
-            throw RuntimeException(e)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            inputStream?.close()
-        }
     }
 
     private fun loadTestByText(title: String = "", text: String) {
