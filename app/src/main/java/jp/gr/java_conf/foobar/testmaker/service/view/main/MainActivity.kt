@@ -247,16 +247,8 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                 R.id.nav_settings -> {
                     startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
                 }
-
-                R.id.nav_online -> {
-                    startActivityForResult(
-                        Intent(this@MainActivity, FirebaseActivity::class.java),
-                        REQUEST_EDIT
-                    )
-                }
-                R.id.nav_group -> {
-                    startActivity(Intent(this@MainActivity, GroupActivity::class.java))
-                }
+                R.id.nav_online -> startActivity(Intent(this@MainActivity, FirebaseActivity::class.java))
+                R.id.nav_group -> startActivity(Intent(this@MainActivity, GroupActivity::class.java))
                 R.id.nav_move_questions -> {
                     startActivityForResult(
                         Intent(
