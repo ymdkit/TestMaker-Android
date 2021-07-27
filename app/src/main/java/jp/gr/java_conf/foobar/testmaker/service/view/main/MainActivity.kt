@@ -19,7 +19,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.android.billingclient.api.BillingClient
-import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
@@ -288,33 +287,6 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_CANCELED) {
-            binding.drawerLayout.closeDrawers()
-        }
-
-        if (requestCode == REQUEST_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
-
-            if (resultCode == Activity.RESULT_OK) {
-                // Successfully signed in
-                viewModel.createUser(viewModel.getUser())
-
-                Toast.makeText(this, getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
-                // ...
-            } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                response?.error?.errorCode
-                // ...
-            }
-        }
-
-        if (resultCode != Activity.RESULT_OK) return
-    }
-
     private fun loadTestByText(title: String = "", text: String) {
 
         executeJobWithDialog(
@@ -360,7 +332,6 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         const val PAGE_LOCAL = 0
         const val PAGE_REMOTE = 1
 
-        const val REQUEST_EDIT = 11111
         const val REQUEST_SIGN_IN = 12346
 
         fun startActivityWithClear(activity: Activity) {
