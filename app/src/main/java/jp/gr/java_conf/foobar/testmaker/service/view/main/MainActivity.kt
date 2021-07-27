@@ -191,18 +191,12 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
-                R.id.nav_help //editProActivityにも同様の記述
+                R.id.nav_help
                 -> {
-                    startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW, Uri
-                                .parse(getString(R.string.help_url))
-                        )
-                    )
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.help_url))))
                 }
                 R.id.nav_feedback
                 -> {
-
                     val emailIntent = Intent(Intent.ACTION_SENDTO)
                     emailIntent.data = Uri.parse("mailto:")
                     emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("testmaker.contact@gmail.com"))
@@ -216,14 +210,6 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                     )
                     startActivity(Intent.createChooser(emailIntent, null))
 
-                }
-                R.id.nav_review -> {
-                    startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW, Uri
-                                .parse("https://play.google.com/store/apps/details?id=jp.gr.java_conf.foobar.testmaker.service&amp;hl=ja")
-                        )
-                    )
                 }
                 R.id.nav_import -> {
 
