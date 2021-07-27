@@ -282,8 +282,8 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
             binding.toolbar, R.string.add,
             R.string.add
         )
-
         binding.drawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
 
     }
 
@@ -313,11 +313,6 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                 showErrorToast(it)
             }
         )
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        drawerToggle.syncState()
     }
 
     private inner class ViewPagerAdapter(
