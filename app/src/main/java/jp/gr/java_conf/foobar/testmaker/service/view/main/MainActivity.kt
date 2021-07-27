@@ -319,7 +319,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
 
                 var text = it.bufferedReader().use(BufferedReader::readText)
 
-                if (text[0].toString() == "\uFEFF") {
+                if (text.isNotEmpty() && text[0].toString() == "\uFEFF") {
                     text = text.substring(1)
                 }
 
