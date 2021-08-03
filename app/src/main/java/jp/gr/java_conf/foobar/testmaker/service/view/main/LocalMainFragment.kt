@@ -203,7 +203,7 @@ class LocalMainFragment : Fragment() {
     private fun initDialogPlayStart(test: Test) {
 
         if (!sharedPreferenceManager.isShowPlaySettingDialog) {
-            startAnswer(test, (test.startPosition + 1), test.limit)
+            startAnswer(test, (test.startPosition), test.limit)
         } else {
 
             childFragmentManager.setFragmentResultListener(REQUEST_PLAY_CONFIG, viewLifecycleOwner) { requestKey, bundle ->
@@ -211,7 +211,7 @@ class LocalMainFragment : Fragment() {
 
                 val position = bundle.getInt(PlayConfigDialogFragment.RESULT_START_POSITION)
                 val limit = bundle.getInt(PlayConfigDialogFragment.RESULT_LIMIT)
-                startAnswer(test, position, limit)
+                startAnswer(test, (position - 1).coerceAtLeast(0), limit)
             }
 
             PlayConfigDialogFragment.newInstance(test, REQUEST_PLAY_CONFIG)
@@ -233,7 +233,7 @@ class LocalMainFragment : Fragment() {
 
             val result = test.copy(
                     limit = limit,
-                    startPosition = start - 1,
+                    startPosition = start,
                     history = Calendar.getInstance().timeInMillis)
 
             testViewModel.update(result)
