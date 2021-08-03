@@ -12,6 +12,7 @@ class QuestionsBuilder(var questions: List<Question>) {
 
     fun startPosition(startPosition: Int): QuestionsBuilder{
         if(isRetry) return this
+        if(startPosition < 0) return this
         questions = questions.drop(startPosition)
         return this
     }
