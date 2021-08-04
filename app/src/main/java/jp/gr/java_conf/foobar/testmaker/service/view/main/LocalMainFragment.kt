@@ -33,10 +33,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
-import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
@@ -100,6 +97,13 @@ class LocalMainFragment : Fragment() {
             mainController.tests = it
         }
 
+        childFragmentManager.setFragmentResultListener(REQUEST_CONFIRM_DELETE, viewLifecycleOwner){ key, bundle ->
+            val test = bundle.getParcelable<Test>(ConfirmDeleteTestDialogFragment.RESULT_TEST) ?: return@setFragmentResultListener
+            testViewModel.delete(test)
+            categoryViewModel.refresh()
+            requireContext().showToast(getString(R.string.msg_success_delete_test))
+        }
+
         return DataBindingUtil.inflate<LocalMainFragmentBinding>(inflater, R.layout.local_main_fragment, container, false).apply {
             binding = this
             lifecycleOwner = viewLifecycleOwner
@@ -149,11 +153,13 @@ class LocalMainFragment : Fragment() {
     private fun deleteTest(test: Test) {
         firebaseAnalytic.logEvent("delete", Bundle())
 
-        ConfirmDangerDialogFragment(getString(R.string.message_delete_exam, test.title)) {
-            testViewModel.delete(test)
-            categoryViewModel.refresh()
-            requireContext().showToast(getString(R.string.msg_success_delete_test))
-        }.show(requireActivity().supportFragmentManager, "TAG")
+        ConfirmDeleteTestDialogFragment.newInstance(
+            title = getString(R.string.message_delete_exam, test.title),
+            buttonText = getString(R.string.button_delete_confirm),
+            requestKey = REQUEST_CONFIRM_DELETE,
+            test = test
+        ).show(childFragmentManager, ConfirmDeleteTestDialogFragment::class.java.name)
+
     }
 
     private fun shareTest(test: Test) {
@@ -338,6 +344,9 @@ class LocalMainFragment : Fragment() {
         const val REQUEST_SIGN_IN_UPLOAD = 54321
         const val REQUEST_UPLOAD_TEST = 54322
         const val REQUEST_PLAY_CONFIG = "request_play_config"
+        const val REQUEST_CONFIRM_DELETE = "request_confirm_delete"
+
+        const val RESULT_TEST = "result_test"
 
         const val EXTRA_DOCUMENT_ID = "documentId"
         const val EXTRA_TEST_NAME = "testName"

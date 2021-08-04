@@ -18,25 +18,32 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.extensions.requireParcelableArgument
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireStringArgument
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ui.theme.TestMakerAndroidTheme
 
-class ComposeConfirmDangerDialogFragment : BottomSheetDialogFragment() {
+class ConfirmDeleteTestDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val ARG_TITLE = "title"
         const val ARG_BUTTON_TEXT = "button_text"
+        const val ARG_TEST = "arg_test"
         const val ARG_REQUEST_KEY = "request_key"
+
+        const val RESULT_TEST = "result_test"
 
         fun newInstance(
             title: String,
             buttonText: String,
             requestKey: String,
-        ) = ComposeConfirmDangerDialogFragment().apply {
+            test: Test
+        ) = ConfirmDeleteTestDialogFragment().apply {
             arguments = bundleOf(
                 ARG_TITLE to title,
                 ARG_BUTTON_TEXT to buttonText,
-                ARG_REQUEST_KEY to requestKey
+                ARG_TEST to test,
+                ARG_REQUEST_KEY to requestKey,
             )
         }
     }
@@ -56,7 +63,9 @@ class ComposeConfirmDangerDialogFragment : BottomSheetDialogFragment() {
                         onClick = {
                             setFragmentResult(
                                 requireStringArgument(ARG_REQUEST_KEY),
-                                Bundle.EMPTY
+                                bundleOf(
+                                    RESULT_TEST to requireParcelableArgument(ARG_TEST)
+                                )
                             )
                             dismiss()
                         }
@@ -82,7 +91,9 @@ fun DialogContent(
                 backgroundColor = MaterialTheme.colors.error
             ),
             contentPadding = PaddingValues(12.dp),
-            modifier = Modifier.align(CenterHorizontally).fillMaxWidth()
+            modifier = Modifier
+                .align(CenterHorizontally)
+                .fillMaxWidth()
         ) {
             Text(
                 text = buttonText,
