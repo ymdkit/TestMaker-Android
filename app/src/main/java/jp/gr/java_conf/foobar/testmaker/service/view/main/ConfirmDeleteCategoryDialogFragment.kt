@@ -1,48 +1,39 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.share
+package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireParcelableArgument
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireStringArgument
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ui.theme.TestMakerAndroidTheme
+import jp.gr.java_conf.foobar.testmaker.service.view.share.component.DangerDialogContent
 
-class ConfirmDeleteTestDialogFragment : BottomSheetDialogFragment() {
+class ConfirmDeleteCategoryDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val ARG_TITLE = "title"
         const val ARG_BUTTON_TEXT = "button_text"
-        const val ARG_TEST = "arg_test"
+        const val ARG_CATEGORY = "arg_category"
         const val ARG_REQUEST_KEY = "request_key"
 
-        const val RESULT_TEST = "result_test"
+        const val RESULT_CATEGORY = "result_category"
 
         fun newInstance(
             title: String,
             buttonText: String,
             requestKey: String,
-            test: Test
-        ) = ConfirmDeleteTestDialogFragment().apply {
+            category: Category
+        ) = ConfirmDeleteCategoryDialogFragment().apply {
             arguments = bundleOf(
                 ARG_TITLE to title,
                 ARG_BUTTON_TEXT to buttonText,
-                ARG_TEST to test,
+                ARG_CATEGORY to category,
                 ARG_REQUEST_KEY to requestKey,
             )
         }
@@ -57,14 +48,14 @@ class ConfirmDeleteTestDialogFragment : BottomSheetDialogFragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 TestMakerAndroidTheme {
-                    DialogContent(
+                    DangerDialogContent(
                         title = requireStringArgument(ARG_TITLE),
                         buttonText = requireStringArgument(ARG_BUTTON_TEXT),
                         onClick = {
                             setFragmentResult(
                                 requireStringArgument(ARG_REQUEST_KEY),
                                 bundleOf(
-                                    RESULT_TEST to requireParcelableArgument(ARG_TEST)
+                                    RESULT_CATEGORY to requireParcelableArgument(ARG_CATEGORY)
                                 )
                             )
                             dismiss()
@@ -74,36 +65,4 @@ class ConfirmDeleteTestDialogFragment : BottomSheetDialogFragment() {
             }
         }
     }
-}
-
-@Composable
-fun DialogContent(
-    title: String,
-    buttonText: String,
-    onClick: () -> Unit
-) {
-    Column(modifier = Modifier.padding(12.dp)) {
-        Text(text = title, color = MaterialTheme.colors.onBackground)
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = onClick,
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.error
-            ),
-            contentPadding = PaddingValues(12.dp),
-            modifier = Modifier
-                .align(CenterHorizontally)
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = buttonText,
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun PreviewDialog() {
-    DialogContent(title = "問題集「ああああ」を削除しますか？", buttonText = "削除する") {}
 }

@@ -58,31 +58,51 @@ class LocalMainFragment : Fragment() {
 
     private var selectedTest: Test? = null //ログイン時に一度画面から離れるので選択中の値を保持
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
             override fun onClickTest(test: Test) {
                 ListDialogFragment.newInstance(
-                        test.title,
-                        listOf(
-                                DialogMenuItem(title = getString(R.string.play), iconRes = R.drawable.ic_play_arrow_white_24dp, action = { playTest(test) }),
-                                DialogMenuItem(title = getString(R.string.edit), iconRes = R.drawable.ic_edit_white, action = { editTest(test) }),
-                                DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteTest(test) }),
-                                DialogMenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(test) })
-                        )
+                    test.title,
+                    listOf(
+                        DialogMenuItem(
+                            title = getString(R.string.play),
+                            iconRes = R.drawable.ic_play_arrow_white_24dp,
+                            action = { playTest(test) }),
+                        DialogMenuItem(
+                            title = getString(R.string.edit),
+                            iconRes = R.drawable.ic_edit_white,
+                            action = { editTest(test) }),
+                        DialogMenuItem(
+                            title = getString(R.string.delete),
+                            iconRes = R.drawable.ic_delete_white,
+                            action = { deleteTest(test) }),
+                        DialogMenuItem(
+                            title = getString(R.string.share),
+                            iconRes = R.drawable.ic_share_white,
+                            action = { shareTest(test) })
+                    )
                 ).show(requireActivity().supportFragmentManager, "TAG")
             }
 
             override fun onClickCategoryMenu(category: Category) {
 
                 ListDialogFragment.newInstance(
-                        category.name,
-                        listOf(
-                                DialogMenuItem(title = getString(R.string.edit_category_name), iconRes = R.drawable.ic_edit_white, action = { editCategory(category) }),
-                                DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteCategory(category) })
-                        )
+                    category.name,
+                    listOf(
+                        DialogMenuItem(
+                            title = getString(R.string.edit_category_name),
+                            iconRes = R.drawable.ic_edit_white,
+                            action = { editCategory(category) }),
+                        DialogMenuItem(
+                            title = getString(R.string.delete),
+                            iconRes = R.drawable.ic_delete_white,
+                            action = { deleteCategory(category) })
+                    )
                 ).show(requireActivity().supportFragmentManager, "TAG")
 
             }
@@ -97,14 +117,35 @@ class LocalMainFragment : Fragment() {
             mainController.tests = it
         }
 
-        childFragmentManager.setFragmentResultListener(REQUEST_CONFIRM_DELETE, viewLifecycleOwner){ key, bundle ->
-            val test = bundle.getParcelable<Test>(ConfirmDeleteTestDialogFragment.RESULT_TEST) ?: return@setFragmentResultListener
+        childFragmentManager.setFragmentResultListener(
+            REQUEST_DELETE_TEST,
+            viewLifecycleOwner
+        ) { key, bundle ->
+            val test = bundle.getParcelable<Test>(ConfirmDeleteTestDialogFragment.RESULT_TEST)
+                ?: return@setFragmentResultListener
             testViewModel.delete(test)
             categoryViewModel.refresh()
             requireContext().showToast(getString(R.string.msg_success_delete_test))
         }
 
-        return DataBindingUtil.inflate<LocalMainFragmentBinding>(inflater, R.layout.local_main_fragment, container, false).apply {
+        childFragmentManager.setFragmentResultListener(
+            REQUEST_DELETE_CATEGORY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val category =
+                bundle.getParcelable<Category>(ConfirmDeleteCategoryDialogFragment.RESULT_CATEGORY)
+                    ?: return@setFragmentResultListener
+            testViewModel.deleteAllInCategory(category.name)
+            categoryViewModel.delete(category)
+            requireContext().showToast(getString(R.string.msg_success_delete_category))
+        }
+
+        return DataBindingUtil.inflate<LocalMainFragmentBinding>(
+            inflater,
+            R.layout.local_main_fragment,
+            container,
+            false
+        ).apply {
             binding = this
             lifecycleOwner = viewLifecycleOwner
 
@@ -116,22 +157,30 @@ class LocalMainFragment : Fragment() {
             recyclerView.adapter = mainController.adapter
 
             EpoxyTouchHelper
-                    .initDragging(mainController)
-                    .withRecyclerView(recyclerView)
-                    .forVerticalList()
-                    .withTargets(CardCategoryBindingModel_::class.java, ItemTestBindingModel_::class.java)
-                    .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<EpoxyModel<*>>() {
-                        override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: EpoxyModel<*>?, itemView: View?) {
-                            val from = mainController.adapter.getModelAtPosition(fromPosition)
-                            val to = mainController.adapter.getModelAtPosition(toPosition)
+                .initDragging(mainController)
+                .withRecyclerView(recyclerView)
+                .forVerticalList()
+                .withTargets(
+                    CardCategoryBindingModel_::class.java,
+                    ItemTestBindingModel_::class.java
+                )
+                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<EpoxyModel<*>>() {
+                    override fun onModelMoved(
+                        fromPosition: Int,
+                        toPosition: Int,
+                        modelBeingMoved: EpoxyModel<*>?,
+                        itemView: View?
+                    ) {
+                        val from = mainController.adapter.getModelAtPosition(fromPosition)
+                        val to = mainController.adapter.getModelAtPosition(toPosition)
 
-                            if (from is ItemTestBindingModel_ && to is ItemTestBindingModel_) {
-                                testViewModel.swap(from.test(), to.test())
-                            } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
-                                categoryViewModel.swap(from.category(), to.category())
-                            }
+                        if (from is ItemTestBindingModel_ && to is ItemTestBindingModel_) {
+                            testViewModel.swap(from.test(), to.test())
+                        } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
+                            categoryViewModel.swap(from.category(), to.category())
                         }
-                    })
+                    }
+                })
         }.root
     }
 
@@ -139,7 +188,11 @@ class LocalMainFragment : Fragment() {
         firebaseAnalytic.logEvent("play", Bundle())
 
         if (test.questions.isEmpty()) {
-            Toast.makeText(requireContext(), getString(R.string.message_null_questions), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.message_null_questions),
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
             initDialogPlayStart(test)
         }
@@ -156,19 +209,24 @@ class LocalMainFragment : Fragment() {
         ConfirmDeleteTestDialogFragment.newInstance(
             title = getString(R.string.message_delete_exam, test.title),
             buttonText = getString(R.string.button_delete_confirm),
-            requestKey = REQUEST_CONFIRM_DELETE,
+            requestKey = REQUEST_DELETE_TEST,
             test = test
         ).show(childFragmentManager, ConfirmDeleteTestDialogFragment::class.java.name)
-
     }
 
     private fun shareTest(test: Test) {
         ListDialogFragment.newInstance(
-                getString(R.string.title_dialog_share),
-                listOf(
-                        DialogMenuItem(title = getString(R.string.button_upload), iconRes = R.drawable.ic_baseline_cloud_upload_24, action = { uploadTest(test) }),
-                        DialogMenuItem(title = getString(R.string.button_convert_to_csv), iconRes = R.drawable.ic_edit_white, action = { convertTestToCSV(test) })
-                )
+            getString(R.string.title_dialog_share),
+            listOf(
+                DialogMenuItem(
+                    title = getString(R.string.button_upload),
+                    iconRes = R.drawable.ic_baseline_cloud_upload_24,
+                    action = { uploadTest(test) }),
+                DialogMenuItem(
+                    title = getString(R.string.button_convert_to_csv),
+                    iconRes = R.drawable.ic_edit_white,
+                    action = { convertTestToCSV(test) })
+            )
         ).show(requireActivity().supportFragmentManager, "TAG")
     }
 
@@ -184,25 +242,25 @@ class LocalMainFragment : Fragment() {
     private fun convertTestToCSV(test: Test) {
 
         requireActivity().executeJobWithDialog(
-                title = getString(R.string.converting),
-                task = {
-                    withContext(Dispatchers.IO) {
-                        service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
-                    }
-                },
-                onSuccess = {
-                    val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, it.text)
-                        type = "text/plain"
-                    }
-
-                    val shareIntent = Intent.createChooser(sendIntent, null)
-                    startActivity(shareIntent)
-                },
-                onFailure = {
-                    requireContext().showErrorToast(it)
+            title = getString(R.string.converting),
+            task = {
+                withContext(Dispatchers.IO) {
+                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
                 }
+            },
+            onSuccess = {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, it.text)
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
+            },
+            onFailure = {
+                requireContext().showErrorToast(it)
+            }
         )
     }
 
@@ -212,7 +270,10 @@ class LocalMainFragment : Fragment() {
             startAnswer(test, (test.startPosition), test.limit)
         } else {
 
-            childFragmentManager.setFragmentResultListener(REQUEST_PLAY_CONFIG, viewLifecycleOwner) { requestKey, bundle ->
+            childFragmentManager.setFragmentResultListener(
+                REQUEST_PLAY_CONFIG,
+                viewLifecycleOwner
+            ) { requestKey, bundle ->
                 if (requestKey != REQUEST_PLAY_CONFIG) return@setFragmentResultListener
 
                 val position = bundle.getInt(PlayConfigDialogFragment.RESULT_START_POSITION)
@@ -221,7 +282,7 @@ class LocalMainFragment : Fragment() {
             }
 
             PlayConfigDialogFragment.newInstance(test, REQUEST_PLAY_CONFIG)
-                    .show(childFragmentManager, "TAG")
+                .show(childFragmentManager, "TAG")
         }
     }
 
@@ -233,14 +294,19 @@ class LocalMainFragment : Fragment() {
 
         if (!incorrect && sharedPreferenceManager.refine) {
 
-            Toast.makeText(requireContext(), getString(R.string.message_null_wrongs), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.message_null_wrongs),
+                Toast.LENGTH_SHORT
+            ).show()
 
         } else {
 
             val result = test.copy(
-                    limit = limit,
-                    startPosition = start,
-                    history = Calendar.getInstance().timeInMillis)
+                limit = limit,
+                startPosition = start,
+                history = Calendar.getInstance().timeInMillis
+            )
 
             testViewModel.update(result)
 
@@ -254,48 +320,51 @@ class LocalMainFragment : Fragment() {
         selectedTest = test
 
         AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
-                .setTitle(getString(R.string.login))
-                .setMessage(getString(R.string.msg_not_login))
-                .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                    val providers = arrayListOf(
-                            AuthUI.IdpConfig.EmailBuilder().build(),
-                            AuthUI.IdpConfig.GoogleBuilder().build())
+            .setTitle(getString(R.string.login))
+            .setMessage(getString(R.string.msg_not_login))
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                val providers = arrayListOf(
+                    AuthUI.IdpConfig.EmailBuilder().build(),
+                    AuthUI.IdpConfig.GoogleBuilder().build()
+                )
 
-                    // Create and launch sign-in intent
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setAvailableProviders(providers)
-                                    .setTosAndPrivacyPolicyUrls(
-                                            "https://testmaker-1cb29.firebaseapp.com/terms",
-                                            "https://testmaker-1cb29.firebaseapp.com/privacy")
-                                    .build(),
-                            REQUEST_SIGN_IN_UPLOAD)
-                }
-                .setNegativeButton(getString(R.string.cancel), null)
-                .show()
+                // Create and launch sign-in intent
+                startActivityForResult(
+                    AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .setTosAndPrivacyPolicyUrls(
+                            "https://testmaker-1cb29.firebaseapp.com/terms",
+                            "https://testmaker-1cb29.firebaseapp.com/privacy"
+                        )
+                        .build(),
+                    REQUEST_SIGN_IN_UPLOAD
+                )
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
     }
 
     private fun editCategory(category: Category) {
 
         EditTextDialogFragment(
-                title = getString(R.string.title_dialog_edit_category),
-                defaultText = category.name,
-                hint = getString(R.string.hint_category_name))
+            title = getString(R.string.title_dialog_edit_category),
+            defaultText = category.name,
+            hint = getString(R.string.hint_category_name)
+        )
         { text ->
-
             testViewModel.renameAllInCategory(category.name, text)
             categoryViewModel.update(category.copy(name = text))
-
         }.show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun deleteCategory(category: Category) {
-
-        ConfirmDangerDialogFragment(getString(R.string.message_delete_category, category.name)) {
-            testViewModel.deleteAllInCategory(category.name)
-            categoryViewModel.delete(category)
-        }.show(requireActivity().supportFragmentManager, "TAG")
+        ConfirmDeleteCategoryDialogFragment.newInstance(
+            title = getString(R.string.message_delete_category, category.name),
+            buttonText = getString(R.string.button_delete_confirm),
+            category = category,
+            requestKey = REQUEST_DELETE_CATEGORY
+        ).show(childFragmentManager, ConfirmDeleteCategoryDialogFragment::class.java.name)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -312,24 +381,27 @@ class LocalMainFragment : Fragment() {
             val testName = data.getStringExtra(EXTRA_TEST_NAME) ?: return
 
             requireActivity().executeJobWithDialog(
-                    title = getString(R.string.msg_creating_share_test_link),
-                    task = {
-                        dynamicLinksCreator.createShareTestDynamicLinks(documentId)
-                    },
-                    onSuccess = {
-                        it.shortLink?.let {
-                            val sendIntent: Intent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, testName, it))
-                                type = "text/plain"
-                            }
-                            val shareIntent = Intent.createChooser(sendIntent, null)
-                            startActivity(shareIntent)
+                title = getString(R.string.msg_creating_share_test_link),
+                task = {
+                    dynamicLinksCreator.createShareTestDynamicLinks(documentId)
+                },
+                onSuccess = {
+                    it.shortLink?.let {
+                        val sendIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                getString(R.string.msg_share_test, testName, it)
+                            )
+                            type = "text/plain"
                         }
-                    },
-                    onFailure = {
-                        requireContext().showToast(getString(R.string.msg_failure_share_test))
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        startActivity(shareIntent)
                     }
+                },
+                onFailure = {
+                    requireContext().showToast(getString(R.string.msg_failure_share_test))
+                }
             )
         }
     }
@@ -344,9 +416,8 @@ class LocalMainFragment : Fragment() {
         const val REQUEST_SIGN_IN_UPLOAD = 54321
         const val REQUEST_UPLOAD_TEST = 54322
         const val REQUEST_PLAY_CONFIG = "request_play_config"
-        const val REQUEST_CONFIRM_DELETE = "request_confirm_delete"
-
-        const val RESULT_TEST = "result_test"
+        const val REQUEST_DELETE_TEST = "request_confirm_delete"
+        const val REQUEST_DELETE_CATEGORY = "request_delete_category"
 
         const val EXTRA_DOCUMENT_ID = "documentId"
         const val EXTRA_TEST_NAME = "testName"
