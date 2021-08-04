@@ -4,21 +4,51 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.DialogConfirmDangerBinding
+import jp.gr.java_conf.foobar.testmaker.service.extensions.requireStringArgument
 
-class ConfirmDangerDialogFragment(private val title: String = "", private val buttonText: String = "", private val completion: () -> Unit) : BottomSheetDialogFragment() {
+class ConfirmDangerDialogFragment : BottomSheetDialogFragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return DataBindingUtil.inflate<DialogConfirmDangerBinding>(inflater, R.layout.dialog_confirm_danger, container, false).apply {
+    companion object {
+        const val ARG_TITLE = "title"
+        const val ARG_BUTTON_TEXT = "button_text"
+
+        fun newInstance(
+            title: String,
+            buttonText: String,
+            completion: () -> Unit
+        ) = ConfirmDangerDialogFragment()
+            .apply {
+                this.completion = completion
+                arguments = bundleOf(
+                    ARG_TITLE to title,
+                    ARG_BUTTON_TEXT to buttonText
+                )
+            }
+    }
+
+    //FIXME Activity の再生成時に復元できるようにする
+    private var completion = {}
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return DataBindingUtil.inflate<DialogConfirmDangerBinding>(
+            inflater,
+            R.layout.dialog_confirm_danger,
+            container,
+            false
+        ).apply {
             lifecycleOwner = viewLifecycleOwner
 
-            this.titleDialog = title
-            if(buttonText.isNotEmpty()){
-                button.text = buttonText
-            }
+            this.titleDialog = requireStringArgument(ARG_TITLE)
+            button.text = requireStringArgument(ARG_BUTTON_TEXT)
             button.setOnClickListener {
                 completion()
                 dismiss()

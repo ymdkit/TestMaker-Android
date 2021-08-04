@@ -162,7 +162,8 @@ class EditActivity : BaseActivity() {
     }
 
     fun deleteQuestion(question: Question) {
-        ConfirmDangerDialogFragment(getString(R.string.message_delete, question.question)) {
+        ConfirmDangerDialogFragment.newInstance(getString(R.string.message_delete, question.question),
+            getString(R.string.button_delete_confirm)) {
             testViewModel.delete(question)
         }.show(supportFragmentManager, "TAG")
     }
