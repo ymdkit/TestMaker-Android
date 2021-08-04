@@ -36,24 +36,34 @@ class GroupListFragment : Fragment() {
     private lateinit var binding: FragmentGroupListBinding
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         controller.setOnClickListener(object : GroupListController.OnClickListener {
             override fun onClickGroup(group: Group) {
-                findNavController().navigate(GroupListFragmentDirections.actionGroupListToGroupDetail(groupId = group.id))
+                findNavController().navigate(
+                    GroupListFragmentDirections.actionGroupListToGroupDetail(
+                        groupId = group.id
+                    )
+                )
             }
         })
 
-        return DataBindingUtil.inflate<FragmentGroupListBinding>(inflater, R.layout.fragment_group_list, container, false).apply {
+        return DataBindingUtil.inflate<FragmentGroupListBinding>(
+            inflater,
+            R.layout.fragment_group_list,
+            container,
+            false
+        ).apply {
             binding = this
             isLogin = (auth.getUser() != null)
 
             buttonLogin.setOnClickListener {
                 startActivityForResult(
-                        auth.getAuthUIIntent(),
-                        AccountMainFragment.REQUEST_SIGN_IN)
+                    auth.getAuthUIIntent(),
+                    AccountMainFragment.REQUEST_SIGN_IN
+                )
             }
 
             recyclerView.adapter = controller.adapter
@@ -63,9 +73,11 @@ class GroupListFragment : Fragment() {
             }
 
             buttonAdd.setOnClickListener {
-                EditTextDialogFragment(
-                        title = getString(R.string.title_create_group),
-                        hint = getString(R.string.hint_group_name))
+                EditTextDialogFragment.newInstance(
+                    title = getString(R.string.title_create_group),
+                    hint = getString(R.string.hint_group_name),
+                    defaultText = ""
+                )
                 { text ->
                     createAndJoinGroup(text)
                 }.show(requireActivity().supportFragmentManager, "TAG")
@@ -111,7 +123,11 @@ class GroupListFragment : Fragment() {
                     binding.isLogin = true
                     viewModel.createUser(it)
                     refresh()
-                    Toast.makeText(requireContext(), getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.login_successed),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             } else {

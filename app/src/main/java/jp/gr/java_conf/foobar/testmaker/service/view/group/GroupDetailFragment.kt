@@ -162,7 +162,7 @@ class GroupDetailFragment : Fragment() {
 
                 group?.let {
 
-                    EditTextDialogFragment(
+                    EditTextDialogFragment.newInstance(
                         title = getString(R.string.title_rename_group),
                         defaultText = it.name,
                         hint = getString(R.string.hint_group_name)

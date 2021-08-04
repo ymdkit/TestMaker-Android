@@ -347,7 +347,7 @@ class LocalMainFragment : Fragment() {
 
     private fun editCategory(category: Category) {
 
-        EditTextDialogFragment(
+        EditTextDialogFragment.newInstance(
             title = getString(R.string.title_dialog_edit_category),
             defaultText = category.name,
             hint = getString(R.string.hint_category_name)

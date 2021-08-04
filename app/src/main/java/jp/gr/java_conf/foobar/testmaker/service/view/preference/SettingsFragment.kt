@@ -44,7 +44,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         userNamePreference?.apply {
             setOnPreferenceClickListener {
 
-                EditTextDialogFragment(
+                EditTextDialogFragment.newInstance(
                         title = getString(R.string.title_dialog_edit_user_name),
                         defaultText = user.displayName ?: "",
                         hint = getString(R.string.hint_user_name))
