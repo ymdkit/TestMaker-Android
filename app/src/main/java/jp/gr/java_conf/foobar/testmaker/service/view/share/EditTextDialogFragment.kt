@@ -37,6 +37,14 @@ class EditTextDialogFragment: DialogFragment() {
 
     private var completion: (String) -> Unit = {}
 
+    // Activity の再生成が起きた場合にダイアログを削除する
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState != null){
+            dismiss()
+        }
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
 
