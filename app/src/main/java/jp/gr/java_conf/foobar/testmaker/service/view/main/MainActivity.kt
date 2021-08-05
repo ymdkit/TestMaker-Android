@@ -61,6 +61,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
     private val logger: TestMakerLogger by inject()
 
     private val importFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
+        it?: return@registerForActivityResult
         val (title, content) = TestMakerFileReader.readFileFromUri(it, this)
         loadTestByText(title = title, text = content)
     }

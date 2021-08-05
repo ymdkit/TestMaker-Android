@@ -28,8 +28,8 @@ android {
         minSdk = Deps.minSdkVersion
         targetSdk = Deps.targetSdkVersion
         multiDexEnabled = true
-        versionCode = 148
-        versionName = "4.1.3"
+        versionCode = 149
+        versionName = "4.1.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
