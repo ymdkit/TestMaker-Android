@@ -148,7 +148,7 @@ class PlayActivity : BaseActivity() {
         }
 
     override fun onBackPressed() {
-        ConfirmDangerDialogFragment(
+        ConfirmDangerDialogFragment.newInstance(
             title = getString(R.string.play_dialog_confirm_interrupt),
             buttonText = getString(R.string.ok)
         ) {

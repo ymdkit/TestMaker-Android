@@ -64,8 +64,10 @@ class AccountMainFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         viewModel.getMyTests().observeNonNull(this) {
             controller.tests = it
@@ -76,17 +78,31 @@ class AccountMainFragment : Fragment() {
 
             override fun onClickTest(document: DocumentSnapshot) {
                 ListDialogFragment.newInstance(
-                        document.toObject(FirebaseTest::class.java)?.name ?: "",
-                        listOf(
-                                DialogMenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(document) }),
-                                DialogMenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(document) }),
-                                DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteTest(document) })
-                        )
+                    document.toObject(FirebaseTest::class.java)?.name ?: "",
+                    listOf(
+                        DialogMenuItem(
+                            title = getString(R.string.download),
+                            iconRes = R.drawable.ic_file_download_white,
+                            action = { downloadTest(document) }),
+                        DialogMenuItem(
+                            title = getString(R.string.share),
+                            iconRes = R.drawable.ic_share_white,
+                            action = { shareTest(document) }),
+                        DialogMenuItem(
+                            title = getString(R.string.delete),
+                            iconRes = R.drawable.ic_delete_white,
+                            action = { deleteTest(document) })
+                    )
                 ).show(requireActivity().supportFragmentManager, "TAG")
             }
         })
 
-        return DataBindingUtil.inflate<AccountMainFragmentBinding>(inflater, R.layout.account_main_fragment, container, false).apply {
+        return DataBindingUtil.inflate<AccountMainFragmentBinding>(
+            inflater,
+            R.layout.account_main_fragment,
+            container,
+            false
+        ).apply {
             binding = this
             recyclerView.layoutManager = StickyHeaderLinearLayoutManager(requireContext())
             recyclerView.adapter = controller.adapter
@@ -100,29 +116,35 @@ class AccountMainFragment : Fragment() {
             buttonLogin.setOnClickListener {
                 firebaseAnalytic.logEvent("login_from_account_tab", Bundle())
                 startActivityForResult(
-                        viewModel.getAuthUIIntent(),
-                        REQUEST_SIGN_IN)
+                    viewModel.getAuthUIIntent(),
+                    REQUEST_SIGN_IN
+                )
             }
 
             fab.setOnClickListener {
                 viewModel.getUser()?.let {
                     if (testViewModel.tests.isEmpty()) {
-                        Toast.makeText(requireContext(), getString(R.string.message_non_exist_test), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.message_non_exist_test),
+                            Toast.LENGTH_LONG
+                        ).show()
                         return@setOnClickListener
                     }
 
                     UploadTestActivity.startActivity(requireActivity())
                 } ?: run {
                     AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
-                            .setTitle(getString(R.string.login))
-                            .setMessage(getString(R.string.msg_not_login))
-                            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                                startActivityForResult(
-                                        viewModel.getAuthUIIntent(),
-                                        MainActivity.REQUEST_SIGN_IN)
-                            }
-                            .setNegativeButton(getString(R.string.cancel), null)
-                            .show()
+                        .setTitle(getString(R.string.login))
+                        .setMessage(getString(R.string.msg_not_login))
+                        .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                            startActivityForResult(
+                                viewModel.getAuthUIIntent(),
+                                MainActivity.REQUEST_SIGN_IN
+                            )
+                        }
+                        .setNegativeButton(getString(R.string.cancel), null)
+                        .show()
                 }
             }
 
@@ -142,20 +164,20 @@ class AccountMainFragment : Fragment() {
     fun downloadTest(document: DocumentSnapshot) {
 
         requireActivity().executeJobWithDialog(
-                title = getString(R.string.downloading),
-                task = {
-                    viewModel.downloadTest(document.id)
-                },
-                onSuccess = {
-                    viewModel.convert(it)
+            title = getString(R.string.downloading),
+            task = {
+                viewModel.downloadTest(document.id)
+            },
+            onSuccess = {
+                viewModel.convert(it)
 
-                    logger.logCreateTestEvent(it.name, CreateTestSource.SELF_DOWNLOAD.title)
-                    requireContext().showToast(getString(R.string.msg_success_download_test, it.name))
-                    listener?.onDownloaded()
-                },
-                onFailure = {
-                    requireContext().showToast(getString(R.string.msg_failure_download_test))
-                }
+                logger.logCreateTestEvent(it.name, CreateTestSource.SELF_DOWNLOAD.title)
+                requireContext().showToast(getString(R.string.msg_success_download_test, it.name))
+                listener?.onDownloaded()
+            },
+            onFailure = {
+                requireContext().showToast(getString(R.string.msg_failure_download_test))
+            }
         )
     }
 
@@ -164,42 +186,49 @@ class AccountMainFragment : Fragment() {
         val data = document.toObject(FirebaseTest::class.java) ?: return
 
         requireActivity().executeJobWithDialog(
-                title = getString(R.string.msg_creating_share_test_link),
-                task = {
-                    dynamicLinksCreator.createShareTestDynamicLinks(document.id)
-                },
-                onSuccess = {
-                    it.shortLink?.let {
-                        val sendIntent: Intent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, it))
-                            type = "text/plain"
-                        }
-                        val shareIntent = Intent.createChooser(sendIntent, null)
-                        startActivity(shareIntent)
+            title = getString(R.string.msg_creating_share_test_link),
+            task = {
+                dynamicLinksCreator.createShareTestDynamicLinks(document.id)
+            },
+            onSuccess = {
+                it.shortLink?.let {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(
+                            Intent.EXTRA_TEXT,
+                            getString(R.string.msg_share_test, data.name, it)
+                        )
+                        type = "text/plain"
                     }
-                },
-                onFailure = {
-                    requireContext().showToast(getString(R.string.msg_failure_share_test))
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
                 }
+            },
+            onFailure = {
+                requireContext().showToast(getString(R.string.msg_failure_share_test))
+            }
         )
     }
 
     fun deleteTest(document: DocumentSnapshot) {
-        ConfirmDangerDialogFragment(
-                title = getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name),
-                completion = {
-                    lifecycleScope.launch {
-                        runCatching {
-                            viewModel.deleteTest(document.id)
-                        }.onSuccess {
-                            viewModel.fetchMyTests()
-                            requireContext().showToast(getString(R.string.msg_success_delete_test))
-                        }.onFailure {
-                            requireContext().showToast(getString(R.string.msg_failure_delete_test))
-                        }
+        ConfirmDangerDialogFragment.newInstance(
+            title = getString(
+                R.string.message_delete_exam,
+                document.toObject(FirebaseTest::class.java)?.name
+            ),
+            buttonText = getString(R.string.button_delete_confirm),
+            completion = {
+                lifecycleScope.launch {
+                    runCatching {
+                        viewModel.deleteTest(document.id)
+                    }.onSuccess {
+                        viewModel.fetchMyTests()
+                        requireContext().showToast(getString(R.string.msg_success_delete_test))
+                    }.onFailure {
+                        requireContext().showToast(getString(R.string.msg_failure_delete_test))
                     }
-                }).show(requireActivity().supportFragmentManager, "TAG")
+                }
+            }).show(requireActivity().supportFragmentManager, "TAG")
 
     }
 
@@ -217,7 +246,11 @@ class AccountMainFragment : Fragment() {
                 binding?.progress?.isRefreshing = true
                 viewModel.fetchMyTests()
 
-                Toast.makeText(requireContext(), getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.login_successed),
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 response?.error?.errorCode
             }

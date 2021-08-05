@@ -28,8 +28,8 @@ android {
         minSdk = Deps.minSdkVersion
         targetSdk = Deps.targetSdkVersion
         multiDexEnabled = true
-        versionCode = 147
-        versionName = "4.1.2"
+        versionCode = 148
+        versionName = "4.1.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -92,7 +92,7 @@ android {
         jvmTarget = "1.8"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.0-rc01"
+        kotlinCompilerExtensionVersion = "1.0.0"
     }
 }
 
@@ -103,13 +103,13 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.compose.ui:ui:1.0.0-rc01")
-    implementation("androidx.compose.ui:ui-tooling:1.0.0-rc01")
-    implementation("androidx.compose.foundation:foundation:1.0.0-rc01")
-    implementation("androidx.compose.material:material:1.0.0-rc01")
-    implementation("androidx.compose.material:material-icons-core:1.0.0-rc01")
-    implementation("androidx.compose.material:material-icons-extended:1.0.0-rc01")
-    implementation("androidx.compose.runtime:runtime-livedata:1.0.0-rc01")
+    implementation("androidx.compose.ui:ui:1.0.0")
+    implementation("androidx.compose.ui:ui-tooling:1.0.0")
+    implementation("androidx.compose.foundation:foundation:1.0.0")
+    implementation("androidx.compose.material:material:1.0.0")
+    implementation("androidx.compose.material:material-icons-core:1.0.0")
+    implementation("androidx.compose.material:material-icons-extended:1.0.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.0.0")
     implementation("com.google.android.gms:play-services-ads:19.3.0")
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("com.google.android.play:core-ktx:1.8.0")
@@ -152,7 +152,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.2.2")
     implementation("androidx.navigation:navigation-ui-ktx:2.2.2")
     implementation("androidx.fragment:fragment-ktx:${Deps.fragmentVersion}")
-    implementation("androidx.activity:activity-compose:1.3.0-beta01")
+    implementation("androidx.activity:activity-compose:1.3.0")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")
     kapt("com.airbnb.android:epoxy-processor:3.11.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.9.0")
@@ -166,7 +166,7 @@ dependencies {
     androidTestImplementation("tools.fastlane:screengrab:1.0.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
     androidTestImplementation("androidx.test:rules:1.2.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta07")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0")
     androidTestImplementation("com.jraska:falcon:2.1.1")
 }
 repositories {

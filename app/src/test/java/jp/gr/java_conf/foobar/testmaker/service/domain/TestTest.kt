@@ -10,7 +10,7 @@ class TestTest {
 
     @Test
     fun testRandomExtractedAnswers() {
-        var test = MyTest(title = "", color = 0)
+        var test = MyTest(title = "", color = 0, source = "")
         assertEquals(emptyList<String>(), test.randomExtractedAnswers.sorted())
 
         // 一つ追加
@@ -48,7 +48,7 @@ class TestTest {
 
     @Test
     fun testGetChoicesSelect() {
-        var test = MyTest(title = "", color = 0)
+        var test = MyTest(title = "", color = 0, source = "")
 
         assertEquals(listOf("empty", "empty"), test.getChoices(2, "answer1", "empty"))
 
@@ -60,7 +60,7 @@ class TestTest {
 
     @Test
     fun testGetChoicesSelectComplete() {
-        var test = MyTest(title = "", color = 0)
+        var test = MyTest(title = "", color = 0, source = "")
 
         assertEquals(listOf("empty", "empty"), test.getChoices(2, listOf("answer1"), "empty"))
 

@@ -5,11 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
@@ -19,7 +19,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.android.billingclient.api.BillingClient
-import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
@@ -35,6 +34,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
+import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
@@ -60,13 +60,17 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
     private val service: CloudFunctionsService by inject()
     private val logger: TestMakerLogger by inject()
 
+    private val importFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
+        val (title, content) = TestMakerFileReader.readFileFromUri(it, this)
+        loadTestByText(title = title, text = content)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.viewPager.offscreenPageLimit = 1
-
         binding.viewPager.adapter = ViewPagerAdapter(
             this, listOf(
                 LocalMainFragment(),
@@ -86,7 +90,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         createAd(binding.adView)
         initNavigationView()
 
-        viewModel.startConnection()
+        viewModel.startBillingConnection()
         viewModel.billingStatus.observeNonNull(this) {
             when (it) {
                 is BillingStatus.Error -> {
@@ -192,18 +196,17 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
-                R.id.nav_help //editProActivityにも同様の記述
+                R.id.nav_help
                 -> {
                     startActivity(
                         Intent(
-                            Intent.ACTION_VIEW, Uri
-                                .parse(getString(R.string.help_url))
+                            Intent.ACTION_VIEW,
+                            Uri.parse(getString(R.string.help_url))
                         )
                     )
                 }
                 R.id.nav_feedback
                 -> {
-
                     val emailIntent = Intent(Intent.ACTION_SENDTO)
                     emailIntent.data = Uri.parse("mailto:")
                     emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("testmaker.contact@gmail.com"))
@@ -218,21 +221,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                     startActivity(Intent.createChooser(emailIntent, null))
 
                 }
-                R.id.nav_review -> {
-                    startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW, Uri
-                                .parse("https://play.google.com/store/apps/details?id=jp.gr.java_conf.foobar.testmaker.service&amp;hl=ja")
-                        )
-                    )
-                }
-                R.id.nav_import -> {
-
-                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                    intent.type = "text/*"
-                    startActivityForResult(intent, REQUEST_IMPORT)
-
-                }
+                R.id.nav_import -> importFile.launch(arrayOf("text/*"))
                 R.id.nav_paste -> {
 
                     val dialogLayout = layoutInflater.inflate(
@@ -254,29 +243,31 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                         dialog.dismiss()
                     }
                 }
-                R.id.nav_settings -> {
-                    startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
-                }
-
-                R.id.nav_online -> {
-                    startActivityForResult(
-                        Intent(this@MainActivity, FirebaseActivity::class.java),
-                        REQUEST_EDIT
+                R.id.nav_settings -> startActivity(
+                    Intent(
+                        this@MainActivity,
+                        SettingsActivity::class.java
                     )
-                }
-                R.id.nav_group -> {
-                    startActivity(Intent(this@MainActivity, GroupActivity::class.java))
-                }
-                R.id.nav_move_questions -> {
-                    startActivityForResult(
-                        Intent(
-                            this@MainActivity,
-                            MoveQuestionsActivity::class.java
-                        ), REQUEST_EDIT
+                )
+                R.id.nav_online -> startActivity(
+                    Intent(
+                        this@MainActivity,
+                        FirebaseActivity::class.java
                     )
-                }
+                )
+                R.id.nav_group -> startActivity(
+                    Intent(
+                        this@MainActivity,
+                        GroupActivity::class.java
+                    )
+                )
+                R.id.nav_move_questions -> startActivity(
+                    Intent(
+                        this@MainActivity,
+                        MoveQuestionsActivity::class.java
+                    )
+                )
                 R.id.nav_remove_ad -> {
-
                     viewModel.purchaseRemoveAd(
                         this,
                         BillingItem(getString(R.string.sku_remove_ad), BillingClient.SkuType.INAPP)
@@ -291,79 +282,9 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
             binding.toolbar, R.string.add,
             R.string.add
         )
-
         binding.drawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
 
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_CANCELED) {
-            binding.drawerLayout.closeDrawers()
-        }
-
-        if (requestCode == REQUEST_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
-
-            if (resultCode == Activity.RESULT_OK) {
-                // Successfully signed in
-                viewModel.createUser(viewModel.getUser())
-
-                Toast.makeText(this, getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
-                // ...
-            } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                response?.error?.errorCode
-                // ...
-            }
-        }
-
-        if (resultCode != Activity.RESULT_OK) return
-
-        if (requestCode == REQUEST_IMPORT) {
-
-            data?.also {
-                launchEditorActivity(it.data)
-            }
-        }
-    }
-
-    private fun launchEditorActivity(uri: Uri?) {
-
-        if (uri == null) return
-        var inputStream: InputStream? = null
-
-        try {
-
-            inputStream = contentResolver.openInputStream(uri)
-            inputStream?.also {
-
-                var text = it.bufferedReader().use(BufferedReader::readText)
-
-                if (text[0].toString() == "\uFEFF") {
-                    text = text.substring(1)
-                }
-
-                val cursor = contentResolver.query(uri, null, null, null, null)
-                cursor?.let { cur ->
-                    val nameIndex = cur.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    cur.moveToFirst()
-                    val title = cur.getString(nameIndex)
-                    loadTestByText(title = title, text = text)
-                    cur.close()
-                }
-            }
-        } catch (e: FileNotFoundException) {
-            throw RuntimeException(e)
-        } catch (e: UnsupportedEncodingException) {
-            throw RuntimeException(e)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            inputStream?.close()
-        }
     }
 
     private fun loadTestByText(title: String = "", text: String) {
@@ -394,11 +315,6 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         )
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        drawerToggle.syncState()
-    }
-
     private inner class ViewPagerAdapter(
         activity: FragmentActivity,
         private val fragments: List<Fragment>
@@ -411,8 +327,6 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
         const val PAGE_LOCAL = 0
         const val PAGE_REMOTE = 1
 
-        const val REQUEST_EDIT = 11111
-        const val REQUEST_IMPORT = 12345
         const val REQUEST_SIGN_IN = 12346
 
         fun startActivityWithClear(activity: Activity) {

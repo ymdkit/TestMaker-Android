@@ -28,6 +28,14 @@ class ListDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
+    // Activity の再生成が起きた場合にダイアログを削除する
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState != null){
+            dismiss()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return DataBindingUtil.inflate<DialogListMenusBinding>(inflater, R.layout.dialog_list_menus, container, false).apply {
             lifecycleOwner = viewLifecycleOwner

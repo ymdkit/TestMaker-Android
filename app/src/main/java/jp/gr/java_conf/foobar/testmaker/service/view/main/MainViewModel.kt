@@ -59,7 +59,7 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
 
     }
 
-    fun startConnection() {
+    fun startBillingConnection() {
         billingClient.startConnection(this)
     }
 

@@ -48,42 +48,67 @@ class GroupDetailFragment : Fragment() {
     private val dynamicLinksCreator: DynamicLinksCreator by inject()
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         controller.setOnClickListener(object : GroupDetailController.OnClickListener {
             override fun onClickTest(document: DocumentSnapshot) {
 
                 val user = auth.getUser()
-                val actions = if (user != null && user.uid == document.toObject(FirebaseTest::class.java)?.userId)
-                    listOf(
-                            DialogMenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(document) }),
-                            DialogMenuItem(title = getString(R.string.history), iconRes = R.drawable.ic_baseline_history_24, action = { actionShowHistory(document) }),
-                            DialogMenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(document) }),
-                            DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteTest(document) })
-                    )
-                else
-                    listOf(
-                            DialogMenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(document) }),
-                            DialogMenuItem(title = getString(R.string.share), iconRes = R.drawable.ic_share_white, action = { shareTest(document) })
-                    )
+                val actions =
+                    if (user != null && user.uid == document.toObject(FirebaseTest::class.java)?.userId)
+                        listOf(
+                            DialogMenuItem(
+                                title = getString(R.string.download),
+                                iconRes = R.drawable.ic_file_download_white,
+                                action = { downloadTest(document) }),
+                            DialogMenuItem(
+                                title = getString(R.string.history),
+                                iconRes = R.drawable.ic_baseline_history_24,
+                                action = { actionShowHistory(document) }),
+                            DialogMenuItem(
+                                title = getString(R.string.share),
+                                iconRes = R.drawable.ic_share_white,
+                                action = { shareTest(document) }),
+                            DialogMenuItem(
+                                title = getString(R.string.delete),
+                                iconRes = R.drawable.ic_delete_white,
+                                action = { deleteTest(document) })
+                        )
+                    else
+                        listOf(
+                            DialogMenuItem(
+                                title = getString(R.string.download),
+                                iconRes = R.drawable.ic_file_download_white,
+                                action = { downloadTest(document) }),
+                            DialogMenuItem(
+                                title = getString(R.string.share),
+                                iconRes = R.drawable.ic_share_white,
+                                action = { shareTest(document) })
+                        )
 
                 ListDialogFragment.newInstance(
-                        document.toObject(FirebaseTest::class.java)?.name ?: "",
-                        actions
+                    document.toObject(FirebaseTest::class.java)?.name ?: "",
+                    actions
                 ).show(requireActivity().supportFragmentManager, "TAG")
             }
         })
 
-        return DataBindingUtil.inflate<FragmentGroupDetailBinding>(inflater, R.layout.fragment_group_detail, container, false).apply {
+        return DataBindingUtil.inflate<FragmentGroupDetailBinding>(
+            inflater,
+            R.layout.fragment_group_detail,
+            container,
+            false
+        ).apply {
             binding = this
             isLogin = (auth.getUser() != null)
 
             buttonLogin.setOnClickListener {
                 startActivityForResult(
-                        auth.getAuthUIIntent(),
-                        AccountMainFragment.REQUEST_SIGN_IN)
+                    auth.getAuthUIIntent(),
+                    AccountMainFragment.REQUEST_SIGN_IN
+                )
             }
 
             recyclerView.adapter = controller.adapter
@@ -93,7 +118,11 @@ class GroupDetailFragment : Fragment() {
             }
 
             buttonAdd.setOnClickListener {
-                findNavController().navigate(GroupDetailFragmentDirections.actionGroupDetailToUploadTest(groupId = args.groupId))
+                findNavController().navigate(
+                    GroupDetailFragmentDirections.actionGroupDetailToUploadTest(
+                        groupId = args.groupId
+                    )
+                )
             }
 
         }.root
@@ -133,10 +162,11 @@ class GroupDetailFragment : Fragment() {
 
                 group?.let {
 
-                    EditTextDialogFragment(
-                            title = getString(R.string.title_rename_group),
-                            defaultText = it.name,
-                            hint = getString(R.string.hint_group_name))
+                    EditTextDialogFragment.newInstance(
+                        title = getString(R.string.title_rename_group),
+                        defaultText = it.name,
+                        hint = getString(R.string.hint_group_name)
+                    )
                     { text ->
 
                         renameGroup(text, it)
@@ -150,7 +180,13 @@ class GroupDetailFragment : Fragment() {
 
                 group?.let {
 
-                    ConfirmDangerDialogFragment(getString(R.string.msg_delete_group, it.name)) {
+                    ConfirmDangerDialogFragment.newInstance(
+                        getString(
+                            R.string.msg_delete_group,
+                            it.name
+                        ),
+                        getString(R.string.button_delete_confirm)
+                    ) {
                         deleteAndExitGroup(it)
 
                     }.show(requireActivity().supportFragmentManager, "TAG")
@@ -161,7 +197,12 @@ class GroupDetailFragment : Fragment() {
 
                 group?.let {
 
-                    ConfirmDangerDialogFragment(getString(R.string.msg_exit_group, it.name)) {
+                    ConfirmDangerDialogFragment.newInstance(
+                        getString(
+                            R.string.msg_exit_group,
+                            it.name
+                        ), getString(R.string.button_delete_confirm)
+                    ) {
                         exitGroup(it.id)
                     }.show(requireActivity().supportFragmentManager, "TAG")
                 }
@@ -173,19 +214,20 @@ class GroupDetailFragment : Fragment() {
 
     private fun refresh() = lifecycleScope.launch {
         controller.tests = viewModel.getTests(args.groupId)
-        viewModel.getGroup(args.
-        groupId)
-                .addOnSuccessListener {
-                    it.toObject(Group::class.java)?.let {
-                        group = it
-                        joinGroup()
-                        binding.swipeRefresh.isRefreshing = false
-                        requireActivity().invalidateOptionsMenu()
-                    } ?: run {
-                        requireContext().showToast(getString(R.string.msg_group_deleted))
-                        exitGroup(args.groupId)
-                    }
+        viewModel.getGroup(
+            args.groupId
+        )
+            .addOnSuccessListener {
+                it.toObject(Group::class.java)?.let {
+                    group = it
+                    joinGroup()
+                    binding.swipeRefresh.isRefreshing = false
+                    requireActivity().invalidateOptionsMenu()
+                } ?: run {
+                    requireContext().showToast(getString(R.string.msg_group_deleted))
+                    exitGroup(args.groupId)
                 }
+            }
     }
 
     private fun joinGroup() = lifecycleScope.launch {
@@ -201,24 +243,27 @@ class GroupDetailFragment : Fragment() {
         val group = group ?: return
 
         requireActivity().executeJobWithDialog(
-                title = getString(R.string.msg_creating_invite_group_link),
-                task = {
-                    dynamicLinksCreator.createInviteGroupDynamicLinks(group.id)
-                },
-                onSuccess = {
-                    it.shortLink?.let {
-                        val sendIntent: Intent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_invite_group, group.name, it))
-                            type = "text/plain"
-                        }
-                        val shareIntent = Intent.createChooser(sendIntent, null)
-                        startActivity(shareIntent)
+            title = getString(R.string.msg_creating_invite_group_link),
+            task = {
+                dynamicLinksCreator.createInviteGroupDynamicLinks(group.id)
+            },
+            onSuccess = {
+                it.shortLink?.let {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(
+                            Intent.EXTRA_TEXT,
+                            getString(R.string.msg_invite_group, group.name, it)
+                        )
+                        type = "text/plain"
                     }
-                },
-                onFailure = {
-                    requireContext().showToast(getString(R.string.msg_failure_invite_group))
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
                 }
+            },
+            onFailure = {
+                requireContext().showToast(getString(R.string.msg_failure_invite_group))
+            }
         )
     }
 
@@ -255,24 +300,32 @@ class GroupDetailFragment : Fragment() {
     fun downloadTest(document: DocumentSnapshot) {
 
         requireActivity().executeJobWithDialog(
-                title = getString(R.string.downloading),
-                task = {
-                    viewModel.downloadTest(document.id)
-                },
-                onSuccess = {
-                    viewModel.convert(it)
+            title = getString(R.string.downloading),
+            task = {
+                viewModel.downloadTest(document.id)
+            },
+            onSuccess = {
+                viewModel.convert(it)
 
-                    Toast.makeText(requireActivity(), getString(R.string.msg_success_download_test, it.name), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireActivity(),
+                    getString(R.string.msg_success_download_test, it.name),
+                    Toast.LENGTH_SHORT
+                ).show()
 
-                    Toast.makeText(requireContext(), getString(R.string.msg_success_download_test, it.name), Toast.LENGTH_SHORT).show()
-                    val intent = Intent(requireActivity(), MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    startActivity(intent)
-                },
-                onFailure = {
-                    requireContext().showToast(getString(R.string.msg_failure_download_test))
-                }
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.msg_success_download_test, it.name),
+                    Toast.LENGTH_SHORT
+                ).show()
+                val intent = Intent(requireActivity(), MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                startActivity(intent)
+            },
+            onFailure = {
+                requireContext().showToast(getString(R.string.msg_failure_download_test))
+            }
         )
     }
 
@@ -280,46 +333,57 @@ class GroupDetailFragment : Fragment() {
         val data = document.toObject(FirebaseTest::class.java) ?: return
 
         requireActivity().executeJobWithDialog(
-                title = getString(R.string.msg_creating_share_test_link),
-                task = {
-                    dynamicLinksCreator.createShareTestDynamicLinks(document.id)
-                },
-                onSuccess = {
-                    it.shortLink?.let {
-                        val sendIntent: Intent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_share_test, data.name, it))
-                            type = "text/plain"
-                        }
-                        val shareIntent = Intent.createChooser(sendIntent, null)
-                        startActivity(shareIntent)
+            title = getString(R.string.msg_creating_share_test_link),
+            task = {
+                dynamicLinksCreator.createShareTestDynamicLinks(document.id)
+            },
+            onSuccess = {
+                it.shortLink?.let {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(
+                            Intent.EXTRA_TEXT,
+                            getString(R.string.msg_share_test, data.name, it)
+                        )
+                        type = "text/plain"
                     }
-                },
-                onFailure = {
-                    requireContext().showToast(getString(R.string.msg_failure_share_test))
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
                 }
+            },
+            onFailure = {
+                requireContext().showToast(getString(R.string.msg_failure_share_test))
+            }
         )
     }
 
     fun deleteTest(document: DocumentSnapshot) {
-        ConfirmDangerDialogFragment(
-                title = getString(R.string.message_delete_exam, document.toObject(FirebaseTest::class.java)?.name),
-                completion = {
-                    lifecycleScope.launch {
-                        runCatching {
-                            viewModel.deleteTest(document.id)
-                        }.onSuccess {
-                            refresh()
-                            requireContext().showToast(getString(R.string.msg_success_delete_test))
-                        }.onFailure {
-                            requireContext().showToast(getString(R.string.msg_failure_delete_test))
-                        }
+        ConfirmDangerDialogFragment.newInstance(
+            title = getString(
+                R.string.message_delete_exam,
+                document.toObject(FirebaseTest::class.java)?.name
+            ),
+            buttonText = getString(R.string.button_delete_confirm),
+            completion = {
+                lifecycleScope.launch {
+                    runCatching {
+                        viewModel.deleteTest(document.id)
+                    }.onSuccess {
+                        refresh()
+                        requireContext().showToast(getString(R.string.msg_success_delete_test))
+                    }.onFailure {
+                        requireContext().showToast(getString(R.string.msg_failure_delete_test))
                     }
-                }).show(requireActivity().supportFragmentManager, "TAG")
+                }
+            }).show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun actionShowHistory(document: DocumentSnapshot) {
-        findNavController().navigate(GroupDetailFragmentDirections.actionGroupDetailToHistoryTest(documentId = document.id))
+        findNavController().navigate(
+            GroupDetailFragmentDirections.actionGroupDetailToHistoryTest(
+                documentId = document.id
+            )
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -335,7 +399,11 @@ class GroupDetailFragment : Fragment() {
                     binding.isLogin = true
                     viewModel.createUser(it)
                     refresh()
-                    Toast.makeText(requireContext(), getString(R.string.login_successed), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.login_successed),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             } else {
