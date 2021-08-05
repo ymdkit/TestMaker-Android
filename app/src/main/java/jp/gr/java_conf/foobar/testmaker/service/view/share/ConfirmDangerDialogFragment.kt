@@ -31,8 +31,15 @@ class ConfirmDangerDialogFragment : BottomSheetDialogFragment() {
             }
     }
 
-    //FIXME Activity の再生成時に復元できるようにする
     private var completion = {}
+
+    // Activity の再生成が起きた場合にダイアログを削除する
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState != null){
+            dismiss()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
