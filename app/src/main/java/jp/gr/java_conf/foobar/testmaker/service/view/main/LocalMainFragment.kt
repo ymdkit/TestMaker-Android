@@ -117,29 +117,6 @@ class LocalMainFragment : Fragment() {
             mainController.tests = it
         }
 
-        childFragmentManager.setFragmentResultListener(
-            REQUEST_DELETE_TEST,
-            viewLifecycleOwner
-        ) { key, bundle ->
-            val test = bundle.getParcelable<Test>(ConfirmDeleteTestDialogFragment.RESULT_TEST)
-                ?: return@setFragmentResultListener
-            testViewModel.delete(test)
-            categoryViewModel.refresh()
-            requireContext().showToast(getString(R.string.msg_success_delete_test))
-        }
-
-        childFragmentManager.setFragmentResultListener(
-            REQUEST_DELETE_CATEGORY,
-            viewLifecycleOwner
-        ) { _, bundle ->
-            val category =
-                bundle.getParcelable<Category>(ConfirmDeleteCategoryDialogFragment.RESULT_CATEGORY)
-                    ?: return@setFragmentResultListener
-            testViewModel.deleteAllInCategory(category.name)
-            categoryViewModel.delete(category)
-            requireContext().showToast(getString(R.string.msg_success_delete_category))
-        }
-
         return DataBindingUtil.inflate<LocalMainFragmentBinding>(
             inflater,
             R.layout.local_main_fragment,
@@ -206,12 +183,15 @@ class LocalMainFragment : Fragment() {
     private fun deleteTest(test: Test) {
         firebaseAnalytic.logEvent("delete", Bundle())
 
-        ConfirmDeleteTestDialogFragment.newInstance(
+        ConfirmDangerDialogFragment.newInstance(
             title = getString(R.string.message_delete_exam, test.title),
             buttonText = getString(R.string.button_delete_confirm),
-            requestKey = REQUEST_DELETE_TEST,
-            test = test
-        ).show(childFragmentManager, ConfirmDeleteTestDialogFragment::class.java.name)
+            completion = {
+                testViewModel.delete(test)
+                categoryViewModel.refresh()
+                requireContext().showToast(getString(R.string.msg_success_delete_test))
+            }
+        ).show(childFragmentManager, ConfirmDangerDialogFragment::class.java.simpleName)
     }
 
     private fun shareTest(test: Test) {
@@ -359,12 +339,15 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun deleteCategory(category: Category) {
-        ConfirmDeleteCategoryDialogFragment.newInstance(
+        ConfirmDangerDialogFragment.newInstance(
             title = getString(R.string.message_delete_category, category.name),
             buttonText = getString(R.string.button_delete_confirm),
-            category = category,
-            requestKey = REQUEST_DELETE_CATEGORY
-        ).show(childFragmentManager, ConfirmDeleteCategoryDialogFragment::class.java.name)
+            completion = {
+                testViewModel.deleteAllInCategory(category.name)
+                categoryViewModel.delete(category)
+                requireContext().showToast(getString(R.string.msg_success_delete_category))
+            }
+        ).show(childFragmentManager, ConfirmDangerDialogFragment::class.java.simpleName)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
