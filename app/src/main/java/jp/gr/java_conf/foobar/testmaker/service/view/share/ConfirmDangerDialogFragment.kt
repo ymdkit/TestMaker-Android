@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
-import androidx.databinding.DataBindingUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.databinding.DialogConfirmDangerBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireStringArgument
+import jp.gr.java_conf.foobar.testmaker.service.view.result.ui.theme.TestMakerAndroidTheme
+import jp.gr.java_conf.foobar.testmaker.service.view.share.component.DangerDialogContent
 
 class ConfirmDangerDialogFragment : BottomSheetDialogFragment() {
 
@@ -46,20 +46,19 @@ class ConfirmDangerDialogFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return DataBindingUtil.inflate<DialogConfirmDangerBinding>(
-            inflater,
-            R.layout.dialog_confirm_danger,
-            container,
-            false
-        ).apply {
-            lifecycleOwner = viewLifecycleOwner
-
-            this.titleDialog = requireStringArgument(ARG_TITLE)
-            button.text = requireStringArgument(ARG_BUTTON_TEXT)
-            button.setOnClickListener {
-                completion()
-                dismiss()
+        return ComposeView(requireContext()).apply {
+            setContent {
+                TestMakerAndroidTheme {
+                    DangerDialogContent(
+                        title = requireStringArgument(ARG_TITLE),
+                        buttonText = requireStringArgument(ARG_BUTTON_TEXT),
+                        onClick = {
+                            completion()
+                            dismiss()
+                        }
+                    )
+                }
             }
-        }.root
+        }
     }
 }
