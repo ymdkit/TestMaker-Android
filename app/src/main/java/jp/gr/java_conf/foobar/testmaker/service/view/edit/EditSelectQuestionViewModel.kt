@@ -49,8 +49,10 @@ class EditSelectQuestionViewModel(preferences: SharedPreferenceManager) : EditQu
         if (isResetForm.value == true) {
             super.resetForm()
             answer.value = ""
-            others.forEach {
-                it.value = ""
+            if(isCheckedAuto.value == false){
+                others.forEach {
+                    it.value = ""
+                }
             }
         }
     }
