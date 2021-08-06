@@ -159,7 +159,7 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:4.9.0")
     api("com.isseiaoki:simplecropview:1.1.4")
     api("androidx.multidex:multidex:2.0.1")
-    api("com.android.billingclient:billing:3.0.2")
+    api("com.android.billingclient:billing:4.0.0")
     testImplementation("org.robolectric:robolectric:4.3.1")
     testImplementation("junit:junit:4.13")
     androidTestImplementation("androidx.test.ext:junit:1.1.1")
