@@ -307,6 +307,7 @@
     <string name="app_description">TestMaker is application for making your own tests</string>
     <string name="msg_success_delete_category">category deleted</string>
     <string name="button_delete_confirm">delete</string>
+    <string name="menu_export">export</string>
 
 
 </resources>

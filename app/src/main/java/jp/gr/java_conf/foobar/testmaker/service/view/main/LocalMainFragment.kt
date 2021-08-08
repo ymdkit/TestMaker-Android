@@ -22,9 +22,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
@@ -34,8 +32,6 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -52,7 +48,6 @@ class LocalMainFragment : Fragment() {
 
     private val testViewModel: TestViewModel by sharedViewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
-    private val service: CloudFunctionsService by inject()
     private val dynamicLinksCreator: DynamicLinksCreator by inject()
     private val logger: TestMakerLogger by inject()
 
@@ -84,7 +79,7 @@ class LocalMainFragment : Fragment() {
                         DialogMenuItem(
                             title = getString(R.string.share),
                             iconRes = R.drawable.ic_share_white,
-                            action = { shareTest(test) })
+                            action = { uploadTest(test) })
                     )
                 ).show(requireActivity().supportFragmentManager, "TAG")
             }
@@ -188,22 +183,6 @@ class LocalMainFragment : Fragment() {
         ).show(childFragmentManager, ConfirmDangerDialogFragment::class.java.simpleName)
     }
 
-    private fun shareTest(test: Test) {
-        ListDialogFragment.newInstance(
-            getString(R.string.title_dialog_share),
-            listOf(
-                DialogMenuItem(
-                    title = getString(R.string.button_upload),
-                    iconRes = R.drawable.ic_baseline_cloud_upload_24,
-                    action = { uploadTest(test) }),
-                DialogMenuItem(
-                    title = getString(R.string.button_convert_to_csv),
-                    iconRes = R.drawable.ic_edit_white,
-                    action = { convertTestToCSV(test) })
-            )
-        ).show(requireActivity().supportFragmentManager, "TAG")
-    }
-
     private fun uploadTest(test: Test) {
         localMainViewModel.getUser()?.let {
             logger.logEvent("upload_from_share_local")
@@ -211,31 +190,6 @@ class LocalMainFragment : Fragment() {
         } ?: run {
             login(test)
         }
-    }
-
-    private fun convertTestToCSV(test: Test) {
-
-        requireActivity().executeJobWithDialog(
-            title = getString(R.string.converting),
-            task = {
-                withContext(Dispatchers.IO) {
-                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
-                }
-            },
-            onSuccess = {
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, it.text)
-                    type = "text/plain"
-                }
-
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                startActivity(shareIntent)
-            },
-            onFailure = {
-                requireContext().showErrorToast(it)
-            }
-        )
     }
 
     private fun initDialogPlayStart(test: Test) {

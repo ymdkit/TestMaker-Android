@@ -293,4 +293,5 @@
     <string name="app_description">「暗記メーカー」は、自学自習の効率化を目的とした問題集作成用のアプリです。資格習得のための勉強や、複数人への問題集の配布のために利用できます。</string>
     <string name="msg_success_delete_category">フォルダを削除しました</string>
     <string name="button_delete_confirm">削除する</string>
+    <string name="menu_export">エクスポート</string>
 </resources>

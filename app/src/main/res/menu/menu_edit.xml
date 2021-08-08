@@ -15,6 +15,12 @@
         />
 
     <item
+        android:id="@+id/action_export"
+        android:title="@string/menu_export"
+        app:showAsAction="never"
+        />
+
+    <item
         android:id="@+id/menu_search"
         android:title="@string/search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
