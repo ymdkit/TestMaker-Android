@@ -6,7 +6,6 @@
     <string name="hint_answer">answer</string>
     <string name="hint_question">question</string>
     <string name="hint_other">other choice</string>
-    <string name="action_rev">review</string>
     <string name="action_import">import file</string>
     <string name="action_license">license</string>
     <string name="action_next">next</string>

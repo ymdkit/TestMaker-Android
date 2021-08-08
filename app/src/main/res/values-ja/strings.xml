@@ -12,13 +12,13 @@
     <string name="number_existing_questions">達成率: %1$d / %2$d</string>
     <string name="number_exams">問題集数 %1$d</string>
     <string name="confirm">確認</string>
-    <string name="play">解答</string>
-    <string name="share">共有</string>
+    <string name="play">解答する</string>
+    <string name="share">共有する</string>
     <string name="help">よくある質問</string>
     <string name="menu">メニュー</string>
     <string name="retry">解き直す</string>
-    <string name="edit">編集</string>
-    <string name="delete">削除</string>
+    <string name="edit">編集する</string>
+    <string name="delete">削除する</string>
     <string name="way">出題設定</string>
     <string name="load">読み込む</string>
     <string name="trim">トリミング</string>
@@ -46,7 +46,6 @@
     <string name="hint_answer">解答</string>
     <string name="hint_question">問題文</string>
     <string name="hint_other">不正解の選択肢</string>
-    <string name="action_rev">レビューする</string>
     <string name="action_other">開発者の他のアプリ</string>
     <string name="action_import">ファイルのインポート</string>
     <string name="action_license">ライセンス</string>
