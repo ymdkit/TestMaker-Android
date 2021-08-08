@@ -14,7 +14,6 @@ import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
 import com.firebase.ui.auth.AuthUI
-import com.google.firebase.analytics.FirebaseAnalytics
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.ItemTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -28,6 +27,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
@@ -47,7 +47,6 @@ class LocalMainFragment : Fragment() {
 
     private val mainController by lazy { MainController(requireContext()) }
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
-    private val firebaseAnalytic: FirebaseAnalytics by inject()
 
     private var binding: LocalMainFragmentBinding? = null
 
@@ -55,6 +54,7 @@ class LocalMainFragment : Fragment() {
     private val categoryViewModel: CategoryViewModel by viewModel()
     private val service: CloudFunctionsService by inject()
     private val dynamicLinksCreator: DynamicLinksCreator by inject()
+    private val logger: TestMakerLogger by inject()
 
     private var selectedTest: Test? = null //ログイン時に一度画面から離れるので選択中の値を保持
 
@@ -104,9 +104,7 @@ class LocalMainFragment : Fragment() {
                             action = { deleteCategory(category) })
                     )
                 ).show(requireActivity().supportFragmentManager, "TAG")
-
             }
-
         })
 
         categoryViewModel.categories.observeNonNull(this) {
@@ -162,7 +160,6 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun playTest(test: Test) {
-        firebaseAnalytic.logEvent("play", Bundle())
 
         if (test.questions.isEmpty()) {
             Toast.makeText(
@@ -176,13 +173,10 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun editTest(test: Test) {
-        firebaseAnalytic.logEvent("edit", Bundle())
         EditActivity.startActivity(requireActivity(), test.id)
     }
 
     private fun deleteTest(test: Test) {
-        firebaseAnalytic.logEvent("delete", Bundle())
-
         ConfirmDangerDialogFragment.newInstance(
             title = getString(R.string.message_delete_exam, test.title),
             buttonText = getString(R.string.button_delete_confirm),
@@ -212,7 +206,7 @@ class LocalMainFragment : Fragment() {
 
     private fun uploadTest(test: Test) {
         localMainViewModel.getUser()?.let {
-            firebaseAnalytic.logEvent("upload_from_share_local", Bundle())
+            logger.logEvent("upload_from_share_local")
             UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
         } ?: run {
             login(test)
