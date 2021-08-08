@@ -314,8 +314,8 @@ class LocalMainFragment : Fragment() {
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
                         .setTosAndPrivacyPolicyUrls(
-                            "https://testmaker-1cb29.firebaseapp.com/terms",
-                            "https://testmaker-1cb29.firebaseapp.com/privacy"
+                            "https://ankimaker.com/terms",
+                            "https://ankimaker.com/privacy"
                         )
                         .build(),
                     REQUEST_SIGN_IN_UPLOAD
@@ -399,8 +399,6 @@ class LocalMainFragment : Fragment() {
         const val REQUEST_SIGN_IN_UPLOAD = 54321
         const val REQUEST_UPLOAD_TEST = 54322
         const val REQUEST_PLAY_CONFIG = "request_play_config"
-        const val REQUEST_DELETE_TEST = "request_confirm_delete"
-        const val REQUEST_DELETE_CATEGORY = "request_delete_category"
 
         const val EXTRA_DOCUMENT_ID = "documentId"
         const val EXTRA_TEST_NAME = "testName"
