@@ -155,16 +155,11 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun playTest(test: Test) {
-
         if (test.questions.isEmpty()) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.message_null_questions),
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            initDialogPlayStart(test)
+            requireContext().showToast(getString(R.string.message_null_questions))
+            return
         }
+        initDialogPlayStart(test)
     }
 
     private fun editTest(test: Test) {
