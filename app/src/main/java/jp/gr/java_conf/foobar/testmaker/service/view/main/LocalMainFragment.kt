@@ -7,13 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
-import com.firebase.ui.auth.AuthUI
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.ItemTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -39,8 +37,6 @@ import java.util.*
 
 class LocalMainFragment : Fragment() {
 
-    private val localMainViewModel: LocalMainViewModel by viewModel()
-
     private val mainController by lazy { MainController(requireContext()) }
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
 
@@ -50,8 +46,6 @@ class LocalMainFragment : Fragment() {
     private val categoryViewModel: CategoryViewModel by viewModel()
     private val dynamicLinksCreator: DynamicLinksCreator by inject()
     private val logger: TestMakerLogger by inject()
-
-    private var selectedTest: Test? = null //ログイン時に一度画面から離れるので選択中の値を保持
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -179,12 +173,8 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun uploadTest(test: Test) {
-        localMainViewModel.getUser()?.let {
-            logger.logEvent("upload_from_share_local")
-            UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
-        } ?: run {
-            login(test)
-        }
+        logger.logEvent("upload_from_share_local")
+        UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
     }
 
     private fun initDialogPlayStart(test: Test) {
@@ -238,36 +228,6 @@ class LocalMainFragment : Fragment() {
         }
     }
 
-    private fun login(test: Test) {
-
-        selectedTest = test
-
-        AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
-            .setTitle(getString(R.string.login))
-            .setMessage(getString(R.string.msg_not_login))
-            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                val providers = arrayListOf(
-                    AuthUI.IdpConfig.EmailBuilder().build(),
-                    AuthUI.IdpConfig.GoogleBuilder().build()
-                )
-
-                // Create and launch sign-in intent
-                startActivityForResult(
-                    AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .setTosAndPrivacyPolicyUrls(
-                            "https://ankimaker.com/terms",
-                            "https://ankimaker.com/privacy"
-                        )
-                        .build(),
-                    REQUEST_SIGN_IN_UPLOAD
-                )
-            }
-            .setNegativeButton(getString(R.string.cancel), null)
-            .show()
-    }
-
     private fun editCategory(category: Category) {
 
         EditTextDialogFragment.newInstance(
@@ -296,12 +256,7 @@ class LocalMainFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_SIGN_IN_UPLOAD && resultCode == Activity.RESULT_OK) {
-            selectedTest?.let {
-                uploadTest(it)
-                selectedTest = null
-            }
-        } else if (requestCode == REQUEST_UPLOAD_TEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_UPLOAD_TEST && resultCode == Activity.RESULT_OK) {
 
             val documentId = data?.getStringExtra(EXTRA_DOCUMENT_ID) ?: return
             val testName = data.getStringExtra(EXTRA_TEST_NAME) ?: return
@@ -339,7 +294,6 @@ class LocalMainFragment : Fragment() {
     }
 
     companion object {
-        const val REQUEST_SIGN_IN_UPLOAD = 54321
         const val REQUEST_UPLOAD_TEST = 54322
         const val REQUEST_PLAY_CONFIG = "request_play_config"
 

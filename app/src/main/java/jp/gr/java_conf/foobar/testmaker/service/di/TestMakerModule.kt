@@ -24,7 +24,6 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.*
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupDetailViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.group.HistoryTestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.main.LocalMainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
@@ -87,7 +86,6 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
     viewModel { FirebaseViewModel(get(), get(), get()) }
     viewModel { FirebaseMyPageViewModel(get(), get()) }
     viewModel { (test: Test, questions: List<Question>) -> PlayViewModel(test, questions, get()) }
-    viewModel { LocalMainViewModel(get(), get()) }
     viewModel { ShowTestsViewModel(get(), get(), get()) }
     viewModel { GroupListViewModel(get()) }
     viewModel { GroupDetailViewModel(get(), get()) }

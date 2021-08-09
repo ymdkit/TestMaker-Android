@@ -294,4 +294,5 @@
     <string name="msg_success_delete_category">フォルダを削除しました</string>
     <string name="button_delete_confirm">削除する</string>
     <string name="menu_export">エクスポート</string>
+    <string name="msg_success_login">ログインに成功しました</string>
 </resources>
