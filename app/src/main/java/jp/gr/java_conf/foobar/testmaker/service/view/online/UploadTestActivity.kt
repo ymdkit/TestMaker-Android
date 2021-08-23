@@ -40,16 +40,41 @@ class UploadTestActivity : BaseActivity() {
     private var ablePrivateUpload = false
 
     private val binding: ActivityUploadTestBinding by lazy {
-        DataBindingUtil.setContentView<ActivityUploadTestBinding>(
+        DataBindingUtil.setContentView(
             this,
             R.layout.activity_upload_test
         )
+    }
+
+    private val signIn = registerForActivityResult(SignInRequestContract()){
+        it ?: run {
+            finish()
+            return@registerForActivityResult
+        }
+        showToast(getString(R.string.msg_success_login))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createAd(binding.adView)
         loadRewardedAd()
+
+        viewModel.getUser() ?: run {
+
+            AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                .setTitle(getString(R.string.login))
+                .setMessage(getString(R.string.msg_not_login))
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    signIn.launch(Unit)
+                }
+                .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                    finish()
+                }
+                .setOnCancelListener {
+                    finish()
+                }
+                .show()
+        }
 
         val adapter = ArrayAdapter(
             this,

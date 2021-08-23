@@ -32,6 +32,12 @@ class TestMakerLogger(private val analytics: FirebaseAnalytics) {
             param(FirebaseAnalytics.Param.DESTINATION, destination)
         }
 
+    fun logExportTestEvent(test: Test) =
+        analytics.logEvent("export_test"){
+            param(FirebaseAnalytics.Param.ITEM_NAME, test.title)
+            param(FirebaseAnalytics.Param.SOURCE, test.source)
+        }
+
     fun logCreateQuestion(question: Question, source: String) =
         analytics.logEvent("create_question"){
             param(FirebaseAnalytics.Param.ITEM_NAME, question.question)

@@ -6,7 +6,6 @@
     <string name="hint_answer">answer</string>
     <string name="hint_question">question</string>
     <string name="hint_other">other choice</string>
-    <string name="action_rev">review</string>
     <string name="action_import">import file</string>
     <string name="action_license">license</string>
     <string name="action_next">next</string>
@@ -308,6 +307,8 @@
     <string name="app_description">TestMaker is application for making your own tests</string>
     <string name="msg_success_delete_category">category deleted</string>
     <string name="button_delete_confirm">delete</string>
+    <string name="menu_export">export</string>
+    <string name="msg_success_login">login success</string>
 
 
 </resources>

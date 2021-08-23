@@ -15,14 +15,21 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
+import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 /**
  * Created by keita on 2017/02/12.
@@ -31,6 +38,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class EditActivity : BaseActivity() {
 
     private val testViewModel: TestViewModel by viewModel()
+    private val service: CloudFunctionsService by inject()
 
     private val controller: EditController by lazy {
         EditController(this).apply {
@@ -116,6 +124,10 @@ class EditActivity : BaseActivity() {
                     EditTestActivity.startActivity(this, test.id)
                     true
                 }
+                R.id.action_export -> {
+                    convertTestToCSV(test)
+                    true
+                }
                 android.R.id.home -> {
                     finish()
                     true
@@ -151,6 +163,31 @@ class EditActivity : BaseActivity() {
                         }
                     }
                 })
+    }
+
+    private fun convertTestToCSV(test: Test) {
+
+        executeJobWithDialog(
+            title = getString(R.string.converting),
+            task = {
+                withContext(Dispatchers.IO) {
+                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
+                }
+            },
+            onSuccess = {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, it.text)
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
+            },
+            onFailure = {
+                showErrorToast(it)
+            }
+        )
     }
 
     fun editQuestion(question: Question) {

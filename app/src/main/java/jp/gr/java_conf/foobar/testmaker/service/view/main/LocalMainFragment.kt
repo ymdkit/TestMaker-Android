@@ -6,15 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
-import com.firebase.ui.auth.AuthUI
-import com.google.firebase.analytics.FirebaseAnalytics
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.ItemTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -23,19 +19,16 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,20 +36,15 @@ import java.util.*
 
 class LocalMainFragment : Fragment() {
 
-    private val localMainViewModel: LocalMainViewModel by viewModel()
-
     private val mainController by lazy { MainController(requireContext()) }
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
-    private val firebaseAnalytic: FirebaseAnalytics by inject()
 
     private var binding: LocalMainFragmentBinding? = null
 
     private val testViewModel: TestViewModel by sharedViewModel()
     private val categoryViewModel: CategoryViewModel by viewModel()
-    private val service: CloudFunctionsService by inject()
     private val dynamicLinksCreator: DynamicLinksCreator by inject()
-
-    private var selectedTest: Test? = null //ログイン時に一度画面から離れるので選択中の値を保持
+    private val logger: TestMakerLogger by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,7 +72,7 @@ class LocalMainFragment : Fragment() {
                         DialogMenuItem(
                             title = getString(R.string.share),
                             iconRes = R.drawable.ic_share_white,
-                            action = { shareTest(test) })
+                            action = { uploadTest(test) })
                     )
                 ).show(requireActivity().supportFragmentManager, "TAG")
             }
@@ -104,9 +92,7 @@ class LocalMainFragment : Fragment() {
                             action = { deleteCategory(category) })
                     )
                 ).show(requireActivity().supportFragmentManager, "TAG")
-
             }
-
         })
 
         categoryViewModel.categories.observeNonNull(this) {
@@ -162,27 +148,18 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun playTest(test: Test) {
-        firebaseAnalytic.logEvent("play", Bundle())
-
         if (test.questions.isEmpty()) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.message_null_questions),
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            initDialogPlayStart(test)
+            requireContext().showToast(getString(R.string.message_null_questions))
+            return
         }
+        initDialogPlayStart(test)
     }
 
     private fun editTest(test: Test) {
-        firebaseAnalytic.logEvent("edit", Bundle())
         EditActivity.startActivity(requireActivity(), test.id)
     }
 
     private fun deleteTest(test: Test) {
-        firebaseAnalytic.logEvent("delete", Bundle())
-
         ConfirmDangerDialogFragment.newInstance(
             title = getString(R.string.message_delete_exam, test.title),
             buttonText = getString(R.string.button_delete_confirm),
@@ -194,54 +171,9 @@ class LocalMainFragment : Fragment() {
         ).show(childFragmentManager, ConfirmDangerDialogFragment::class.java.simpleName)
     }
 
-    private fun shareTest(test: Test) {
-        ListDialogFragment.newInstance(
-            getString(R.string.title_dialog_share),
-            listOf(
-                DialogMenuItem(
-                    title = getString(R.string.button_upload),
-                    iconRes = R.drawable.ic_baseline_cloud_upload_24,
-                    action = { uploadTest(test) }),
-                DialogMenuItem(
-                    title = getString(R.string.button_convert_to_csv),
-                    iconRes = R.drawable.ic_edit_white,
-                    action = { convertTestToCSV(test) })
-            )
-        ).show(requireActivity().supportFragmentManager, "TAG")
-    }
-
     private fun uploadTest(test: Test) {
-        localMainViewModel.getUser()?.let {
-            firebaseAnalytic.logEvent("upload_from_share_local", Bundle())
-            UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
-        } ?: run {
-            login(test)
-        }
-    }
-
-    private fun convertTestToCSV(test: Test) {
-
-        requireActivity().executeJobWithDialog(
-            title = getString(R.string.converting),
-            task = {
-                withContext(Dispatchers.IO) {
-                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
-                }
-            },
-            onSuccess = {
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, it.text)
-                    type = "text/plain"
-                }
-
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                startActivity(shareIntent)
-            },
-            onFailure = {
-                requireContext().showErrorToast(it)
-            }
-        )
+        logger.logEvent("upload_from_share_local")
+        UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
     }
 
     private fun initDialogPlayStart(test: Test) {
@@ -273,13 +205,7 @@ class LocalMainFragment : Fragment() {
         for (element in test.questions) if (!(element.isCorrect)) incorrect = true
 
         if (!incorrect && sharedPreferenceManager.refine) {
-
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.message_null_wrongs),
-                Toast.LENGTH_SHORT
-            ).show()
-
+            requireContext().showToast(getString(R.string.message_null_wrongs))
         } else {
 
             val result = test.copy(
@@ -293,36 +219,6 @@ class LocalMainFragment : Fragment() {
             PlayActivity.startActivity(requireActivity(), result.id)
 
         }
-    }
-
-    private fun login(test: Test) {
-
-        selectedTest = test
-
-        AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
-            .setTitle(getString(R.string.login))
-            .setMessage(getString(R.string.msg_not_login))
-            .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                val providers = arrayListOf(
-                    AuthUI.IdpConfig.EmailBuilder().build(),
-                    AuthUI.IdpConfig.GoogleBuilder().build()
-                )
-
-                // Create and launch sign-in intent
-                startActivityForResult(
-                    AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .setTosAndPrivacyPolicyUrls(
-                            "https://testmaker-1cb29.firebaseapp.com/terms",
-                            "https://testmaker-1cb29.firebaseapp.com/privacy"
-                        )
-                        .build(),
-                    REQUEST_SIGN_IN_UPLOAD
-                )
-            }
-            .setNegativeButton(getString(R.string.cancel), null)
-            .show()
     }
 
     private fun editCategory(category: Category) {
@@ -353,12 +249,7 @@ class LocalMainFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_SIGN_IN_UPLOAD && resultCode == Activity.RESULT_OK) {
-            selectedTest?.let {
-                uploadTest(it)
-                selectedTest = null
-            }
-        } else if (requestCode == REQUEST_UPLOAD_TEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_UPLOAD_TEST && resultCode == Activity.RESULT_OK) {
 
             val documentId = data?.getStringExtra(EXTRA_DOCUMENT_ID) ?: return
             val testName = data.getStringExtra(EXTRA_TEST_NAME) ?: return
@@ -396,11 +287,8 @@ class LocalMainFragment : Fragment() {
     }
 
     companion object {
-        const val REQUEST_SIGN_IN_UPLOAD = 54321
         const val REQUEST_UPLOAD_TEST = 54322
         const val REQUEST_PLAY_CONFIG = "request_play_config"
-        const val REQUEST_DELETE_TEST = "request_confirm_delete"
-        const val REQUEST_DELETE_CATEGORY = "request_delete_category"
 
         const val EXTRA_DOCUMENT_ID = "documentId"
         const val EXTRA_TEST_NAME = "testName"

@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.isseiaoki.simplecropview.CropImageView
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
@@ -111,6 +112,9 @@ abstract class EditQuestionFragment : Fragment() {
     }
 
     protected fun saveQuestion() {
+        if(testViewModel.get(editQuestionViewModel.testId).source == CreateTestSource.DYNAMIC_LINKS.title){
+            testViewModel.update(testViewModel.get(editQuestionViewModel.testId).copy(source = CreateTestSource.UPDATED_BY_OTHERS.title))
+        }
         requireContext().showToast(getString(R.string.msg_save))
         if (editQuestionViewModel.selectedQuestion.id == Question().id) {
             val question = editQuestionViewModel.createQuestion()

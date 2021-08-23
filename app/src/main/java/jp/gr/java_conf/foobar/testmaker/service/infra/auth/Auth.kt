@@ -22,8 +22,8 @@ class Auth {
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .setTosAndPrivacyPolicyUrls(
-                        "https://testmaker-1cb29.firebaseapp.com/terms",
-                        "https://testmaker-1cb29.firebaseapp.com/privacy")
+                        "https://ankimaker.com/terms",
+                        "https://ankimaker.com/privacy")
                 .build()
     }
 

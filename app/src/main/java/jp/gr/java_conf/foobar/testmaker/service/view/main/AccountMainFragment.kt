@@ -1,6 +1,5 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.main
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,12 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
-import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -26,6 +23,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreat
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.online.SignInRequestContract
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
@@ -52,6 +50,17 @@ class AccountMainFragment : Fragment() {
         AccountMainController(requireContext())
     }
 
+    private val signIn = registerForActivityResult(SignInRequestContract()) {
+        it ?: run {
+            return@registerForActivityResult
+        }
+        viewModel.isLogin.value = true
+        viewModel.createUser(viewModel.getUser())
+        binding?.progress?.isRefreshing = true
+        viewModel.fetchMyTests()
+        requireContext().showToast(getString(R.string.msg_success_login))
+    }
+
     interface OnTestDownloadedListener {
         fun onDownloaded()
     }
@@ -67,7 +76,7 @@ class AccountMainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         viewModel.getMyTests().observeNonNull(this) {
             controller.tests = it
@@ -115,37 +124,20 @@ class AccountMainFragment : Fragment() {
 
             buttonLogin.setOnClickListener {
                 firebaseAnalytic.logEvent("login_from_account_tab", Bundle())
-                startActivityForResult(
-                    viewModel.getAuthUIIntent(),
-                    REQUEST_SIGN_IN
-                )
+                signIn.launch(Unit)
             }
 
             fab.setOnClickListener {
-                viewModel.getUser()?.let {
-                    if (testViewModel.tests.isEmpty()) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.message_non_exist_test),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        return@setOnClickListener
-                    }
-
-                    UploadTestActivity.startActivity(requireActivity())
-                } ?: run {
-                    AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
-                        .setTitle(getString(R.string.login))
-                        .setMessage(getString(R.string.msg_not_login))
-                        .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                            startActivityForResult(
-                                viewModel.getAuthUIIntent(),
-                                MainActivity.REQUEST_SIGN_IN
-                            )
-                        }
-                        .setNegativeButton(getString(R.string.cancel), null)
-                        .show()
+                if (testViewModel.tests.isEmpty()) {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.message_non_exist_test),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@setOnClickListener
                 }
+
+                UploadTestActivity.startActivity(requireActivity())
             }
 
             progress.setOnRefreshListener {
@@ -230,31 +222,6 @@ class AccountMainFragment : Fragment() {
                 }
             }).show(requireActivity().supportFragmentManager, "TAG")
 
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-
-        if (requestCode == MainActivity.REQUEST_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
-
-            if (resultCode == Activity.RESULT_OK) {
-                // Successfully signed in
-                viewModel.isLogin.value = true
-                viewModel.createUser(viewModel.getUser())
-                binding?.progress?.isRefreshing = true
-                viewModel.fetchMyTests()
-
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.login_successed),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                response?.error?.errorCode
-            }
-        }
     }
 
     override fun onResume() {
