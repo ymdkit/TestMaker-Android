@@ -111,6 +111,7 @@ class PlayViewModel(private val test: Test, private val questions: List<Question
         answers.forEach { it.value = "" }
         checkLists.forEach { it.value = false }
         selections.forEach { it.value = "" }
+        checkListOrders.forEach { it.value = 0 }
     }
 
     fun judge(view: View) {
