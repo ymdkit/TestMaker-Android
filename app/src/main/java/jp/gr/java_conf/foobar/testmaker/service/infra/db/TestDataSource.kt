@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.db
 
 import io.realm.Realm
+import io.realm.RealmModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
@@ -8,8 +9,11 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
 class TestDataSource(private val realm: Realm) {
 
+    private inline fun <reified T : RealmModel> generateId(): Long =
+        realm.where(T::class.java).max("id")?.toLong()?.plus(1) ?: 1L
+
     fun create(test: Test): Long {
-        val questionId = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
+        val questionId = generateId<Quest>()
         val realmTest = RealmTest.createFromTest(
             test.copy(
                 questions = test.questions.mapIndexed { index, question ->
@@ -20,7 +24,7 @@ class TestDataSource(private val realm: Realm) {
                 })
         )
 
-        realmTest.id = realm.where(RealmTest::class.java).max("id")?.toLong()?.plus(1) ?: 0
+        realmTest.id = generateId<RealmTest>()
         realmTest.order = realmTest.id.toInt()
         realm.executeTransaction { realm ->
             realm.copyToRealm(realmTest)
@@ -45,7 +49,7 @@ class TestDataSource(private val realm: Realm) {
 
     fun update(test: Test) {
         var result = test
-        val questionId = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
+        val questionId = generateId<Quest>()
         if (test.questions.size >= 2 && test.questions[0].id == test.questions[1].id) {
             result = result.copy(questions =
             result.questions.mapIndexed { index, question ->
@@ -71,7 +75,7 @@ class TestDataSource(private val realm: Realm) {
     }
 
     fun create(test: Test, question: Question): Long {
-        val questionId = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
+        val questionId = generateId<Quest>()
 
         update(
             test.copy(
