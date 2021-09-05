@@ -10,12 +10,15 @@ class TestDataSource(private val realm: Realm) {
 
     fun create(test: Test): Long {
         val questionId = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
-        val realmTest = RealmTest.createFromTest(test.copy(
+        val realmTest = RealmTest.createFromTest(
+            test.copy(
                 questions = test.questions.mapIndexed { index, question ->
                     question.copy(
-                            id = questionId + index,
-                            order = index)
-                }))
+                        id = questionId + index,
+                        order = index
+                    )
+                })
+        )
 
         realmTest.id = realm.where(RealmTest::class.java).max("id")?.toLong()?.plus(1) ?: 0
         realmTest.order = realmTest.id.toInt()
@@ -25,14 +28,20 @@ class TestDataSource(private val realm: Realm) {
         return realmTest.id
     }
 
-    fun getAll(): List<Test> = realm.copyFromRealm(realm.where(RealmTest::class.java)
-            .findAll())
-            ?.sortedBy { it.order }
-            ?.map { Test.createFromRealmTest(it) }
-            ?: listOf()
+    fun getAll(): List<Test> = realm.copyFromRealm(
+        realm.where(RealmTest::class.java)
+            .findAll()
+    )
+        ?.sortedBy { it.order }
+        ?.map { Test.createFromRealmTest(it) }
+        ?: listOf()
 
-    fun get(id: Long): Test = Test.createFromRealmTest(realm.copyFromRealm(realm.where(RealmTest::class.java)
-            .equalTo("id", id).findFirst() ?: RealmTest()))
+    fun get(id: Long): Test = Test.createFromRealmTest(
+        realm.copyFromRealm(
+            realm.where(RealmTest::class.java)
+                .equalTo("id", id).findFirst() ?: RealmTest()
+        )
+    )
 
     fun update(test: Test) {
         var result = test
@@ -41,8 +50,9 @@ class TestDataSource(private val realm: Realm) {
             result = result.copy(questions =
             result.questions.mapIndexed { index, question ->
                 question.copy(
-                        id = questionId + index,
-                        order = index)
+                    id = questionId + index,
+                    order = index
+                )
             })
         }
         update(RealmTest.createFromTest(result))
@@ -63,12 +73,16 @@ class TestDataSource(private val realm: Realm) {
     fun create(test: Test, question: Question): Long {
         val questionId = realm.where(Quest::class.java).max("id")?.toLong()?.plus(1) ?: 0
 
-        update(test.copy(
-                questions = test.questions + listOf(question.copy(
+        update(
+            test.copy(
+                questions = get(test.id).questions + listOf(
+                    question.copy(
                         id = questionId,
                         order = questionId.toInt()
-                ))
-        ))
+                    )
+                )
+            )
+        )
         return questionId
     }
 
@@ -91,19 +105,26 @@ class TestDataSource(private val realm: Realm) {
     }
 
     fun insertAt(test: Test, question: Question, index: Int) {
+
         test.questions
-                .filter {
-                    it.order >= index
-                }.forEach {
-                    update(it.copy(order = it.order + 1))
-                }
+            .filter {
+                it.order > index
+            }.forEach {
+                update(it.copy(order = it.order + 1))
+            }
 
         val id = create(test, question)
-        update(getQuestion(id).copy(order = index))
+        update(getQuestion(id).copy(order = index + 1))
     }
 
-    private fun getQuestion(id: Long): Question = Question.createFromRealmQuestion(realm.copyFromRealm(realm.where(Quest::class.java)
-            .equalTo("id", id).findFirst() ?: Quest()))
+    private fun getQuestion(id: Long): Question {
+        return Question.createFromRealmQuestion(
+            realm.copyFromRealm(
+                realm.where(Quest::class.java)
+                    .equalTo("id", id).findFirst() ?: Quest()
+            )
+        )
+    }
 
     private fun update(test: RealmTest) {
         realm.executeTransaction {
