@@ -18,7 +18,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/button_add"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -132,6 +132,19 @@
                     android:text="@string/message_reset_form"
                     app:layout_constraintTop_toBottomOf="@id/switch_image" />
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_add"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="@dimen/element_spacing_large"
+                    android:enabled="@{viewModel.isValidated}"
+                    android:text="@string/save_question"
+                    android:textSize="@dimen/text_size_medium"
+                    android:theme="@style/ThemeOverlay.Button.Accent"
+                    app:layout_constraintTop_toBottomOf="@id/switch_reset_form"
+                    tools:enabled="false" />
+
                 <androidx.constraintlayout.widget.Group
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -141,19 +154,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_add"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="@dimen/element_spacing_large"
-            android:enabled="@{viewModel.isValidated}"
-            android:text="@string/save_question"
-            android:textSize="@dimen/text_size_medium"
-            android:theme="@style/ThemeOverlay.Button.Accent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:enabled="false" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
