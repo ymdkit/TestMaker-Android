@@ -295,4 +295,8 @@
     <string name="button_delete_confirm">削除する</string>
     <string name="menu_export">エクスポート</string>
     <string name="msg_success_login">ログインに成功しました</string>
+    <string name="detail">詳細を見る</string>
+    <string name="user_name_online">作成者: %1$s</string>
+    <string name="date_online">作成日時: %1$s</string>
+    <string name="overview_online">概要： %1$s</string>
 </resources>

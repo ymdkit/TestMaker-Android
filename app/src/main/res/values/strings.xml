@@ -309,6 +309,10 @@
     <string name="button_delete_confirm">delete</string>
     <string name="menu_export">export</string>
     <string name="msg_success_login">login success</string>
+    <string name="detail">info</string>
+    <string name="user_name_online">creator: %1$s</string>
+    <string name="date_online">create: %1$s</string>
+    <string name="overview_online">overview: %1$s</string>
 
 
 </resources>

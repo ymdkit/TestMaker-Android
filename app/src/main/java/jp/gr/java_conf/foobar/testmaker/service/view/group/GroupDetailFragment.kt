@@ -64,6 +64,10 @@ class GroupDetailFragment : Fragment() {
                                 iconRes = R.drawable.ic_file_download_white,
                                 action = { downloadTest(document) }),
                             DialogMenuItem(
+                                title = getString(R.string.detail),
+                                iconRes = R.drawable.ic_info_white,
+                                action = { actionShowInfo(document) }),
+                            DialogMenuItem(
                                 title = getString(R.string.history),
                                 iconRes = R.drawable.ic_baseline_history_24,
                                 action = { actionShowHistory(document) }),
@@ -376,6 +380,28 @@ class GroupDetailFragment : Fragment() {
                     }
                 }
             }).show(requireActivity().supportFragmentManager, "TAG")
+    }
+
+    private fun actionShowInfo(document: DocumentSnapshot) {
+        val test = document.toObject(FirebaseTest::class.java) ?: return
+
+        ListDialogFragment.newInstance(
+            test.name,
+            listOf(
+                DialogMenuItem(
+                    title = getString(R.string.user_name_online, test.userName),
+                    iconRes = R.drawable.ic_account,
+                    action = {  }),
+                DialogMenuItem(
+                    title = getString(R.string.date_online, test.getDate()),
+                    iconRes = R.drawable.ic_baseline_calendar_today_24,
+                    action = { }),
+                DialogMenuItem(
+                    title = getString(R.string.overview_online, test.overview),
+                    iconRes = R.drawable.ic_baseline_description_24,
+                    action = {  }),
+            )
+        ).show(requireActivity().supportFragmentManager, "TAG")
     }
 
     private fun actionShowHistory(document: DocumentSnapshot) {
