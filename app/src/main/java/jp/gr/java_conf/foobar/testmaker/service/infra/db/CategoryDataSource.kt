@@ -1,29 +1,10 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.db
 
 import io.realm.Realm
-import jp.gr.java_conf.foobar.testmaker.service.domain.Cate
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmCategory
 
 class CategoryDataSource(private val realm: Realm) {
-
-    init {
-        realm.executeTransaction {
-            realm.where(Cate::class.java).findAll().forEachIndexed { index, it ->
-                val category = RealmCategory()
-                category.id = index.toLong()
-                category.name = it.category
-                category.color = it.color
-                category.order = it.order
-                realm.copyToRealm(category)
-                it.deleteFromRealm()
-            }
-
-            realm.where(RealmCategory::class.java).findAll().forEachIndexed { index, it ->
-                it.order = index
-            }
-        }
-    }
 
     fun create(category: Category): Long {
         val result = RealmCategory.createFromCategory(category)
