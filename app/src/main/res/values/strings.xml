@@ -313,6 +313,10 @@
     <string name="user_name_online">creator: %1$s</string>
     <string name="date_online">create: %1$s</string>
     <string name="overview_online">overview: %1$s</string>
+    <string name="title_activity_public_tests">PublicTestsActivity</string>
+    <string name="label_public_tests">public tests</string>
+    <string name="button_upload_test">publish your tests</string>
+    <string name="hint_search_public_tests">search</string>
 
 
 </resources>

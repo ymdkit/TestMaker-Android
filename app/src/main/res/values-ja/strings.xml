@@ -299,4 +299,7 @@
     <string name="user_name_online">作成者: %1$s</string>
     <string name="date_online">作成日時: %1$s</string>
     <string name="overview_online">概要： %1$s</string>
+    <string name="label_public_tests">みんなの問題集</string>
+    <string name="button_upload_test">問題集のアップロード</string>
+    <string name="hint_search_public_tests">検索</string>
 </resources>

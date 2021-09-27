@@ -9,7 +9,6 @@
         R.layout.item_empty,
         R.layout.item_section_header,
         R.layout.item_section,
-        R.layout.card_test_online,
         R.layout.card_test_account,
         R.layout.item_group,
         R.layout.item_test_group,

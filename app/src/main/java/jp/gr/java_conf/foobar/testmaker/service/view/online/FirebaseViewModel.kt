@@ -1,6 +1,5 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.online
 
-import android.content.Intent
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,15 +27,11 @@ class FirebaseViewModel(
             test = test,
             source = CreateTestSource.PUBLIC_DOWNLOAD.title)
 
-    fun createUser(user: FirebaseUser?) = repository.setUser(user)
-
     suspend fun uploadTest(test: RealmTest, overview: String, isPublic: Boolean) =
         repository.createTest(test, overview, isPublic)
 
     suspend fun uploadTestInGroup(test: RealmTest, overview: String, groupId: String) =
         repository.createTestInGroup(test, overview, groupId)
-
-    fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
 
     fun getUser(): FirebaseUser? = auth.getUser()
 

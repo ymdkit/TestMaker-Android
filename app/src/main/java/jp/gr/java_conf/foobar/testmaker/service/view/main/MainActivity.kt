@@ -37,7 +37,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.online.PublicTestsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.coroutines.Dispatchers
@@ -250,12 +250,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                         SettingsActivity::class.java
                     )
                 )
-                R.id.nav_online -> startActivity(
-                    Intent(
-                        this@MainActivity,
-                        FirebaseActivity::class.java
-                    )
-                )
+                R.id.nav_online -> PublicTestsActivity.startActivity(this)
                 R.id.nav_group -> startActivity(
                     Intent(
                         this@MainActivity,
