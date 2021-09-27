@@ -102,6 +102,12 @@
             android:exported="true"
             android:label="@string/title_activity_compose_result"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="jp.gr.java_conf.foobar.testmaker.service.view.online.PublicTestsActivity"
+            android:exported="true"
+            android:label="@string/title_activity_public_tests"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
