@@ -21,9 +21,6 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
 import com.google.android.play.core.review.ReviewManagerFactory
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
@@ -32,10 +29,11 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.result.ui.theme.TestMakerAndroidTheme
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
+import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -276,23 +274,5 @@ fun ItemPieChart(dataSet: PieDataSet, centerText: String) {
             .fillMaxWidth()
             .height(200.dp)
             .padding(16.dp)
-    )
-}
-
-@Composable
-fun ComposeAdView(isRemovedAd: Boolean) {
-    if (isRemovedAd) return
-
-    AndroidView(
-        factory = {
-            AdView(it).apply {
-                adSize = AdSize.BANNER
-                adUnitId = "ca-app-pub-8942090726462263/8420884238"
-                loadAd(AdRequest.Builder().build())
-            }
-        },
-        modifier = Modifier
-            .height(56.dp)
-            .fillMaxWidth()
     )
 }
