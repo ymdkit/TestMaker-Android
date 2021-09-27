@@ -14,14 +14,16 @@ private val DarkColorPalette = darkColors(
     onPrimary = Color.White,
     onSurface = Color(0X99FFFFFF),
     onBackground = Color(0X99FFFFFF),
-    onSecondary = Color(0X99FFFFFF),
+    onSecondary = Color.White,
     onError = Color.White
 )
 
 private val LightColorPalette = lightColors(
     primary = Color(0XFF33B5E5),
     secondary = Color(0XFFFFA144),
-)
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    )
 
 @Composable
 fun TestMakerAndroidTheme(
