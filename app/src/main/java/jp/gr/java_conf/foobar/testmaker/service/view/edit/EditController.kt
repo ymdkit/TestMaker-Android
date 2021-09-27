@@ -4,7 +4,6 @@ import android.content.Context
 import com.airbnb.epoxy.EpoxyController
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
-import jp.gr.java_conf.foobar.testmaker.service.extensions.filteredList
 import jp.gr.java_conf.foobar.testmaker.service.itemEmpty
 import jp.gr.java_conf.foobar.testmaker.service.itemQuestion
 
@@ -41,7 +40,14 @@ class EditController(private val context: Context) : EpoxyController() {
             }
 
         } else {
-            val result = if (searchWord.isNotEmpty()) questions.filteredList(searchWord) else questions
+            val result =
+                if (searchWord.isNotEmpty())
+                    questions.filter {
+                        it.question.contains(searchWord) || it.answer.contains(
+                            searchWord
+                        ) || it.answers.any { it.contains(searchWord) }
+                    }
+                else questions
             result.forEachIndexed { index, it ->
                 itemQuestion {
                     id(it.id)
