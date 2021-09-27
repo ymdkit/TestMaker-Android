@@ -9,10 +9,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -28,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.PublicTestsActivity.Companion.COLOR_MAX
 import jp.gr.java_conf.foobar.testmaker.service.view.result.MyTopAppBar
@@ -53,6 +51,8 @@ class PublicTestsActivity : ComponentActivity() {
     private val viewModel: FirebaseViewModel by viewModel()
     private val testViewModel: TestViewModel by viewModel()
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
+    private val logger: TestMakerLogger by inject()
+
 
     @ExperimentalGraphicsApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +82,23 @@ class PublicTestsActivity : ComponentActivity() {
                                     }
                                 }
 
+                                Button(
+                                    onClick = {
+                                        logger.logEvent("upload_from_firebase_activity")
+                                        UploadTestActivity.startActivity(this@PublicTestsActivity)
+                                    },
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .fillMaxWidth(),
+                                    contentPadding = PaddingValues(vertical = 16.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = MaterialTheme.colors.secondary
+                                    ),
+
+                                ) {
+                                    Text(text = getString(R.string.button_upload_test), color = MaterialTheme.colors.onSecondary)
+                                }
+
                                 ComposeAdView(isRemovedAd = sharedPreferenceManager.isRemovedAd)
                             }
                         }
@@ -96,9 +113,11 @@ class PublicTestsActivity : ComponentActivity() {
 @ExperimentalGraphicsApi
 @Composable
 fun ItemPublicTest(test: FirebaseTest) {
-    Row(modifier = Modifier
-        .height(64.dp)
-        .padding(16.dp)) {
+    Row(
+        modifier = Modifier
+            .height(64.dp)
+            .padding(16.dp)
+    ) {
         Image(
             painter = painterResource(id = R.drawable.ic_baseline_description_24),
             contentDescription = "icon test",
@@ -111,8 +130,10 @@ fun ItemPublicTest(test: FirebaseTest) {
                 .height(24.dp)
         )
 
-        Text(text = test.name,
+        Text(
+            text = test.name,
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp))
+            fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp)
+        )
     }
 }
