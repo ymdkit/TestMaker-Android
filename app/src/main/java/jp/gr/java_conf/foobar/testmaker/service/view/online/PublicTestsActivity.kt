@@ -25,6 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
@@ -69,7 +71,8 @@ class PublicTestsActivity : AppCompatActivity() {
 
         setContent {
 
-            val tests by viewModel.tests.observeAsState()
+            val tests by viewModel.tests.observeAsState(emptyList())
+            val isRefreshing by viewModel.loading.observeAsState(true)
 
             TestMakerAndroidTheme {
                 Scaffold(
@@ -79,26 +82,44 @@ class PublicTestsActivity : AppCompatActivity() {
                     content = {
                         Surface(color = MaterialTheme.colors.surface) {
                             Column {
-                                Column(
+                                SwipeRefresh(
                                     modifier = Modifier
                                         .verticalScroll(state = ScrollState(0))
                                         .weight(weight = 1f, fill = true),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
+                                    state = rememberSwipeRefreshState(isRefreshing), onRefresh = {
+                                        viewModel.getTests()
+                                    }) {
 
-                                    tests?.map {
-                                        ItemPublicTest(it, onClick = { test ->
+                                    Column(
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
 
-                                            ListDialogFragment.newInstance(
-                                                test.name,
-                                                listOf(
-                                                    DialogMenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(test) }),
-                                                    DialogMenuItem(title = getString(R.string.info), iconRes = R.drawable.ic_info_white, action = { showInfoTest(test) }),
-                                                    DialogMenuItem(title = getString(R.string.report), iconRes = R.drawable.ic_baseline_flag_24, action = { reportTest(test) })
+                                        tests.map {
+                                            ItemPublicTest(it, onClick = { test ->
+
+                                                ListDialogFragment.newInstance(
+                                                    test.name,
+                                                    listOf(
+                                                        DialogMenuItem(
+                                                            title = getString(R.string.download),
+                                                            iconRes = R.drawable.ic_file_download_white,
+                                                            action = { downloadTest(test) }),
+                                                        DialogMenuItem(
+                                                            title = getString(R.string.info),
+                                                            iconRes = R.drawable.ic_info_white,
+                                                            action = { showInfoTest(test) }),
+                                                        DialogMenuItem(
+                                                            title = getString(R.string.report),
+                                                            iconRes = R.drawable.ic_baseline_flag_24,
+                                                            action = { reportTest(test) })
+                                                    )
+                                                ).show(
+                                                    this@PublicTestsActivity.supportFragmentManager,
+                                                    "TAG"
                                                 )
-                                            ).show(this@PublicTestsActivity.supportFragmentManager, "TAG")
 
-                                        })
+                                            })
+                                        }
                                     }
                                 }
 
@@ -142,7 +163,11 @@ class PublicTestsActivity : AppCompatActivity() {
             onSuccess = {
                 viewModel.convert(it)
 
-                Toast.makeText(this, getString(R.string.msg_success_download_test, it.name), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    getString(R.string.msg_success_download_test, it.name),
+                    Toast.LENGTH_SHORT
+                ).show()
                 logger.logCreateTestEvent(it.name, CreateTestSource.PUBLIC_DOWNLOAD.title)
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -160,9 +185,18 @@ class PublicTestsActivity : AppCompatActivity() {
         ListDialogFragment.newInstance(
             test.name,
             listOf(
-                DialogMenuItem(title = getString(R.string.text_info_creator, test.userName), iconRes = R.drawable.ic_account, action = { }),
-                DialogMenuItem(title = getString(R.string.text_info_created_at, test.getDate()), iconRes = R.drawable.ic_baseline_calendar_today_24, action = { }),
-                DialogMenuItem(title = getString(R.string.text_info_overview, test.overview), iconRes = R.drawable.ic_baseline_description_24, action = { })
+                DialogMenuItem(
+                    title = getString(R.string.text_info_creator, test.userName),
+                    iconRes = R.drawable.ic_account,
+                    action = { }),
+                DialogMenuItem(
+                    title = getString(R.string.text_info_created_at, test.getDate()),
+                    iconRes = R.drawable.ic_baseline_calendar_today_24,
+                    action = { }),
+                DialogMenuItem(
+                    title = getString(R.string.text_info_overview, test.overview),
+                    iconRes = R.drawable.ic_baseline_description_24,
+                    action = { })
             )
         ).show(supportFragmentManager, "TAG")
 
@@ -173,7 +207,10 @@ class PublicTestsActivity : AppCompatActivity() {
         val emailIntent = Intent(Intent.ACTION_SENDTO)
         emailIntent.data = Uri.parse("mailto:")
         emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("testmaker.contact@gmail.com"))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_subject, test.documentId))
+        emailIntent.putExtra(
+            Intent.EXTRA_SUBJECT,
+            getString(R.string.report_subject, test.documentId)
+        )
         emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_body))
         startActivity(Intent.createChooser(emailIntent, null))
 
@@ -189,10 +226,10 @@ fun ItemPublicTest(test: FirebaseTest, onClick: (FirebaseTest) -> Unit) {
             .fillMaxWidth()
             .clickable(onClick = { onClick(test) }),
 
-    ) {
+        ) {
         Row(
             modifier = Modifier.padding(16.dp)
-        ){
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_baseline_description_24),
                 contentDescription = "icon test",
