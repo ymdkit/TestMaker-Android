@@ -7,22 +7,23 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ExperimentalGraphicsApi
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -35,9 +36,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.PublicTestsActivity.Companion.COLOR_MAX
-import jp.gr.java_conf.foobar.testmaker.service.view.result.MyTopAppBar
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
@@ -60,7 +59,6 @@ class PublicTestsActivity : AppCompatActivity() {
     }
 
     private val viewModel: FirebaseViewModel by viewModel()
-    private val testViewModel: TestViewModel by viewModel()
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
     private val logger: TestMakerLogger by inject()
 
@@ -73,24 +71,57 @@ class PublicTestsActivity : AppCompatActivity() {
 
             val tests by viewModel.tests.observeAsState(emptyList())
             val isRefreshing by viewModel.loading.observeAsState(true)
+            val isSearching = mutableStateOf(false)
 
             TestMakerAndroidTheme {
                 Scaffold(
                     topBar = {
-                        MyTopAppBar(getString(R.string.label_public_tests))
+                        TopAppBar(
+                            title = {
+                                if (isSearching.value) {
+                                    SearchTextField(
+                                        modifier = Modifier.fillMaxWidth()
+                                    ){
+                                        viewModel.getTests(it)
+                                    }
+                                } else {
+                                    Text(
+                                        text = getString(R.string.label_public_tests),
+                                        color = MaterialTheme.colors.onPrimary
+                                    )
+                                }
+
+                            },
+                            backgroundColor = MaterialTheme.colors.primary,
+                            actions = {
+                                IconButton(onClick = {
+                                    isSearching.value = !isSearching.value
+                                }) {
+                                    Image(
+                                        painter = painterResource(
+                                            id =
+                                            if (isSearching.value) R.drawable.ic_close_white
+                                            else R.drawable.ic_baseline_search_24
+                                        ),
+                                        contentDescription = "search",
+                                    )
+                                }
+                            },
+                        )
                     },
                     content = {
                         Surface(color = MaterialTheme.colors.surface) {
                             Column {
                                 SwipeRefresh(
                                     modifier = Modifier
-                                        .verticalScroll(state = ScrollState(0))
                                         .weight(weight = 1f, fill = true),
-                                    state = rememberSwipeRefreshState(isRefreshing), onRefresh = {
+                                    state = rememberSwipeRefreshState(isRefreshing),
+                                    onRefresh = {
                                         viewModel.getTests()
                                     }) {
 
                                     Column(
+                                        modifier = Modifier.verticalScroll(state = rememberScrollState()),
                                         verticalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
 
@@ -217,6 +248,35 @@ class PublicTestsActivity : AppCompatActivity() {
     }
 }
 
+@Composable
+fun SearchTextField(modifier:Modifier = Modifier, onSearch:(String) -> Unit) {
+
+    val searchWord = remember {
+        mutableStateOf(TextFieldValue())
+    }
+    val focusRequester by remember { mutableStateOf(FocusRequester())}
+
+    BasicTextField(
+        value = searchWord.value,
+        onValueChange = {
+            searchWord.value = it
+        },
+        keyboardActions = KeyboardActions(onSearch = {
+            onSearch(searchWord.value.text)
+        }),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        singleLine = true,
+        cursorBrush = SolidColor(MaterialTheme.colors.onPrimary),
+        modifier = modifier.focusRequester(focusRequester),
+        textStyle = TextStyle(color = MaterialTheme.colors.onPrimary)
+    )
+
+    LaunchedEffect(Unit){
+        focusRequester.requestFocus()
+    }
+
+}
+
 @ExperimentalGraphicsApi
 @Composable
 fun ItemPublicTest(test: FirebaseTest, onClick: (FirebaseTest) -> Unit) {
@@ -245,7 +305,8 @@ fun ItemPublicTest(test: FirebaseTest, onClick: (FirebaseTest) -> Unit) {
             Text(
                 text = test.name,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp)
+                fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp),
+                maxLines = 1
             )
         }
     }
