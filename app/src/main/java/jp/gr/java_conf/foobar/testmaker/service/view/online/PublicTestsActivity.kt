@@ -31,6 +31,8 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
+import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
@@ -182,6 +184,10 @@ class PublicTestsActivity : AppCompatActivity() {
             }
         }
         viewModel.getTests()
+
+        viewModel.error.observeNonNull(this) {
+            showErrorToast(it)
+        }
     }
 
     private fun downloadTest(test: FirebaseTest) {
