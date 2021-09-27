@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.fragment.app.Fragment
 
 fun Fragment.requireStringArgument(key: String): String =
-    requireArguments().getString(key) ?: throw NullPointerException("${this.javaClass.name}: $key is null")
+    requireArguments().getString(key)!!
 
 fun <T: Parcelable>Fragment.requireParcelableArgument(key: String): T =
-    requireArguments().getParcelable(key) ?: throw NullPointerException("${this.javaClass.name}: $key is null")
+    requireArguments().getParcelable(key)!!
