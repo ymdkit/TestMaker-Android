@@ -315,6 +315,7 @@
     <string name="overview_online">overview: %1$s</string>
     <string name="title_activity_public_tests">PublicTestsActivity</string>
     <string name="label_public_tests">public tests</string>
+    <string name="button_upload_test">publish your tests</string>
 
 
 </resources>

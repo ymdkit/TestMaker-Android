@@ -2,11 +2,14 @@ package jp.gr.java_conf.foobar.testmaker.service.view.online
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -23,18 +26,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
+import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
+import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.PublicTestsActivity.Companion.COLOR_MAX
 import jp.gr.java_conf.foobar.testmaker.service.view.result.MyTopAppBar
+import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PublicTestsActivity : ComponentActivity() {
+class PublicTestsActivity : AppCompatActivity() {
 
     companion object {
         const val COLOR_MAX = 8F
@@ -73,12 +82,23 @@ class PublicTestsActivity : ComponentActivity() {
                                 Column(
                                     modifier = Modifier
                                         .verticalScroll(state = ScrollState(0))
-                                        .weight(weight = 1f, fill = true)
-                                        .padding(top = 16.dp)
+                                        .weight(weight = 1f, fill = true),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
 
                                     tests?.map {
-                                        ItemPublicTest(it)
+                                        ItemPublicTest(it, onClick = { test ->
+
+                                            ListDialogFragment.newInstance(
+                                                test.name,
+                                                listOf(
+                                                    DialogMenuItem(title = getString(R.string.download), iconRes = R.drawable.ic_file_download_white, action = { downloadTest(test) }),
+                                                    DialogMenuItem(title = getString(R.string.info), iconRes = R.drawable.ic_info_white, action = { showInfoTest(test) }),
+                                                    DialogMenuItem(title = getString(R.string.report), iconRes = R.drawable.ic_baseline_flag_24, action = { reportTest(test) })
+                                                )
+                                            ).show(this@PublicTestsActivity.supportFragmentManager, "TAG")
+
+                                        })
                                     }
                                 }
 
@@ -95,8 +115,11 @@ class PublicTestsActivity : ComponentActivity() {
                                         backgroundColor = MaterialTheme.colors.secondary
                                     ),
 
-                                ) {
-                                    Text(text = getString(R.string.button_upload_test), color = MaterialTheme.colors.onSecondary)
+                                    ) {
+                                    Text(
+                                        text = getString(R.string.button_upload_test),
+                                        color = MaterialTheme.colors.onSecondary
+                                    )
                                 }
 
                                 ComposeAdView(isRemovedAd = sharedPreferenceManager.isRemovedAd)
@@ -108,32 +131,85 @@ class PublicTestsActivity : ComponentActivity() {
         }
         viewModel.getTests()
     }
+
+    private fun downloadTest(test: FirebaseTest) {
+
+        executeJobWithDialog(
+            title = getString(R.string.downloading),
+            task = {
+                viewModel.downloadTest(test.documentId)
+            },
+            onSuccess = {
+                viewModel.convert(it)
+
+                Toast.makeText(this, getString(R.string.msg_success_download_test, it.name), Toast.LENGTH_SHORT).show()
+                logger.logCreateTestEvent(it.name, CreateTestSource.PUBLIC_DOWNLOAD.title)
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                startActivity(intent)
+            },
+            onFailure = {
+                showToast(getString(R.string.msg_failure_download_test))
+            }
+        )
+    }
+
+    private fun showInfoTest(test: FirebaseTest) {
+
+        ListDialogFragment.newInstance(
+            test.name,
+            listOf(
+                DialogMenuItem(title = getString(R.string.text_info_creator, test.userName), iconRes = R.drawable.ic_account, action = { }),
+                DialogMenuItem(title = getString(R.string.text_info_created_at, test.getDate()), iconRes = R.drawable.ic_baseline_calendar_today_24, action = { }),
+                DialogMenuItem(title = getString(R.string.text_info_overview, test.overview), iconRes = R.drawable.ic_baseline_description_24, action = { })
+            )
+        ).show(supportFragmentManager, "TAG")
+
+    }
+
+    private fun reportTest(test: FirebaseTest) {
+
+        val emailIntent = Intent(Intent.ACTION_SENDTO)
+        emailIntent.data = Uri.parse("mailto:")
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("testmaker.contact@gmail.com"))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_subject, test.documentId))
+        emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_body))
+        startActivity(Intent.createChooser(emailIntent, null))
+
+    }
 }
 
 @ExperimentalGraphicsApi
 @Composable
-fun ItemPublicTest(test: FirebaseTest) {
+fun ItemPublicTest(test: FirebaseTest, onClick: (FirebaseTest) -> Unit) {
     Row(
         modifier = Modifier
             .height(64.dp)
-            .padding(16.dp)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_baseline_description_24),
-            contentDescription = "icon test",
-            colorFilter = ColorFilter.tint(
-                Color.Companion.hsv(360F * test.color.toFloat() / COLOR_MAX, 0.5F, 0.9F),
-                BlendMode.SrcIn
-            ),
-            modifier = Modifier
-                .width(24.dp)
-                .height(24.dp)
-        )
+            .fillMaxWidth()
+            .clickable(onClick = { onClick(test) }),
 
-        Text(
-            text = test.name,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp)
-        )
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp)
+        ){
+            Image(
+                painter = painterResource(id = R.drawable.ic_baseline_description_24),
+                contentDescription = "icon test",
+                colorFilter = ColorFilter.tint(
+                    Color.Companion.hsv(360F * test.color.toFloat() / COLOR_MAX, 0.5F, 0.9F),
+                    BlendMode.SrcIn
+                ),
+                modifier = Modifier
+                    .width(24.dp)
+                    .height(24.dp)
+            )
+
+            Text(
+                text = test.name,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp)
+            )
+        }
     }
 }
