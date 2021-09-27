@@ -129,28 +129,7 @@ class PublicTestsActivity : AppCompatActivity() {
 
                                         tests.map {
                                             ItemPublicTest(it, onClick = { test ->
-
-                                                ListDialogFragment.newInstance(
-                                                    test.name,
-                                                    listOf(
-                                                        DialogMenuItem(
-                                                            title = getString(R.string.download),
-                                                            iconRes = R.drawable.ic_file_download_white,
-                                                            action = { downloadTest(test) }),
-                                                        DialogMenuItem(
-                                                            title = getString(R.string.info),
-                                                            iconRes = R.drawable.ic_info_white,
-                                                            action = { showInfoTest(test) }),
-                                                        DialogMenuItem(
-                                                            title = getString(R.string.report),
-                                                            iconRes = R.drawable.ic_baseline_flag_24,
-                                                            action = { reportTest(test) })
-                                                    )
-                                                ).show(
-                                                    this@PublicTestsActivity.supportFragmentManager,
-                                                    "TAG"
-                                                )
-
+                                                onClickTest(test)
                                             })
                                         }
                                     }
@@ -188,6 +167,29 @@ class PublicTestsActivity : AppCompatActivity() {
         viewModel.error.observeNonNull(this) {
             showErrorToast(it)
         }
+    }
+
+    private fun onClickTest(test: FirebaseTest){
+        ListDialogFragment.newInstance(
+            test.name,
+            listOf(
+                DialogMenuItem(
+                    title = getString(R.string.download),
+                    iconRes = R.drawable.ic_file_download_white,
+                    action = { downloadTest(test) }),
+                DialogMenuItem(
+                    title = getString(R.string.info),
+                    iconRes = R.drawable.ic_info_white,
+                    action = { showInfoTest(test) }),
+                DialogMenuItem(
+                    title = getString(R.string.report),
+                    iconRes = R.drawable.ic_baseline_flag_24,
+                    action = { reportTest(test) })
+            )
+        ).show(
+            this@PublicTestsActivity.supportFragmentManager,
+            "TAG"
+        )
     }
 
     private fun downloadTest(test: FirebaseTest) {
