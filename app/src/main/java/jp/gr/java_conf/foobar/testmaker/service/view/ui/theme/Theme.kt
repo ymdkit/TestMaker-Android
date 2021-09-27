@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.result.ui.theme
+package jp.gr.java_conf.foobar.testmaker.service.view.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
