@@ -6,5 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 class EditQuestionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // drag and drop のサポートが開始されるまで待機
+        // https://developer.android.com/jetpack/androidx/compose-roadmap
     }
 }
