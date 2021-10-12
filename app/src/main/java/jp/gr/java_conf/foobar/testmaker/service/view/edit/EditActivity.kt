@@ -103,7 +103,7 @@ class EditActivity : BaseActivity() {
                                 title = it.title,
                                 iconRes = R.drawable.ic_baseline_description_24,
                                 action = {
-                                    testViewModel.move(controller.selectedQuestions, test, it)
+                                    testViewModel.move(controller.selectedQuestions, it)
                                     showToast(
                                         getString(
                                             R.string.msg_succes_move_questions,

@@ -86,20 +86,16 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
 
     }
 
-    fun move(questions: List<Question>, source: Test, dest: Test){
-        update(
-            dest.copy(questions = dest.questions + questions)
-        )
-        update(
-            source.copy(questions = source.questions.filterNot { question ->
-                questions.any{ question.id == it.id }
-            })
-        )
+    fun move(questions: List<Question>, dest: Test){
+        questions.forEach {
+            create(dest, it)
+            delete(it)
+        }
     }
 
     fun copy(questions: List<Question>, dest: Test){
-        update(
-            dest.copy(questions = dest.questions + questions)
-        )
+        questions.forEach {
+            create(dest, it)
+        }
     }
 }
