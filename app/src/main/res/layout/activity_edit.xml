@@ -27,7 +27,6 @@
                     android:layout_width="match_parent"
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
                     app:popupTheme="@style/Theme.AppCompat.DayNight"
                     app:title="@string/title_activity_edit" />
 
