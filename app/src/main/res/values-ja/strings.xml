@@ -313,4 +313,5 @@
     <string name="menu_copy">コピー</string>
     <string name="msg_copy_questions">コピー先の選択</string>
     <string name="msg_succes_copy_questions">選択した全ての問題を %1$s にコピーしました</string>
+    <string name="msg_empty_selected_questions">1つ以上の問題を選択してください</string>
 </resources>

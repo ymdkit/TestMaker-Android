@@ -18,6 +18,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
@@ -37,6 +38,7 @@ class EditActivity : BaseActivity() {
 
     private val testViewModel: TestViewModel by viewModel()
     private val service: CloudFunctionsService by inject()
+    private val logger: TestMakerLogger by inject()
 
     private val controller: EditController by lazy {
         EditController(this).apply {
@@ -86,12 +88,17 @@ class EditActivity : BaseActivity() {
             return false
         }
 
-        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean =
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
             when (item?.itemId) {
                 R.id.action_move -> {
+                    if (controller.selectedQuestions.isEmpty()) {
+                        showToast(getString(R.string.msg_empty_selected_questions))
+                        return true
+                    }
+
                     ListDialogFragment.newInstance(
                         getString(R.string.msg_move_questions),
-                        testViewModel.tests.map {
+                        testViewModel.tests.filterNot { it.id == test.id }.map {
                             DialogMenuItem(
                                 title = it.title,
                                 iconRes = R.drawable.ic_baseline_description_24,
@@ -103,17 +110,23 @@ class EditActivity : BaseActivity() {
                                             it.title
                                         )
                                     )
+                                    logger.logEvent("move_questions")
                                     mode?.finish()
                                 }
                             )
                         }
                     ).show(supportFragmentManager, "TAG")
-                    true
+                    return true
                 }
                 R.id.action_copy -> {
+                    if (controller.selectedQuestions.isEmpty()) {
+                        showToast(getString(R.string.msg_empty_selected_questions))
+                        return true
+                    }
+
                     ListDialogFragment.newInstance(
                         getString(R.string.msg_copy_questions),
-                        testViewModel.tests.map {
+                        testViewModel.tests.filterNot { it.id == test.id }.map {
                             DialogMenuItem(
                                 title = it.title,
                                 iconRes = R.drawable.ic_baseline_description_24,
@@ -125,14 +138,20 @@ class EditActivity : BaseActivity() {
                                             it.title
                                         )
                                     )
+                                    logger.logEvent("copy_questions")
                                     mode?.finish()
                                 }
                             )
                         }
                     ).show(supportFragmentManager, "TAG")
-                    true
+                    return true
                 }
                 R.id.action_delete -> {
+
+                    if (controller.selectedQuestions.isEmpty()) {
+                        showToast(getString(R.string.msg_empty_selected_questions))
+                        return true
+                    }
 
                     ConfirmDangerDialogFragment.newInstance(
                         getString(
@@ -143,15 +162,17 @@ class EditActivity : BaseActivity() {
 
                         testViewModel.delete(controller.selectedQuestions)
                         showToast(getString(R.string.msg_succes_delete_questions))
+                        logger.logEvent("delete_questions")
                         mode?.finish()
 
                     }.show(supportFragmentManager, "TAG")
-                    true
+                    return true
                 }
                 else -> {
-                    false
+                    return false
                 }
             }
+        }
 
 
         override fun onDestroyActionMode(mode: ActionMode?) {
