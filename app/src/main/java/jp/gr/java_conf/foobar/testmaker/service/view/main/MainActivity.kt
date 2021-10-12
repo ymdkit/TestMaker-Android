@@ -36,7 +36,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.move.MoveQuestionsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.PublicTestsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
@@ -255,12 +254,6 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                     Intent(
                         this@MainActivity,
                         GroupActivity::class.java
-                    )
-                )
-                R.id.nav_move_questions -> startActivity(
-                    Intent(
-                        this@MainActivity,
-                        MoveQuestionsActivity::class.java
                     )
                 )
                 R.id.nav_remove_ad -> {
