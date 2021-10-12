@@ -1,7 +1,9 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.online
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ArrayAdapter
@@ -17,7 +19,6 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityUploadTestBi
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.UploadTestDestination
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
-import jp.gr.java_conf.foobar.testmaker.service.extensions.isConnectedInternet
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.LocalMainFragment
@@ -269,7 +270,11 @@ class UploadTestActivity : BaseActivity() {
                 ).show()
             }
         )
+    }
 
+    private fun isConnectedInternet(): Boolean{
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return cm.getNetworkCapabilities(cm.activeNetwork) != null
     }
 
     companion object {

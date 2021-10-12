@@ -23,6 +23,12 @@ class EditController(private val context: Context) : EpoxyController() {
             requestModelBuild()
         }
 
+    var selectedQuestions = listOf<Question>()
+        set(value) {
+            field = value
+            requestModelBuild()
+        }
+
     interface OnClickListener {
         fun onClickQuestion(question: Question)
     }
@@ -53,7 +59,10 @@ class EditController(private val context: Context) : EpoxyController() {
                     id(it.id)
                     index((index + 1).toString())
                     question(it)
-                    listener(listener)
+                    onClick { _ ->
+                        listener?.onClickQuestion(it)
+                    }
+                    isSelected(selectedQuestions.any{ question -> it.id == question.id})
                 }
             }
         }

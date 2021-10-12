@@ -53,6 +53,12 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
         repository.delete(question)
     }
 
+    fun delete(questions: List<Question>){
+        questions.forEach {
+            delete(it)
+        }
+    }
+
     fun swap(from: Question, to: Question) {
         repository.swap(from, to)
     }
@@ -78,5 +84,18 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
             repository.update(it.copy(category = newCategory))
         }
 
+    }
+
+    fun move(questions: List<Question>, dest: Test){
+        questions.forEach {
+            create(dest, it)
+            delete(it)
+        }
+    }
+
+    fun copy(questions: List<Question>, dest: Test){
+        questions.forEach {
+            create(dest, it)
+        }
     }
 }

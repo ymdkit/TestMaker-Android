@@ -26,4 +26,10 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_select"
+        android:title="@string/menu_select"
+        app:showAsAction="ifRoom"
+        />
+
 </menu>

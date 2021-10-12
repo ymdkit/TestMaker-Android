@@ -302,4 +302,16 @@
     <string name="label_public_tests">みんなの問題集</string>
     <string name="button_upload_test">問題集のアップロード</string>
     <string name="hint_search_public_tests">検索</string>
+    <string name="menu_select">選択</string>
+    <string name="menu_cancel">キャンセル</string>
+    <string name="menu_delete">削除</string>
+    <string name="msg_delete_selected_questions">選択した全ての問題を削除しますか？</string>
+    <string name="msg_succes_delete_questions">選択した全ての問題を削除しました</string>
+    <string name="menu_move">移動</string>
+    <string name="msg_move_questions">移動先の選択</string>
+    <string name="msg_succes_move_questions">選択した全ての問題を %1$s に移動しました</string>
+    <string name="menu_copy">コピー</string>
+    <string name="msg_copy_questions">コピー先の選択</string>
+    <string name="msg_succes_copy_questions">選択した全ての問題を %1$s にコピーしました</string>
+    <string name="msg_empty_selected_questions">1つ以上の問題を選択してください</string>
 </resources>
