@@ -322,6 +322,12 @@
     <string name="menu_delete">delete</string>
     <string name="msg_delete_selected_questions">delete all questions?</string>
     <string name="msg_succes_delete_questions">deleted questions</string>
+    <string name="menu_move">move</string>
+    <string name="msg_move_questions">select destination to move</string>
+    <string name="msg_succes_move_questions">moved questions to %1$s</string>
+    <string name="menu_copy">copy</string>
+    <string name="msg_copy_questions">select destination to copy</string>
+    <string name="msg_succes_copy_questions">copied success to %1$s</string>
 
 
 </resources>

@@ -305,6 +305,12 @@
     <string name="menu_select">選択</string>
     <string name="menu_cancel">キャンセル</string>
     <string name="menu_delete">削除</string>
-    <string name="msg_delete_selected_questions">選択した全ての問題集を削除しますか？</string>
-    <string name="msg_succes_delete_questions">選択した問題集を全て削除しました</string>
+    <string name="msg_delete_selected_questions">選択した全ての問題を削除しますか？</string>
+    <string name="msg_succes_delete_questions">選択した全ての問題を削除しました</string>
+    <string name="menu_move">移動</string>
+    <string name="msg_move_questions">移動先の選択</string>
+    <string name="msg_succes_move_questions">選択した全ての問題を %1$s に移動しました</string>
+    <string name="menu_copy">コピー</string>
+    <string name="msg_copy_questions">コピー先の選択</string>
+    <string name="msg_succes_copy_questions">選択した全ての問題を %1$s にコピーしました</string>
 </resources>

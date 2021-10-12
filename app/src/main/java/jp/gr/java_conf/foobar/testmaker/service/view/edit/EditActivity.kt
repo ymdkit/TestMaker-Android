@@ -88,6 +88,50 @@ class EditActivity : BaseActivity() {
 
         override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean =
             when (item?.itemId) {
+                R.id.action_move -> {
+                    ListDialogFragment.newInstance(
+                        getString(R.string.msg_move_questions),
+                        testViewModel.tests.map {
+                            DialogMenuItem(
+                                title = it.title,
+                                iconRes = R.drawable.ic_baseline_description_24,
+                                action = {
+                                    testViewModel.move(controller.selectedQuestions, test, it)
+                                    showToast(
+                                        getString(
+                                            R.string.msg_succes_move_questions,
+                                            it.title
+                                        )
+                                    )
+                                    mode?.finish()
+                                }
+                            )
+                        }
+                    ).show(supportFragmentManager, "TAG")
+                    true
+                }
+                R.id.action_copy -> {
+                    ListDialogFragment.newInstance(
+                        getString(R.string.msg_copy_questions),
+                        testViewModel.tests.map {
+                            DialogMenuItem(
+                                title = it.title,
+                                iconRes = R.drawable.ic_baseline_description_24,
+                                action = {
+                                    testViewModel.copy(controller.selectedQuestions, it)
+                                    showToast(
+                                        getString(
+                                            R.string.msg_succes_copy_questions,
+                                            it.title
+                                        )
+                                    )
+                                    mode?.finish()
+                                }
+                            )
+                        }
+                    ).show(supportFragmentManager, "TAG")
+                    true
+                }
                 R.id.action_delete -> {
 
                     ConfirmDangerDialogFragment.newInstance(
