@@ -3,9 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import com.airbnb.epoxy.EpoxyTouchHelper
@@ -44,22 +42,90 @@ class EditActivity : BaseActivity() {
         EditController(this).apply {
             setOnClickListener(object : EditController.OnClickListener {
                 override fun onClickQuestion(question: Question) {
-                    ListDialogFragment.newInstance(
+
+                    if (actionMode != null) {
+                        selectedQuestions = if (selectedQuestions.any { question.id == it.id }) {
+                            selectedQuestions.filterNot { it.id == question.id }
+                        } else {
+                            selectedQuestions + listOf(question)
+                        }
+                    } else {
+
+                        ListDialogFragment.newInstance(
                             question.question,
                             listOf(
-                                    DialogMenuItem(title = getString(R.string.edit), iconRes = R.drawable.ic_edit_white, action = { editQuestion(question) }),
-                                    DialogMenuItem(title = getString(R.string.copy_question), iconRes = R.drawable.ic_baseline_file_copy_24, action = { copyQuestion(question) }),
-                                    DialogMenuItem(title = getString(R.string.delete), iconRes = R.drawable.ic_delete_white, action = { deleteQuestion(question) })
+                                DialogMenuItem(
+                                    title = getString(R.string.edit),
+                                    iconRes = R.drawable.ic_edit_white,
+                                    action = { editQuestion(question) }),
+                                DialogMenuItem(
+                                    title = getString(R.string.copy_question),
+                                    iconRes = R.drawable.ic_baseline_file_copy_24,
+                                    action = { copyQuestion(question) }),
+                                DialogMenuItem(
+                                    title = getString(R.string.delete),
+                                    iconRes = R.drawable.ic_delete_white,
+                                    action = { deleteQuestion(question) })
                             )
-                    ).show(supportFragmentManager, "TAG")
+                        ).show(supportFragmentManager, "TAG")
+
+                    }
                 }
             })
         }
     }
 
-    private val binding by lazy { DataBindingUtil.setContentView<ActivityEditBinding>(this, R.layout.activity_edit) }
+    private val actionModeCallback = object : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            val inflater: MenuInflater = mode?.menuInflater ?: return false
+            inflater.inflate(R.menu.menu_edit_selected, menu)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean =
+            when (item?.itemId) {
+                R.id.action_delete -> {
+
+                    ConfirmDangerDialogFragment.newInstance(
+                        getString(
+                            R.string.msg_delete_selected_questions,
+                        ),
+                        getString(R.string.button_delete_confirm)
+                    ) {
+
+                        testViewModel.delete(controller.selectedQuestions)
+                        showToast(getString(R.string.msg_succes_delete_questions))
+                        mode?.finish()
+
+                    }.show(supportFragmentManager, "TAG")
+                    true
+                }
+                else -> {
+                    false
+                }
+            }
+
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            controller.selectedQuestions = emptyList()
+            actionMode = null
+        }
+
+    }
+
+    private val binding by lazy {
+        DataBindingUtil.setContentView<ActivityEditBinding>(
+            this,
+            R.layout.activity_edit
+        )
+    }
 
     private lateinit var test: Test
+    private var actionMode: ActionMode? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,50 +185,66 @@ class EditActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
-            when (item.itemId) {
-                R.id.action_setting -> {
-                    EditTestActivity.startActivity(this, test.id)
-                    true
-                }
-                R.id.action_export -> {
-                    convertTestToCSV(test)
-                    true
-                }
-                android.R.id.home -> {
-                    finish()
-                    true
-                }
-                R.id.action_reset_achievement -> {
-                    test.let {
-                        testViewModel.update(Test.createFromRealmTest(RealmTest.createFromTest(it).apply {
-                            resetAchievement()
-                        }))
-                    }
-
-                    showToast(getString(R.string.msg_reset_achievement))
-                    true
-                }
-                else -> {
-                    super.onOptionsItemSelected(item)
-                }
+        when (item.itemId) {
+            R.id.action_setting -> {
+                EditTestActivity.startActivity(this, test.id)
+                true
             }
+            R.id.action_export -> {
+                convertTestToCSV(test)
+                true
+            }
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            R.id.action_reset_achievement -> {
+                test.let {
+                    testViewModel.update(
+                        Test.createFromRealmTest(
+                            RealmTest.createFromTest(it).apply {
+                                resetAchievement()
+                            })
+                    )
+                }
+
+                showToast(getString(R.string.msg_reset_achievement))
+                true
+            }
+            R.id.action_select -> {
+                if (actionMode == null) {
+                    actionMode = startActionMode(actionModeCallback)
+                } else {
+                    controller.selectedQuestions = emptyList()
+                }
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
 
     private fun initViews() {
         EpoxyTouchHelper
-                .initDragging(controller)
-                .withRecyclerView(binding.recyclerView)
-                .forVerticalList()
-                .withTarget(ItemQuestionBindingModel_::class.java)
-                .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<ItemQuestionBindingModel_>() {
-                    override fun onModelMoved(fromPosition: Int, toPosition: Int, modelBeingMoved: ItemQuestionBindingModel_, itemView: View?) {
-                        val from = controller.adapter.getModelAtPosition(fromPosition)
-                        val to = controller.adapter.getModelAtPosition(toPosition)
+            .initDragging(controller)
+            .withRecyclerView(binding.recyclerView)
+            .forVerticalList()
+            .withTarget(ItemQuestionBindingModel_::class.java)
+            .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<ItemQuestionBindingModel_>() {
+                override fun onModelMoved(
+                    fromPosition: Int,
+                    toPosition: Int,
+                    modelBeingMoved: ItemQuestionBindingModel_,
+                    itemView: View?
+                ) {
+                    val from = controller.adapter.getModelAtPosition(fromPosition)
+                    val to = controller.adapter.getModelAtPosition(toPosition)
 
-                        if (from is ItemQuestionBindingModel_ && to is ItemQuestionBindingModel_) {
-                            testViewModel.swap(from.question(), to.question())
-                        }
+                    if (from is ItemQuestionBindingModel_ && to is ItemQuestionBindingModel_) {
+                        testViewModel.swap(from.question(), to.question())
                     }
-                })
+                }
+            })
     }
 
     private fun convertTestToCSV(test: Test) {
@@ -199,8 +281,10 @@ class EditActivity : BaseActivity() {
     }
 
     fun deleteQuestion(question: Question) {
-        ConfirmDangerDialogFragment.newInstance(getString(R.string.message_delete, question.question),
-            getString(R.string.button_delete_confirm)) {
+        ConfirmDangerDialogFragment.newInstance(
+            getString(R.string.message_delete, question.question),
+            getString(R.string.button_delete_confirm)
+        ) {
             testViewModel.delete(question)
         }.show(supportFragmentManager, "TAG")
     }

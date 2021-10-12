@@ -302,4 +302,9 @@
     <string name="label_public_tests">みんなの問題集</string>
     <string name="button_upload_test">問題集のアップロード</string>
     <string name="hint_search_public_tests">検索</string>
+    <string name="menu_select">選択</string>
+    <string name="menu_cancel">キャンセル</string>
+    <string name="menu_delete">削除</string>
+    <string name="msg_delete_selected_questions">選択した全ての問題集を削除しますか？</string>
+    <string name="msg_succes_delete_questions">選択した問題集を全て削除しました</string>
 </resources>

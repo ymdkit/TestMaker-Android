@@ -317,6 +317,11 @@
     <string name="label_public_tests">public tests</string>
     <string name="button_upload_test">publish your tests</string>
     <string name="hint_search_public_tests">search</string>
+    <string name="menu_select">select</string>
+    <string name="menu_cancel">cancel</string>
+    <string name="menu_delete">delete</string>
+    <string name="msg_delete_selected_questions">delete all questions?</string>
+    <string name="msg_succes_delete_questions">deleted questions</string>
 
 
 </resources>
