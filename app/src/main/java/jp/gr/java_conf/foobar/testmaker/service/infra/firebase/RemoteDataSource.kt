@@ -14,6 +14,7 @@ import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.domain.History
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
@@ -252,15 +253,92 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
             .whereEqualTo("userId", userId)
             .get()
             .await()
-            .map{
+            .map {
                 it.toObject(FirebaseTest::class.java).copy(documentId = it.id)
             }
+
+    // 問題集の"新規"アップロード（更新は考慮しない）
+    suspend fun createTest(test: Test, overview: String, isPublic: Boolean): FirebasePostResponse {
+        val user = auth.getUser() ?: return FirebasePostResponse.Failure("user does not exist")
+        val testRef = db.collection(TESTS).document()
+
+        val result = runCatching {
+
+            db.runBatch { batch ->
+                batch.set(
+                    testRef,
+                    testToFirebaseTest(
+                        test = test,
+                        user = user,
+                        overview = overview,
+                        isPublic = isPublic
+                    )
+                )
+
+                test.questions.forEach {
+                    val questionRef =
+                        db.collection(TESTS).document(testRef.id).collection(QUESTIONS).document()
+
+                    val imageUrl = if (it.hasLocalImage) {
+                        uploadImage(it.imagePath, "${user.uid}/${it.imagePath}")
+                    } else ""
+
+                    batch.set(questionRef, it.toFirebaseQuestion(imageUrl = imageUrl))
+                }
+            }.await()
+        }
+
+        return if(result.isSuccess){
+            FirebasePostResponse.Success(testRef.id)
+        }else{
+            FirebasePostResponse.Failure(result.exceptionOrNull()?.message)
+        }
+    }
+
+    private fun uploadImage(localPath: String, remotePath: String): String {
+        val storage = FirebaseStorage.getInstance()
+
+        val storageRef = storage.reference.child(remotePath)
+
+        val baos = ByteArrayOutputStream()
+        val imageOptions = BitmapFactory.Options()
+        imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
+        val input = context.openFileInput(localPath)
+        val bitmap = BitmapFactory.decodeStream(input, null, imageOptions)
+        bitmap?.compress(Bitmap.CompressFormat.JPEG, 50, baos)
+        val data = baos.toByteArray()
+        storageRef.putBytes(data)
+
+        return remotePath
+    }
+
+    private fun testToFirebaseTest(
+        test: Test,
+        user: FirebaseUser,
+        overview: String,
+        isPublic: Boolean
+    ) = FirebaseTest(
+        userId = user.uid,
+        userName = user.displayName ?: "Anonymous",
+        overview = overview,
+        size = test.questions.size,
+        locale = Locale.getDefault().language,
+        public = isPublic,
+        name = test.title,
+        color = test.getColorId(context)
+    )
 
     companion object {
         const val TESTS = "tests"
         const val GROUPS = "groups"
         const val USERS = "users"
         const val HISTORIES = "histories"
+        const val QUESTIONS = "questions"
+    }
+
+    sealed class FirebasePostResponse {
+        data class Failure(val message: String?) : FirebasePostResponse()
+        data class Success(val documentId: String) : FirebasePostResponse()
     }
 
 }

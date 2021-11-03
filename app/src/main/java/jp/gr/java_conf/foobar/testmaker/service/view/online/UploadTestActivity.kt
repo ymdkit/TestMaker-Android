@@ -20,6 +20,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.UploadTestDestination
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.LocalMainFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
@@ -192,32 +193,45 @@ class UploadTestActivity : BaseActivity() {
         executeJobWithDialog(
             title = getString(R.string.uploading),
             task = {
-                viewModel.uploadTest(
-                    RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]),
+
+                viewModel.createTest(
+                    testViewModel.tests[binding.spinner.selectedItemPosition],
                     binding.editOverview.text.toString(),
                     !binding.checkPrivate.isChecked
                 )
             },
-            onSuccess = { documentId ->
-                logger.logUploadTestEvent(
-                    test = testViewModel.tests[binding.spinner.selectedItemPosition],
-                    destination = if (ablePrivateUpload) UploadTestDestination.PRIVATE.title else UploadTestDestination.PUBLIC.title
-                )
-                if (intent.hasExtra(ARGUMENT_ID)) {
-                    setResult(Activity.RESULT_OK, Intent().apply {
-                        putExtra(
-                            LocalMainFragment.EXTRA_TEST_NAME,
-                            testViewModel.tests[binding.spinner.selectedItemPosition].title
+            onSuccess = { response ->
+
+                when(response){
+                    is RemoteDataSource.FirebasePostResponse.Success -> {
+                        logger.logUploadTestEvent(
+                            test = testViewModel.tests[binding.spinner.selectedItemPosition],
+                            destination = if (ablePrivateUpload) UploadTestDestination.PRIVATE.title else UploadTestDestination.PUBLIC.title
                         )
-                        putExtra(LocalMainFragment.EXTRA_DOCUMENT_ID, documentId)
-                    })
+                        if (intent.hasExtra(ARGUMENT_ID)) {
+                            setResult(Activity.RESULT_OK, Intent().apply {
+                                putExtra(
+                                    LocalMainFragment.EXTRA_TEST_NAME,
+                                    testViewModel.tests[binding.spinner.selectedItemPosition].title
+                                )
+                                putExtra(LocalMainFragment.EXTRA_DOCUMENT_ID, response.documentId)
+                            })
+                        }
+                        Toast.makeText(
+                            baseContext,
+                            getString(R.string.msg_test_upload),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish()
+                    }
+                    is RemoteDataSource.FirebasePostResponse.Failure -> {
+                        Toast.makeText(
+                            baseContext,
+                            response.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
-                Toast.makeText(
-                    baseContext,
-                    getString(R.string.msg_test_upload),
-                    Toast.LENGTH_SHORT
-                ).show()
-                finish()
             },
             onFailure = {
                 Toast.makeText(

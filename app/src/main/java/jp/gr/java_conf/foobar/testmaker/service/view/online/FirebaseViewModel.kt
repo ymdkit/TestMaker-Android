@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.SearchService
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
@@ -25,7 +26,11 @@ class FirebaseViewModel(
     fun convert(test: FirebaseTest) =
         repository.createObjectFromFirebase(
             test = test,
-            source = CreateTestSource.PUBLIC_DOWNLOAD.title)
+            source = CreateTestSource.PUBLIC_DOWNLOAD.title
+        )
+
+    suspend fun createTest(test: Test, overview: String, isPublic: Boolean) =
+        repository.createTest(test, overview, isPublic)
 
     suspend fun uploadTest(test: RealmTest, overview: String, isPublic: Boolean) =
         repository.createTest(test, overview, isPublic)
@@ -60,7 +65,12 @@ class FirebaseViewModel(
         return repository.getTestsByUserId(userId).firstOrNull { it.name == title }
     }
 
-    suspend fun overwriteTest(documentId: String, test: RealmTest,overview: String, isPublic: Boolean = true): String {
+    suspend fun overwriteTest(
+        documentId: String,
+        test: RealmTest,
+        overview: String,
+        isPublic: Boolean = true
+    ): String {
         repository.deleteTest(documentId)
         return repository.createTest(test, overview, isPublic)
     }

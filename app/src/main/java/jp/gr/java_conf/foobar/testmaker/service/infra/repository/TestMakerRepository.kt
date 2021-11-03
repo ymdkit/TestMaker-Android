@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
@@ -31,6 +32,10 @@ class TestMakerRepository(private val local: LocalDataSource,
         }
         return newDocumentId
     }
+
+    suspend fun createTest(test: Test, overview: String, isPublic: Boolean) =
+        remote.createTest(test, overview, isPublic)
+
 
     suspend fun createTestInGroup(test: RealmTest, overview: String, groupId: String) {
         val id = remote.createTest(test, overview, groupId)
