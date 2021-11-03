@@ -13,7 +13,6 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.domain.History
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import kotlinx.coroutines.tasks.await
@@ -58,85 +57,6 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
             .document(user.uid)
             .set(myUser)
 
-    }
-
-    suspend fun createTest(test: RealmTest, overview: String, isPublic: Boolean = true): String {
-
-        val firebaseTest = test.toFirebaseTest(context)
-        val user = auth.getUser() ?: return ""
-
-        firebaseTest.userId = user.uid
-        firebaseTest.userName = user.displayName ?: "guest"
-        firebaseTest.overview = overview
-        firebaseTest.size = test.questionsNonNull().size
-        firebaseTest.locale = Locale.getDefault().language
-        firebaseTest.public = isPublic
-
-        val ref = db.collection(TESTS).document()
-
-        ref.set(firebaseTest).await()
-
-        return ref.id
-    }
-
-    // グループ内に問題集を保存する
-    suspend fun createTest(test: RealmTest, overview: String, groupId: String): String {
-
-        val firebaseTest = test.toFirebaseTest(context)
-        val user = auth.getUser() ?: return ""
-
-        firebaseTest.userId = user.uid
-        firebaseTest.userName = user.displayName ?: "guest"
-        firebaseTest.overview = overview
-        firebaseTest.size = test.questionsNonNull().size
-        firebaseTest.locale = Locale.getDefault().language
-        firebaseTest.public = false
-        firebaseTest.groupId = groupId
-
-        val ref = db.collection(TESTS).document()
-        ref.set(firebaseTest).await()
-
-        return ref.id
-    }
-
-    suspend fun uploadQuestions(test: RealmTest, documentId: String): List<String> {
-
-        val questionRefs = arrayListOf<String>()
-
-        val firebaseQuestions = test.questionsNonNull()
-
-        val testRef = db.collection(TESTS).document(documentId)
-
-        val user = auth.getUser() ?: return emptyList()
-
-        val batch = db.batch()
-        firebaseQuestions.forEach {
-            val questionRef = if (it.documentId.isEmpty()) testRef.collection("questions")
-                .document() else testRef.collection("questions").document(it.documentId)
-            batch.set(questionRef, it.toFirebaseQuestions(user))
-
-            questionRefs.add(questionRef.id)
-
-            if (it.imagePath.isNotEmpty() && !it.imagePath.contains("/")) {
-                val storage = FirebaseStorage.getInstance()
-
-                val storageRef = storage.reference.child("${user.uid}/${it.imagePath}")
-
-                val baos = ByteArrayOutputStream()
-                val imageOptions = BitmapFactory.Options()
-                imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-                val input = context.openFileInput(it.imagePath)
-                val bitmap = BitmapFactory.decodeStream(input, null, imageOptions)
-                bitmap?.compress(Bitmap.CompressFormat.JPEG, 50, baos)
-                val data = baos.toByteArray()
-
-                storageRef.putBytes(data)
-            }
-        }
-
-        batch.commit().await()
-
-        return questionRefs
     }
 
     fun getMyTests(): LiveData<List<DocumentSnapshot>> {
@@ -257,48 +177,55 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                 it.toObject(FirebaseTest::class.java).copy(documentId = it.id)
             }
 
-    // 問題集の"新規"アップロード（更新は考慮しない）
-    suspend fun createTest(test: Test, overview: String, isPublic: Boolean): FirebasePostResponse {
+    suspend fun createTest(
+        test: Test,
+        overview: String,
+        isPublic: Boolean,
+        groupId: String = ""
+    ): FirebasePostResponse {
         val user = auth.getUser() ?: return FirebasePostResponse.Failure("user does not exist")
 
         val batchOperationLimit = 500
 
-        if(test.questions.size >= batchOperationLimit){
+        if (test.questions.size >= batchOperationLimit) {
             val result = runCatching {
-                test.questions.sortedBy { it.order }.chunked(batchOperationLimit - 1).forEachIndexed{ index, it ->
-                    val testRef = db.collection(TESTS).document()
+                test.questions.sortedBy { it.order }.chunked(batchOperationLimit - 1)
+                    .forEachIndexed { index, it ->
+                        val testRef = db.collection(TESTS).document()
 
-                    db.runBatch { batch ->
-                        batch.set(
-                            testRef,
-                            testToFirebaseTest(
-                                test = test.copy(title = if(index == 0) test.title else "${test.title}($index)"),
-                                user = user,
-                                overview = overview,
-                                isPublic = isPublic,
-                                size = it.size
+                        db.runBatch { batch ->
+                            batch.set(
+                                testRef,
+                                testToFirebaseTest(
+                                    test = test.copy(title = if (index == 0) test.title else "${test.title}($index)"),
+                                    user = user,
+                                    overview = overview,
+                                    isPublic = isPublic,
+                                    size = it.size,
+                                    groupId = groupId,
+                                )
                             )
-                        )
-                        it.forEach {
-                            val questionRef =
-                                db.collection(TESTS).document(testRef.id).collection(QUESTIONS).document()
+                            it.forEach {
+                                val questionRef =
+                                    db.collection(TESTS).document(testRef.id).collection(QUESTIONS)
+                                        .document()
 
-                            val imageUrl = if (it.hasLocalImage) {
-                                uploadImage(it.imagePath, "${user.uid}/${it.imagePath}")
-                            } else ""
+                                val imageUrl = if (it.hasLocalImage) {
+                                    uploadImage(it.imagePath, "${user.uid}/${it.imagePath}")
+                                } else ""
 
-                            batch.set(questionRef, it.toFirebaseQuestion(imageUrl = imageUrl))
-                        }
-                    }.await()
-                }
+                                batch.set(questionRef, it.toFirebaseQuestion(imageUrl = imageUrl))
+                            }
+                        }.await()
+                    }
             }
 
-            return if(result.isSuccess){
+            return if (result.isSuccess) {
                 FirebasePostResponse.Divided
-            }else{
+            } else {
                 FirebasePostResponse.Failure(result.exceptionOrNull()?.message)
             }
-        }else{
+        } else {
             val testRef = db.collection(TESTS).document()
             val result = runCatching {
 
@@ -310,7 +237,8 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
                             user = user,
                             overview = overview,
                             isPublic = isPublic,
-                            size = test.questions.size
+                            size = test.questions.size,
+                            groupId = groupId
                         )
                     )
                     test.questions.forEach {
@@ -328,9 +256,9 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
 
             }
 
-            return if(result.isSuccess){
+            return if (result.isSuccess) {
                 FirebasePostResponse.Success(testRef.id)
-            }else{
+            } else {
                 FirebasePostResponse.Failure(result.exceptionOrNull()?.message)
             }
 
@@ -359,7 +287,8 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
         user: FirebaseUser,
         overview: String,
         isPublic: Boolean,
-        size: Int
+        size: Int,
+        groupId: String
     ) = FirebaseTest(
         userId = user.uid,
         userName = user.displayName ?: "Anonymous",
@@ -368,7 +297,8 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
         locale = Locale.getDefault().language,
         public = isPublic,
         name = test.title,
-        color = test.getColorId(context)
+        color = test.getColorId(context),
+        groupId = groupId
     )
 
     companion object {
@@ -380,7 +310,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
     }
 
     sealed class FirebasePostResponse {
-        object Divided: FirebasePostResponse()
+        object Divided : FirebasePostResponse()
         data class Failure(val message: String?) : FirebasePostResponse()
         data class Success(val documentId: String) : FirebasePostResponse()
     }

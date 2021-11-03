@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentUploadGroupTestBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.UploadTestDestination
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
@@ -45,7 +44,7 @@ class UploadGroupTestFragment : Fragment() {
                         title = getString(R.string.uploading),
                         task = {
                             viewModel.uploadTestInGroup(
-                                    RealmTest.createFromTest(testViewModel.tests[binding.spinner.selectedItemPosition]),
+                                    testViewModel.tests[binding.spinner.selectedItemPosition],
                                     binding.editOverview.text.toString(),
                                     args.groupId)
                         },

@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.SearchService
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,10 +32,7 @@ class FirebaseViewModel(
     suspend fun createTest(test: Test, overview: String, isPublic: Boolean) =
         repository.createTest(test, overview, isPublic)
 
-    suspend fun uploadTest(test: RealmTest, overview: String, isPublic: Boolean) =
-        repository.createTest(test, overview, isPublic)
-
-    suspend fun uploadTestInGroup(test: RealmTest, overview: String, groupId: String) =
+    suspend fun uploadTestInGroup(test: Test, overview: String, groupId: String) =
         repository.createTestInGroup(test, overview, groupId)
 
     fun getUser(): FirebaseUser? = auth.getUser()
@@ -67,10 +64,10 @@ class FirebaseViewModel(
 
     suspend fun overwriteTest(
         documentId: String,
-        test: RealmTest,
+        test: Test,
         overview: String,
         isPublic: Boolean = true
-    ): String {
+    ): RemoteDataSource.FirebasePostResponse {
         repository.deleteTest(documentId)
         return repository.createTest(test, overview, isPublic)
     }
