@@ -329,6 +329,7 @@
     <string name="msg_copy_questions">select destination to copy</string>
     <string name="msg_succes_copy_questions">copied success to %1$s</string>
     <string name="msg_empty_selected_questions">select questions</string>
+    <string name="msg_test_upload_divided">Due to the large number of problems, it has been split and uploaded.</string>
 
 
 </resources>

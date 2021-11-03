@@ -294,7 +294,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
             }
 
             return if(result.isSuccess){
-                FirebasePostResponse.Success("")
+                FirebasePostResponse.Divided
             }else{
                 FirebasePostResponse.Failure(result.exceptionOrNull()?.message)
             }
@@ -380,6 +380,7 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
     }
 
     sealed class FirebasePostResponse {
+        object Divided: FirebasePostResponse()
         data class Failure(val message: String?) : FirebasePostResponse()
         data class Success(val documentId: String) : FirebasePostResponse()
     }

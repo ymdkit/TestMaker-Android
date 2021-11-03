@@ -231,6 +231,14 @@ class UploadTestActivity : BaseActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                    is RemoteDataSource.FirebasePostResponse.Divided -> {
+                        Toast.makeText(
+                            baseContext,
+                            getString(R.string.msg_test_upload_divided),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish()
+                    }
                 }
             },
             onFailure = {
