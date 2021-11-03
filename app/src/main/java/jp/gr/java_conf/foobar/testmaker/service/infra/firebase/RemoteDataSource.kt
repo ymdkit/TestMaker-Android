@@ -260,38 +260,80 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
     // 問題集の"新規"アップロード（更新は考慮しない）
     suspend fun createTest(test: Test, overview: String, isPublic: Boolean): FirebasePostResponse {
         val user = auth.getUser() ?: return FirebasePostResponse.Failure("user does not exist")
-        val testRef = db.collection(TESTS).document()
 
-        val result = runCatching {
+        val batchOperationLimit = 500
 
-            db.runBatch { batch ->
-                batch.set(
-                    testRef,
-                    testToFirebaseTest(
-                        test = test,
-                        user = user,
-                        overview = overview,
-                        isPublic = isPublic
-                    )
-                )
+        if(test.questions.size >= batchOperationLimit){
+            val result = runCatching {
+                test.questions.sortedBy { it.order }.chunked(batchOperationLimit - 1).forEachIndexed{ index, it ->
+                    val testRef = db.collection(TESTS).document()
 
-                test.questions.forEach {
-                    val questionRef =
-                        db.collection(TESTS).document(testRef.id).collection(QUESTIONS).document()
+                    db.runBatch { batch ->
+                        batch.set(
+                            testRef,
+                            testToFirebaseTest(
+                                test = test.copy(title = if(index == 0) test.title else "${test.title}($index)"),
+                                user = user,
+                                overview = overview,
+                                isPublic = isPublic,
+                                size = it.size
+                            )
+                        )
+                        it.forEach {
+                            val questionRef =
+                                db.collection(TESTS).document(testRef.id).collection(QUESTIONS).document()
 
-                    val imageUrl = if (it.hasLocalImage) {
-                        uploadImage(it.imagePath, "${user.uid}/${it.imagePath}")
-                    } else ""
+                            val imageUrl = if (it.hasLocalImage) {
+                                uploadImage(it.imagePath, "${user.uid}/${it.imagePath}")
+                            } else ""
 
-                    batch.set(questionRef, it.toFirebaseQuestion(imageUrl = imageUrl))
+                            batch.set(questionRef, it.toFirebaseQuestion(imageUrl = imageUrl))
+                        }
+                    }.await()
                 }
-            }.await()
-        }
+            }
 
-        return if(result.isSuccess){
-            FirebasePostResponse.Success(testRef.id)
+            return if(result.isSuccess){
+                FirebasePostResponse.Success("")
+            }else{
+                FirebasePostResponse.Failure(result.exceptionOrNull()?.message)
+            }
         }else{
-            FirebasePostResponse.Failure(result.exceptionOrNull()?.message)
+            val testRef = db.collection(TESTS).document()
+            val result = runCatching {
+
+                db.runBatch { batch ->
+                    batch.set(
+                        testRef,
+                        testToFirebaseTest(
+                            test = test,
+                            user = user,
+                            overview = overview,
+                            isPublic = isPublic,
+                            size = test.questions.size
+                        )
+                    )
+                    test.questions.forEach {
+                        val questionRef =
+                            db.collection(TESTS).document(testRef.id).collection(QUESTIONS)
+                                .document()
+
+                        val imageUrl = if (it.hasLocalImage) {
+                            uploadImage(it.imagePath, "${user.uid}/${it.imagePath}")
+                        } else ""
+
+                        batch.set(questionRef, it.toFirebaseQuestion(imageUrl = imageUrl))
+                    }
+                }.await()
+
+            }
+
+            return if(result.isSuccess){
+                FirebasePostResponse.Success(testRef.id)
+            }else{
+                FirebasePostResponse.Failure(result.exceptionOrNull()?.message)
+            }
+
         }
     }
 
@@ -316,12 +358,13 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
         test: Test,
         user: FirebaseUser,
         overview: String,
-        isPublic: Boolean
+        isPublic: Boolean,
+        size: Int
     ) = FirebaseTest(
         userId = user.uid,
         userName = user.displayName ?: "Anonymous",
         overview = overview,
-        size = test.questions.size,
+        size = size,
         locale = Locale.getDefault().language,
         public = isPublic,
         name = test.title,
