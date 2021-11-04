@@ -5,10 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.SearchService
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,12 +26,13 @@ class FirebaseViewModel(
     fun convert(test: FirebaseTest) =
         repository.createObjectFromFirebase(
             test = test,
-            source = CreateTestSource.PUBLIC_DOWNLOAD.title)
+            source = CreateTestSource.PUBLIC_DOWNLOAD.title
+        )
 
-    suspend fun uploadTest(test: RealmTest, overview: String, isPublic: Boolean) =
+    suspend fun createTest(test: Test, overview: String, isPublic: Boolean) =
         repository.createTest(test, overview, isPublic)
 
-    suspend fun uploadTestInGroup(test: RealmTest, overview: String, groupId: String) =
+    suspend fun uploadTestInGroup(test: Test, overview: String, groupId: String) =
         repository.createTestInGroup(test, overview, groupId)
 
     fun getUser(): FirebaseUser? = auth.getUser()
@@ -60,7 +62,12 @@ class FirebaseViewModel(
         return repository.getTestsByUserId(userId).firstOrNull { it.name == title }
     }
 
-    suspend fun overwriteTest(documentId: String, test: RealmTest,overview: String, isPublic: Boolean = true): String {
+    suspend fun overwriteTest(
+        documentId: String,
+        test: Test,
+        overview: String,
+        isPublic: Boolean = true
+    ): RemoteDataSource.FirebasePostResponse {
         repository.deleteTest(documentId)
         return repository.createTest(test, overview, isPublic)
     }

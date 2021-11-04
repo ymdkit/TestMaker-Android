@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.domain
 
+import android.content.Context
 import android.os.Parcelable
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -61,6 +62,9 @@ data class Test(
                 )
             })
         }
+
+    fun getColorId(context: Context): Int =
+        context.resources.getIntArray(R.array.color_list).indexOf(color).coerceAtLeast(0)
 
     companion object {
         fun createFromRealmTest(realmTest: RealmTest) = Test(

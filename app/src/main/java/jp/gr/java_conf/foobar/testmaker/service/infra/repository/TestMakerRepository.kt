@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
@@ -11,8 +12,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 
-class TestMakerRepository(private val local: LocalDataSource,
-                          private val remote: RemoteDataSource) {
+class TestMakerRepository(
+    private val local: LocalDataSource,
+    private val remote: RemoteDataSource
+) {
 
     suspend fun downloadTest(testId: String): FirebaseTest = withContext(Dispatchers.Default) {
         remote.downloadTest(testId)
@@ -22,19 +25,12 @@ class TestMakerRepository(private val local: LocalDataSource,
         local.createObjectFromFirebase(test, source = source)
     }
 
-    suspend fun createTest(test: RealmTest, overview: String, isPublic: Boolean = true): String {
-        val newDocumentId = withContext(Dispatchers.Default) { remote.createTest(test, overview, isPublic) }
-        local.updateDocumentId(getTest(test.id), newDocumentId)
-        val newDocumentIds = withContext(Dispatchers.Default) { remote.uploadQuestions(test, newDocumentId) }
-        getTest(test.id).questionsNonNull().forEachIndexed { index, quest ->
-            local.updateDocumentId(quest, newDocumentIds[index])
-        }
-        return newDocumentId
-    }
+    suspend fun createTest(test: Test, overview: String, isPublic: Boolean) =
+        remote.createTest(test, overview, isPublic)
 
-    suspend fun createTestInGroup(test: RealmTest, overview: String, groupId: String) {
-        val id = remote.createTest(test, overview, groupId)
-        remote.uploadQuestions(test, id)
+
+    suspend fun createTestInGroup(test: Test, overview: String, groupId: String) {
+        remote.createTest(test = test, overview = overview, isPublic = false, groupId = groupId)
     }
 
     fun getMyTests(): LiveData<List<DocumentSnapshot>> {

@@ -64,15 +64,24 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/element_spacing_very_large"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="@dimen/element_spacing_large"
+            android:layout_marginEnd="@dimen/element_spacing_large"
+            android:layout_marginBottom="@dimen/element_spacing_large"
             android:animatedVisibility="@{vM.isLogin}"
-            android:src="@drawable/ic_baseline_cloud_upload_24"
+            android:text="@string/button_upload_test"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:theme="@style/ThemeOverlay.Button.Accent"
+            app:icon="@drawable/ic_baseline_add_24"
+            app:iconGravity="textStart"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

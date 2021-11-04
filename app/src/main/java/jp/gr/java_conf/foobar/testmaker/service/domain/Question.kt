@@ -4,6 +4,8 @@ import android.os.Parcelable
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.extensions.allIndexed
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.QuestionResponse
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseQuestion
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -58,6 +60,22 @@ data class Question(
     }
 
     private fun isReversible() = type == Constants.WRITE || type == Constants.COMPLETE
+
+    fun toFirebaseQuestion(imageUrl: String = "") = FirebaseQuestion(
+        question = question,
+        answer = answer,
+        answers = answers,
+        others = others,
+        explanation = explanation,
+        imageRef = imageUrl,
+        type = type,
+        auto = isAutoGenerateOthers,
+        checkOrder = isCheckOrder,
+        order = order
+    )
+
+    @IgnoredOnParcel
+    val hasLocalImage = imagePath.isNotEmpty() && !imagePath.contains("/")
 
     companion object {
         fun createFromRealmQuestion(realmQuestion: Quest) = Question(
