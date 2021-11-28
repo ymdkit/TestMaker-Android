@@ -315,4 +315,8 @@
     <string name="msg_succes_copy_questions">選択した全ての問題を %1$s にコピーしました</string>
     <string name="msg_empty_selected_questions">1つ以上の問題を選択してください</string>
     <string name="msg_test_upload_divided">問題数が500以上だったため、問題集を分割してアップロードしました。</string>
+    <string name="title_page_search">さがす</string>
+    <string name="title_page_home">ホーム</string>
+    <string name="title_page_group">グループ</string>
+    <string name="title_page_settings">設定</string>
 </resources>

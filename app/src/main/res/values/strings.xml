@@ -330,6 +330,10 @@
     <string name="msg_succes_copy_questions">copied success to %1$s</string>
     <string name="msg_empty_selected_questions">select questions</string>
     <string name="msg_test_upload_divided">Due to the large number of problems, it has been split and uploaded.</string>
+    <string name="title_page_search">search</string>
+    <string name="title_page_home">home</string>
+    <string name="title_page_group">group</string>
+    <string name="title_page_settings">settings</string>
 
 
 </resources>
