@@ -7,6 +7,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/colorAccent</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="android:windowAnimationStyle">@style/ActivityTransitionAnimation</item>
         <item name="windowActionModeOverlay">true</item>
