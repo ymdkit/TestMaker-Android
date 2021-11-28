@@ -32,7 +32,7 @@ class EditQuestionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        createAd(binding.adView)
+        //createAd(binding.adView)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
