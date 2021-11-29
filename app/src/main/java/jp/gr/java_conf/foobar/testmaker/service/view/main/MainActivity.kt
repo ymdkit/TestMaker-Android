@@ -11,7 +11,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -19,6 +18,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.android.billingclient.api.BillingClient
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
@@ -229,7 +229,7 @@ class MainActivity : BaseActivity(), AccountMainFragment.OnTestDownloadedListene
                         findViewById(R.id.layout_dialog_paste)
                     )
 
-                    val builder = AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                    val builder = MaterialAlertDialogBuilder(this)
                     builder.setView(dialogLayout)
                     builder.setTitle(getString(R.string.action_paste))
                     val dialog = builder.show()

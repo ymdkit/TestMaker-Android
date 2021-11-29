@@ -26,11 +26,6 @@
         <item name="android:activityCloseEnterAnimation">@anim/alpha_appear</item>
     </style>
 
-    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert">
-        <item name="colorAccent">@android:color/holo_blue_dark</item>
-        <item name="android:textColor">@android:color/holo_blue_dark</item>
-    </style>
-
     <style name="ThemeOverlay.Button.Danger" parent="ThemeOverlay.AppCompat">
         <item name="colorAccent">@color/colorDanger</item>
     </style>

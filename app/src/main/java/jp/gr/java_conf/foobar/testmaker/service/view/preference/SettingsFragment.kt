@@ -4,11 +4,11 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import jp.gr.java_conf.foobar.testmaker.service.BuildConfig
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
@@ -68,7 +68,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val logoutPreference = findPreference<Preference>("setting_logout")
         logoutPreference?.apply {
             setOnPreferenceClickListener {
-                AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle)
+                MaterialAlertDialogBuilder(requireContext())
                         .setTitle(getString(R.string.logout))
                         .setMessage(getString(R.string.msg_logout))
                         .setPositiveButton(getString(R.string.ok)) { _, _ ->
