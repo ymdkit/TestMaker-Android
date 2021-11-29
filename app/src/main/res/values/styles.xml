@@ -31,12 +31,6 @@
         <item name="android:textColor">@android:color/holo_blue_dark</item>
     </style>
 
-    <style name="AppTheme.Design.TextInputLayout" parent="Widget.Design.TextInputLayout">
-        <item name="android:textColorHint">@color/colorPrimary
-        </item><!-- 何も入力してないとき入力フォーム内のHintの色 --><!-- 通常時EditTextの下線 -->
-        <item name="colorControlActivated">@color/colorPrimary</item><!-- フォーカス時の下線の色 -->
-    </style>
-
     <style name="ThemeOverlay.Button.Danger" parent="ThemeOverlay.AppCompat">
         <item name="colorAccent">@color/colorDanger</item>
     </style>
@@ -118,8 +112,6 @@
 
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:theme">@style/AppTheme.Design.TextInputLayout</item>
-
     </style>
 
     <style name="MyEditTextSingleLine" parent="Theme.AppCompat.DayNight.NoActionBar">
