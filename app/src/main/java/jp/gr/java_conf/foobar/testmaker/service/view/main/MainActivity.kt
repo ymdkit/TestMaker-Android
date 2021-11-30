@@ -16,9 +16,9 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupContainerFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.online.PublishedWorkbookListFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsContainerFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,8 +41,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         supportFragmentManager.setFragmentResultListener(REQUEST_NAVIGATE_HOME_PAGE, this){ _, _ ->
-            testViewModel.refresh()
-            binding.viewPager.setCurrentItem(0, true)
+            navigateHomePage()
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -53,7 +52,7 @@ class MainActivity : BaseActivity() {
             this, listOf(
                 HomeFragment(),
                 PublishedWorkbookListFragment(),
-                SettingsFragment(),
+                GroupContainerFragment(),
                 SettingsContainerFragment()
             )
         )
@@ -90,6 +89,12 @@ class MainActivity : BaseActivity() {
             val deepLink = pendingDynamicLinkData.link
             handleDynamicLink(deepLink.toString())
         }
+    }
+
+    fun navigateHomePage(){
+        testViewModel.refresh()
+        binding.bottomBar.selectedItemId = R.id.page_home
+        binding.viewPager.setCurrentItem(0, true)
     }
 
     private fun handleDynamicLink(link: String) {

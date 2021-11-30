@@ -322,10 +322,9 @@ class GroupDetailFragment : Fragment() {
                     getString(R.string.msg_success_download_test, it.name),
                     Toast.LENGTH_SHORT
                 ).show()
-                val intent = Intent(requireActivity(), MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                startActivity(intent)
+                
+                val hostActivity = requireActivity() as? MainActivity
+                hostActivity?.navigateHomePage()
             },
             onFailure = {
                 requireContext().showToast(getString(R.string.msg_failure_download_test))
