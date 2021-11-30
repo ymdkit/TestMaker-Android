@@ -33,8 +33,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.online.PublicTestsActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
@@ -136,13 +134,6 @@ class HomeFragment : Fragment() {
 
                 }
                 R.id.nav_import -> importFile.launch(arrayOf("text/*"))
-                R.id.nav_settings -> startActivity(
-                    Intent(
-                        requireActivity(),
-                        SettingsActivity::class.java
-                    )
-                )
-                R.id.nav_online -> PublicTestsActivity.startActivity(requireActivity())
                 R.id.nav_group -> startActivity(
                     Intent(
                         requireActivity(),

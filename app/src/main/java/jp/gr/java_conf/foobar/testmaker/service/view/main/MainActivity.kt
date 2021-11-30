@@ -16,6 +16,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.online.PublishedWorkbookListFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsContainerFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
@@ -39,6 +40,11 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        supportFragmentManager.setFragmentResultListener(REQUEST_NAVIGATE_HOME_PAGE, this){ _, _ ->
+            testViewModel.refresh()
+            binding.viewPager.setCurrentItem(0, true)
+        }
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.viewPager.offscreenPageLimit = 3
@@ -46,7 +52,7 @@ class MainActivity : BaseActivity() {
         binding.viewPager.adapter = ViewPagerAdapter(
             this, listOf(
                 HomeFragment(),
-                SettingsFragment(),
+                PublishedWorkbookListFragment(),
                 SettingsFragment(),
                 SettingsContainerFragment()
             )
@@ -137,6 +143,7 @@ class MainActivity : BaseActivity() {
 
     companion object {
 
+        const val REQUEST_NAVIGATE_HOME_PAGE = "request_navigate_home_page"
         const val REQUEST_SIGN_IN = 12346
 
         fun startActivityWithClear(activity: Activity) {

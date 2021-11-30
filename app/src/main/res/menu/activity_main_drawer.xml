@@ -18,10 +18,6 @@
             android:icon="@drawable/ic_content_paste_white"
             android:title="@string/action_paste" />
         <item
-            android:id="@+id/nav_online"
-            android:icon="@drawable/ic_public_white"
-            android:title="@string/action_online" />
-        <item
             android:id="@+id/nav_group"
             android:icon="@drawable/ic_baseline_group_24"
             android:title="@string/action_group" />
@@ -30,10 +26,6 @@
             android:id="@+id/nav_remove_ad"
             android:icon="@drawable/ic_remove_ad_white"
             android:title="@string/action_remove_ad" />
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_settings_white"
-            android:title="@string/setting" />
     </group>
 
 
