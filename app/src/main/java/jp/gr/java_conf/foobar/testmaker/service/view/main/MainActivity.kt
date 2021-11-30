@@ -16,6 +16,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsContainerFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +48,7 @@ class MainActivity : BaseActivity() {
                 HomeFragment(),
                 SettingsFragment(),
                 SettingsFragment(),
-                SettingsFragment()
+                SettingsContainerFragment()
             )
         )
 
