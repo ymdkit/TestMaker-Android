@@ -1,14 +1,15 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.main
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -22,6 +23,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
+import jp.gr.java_conf.foobar.testmaker.service.view.main.HomeFragment.Companion.REQUEST_WORKBOOK_CREATED
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.SignInRequestContract
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
@@ -42,8 +44,6 @@ class AccountMainFragment : Fragment() {
     private val logger: TestMakerLogger by inject()
     private val dynamicLinksCreator: DynamicLinksCreator by inject()
 
-    var listener: OnTestDownloadedListener? = null
-
     private var binding: AccountMainFragmentBinding? = null
 
     private val controller: AccountMainController by lazy {
@@ -59,18 +59,6 @@ class AccountMainFragment : Fragment() {
         binding?.progress?.isRefreshing = true
         viewModel.fetchMyTests()
         requireContext().showToast(getString(R.string.msg_success_login))
-    }
-
-    interface OnTestDownloadedListener {
-        fun onDownloaded()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        listener = context as? OnTestDownloadedListener
-        if (listener == null) {
-            throw ClassCastException("$context must implement OnArticleSelectedListener")
-        }
     }
 
     override fun onCreateView(
@@ -165,7 +153,8 @@ class AccountMainFragment : Fragment() {
 
                 logger.logCreateTestEvent(it.name, CreateTestSource.SELF_DOWNLOAD.title)
                 requireContext().showToast(getString(R.string.msg_success_download_test, it.name))
-                listener?.onDownloaded()
+
+                setFragmentResult(REQUEST_WORKBOOK_CREATED, bundleOf())
             },
             onFailure = {
                 requireContext().showToast(getString(R.string.msg_failure_download_test))
