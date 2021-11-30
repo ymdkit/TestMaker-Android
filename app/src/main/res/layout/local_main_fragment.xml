@@ -12,9 +12,8 @@
             android:id="@+id/recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:isHasFixedSize="@{true}"
             android:layout_marginBottom="@dimen/element_spacing_large"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:isHasFixedSize="@{true}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,9 +26,7 @@
             android:layout_margin="@dimen/element_spacing_very_large"
             android:src="@drawable/ic_add_white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_anchor="@id/recycler_view"
-            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

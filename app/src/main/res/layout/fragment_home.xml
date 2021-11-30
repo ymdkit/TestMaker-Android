@@ -24,6 +24,7 @@
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                     app:contentInsetEnd="@dimen/view_width_normal"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
                     app:logo="@drawable/logo_text"
                     app:popupTheme="@style/Theme.AppCompat.DayNight"
                     app:title="@string/app_name" />
@@ -40,8 +41,8 @@
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@id/adView"
-                app:layout_constraintTop_toBottomOf="@id/app_bar" />
+                app:layout_constraintTop_toBottomOf="@id/app_bar"
+                app:layout_constraintBottom_toTopOf="@id/adView" />
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adView"
