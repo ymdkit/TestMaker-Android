@@ -1,8 +1,5 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.main
 
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -107,31 +104,6 @@ class HomeFragment : Fragment() {
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
-                R.id.nav_help
-                -> {
-                    startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(getString(R.string.help_url))
-                        )
-                    )
-                }
-                R.id.nav_feedback
-                -> {
-                    val emailIntent = Intent(Intent.ACTION_SENDTO)
-                    emailIntent.data = Uri.parse("mailto:")
-                    emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("testmaker.contact@gmail.com"))
-                    emailIntent.putExtra(
-                        Intent.EXTRA_SUBJECT,
-                        getString(R.string.email_subject_feedback)
-                    )
-                    emailIntent.putExtra(
-                        Intent.EXTRA_TEXT,
-                        getString(R.string.email_body_feedback, Build.VERSION.SDK_INT)
-                    )
-                    startActivity(Intent.createChooser(emailIntent, null))
-
-                }
                 R.id.nav_import -> importFile.launch(arrayOf("text/*"))
                 R.id.nav_remove_ad -> {
                     viewModel.purchaseRemoveAd(

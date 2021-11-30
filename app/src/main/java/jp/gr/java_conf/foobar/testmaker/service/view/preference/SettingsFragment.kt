@@ -2,6 +2,8 @@ package jp.gr.java_conf.foobar.testmaker.service.view.preference
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.preference.ListPreference
@@ -121,6 +123,26 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun initOtherPreferences() {
+
+        val feedbackPreference = findPreference<Preference>("feedback")
+        feedbackPreference?.apply {
+            setOnPreferenceClickListener {
+                val emailIntent = Intent(Intent.ACTION_SENDTO)
+                emailIntent.data = Uri.parse("mailto:")
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("testmaker.contact@gmail.com"))
+                emailIntent.putExtra(
+                    Intent.EXTRA_SUBJECT,
+                    getString(R.string.email_subject_feedback)
+                )
+                emailIntent.putExtra(
+                    Intent.EXTRA_TEXT,
+                    getString(R.string.email_body_feedback, Build.VERSION.SDK_INT)
+                )
+                startActivity(Intent.createChooser(emailIntent, null))
+                true
+            }
+        }
+
         val licensePreference = findPreference<Preference>("license")
         licensePreference?.apply {
             setOnPreferenceClickListener {

@@ -4,86 +4,118 @@
 
     <PreferenceCategory
         app:key="setting_play"
-        app:title="@string/way">
+        app:title="@string/way"
+        app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
             app:key="random"
-            app:title="@string/message_random" />
+            app:title="@string/message_random"
+            app:iconSpaceReserved="false"/>
 
         <SwitchPreferenceCompat
             app:key="reverse"
             app:summary="@string/summary_setting_reverse_answer"
-            app:title="@string/message_switch_question" />
+            app:title="@string/message_switch_question"
+            app:iconSpaceReserved="false"/>
 
         <SwitchPreferenceCompat
             app:key="refine"
-            app:title="@string/message_wrong_only" />
+            app:title="@string/message_wrong_only"
+            app:iconSpaceReserved="false"/>
 
         <SwitchPreferenceCompat
             app:key="manual"
             app:summary="@string/summary_setting_reverse_answer"
-            app:title="@string/message_self" />
+            app:title="@string/message_self"
+            app:iconSpaceReserved="false"/>
 
         <SwitchPreferenceCompat
             app:key="alwaysReview"
-            app:title="@string/always_review" />
+            app:title="@string/always_review"
+            app:iconSpaceReserved="false"/>
 
         <SwitchPreferenceCompat
             app:key="audio"
-            app:title="@string/setting_sound" />
+            app:title="@string/setting_sound"
+            app:iconSpaceReserved="false"/>
 
         <SwitchPreferenceCompat
             app:key="show_setting_dialog"
             app:summary="@string/setting_show_setting_dialog"
-            app:title="@string/setting_show_dialog" />
+            app:title="@string/setting_show_dialog"
+            app:iconSpaceReserved="false"/>
 
         <ListPreference
             app:entries="@array/play_font_size"
             app:entryValues="@array/play_font_size_values"
             app:key="play_font_size"
-            app:title="@string/play_font_size" />
+            app:title="@string/play_font_size"
+            app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         app:key="preference_group_account"
         app:title="@string/preference_group_account"
-        app:isPreferenceVisible="false">
+        app:isPreferenceVisible="false"
+        app:iconSpaceReserved="false">
 
         <Preference
             app:key="setting_user_name"
-            app:title="@string/setting_user_name" />
+            app:title="@string/setting_user_name"
+            app:iconSpaceReserved="false"/>
 
         <Preference
             app:key="setting_logout"
-            app:title="@string/logout" />
+            app:title="@string/logout"
+            app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         app:key="preference_group_study_plus"
-        app:title="@string/preference_group_study_plus">
+        app:title="@string/preference_group_study_plus"
+        app:iconSpaceReserved="false">
 
         <Preference
             app:key="setting_study_plus"
-            app:title="@string/preference_study_plus" />
+            app:title="@string/preference_study_plus"
+            app:iconSpaceReserved="false"/>
 
         <ListPreference
             app:entries="@array/upload_setting_study_plus"
             app:entryValues="@array/upload_setting_study_plus_values"
             app:isPreferenceVisible="false"
             app:key="study_plus"
-            app:title="@string/preference_post_study_plus" />
+            app:title="@string/preference_post_study_plus"
+            app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         app:key="setting_other"
-        app:title="@string/preference_group_other">
+        app:title="@string/preference_group_other"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            app:key="help"
+            app:title="@string/help"
+            app:iconSpaceReserved="false">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://ankimaker.com/guide" />
+        </Preference>
+
+        <Preference
+            app:key="feedback"
+            app:title="@string/menu_feedback"
+            app:iconSpaceReserved="false">
+        </Preference>
 
         <Preference
             app:key="other_apps"
-            app:title="@string/action_other">
+            app:title="@string/action_other"
+            app:iconSpaceReserved="false">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="https://play.google.com/store/apps/developer?id=ke-ta" />
@@ -91,11 +123,13 @@
 
         <Preference
             app:key="license"
-            app:title="@string/action_license"></Preference>
+            app:title="@string/action_license"
+            app:iconSpaceReserved="false"/>
 
         <Preference
             app:key="version"
-            app:title="@string/version_app"></Preference>
+            app:title="@string/version_app"
+            app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>
 

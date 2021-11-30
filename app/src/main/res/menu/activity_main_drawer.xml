@@ -2,14 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_help"
-            android:icon="@drawable/ic_help_outline_white"
-            android:title="@string/help" />
-        <item
-            android:id="@+id/nav_feedback"
-            android:icon="@drawable/ic_chat_bubble"
-            android:title="@string/menu_feedback" />
-        <item
             android:id="@+id/nav_import"
             android:icon="@drawable/ic_file_download_white"
             android:title="@string/action_import" />
@@ -18,6 +10,4 @@
             android:icon="@drawable/ic_remove_ad_white"
             android:title="@string/action_remove_ad" />
     </group>
-
-
 </menu>
