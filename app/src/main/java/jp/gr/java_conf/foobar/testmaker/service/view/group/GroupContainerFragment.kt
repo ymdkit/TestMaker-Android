@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.AdRequest
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupContainerBinding
@@ -29,6 +29,8 @@ class GroupContainerFragment: Fragment() {
             container,
             false
         )
+
+        (requireActivity() as? AppCompatActivity)?.setSupportActionBar(binding.toolbar)
 
         if (sharedPreferenceManager.isRemovedAd) {
             binding.adView.visibility = View.GONE
