@@ -10,13 +10,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ExperimentalGraphicsApi
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
@@ -43,7 +46,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTh
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PublishedWorkbookListFragment: Fragment() {
+class PublishedWorkbookListFragment : Fragment() {
 
     companion object {
         const val COLOR_MAX = 8F
@@ -88,7 +91,7 @@ class PublishedWorkbookListFragment: Fragment() {
                                     if (isSearching.value) {
                                         SearchTextField(
                                             modifier = Modifier.fillMaxWidth()
-                                        ){
+                                        ) {
                                             viewModel.getTests(it)
                                         }
                                     } else {
@@ -119,47 +122,48 @@ class PublishedWorkbookListFragment: Fragment() {
                         content = {
                             Surface(color = MaterialTheme.colors.surface) {
                                 Column {
-                                    SwipeRefresh(
+                                    Box(
                                         modifier = Modifier
-                                            .weight(weight = 1f, fill = true),
-                                        state = rememberSwipeRefreshState(isRefreshing),
-                                        onRefresh = {
-                                            viewModel.getTests()
-                                        }) {
+                                            .weight(weight = 1f, fill = true)
+                                    ) {
+                                        SwipeRefresh(
+                                            state = rememberSwipeRefreshState(isRefreshing),
+                                            onRefresh = {
+                                                viewModel.getTests()
+                                            }) {
 
-                                        Column(
-                                            modifier = Modifier.verticalScroll(state = rememberScrollState()),
-                                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                                        ) {
-
-                                            tests.map {
-                                                ItemPublicTest(it, onClick = { test ->
-                                                    onClickTest(test)
-                                                })
+                                            LazyColumn(
+                                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                                            ) {
+                                                items(tests) {
+                                                    ItemPublicTest(it, onClick = { test ->
+                                                        onClickTest(test)
+                                                    })
+                                                }
                                             }
                                         }
+                                        Button(
+                                            onClick = {
+                                                logger.logEvent("upload_from_firebase_activity")
+                                                UploadTestActivity.startActivity(requireActivity())
+                                            },
+                                            modifier = Modifier
+                                                .padding(16.dp)
+                                                .size(56.dp)
+                                                .clip(CircleShape)
+                                                .align(Alignment.BottomEnd),
+                                            contentPadding = PaddingValues(vertical = 16.dp),
+                                            colors = ButtonDefaults.buttonColors(
+                                                backgroundColor = MaterialTheme.colors.secondary
+                                            ),
+
+                                            ) {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.ic_baseline_cloud_upload_24),
+                                                contentDescription = ""
+                                            )
+                                        }
                                     }
-
-                                    Button(
-                                        onClick = {
-                                            logger.logEvent("upload_from_firebase_activity")
-                                            UploadTestActivity.startActivity(requireActivity())
-                                        },
-                                        modifier = Modifier
-                                            .padding(16.dp)
-                                            .fillMaxWidth(),
-                                        contentPadding = PaddingValues(vertical = 16.dp),
-                                        colors = ButtonDefaults.buttonColors(
-                                            backgroundColor = MaterialTheme.colors.secondary
-                                        ),
-
-                                        ) {
-                                        Text(
-                                            text = getString(R.string.button_upload_test),
-                                            color = MaterialTheme.colors.onSecondary
-                                        )
-                                    }
-
                                     ComposeAdView(isRemovedAd = sharedPreferenceManager.isRemovedAd)
                                 }
                             }
@@ -170,7 +174,7 @@ class PublishedWorkbookListFragment: Fragment() {
         }
     }
 
-    private fun onClickTest(test: FirebaseTest){
+    private fun onClickTest(test: FirebaseTest) {
         ListDialogFragment.newInstance(
             test.name,
             listOf(
