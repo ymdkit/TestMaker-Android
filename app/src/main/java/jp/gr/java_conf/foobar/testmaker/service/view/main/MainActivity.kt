@@ -15,7 +15,6 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupContainerFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.online.PublishedWorkbookListFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsContainerFragment
@@ -97,6 +96,11 @@ class MainActivity : BaseActivity() {
         binding.viewPager.setCurrentItem(0, true)
     }
 
+    private fun navigateGroupPage(){
+        binding.bottomBar.selectedItemId = R.id.page_group
+        binding.viewPager.setCurrentItem(2, true)
+    }
+
     private fun handleDynamicLink(link: String) {
 
         val regex = Regex("""(?<=https://testmaker-1cb29\.com/).*|(?<=https://ankimaker\.com/).*""")
@@ -110,8 +114,7 @@ class MainActivity : BaseActivity() {
 
                 if (params.size != 2) return@let
 
-                val groupId = params[1]
-                GroupActivity.startActivityWithGroupId(this, groupId)
+                navigateGroupPage()
 
             } else {
                 actionDownload(params[0])
