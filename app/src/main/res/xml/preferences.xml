@@ -41,7 +41,6 @@
 
         <SwitchPreferenceCompat
             app:key="show_setting_dialog"
-            app:summary="@string/setting_show_setting_dialog"
             app:title="@string/setting_show_dialog"
             app:iconSpaceReserved="false"/>
 
