@@ -38,7 +38,7 @@
         <meta-data
             android:name="com.google.android.gms.ads.jp.gr.java_conf.foobar.testmaker.service"
             android:value="${testmaker_admob_key}" />
-        <meta-data出
+        <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
             android:value="true" />
 
