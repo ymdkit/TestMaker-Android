@@ -1,6 +1,5 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.online
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,21 +8,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ExperimentalGraphicsApi
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -39,6 +49,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity.Companion.REQUEST_NAVIGATE_HOME_PAGE
+import jp.gr.java_conf.foobar.testmaker.service.view.online.PublishedWorkbookListFragment.Companion.COLOR_MAX
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
@@ -50,14 +61,6 @@ class PublishedWorkbookListFragment : Fragment() {
 
     companion object {
         const val COLOR_MAX = 8F
-
-        fun startActivity(activity: Activity) =
-            activity.startActivity(
-                Intent(
-                    activity,
-                    PublicTestsActivity::class.java,
-                )
-            )
     }
 
     private val viewModel: FirebaseViewModel by viewModel()
@@ -260,3 +263,68 @@ class PublishedWorkbookListFragment : Fragment() {
     }
 }
 
+@Composable
+fun SearchTextField(modifier:Modifier = Modifier, onSearch:(String) -> Unit) {
+
+    val searchWord = remember {
+        mutableStateOf(TextFieldValue())
+    }
+    val focusRequester by remember { mutableStateOf(FocusRequester())}
+    val focusManager = LocalFocusManager.current
+
+    BasicTextField(
+        value = searchWord.value,
+        onValueChange = {
+            searchWord.value = it
+        },
+        keyboardActions = KeyboardActions(onSearch = {
+            focusManager.clearFocus()
+            onSearch(searchWord.value.text)
+        }),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        singleLine = true,
+        cursorBrush = SolidColor(MaterialTheme.colors.onPrimary),
+        modifier = modifier.focusRequester(focusRequester),
+        textStyle = TextStyle(color = MaterialTheme.colors.onPrimary)
+    )
+
+    LaunchedEffect(Unit){
+        focusRequester.requestFocus()
+    }
+
+}
+
+@ExperimentalGraphicsApi
+@Composable
+fun ItemPublicTest(test: FirebaseTest, onClick: (FirebaseTest) -> Unit) {
+    Row(
+        modifier = Modifier
+            .height(64.dp)
+            .fillMaxWidth()
+            .clickable(onClick = { onClick(test) }),
+
+        ) {
+        Row(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_baseline_description_24),
+                contentDescription = "icon test",
+                colorFilter = ColorFilter.tint(
+                    Color.Companion.hsv(360F * test.color.toFloat() / COLOR_MAX, 0.5F, 0.9F),
+                    BlendMode.SrcIn
+                ),
+                modifier = Modifier
+                    .width(24.dp)
+                    .height(24.dp)
+            )
+
+            Text(
+                text = test.name,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp),
+                maxLines = 1
+            )
+        }
+    }
+}
