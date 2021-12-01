@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -128,20 +129,31 @@ class PublishedWorkbookListFragment : Fragment() {
                                     Box(
                                         modifier = Modifier
                                             .weight(weight = 1f, fill = true)
+                                            .fillMaxWidth()
                                     ) {
+
                                         SwipeRefresh(
                                             state = rememberSwipeRefreshState(isRefreshing),
                                             onRefresh = {
                                                 viewModel.getTests()
                                             }) {
 
-                                            LazyColumn(
-                                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                                            ) {
-                                                items(tests) {
-                                                    ItemPublicTest(it, onClick = { test ->
-                                                        onClickTest(test)
-                                                    })
+                                            if (tests.isEmpty()) {
+                                                Text(
+                                                    modifier = Modifier
+                                                        .padding(16.dp)
+                                                        .align(Alignment.Center),
+                                                    text = stringResource(id = R.string.msg_empty_published_workbooks)
+                                                )
+                                            } else {
+                                                LazyColumn(
+                                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                                ) {
+                                                    items(tests) {
+                                                        ItemPublicTest(it, onClick = { test ->
+                                                            onClickTest(test)
+                                                        })
+                                                    }
                                                 }
                                             }
                                         }
@@ -264,12 +276,12 @@ class PublishedWorkbookListFragment : Fragment() {
 }
 
 @Composable
-fun SearchTextField(modifier:Modifier = Modifier, onSearch:(String) -> Unit) {
+fun SearchTextField(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
 
     val searchWord = remember {
         mutableStateOf(TextFieldValue())
     }
-    val focusRequester by remember { mutableStateOf(FocusRequester())}
+    val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val focusManager = LocalFocusManager.current
 
     BasicTextField(
@@ -288,7 +300,7 @@ fun SearchTextField(modifier:Modifier = Modifier, onSearch:(String) -> Unit) {
         textStyle = TextStyle(color = MaterialTheme.colors.onPrimary)
     )
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
 
