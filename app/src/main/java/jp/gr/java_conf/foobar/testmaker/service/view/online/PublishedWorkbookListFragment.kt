@@ -35,9 +35,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -49,7 +47,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity.Companion.REQUEST_NAVIGATE_HOME_PAGE
+import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.PublishedWorkbookListFragment.Companion.COLOR_MAX
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
@@ -229,8 +227,8 @@ class PublishedWorkbookListFragment : Fragment() {
                 ).show()
                 logger.logCreateTestEvent(it.name, CreateTestSource.PUBLIC_DOWNLOAD.title)
 
-                setFragmentResult(REQUEST_NAVIGATE_HOME_PAGE, bundleOf())
-
+                val hostActivity = requireActivity() as? MainActivity
+                hostActivity?.navigateHomePage()
             },
             onFailure = {
                 requireContext().showToast(getString(R.string.msg_failure_download_test))

@@ -4,10 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
@@ -15,9 +14,6 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupContainerFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.online.PublishedWorkbookListFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsContainerFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,47 +32,16 @@ class MainActivity : BaseActivity() {
     private val testViewModel: TestViewModel by viewModel()
     private val logger: TestMakerLogger by inject()
 
+    private val navController by lazy {
+        (supportFragmentManager.findFragmentById(R.id.nav_main) as NavHostFragment).navController
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportFragmentManager.setFragmentResultListener(REQUEST_NAVIGATE_HOME_PAGE, this){ _, _ ->
-            navigateHomePage()
-        }
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        binding.viewPager.offscreenPageLimit = 3
-        binding.viewPager.isUserInputEnabled = false
-        binding.viewPager.adapter = ViewPagerAdapter(
-            this, listOf(
-                HomeFragment(),
-                PublishedWorkbookListFragment(),
-                GroupContainerFragment(),
-                SettingsContainerFragment()
-            )
-        )
-
-        binding.bottomBar.setOnItemSelectedListener { item ->
-            when(item.itemId){
-                R.id.page_home -> {
-                    binding.viewPager.currentItem = 0
-                    true
-                }
-                R.id.page_search -> {
-                    binding.viewPager.currentItem = 1
-                    true
-                }
-                R.id.page_group -> {
-                    binding.viewPager.currentItem = 2
-                    true
-                }
-                R.id.page_settings -> {
-                    binding.viewPager.currentItem = 3
-                    true
-                }
-                else -> false
-            }
-        }
+        binding.bottomBar.setupWithNavController(navController)
 
         lifecycleScope.launch {
             val pendingDynamicLinkData = withContext(Dispatchers.Default) {
@@ -90,15 +55,15 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    fun navigateHomePage(){
+    fun navigateHomePage() {
         testViewModel.refresh()
         binding.bottomBar.selectedItemId = R.id.page_home
-        binding.viewPager.setCurrentItem(0, true)
+        navController.navigate(R.id.action_global_page_home)
     }
 
-    private fun navigateGroupPage(){
+    private fun navigateGroupPage() {
         binding.bottomBar.selectedItemId = R.id.page_group
-        binding.viewPager.setCurrentItem(2, true)
+        navController.navigate(R.id.action_global_page_group)
     }
 
     private fun handleDynamicLink(link: String) {
@@ -141,17 +106,8 @@ class MainActivity : BaseActivity() {
         )
     }
 
-    private inner class ViewPagerAdapter(
-        activity: FragmentActivity,
-        private val fragments: List<Fragment>
-    ) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = fragments.size
-        override fun createFragment(position: Int): Fragment = fragments[position]
-    }
-
     companion object {
 
-        const val REQUEST_NAVIGATE_HOME_PAGE = "request_navigate_home_page"
         const val REQUEST_SIGN_IN = 12346
 
         fun startActivityWithClear(activity: Activity) {
