@@ -140,7 +140,8 @@ class PublishedWorkbookListFragment : Fragment() {
                                                 Text(
                                                     modifier = Modifier
                                                         .padding(16.dp)
-                                                        .align(Alignment.Center),
+                                                        .align(Alignment.Center)
+                                                        .fillMaxWidth(),
                                                     text = stringResource(id = R.string.msg_empty_published_workbooks)
                                                 )
                                             } else {
