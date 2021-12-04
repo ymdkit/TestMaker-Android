@@ -23,6 +23,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
@@ -157,6 +158,7 @@ class HomeFragment : Fragment() {
                         for (purchase in it) {
                             when (purchase.sku) {
                                 getString(R.string.sku_remove_ad) -> {
+                                    requireContext().showToast(getString(R.string.msg_remove_ad_success), Toast.LENGTH_LONG)
                                     binding.adView.visibility = View.GONE
                                     viewModel.removeAd()
                                 }

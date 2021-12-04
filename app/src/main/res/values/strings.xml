@@ -335,6 +335,7 @@
     <string name="title_page_group">group</string>
     <string name="title_page_settings">settings</string>
     <string name="msg_empty_published_workbooks">no tests are exists</string>
+    <string name="msg_remove_ad_success">removed ad. please restart.</string>
 
 
 </resources>

@@ -320,4 +320,5 @@
     <string name="title_page_group">グループ</string>
     <string name="title_page_settings">設定</string>
     <string name="msg_empty_published_workbooks">条件に該当する問題集は存在しません。\n検索条件を変更してください。</string>
+    <string name="msg_remove_ad_success">広告削除が有効になりました。既に表示されている広告に関しては、アプリの再起動を行うことで削除できます。</string>
 </resources>
