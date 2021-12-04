@@ -11,10 +11,10 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.isseiaoki.simplecropview.CropImageView
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
@@ -78,7 +78,7 @@ abstract class EditQuestionFragment : Fragment() {
             val cropView = dialogLayout.findViewById<CropImageView>(R.id.cropImageView)
             cropView.imageBitmap = bitmap
 
-            AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
+            MaterialAlertDialogBuilder(requireContext())
                 .setView(dialogLayout)
                 .setTitle(getString(R.string.trim))
                 .setPositiveButton(android.R.string.ok) { _, _ ->
@@ -129,7 +129,7 @@ abstract class EditQuestionFragment : Fragment() {
     }
 
     protected fun showAlertImage() {
-        AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
+        MaterialAlertDialogBuilder(requireContext())
             .setItems(
                 if (!editQuestionViewModel.imagePath.value.isNullOrEmpty()) resources.getStringArray(
                     R.array.action_image

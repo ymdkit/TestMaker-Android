@@ -12,31 +12,21 @@
             android:id="@+id/recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:isHasFixedSize="@{true}"
             android:layout_marginBottom="@dimen/element_spacing_large"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintBottom_toTopOf="@id/fab"
+            android:isHasFixedSize="@{true}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="@dimen/element_spacing_large"
-            android:layout_marginEnd="@dimen/element_spacing_large"
-            android:layout_marginBottom="@dimen/element_spacing_large"
-            android:text="@string/button_create_test"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:theme="@style/ThemeOverlay.Button.Accent"
-            app:icon="@drawable/ic_baseline_add_24"
-            app:iconGravity="textStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/element_spacing_very_large"
+            android:src="@drawable/ic_add_white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

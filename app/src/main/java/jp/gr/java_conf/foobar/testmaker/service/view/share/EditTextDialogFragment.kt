@@ -3,10 +3,10 @@ package jp.gr.java_conf.foobar.testmaker.service.view.share
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.DialogEditTextBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireStringArgument
@@ -53,20 +53,19 @@ class EditTextDialogFragment: DialogFragment() {
                 editText.setText(requireStringArgument(ARG_DEFAULT_TEXT))
             }
 
-            AlertDialog.Builder(it, R.style.MyAlertDialogStyle)
-                    .setTitle(requireStringArgument(ARG_TITLE))
-                    .setView(binding.root)
-                    .setPositiveButton(R.string.ok
-                    ) { _, _ ->
-                        if (binding.editText.text.isNullOrEmpty()) {
-                            requireContext().showToast(getString(R.string.msg_empty_text))
-                            return@setPositiveButton
-                        }
-                        completion(binding.editText.text.toString())
+            MaterialAlertDialogBuilder(it)
+                .setTitle(requireStringArgument(ARG_TITLE))
+                .setView(binding.root)
+                .setPositiveButton(R.string.ok
+                ) { _, _ ->
+                    if (binding.editText.text.isNullOrEmpty()) {
+                        requireContext().showToast(getString(R.string.msg_empty_text))
+                        return@setPositiveButton
                     }
-                    .setNegativeButton(R.string.cancel, null)
-                    .create()
-
+                    completion(binding.editText.text.toString())
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .create()
 
         } ?: throw IllegalStateException("Activity cannot be null")
     }

@@ -218,20 +218,17 @@ class GroupDetailFragment : Fragment() {
 
     private fun refresh() = lifecycleScope.launch {
         controller.tests = viewModel.getTests(args.groupId)
-        viewModel.getGroup(
-            args.groupId
-        )
-            .addOnSuccessListener {
-                it.toObject(Group::class.java)?.let {
-                    group = it
-                    joinGroup()
-                    binding.swipeRefresh.isRefreshing = false
-                    requireActivity().invalidateOptionsMenu()
-                } ?: run {
-                    requireContext().showToast(getString(R.string.msg_group_deleted))
-                    exitGroup(args.groupId)
-                }
-            }
+        group = viewModel.getGroup(args.groupId)
+
+        group ?: run {
+            requireContext().showToast(getString(R.string.msg_group_deleted))
+            exitGroup(args.groupId)
+            return@launch
+        }
+
+        joinGroup()
+        binding.swipeRefresh.isRefreshing = false
+        requireActivity().invalidateOptionsMenu()
     }
 
     private fun joinGroup() = lifecycleScope.launch {
@@ -322,10 +319,9 @@ class GroupDetailFragment : Fragment() {
                     getString(R.string.msg_success_download_test, it.name),
                     Toast.LENGTH_SHORT
                 ).show()
-                val intent = Intent(requireActivity(), MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                startActivity(intent)
+
+                val hostActivity = requireActivity() as? MainActivity
+                hostActivity?.navigateHomePage()
             },
             onFailure = {
                 requireContext().showToast(getString(R.string.msg_failure_download_test))
@@ -391,7 +387,7 @@ class GroupDetailFragment : Fragment() {
                 DialogMenuItem(
                     title = getString(R.string.user_name_online, test.userName),
                     iconRes = R.drawable.ic_account,
-                    action = {  }),
+                    action = { }),
                 DialogMenuItem(
                     title = getString(R.string.date_online, test.getDate()),
                     iconRes = R.drawable.ic_baseline_calendar_today_24,
@@ -399,7 +395,7 @@ class GroupDetailFragment : Fragment() {
                 DialogMenuItem(
                     title = getString(R.string.overview_online, test.overview),
                     iconRes = R.drawable.ic_baseline_description_24,
-                    action = {  }),
+                    action = { }),
             )
         ).show(requireActivity().supportFragmentManager, "TAG")
     }

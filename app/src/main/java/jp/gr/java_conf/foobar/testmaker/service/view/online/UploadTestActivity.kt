@@ -8,12 +8,12 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAdCallback
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityUploadTestBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.UploadTestDestination
@@ -62,7 +62,7 @@ class UploadTestActivity : BaseActivity() {
 
         viewModel.getUser() ?: run {
 
-            AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+            MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.login))
                 .setMessage(getString(R.string.msg_not_login))
                 .setPositiveButton(getString(R.string.ok)) { _, _ ->
@@ -133,7 +133,7 @@ class UploadTestActivity : BaseActivity() {
             if (isChecked) {
                 checkBox.isChecked = false
 
-                AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                MaterialAlertDialogBuilder(this)
                     .setTitle(getString(R.string.title_dialog_private))
                     .setMessage(getString(R.string.msg_dialog_private))
                     .setPositiveButton(android.R.string.ok) { dialog, _ ->

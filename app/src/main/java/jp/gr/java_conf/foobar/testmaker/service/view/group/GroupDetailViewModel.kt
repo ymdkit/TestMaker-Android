@@ -20,7 +20,7 @@ class GroupDetailViewModel(
 
     suspend fun deleteTest(documentId: String) = testMakerRepository.deleteTest(documentId)
 
-    suspend fun getGroup(groupId: String) = repository.getGroup(groupId)
+    suspend fun getGroup(groupId: String): Group? = repository.getGroup(groupId)
     suspend fun deleteGroup(groupId: String) = repository.deleteGroup(groupId)
     suspend fun exitGroup(userId: String, groupId: String) = repository.exitGroup(userId, groupId)
     suspend fun joinGroup(userId: String, group: Group, groupId: String) =

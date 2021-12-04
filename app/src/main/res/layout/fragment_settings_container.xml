@@ -9,13 +9,13 @@
         tools:context=".view.preference.SettingsActivity">
 
         <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                style="@style/Toolbar"
-                android:layout_width="match_parent"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/Theme.AppCompat.DayNight"
-                app:layout_constraintTop_toTopOf="parent"
-                app:title="@string/setting" />
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            android:layout_width="match_parent"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/Theme.AppCompat.DayNight"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/setting" />
 
         <FrameLayout
             android:id="@+id/settingsContainer"

@@ -12,7 +12,7 @@ class GroupRepository(private val dataSource: RemoteDataSource) {
     suspend fun getTests(groupId: String) = dataSource.getTests(groupId = groupId)
     suspend fun downloadTest(documentId: String) = dataSource.downloadTest(documentId)
 
-    suspend fun getGroup(groupId: String) = dataSource.getGroup(groupId)
+    suspend fun getGroup(groupId: String): Group? = dataSource.getGroup(groupId)
     suspend fun deleteGroup(groupId: String) = dataSource.deleteGroup(groupId)
     suspend fun joinGroup(userId: String, group: Group, groupId: String) = dataSource.joinGroup(userId, group.copy(id = groupId))
     suspend fun exitGroup(userId: String, groupId: String) = dataSource.exitGroup(userId, groupId)
