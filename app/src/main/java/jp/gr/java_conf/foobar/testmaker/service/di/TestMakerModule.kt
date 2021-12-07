@@ -28,6 +28,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.main.MainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ResultViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsViewModel
@@ -91,5 +92,5 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
     viewModel { GroupDetailViewModel(get(), get()) }
     viewModel { HistoryTestViewModel(get()) }
     viewModel { (testId: Long) -> ResultViewModel(testId = testId, get(), get(), get()) }
-
+    viewModel { (testId: Long) -> AnswerWorkbookViewModel(testId = testId, get(), get()) }
 }

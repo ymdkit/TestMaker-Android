@@ -336,6 +336,14 @@
     <string name="title_page_settings">settings</string>
     <string name="msg_empty_published_workbooks">no tests are exists</string>
     <string name="msg_remove_ad_success">removed ad. please restart.</string>
-
+    <string name="title_activity_play">answer test</string>
+    <string name="msg_empty_question">please edit question settings (no questions are exist)</string>
+    <string name="no_answer">no_answer</string>
+    <string name="button_request_modify">request modify</string>
+    <string name="email_subject_request_modify">Request Modify [ID: %1$s]</string>
+    <string name="email_body_requet_modify">%1$s</string>
+    <string name="numOfQuestions">limit</string>
+    <string name="preference_question_condition">condition</string>
+    <string name="hint_answer_write">answer</string>
 
 </resources>
