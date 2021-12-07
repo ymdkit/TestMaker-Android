@@ -27,7 +27,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -216,7 +216,9 @@ class LocalMainFragment : Fragment() {
 
             testViewModel.update(result)
 
-            PlayActivity.startActivity(requireActivity(), result.id)
+            AnswerWorkbookActivity.startActivity(requireActivity(), result.id)
+
+//            PlayActivity.startActivity(requireActivity(), result.id)
 
         }
     }

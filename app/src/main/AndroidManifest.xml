@@ -92,6 +92,11 @@
             android:label="@string/title_activity_edit"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name="jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookActivity"
+            android:exported="false"
+            />
+
     </application>
 
 </manifest>
