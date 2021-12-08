@@ -8,8 +8,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -52,7 +52,7 @@ fun ContentPlayCompleteQuestion(state: PlayUiState.Complete, onAnswered: (List<S
             )
             yourAnswers.forEachIndexed { index, _ ->
                 var yourAnswer by remember { mutableStateOf("") }
-                TextField(
+                OutlinedTextField(
                     modifier =
                     if (index == 0) Modifier
                         .fillMaxWidth()
