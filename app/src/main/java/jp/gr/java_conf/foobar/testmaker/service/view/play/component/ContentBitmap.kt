@@ -37,9 +37,8 @@ fun ContentBitmap(modifier: Modifier = Modifier,imageUrl: String){
 
 fun getBitmap(context: Context, imageUrl: String): Bitmap? {
     return try {
-        with(context.assets.open("img/$imageUrl")) {
-            BitmapFactory.decodeStream(this)
-        }
+        val file = context.getFileStreamPath(imageUrl)
+        return BitmapFactory.decodeFile(file.absolutePath)
     } catch (e: IOException) {
         null
     }
