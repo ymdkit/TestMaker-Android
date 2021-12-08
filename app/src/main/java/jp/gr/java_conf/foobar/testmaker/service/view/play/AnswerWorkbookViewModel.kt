@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import jp.gr.java_conf.foobar.testmaker.service.domain.AnswerStatus
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.*
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,9 +24,10 @@ class AnswerWorkbookViewModel(
 
     private var answeringQuestions: List<QuestionModel> = emptyList()
 
+    private val workbook: Test by lazy { repository.get(testId) }
+
     init {
         viewModelScope.launch {
-            resetAnswering()
 
             val workbook = repository.get(testId)
             answeringQuestions = workbook.questions.map { it.toQuestionModel() }
@@ -35,6 +37,8 @@ class AnswerWorkbookViewModel(
             } else {
                 answeringQuestions = answeringQuestions.drop(workbook.startPosition)
             }
+
+            resetAnswering()
 
             if (preferences.refine) {
                 answeringQuestions =
@@ -56,19 +60,13 @@ class AnswerWorkbookViewModel(
         }
     }
 
-    private suspend fun resetAnswering() {
-        // todo
-        //val questions = db.workBookDao().findById(testId)!!.toWorkBookModel().questions
-
-//        db.questionStateDao().insertAll(
-//            *questions.map {
-//                QuestionState(
-//                    questionId = it.id,
-//                    isAnswering = false,
-//                    answerStatus = it.answerStatus
-//                )
-//            }.toTypedArray()
-//        )
+    private fun resetAnswering() {
+        repository.update(
+            workbook.copy(
+                questions = workbook.questions
+                    .map { it.copy(isSolved = false) }
+            )
+        )
     }
 
     fun loadNext() {
@@ -82,16 +80,7 @@ class AnswerWorkbookViewModel(
             }
 
             val answeringQuestion = answeringQuestions[index].copy(isAnswering = true)
-
-            // todo
-//
-//            db.questionStateDao().insert(
-//                QuestionState(
-//                    questionId = answeringQuestion.id,
-//                    isAnswering = true,
-//                    answerStatus = answeringQuestion.answerStatus
-//                )
-//            )
+            repository.update(answeringQuestion.toQuestion())
 
             _uiState.value = when (answeringQuestion.format) {
                 QuestionFormat.WRITE -> PlayUiState.Write(
@@ -123,16 +112,7 @@ class AnswerWorkbookViewModel(
             val judgedQuestion = question.copy(
                 answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
             )
-
-            // todo 正誤判定の保存
-//            db.questionStateDao().insert(
-//                QuestionState(
-//                    questionId = judgedQuestion.id,
-//                    isAnswering = judgedQuestion.isAnswering,
-//                    answerStatus = judgedQuestion.answerStatus
-//                )
-//            )
-
+            repository.update(judgedQuestion.toQuestion())
 
             _uiState.value = PlayUiState.Review(
                 index = index,
@@ -148,15 +128,8 @@ class AnswerWorkbookViewModel(
             val judgedQuestion = question.copy(
                 answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
             )
-// todo
+            repository.update(judgedQuestion.toQuestion())
 
-//            db.questionStateDao().insert(
-//                QuestionState(
-//                    questionId = judgedQuestion.id,
-//                    isAnswering = judgedQuestion.isAnswering,
-//                    answerStatus = judgedQuestion.answerStatus
-//                )
-//            )
 
             _uiState.value = PlayUiState.Review(
                 index = index,
@@ -179,15 +152,7 @@ class AnswerWorkbookViewModel(
                 answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
             )
 
-            // todo 解答状況の保存
-
-//            db.questionStateDao().insert(
-//                QuestionState(
-//                    questionId = judgedQuestion.id,
-//                    isAnswering = judgedQuestion.isAnswering,
-//                    answerStatus = judgedQuestion.answerStatus
-//                )
-//            )
+            repository.update(judgedQuestion.toQuestion())
 
             loadNext()
         }

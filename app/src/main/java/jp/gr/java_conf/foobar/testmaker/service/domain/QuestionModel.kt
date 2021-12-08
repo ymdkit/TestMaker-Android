@@ -46,13 +46,35 @@ data class QuestionModel(
             QuestionFormat.WRITE, QuestionFormat.SELECT -> answer
             QuestionFormat.COMPLETE, QuestionFormat.SELECT_COMPLETE -> answers.joinToString(" ")
         }
+
+    fun toQuestion() = Question(
+        id = id,
+        question = problem,
+        answer = answer,
+        answers = answers,
+        others = wrongChoices,
+        imagePath = imageUrl,
+        explanation = explanation,
+        type = format.getTypeId(),
+        isAutoGenerateOthers = isAutoGenerateWrongChoices,
+        isCheckOrder = isCheckOrder,
+        isSolved = isAnswering,
+        isCorrect = answerStatus == AnswerStatus.CORRECT
+    )
 }
 
 enum class QuestionFormat(val rawValue: String) {
     WRITE("write"),
     SELECT("select"),
     COMPLETE("complete"),
-    SELECT_COMPLETE("select_complete")
+    SELECT_COMPLETE("select_complete");
+
+    fun getTypeId() = when(this) {
+        WRITE -> 0
+        SELECT -> 1
+        COMPLETE -> 2
+        SELECT_COMPLETE -> 3
+    }
 }
 
 enum class AnswerStatus(val rawValue: String) {
