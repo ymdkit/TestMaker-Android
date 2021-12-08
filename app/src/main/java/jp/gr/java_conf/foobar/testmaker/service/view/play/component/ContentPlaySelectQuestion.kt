@@ -32,8 +32,7 @@ fun ContentPlaySelectQuestion(
                 isSwap = false
             )
 
-            val choices = (listOf(state.question.answer) + state.question.wrongChoices).shuffled()
-            choices.forEach {
+            state.choices.forEach {
                 ContainedWideButton(
                     modifier = Modifier.padding(vertical = 8.dp),
                     onClick = {

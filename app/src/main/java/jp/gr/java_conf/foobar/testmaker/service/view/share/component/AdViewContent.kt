@@ -11,19 +11,19 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 
 @Composable
-fun ComposeAdView(isRemovedAd: Boolean) {
+fun ComposeAdView(isRemovedAd: Boolean, adSize: AdSize = AdSize.BANNER) {
     if (isRemovedAd) return
 
     AndroidView(
         factory = {
             AdView(it).apply {
-                adSize = AdSize.BANNER
+                this.adSize = adSize
                 adUnitId = "ca-app-pub-8942090726462263/8420884238"
                 loadAd(AdRequest.Builder().build())
             }
         },
         modifier = Modifier
-            .height(56.dp)
+            .height(adSize.height.dp)
             .fillMaxWidth()
     )
 }

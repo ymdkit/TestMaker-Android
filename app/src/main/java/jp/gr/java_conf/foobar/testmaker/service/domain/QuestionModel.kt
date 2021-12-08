@@ -15,6 +15,7 @@ data class QuestionModel(
     val isCheckOrder: Boolean,
     val isAnswering: Boolean,
     val answerStatus: AnswerStatus,
+    val order: Int
 ){
     fun isCorrect(yourAnswer: String): Boolean =
         yourAnswer == answer
@@ -72,6 +73,15 @@ data class QuestionModel(
             QuestionFormat.COMPLETE, QuestionFormat.SELECT_COMPLETE -> answers.joinToString(" ")
         }
 
+    fun getChoices() =
+        when(format){
+            QuestionFormat.WRITE -> emptyList()
+            QuestionFormat.SELECT -> (listOf(answer) + wrongChoices).shuffled()
+            QuestionFormat.COMPLETE -> emptyList()
+            QuestionFormat.SELECT_COMPLETE -> (answers + wrongChoices).shuffled()
+        }
+
+
     fun toQuestion() = Question(
         id = id,
         question = problem,
@@ -84,7 +94,8 @@ data class QuestionModel(
         isAutoGenerateOthers = isAutoGenerateWrongChoices,
         isCheckOrder = isCheckOrder,
         isSolved = isAnswering,
-        isCorrect = answerStatus == AnswerStatus.CORRECT
+        isCorrect = answerStatus == AnswerStatus.CORRECT,
+        order = order
     )
 }
 

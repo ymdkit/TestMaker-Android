@@ -24,6 +24,9 @@ class AnswerWorkbookViewModel(
     private val _uiState = MutableStateFlow<PlayUiState>(PlayUiState.Initial)
     val uiState: StateFlow<PlayUiState> = _uiState
 
+    private val _answerEffectState = MutableStateFlow(AnswerEffectState.None)
+    val answerEffectState:  StateFlow<AnswerEffectState> = _answerEffectState
+
     private var answeringQuestions: List<QuestionModel> = emptyList()
 
     private val workbook: Test by lazy { repository.get(testId) }
@@ -75,6 +78,7 @@ class AnswerWorkbookViewModel(
 
     fun loadNext(oldIndex: Int) {
         viewModelScope.launch {
+            _answerEffectState.value = AnswerEffectState.None
 
             val index = oldIndex + 1
 
@@ -93,7 +97,8 @@ class AnswerWorkbookViewModel(
                 )
                 QuestionFormat.SELECT -> PlayUiState.Select(
                     index = index,
-                    question = answeringQuestion
+                    question = answeringQuestion,
+                    choices = answeringQuestion.getChoices()
                 )
                 QuestionFormat.COMPLETE -> PlayUiState.Complete(
                     index = index,
@@ -101,7 +106,8 @@ class AnswerWorkbookViewModel(
                 )
                 QuestionFormat.SELECT_COMPLETE -> PlayUiState.SelectComplete(
                     index = index,
-                    question = answeringQuestion
+                    question = answeringQuestion,
+                    choices = answeringQuestion.getChoices()
                 )
             }
         }
@@ -132,6 +138,8 @@ class AnswerWorkbookViewModel(
             answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
         )
         repository.update(judgedQuestion.toQuestion())
+
+        _answerEffectState.value = if(isCorrect) AnswerEffectState.Correct else AnswerEffectState.Incorrect
 
         if (preferences.alwaysReview || !isCorrect) {
             _uiState.value = PlayUiState.Review(
@@ -171,9 +179,9 @@ class AnswerWorkbookViewModel(
 sealed class PlayUiState {
     object Initial : PlayUiState()
     data class Write(val index: Int, val question: QuestionModel) : PlayUiState()
-    data class Select(val index: Int, val question: QuestionModel) : PlayUiState()
+    data class Select(val index: Int, val question: QuestionModel, val choices: List<String>) : PlayUiState()
     data class Complete(val index: Int, val question: QuestionModel) : PlayUiState()
-    data class SelectComplete(val index: Int, val question: QuestionModel) : PlayUiState()
+    data class SelectComplete(val index: Int, val question: QuestionModel, val choices: List<String>) : PlayUiState()
     data class Manual(val index: Int, val question: QuestionModel) : PlayUiState()
     data class ManualReview(val index: Int, val question: QuestionModel) : PlayUiState()
     data class Review(val index: Int, val question: QuestionModel, val yourAnswer: String) :
@@ -182,4 +190,10 @@ sealed class PlayUiState {
     object NoQuestionExist : PlayUiState()
 
     object Finish : PlayUiState()
+}
+
+enum class AnswerEffectState {
+    None,
+    Correct,
+    Incorrect
 }

@@ -6,13 +6,18 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.ads.AdSize
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
@@ -64,102 +69,146 @@ class AnswerWorkbookActivity : AppCompatActivity() {
                     },
                     content = {
                         val uiState = playViewModel.uiState.collectAsState()
+                        val effectState = playViewModel.answerEffectState.collectAsState()
 
                         // todo フォントサイズ変更
                         Column {
-                            Column(
-                                modifier = Modifier
-                                    .weight(weight = 1f, fill = true)
-                                    .padding(16.dp)
-                            ) {
-                                when (val state = uiState.value) {
-                                    is PlayUiState.Write -> {
-                                        ContentPlayWriteQuestion(
-                                            state = state,
-                                            isSwap = sharedPreferenceManager.reverse,
-                                            onAnswered = { yourAnswer ->
-                                                playViewModel.judgeIsCorrect(
-                                                    state.index,
-                                                    state.question,
-                                                    yourAnswer
-                                                )
-                                            })
+                            Box(modifier = Modifier.weight(weight = 1f, fill = true)) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                ) {
+                                    when (val state = uiState.value) {
+                                        is PlayUiState.Write -> {
+                                            ContentPlayWriteQuestion(
+                                                state = state,
+                                                isSwap = sharedPreferenceManager.reverse,
+                                                onAnswered = { yourAnswer ->
+                                                    playViewModel.judgeIsCorrect(
+                                                        state.index,
+                                                        state.question,
+                                                        yourAnswer
+                                                    )
+                                                })
+                                        }
+                                        is PlayUiState.Select -> {
+                                            ContentPlaySelectQuestion(
+                                                state = state,
+                                                onAnswered = { yourAnswer ->
+                                                    playViewModel.judgeIsCorrect(
+                                                        state.index,
+                                                        state.question,
+                                                        yourAnswer
+                                                    )
+                                                })
+                                        }
+                                        is PlayUiState.Complete -> {
+                                            ContentPlayCompleteQuestion(
+                                                state = state,
+                                                isSwap = sharedPreferenceManager.reverse,
+                                                onAnswered = { yourAnswers ->
+                                                    playViewModel.judgeIsCorrect(
+                                                        state.index,
+                                                        state.question,
+                                                        yourAnswers
+                                                    )
+                                                })
+                                        }
+                                        is PlayUiState.SelectComplete -> {
+                                            ContentPlaySelectCompleteQuestion(
+                                                state = state,
+                                                onAnswered = { yourAnswers ->
+                                                    playViewModel.judgeIsCorrect(
+                                                        state.index,
+                                                        state.question,
+                                                        yourAnswers
+                                                    )
+                                                })
+                                        }
+                                        is PlayUiState.Manual -> {
+                                            ContentPlayManualQuestion(
+                                                state = state,
+                                                isSwap = sharedPreferenceManager.reverse,
+                                                onAnswered = {
+                                                    playViewModel.confirm(
+                                                        state.index,
+                                                        state.question
+                                                    )
+                                                }
+                                            )
+                                        }
+                                        is PlayUiState.ManualReview -> {
+                                            ContentPlayManualReviewQuestion(
+                                                state = state,
+                                                isSwap = sharedPreferenceManager.reverse,
+                                                onJudged = { isCorrect ->
+                                                    playViewModel.selfJudge(
+                                                        state.index,
+                                                        state.question,
+                                                        isCorrect
+                                                    )
+                                                }
+                                            )
+                                        }
+                                        is PlayUiState.Review -> {
+                                            ContentPlayReviewQuestion(
+                                                state = state,
+                                                isSwap = sharedPreferenceManager.reverse,
+                                                onConfirmed = {
+                                                    playViewModel.loadNext(state.index)
+                                                }
+                                            )
+                                        }
+                                        is PlayUiState.Finish -> {
+                                            ComposeResultActivity.startActivity(
+                                                this@AnswerWorkbookActivity,
+                                                testId,
+                                                System.currentTimeMillis() - startTime
+                                            )
+                                        }
+                                        is PlayUiState.NoQuestionExist -> {
+                                            showToast(stringResource(id = R.string.msg_empty_question))
+                                            finish()
+                                        }
                                     }
-                                    is PlayUiState.Select -> {
-                                        ContentPlaySelectQuestion(
-                                            state = state,
-                                            onAnswered = { yourAnswer ->
-                                                playViewModel.judgeIsCorrect(
-                                                    state.index,
-                                                    state.question,
-                                                    yourAnswer
-                                                )
-                                            })
-                                    }
-                                    is PlayUiState.Complete -> {
-                                        ContentPlayCompleteQuestion(
-                                            state = state,
-                                            isSwap = sharedPreferenceManager.reverse,
-                                            onAnswered = { yourAnswers ->
-                                                playViewModel.judgeIsCorrect(
-                                                    state.index,
-                                                    state.question,
-                                                    yourAnswers
-                                                )
-                                            })
-                                    }
-                                    is PlayUiState.SelectComplete -> {
-                                        ContentPlaySelectCompleteQuestion(
-                                            state = state,
-                                            onAnswered = { yourAnswers ->
-                                                playViewModel.judgeIsCorrect(
-                                                    state.index,
-                                                    state.question,
-                                                    yourAnswers
-                                                )
-                                            })
-                                    }
-                                    is PlayUiState.Manual -> {
-                                        ContentPlayManualQuestion(
-                                            state = state,
-                                            isSwap = sharedPreferenceManager.reverse,
-                                            onAnswered = {
-                                                playViewModel.confirm(state.index, state.question)
-                                            }
+                                }
+                                when (effectState.value) {
+                                    AnswerEffectState.Correct -> FadeInAndOutAnimation {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.ic_correct),
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .height(150.dp)
+                                                .width(150.dp),
+                                            colorFilter = ColorFilter.tint(MaterialTheme.colors.secondary)
+                                        )
+                                        Text(
+                                            color = MaterialTheme.colors.secondary,
+                                            text = stringResource(id = R.string.judge_correct)
                                         )
                                     }
-                                    is PlayUiState.ManualReview -> {
-                                        ContentPlayManualReviewQuestion(
-                                            state = state,
-                                            isSwap = sharedPreferenceManager.reverse,
-                                            onJudged = { isCorrect ->
-                                                playViewModel.selfJudge(state.index ,state.question, isCorrect)
-                                            }
+                                    AnswerEffectState.Incorrect -> FadeInAndOutAnimation {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.ic_incorrect),
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .height(150.dp)
+                                                .width(150.dp),
+                                            colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
+                                        )
+                                        Text(
+                                            color = MaterialTheme.colors.primary,
+                                            text = stringResource(id = R.string.judge_incorrect)
                                         )
                                     }
-                                    is PlayUiState.Review -> {
-                                        ContentPlayReviewQuestion(
-                                            state = state,
-                                            isSwap = sharedPreferenceManager.reverse,
-                                            onConfirmed = {
-                                                playViewModel.loadNext(state.index)
-                                            }
-                                        )
-                                    }
-                                    is PlayUiState.Finish -> {
-                                        ComposeResultActivity.startActivity(
-                                            this@AnswerWorkbookActivity,
-                                            testId,
-                                            System.currentTimeMillis() - startTime
-                                        )
-                                    }
-                                    is PlayUiState.NoQuestionExist -> {
-                                        showToast(stringResource(id = R.string.msg_empty_question))
-                                        finish()
+                                    else -> {
                                     }
                                 }
                             }
-                            ComposeAdView(isRemovedAd = sharedPreferenceManager.isRemovedAd)
+                            ComposeAdView(
+                                isRemovedAd = sharedPreferenceManager.isRemovedAd,
+                                adSize = AdSize.LARGE_BANNER
+                            )
                         }
                     }
                 )

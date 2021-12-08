@@ -50,8 +50,7 @@ fun ContentPlaySelectCompleteQuestion(
                 question = state.question,
                 isSwap = false
             )
-            val choices = (state.question.answers + state.question.wrongChoices).shuffled()
-            choices.forEachIndexed { index, text ->
+            state.choices.forEachIndexed { index, text ->
                 TimeStampedCheckbox(
                     text = text,
                     onCheckedChange = { checked, time ->

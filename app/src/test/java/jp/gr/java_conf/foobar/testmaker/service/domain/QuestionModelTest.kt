@@ -17,7 +17,8 @@ class QuestionModelTest {
         isCheckOrder = false,
         isAutoGenerateWrongChoices = false,
         isAnswering = true,
-        answerStatus = AnswerStatus.UNANSWERED
+        answerStatus = AnswerStatus.UNANSWERED,
+        order = 1,
     )
 
     @Test

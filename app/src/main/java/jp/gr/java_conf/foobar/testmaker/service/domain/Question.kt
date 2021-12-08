@@ -88,6 +88,7 @@ data class Question(
         isCheckOrder = isCheckOrder,
         isAnswering = isSolved,
         answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT,
+        order = order
     )
 
     @IgnoredOnParcel
