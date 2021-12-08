@@ -54,11 +54,6 @@ class SharedPreferenceManager(private val context: Context) {
         set(f) = sharedPreferences.edit().putBoolean("isResetForm", f)
                 .apply()
 
-    var confirmSave: Boolean
-        get() = sharedPreferences.getBoolean("confirmSave", false)
-        set(f) = sharedPreferences.edit().putBoolean("confirmSave", f)
-                .apply()
-
     var isRemovedAd: Boolean
         get() = sharedPreferences.getBoolean("isRemovedAd", false)
         set(i) = sharedPreferences.edit().putBoolean("isRemovedAd", i).apply()
