@@ -86,13 +86,10 @@ fun ContentPlaySelectCompleteQuestion(
 @Composable
 fun TimeStampedCheckbox(text: String, onCheckedChange: (Boolean, Long) -> Unit) {
     var checked by remember { mutableStateOf(false) }
-    var checkedTime by remember { mutableStateOf(System.currentTimeMillis()) }
     Row(modifier = Modifier
         .fillMaxWidth()
         .clickable {
-            checkedTime = System.currentTimeMillis()
             checked = !checked
-            onCheckedChange(checked, checkedTime)
         }) {
         Row(
             modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
@@ -109,10 +106,3 @@ fun TimeStampedCheckbox(text: String, onCheckedChange: (Boolean, Long) -> Unit) 
         }
     }
 }
-
-data class OrderedCheckBoxModel(
-    val text: String,
-    val checked: Boolean,
-    val lastCheckedTime: Long,
-    val index: Int,
-)
