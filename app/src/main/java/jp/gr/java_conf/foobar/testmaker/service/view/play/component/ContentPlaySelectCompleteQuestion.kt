@@ -54,18 +54,42 @@ fun ContentPlaySelectCompleteQuestion(
             )
             state.choices.forEachIndexed { index, text ->
 
-                val selectedIndex = yourAnswers.indexOfFirst { it == text }
-                TimeStampedCheckbox(
-                    text = if (isSelectedList[index]) "${selectedIndex + 1} $text" else text,
-                    onCheckedChange = { checked, time ->
-                        isSelectedList = isSelectedList.replaced(index, checked)
-                        yourAnswers = if (!checked) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        isSelectedList = isSelectedList.replaced(index, !isSelectedList[index])
+                        yourAnswers = if (!isSelectedList[index]) {
                             yourAnswers.filter { it != text }
                         } else {
                             yourAnswers + listOf(text)
                         }
-                    })
+                    }) {
+                    Row(
+                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
+                    ) {
+                        Checkbox(
+                            checked = isSelectedList[index], onCheckedChange = {
+                                isSelectedList = isSelectedList.replaced(index, !isSelectedList[index])
+                                yourAnswers = if (!isSelectedList[index]) {
+                                    yourAnswers.filter { it != text }
+                                } else {
+                                    yourAnswers + listOf(text)
+                                }
+                            },
+                            colors = CheckboxDefaults.colors(
+                                MaterialTheme.colors.primary
+                            ),
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                        )
+                        val selectedIndex = yourAnswers.indexOfFirst { it == text }
 
+                        Text(
+                            text = if (isSelectedList[index] && state.question.isCheckOrder) "${selectedIndex + 1} $text" else text,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                }
             }
 
         }
@@ -74,34 +98,13 @@ fun ContentPlaySelectCompleteQuestion(
             onClick = {
                 onAnswered(yourAnswers)
                 yourAnswers = emptyList()
-                isSelectedList = List(state.question.answers.size + state.question.wrongChoices.size) { false }
+                isSelectedList =
+                    List(state.question.answers.size + state.question.wrongChoices.size) {
+                        false
+                    }
             },
             text = stringResource(R.string.judge_question),
             color = MaterialTheme.colors.secondary
         )
-    }
-}
-
-@Composable
-fun TimeStampedCheckbox(text: String, onCheckedChange: (Boolean, Long) -> Unit) {
-    var checked by remember { mutableStateOf(false) }
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .clickable {
-            checked = !checked
-        }) {
-        Row(
-            modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
-        ) {
-            Checkbox(
-                checked = checked, onCheckedChange = {},
-                colors = CheckboxDefaults.colors(
-                    MaterialTheme.colors.primary
-                ),
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-            )
-            Text(text = text, modifier = Modifier.padding(start = 8.dp))
-        }
     }
 }
