@@ -133,7 +133,7 @@ class AnswerWorkbookActivity : AppCompatActivity() {
                                             state = state,
                                             isSwap = sharedPreferenceManager.reverse,
                                             onJudged = { isCorrect ->
-                                                playViewModel.selfJudge(state.question, isCorrect)
+                                                playViewModel.selfJudge(state.index ,state.question, isCorrect)
                                             }
                                         )
                                     }
@@ -142,7 +142,7 @@ class AnswerWorkbookActivity : AppCompatActivity() {
                                             state = state,
                                             isSwap = sharedPreferenceManager.reverse,
                                             onConfirmed = {
-                                                playViewModel.loadNext()
+                                                playViewModel.loadNext(state.index)
                                             }
                                         )
                                     }

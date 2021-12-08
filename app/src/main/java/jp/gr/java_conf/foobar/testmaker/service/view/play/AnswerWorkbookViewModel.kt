@@ -8,6 +8,8 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.*
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -58,7 +60,7 @@ class AnswerWorkbookViewModel(
                 return@launch
             }
 
-            loadNext()
+            loadNext(-1)
         }
     }
 
@@ -71,10 +73,10 @@ class AnswerWorkbookViewModel(
         )
     }
 
-    fun loadNext() {
+    fun loadNext(oldIndex: Int) {
         viewModelScope.launch {
 
-            val index = uiState.value.getNewIndex()
+            val index = oldIndex + 1
 
             if (index >= answeringQuestions.size) {
                 _uiState.value = PlayUiState.Finish
@@ -105,21 +107,10 @@ class AnswerWorkbookViewModel(
         }
     }
 
-    // todo 正解時にスキップする機能の追加
     fun judgeIsCorrect(index: Int, question: QuestionModel, yourAnswer: String) {
         viewModelScope.launch {
             val isCorrect = yourAnswer == question.getAnswer(isSwap = isSwap)
-
-            val judgedQuestion = question.copy(
-                answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
-            )
-            repository.update(judgedQuestion.toQuestion())
-
-            _uiState.value = PlayUiState.Review(
-                index = index,
-                question = judgedQuestion,
-                yourAnswer = yourAnswer
-            )
+            setupReview(index, question, yourAnswer, isCorrect)
         }
     }
 
@@ -127,17 +118,32 @@ class AnswerWorkbookViewModel(
         viewModelScope.launch {
             val isCorrect = question.isCorrect(yourAnswers, isSwap = isSwap)
 
-            val judgedQuestion = question.copy(
-                answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
-            )
-            repository.update(judgedQuestion.toQuestion())
+            setupReview(index, question, yourAnswers.joinToString("\n"), isCorrect)
+        }
+    }
 
+    private fun setupReview(
+        index: Int,
+        question: QuestionModel,
+        yourAnswer: String,
+        isCorrect: Boolean
+    ) {
+        val judgedQuestion = question.copy(
+            answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
+        )
+        repository.update(judgedQuestion.toQuestion())
 
+        if (preferences.alwaysReview || !isCorrect) {
             _uiState.value = PlayUiState.Review(
                 index = index,
                 question = judgedQuestion,
-                yourAnswer = yourAnswers.joinToString("\n")
+                yourAnswer = yourAnswer
             )
+        } else {
+            viewModelScope.launch(Dispatchers.Default) {
+                delay(800)
+                loadNext(index)
+            }
         }
     }
 
@@ -148,7 +154,7 @@ class AnswerWorkbookViewModel(
         )
     }
 
-    fun selfJudge(question: QuestionModel, isCorrect: Boolean) {
+    fun selfJudge(index: Int, question: QuestionModel, isCorrect: Boolean) {
         viewModelScope.launch {
             val judgedQuestion = question.copy(
                 answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
@@ -156,7 +162,7 @@ class AnswerWorkbookViewModel(
 
             repository.update(judgedQuestion.toQuestion())
 
-            loadNext()
+            loadNext(index)
         }
     }
 
@@ -176,12 +182,4 @@ sealed class PlayUiState {
     object NoQuestionExist : PlayUiState()
 
     object Finish : PlayUiState()
-
-    fun getNewIndex(): Int =
-        when (this) {
-            is Initial -> 0
-            is ManualReview -> index + 1
-            is Review -> index + 1
-            else -> 0
-        }
 }
