@@ -19,9 +19,6 @@ fun ContentProblem(index: Int, question: QuestionModel) {
                 color = MaterialTheme.colors.primary
             )
             Spacer(modifier = Modifier.weight(fill = true, weight = 1f))
-            Text(
-                text = question.quotation,
-            )
         }
         SelectionContainer {
             Text(

@@ -3,18 +3,18 @@ package jp.gr.java_conf.foobar.testmaker.service.domain
 import jp.gr.java_conf.foobar.testmaker.service.extensions.allIndexed
 
 data class QuestionModel(
-    val id: Int,
+    val id: Long,
     val problem: String,
     val answer: String,
     val answers: List<String>,
     val wrongChoices: List<String>,
     val format: QuestionFormat,
-    val quotation: String,
     val imageUrl: String,
     val explanation: String,
+    val isAutoGenerateWrongChoices: Boolean,
     val isCheckOrder: Boolean,
     val isAnswering: Boolean,
-    val answerStatus: AnswerStatus
+    val answerStatus: AnswerStatus,
 ){
     fun isCorrect(yourAnswer: String): Boolean =
         yourAnswer == answer

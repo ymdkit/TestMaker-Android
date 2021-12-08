@@ -74,6 +74,31 @@ data class Question(
         order = order
     )
 
+
+    fun toQuestionModel() = QuestionModel(
+        id = id,
+        problem = question,
+        answer = answer,
+        answers = answers,
+        wrongChoices = others,
+        format = format,
+        imageUrl = imagePath,
+        explanation = explanation,
+        isAutoGenerateWrongChoices = isAutoGenerateOthers,
+        isCheckOrder = isCheckOrder,
+        isAnswering = isSolved,
+        answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT,
+    )
+
+    @IgnoredOnParcel
+    private val format = when (type) {
+        Constants.WRITE -> QuestionFormat.WRITE
+        Constants.SELECT -> QuestionFormat.SELECT
+        Constants.COMPLETE -> QuestionFormat.COMPLETE
+        Constants.SELECT_COMPLETE -> QuestionFormat.SELECT_COMPLETE
+        else -> QuestionFormat.WRITE
+    }
+
     @IgnoredOnParcel
     val hasLocalImage = imagePath.isNotEmpty() && !imagePath.contains("/")
 

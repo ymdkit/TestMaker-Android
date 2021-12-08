@@ -17,6 +17,7 @@ open class Quest : RealmObject() {
     var id: Long = 0
     var problem: String = ""
     var answer: String = ""
+
     @Required
     var explanation: String = ""
     var correct: Boolean = false
@@ -57,16 +58,16 @@ open class Quest : RealmObject() {
     fun toFirebaseQuestions(user: FirebaseUser): FirebaseQuestion {
 
         return FirebaseQuestion(
-                question = problem,
-                answer = answer,
-                answers = answers.map { it.selection },
-                others = selections.map { it.selection },
-                explanation = explanation,
-                imageRef = if (imagePath.isEmpty()) "" else "${user.uid}/$imagePath",
-                type = type,
-                auto = auto,
-                checkOrder = isCheckOrder,
-                order = order
+            question = problem,
+            answer = answer,
+            answers = answers.map { it.selection },
+            others = selections.map { it.selection },
+            explanation = explanation,
+            imageRef = if (imagePath.isEmpty()) "" else "${user.uid}/$imagePath",
+            type = type,
+            auto = auto,
+            checkOrder = isCheckOrder,
+            order = order
         )
 
     }

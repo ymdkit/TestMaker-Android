@@ -6,15 +6,16 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.AnswerStatus
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.*
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
+import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class AnswerWorkbookViewModel(
     private val testId: Long,
+    private val isRetry: Boolean,
     private val preferences: SharedPreferenceManager,
-    private val testViewModel: TestViewModel
+    private val repository: TestRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<PlayUiState>(PlayUiState.Initial)
@@ -26,24 +27,25 @@ class AnswerWorkbookViewModel(
         viewModelScope.launch {
             resetAnswering()
 
-            // todo
-            //answeringQuestions = db.workBookDao().findById(testId)!!.toWorkBookModel().questions
+            val workbook = repository.get(testId)
+            answeringQuestions = workbook.questions.map { it.toQuestionModel() }
 
+            if (isRetry) {
+                answeringQuestions = answeringQuestions.filter { it.isAnswering }
+            } else {
+                answeringQuestions = answeringQuestions.drop(workbook.startPosition)
+            }
 
-            // todo
-//            answeringQuestions = when (QuestionCondition.init(preferences.questionCondition)) {
-//                QuestionCondition.ALL -> answeringQuestions
-//                QuestionCondition.UNANSWERED_AND_INCORRECT -> answeringQuestions.filter { it.answerStatus == AnswerStatus.UNANSWERED.value || it.answerStatus == AnswerStatus.INCORRECT.value }
-//                QuestionCondition.UNANSWERED -> answeringQuestions.filter { it.answerStatus == AnswerStatus.UNANSWERED.value }
-//                QuestionCondition.INCORRECT -> answeringQuestions.filter { it.answerStatus == AnswerStatus.INCORRECT.value }
-//            }
+            if (preferences.refine) {
+                answeringQuestions =
+                    answeringQuestions.filter { it.answerStatus == AnswerStatus.INCORRECT }
+            }
 
             if (preferences.random) {
                 answeringQuestions = answeringQuestions.shuffled()
             }
 
-            // todo
-//            answeringQuestions = answeringQuestions.take(preferences.numOfQuestions)
+            answeringQuestions = answeringQuestions.take(workbook.limit)
 
             if (answeringQuestions.isEmpty()) {
                 _uiState.value = PlayUiState.NoQuestionExist

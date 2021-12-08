@@ -48,6 +48,5 @@ fun ContentReview(yourAnswer: String, question: QuestionModel) {
                 )
             }
         }
-        ContentRequestModify(question.id)
     }
 }

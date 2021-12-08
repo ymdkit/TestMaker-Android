@@ -92,5 +92,11 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
     viewModel { GroupDetailViewModel(get(), get()) }
     viewModel { HistoryTestViewModel(get()) }
     viewModel { (testId: Long) -> ResultViewModel(testId = testId, get(), get(), get()) }
-    viewModel { (testId: Long) -> AnswerWorkbookViewModel(testId = testId, get(), get()) }
+    viewModel { (testId: Long, isRetry: Boolean) ->
+        AnswerWorkbookViewModel(
+            testId = testId,
+            isRetry = isRetry, get(),
+            get()
+        )
+    }
 }
