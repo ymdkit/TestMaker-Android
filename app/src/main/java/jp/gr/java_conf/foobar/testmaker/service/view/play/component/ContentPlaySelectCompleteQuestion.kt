@@ -37,7 +37,6 @@ fun ContentPlaySelectCompleteQuestion(
     }
 
     Column {
-
         Column(
             modifier = Modifier
                 .verticalScroll(

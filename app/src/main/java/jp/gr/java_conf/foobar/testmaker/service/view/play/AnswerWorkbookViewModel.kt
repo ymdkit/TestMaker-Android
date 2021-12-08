@@ -7,6 +7,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.*
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -18,7 +19,8 @@ class AnswerWorkbookViewModel(
     private val testId: Long,
     private val isRetry: Boolean,
     private val preferences: SharedPreferenceManager,
-    private val repository: TestRepository
+    private val repository: TestRepository,
+    private val logger: TestMakerLogger
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<PlayUiState>(PlayUiState.Initial)
@@ -156,6 +158,8 @@ class AnswerWorkbookViewModel(
             answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
         )
         repository.update(judgedQuestion.toQuestion())
+
+        logger.logAnswerQuestion(judgedQuestion.toQuestion())
 
         _answerEffectState.value =
             if (isCorrect) AnswerEffectState.Correct else AnswerEffectState.Incorrect

@@ -96,6 +96,7 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
         AnswerWorkbookViewModel(
             testId = testId,
             isRetry = isRetry, get(),
+            get(),
             get()
         )
     }
