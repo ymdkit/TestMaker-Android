@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.play
 
 import android.app.Activity
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -57,9 +58,15 @@ class AnswerWorkbookActivity : AppCompatActivity() {
 
     private val startTime = System.currentTimeMillis()
 
+    private var soundCorrect: MediaPlayer? = null
+    private var soundIncorrect: MediaPlayer? = null
+
     @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        soundCorrect = MediaPlayer.create(this, R.raw.correct)
+        soundIncorrect = MediaPlayer.create(this, R.raw.mistake)
 
         setContent {
             TestMakerAndroidTheme {
@@ -173,33 +180,44 @@ class AnswerWorkbookActivity : AppCompatActivity() {
                                     }
                                 }
                                 when (effectState.value) {
-                                    AnswerEffectState.Correct -> FadeInAndOutAnimation {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.ic_correct),
-                                            contentDescription = "",
-                                            modifier = Modifier
-                                                .height(150.dp)
-                                                .width(150.dp),
-                                            colorFilter = ColorFilter.tint(MaterialTheme.colors.secondary)
-                                        )
-                                        Text(
-                                            color = MaterialTheme.colors.secondary,
-                                            text = stringResource(id = R.string.judge_correct)
-                                        )
+                                    AnswerEffectState.Correct -> {
+                                        if (sharedPreferenceManager.audio) {
+                                            soundCorrect?.start()
+                                        }
+                                        FadeInAndOutAnimation {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.ic_correct),
+                                                contentDescription = "",
+                                                modifier = Modifier
+                                                    .height(150.dp)
+                                                    .width(150.dp),
+                                                colorFilter = ColorFilter.tint(MaterialTheme.colors.secondary)
+                                            )
+                                            Text(
+                                                color = MaterialTheme.colors.secondary,
+                                                text = stringResource(id = R.string.judge_correct)
+                                            )
+                                        }
                                     }
-                                    AnswerEffectState.Incorrect -> FadeInAndOutAnimation {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.ic_incorrect),
-                                            contentDescription = "",
-                                            modifier = Modifier
-                                                .height(150.dp)
-                                                .width(150.dp),
-                                            colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
-                                        )
-                                        Text(
-                                            color = MaterialTheme.colors.primary,
-                                            text = stringResource(id = R.string.judge_incorrect)
-                                        )
+
+                                    AnswerEffectState.Incorrect -> {
+                                        if (sharedPreferenceManager.audio) {
+                                            soundIncorrect?.start()
+                                        }
+                                        FadeInAndOutAnimation {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.ic_incorrect),
+                                                contentDescription = "",
+                                                modifier = Modifier
+                                                    .height(150.dp)
+                                                    .width(150.dp),
+                                                colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
+                                            )
+                                            Text(
+                                                color = MaterialTheme.colors.primary,
+                                                text = stringResource(id = R.string.judge_incorrect)
+                                            )
+                                        }
                                     }
                                     else -> {
                                     }
@@ -224,5 +242,13 @@ class AnswerWorkbookActivity : AppCompatActivity() {
         ) {
             super.onBackPressed()
         }.show(supportFragmentManager, "TAG")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        soundCorrect?.release()
+        soundCorrect = null
+        soundIncorrect?.release()
+        soundIncorrect = null
     }
 }
