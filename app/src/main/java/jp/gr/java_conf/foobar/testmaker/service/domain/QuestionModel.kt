@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.domain
 
 import jp.gr.java_conf.foobar.testmaker.service.extensions.allIndexed
+import java.util.*
 
 data class QuestionModel(
     val id: Long,
@@ -17,21 +18,24 @@ data class QuestionModel(
     val answerStatus: AnswerStatus,
     val order: Int
 ) {
-    fun isCorrect(yourAnswer: String): Boolean =
-        yourAnswer == answer
+    fun isCorrect(yourAnswer: String, isReverse: Boolean, isCaseInsensitive: Boolean): Boolean =
+        if (isCaseInsensitive)
+            yourAnswer.lowercase(Locale.ENGLISH) ==
+                    getAnswer(isReverse).lowercase(Locale.ENGLISH)
+        else
+            yourAnswer == getAnswer(isReverse)
 
-    fun isCorrect(yourAnswers: List<String>, isSwap: Boolean): Boolean {
-        val original = getAnswers(isSwap)
+    fun isCorrect(yourAnswers: List<String>, isReverse: Boolean, isCaseInsensitive: Boolean = false): Boolean {
+        val yours = if (isCaseInsensitive) yourAnswers.map { it.lowercase(Locale.ENGLISH) } else yourAnswers
+        val original = if (isCaseInsensitive) getAnswers(isReverse).map { it.lowercase(Locale.ENGLISH) } else getAnswers(isReverse)
 
-        if (yourAnswers.size != original.size) return false
+        if (yours.size != original.size) return false
 
         if (isCheckOrder) {
-            if (!yourAnswers.allIndexed { index, it -> it == original[index] }) return false
+            if (!yours.allIndexed { index, it -> it == original[index] }) return false
         } else {
-            if (!yourAnswers.all { yourAnswer ->
-                    original.map { it }.contains(yourAnswer)
-                }) return false
-            if (yourAnswers.distinct().size != original.size) return false
+            if (!yours.all { yourAnswer -> original.map { it }.contains(yourAnswer) }) return false
+            if (yours.distinct().size != original.size) return false
         }
         return true
     }

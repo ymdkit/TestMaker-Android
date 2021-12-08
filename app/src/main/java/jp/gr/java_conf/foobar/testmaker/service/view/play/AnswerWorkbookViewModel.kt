@@ -33,7 +33,8 @@ class AnswerWorkbookViewModel(
 
     private val workbook: Test by lazy { repository.get(testId) }
 
-    private val isSwap: Boolean = preferences.reverse
+    private val isSwap = preferences.reverse
+    private val isCaseInsensitive = preferences.isCaseInsensitive
 
     init {
         viewModelScope.launch {
@@ -135,16 +136,21 @@ class AnswerWorkbookViewModel(
 
     fun judgeIsCorrect(index: Int, question: QuestionModel, yourAnswer: String) {
         viewModelScope.launch {
-            val isCorrect = yourAnswer == question.getAnswer(isSwap = isSwap)
+            val isCorrect = question.isCorrect(yourAnswer, isSwap, isCaseInsensitive)
             setupReview(index, question, yourAnswer, isCorrect)
         }
     }
 
     fun judgeIsCorrect(index: Int, question: QuestionModel, yourAnswers: List<String>) {
         viewModelScope.launch {
-            val isCorrect = question.isCorrect(yourAnswers, isSwap = isSwap)
+            val isCorrect = question.isCorrect(yourAnswers, isSwap, isCaseInsensitive)
 
-            setupReview(index, question, yourAnswers.filter{ it.isNotEmpty() }.joinToString("\n"), isCorrect)
+            setupReview(
+                index,
+                question,
+                yourAnswers.filter { it.isNotEmpty() }.joinToString("\n"),
+                isCorrect
+            )
         }
     }
 
