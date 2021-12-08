@@ -105,7 +105,9 @@ class AnswerWorkbookViewModel(
                 QuestionFormat.SELECT -> PlayUiState.Select(
                     index = index,
                     question = answeringQuestion,
-                    choices = answeringQuestion.getChoices()
+                    choices = answeringQuestion.getChoices(
+                        workbook.randomExtractedAnswers
+                    )
                 )
                 QuestionFormat.COMPLETE ->
                     if (preferences.manual)
@@ -121,7 +123,9 @@ class AnswerWorkbookViewModel(
                 QuestionFormat.SELECT_COMPLETE -> PlayUiState.SelectComplete(
                     index = index,
                     question = answeringQuestion,
-                    choices = answeringQuestion.getChoices()
+                    choices = answeringQuestion.getChoices(
+                        workbook.randomExtractedAnswers
+                    )
                 )
             }
         }

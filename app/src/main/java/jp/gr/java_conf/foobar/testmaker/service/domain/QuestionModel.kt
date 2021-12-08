@@ -16,7 +16,7 @@ data class QuestionModel(
     val isAnswering: Boolean,
     val answerStatus: AnswerStatus,
     val order: Int
-){
+) {
     fun isCorrect(yourAnswer: String): Boolean =
         yourAnswer == answer
 
@@ -37,33 +37,33 @@ data class QuestionModel(
     }
 
     fun getProblem(isSwap: Boolean) =
-        when(format){
+        when (format) {
             QuestionFormat.WRITE -> if (isSwap) answer else problem
             QuestionFormat.SELECT -> problem
-            QuestionFormat.COMPLETE -> if(isSwap) answers.joinToString(separator = "\n") else problem
+            QuestionFormat.COMPLETE -> if (isSwap) answers.joinToString(separator = "\n") else problem
             QuestionFormat.SELECT_COMPLETE -> problem
         }
 
     fun getAnswer(isSwap: Boolean) =
-        when(format){
+        when (format) {
             QuestionFormat.WRITE -> if (isSwap) problem else answer
             QuestionFormat.SELECT -> answer
-            QuestionFormat.COMPLETE -> if(isSwap) problem else ""
+            QuestionFormat.COMPLETE -> if (isSwap) problem else ""
             QuestionFormat.SELECT_COMPLETE -> ""
         }
 
-    fun getAnswers(isSwap: Boolean) = when(format){
+    fun getAnswers(isSwap: Boolean) = when (format) {
         QuestionFormat.WRITE -> emptyList()
         QuestionFormat.SELECT -> emptyList()
-        QuestionFormat.COMPLETE -> if(isSwap) listOf(problem) else answers
+        QuestionFormat.COMPLETE -> if (isSwap) listOf(problem) else answers
         QuestionFormat.SELECT_COMPLETE -> answers
     }
 
     fun getAnswerForReview(isSwap: Boolean) =
-        when(format){
+        when (format) {
             QuestionFormat.WRITE -> if (isSwap) problem else answer
             QuestionFormat.SELECT -> answer
-            QuestionFormat.COMPLETE -> if(isSwap) problem else answers.joinToString("\n")
+            QuestionFormat.COMPLETE -> if (isSwap) problem else answers.joinToString("\n")
             QuestionFormat.SELECT_COMPLETE -> answers.joinToString("\n")
         }
 
@@ -73,12 +73,22 @@ data class QuestionModel(
             QuestionFormat.COMPLETE, QuestionFormat.SELECT_COMPLETE -> answers.joinToString(" ")
         }
 
-    fun getChoices() =
-        when(format){
+    fun getChoices(candidates: List<String>) =
+        when (format) {
             QuestionFormat.WRITE -> emptyList()
-            QuestionFormat.SELECT -> (listOf(answer) + wrongChoices).shuffled()
+            QuestionFormat.SELECT ->
+                if (isAutoGenerateWrongChoices) {
+                    (listOf(answer) + candidates.take(wrongChoices.size)).shuffled()
+                } else {
+                    (listOf(answer) + wrongChoices).shuffled()
+                }
             QuestionFormat.COMPLETE -> emptyList()
-            QuestionFormat.SELECT_COMPLETE -> (answers + wrongChoices).shuffled()
+            QuestionFormat.SELECT_COMPLETE ->
+                if (isAutoGenerateWrongChoices) {
+                    (answers + candidates.take(wrongChoices.size)).shuffled()
+                } else {
+                    (answers + wrongChoices).shuffled()
+                }
         }
 
 
@@ -105,7 +115,7 @@ enum class QuestionFormat(val rawValue: String) {
     COMPLETE("complete"),
     SELECT_COMPLETE("select_complete");
 
-    fun getTypeId() = when(this) {
+    fun getTypeId() = when (this) {
         WRITE -> 0
         SELECT -> 1
         COMPLETE -> 2
