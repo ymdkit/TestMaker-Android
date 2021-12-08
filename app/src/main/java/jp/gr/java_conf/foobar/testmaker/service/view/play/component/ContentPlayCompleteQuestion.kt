@@ -91,6 +91,7 @@ fun ContentPlayCompleteQuestion(
             modifier = Modifier.padding(vertical = 8.dp),
             onClick = {
                 onAnswered(yourAnswers)
+                yourAnswers = List(state.question.answers.count()) { "" }
             },
             text = stringResource(R.string.judge_question),
             color = MaterialTheme.colors.secondary

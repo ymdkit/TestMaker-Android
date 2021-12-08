@@ -73,6 +73,7 @@ fun ContentPlayWriteQuestion(
             modifier = Modifier.padding(vertical = 8.dp),
             onClick = {
                 onAnswered(yourAnswer)
+                yourAnswer = ""
             },
             text = stringResource(R.string.judge_question),
             color = MaterialTheme.colors.secondary

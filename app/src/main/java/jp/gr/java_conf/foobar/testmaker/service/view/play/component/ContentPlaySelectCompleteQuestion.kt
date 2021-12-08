@@ -26,10 +26,13 @@ fun ContentPlaySelectCompleteQuestion(
     onAnswered: (List<String>) -> Unit
 ) {
 
-    // todo 順序設定
-    var yourAnswers: List<OrderedCheckBoxModel> by remember {
-        mutableStateOf(List(state.question.answers.count() + state.question.wrongChoices.count()) {
-            OrderedCheckBoxModel("", false, 0L, 0)
+    var yourAnswers: List<String> by remember {
+        mutableStateOf(emptyList())
+    }
+
+    var isSelectedList: List<Boolean> by remember {
+        mutableStateOf(List(state.question.answers.size + state.question.wrongChoices.size) {
+            false
         })
     }
 
@@ -51,28 +54,28 @@ fun ContentPlaySelectCompleteQuestion(
                 isSwap = false
             )
             state.choices.forEachIndexed { index, text ->
+
+                val selectedIndex = yourAnswers.indexOfFirst { it == text }
                 TimeStampedCheckbox(
-                    text = text,
+                    text = if (isSelectedList[index]) "${selectedIndex + 1} $text" else text,
                     onCheckedChange = { checked, time ->
-                        yourAnswers = yourAnswers.replaced(
-                            index, OrderedCheckBoxModel(
-                                text,
-                                checked,
-                                time,
-                                0,
-                            )
-                        )
+                        isSelectedList = isSelectedList.replaced(index, checked)
+                        yourAnswers = if (!checked) {
+                            yourAnswers.filter { it != text }
+                        } else {
+                            yourAnswers + listOf(text)
+                        }
                     })
+
             }
 
         }
         ContainedWideButton(
             modifier = Modifier.padding(vertical = 4.dp),
             onClick = {
-                onAnswered(yourAnswers
-                    .filter { it.checked }
-                    .sortedBy { it.lastCheckedTime }
-                    .map { it.text })
+                onAnswered(yourAnswers)
+                yourAnswers = emptyList()
+                isSelectedList = List(state.question.answers.size + state.question.wrongChoices.size) { false }
             },
             text = stringResource(R.string.judge_question),
             color = MaterialTheme.colors.secondary
