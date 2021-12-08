@@ -28,7 +28,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
@@ -207,13 +207,13 @@ class ComposeResultActivity : BaseActivity() {
 
     private fun retryAllQuestions() {
         sharedPreferenceManager.refine = false
-        PlayActivity.startActivity(this, testId, true)
+        AnswerWorkbookActivity.startActivity(this, testId, true)
     }
 
     private fun retryOnlyInCorrectQuestions() {
         if (viewModel.questions.any { !it.isCorrect }) {
             sharedPreferenceManager.refine = true
-            PlayActivity.startActivity(this, testId, true)
+            AnswerWorkbookActivity.startActivity(this, testId, true)
         } else {
             showToast(getString(R.string.message_null_wrongs))
         }
