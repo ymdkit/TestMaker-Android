@@ -25,7 +25,7 @@ class AnswerWorkbookViewModel(
     val uiState: StateFlow<PlayUiState> = _uiState
 
     private val _answerEffectState = MutableStateFlow(AnswerEffectState.None)
-    val answerEffectState:  StateFlow<AnswerEffectState> = _answerEffectState
+    val answerEffectState: StateFlow<AnswerEffectState> = _answerEffectState
 
     private var answeringQuestions: List<QuestionModel> = emptyList()
 
@@ -91,19 +91,33 @@ class AnswerWorkbookViewModel(
             repository.update(answeringQuestion.toQuestion())
 
             _uiState.value = when (answeringQuestion.format) {
-                QuestionFormat.WRITE -> PlayUiState.Write(
-                    index = index,
-                    question = answeringQuestion
-                )
+                QuestionFormat.WRITE ->
+                    if (preferences.manual)
+                        PlayUiState.Manual(
+                            index = index,
+                            question = answeringQuestion
+                        )
+                    else
+                        PlayUiState.Write(
+                            index = index,
+                            question = answeringQuestion
+                        )
                 QuestionFormat.SELECT -> PlayUiState.Select(
                     index = index,
                     question = answeringQuestion,
                     choices = answeringQuestion.getChoices()
                 )
-                QuestionFormat.COMPLETE -> PlayUiState.Complete(
-                    index = index,
-                    question = answeringQuestion
-                )
+                QuestionFormat.COMPLETE ->
+                    if (preferences.manual)
+                        PlayUiState.Manual(
+                            index = index,
+                            question = answeringQuestion
+                        )
+                    else
+                        PlayUiState.Complete(
+                            index = index,
+                            question = answeringQuestion
+                        )
                 QuestionFormat.SELECT_COMPLETE -> PlayUiState.SelectComplete(
                     index = index,
                     question = answeringQuestion,
@@ -139,7 +153,8 @@ class AnswerWorkbookViewModel(
         )
         repository.update(judgedQuestion.toQuestion())
 
-        _answerEffectState.value = if(isCorrect) AnswerEffectState.Correct else AnswerEffectState.Incorrect
+        _answerEffectState.value =
+            if (isCorrect) AnswerEffectState.Correct else AnswerEffectState.Incorrect
 
         if (preferences.alwaysReview || !isCorrect) {
             _uiState.value = PlayUiState.Review(
@@ -179,9 +194,16 @@ class AnswerWorkbookViewModel(
 sealed class PlayUiState {
     object Initial : PlayUiState()
     data class Write(val index: Int, val question: QuestionModel) : PlayUiState()
-    data class Select(val index: Int, val question: QuestionModel, val choices: List<String>) : PlayUiState()
+    data class Select(val index: Int, val question: QuestionModel, val choices: List<String>) :
+        PlayUiState()
+
     data class Complete(val index: Int, val question: QuestionModel) : PlayUiState()
-    data class SelectComplete(val index: Int, val question: QuestionModel, val choices: List<String>) : PlayUiState()
+    data class SelectComplete(
+        val index: Int,
+        val question: QuestionModel,
+        val choices: List<String>
+    ) : PlayUiState()
+
     data class Manual(val index: Int, val question: QuestionModel) : PlayUiState()
     data class ManualReview(val index: Int, val question: QuestionModel) : PlayUiState()
     data class Review(val index: Int, val question: QuestionModel, val yourAnswer: String) :
