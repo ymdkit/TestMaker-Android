@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">暗記メーカー</string>
-    <string name="delete_exam">問題集の削除</string>
     <string name="message_delete_exam">「 %1$s 」 を削除してもよろしいですか？</string>
-    <string name="message_share_exam">「 %1$s 」をテキストデータに変換します　　※現在 画像は変換できないのでご注意下さい. また，作成したテキストデータは「コピペで読み込む」機能で問題集に復元できます．</string>
-    <string name="action_paste">コピペで読み込む</string>
     <string name="action_next">次へ</string>
-    <string name="delete_question">問題の削除</string>
     <string name="save_question">問題を保存</string>
     <string name="number_questions">出題数</string>
     <string name="number_existing_questions">達成率: %1$d / %2$d</string>
@@ -23,12 +19,8 @@
     <string name="load">読み込む</string>
     <string name="trim">トリミング</string>
     <string name="cancel">キャンセル</string>
-    <string name="sort">並び替え</string>
-    <string name="message_shortage">全項目を入力してください</string>
     <string name="message_delete">「 %1$s 」を削除してもよろしいですか？</string>
-    <string name="message_not_auto">問題数不足で自動生成できません</string>
     <string name="message_explanation">解説文を入れる</string>
-    <string name="message_paste">共有機能で作成したテキストを\nここに貼り付けてください</string>
     <string name="message_random">出題順をランダムにする</string>
     <string name="message_wrong_only">間違えた問題のみ出題する</string>
     <string name="message_switch_question">問題文と解答を入れ替える（記述問題のみ）</string>
@@ -50,10 +42,6 @@
     <string name="action_import">ファイルのインポート</string>
     <string name="action_license">ライセンス</string>
     <string name="msg_save">保存しました</string>
-    <string name="save">保存</string>
-    <string name="pass">分からない</string>
-
-
     <string-array name="sort_exam">
         <item>五十音順(降順)</item>
         <item>五十音順(昇順)</item>
@@ -98,41 +86,23 @@
         <item>大きめ</item>
     </string-array>
 
-    <string name="message_success_update">保存しました</string>
     <string name="config">問題集の設定</string>
     <string name="search">検索</string>
     <string name="ok">OK</string>
     <string name="number">No.%1$s</string>
-    <string name="help_url">https://ankimaker.com/guide</string>
-    <string name="show_never">次回からこのダイアログを表示しない</string>
-    <string name="action_online">みんなの問題集</string>
     <string name="info">詳細</string>
-    <string name="title_activity_online_main">みんなの問題集</string>
     <string name="hint_user_name">ユーザー名</string>
     <string name="login">ログイン</string>
     <string name="login_successed">ログインしました</string>
-    <string name="message_upload_test">アップロードする問題集の選択</string>
-    <string name="profile">マイページ</string>
-    <string name="title_activity_online_my_page">マイページ</string>
     <string name="hint_overview">概要(問題集についての説明)</string>
-    <string name="tests_my_page">投稿した問題集</string>
-    <string name="creator_name">ユーザー名: %1$s</string>
-    <string name="download_test">読込</string>
     <string name="message_non_exist_test">端末内に問題集が存在しません。「端末」タブから問題集を追加してください</string>
-    <string name="message_edit_profile">プロフィールの編集</string>
     <string name="num_questions">問題数 %1$d</string>
     <string name="always_review">正解時も解説を表示する</string>
-    <string name="target">対象</string>
-    <string name="action_move">問題の移動,複製</string>
-    <string name="check_all_questions">全てチェック</string>
-    <string name="new_test">新しい問題集</string>
     <string name="test">問題集</string>
-    <string name="msg_same_test">移動元と移動先が同じ問題集になっています</string>
     <string name="msg_download_study_plus">最新版の Studyplus をストアからダウンロードしてください</string>
     <string name="msg_connect_success">連携しました</string>
     <string name="msg_upload_study_plus">勉強結果を Studyplus に投稿しました</string>
     <string name="action_remove_ad">広告の削除</string>
-    <string name="msg_failed_upload_study_plus">スタディプラスへの投稿に失敗しました</string>
     <string name="alrady_removed_ad">購入済みです</string>
     <string name="error">読み込み中にエラーが発生しました</string>
     <string name="case_insensitive">case-insensitive</string>
@@ -146,7 +116,6 @@
     <string name="select_complete">選択完答</string>
     <string name="start">スタート</string>
     <string name="is_random">出題順をランダムにする</string>
-    <string name="info_firebase_test">作者: %1$s\n\n投稿日: %2$s\n\n概要: %3$s</string>
     <string name="text_info_creator">作者: %1$s</string>
     <string name="text_info_created_at">作成日: %1$s</string>
     <string name="text_info_overview">概要: %1$s</string>
@@ -165,14 +134,10 @@
     <string name="preference_group_study_plus">Studyplus連携設定</string>
     <string name="preference_study_plus">Studyplus連携</string>
     <string name="preference_post_study_plus">勉強結果の投稿</string>
-    <string name="setting_show_setting_dialog">出題前に設定を変更することができます</string>
     <string name="uploading">問題集をアップロード中</string>
     <string name="downloading">問題集をダウンロード中</string>
     <string name="msg_success_download_test">問題集 %1$s をダウンロードしました</string>
     <string name="msg_share_test">問題集「 %1$s 」が共有されました。下記のリンクから問題集を受け取ってください\n %2$s</string>
-    <string name="title_dialog_share">共有方法の選択</string>
-    <string name="msg_test_not_exist">問題集が見つかりません</string>
-    <string name="my_page">マイページ</string>
     <string name="purchase_canceled">購入がキャンセルされました</string>
     <string name="menu_feedback">お問い合わせ</string>
     <string name="email_subject_feedback">「暗記メーカー」に関するお問い合わせ</string>
@@ -212,7 +177,6 @@
     <string name="menu_upload_studyplus">勉強結果をStudyPlusに投稿する</string>
     <string name="msg_loading">読み込み中</string>
     <string name="network_error">サーバに接続できません</string>
-    <string name="play_font_size">解答画面でのフォントサイズ</string>
     <string name="tab_local">問題集（端末）</string>
     <string name="tab_remote">問題集（共有）</string>
     <string name="msg_please_login">アカウントに問題集を紐づけることで、\n複数端末で問題集を共有することができます。</string>
@@ -224,7 +188,6 @@
     <string name="title_activity_upload_test">問題集のアップロード</string>
     <string name="upload_test">アップロード</string>
     <string name="label_spinner_tests_for_upload">アップロードする問題集</string>
-    <string name="label_overview">概要</string>
     <string name="label_setting_public">公開設定</string>
     <string name="check_private">限定公開（リンクを知っている人のみ利用可能）</string>
     <string name="load_ad">広告を読み込み中</string>
@@ -233,8 +196,6 @@
     <string name="msg_dialog_private">動画広告を視聴することで、公開設定の変更が可能になります</string>
     <string name="label_public">全体公開</string>
     <string name="label_private">限定公開</string>
-    <string name="button_convert_to_csv">テキスト形式に変換して共有</string>
-    <string name="button_upload">アップロードしてリンクを共有</string>
     <string name="folder">フォルダ</string>
     <string name="download">ダウンロードする</string>
     <string name="copy_question">コピーする</string>
@@ -243,7 +204,6 @@
     <string name="message_delete_category">「 %1$s 」を削除してもよろしいですか？（フォルダ内の問題集も全て削除されます）</string>
     <string name="hint_category">フォルダ名</string>
     <string name="title_dialog_edit_category">フォルダ名の変更</string>
-    <string name="action_group">グループ</string>
     <string name="group_list_fragment_label">グループ一覧</string>
     <string name="group_detail_fragment_label">グループ詳細</string>
     <string name="group">グループ</string>
@@ -257,7 +217,6 @@
     <string name="invite_group">招待する</string>
     <string name="rename_group">グループ名の変更</string>
     <string name="delete_group">グループの削除</string>
-    <string name="title_activity_group">グループ</string>
     <string name="msg_delete_group">グループ「 %1$s 」を削除しますか？</string>
     <string name="msg_success_delete_group">グループを削除しました</string>
     <string name="msg_invite_group">グループ「 %1$s 」に招待されました。下記のリンクからグループ内の問題集にアクセスできます \n %2$s</string>
@@ -274,7 +233,6 @@
     <string name="item_title_history"> %1$s さんが %2$d 問中 %3$d 問正解しました</string>
     <string name="msg_failure_invite_group">招待リンクの生成に失敗しました。端末がネットワークに接続されていないか、このグループが既に削除されている可能性があります。</string>
     <string name="msg_creating_invite_group_link">招待リンク生成中</string>
-    <string name="msg_failure_share_group">failure to create link</string>
     <string name="msg_failure_share_test">共有用リンクの生成に失敗しました。端末がネットワークに接続されていない可能性があります。</string>
     <string name="msg_creating_share_test_link">共有用リンク生成中</string>
     <string name="msg_failure_download_test">問題集のダウンロードに失敗しました。端末がネットワークに接続されていないか、この問題集が既に削除されている可能性があります。</string>
@@ -282,7 +240,6 @@
     <string name="hint_category_name">フォルダ名を入力</string>
     <string name="msg_empty_text">入力欄が空です</string>
     <string name="title_dialog_edit_user_name">ユーザ名の変更</string>
-    <string name="button_create_test">問題集の作成</string>
     <string name="result_dialog_item_retry_all">全ての問題</string>
     <string name="result_dialog_item_retry_only_incorrect">不正解の問題のみ</string>
     <string name="play_dialog_confirm_interrupt">解答を中断しますか？</string>
@@ -300,10 +257,7 @@
     <string name="date_online">作成日時: %1$s</string>
     <string name="overview_online">概要： %1$s</string>
     <string name="label_public_tests">みんなの問題集</string>
-    <string name="button_upload_test">問題集のアップロード</string>
-    <string name="hint_search_public_tests">検索</string>
     <string name="menu_select">選択</string>
-    <string name="menu_cancel">キャンセル</string>
     <string name="menu_delete">削除</string>
     <string name="msg_delete_selected_questions">選択した全ての問題を削除しますか？</string>
     <string name="msg_succes_delete_questions">選択した全ての問題を削除しました</string>
@@ -324,9 +278,5 @@
     <string name="title_activity_play">問題集の解答</string>
     <string name="msg_empty_question">出題できる問題がありません。出題設定を変更してください</string>
     <string name="no_answer">わからない</string>
-    <string name="button_request_modify">内容の誤りを報告</string>
-    <string name="email_body_requet_modify">"アプリバージョン: %1$s \n\n修正内容について、具体的に教えていただけると助かります"</string>
-    <string name="numOfQuestions">出題数</string>
-    <string name="preference_question_condition">出題範囲</string>
     <string name="hint_answer_write">解答</string>
 </resources>

@@ -7,34 +7,12 @@
     <dimen name="element_spacing_large">12dp</dimen>
     <dimen name="element_spacing_normal">8dp</dimen>
     <dimen name="element_spacing_small">4dp</dimen>
-    <dimen name="element_spacing_very_small">2dp</dimen>
     <dimen name="element_spacing_none">0dp</dimen>
-    <dimen name="view_height_very_large">72dp</dimen>
     <dimen name="view_height_large">64dp</dimen>
     <dimen name="view_height_normal">48dp</dimen>
-    <dimen name="view_height_small">36dp</dimen>
-    <dimen name="view_height_tiny">24dp</dimen>
-
-    <dimen name="view_width_small">44dp</dimen>
     <dimen name="view_width_normal">64dp</dimen>
 
-    <dimen name="text_size_sssmall">8sp</dimen>
-    <dimen name="text_size_ssmall">11sp</dimen>
     <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_medium">14sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
-    <dimen name="text_size_xlarge">20sp</dimen>
-    <dimen name="text_size_very_large">32sp</dimen>
-
-    <dimen name="text_size_body">@dimen/text_size_small</dimen>
-    <dimen name="text_size_title">@dimen/text_size_large</dimen>
-    <dimen name="text_size_subtitle">@dimen/text_size_medium</dimen>
-    <dimen name="text_size_menu">@dimen/text_size_medium</dimen>
-    <dimen name="text_size_caption">@dimen/text_size_small</dimen>
-    <dimen name="text_size_button">@dimen/text_size_large</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-
-    <dimen name="margin_bottom">64dp</dimen>
-    <dimen name="width_order">24dp</dimen>
-    <dimen name="view_width_large">128dp</dimen>
 </resources>

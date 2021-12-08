@@ -10,13 +10,10 @@
     <string name="action_license">license</string>
     <string name="action_next">next</string>
     <string name="action_other">other apps</string>
-    <string name="action_paste">load by copying and pasting</string>
     <string name="app_name">TestMaker</string>
     <string name="cancel">cancel</string>
     <string name="confirm">confirm</string>
     <string name="delete">delete</string>
-    <string name="delete_exam">delete test</string>
-    <string name="delete_question">delete question</string>
     <string name="edit">edit</string>
     <string name="help">help</string>
     <string name="image">image</string>
@@ -26,15 +23,11 @@
     <string name="message_delete_exam">delete %1$s ?</string>
     <string name="message_delete_sound">sound</string>
     <string name="message_explanation">add explanation</string>
-    <string name="message_not_auto">add more question</string>
     <string name="message_null_number">please input number</string>
     <string name="message_null_questions">\"please add questions\"</string>
     <string name="message_null_wrongs">wrong is nothing</string>
     <string name="message_random">random order</string>
-    <string name="message_paste">paste text shared by this app</string>
     <string name="message_self">judge self</string>
-    <string name="message_share_exam">change %1$s into txt</string>
-    <string name="message_shortage">input all place</string>
     <string name="message_success_load">loaded %1$s</string>
     <string name="message_switch_question">exchange question for answer</string>
     <string name="message_wrong_only">only wrong questions</string>
@@ -44,12 +37,9 @@
     <string name="retry">retry</string>
     <string name="save_question">save</string>
     <string name="share">share</string>
-    <string name="sort">sort</string>
     <string name="title_activity_edit">edit</string>
     <string name="trim">trim</string>
     <string name="way">option</string>
-    <string name="help_url">https://ankimaker.com/guide</string>
-
     <string-array name="sort_exam">
         <item>alphabetical(descending)</item>
         <item>alphabetical(ascending)</item>
@@ -95,44 +85,24 @@
     </string-array>
 
     <string name="msg_save">saved</string>
-    <string name="save">save</string>
-    <string name="message_success_update">saved</string>
     <string name="config">config</string>
     <string name="search">search</string>
     <string name="ok">OK</string>
     <string name="number">No.%1$s</string>
-    <string name="pass">I don\'t know</string>
     <string name="number_existing_questions">%1$d / %2$d solved</string>
-    <string name="show_never">never show again</string>
-    <string name="action_online">online tests</string>
     <string name="info">info</string>
-    <string name="title_activity_online_main">online</string>
     <string name="hint_user_name">name</string>
     <string name="login">log in</string>
     <string name="login_successed">login success</string>
-    <string name="message_upload_test">select test you will upload</string>
-    <string name="profile">profile</string>
-    <string name="title_activity_online_my_page">myPage</string>
     <string name="hint_overview">overview</string>
-    <string name="tests_my_page">my tests</string>
-    <string name="creator_name">username: %1$s</string>
-    <string name="download_test">load</string>
     <string name="message_non_exist_test">create test yourself</string>
-    <string name="message_edit_profile">edit profile</string>
     <string name="num_questions">%1$d questions</string>
     <string name="always_review">show explanation when you correct</string>
-    <string name="title_activity_move_questions">MoveQuestionsActivity</string>
-    <string name="target">target</string>
-    <string name="action_move">move questions</string>
-    <string name="check_all_questions">check all</string>
-    <string name="new_test">new test</string>
     <string name="test">test</string>
-    <string name="msg_same_test">Don\'t select same test</string>
     <string name="msg_download_study_plus">download latest studyplus from Play store</string>
     <string name="msg_connect_success">success</string>
     <string name="msg_upload_study_plus">success upload to Studyplus</string>
     <string name="action_remove_ad">remove ad</string>
-    <string name="msg_failed_upload_study_plus">failed to upload studyplus</string>
     <string name="alrady_removed_ad">already parchased</string>
     <string name="error">loading error</string>
     <string name="case_insensitive">case-insensitive</string>
@@ -146,7 +116,6 @@
     <string name="select_complete">select answers</string>
     <string name="start">start</string>
     <string name="is_random">random order</string>
-    <string name="info_firebase_test">creator: %1$s\n\nupload: %2$s\n\noverview: %3$s</string>
     <string name="text_info_creator">creator: %1$s</string>
     <string name="text_info_created_at">upload: %1$s</string>
     <string name="text_info_overview">overview: %1$s</string>
@@ -165,19 +134,14 @@
     <string name="preference_group_study_plus">Studyplus</string>
     <string name="preference_study_plus">Connect Studyplus</string>
     <string name="preference_post_study_plus">post your study</string>
-    <string name="setting_show_setting_dialog">show setting dialog before play</string>
     <string name="version_app">アプリのバージョン</string>
     <string name="uploading">upload now</string>
     <string name="downloading">download</string>
     <string name="msg_success_download_test">download %1$s</string>
     <string name="msg_share_test">share %1$s \n %2$s</string>
-    <string name="title_dialog_share">share</string>
-    <string name="msg_test_not_exist">test does not exist</string>
-    <string name="my_page">My Page</string>
     <string name="purchase_canceled">canceled</string>
     <string name="sku_remove_ad">android.test.purchased</string>
     <string name="menu_feedback">feedback</string>
-    <string name="contact_email">testmaker.contact@gmail.com</string>
     <string name="email_subject_feedback">feedback</string>
     <string name="email_body_feedback">It would be very helpful if you could provide a description of what you did and what you did with the screenshot. \n\n\n\n\n Android SDK%1$d </string>
     <string name="label_color">color</string>
@@ -217,7 +181,6 @@
     <string name="menu_upload_studyplus">upload studyplus</string>
     <string name="msg_loading">now loading</string>
     <string name="network_error">network error</string>
-    <string name="play_font_size">font size (answering)</string>
     <string name="tab_local">device</string>
     <string name="tab_remote">online</string>
     <string name="msg_please_login">please login</string>
@@ -229,7 +192,6 @@
     <string name="title_activity_upload_test">upload test</string>
     <string name="upload_test">upload</string>
     <string name="label_spinner_tests_for_upload">select test</string>
-    <string name="label_overview">overview</string>
     <string name="label_setting_public">publicity</string>
     <string name="check_private">private (need to watch Ad)</string>
     <string name="load_ad">loading_ad</string>
@@ -238,8 +200,6 @@
     <string name="msg_dialog_private">you can use this function by watching Ad</string>
     <string name="label_public">public</string>
     <string name="label_private">private</string>
-    <string name="button_convert_to_csv">convert to csv</string>
-    <string name="button_upload">share link</string>
     <string name="folder">Folder</string>
     <string name="download">download</string>
     <string name="copy_question">copy</string>
@@ -248,16 +208,9 @@
     <string name="message_delete_category">delete %1$s ?</string>
     <string name="hint_category">folder name</string>
     <string name="title_dialog_edit_category">edit folder name</string>
-    <string name="title_activity_group">GroupActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="group_list_fragment_label">GroupList</string>
     <string name="group_detail_fragment_label">Group</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="action_group">group</string>
     <string name="group">group</string>
     <string name="title_create_group">create group</string>
     <string name="hint_group_name">group name</string>
@@ -267,7 +220,6 @@
     <string name="upload_group_test_fragment_label">upload test</string>
     <string name="history_test_fragment_label">history</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="invite_group">invite group</string>
     <string name="rename_group">rename group</string>
     <string name="delete_group">delete group</string>
@@ -287,7 +239,6 @@
     <string name="item_title_history"> %1$s corrects %3$d / %2$d</string>
     <string name="msg_failure_invite_group">faikure to create link</string>
     <string name="msg_creating_invite_group_link">creating link</string>
-    <string name="msg_failure_share_group">failure to create link</string>
     <string name="msg_failure_share_test">failure to create link</string>
     <string name="msg_creating_share_test_link">creating link</string>
     <string name="msg_failure_download_test">failure to download test</string>
@@ -295,7 +246,6 @@
     <string name="hint_category_name">folder name</string>
     <string name="msg_empty_text">please input</string>
     <string name="title_dialog_edit_user_name">edit username</string>
-    <string name="button_create_test">create test</string>
     <string name="title_activity_compose_result">ComposeResultActivity</string>
     <string name="result_dialog_item_retry_all">All Questions</string>
     <string name="result_dialog_item_retry_only_incorrect">Only Incorect Questions</string>
@@ -315,10 +265,7 @@
     <string name="overview_online">overview: %1$s</string>
     <string name="title_activity_public_tests">PublicTestsActivity</string>
     <string name="label_public_tests">public tests</string>
-    <string name="button_upload_test">publish your tests</string>
-    <string name="hint_search_public_tests">search</string>
     <string name="menu_select">select</string>
-    <string name="menu_cancel">cancel</string>
     <string name="menu_delete">delete</string>
     <string name="msg_delete_selected_questions">delete all questions?</string>
     <string name="msg_succes_delete_questions">deleted questions</string>
@@ -339,11 +286,5 @@
     <string name="title_activity_play">answer test</string>
     <string name="msg_empty_question">please edit question settings (no questions are exist)</string>
     <string name="no_answer">no_answer</string>
-    <string name="button_request_modify">request modify</string>
-    <string name="email_subject_request_modify">Request Modify [ID: %1$s]</string>
-    <string name="email_body_requet_modify">%1$s</string>
-    <string name="numOfQuestions">limit</string>
-    <string name="preference_question_condition">condition</string>
     <string name="hint_answer_write">answer</string>
-
 </resources>
