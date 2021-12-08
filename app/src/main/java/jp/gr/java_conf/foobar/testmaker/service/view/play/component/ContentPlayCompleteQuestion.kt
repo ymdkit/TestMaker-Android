@@ -88,7 +88,7 @@ fun ContentPlayCompleteQuestion(
             }
         }
         ContainedWideButton(
-            modifier = Modifier.padding(vertical = 4.dp),
+            modifier = Modifier.padding(vertical = 8.dp),
             onClick = {
                 onAnswered(yourAnswers)
             },
