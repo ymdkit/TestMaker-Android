@@ -12,7 +12,6 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityPlayBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionsBuilder
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
-import jp.gr.java_conf.foobar.testmaker.service.extensions.setFontSize
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ComposeResultActivity
@@ -110,10 +109,6 @@ class PlayActivity : BaseActivity() {
         playViewModel.loadNextQuestion()
 
         binding.let {
-            it.question.setFontSize(sharedPreferenceManager.playFontSize)
-            it.textYourAnswer.setFontSize(sharedPreferenceManager.playFontSize)
-            it.textAnswer.setFontSize(sharedPreferenceManager.playFontSize)
-            it.textExplanation.setFontSize(sharedPreferenceManager.playFontSize)
         }
     }
 
