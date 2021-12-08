@@ -138,7 +138,7 @@ class AnswerWorkbookViewModel(
         viewModelScope.launch {
             val isCorrect = question.isCorrect(yourAnswers, isSwap = isSwap)
 
-            setupReview(index, question, yourAnswers.joinToString("\n"), isCorrect)
+            setupReview(index, question, yourAnswers.filter{ it.isNotEmpty() }.joinToString("\n"), isCorrect)
         }
     }
 
