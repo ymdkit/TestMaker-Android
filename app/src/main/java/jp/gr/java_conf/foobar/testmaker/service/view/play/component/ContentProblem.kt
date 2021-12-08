@@ -11,7 +11,12 @@ import androidx.compose.ui.unit.dp
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 
 @Composable
-fun ContentProblem(index: Int, question: QuestionModel) {
+fun ContentProblem(
+    index: Int,
+    question: QuestionModel,
+    isSwap: Boolean)
+{
+
     Column {
         Row {
             Text(
@@ -23,7 +28,7 @@ fun ContentProblem(index: Int, question: QuestionModel) {
         SelectionContainer {
             Text(
                 modifier = Modifier.padding(vertical = 16.dp),
-                text = question.problem
+                text = question.getProblem(isSwap)
             )
         }
         if (question.imageUrl.isNotEmpty()) {

@@ -22,7 +22,11 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
 
 @Composable
-fun ContentPlayWriteQuestion(state: PlayUiState.Write, onAnswered: (String) -> Unit) {
+fun ContentPlayWriteQuestion(
+    state: PlayUiState.Write,
+    onAnswered: (String) -> Unit,
+    isSwap: Boolean
+) {
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
@@ -45,7 +49,8 @@ fun ContentPlayWriteQuestion(state: PlayUiState.Write, onAnswered: (String) -> U
         ) {
             ContentProblem(
                 index = state.index,
-                question = state.question
+                question = state.question,
+                isSwap = isSwap
             )
             OutlinedTextField(
                 modifier = Modifier

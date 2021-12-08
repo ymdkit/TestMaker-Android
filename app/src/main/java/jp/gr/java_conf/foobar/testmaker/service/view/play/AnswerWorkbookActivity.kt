@@ -76,6 +76,7 @@ class AnswerWorkbookActivity : AppCompatActivity() {
                                     is PlayUiState.Write -> {
                                         ContentPlayWriteQuestion(
                                             state = state,
+                                            isSwap = sharedPreferenceManager.reverse,
                                             onAnswered = { yourAnswer ->
                                                 playViewModel.judgeIsCorrect(
                                                     state.index,
@@ -98,6 +99,7 @@ class AnswerWorkbookActivity : AppCompatActivity() {
                                     is PlayUiState.Complete -> {
                                         ContentPlayCompleteQuestion(
                                             state = state,
+                                            isSwap = sharedPreferenceManager.reverse,
                                             onAnswered = { yourAnswers ->
                                                 playViewModel.judgeIsCorrect(
                                                     state.index,
@@ -120,6 +122,7 @@ class AnswerWorkbookActivity : AppCompatActivity() {
                                     is PlayUiState.Manual -> {
                                         ContentPlayManualQuestion(
                                             state = state,
+                                            isSwap = sharedPreferenceManager.reverse,
                                             onAnswered = {
                                                 playViewModel.confirm(state.index, state.question)
                                             }
@@ -128,6 +131,7 @@ class AnswerWorkbookActivity : AppCompatActivity() {
                                     is PlayUiState.ManualReview -> {
                                         ContentPlayManualReviewQuestion(
                                             state = state,
+                                            isSwap = sharedPreferenceManager.reverse,
                                             onJudged = { isCorrect ->
                                                 playViewModel.selfJudge(state.question, isCorrect)
                                             }
@@ -136,6 +140,7 @@ class AnswerWorkbookActivity : AppCompatActivity() {
                                     is PlayUiState.Review -> {
                                         ContentPlayReviewQuestion(
                                             state = state,
+                                            isSwap = sharedPreferenceManager.reverse,
                                             onConfirmed = {
                                                 playViewModel.loadNext()
                                             }

@@ -26,6 +26,8 @@ class AnswerWorkbookViewModel(
 
     private val workbook: Test by lazy { repository.get(testId) }
 
+    private val isSwap: Boolean = preferences.reverse
+
     init {
         viewModelScope.launch {
 
@@ -106,8 +108,7 @@ class AnswerWorkbookViewModel(
     // todo 正解時にスキップする機能の追加
     fun judgeIsCorrect(index: Int, question: QuestionModel, yourAnswer: String) {
         viewModelScope.launch {
-            val isCorrect = question.isCorrect(yourAnswer)
-
+            val isCorrect = yourAnswer == question.getAnswer(isSwap = isSwap)
 
             val judgedQuestion = question.copy(
                 answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
@@ -124,7 +125,8 @@ class AnswerWorkbookViewModel(
 
     fun judgeIsCorrect(index: Int, question: QuestionModel, yourAnswers: List<String>) {
         viewModelScope.launch {
-            val isCorrect = question.isCorrect(yourAnswers)
+            val isCorrect = question.isCorrect(yourAnswers, isSwap = isSwap)
+
             val judgedQuestion = question.copy(
                 answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
             )

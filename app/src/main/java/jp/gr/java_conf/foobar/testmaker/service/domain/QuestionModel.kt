@@ -19,8 +19,8 @@ data class QuestionModel(
     fun isCorrect(yourAnswer: String): Boolean =
         yourAnswer == answer
 
-    fun isCorrect(yourAnswers: List<String>): Boolean {
-        val original = answers
+    fun isCorrect(yourAnswers: List<String>, isSwap: Boolean): Boolean {
+        val original = getAnswers(isSwap)
 
         if (yourAnswers.size != original.size) return false
 
@@ -35,10 +35,35 @@ data class QuestionModel(
         return true
     }
 
-    fun getAnswerForReview() =
-        when (format) {
-            QuestionFormat.WRITE, QuestionFormat.SELECT -> answer
-            QuestionFormat.COMPLETE, QuestionFormat.SELECT_COMPLETE -> answers.joinToString("\n")
+    fun getProblem(isSwap: Boolean) =
+        when(format){
+            QuestionFormat.WRITE -> if (isSwap) answer else problem
+            QuestionFormat.SELECT -> problem
+            QuestionFormat.COMPLETE -> if(isSwap) answers.joinToString(separator = "\n") else problem
+            QuestionFormat.SELECT_COMPLETE -> problem
+        }
+
+    fun getAnswer(isSwap: Boolean) =
+        when(format){
+            QuestionFormat.WRITE -> if (isSwap) problem else answer
+            QuestionFormat.SELECT -> answer
+            QuestionFormat.COMPLETE -> if(isSwap) problem else ""
+            QuestionFormat.SELECT_COMPLETE -> ""
+        }
+
+    fun getAnswers(isSwap: Boolean) = when(format){
+        QuestionFormat.WRITE -> emptyList()
+        QuestionFormat.SELECT -> emptyList()
+        QuestionFormat.COMPLETE -> if(isSwap) listOf(problem) else answers
+        QuestionFormat.SELECT_COMPLETE -> answers
+    }
+
+    fun getAnswerForReview(isSwap: Boolean) =
+        when(format){
+            QuestionFormat.WRITE -> if (isSwap) problem else answer
+            QuestionFormat.SELECT -> answer
+            QuestionFormat.COMPLETE -> if(isSwap) problem else answers.joinToString("\n")
+            QuestionFormat.SELECT_COMPLETE -> answers.joinToString("\n")
         }
 
     fun getAnswerForResult() =

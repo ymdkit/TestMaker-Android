@@ -12,7 +12,9 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
 
 @Composable
-fun ContentPlaySelectQuestion(state: PlayUiState.Select, onAnswered: (String) -> Unit) {
+fun ContentPlaySelectQuestion(
+    state: PlayUiState.Select,
+    onAnswered: (String) -> Unit) {
     Column {
         Column(
             modifier = Modifier
@@ -26,7 +28,8 @@ fun ContentPlaySelectQuestion(state: PlayUiState.Select, onAnswered: (String) ->
         ) {
             ContentProblem(
                 index = state.index,
-                question = state.question
+                question = state.question,
+                isSwap = false
             )
 
             val choices = (listOf(state.question.answer) + state.question.wrongChoices).shuffled()

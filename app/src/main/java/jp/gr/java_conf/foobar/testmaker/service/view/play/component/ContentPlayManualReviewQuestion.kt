@@ -14,7 +14,11 @@ import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
 
 
 @Composable
-fun ContentPlayManualReviewQuestion(state: PlayUiState.ManualReview, onJudged: (Boolean) -> Unit) {
+fun ContentPlayManualReviewQuestion(
+    state: PlayUiState.ManualReview,
+    isSwap: Boolean,
+    onJudged: (Boolean) -> Unit,
+) {
     Column {
         Column(
             modifier = Modifier
@@ -28,9 +32,13 @@ fun ContentPlayManualReviewQuestion(state: PlayUiState.ManualReview, onJudged: (
         ) {
             ContentProblem(
                 index = state.index,
-                question = state.question
+                question = state.question,
+                isSwap = isSwap
             )
-            ContentReview(yourAnswer = "", question = state.question)
+            ContentReview(
+                yourAnswer = "",
+                isSwap = isSwap,
+                question = state.question)
         }
         ContainedWideButton(
             modifier = Modifier.padding(bottom = 16.dp),

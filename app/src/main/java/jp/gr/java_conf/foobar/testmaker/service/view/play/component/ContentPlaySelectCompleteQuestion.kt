@@ -47,7 +47,8 @@ fun ContentPlaySelectCompleteQuestion(
         ) {
             ContentProblem(
                 index = state.index,
-                question = state.question
+                question = state.question,
+                isSwap = false
             )
             val choices = (state.question.answers + state.question.wrongChoices).shuffled()
             choices.forEachIndexed { index, text ->

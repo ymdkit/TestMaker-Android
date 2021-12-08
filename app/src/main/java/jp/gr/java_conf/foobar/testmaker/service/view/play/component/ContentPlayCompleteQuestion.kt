@@ -23,7 +23,11 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
 
 @Composable
-fun ContentPlayCompleteQuestion(state: PlayUiState.Complete, onAnswered: (List<String>) -> Unit) {
+fun ContentPlayCompleteQuestion(
+    state: PlayUiState.Complete,
+    isSwap: Boolean,
+    onAnswered: (List<String>) -> Unit)
+{
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
@@ -48,7 +52,8 @@ fun ContentPlayCompleteQuestion(state: PlayUiState.Complete, onAnswered: (List<S
         ) {
             ContentProblem(
                 index = state.index,
-                question = state.question
+                question = state.question,
+                isSwap = isSwap
             )
             yourAnswers.forEachIndexed { index, _ ->
                 var yourAnswer by remember { mutableStateOf("") }

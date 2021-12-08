@@ -14,7 +14,11 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 
 @Composable
-fun ContentReview(yourAnswer: String, question: QuestionModel) {
+fun ContentReview(
+    yourAnswer: String,
+    isSwap: Boolean,
+    question: QuestionModel
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         if (yourAnswer.isNotEmpty()) {
             Text(
@@ -33,7 +37,7 @@ fun ContentReview(yourAnswer: String, question: QuestionModel) {
         SelectionContainer {
             Text(
                 modifier = Modifier.padding(vertical = 16.dp),
-                text = question.getAnswerForReview()
+                text = question.getAnswerForReview(isSwap = isSwap)
             )
         }
         if (question.explanation.isNotEmpty()) {

@@ -24,7 +24,11 @@ import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
 
 @ExperimentalAnimationApi
 @Composable
-fun ContentPlayReviewQuestion(state: PlayUiState.Review, onConfirmed: () -> Unit) {
+fun ContentPlayReviewQuestion(
+    state: PlayUiState.Review,
+    isSwap: Boolean,
+    onConfirmed: () -> Unit)
+{
     var isShowEffect by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
@@ -46,9 +50,13 @@ fun ContentPlayReviewQuestion(state: PlayUiState.Review, onConfirmed: () -> Unit
                 Column {
                     ContentProblem(
                         index = state.index,
-                        question = state.question
+                        question = state.question,
+                        isSwap = isSwap
                     )
-                    ContentReview(yourAnswer = state.yourAnswer, question = state.question)
+                    ContentReview(
+                        yourAnswer = state.yourAnswer,
+                        isSwap = isSwap,
+                        question = state.question)
                 }
 
                 Column {
