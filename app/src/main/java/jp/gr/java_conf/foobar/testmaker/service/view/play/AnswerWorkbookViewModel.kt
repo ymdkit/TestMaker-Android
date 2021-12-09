@@ -199,6 +199,8 @@ class AnswerWorkbookViewModel(
 
             repository.update(judgedQuestion.toQuestion())
 
+            logger.logAnswerQuestion(judgedQuestion.toQuestion())
+
             loadNext(index)
         }
     }
