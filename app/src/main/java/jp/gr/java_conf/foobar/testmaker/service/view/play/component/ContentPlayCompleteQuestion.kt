@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.extensions.replaced
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
 
 @Composable
@@ -37,7 +38,7 @@ fun ContentPlayCompleteQuestion(
 
     Column {
         var yourAnswers: List<String> by remember {
-            mutableStateOf(List(state.question.answers.count()) { "" })
+            mutableStateOf(List(state.question.getAnswers(isSwap).count()) { "" })
         }
 
         Column(
@@ -56,7 +57,6 @@ fun ContentPlayCompleteQuestion(
                 isSwap = isSwap
             )
             yourAnswers.forEachIndexed { index, _ ->
-                var yourAnswer by remember { mutableStateOf("") }
                 OutlinedTextField(
                     modifier =
                     if (index == 0) Modifier
@@ -66,7 +66,7 @@ fun ContentPlayCompleteQuestion(
                     else Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    value = yourAnswer,
+                    value = yourAnswers[index],
                     label = {
                         Text(text = stringResource(R.string.hint_answer_write))
                     },
@@ -80,10 +80,7 @@ fun ContentPlayCompleteQuestion(
                             focusManager.clearFocus()
                         }),
                     onValueChange = { text ->
-                        yourAnswer = text
-                        yourAnswers = List(state.question.answers.count()) {
-                            if (it == index) text else yourAnswers[index]
-                        }
+                        yourAnswers = yourAnswers.replaced(index, text)
                     })
             }
         }
@@ -91,7 +88,7 @@ fun ContentPlayCompleteQuestion(
             modifier = Modifier.padding(vertical = 8.dp),
             onClick = {
                 onAnswered(yourAnswers)
-                yourAnswers = List(state.question.answers.count()) { "" }
+                yourAnswers = List(state.question.getAnswers(isSwap).count()) { "" }
             },
             text = stringResource(R.string.judge_question),
             color = MaterialTheme.colors.secondary
