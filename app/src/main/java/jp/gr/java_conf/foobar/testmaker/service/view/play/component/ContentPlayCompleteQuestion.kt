@@ -1,9 +1,9 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.play.component
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.replaced
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
+import kotlinx.coroutines.delay
 
 @Composable
 fun ContentPlayCompleteQuestion(
@@ -31,9 +32,12 @@ fun ContentPlayCompleteQuestion(
 {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+        delay(500)
+        scrollState.animateScrollTo(1000)
     }
 
     Column {
@@ -44,7 +48,7 @@ fun ContentPlayCompleteQuestion(
         Column(
             modifier = Modifier
                 .verticalScroll(
-                    ScrollState(0)
+                    scrollState
                 )
                 .weight(
                     weight = 1f,
