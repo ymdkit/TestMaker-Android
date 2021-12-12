@@ -5,8 +5,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.realm.Realm
-import jp.gr.java_conf.foobar.testmaker.service.domain.Question
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.SearchClient
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
@@ -28,7 +26,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.main.MainViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ResultViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsViewModel
 import jp.studyplus.android.sdk.Studyplus
@@ -85,11 +83,17 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
     viewModel { EditCategoryViewModel() }
     viewModel { FirebaseViewModel(get(), get(), get()) }
     viewModel { FirebaseMyPageViewModel(get(), get()) }
-    viewModel { (test: Test, questions: List<Question>) -> PlayViewModel(test, questions, get()) }
     viewModel { ShowTestsViewModel(get(), get(), get()) }
     viewModel { GroupListViewModel(get()) }
     viewModel { GroupDetailViewModel(get(), get()) }
     viewModel { HistoryTestViewModel(get()) }
     viewModel { (testId: Long) -> ResultViewModel(testId = testId, get(), get(), get()) }
-
+    viewModel { (testId: Long, isRetry: Boolean) ->
+        AnswerWorkbookViewModel(
+            testId = testId,
+            isRetry = isRetry, get(),
+            get(),
+            get()
+        )
+    }
 }

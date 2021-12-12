@@ -26,16 +26,8 @@
         <item name="android:activityCloseEnterAnimation">@anim/alpha_appear</item>
     </style>
 
-    <style name="ThemeOverlay.Button.Danger" parent="ThemeOverlay.AppCompat">
-        <item name="colorAccent">@color/colorDanger</item>
-    </style>
-
     <style name="ThemeOverlay.Button.Accent" parent="ThemeOverlay.AppCompat">
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="ThemeOverlay.Button.Primary" parent="ThemeOverlay.AppCompat">
-        <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="Widget.AppCompat.ProgressBar.Normal">
@@ -52,12 +44,6 @@
     <style name="Button.Primary">
         <item name="android:stateListAnimator">@null</item>
         <item name="android:backgroundTint">@color/colorPrimary</item>
-    </style>
-
-    <style name="Button.Primary.TextWide">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">56dp</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
     <style name="Button.Primary.RectImage">

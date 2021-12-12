@@ -44,13 +44,6 @@
             app:title="@string/setting_show_dialog"
             app:iconSpaceReserved="false"/>
 
-        <ListPreference
-            app:entries="@array/play_font_size"
-            app:entryValues="@array/play_font_size_values"
-            app:key="play_font_size"
-            app:title="@string/play_font_size"
-            app:iconSpaceReserved="false"/>
-
     </PreferenceCategory>
 
     <PreferenceCategory

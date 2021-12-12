@@ -2,12 +2,10 @@ package jp.gr.java_conf.foobar.testmaker.service.domain
 
 import android.os.Parcelable
 import jp.gr.java_conf.foobar.testmaker.service.Constants
-import jp.gr.java_conf.foobar.testmaker.service.extensions.allIndexed
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.QuestionResponse
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseQuestion
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import java.util.*
 
 @Parcelize
 data class Question(
@@ -27,40 +25,6 @@ data class Question(
         var documentId: String = ""
 ) : Parcelable {
 
-    fun getReversibleAnswer(isReverse: Boolean = false) = if (isReversible() && isReverse) question else answer
-
-    fun getAnswerForReview() =
-            when (type) {
-                Constants.WRITE, Constants.SELECT -> answer
-                Constants.COMPLETE, Constants.SELECT_COMPLETE -> answers.joinToString("\n")
-                else -> answer
-            }
-
-
-    fun isCorrect(yourAnswer: String, isReverse: Boolean, isCaseInsensitive: Boolean): Boolean =
-            if (isCaseInsensitive)
-                yourAnswer.lowercase(Locale.ENGLISH) == this.getReversibleAnswer(isReverse)
-                    .lowercase(Locale.ENGLISH)
-            else
-                yourAnswer == this.getReversibleAnswer(isReverse)
-
-    fun isCorrect(yourAnswers: List<String>, isCaseInsensitive: Boolean = false): Boolean {
-        val yours = if (isCaseInsensitive) yourAnswers.map { it.lowercase(Locale.ENGLISH) } else yourAnswers
-        val original = if (isCaseInsensitive) answers.map { it.lowercase(Locale.ENGLISH) } else answers
-
-        if (yours.size != original.size) return false
-
-        if (isCheckOrder) {
-            if (!yours.allIndexed { index, it -> it == original[index] }) return false
-        } else {
-            if (!yours.all { yourAnswer -> original.map { it }.contains(yourAnswer) }) return false
-            if (yours.distinct().size != original.size) return false
-        }
-        return true
-    }
-
-    private fun isReversible() = type == Constants.WRITE || type == Constants.COMPLETE
-
     fun toFirebaseQuestion(imageUrl: String = "") = FirebaseQuestion(
         question = question,
         answer = answer,
@@ -73,6 +37,32 @@ data class Question(
         checkOrder = isCheckOrder,
         order = order
     )
+
+
+    fun toQuestionModel() = QuestionModel(
+        id = id,
+        problem = question,
+        answer = answer,
+        answers = answers,
+        wrongChoices = others,
+        format = format,
+        imageUrl = imagePath,
+        explanation = explanation,
+        isAutoGenerateWrongChoices = isAutoGenerateOthers,
+        isCheckOrder = isCheckOrder,
+        isAnswering = isSolved,
+        answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT,
+        order = order
+    )
+
+    @IgnoredOnParcel
+    private val format = when (type) {
+        Constants.WRITE -> QuestionFormat.WRITE
+        Constants.SELECT -> QuestionFormat.SELECT
+        Constants.COMPLETE -> QuestionFormat.COMPLETE
+        Constants.SELECT_COMPLETE -> QuestionFormat.SELECT_COMPLETE
+        else -> QuestionFormat.WRITE
+    }
 
     @IgnoredOnParcel
     val hasLocalImage = imagePath.isNotEmpty() && !imagePath.contains("/")

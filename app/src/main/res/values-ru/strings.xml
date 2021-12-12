@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ТестМейкер</string>
-    <string name="delete_exam">делеция тест</string>
     <string name="message_delete_exam">делеция: %1$s ?</string>
-    <string name="message_share_exam">Преобразование текста「 %1$s 」</string>
-    <string name="action_paste">Загрузить текст</string>
     <string name="action_next">следующий</string>
-    <string name="delete_question">делеция вопрос</string>
     <string name="save_question">Сохранить</string>
     <string name="number_questions">сумма</string>
     <string name="number_existing_questions">%1$d / %2$d</string>
@@ -23,12 +19,8 @@
     <string name="load">погрузка</string>
     <string name="trim">Порезы</string>
     <string name="cancel">отмена</string>
-    <string name="sort">сортировать</string>
-    <string name="message_shortage">недобор ввод</string>
     <string name="message_delete">делеция %1$s ?</string>
-    <string name="message_not_auto">недобор вопрос</string>
     <string name="message_explanation">комментарий</string>
-    <string name="message_paste">клейстер текст</string>
     <string name="message_random">случайный</string>
     <string name="message_wrong_only">только Неверный ответ</string>
     <string name="message_switch_question">замена вопрос и ответ</string>
@@ -50,10 +42,6 @@
     <string name="action_import">Импортировать</string>
     <string name="action_license">лицензия</string>
     <string name="msg_save">Сохранить</string>
-    <string name="save">Сохранить</string>
-    <string name="pass">Я не знаю</string>
-
-
     <string-array name="sort_exam">
         <item>Алфавитный порядок(По убыванию)</item>
         <item>Алфавитный порядок(По возрастанию)</item>
@@ -88,40 +76,22 @@
         <item>сам</item>
     </string-array>
 
-    <string name="message_success_update">Сохранить</string>
     <string name="config">настройки</string>
     <string name="search">поиск</string>
     <string name="ok">оК</string>
     <string name="number">%1$s</string>
-    <string name="help_url">https://ankimaker.com/guide</string>
-    <string name="show_never">никогда не показывать снова</string>
-    <string name="action_online">Интернет</string>
     <string name="info">информация</string>
-    <string name="title_activity_online_main">Интернет</string>
     <string name="hint_user_name">Имя пользователя</string>
     <string name="login">Войти</string>
-    <string name="message_upload_test">Выбрать</string>
-    <string name="profile">профиль</string>
-    <string name="title_activity_online_my_page">профиль</string>
     <string name="hint_overview">комментарий</string>
-    <string name="tests_my_page">Ваши тест</string>
-    <string name="creator_name">имя: %1$s</string>
-    <string name="download_test">скачать</string>
     <string name="message_non_exist_test">0 вопрос</string>
-    <string name="message_edit_profile">редактирование</string>
     <string name="num_questions">%1$d вопрос</string>
     <string name="always_review">в любое время комментарий</string>
-    <string name="target">цель</string>
-    <string name="action_move">движение,копия</string>
-    <string name="check_all_questions">Все</string>
-    <string name="new_test">Новый тест</string>
     <string name="test">тест</string>
-    <string name="msg_same_test">дупликация тест</string>
     <string name="msg_download_study_plus">скачать Studyplus </string>
     <string name="msg_connect_success">соединение</string>
     <string name="msg_upload_study_plus">вклад Studyplus </string>
     <string name="action_remove_ad">Удалить объявление</string>
-    <string name="msg_failed_upload_study_plus">Провалиться вклад</string>
     <string name="alrady_removed_ad">купленный</string>
     <string name="error">ошибка</string>
     <string name="case_insensitive">case-insensitive</string>
@@ -135,7 +105,6 @@
     <string name="complete">много</string>
     <string name="select_complete">много выбор</string>
     <string name="write">нормальный</string>
-    <string name="info_firebase_test">имя: %1$s\n\nдата: %2$s\n\nкомментарий: %3$s</string>
     <string name="msg_not_login">Пожалуйста, войдите</string>
     <string name="logout">выйти</string>
     <string name="msg_logout">выйти?</string>
@@ -150,11 +119,8 @@
     <string name="preference_group_study_plus">Studyplus</string>
     <string name="preference_study_plus">Connect Studyplus</string>
     <string name="preference_post_study_plus">post your study</string>
-    <string name="setting_show_setting_dialog">show setting dialog before play</string>
     <string name="uploading">upload now</string>
     <string name="downloading">download</string>
     <string name="msg_success_download_test">download %1$s</string>
     <string name="msg_share_test">share %1$s \n %2$s</string>
-    <string name="title_dialog_share">share</string>
-    <string name="msg_test_not_exist">does not exist this test</string>
 </resources>

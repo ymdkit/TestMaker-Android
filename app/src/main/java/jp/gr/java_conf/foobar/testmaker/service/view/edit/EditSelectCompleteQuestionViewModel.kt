@@ -81,8 +81,8 @@ class EditSelectCompleteQuestionViewModel(preferences: SharedPreferenceManager) 
     override fun inputForm(question: Question) {
         super.inputForm(question)
         answer.value = question.answer
-        sizeOfOthers.value = question.others.size.coerceAtLeast(SIZE_OTHER_MIN)
-        sizeOfAnswers.value = question.answers.size.coerceIn(SIZE_ANSWER_MIN..SIZE_TOTAL_MAX - question.others.size)
+        sizeOfOthers.value = question.others.size.coerceIn(SIZE_OTHER_MIN, SIZE_OTHER_MAX)
+        sizeOfAnswers.value = question.answers.size.coerceIn(SIZE_ANSWER_MIN, SIZE_ANSWER_MAX)
         isCheckedAuto.value = question.isAutoGenerateOthers
         isCheckedCheckOrder.value = question.isCheckOrder
         question.others.forEachIndexed { index, s ->
