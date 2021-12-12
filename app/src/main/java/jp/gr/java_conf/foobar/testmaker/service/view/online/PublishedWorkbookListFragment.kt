@@ -179,9 +179,17 @@ class PublishedWorkbookListFragment : Fragment() {
                                                                 )
                                                             },
                                                             secondaryText = {
-                                                                Text(
-                                                                    text = stringResource(id = R.string.text_workbook_size, it.size),
-                                                                )
+                                                                Row {
+                                                                    Text(
+                                                                        text = stringResource(id = R.string.text_workbook_size, it.size),
+                                                                    )
+                                                                    Text(
+                                                                        text = "・",
+                                                                    )
+                                                                    Text(
+                                                                        text = stringResource(id = R.string.text_download_count, it.downloadCount),
+                                                                    )
+                                                                }
                                                             },
                                                             singleLineSecondaryText = true,
                                                         )
