@@ -15,7 +15,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class EditQuestionActivity : BaseActivity() {
+class LegacyEditQuestionActivity : BaseActivity() {
 
     private val editWriteQuestionViewModel: EditWriteQuestionViewModel by viewModel()
     private val editSelectQuestionViewModel: EditSelectQuestionViewModel by viewModel()
@@ -25,7 +25,7 @@ class EditQuestionActivity : BaseActivity() {
 
     private val binding by lazy {
         DataBindingUtil.setContentView<ActivityEditQuestionBinding>(this, R.layout.activity_edit_question).apply {
-            lifecycleOwner = this@EditQuestionActivity
+            lifecycleOwner = this@LegacyEditQuestionActivity
         }
     }
 
@@ -80,7 +80,7 @@ class EditQuestionActivity : BaseActivity() {
         const val ARGUMENT_QUESTION_ID = "questionId"
 
         fun startActivity(activity: Activity, testId: Long, questionId: Long) {
-            val intent = Intent(activity, EditQuestionActivity::class.java).apply {
+            val intent = Intent(activity, LegacyEditQuestionActivity::class.java).apply {
                 putExtra(ARGUMENT_TEST_ID, testId)
                 putExtra(ARGUMENT_QUESTION_ID, questionId)
             }
@@ -88,7 +88,7 @@ class EditQuestionActivity : BaseActivity() {
         }
 
         fun startActivity(activity: Activity, testId: Long) {
-            val intent = Intent(activity, EditQuestionActivity::class.java).apply {
+            val intent = Intent(activity, LegacyEditQuestionActivity::class.java).apply {
                 putExtra(ARGUMENT_TEST_ID, testId)
             }
             activity.startActivity(intent)

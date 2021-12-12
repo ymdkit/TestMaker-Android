@@ -23,7 +23,7 @@
 
         <activity android:name=".view.online.UploadTestActivity" />
         <activity
-            android:name=".view.edit.EditQuestionActivity"
+            android:name=".view.edit.LegacyEditQuestionActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".view.category.EditCategoryActivity" />
         <activity android:name=".view.edit.EditTestActivity" />
