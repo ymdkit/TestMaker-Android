@@ -289,4 +289,10 @@
     <string name="hint_answer_write">answer</string>
     <string name="text_download_count">%1$s downloads</string>
     <string name="text_workbook_size">%1$s questions</string>
+    <string name="button_create_wuestion">create question</string>
+    <string name="header_optional">optional</string>
+    <string name="header_required">required</string>
+    <string name="title_error_create_quesiton">error</string>
+    <string name="msg_error_create_quesiton">input required forms</string>
+    <string name="msg_create_question">create success</string>
 </resources>

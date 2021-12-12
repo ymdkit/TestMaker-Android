@@ -6,16 +6,26 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditWriteQuestion
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CreateQuestionActivity : AppCompatActivity() {
 
@@ -30,6 +40,11 @@ class CreateQuestionActivity : AppCompatActivity() {
         }
     }
 
+    val sharedPreferenceManager: SharedPreferenceManager by inject()
+    private val testViewModel: TestViewModel by viewModel()
+
+    private val workbook: Test by lazy { testViewModel.get(intent.getLongExtra(ARGUMENT_TEST_ID, -1L)) }
+
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +57,9 @@ class CreateQuestionActivity : AppCompatActivity() {
                             title = {
                                 Text(
                                     text = getString(R.string.title_activity_edit_question),
-                                    color = MaterialTheme.colors.onPrimary
                                 )
                             },
                             elevation = 0.dp,
-                            backgroundColor = MaterialTheme.colors.primary
                         )
                     },
                     content = {
@@ -85,6 +98,36 @@ class CreateQuestionActivity : AppCompatActivity() {
                                     )
                                 }
                             }
+                            Column(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .weight(weight = 1f, fill = true)
+                            ) {
+                                when (QuestionFormat.values()[pagerState.currentPage]) {
+                                    QuestionFormat.WRITE -> ContentEditWriteQuestion(
+                                        questionId = -1,
+                                        order = -1,
+                                        imageUrl = "",
+                                        onCreate = {
+                                            testViewModel.create(
+                                                test = workbook,
+                                                question = it.toQuestion())
+
+                                            showToast(getString(R.string.msg_create_question))
+                                        }
+                                    )
+                                    QuestionFormat.SELECT -> {
+
+                                    }
+                                    QuestionFormat.COMPLETE -> {
+                                    }
+                                    QuestionFormat.SELECT_COMPLETE -> {
+                                    }
+                                }
+                            }
+                            ComposeAdView(
+                                isRemovedAd = sharedPreferenceManager.isRemovedAd,
+                            )
                         }
                     }
                 )
