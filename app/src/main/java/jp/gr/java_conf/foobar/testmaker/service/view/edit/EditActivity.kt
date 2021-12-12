@@ -203,7 +203,7 @@ class EditActivity : BaseActivity() {
         binding.recyclerView.adapter = controller.adapter
 
         binding.fab.setOnClickListener {
-            LegacyEditQuestionActivity.startActivity(this, test.id)
+            CreateQuestionActivity.startActivity(this, test.id)
         }
 
         createAd(binding.adView)

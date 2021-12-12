@@ -96,6 +96,11 @@
             android:exported="false"
             />
 
+        <activity
+            android:name="jp.gr.java_conf.foobar.testmaker.service.view.edit.CreateQuestionActivity"
+            android:exported="false"
+            />
+
     </application>
 
 </manifest>
