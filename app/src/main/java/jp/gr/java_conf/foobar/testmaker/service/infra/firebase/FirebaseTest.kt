@@ -18,6 +18,8 @@ data class FirebaseTest(var name: String = "",
                         var size: Int = 0,
                         var created_at: Timestamp = Timestamp(Date()),
                         @Json(name = "document_id") var documentId: String = "",
+                        @Json(name = "download_count") var downloadCount: Int = 0,
+                        @Json(name = "answer_count") var answerCount: Int = 0,
                         var public: Boolean = true,
                         var groupId: String = ""
 ) {

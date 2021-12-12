@@ -4,6 +4,7 @@ import android.content.Context
 import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 
 class LocalDataSource(private val realm: Realm, private val context: Context) {
@@ -12,7 +13,7 @@ class LocalDataSource(private val realm: Realm, private val context: Context) {
         return realm.where(RealmTest::class.java).equalTo("id", testId).findFirst() ?: RealmTest()
     }
 
-    fun createObjectFromFirebase(firebaseTest: FirebaseTest, source: String) {
+    fun createObjectFromFirebase(firebaseTest: FirebaseTest, source: String): Test {
         realm.beginTransaction()
 
         val test = firebaseTest.toTest(context)
@@ -32,6 +33,8 @@ class LocalDataSource(private val realm: Realm, private val context: Context) {
         realm.copyToRealmOrUpdate(test)
 
         realm.commitTransaction()
+
+        return Test.createFromRealmTest(test)
     }
 
     fun updateDocumentId(test: RealmTest, documentId: String) {

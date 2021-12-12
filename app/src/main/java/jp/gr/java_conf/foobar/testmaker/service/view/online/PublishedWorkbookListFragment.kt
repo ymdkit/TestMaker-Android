@@ -38,6 +38,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -54,6 +55,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -160,7 +162,9 @@ class PublishedWorkbookListFragment : Fragment() {
                                                                 Icon(
                                                                     imageVector = Icons.Default.Description,
                                                                     contentDescription = "workbook",
-                                                                    modifier = Modifier.size(40.dp).padding(8.dp),
+                                                                    modifier = Modifier
+                                                                        .size(40.dp)
+                                                                        .padding(8.dp),
                                                                     tint = Color.Companion.hsv(
                                                                         360F * it.color.toFloat() / COLOR_MAX,
                                                                         0.5F,
@@ -176,7 +180,7 @@ class PublishedWorkbookListFragment : Fragment() {
                                                             },
                                                             secondaryText = {
                                                                 Text(
-                                                                    text = it.size.toString(),
+                                                                    text = stringResource(id = R.string.text_workbook_size, it.size),
                                                                 )
                                                             },
                                                             singleLineSecondaryText = true,
@@ -248,7 +252,15 @@ class PublishedWorkbookListFragment : Fragment() {
                 viewModel.downloadTest(test.documentId)
             },
             onSuccess = {
-                viewModel.convert(it)
+                val workbook = viewModel.convert(it)
+
+                lifecycleScope.launch {
+                    viewModel.updateTest(
+                        documentId = test.documentId,
+                        size = workbook.questions.size,
+                        downloadCount = test.downloadCount + 1
+                    )
+                }
 
                 Toast.makeText(
                     requireContext(),

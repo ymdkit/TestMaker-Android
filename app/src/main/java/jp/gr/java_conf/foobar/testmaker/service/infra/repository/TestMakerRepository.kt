@@ -21,9 +21,7 @@ class TestMakerRepository(
         remote.downloadTest(testId)
     }
 
-    fun createObjectFromFirebase(test: FirebaseTest, source: String) {
-        local.createObjectFromFirebase(test, source = source)
-    }
+    fun createObjectFromFirebase(test: FirebaseTest, source: String) = local.createObjectFromFirebase(test, source = source)
 
     suspend fun createTest(test: Test, overview: String, isPublic: Boolean) =
         remote.createTest(test, overview, isPublic)

@@ -287,4 +287,6 @@
     <string name="msg_empty_question">please edit question settings (no questions are exist)</string>
     <string name="no_answer">no_answer</string>
     <string name="hint_answer_write">answer</string>
+    <string name="text_download_count">%1$s downloads</string>
+    <string name="text_workbook_size">%1$s questions</string>
 </resources>
