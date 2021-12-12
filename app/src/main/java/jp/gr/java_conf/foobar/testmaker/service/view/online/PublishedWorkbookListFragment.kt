@@ -17,6 +17,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -24,17 +26,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ExperimentalGraphicsApi
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -48,7 +50,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.online.PublishedWorkbookListFragment.Companion.COLOR_MAX
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
@@ -66,6 +67,7 @@ class PublishedWorkbookListFragment : Fragment() {
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
     private val logger: TestMakerLogger by inject()
 
+    @ExperimentalMaterialApi
     @ExperimentalGraphicsApi
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -150,9 +152,35 @@ class PublishedWorkbookListFragment : Fragment() {
                                                     verticalArrangement = Arrangement.spacedBy(8.dp)
                                                 ) {
                                                     items(tests) {
-                                                        ItemPublicTest(it, onClick = { test ->
-                                                            onClickTest(test)
-                                                        })
+                                                        ListItem(
+                                                            modifier = Modifier.clickable {
+                                                                onClickTest(it)
+                                                            },
+                                                            icon = {
+                                                                Icon(
+                                                                    imageVector = Icons.Default.Description,
+                                                                    contentDescription = "workbook",
+                                                                    modifier = Modifier.size(40.dp).padding(8.dp),
+                                                                    tint = Color.Companion.hsv(
+                                                                        360F * it.color.toFloat() / COLOR_MAX,
+                                                                        0.5F,
+                                                                        0.9F
+                                                                    )
+                                                                )
+                                                            },
+                                                            text = {
+                                                                Text(
+                                                                    text = it.name,
+                                                                    maxLines = 1
+                                                                )
+                                                            },
+                                                            secondaryText = {
+                                                                Text(
+                                                                    text = it.size.toString(),
+                                                                )
+                                                            },
+                                                            singleLineSecondaryText = true,
+                                                        )
                                                     }
                                                 }
                                             }
@@ -304,39 +332,4 @@ fun SearchTextField(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
         focusRequester.requestFocus()
     }
 
-}
-
-@ExperimentalGraphicsApi
-@Composable
-fun ItemPublicTest(test: FirebaseTest, onClick: (FirebaseTest) -> Unit) {
-    Row(
-        modifier = Modifier
-            .height(64.dp)
-            .fillMaxWidth()
-            .clickable(onClick = { onClick(test) }),
-
-        ) {
-        Row(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_baseline_description_24),
-                contentDescription = "icon test",
-                colorFilter = ColorFilter.tint(
-                    Color.Companion.hsv(360F * test.color.toFloat() / COLOR_MAX, 0.5F, 0.9F),
-                    BlendMode.SrcIn
-                ),
-                modifier = Modifier
-                    .width(24.dp)
-                    .height(24.dp)
-            )
-
-            Text(
-                text = test.name,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp),
-                maxLines = 1
-            )
-        }
-    }
 }
