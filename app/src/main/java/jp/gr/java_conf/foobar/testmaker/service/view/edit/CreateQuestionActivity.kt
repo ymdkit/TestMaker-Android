@@ -114,7 +114,8 @@ class CreateQuestionActivity : AppCompatActivity() {
                                                 question = it.toQuestion())
 
                                             showToast(getString(R.string.msg_create_question))
-                                        }
+                                        },
+                                        fragmentManager = supportFragmentManager
                                     )
                                     QuestionFormat.SELECT -> {
 

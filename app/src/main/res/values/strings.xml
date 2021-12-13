@@ -295,4 +295,9 @@
     <string name="title_error_create_quesiton">error</string>
     <string name="msg_error_create_quesiton">input required forms</string>
     <string name="msg_create_question">create success</string>
+    <string name="button_add_image">add image</string>
+    <string name="title_image_menu">add image</string>
+    <string name="button_take_photo">take photo</string>
+    <string name="button_select_gallery">select gallery</string>
+    <string name="button_delete_image">delete image</string>
 </resources>

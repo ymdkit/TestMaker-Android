@@ -287,4 +287,9 @@
     <string name="title_error_create_quesiton">入力エラー</string>
     <string name="msg_error_create_quesiton">必須項目を全て入力してください</string>
     <string name="msg_create_question">問題を作成しました</string>
+    <string name="button_add_image">画像</string>
+    <string name="title_image_menu">画像設定</string>
+    <string name="button_take_photo">写真を撮影</string>
+    <string name="button_select_gallery">ギャラリーから選択</string>
+    <string name="button_delete_image">画像の削除</string>
 </resources>
