@@ -16,6 +16,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
+import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
@@ -27,14 +28,16 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CreateQuestionActivity : AppCompatActivity() {
+class EditQuestionActivity : AppCompatActivity() {
 
     companion object {
         const val ARGUMENT_TEST_ID = "testId"
+        const val ARGUMENT_QUESTION_ID = "questionId"
 
-        fun startActivity(activity: Activity, testId: Long) {
-            val intent = Intent(activity, CreateQuestionActivity::class.java).apply {
+        fun startActivity(activity: Activity, testId: Long, questionId: Long) {
+            val intent = Intent(activity, EditQuestionActivity::class.java).apply {
                 putExtra(ARGUMENT_TEST_ID, testId)
+                putExtra(ARGUMENT_QUESTION_ID, questionId)
             }
             activity.startActivity(intent)
         }
@@ -44,6 +47,10 @@ class CreateQuestionActivity : AppCompatActivity() {
     private val testViewModel: TestViewModel by viewModel()
 
     private val workbook: Test by lazy { testViewModel.get(intent.getLongExtra(ARGUMENT_TEST_ID, -1L)) }
+
+    private val question: QuestionModel by lazy {
+        workbook.questions.find { it.id == intent.getLongExtra(ARGUMENT_QUESTION_ID, -1L) }!!.toQuestionModel()
+    }
 
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,20 +112,21 @@ class CreateQuestionActivity : AppCompatActivity() {
                             ) {
                                 when (QuestionFormat.values()[pagerState.currentPage]) {
                                     QuestionFormat.WRITE -> ContentEditWriteQuestion(
-                                        questionId = -1,
-                                        order = -1,
-                                        problem = "",
-                                        answer = "",
-                                        explanation = "",
-                                        imageUrl = "",
+                                        questionId = question.id,
+                                        order = question.order,
+                                        problem = question.problem,
+                                        answer = question.answer,
+                                        explanation = question.explanation,
+                                        imageUrl = question.imageUrl,
                                         onCreate = {
-                                            testViewModel.create(
-                                                test = workbook,
-                                                question = it.toQuestion())
 
-                                            showToast(getString(R.string.msg_create_question))
+                                            testViewModel.update(it.toQuestion())
+
+                                            showToast(getString(R.string.msg_update_question))
+
+                                            finish()
                                         },
-                                        buttonTitle = stringResource(id = R.string.button_create_wuestion),
+                                        buttonTitle = stringResource(id = R.string.button_update_question),
                                         fragmentManager = supportFragmentManager
                                     )
                                     QuestionFormat.SELECT -> {

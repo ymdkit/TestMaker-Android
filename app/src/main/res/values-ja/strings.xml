@@ -292,4 +292,6 @@
     <string name="button_take_photo">写真を撮影</string>
     <string name="button_select_gallery">ギャラリーから選択</string>
     <string name="button_delete_image">画像の削除</string>
+    <string name="msg_update_question">問題内容を変更しました</string>
+    <string name="button_update_question">変更内容を保存する</string>
 </resources>

@@ -338,7 +338,7 @@ class EditActivity : BaseActivity() {
     }
 
     fun editQuestion(question: Question) {
-        LegacyEditQuestionActivity.startActivity(this, test.id, question.id)
+        EditQuestionActivity.startActivity(this, test.id, question.id)
     }
 
     fun copyQuestion(question: Question) {

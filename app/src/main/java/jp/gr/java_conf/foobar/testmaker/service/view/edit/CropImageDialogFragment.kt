@@ -41,8 +41,6 @@ class CropImageDialogFragment(
 
                 lifecycleScope.launch {
                     onCrop(binding.cropImageView.croppedBitmap)
-//                    saveImage(name, cropView.croppedBitmap)
-//                    editQuestionViewModel.imagePath.postValue(name)
                 }
             }
             .setNegativeButton(android.R.string.cancel, null)

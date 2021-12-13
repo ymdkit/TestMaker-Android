@@ -300,4 +300,6 @@
     <string name="button_take_photo">take photo</string>
     <string name="button_select_gallery">select gallery</string>
     <string name="button_delete_image">delete image</string>
+    <string name="msg_update_question">update success</string>
+    <string name="button_update_question">save</string>
 </resources>

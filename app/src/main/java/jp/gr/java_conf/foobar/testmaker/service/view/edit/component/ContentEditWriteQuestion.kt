@@ -28,14 +28,18 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.ImageStore
 fun ContentEditWriteQuestion(
     onCreate: (QuestionModel) -> Unit,
     questionId: Long,
+    problem: String,
+    answer: String,
+    explanation: String,
     order: Int,
     imageUrl: String,
+    buttonTitle: String,
     fragmentManager: FragmentManager
 ) {
 
-    var problem by remember { mutableStateOf("") }
-    var answer by remember { mutableStateOf("") }
-    var explanation by remember { mutableStateOf("") }
+    var editingProblem by remember { mutableStateOf(problem) }
+    var editingAnswer by remember { mutableStateOf(answer) }
+    var editingExplanation by remember { mutableStateOf(explanation) }
 
     var bitmap: Bitmap? by remember {
         mutableStateOf(null)
@@ -44,7 +48,7 @@ fun ContentEditWriteQuestion(
     var showingValidationError by remember { mutableStateOf(false) }
 
     val validate =
-        !(problem.isEmpty() || answer.isEmpty())
+        !(editingProblem.isEmpty() || editingAnswer.isEmpty())
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -71,25 +75,25 @@ fun ContentEditWriteQuestion(
                     .fillMaxWidth()
                     .focusRequester(focusRequester)
                     .padding(bottom = 8.dp),
-                value = problem,
+                value = editingProblem,
                 maxLines = 3,
                 label = {
                     Text(text = stringResource(R.string.hint_question))
                 },
                 onValueChange = {
-                    problem = it
+                    editingProblem = it
                 }
             )
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                value = answer,
+                value = editingAnswer,
                 label = {
                     Text(text = stringResource(R.string.hint_answer))
                 },
                 onValueChange = {
-                    answer = it
+                    editingAnswer = it
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
@@ -103,6 +107,7 @@ fun ContentEditWriteQuestion(
                 style = MaterialTheme.typography.caption
             )
             ContentEditImageQuestion(
+                imageUrl = imageUrl,
                 fragmentManager = fragmentManager,
                 onBitmapChange = {
                     bitmap = it
@@ -112,13 +117,13 @@ fun ContentEditWriteQuestion(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                value = explanation,
+                value = editingExplanation,
                 maxLines = 3,
                 label = {
                     Text(text = stringResource(R.string.hint_explanation))
                 },
                 onValueChange = {
-                    explanation = it
+                    editingExplanation = it
                 }
             )
         }
@@ -135,12 +140,12 @@ fun ContentEditWriteQuestion(
 
                 val question = QuestionModel(
                     id = questionId,
-                    problem = problem,
-                    answer = answer,
+                    problem = editingProblem,
+                    answer = editingAnswer,
                     answers = listOf(),
                     wrongChoices = listOf(),
                     format = QuestionFormat.WRITE,
-                    explanation = explanation,
+                    explanation = editingExplanation,
                     imageUrl = newImageUrl,
                     isCheckOrder = false,
                     isAnswering = false,
@@ -151,16 +156,16 @@ fun ContentEditWriteQuestion(
 
                 onCreate(question)
 
-                problem = ""
-                answer = ""
-                explanation = ""
+                editingProblem = ""
+                editingAnswer = ""
+                editingExplanation = ""
                 bitmap = null
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
         ) {
-            Text(text = stringResource(id = R.string.button_create_wuestion))
+            Text(text = buttonTitle)
         }
         if (showingValidationError) {
             AlertDialog(
