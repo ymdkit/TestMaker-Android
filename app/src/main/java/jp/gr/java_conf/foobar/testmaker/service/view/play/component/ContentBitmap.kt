@@ -4,13 +4,16 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.github.chrisbanes.photoview.PhotoView
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.modules.GlideApp
@@ -54,10 +57,15 @@ fun ContentBitmap(modifier: Modifier = Modifier,imageUrl: String){
     }
 
     bitmap?.let {
-        Image(
-            bitmap = it.asImageBitmap(),
-            contentDescription = "",
-            modifier = modifier.padding(16.dp)
+        AndroidView(
+            factory = { context ->
+                PhotoView(context).apply {
+                    this.setImageBitmap(it)
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
         )
     } ?: run {
         Image(

@@ -23,6 +23,12 @@ class FirebaseViewModel(
 
     suspend fun downloadTest(testId: String): FirebaseTest = repository.downloadTest(testId)
 
+    suspend fun updateTest(documentId: String, size: Int, downloadCount: Int) = service.updateTest(
+        documentId = documentId,
+        size = size,
+        downloadCount = downloadCount
+    )
+
     fun convert(test: FirebaseTest) =
         repository.createObjectFromFirebase(
             test = test,

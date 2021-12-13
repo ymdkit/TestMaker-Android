@@ -279,4 +279,6 @@
     <string name="msg_empty_question">出題できる問題がありません。出題設定を変更してください</string>
     <string name="no_answer">わからない</string>
     <string name="hint_answer_write">解答</string>
+    <string name="text_download_count">%1$s回ダウンロード</string>
+    <string name="text_workbook_size">%1$s問</string>
 </resources>
