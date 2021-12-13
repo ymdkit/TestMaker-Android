@@ -31,7 +31,7 @@ fun ContentPlaySelectCompleteQuestion(
     }
 
     var isSelectedList: List<Boolean> by remember {
-        mutableStateOf(List(state.question.answers.size + state.question.wrongChoices.size) {
+        mutableStateOf(List(state.choices.size) {
             false
         })
     }
