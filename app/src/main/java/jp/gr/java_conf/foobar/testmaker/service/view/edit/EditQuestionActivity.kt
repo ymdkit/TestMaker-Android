@@ -20,6 +20,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditWriteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
@@ -76,7 +77,9 @@ class EditQuestionActivity : AppCompatActivity() {
                                 pageCount = QuestionFormat.values().size,
                                 initialOffscreenLimit = 4,
                                 infiniteLoop = false,
-                                initialPage = 0
+                                initialPage = QuestionFormat.values()
+                                    .indexOfFirst { it == question.format }
+                                    .coerceIn(0, QuestionFormat.values().size)
                             )
                             val tabIndex = pagerState.currentPage
                             val coroutineScope = rememberCoroutineScope()
@@ -114,24 +117,35 @@ class EditQuestionActivity : AppCompatActivity() {
                                     QuestionFormat.WRITE -> ContentEditWriteQuestion(
                                         questionId = question.id,
                                         order = question.order,
-                                        problem = question.problem,
-                                        answer = question.answer,
-                                        explanation = question.explanation,
+                                        initialProblem = question.problem,
+                                        initialAnswer = question.answer,
+                                        initialExplanation = question.explanation,
                                         imageUrl = question.imageUrl,
                                         onCreate = {
-
                                             testViewModel.update(it.toQuestion())
-
                                             showToast(getString(R.string.msg_update_question))
-
                                             finish()
                                         },
                                         buttonTitle = stringResource(id = R.string.button_update_question),
                                         fragmentManager = supportFragmentManager
                                     )
-                                    QuestionFormat.SELECT -> {
-
-                                    }
+                                    QuestionFormat.SELECT ->
+                                        ContentEditSelectQuestion(
+                                            questionId = question.id,
+                                            order = question.order,
+                                            initialProblem = question.problem,
+                                            initialAnswer = question.answer,
+                                            initialWrongChoices = question.wrongChoices,
+                                            initialExplanation = question.explanation,
+                                            imageUrl = question.imageUrl,
+                                            onCreate = {
+                                                testViewModel.update(it.toQuestion())
+                                                showToast(getString(R.string.msg_update_question))
+                                                finish()
+                                            },
+                                            buttonTitle = stringResource(id = R.string.button_update_question),
+                                            fragmentManager = supportFragmentManager
+                                        )
                                     QuestionFormat.COMPLETE -> {
                                     }
                                     QuestionFormat.SELECT_COMPLETE -> {

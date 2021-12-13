@@ -54,11 +54,7 @@ fun ContentEditSelectQuestion(
         })
     }
     var sizeOfWrongChoices by remember {
-        mutableStateOf(if (initialWrongChoices.isNotEmpty()) initialWrongChoices.size else 3)
-    }
-
-    var showingDropDownSizeOfWrongChoices by remember {
-        mutableStateOf(false)
+        mutableStateOf(if (initialWrongChoices.isNotEmpty()) initialWrongChoices.size else 2)
     }
 
     var bitmap: Bitmap? by remember {
@@ -201,8 +197,8 @@ fun ContentEditSelectQuestion(
                     problem = editingProblem,
                     answer = editingAnswer,
                     answers = listOf(),
-                    wrongChoices = editingWrongChoices,
-                    format = QuestionFormat.WRITE,
+                    wrongChoices = editingWrongChoices.take(sizeOfWrongChoices),
+                    format = QuestionFormat.SELECT,
                     explanation = editingExplanation,
                     imageUrl = newImageUrl,
                     isCheckOrder = false,
