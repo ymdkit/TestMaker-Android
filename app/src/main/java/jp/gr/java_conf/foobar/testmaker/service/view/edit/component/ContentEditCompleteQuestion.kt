@@ -126,12 +126,12 @@ fun ContentEditCompleteQuestion(
             NumberPicker(
                 modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
                 min = 1,
-                max = WRONG_SIZE_MAX,
+                max = ANSWERS_SIZE_MAX,
                 label = stringResource(id = R.string.picker_answers_size),
                 initialValue = sizeOfAnswers,
                 onValueChange = {
                     sizeOfAnswers = it
-                    editingAnswers = List(WRONG_SIZE_MAX) { index ->
+                    editingAnswers = List(ANSWERS_SIZE_MAX) { index ->
                         if (index < sizeOfAnswers) {
                             editingAnswers[index]
                         } else {
@@ -201,7 +201,7 @@ fun ContentEditCompleteQuestion(
 
                 editingProblem = ""
                 editingExplanation = ""
-                editingAnswers = List(WRONG_SIZE_MAX) { "" }
+                editingAnswers = List(ANSWERS_SIZE_MAX) { "" }
                 bitmap = null
             },
             modifier = Modifier
