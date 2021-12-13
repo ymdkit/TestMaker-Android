@@ -31,7 +31,7 @@ fun ContentEditWriteQuestion(
     initialAnswer: String,
     initialExplanation: String,
     order: Int,
-    imageUrl: String,
+    initialImageUrl: String,
     buttonTitle: String,
     fragmentManager: FragmentManager
 ) {
@@ -39,6 +39,7 @@ fun ContentEditWriteQuestion(
     var editingProblem by remember { mutableStateOf(initialProblem) }
     var editingAnswer by remember { mutableStateOf(initialAnswer) }
     var editingExplanation by remember { mutableStateOf(initialExplanation) }
+    var editingImageUrl by remember { mutableStateOf(initialImageUrl) }
 
     var bitmap: Bitmap? by remember {
         mutableStateOf(null)
@@ -107,10 +108,13 @@ fun ContentEditWriteQuestion(
                 style = MaterialTheme.typography.caption
             )
             ContentEditImageQuestion(
-                imageUrl = imageUrl,
+                imageUrl = editingImageUrl,
                 fragmentManager = fragmentManager,
                 onBitmapChange = {
                     bitmap = it
+                    if(bitmap == null){
+                        editingImageUrl = ""
+                    }
                 }
             )
             OutlinedTextField(
@@ -136,7 +140,7 @@ fun ContentEditWriteQuestion(
 
                 val newImageUrl = bitmap?.let {
                     ImageStore().saveImage(it, context = context)
-                } ?: imageUrl
+                } ?: editingImageUrl
 
                 val question = QuestionModel(
                     id = questionId,

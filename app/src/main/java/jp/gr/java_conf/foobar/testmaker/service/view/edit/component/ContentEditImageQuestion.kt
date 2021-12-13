@@ -112,7 +112,10 @@ fun ContentEditImageQuestion(
                     DialogMenuItem(
                         title = context.getString(R.string.button_delete_image),
                         iconRes = R.drawable.ic_delete_white,
-                        action = { bitmap = null })
+                        action = {
+                            bitmap = null
+                            onBitmapChange(null)
+                        })
                 )
             ).show(
                 fragmentManager,

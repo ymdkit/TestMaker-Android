@@ -111,7 +111,7 @@ class CreateQuestionActivity : AppCompatActivity() {
                                         initialProblem = "",
                                         initialAnswer = "",
                                         initialExplanation = "",
-                                        imageUrl = "",
+                                        initialImageUrl = "",
                                         onCreate = {
                                             testViewModel.create(
                                                 test = workbook,
@@ -129,7 +129,7 @@ class CreateQuestionActivity : AppCompatActivity() {
                                         initialAnswer = "",
                                         initialWrongChoices = listOf(),
                                         initialExplanation = "",
-                                        imageUrl = "",
+                                        initialImageUrl = "",
                                         onCreate = {
                                             testViewModel.create(
                                                 test = workbook,

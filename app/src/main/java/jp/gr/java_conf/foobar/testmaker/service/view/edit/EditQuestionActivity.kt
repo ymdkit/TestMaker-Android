@@ -120,7 +120,7 @@ class EditQuestionActivity : AppCompatActivity() {
                                         initialProblem = question.problem,
                                         initialAnswer = question.answer,
                                         initialExplanation = question.explanation,
-                                        imageUrl = question.imageUrl,
+                                        initialImageUrl = question.imageUrl,
                                         onCreate = {
                                             testViewModel.update(it.toQuestion())
                                             showToast(getString(R.string.msg_update_question))
@@ -137,7 +137,7 @@ class EditQuestionActivity : AppCompatActivity() {
                                             initialAnswer = question.answer,
                                             initialWrongChoices = question.wrongChoices,
                                             initialExplanation = question.explanation,
-                                            imageUrl = question.imageUrl,
+                                            initialImageUrl = question.imageUrl,
                                             onCreate = {
                                                 testViewModel.update(it.toQuestion())
                                                 showToast(getString(R.string.msg_update_question))

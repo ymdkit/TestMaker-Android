@@ -36,7 +36,7 @@ fun ContentEditSelectQuestion(
     initialWrongChoices: List<String>,
     initialExplanation: String,
     order: Int,
-    imageUrl: String,
+    initialImageUrl: String,
     buttonTitle: String,
     fragmentManager: FragmentManager
 ) {
@@ -44,6 +44,7 @@ fun ContentEditSelectQuestion(
     var editingProblem by remember { mutableStateOf(initialProblem) }
     var editingAnswer by remember { mutableStateOf(initialAnswer) }
     var editingExplanation by remember { mutableStateOf(initialExplanation) }
+    var editingImageUrl by remember { mutableStateOf(initialImageUrl) }
     var editingWrongChoices by remember {
         mutableStateOf(List(WRONG_SIZE_MAX) {
             if (it < initialWrongChoices.size) {
@@ -161,10 +162,13 @@ fun ContentEditSelectQuestion(
                 style = MaterialTheme.typography.caption
             )
             ContentEditImageQuestion(
-                imageUrl = imageUrl,
+                imageUrl = editingImageUrl,
                 fragmentManager = fragmentManager,
                 onBitmapChange = {
                     bitmap = it
+                    if(bitmap == null){
+                        editingImageUrl = ""
+                    }
                 }
             )
             OutlinedTextField(
@@ -190,7 +194,7 @@ fun ContentEditSelectQuestion(
 
                 val newImageUrl = bitmap?.let {
                     ImageStore().saveImage(it, context = context)
-                } ?: imageUrl
+                } ?: editingExplanation
 
                 val question = QuestionModel(
                     id = questionId,
