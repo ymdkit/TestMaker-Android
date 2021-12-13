@@ -295,4 +295,6 @@
     <string name="msg_update_question">問題内容を変更しました</string>
     <string name="button_update_question">変更内容を保存する</string>
     <string name="picker_wrong_size">不正解の数</string>
+    <string name="picker_answers_size">解答数</string>
+    <string name="title_activity_create_question">問題の作成</string>
 </resources>

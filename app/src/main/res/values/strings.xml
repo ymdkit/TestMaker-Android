@@ -303,4 +303,6 @@
     <string name="msg_update_question">update success</string>
     <string name="button_update_question">save</string>
     <string name="picker_wrong_size">wrong choices</string>
+    <string name="picker_answers_size">answers</string>
+    <string name="title_activity_create_question">create question</string>
 </resources>
