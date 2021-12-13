@@ -94,7 +94,6 @@
         <activity
             android:name="jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"
             />
 
     </application>
