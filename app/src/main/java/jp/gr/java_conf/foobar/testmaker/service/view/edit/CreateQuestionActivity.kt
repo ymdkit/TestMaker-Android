@@ -20,6 +20,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditCompleteQuestion
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectCompleteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditWriteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
@@ -159,8 +160,25 @@ class CreateQuestionActivity : AppCompatActivity() {
                                             buttonTitle = stringResource(id = R.string.button_create_wuestion),
                                             fragmentManager = supportFragmentManager
                                         )
-                                    QuestionFormat.SELECT_COMPLETE -> {
-                                    }
+                                    QuestionFormat.SELECT_COMPLETE ->
+                                        ContentEditSelectCompleteQuestion(
+                                            questionId = -1,
+                                            order = -1,
+                                            initialProblem = "",
+                                            initialAnswers = listOf(),
+                                            initialWrongChoices = listOf(),
+                                            initialExplanation = "",
+                                            initialImageUrl = "",
+                                            onCreate = {
+                                                testViewModel.create(
+                                                    test = workbook,
+                                                    question = it.toQuestion())
+
+                                                showToast(getString(R.string.msg_create_question))
+                                            },
+                                            buttonTitle = stringResource(id = R.string.button_create_wuestion),
+                                            fragmentManager = supportFragmentManager
+                                        )
                                 }
                             }
                             ComposeAdView(

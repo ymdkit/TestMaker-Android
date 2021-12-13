@@ -21,6 +21,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditCompleteQuestion
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectCompleteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditWriteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
@@ -48,10 +49,18 @@ class EditQuestionActivity : AppCompatActivity() {
     val sharedPreferenceManager: SharedPreferenceManager by inject()
     private val testViewModel: TestViewModel by viewModel()
 
-    private val workbook: Test by lazy { testViewModel.get(intent.getLongExtra(ARGUMENT_TEST_ID, -1L)) }
+    private val workbook: Test by lazy {
+        testViewModel.get(
+            intent.getLongExtra(
+                ARGUMENT_TEST_ID,
+                -1L
+            )
+        )
+    }
 
     private val question: QuestionModel by lazy {
-        workbook.questions.find { it.id == intent.getLongExtra(ARGUMENT_QUESTION_ID, -1L) }!!.toQuestionModel()
+        workbook.questions.find { it.id == intent.getLongExtra(ARGUMENT_QUESTION_ID, -1L) }!!
+            .toQuestionModel()
     }
 
     @ExperimentalPagerApi
@@ -163,8 +172,23 @@ class EditQuestionActivity : AppCompatActivity() {
                                             buttonTitle = stringResource(id = R.string.button_update_question),
                                             fragmentManager = supportFragmentManager
                                         )
-                                    QuestionFormat.SELECT_COMPLETE -> {
-                                    }
+                                    QuestionFormat.SELECT_COMPLETE ->
+                                        ContentEditSelectCompleteQuestion(
+                                            questionId = question.id,
+                                            order = question.order,
+                                            initialProblem = question.problem,
+                                            initialAnswers = question.answers,
+                                            initialWrongChoices = question.wrongChoices,
+                                            initialExplanation = question.explanation,
+                                            initialImageUrl = question.imageUrl,
+                                            onCreate = {
+                                                testViewModel.update(it.toQuestion())
+                                                showToast(getString(R.string.msg_update_question))
+                                                finish()
+                                            },
+                                            buttonTitle = stringResource(id = R.string.button_update_question),
+                                            fragmentManager = supportFragmentManager
+                                        )
                                 }
                             }
                             ComposeAdView(
