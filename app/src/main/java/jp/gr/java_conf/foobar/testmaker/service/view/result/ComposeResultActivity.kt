@@ -135,7 +135,7 @@ class ComposeResultActivity : BaseActivity() {
                                         ItemResultModel(
                                             index + 1,
                                             it.question,
-                                            it.answer,
+                                            it.singleLineAnswer,
                                             it.isCorrect
                                         ).ItemResult(onClick = {
                                             LegacyEditQuestionActivity.startActivity(

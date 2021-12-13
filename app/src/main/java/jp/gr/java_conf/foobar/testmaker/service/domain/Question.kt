@@ -25,6 +25,14 @@ data class Question(
         var documentId: String = ""
 ) : Parcelable {
 
+    @IgnoredOnParcel
+    val singleLineAnswer =
+        when(type){
+            Constants.WRITE, Constants.SELECT -> answer
+            Constants.COMPLETE, Constants.SELECT_COMPLETE -> answers.joinToString(" ")
+            else -> answer
+        }
+
     fun toFirebaseQuestion(imageUrl: String = "") = FirebaseQuestion(
         question = question,
         answer = answer,
