@@ -19,6 +19,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditWriteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
@@ -121,9 +122,24 @@ class CreateQuestionActivity : AppCompatActivity() {
                                         buttonTitle = stringResource(id = R.string.button_create_wuestion),
                                         fragmentManager = supportFragmentManager
                                     )
-                                    QuestionFormat.SELECT -> {
+                                    QuestionFormat.SELECT -> ContentEditSelectQuestion(
+                                        questionId = -1,
+                                        order = -1,
+                                        problem = "",
+                                        answer = "",
+                                        wrongChoices = listOf(),
+                                        explanation = "",
+                                        imageUrl = "",
+                                        onCreate = {
+                                            testViewModel.create(
+                                                test = workbook,
+                                                question = it.toQuestion())
 
-                                    }
+                                            showToast(getString(R.string.msg_create_question))
+                                        },
+                                        buttonTitle = stringResource(id = R.string.button_create_wuestion),
+                                        fragmentManager = supportFragmentManager
+                                    )
                                     QuestionFormat.COMPLETE -> {
                                     }
                                     QuestionFormat.SELECT_COMPLETE -> {

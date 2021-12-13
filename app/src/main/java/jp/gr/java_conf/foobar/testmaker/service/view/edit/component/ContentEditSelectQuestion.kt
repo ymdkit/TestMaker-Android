@@ -21,14 +21,19 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.AnswerStatus
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
+import jp.gr.java_conf.foobar.testmaker.service.extensions.replaced
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.ImageStore
+import jp.gr.java_conf.foobar.testmaker.service.view.share.component.NumberPicker
+
+const val WRONG_SIZE_MAX = 10
 
 @Composable
-fun ContentEditWriteQuestion(
+fun ContentEditSelectQuestion(
     onCreate: (QuestionModel) -> Unit,
     questionId: Long,
     problem: String,
     answer: String,
+    wrongChoices: List<String>,
     explanation: String,
     order: Int,
     imageUrl: String,
@@ -39,6 +44,22 @@ fun ContentEditWriteQuestion(
     var editingProblem by remember { mutableStateOf(problem) }
     var editingAnswer by remember { mutableStateOf(answer) }
     var editingExplanation by remember { mutableStateOf(explanation) }
+    var editingWrongChoices by remember {
+        mutableStateOf(List(WRONG_SIZE_MAX) {
+            if (it < wrongChoices.size) {
+                wrongChoices[it]
+            } else {
+                ""
+            }
+        })
+    }
+    var sizeOfWrongChoices by remember {
+        mutableStateOf(if (wrongChoices.isNotEmpty()) wrongChoices.size else 3)
+    }
+
+    var showingDropDownSizeOfWrongChoices by remember {
+        mutableStateOf(false)
+    }
 
     var bitmap: Bitmap? by remember {
         mutableStateOf(null)
@@ -47,7 +68,10 @@ fun ContentEditWriteQuestion(
     var showingValidationError by remember { mutableStateOf(false) }
 
     val validate =
-        !(editingProblem.isEmpty() || editingAnswer.isEmpty())
+        !(editingProblem.isEmpty()
+                || editingAnswer.isEmpty()
+                || editingWrongChoices.take(sizeOfWrongChoices).any { it.isEmpty() }
+                )
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -62,8 +86,8 @@ fun ContentEditWriteQuestion(
     Column {
         Column(
             modifier = Modifier
-                .weight(weight = 1f, fill = true)
                 .verticalScroll(scrollState)
+                .weight(weight = 1f, fill = true)
         ) {
             Text(
                 text = stringResource(id = R.string.header_required),
@@ -100,6 +124,40 @@ fun ContentEditWriteQuestion(
                     focusManager.clearFocus()
                 })
             )
+
+            repeat(sizeOfWrongChoices.coerceIn(0, editingWrongChoices.size)) { index ->
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    value = editingWrongChoices[index],
+                    maxLines = 3,
+                    label = {
+                        Text(text = stringResource(R.string.hint_other))
+                    },
+                    onValueChange = {
+                        editingWrongChoices = editingWrongChoices.replaced(index, it)
+                    }
+                )
+            }
+
+            NumberPicker(
+                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
+                min = 1,
+                max = WRONG_SIZE_MAX,
+                label = stringResource(id = R.string.picker_wrong_size),
+                initialValue = sizeOfWrongChoices,
+                onValueChange = {
+                    sizeOfWrongChoices = it
+                    editingWrongChoices = List(WRONG_SIZE_MAX) { index ->
+                        if (index < sizeOfWrongChoices) {
+                            editingWrongChoices[index]
+                        } else {
+                            ""
+                        }
+                    }
+                })
+
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(id = R.string.header_optional),
@@ -143,7 +201,7 @@ fun ContentEditWriteQuestion(
                     problem = editingProblem,
                     answer = editingAnswer,
                     answers = listOf(),
-                    wrongChoices = listOf(),
+                    wrongChoices = editingWrongChoices,
                     format = QuestionFormat.WRITE,
                     explanation = editingExplanation,
                     imageUrl = newImageUrl,
@@ -159,6 +217,7 @@ fun ContentEditWriteQuestion(
                 editingProblem = ""
                 editingAnswer = ""
                 editingExplanation = ""
+                editingWrongChoices = List(WRONG_SIZE_MAX) { "" }
                 bitmap = null
             },
             modifier = Modifier

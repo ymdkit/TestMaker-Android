@@ -294,4 +294,5 @@
     <string name="button_delete_image">画像の削除</string>
     <string name="msg_update_question">問題内容を変更しました</string>
     <string name="button_update_question">変更内容を保存する</string>
+    <string name="picker_wrong_size">不正解の数</string>
 </resources>
