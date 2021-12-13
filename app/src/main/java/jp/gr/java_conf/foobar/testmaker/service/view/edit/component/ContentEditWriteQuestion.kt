@@ -27,18 +27,18 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.ImageStore
 fun ContentEditWriteQuestion(
     onCreate: (QuestionModel) -> Unit,
     questionId: Long,
-    problem: String,
-    answer: String,
-    explanation: String,
+    initialProblem: String,
+    initialAnswer: String,
+    initialExplanation: String,
     order: Int,
     imageUrl: String,
     buttonTitle: String,
     fragmentManager: FragmentManager
 ) {
 
-    var editingProblem by remember { mutableStateOf(problem) }
-    var editingAnswer by remember { mutableStateOf(answer) }
-    var editingExplanation by remember { mutableStateOf(explanation) }
+    var editingProblem by remember { mutableStateOf(initialProblem) }
+    var editingAnswer by remember { mutableStateOf(initialAnswer) }
+    var editingExplanation by remember { mutableStateOf(initialExplanation) }
 
     var bitmap: Bitmap? by remember {
         mutableStateOf(null)

@@ -108,9 +108,9 @@ class CreateQuestionActivity : AppCompatActivity() {
                                     QuestionFormat.WRITE -> ContentEditWriteQuestion(
                                         questionId = -1,
                                         order = -1,
-                                        problem = "",
-                                        answer = "",
-                                        explanation = "",
+                                        initialProblem = "",
+                                        initialAnswer = "",
+                                        initialExplanation = "",
                                         imageUrl = "",
                                         onCreate = {
                                             testViewModel.create(
@@ -125,10 +125,10 @@ class CreateQuestionActivity : AppCompatActivity() {
                                     QuestionFormat.SELECT -> ContentEditSelectQuestion(
                                         questionId = -1,
                                         order = -1,
-                                        problem = "",
-                                        answer = "",
-                                        wrongChoices = listOf(),
-                                        explanation = "",
+                                        initialProblem = "",
+                                        initialAnswer = "",
+                                        initialWrongChoices = listOf(),
+                                        initialExplanation = "",
                                         imageUrl = "",
                                         onCreate = {
                                             testViewModel.create(

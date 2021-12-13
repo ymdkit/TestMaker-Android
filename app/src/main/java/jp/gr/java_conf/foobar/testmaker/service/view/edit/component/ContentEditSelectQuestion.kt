@@ -31,30 +31,30 @@ const val WRONG_SIZE_MAX = 10
 fun ContentEditSelectQuestion(
     onCreate: (QuestionModel) -> Unit,
     questionId: Long,
-    problem: String,
-    answer: String,
-    wrongChoices: List<String>,
-    explanation: String,
+    initialProblem: String,
+    initialAnswer: String,
+    initialWrongChoices: List<String>,
+    initialExplanation: String,
     order: Int,
     imageUrl: String,
     buttonTitle: String,
     fragmentManager: FragmentManager
 ) {
 
-    var editingProblem by remember { mutableStateOf(problem) }
-    var editingAnswer by remember { mutableStateOf(answer) }
-    var editingExplanation by remember { mutableStateOf(explanation) }
+    var editingProblem by remember { mutableStateOf(initialProblem) }
+    var editingAnswer by remember { mutableStateOf(initialAnswer) }
+    var editingExplanation by remember { mutableStateOf(initialExplanation) }
     var editingWrongChoices by remember {
         mutableStateOf(List(WRONG_SIZE_MAX) {
-            if (it < wrongChoices.size) {
-                wrongChoices[it]
+            if (it < initialWrongChoices.size) {
+                initialWrongChoices[it]
             } else {
                 ""
             }
         })
     }
     var sizeOfWrongChoices by remember {
-        mutableStateOf(if (wrongChoices.isNotEmpty()) wrongChoices.size else 3)
+        mutableStateOf(if (initialWrongChoices.isNotEmpty()) initialWrongChoices.size else 3)
     }
 
     var showingDropDownSizeOfWrongChoices by remember {
