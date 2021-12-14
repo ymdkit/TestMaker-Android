@@ -177,6 +177,9 @@ class AnswerWorkbookActivity : AppCompatActivity() {
                                             showToast(stringResource(id = R.string.msg_empty_question))
                                             finish()
                                         }
+                                        is PlayUiState.WaitingNextQuestion -> {
+                                            ContentProblem(index = state.index, question = state.question, isSwap = sharedPreferenceManager.reverse)
+                                        }
                                     }
                                 }
                                 when (effectState.value) {

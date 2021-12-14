@@ -178,6 +178,7 @@ class AnswerWorkbookViewModel(
             )
         } else {
             viewModelScope.launch(Dispatchers.Default) {
+                _uiState.value = PlayUiState.WaitingNextQuestion(index, question)
                 delay(800)
                 loadNext(index)
             }
@@ -224,6 +225,9 @@ sealed class PlayUiState {
     data class ManualReview(val index: Int, val question: QuestionModel) : PlayUiState()
     data class Review(val index: Int, val question: QuestionModel, val yourAnswer: String) :
         PlayUiState()
+
+    // 正解時に確実に再 Compose するための State
+    data class WaitingNextQuestion(val index: Int, val question: QuestionModel) : PlayUiState()
 
     object NoQuestionExist : PlayUiState()
 
