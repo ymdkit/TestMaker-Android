@@ -55,7 +55,6 @@ fun ContentPlaySelectCompleteQuestion(
                 isSwap = false
             )
             state.choices.forEachIndexed { index, text ->
-
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
@@ -101,7 +100,7 @@ fun ContentPlaySelectCompleteQuestion(
                 onAnswered(yourAnswers)
                 yourAnswers = emptyList()
                 isSelectedList =
-                    List(state.question.answers.size + state.question.wrongChoices.size) {
+                    List(state.choices.size) {
                         false
                     }
             },
