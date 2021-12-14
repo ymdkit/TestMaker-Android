@@ -1,11 +1,11 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.play.component
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
@@ -31,16 +31,18 @@ fun ContentPlaySelectCompleteQuestion(
     }
 
     var isSelectedList: List<Boolean> by remember {
-        mutableStateOf(List(state.question.answers.size + state.question.wrongChoices.size) {
+        mutableStateOf(List(state.choices.size) {
             false
         })
     }
+
+    val scrollState = rememberScrollState()
 
     Column {
         Column(
             modifier = Modifier
                 .verticalScroll(
-                    ScrollState(0)
+                    scrollState
                 )
                 .weight(
                     weight = 1f,

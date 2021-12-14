@@ -1,8 +1,8 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.play.component
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,11 +15,14 @@ import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
 fun ContentPlaySelectQuestion(
     state: PlayUiState.Select,
     onAnswered: (String) -> Unit) {
+
+    val scrollState = rememberScrollState()
+
     Column {
         Column(
             modifier = Modifier
                 .verticalScroll(
-                    ScrollState(0)
+                    scrollState
                 )
                 .weight(
                     weight = 1f,
