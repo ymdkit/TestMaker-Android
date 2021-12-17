@@ -307,4 +307,5 @@
     <string name="title_activity_create_question">create question</string>
     <string name="header_other_settings">other settings</string>
     <string name="switch_is_check_order">check order</string>
+    <string name="switch_is_auto_generate_others">auto generate other selections</string>
 </resources>

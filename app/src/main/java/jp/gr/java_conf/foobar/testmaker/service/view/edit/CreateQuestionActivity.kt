@@ -170,6 +170,8 @@ class CreateQuestionActivity : AppCompatActivity() {
                                             initialWrongChoices = listOf(),
                                             initialExplanation = "",
                                             initialImageUrl = "",
+                                            initialIsCheckAnswerOrder = false,
+                                            initialIsAutoGenerateWrongChoices = false,
                                             onCreate = {
                                                 testViewModel.create(
                                                     test = workbook,

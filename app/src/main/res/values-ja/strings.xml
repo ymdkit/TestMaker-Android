@@ -299,4 +299,5 @@
     <string name="title_activity_create_question">問題の作成</string>
     <string name="header_other_settings">その他の設定</string>
     <string name="switch_is_check_order">解答順を正誤判定に含める</string>
+    <string name="switch_is_auto_generate_others">選択肢の自動生成</string>
 </resources>
