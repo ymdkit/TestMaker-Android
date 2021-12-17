@@ -163,6 +163,7 @@ class EditQuestionActivity : AppCompatActivity() {
                                             initialProblem = question.problem,
                                             initialAnswers = question.answers,
                                             initialExplanation = question.explanation,
+                                            initialIsCheckAnswerOrder = question.isCheckOrder,
                                             initialImageUrl = question.imageUrl,
                                             onCreate = {
                                                 testViewModel.update(it.toQuestion())

@@ -24,6 +24,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.extensions.replaced
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.ImageStore
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.NumberPicker
+import jp.gr.java_conf.foobar.testmaker.service.view.share.component.OutlinedSwitch
 
 const val ANSWERS_SIZE_MAX = 10
 
@@ -34,6 +35,7 @@ fun ContentEditCompleteQuestion(
     initialProblem: String,
     initialAnswers: List<String>,
     initialExplanation: String,
+    initialIsCheckAnswerOrder: Boolean,
     order: Int,
     initialImageUrl: String,
     buttonTitle: String,
@@ -54,6 +56,9 @@ fun ContentEditCompleteQuestion(
     }
     var sizeOfAnswers by remember {
         mutableStateOf(if (initialAnswers.isNotEmpty()) initialAnswers.size else 2)
+    }
+    var isCheckAnswerOrder by remember {
+        mutableStateOf(initialIsCheckAnswerOrder)
     }
 
     var bitmap: Bitmap? by remember {
@@ -151,7 +156,7 @@ fun ContentEditCompleteQuestion(
                 fragmentManager = fragmentManager,
                 onBitmapChange = {
                     bitmap = it
-                    if(bitmap == null){
+                    if (bitmap == null) {
                         editingImageUrl = ""
                     }
                 }
@@ -169,6 +174,21 @@ fun ContentEditCompleteQuestion(
                     editingExplanation = it
                 }
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(id = R.string.header_other_settings),
+                modifier = Modifier.padding(bottom = 4.dp),
+                style = MaterialTheme.typography.caption
+            )
+
+            OutlinedSwitch(
+                modifier = Modifier.padding(bottom = 8.dp),
+                label = stringResource(id = R.string.switch_is_check_order),
+                initialValue = isCheckAnswerOrder,
+                onCheckedChange = {
+                    isCheckAnswerOrder = it
+                })
         }
         Button(
             onClick = {
@@ -190,7 +210,7 @@ fun ContentEditCompleteQuestion(
                     format = QuestionFormat.COMPLETE,
                     explanation = editingExplanation,
                     imageUrl = newImageUrl,
-                    isCheckOrder = false,
+                    isCheckOrder = isCheckAnswerOrder,
                     isAnswering = false,
                     isAutoGenerateWrongChoices = false,
                     answerStatus = AnswerStatus.UNANSWERED,

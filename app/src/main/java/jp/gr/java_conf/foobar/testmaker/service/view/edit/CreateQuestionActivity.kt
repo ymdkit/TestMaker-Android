@@ -149,6 +149,7 @@ class CreateQuestionActivity : AppCompatActivity() {
                                             initialProblem = "",
                                             initialAnswers = listOf(),
                                             initialExplanation = "",
+                                            initialIsCheckAnswerOrder = false,
                                             initialImageUrl = "",
                                             onCreate = {
                                                 testViewModel.create(
