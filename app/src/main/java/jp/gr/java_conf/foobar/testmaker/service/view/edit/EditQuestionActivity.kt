@@ -148,6 +148,7 @@ class EditQuestionActivity : AppCompatActivity() {
                                             initialWrongChoices = question.wrongChoices,
                                             initialExplanation = question.explanation,
                                             initialImageUrl = question.imageUrl,
+                                            initialIsAutoGenerateWrongChoices = question.isAutoGenerateWrongChoices,
                                             onCreate = {
                                                 testViewModel.update(it.toQuestion())
                                                 showToast(getString(R.string.msg_update_question))

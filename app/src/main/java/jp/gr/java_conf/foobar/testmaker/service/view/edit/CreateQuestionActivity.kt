@@ -131,6 +131,7 @@ class CreateQuestionActivity : AppCompatActivity() {
                                         initialAnswer = "",
                                         initialWrongChoices = listOf(),
                                         initialExplanation = "",
+                                        initialIsAutoGenerateWrongChoices = false,
                                         initialImageUrl = "",
                                         onCreate = {
                                             testViewModel.create(

@@ -24,6 +24,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.extensions.replaced
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.ImageStore
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.NumberPicker
+import jp.gr.java_conf.foobar.testmaker.service.view.share.component.OutlinedSwitch
 
 const val WRONG_SIZE_MAX = 10
 
@@ -35,6 +36,7 @@ fun ContentEditSelectQuestion(
     initialAnswer: String,
     initialWrongChoices: List<String>,
     initialExplanation: String,
+    initialIsAutoGenerateWrongChoices: Boolean,
     order: Int,
     initialImageUrl: String,
     buttonTitle: String,
@@ -57,6 +59,9 @@ fun ContentEditSelectQuestion(
     var sizeOfWrongChoices by remember {
         mutableStateOf(if (initialWrongChoices.isNotEmpty()) initialWrongChoices.size else 2)
     }
+    var isAutoGenerateWrongChoices by remember {
+        mutableStateOf(initialIsAutoGenerateWrongChoices)
+    }
 
     var bitmap: Bitmap? by remember {
         mutableStateOf(null)
@@ -64,11 +69,12 @@ fun ContentEditSelectQuestion(
 
     var showingValidationError by remember { mutableStateOf(false) }
 
-    val validate =
-        !(editingProblem.isEmpty()
-                || editingAnswer.isEmpty()
-                || editingWrongChoices.take(sizeOfWrongChoices).any { it.isEmpty() }
-                )
+    fun validate(): Boolean{
+        if(editingProblem.isEmpty()) return false
+        if(editingAnswer.isEmpty()) return false
+        if(!isAutoGenerateWrongChoices && editingWrongChoices.take(sizeOfWrongChoices).any { it.isEmpty() }) return false
+        return true
+    }
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -123,19 +129,34 @@ fun ContentEditSelectQuestion(
             )
 
             repeat(sizeOfWrongChoices.coerceIn(0, editingWrongChoices.size)) { index ->
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    value = editingWrongChoices[index],
-                    maxLines = 3,
-                    label = {
-                        Text(text = stringResource(R.string.hint_other))
-                    },
-                    onValueChange = {
-                        editingWrongChoices = editingWrongChoices.replaced(index, it)
-                    }
-                )
+
+                if (isAutoGenerateWrongChoices) {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        enabled = false,
+                        value = editingWrongChoices[index],
+                        label = {
+                            Text(text = stringResource(R.string.hint_auto))
+                        },
+                        onValueChange = {}
+                    )
+                } else {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        value = editingWrongChoices[index],
+                        maxLines = 3,
+                        label = {
+                            Text(text = stringResource(R.string.hint_other))
+                        },
+                        onValueChange = {
+                            editingWrongChoices = editingWrongChoices.replaced(index, it)
+                        }
+                    )
+                }
             }
 
             NumberPicker(
@@ -166,7 +187,7 @@ fun ContentEditSelectQuestion(
                 fragmentManager = fragmentManager,
                 onBitmapChange = {
                     bitmap = it
-                    if(bitmap == null){
+                    if (bitmap == null) {
                         editingImageUrl = ""
                     }
                 }
@@ -184,10 +205,24 @@ fun ContentEditSelectQuestion(
                     editingExplanation = it
                 }
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(id = R.string.header_other_settings),
+                modifier = Modifier.padding(bottom = 4.dp),
+                style = MaterialTheme.typography.caption
+            )
+            OutlinedSwitch(
+                modifier = Modifier.padding(bottom = 8.dp),
+                label = stringResource(id = R.string.switch_is_auto_generate_others),
+                initialValue = isAutoGenerateWrongChoices,
+                onCheckedChange = {
+                    isAutoGenerateWrongChoices = it
+                })
         }
         Button(
             onClick = {
-                if (!validate) {
+                if (!validate()) {
                     showingValidationError = true
                     return@Button
                 }
