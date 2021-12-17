@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -261,6 +262,7 @@ fun ContentEditSelectCompleteQuestion(
                 onCheckedChange = {
                     isAutoGenerateWrongChoices = it
                 })
+            Spacer(modifier = Modifier.height((LocalConfiguration.current.screenHeightDp / 3).dp))
         }
         Button(
             onClick = {

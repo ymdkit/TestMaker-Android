@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -181,7 +182,6 @@ fun ContentEditCompleteQuestion(
                 modifier = Modifier.padding(bottom = 4.dp),
                 style = MaterialTheme.typography.caption
             )
-
             OutlinedSwitch(
                 modifier = Modifier.padding(bottom = 8.dp),
                 label = stringResource(id = R.string.switch_is_check_order),
@@ -189,6 +189,7 @@ fun ContentEditCompleteQuestion(
                 onCheckedChange = {
                     isCheckAnswerOrder = it
                 })
+            Spacer(modifier = Modifier.height((LocalConfiguration.current.screenHeightDp / 3).dp))
         }
         Button(
             onClick = {
