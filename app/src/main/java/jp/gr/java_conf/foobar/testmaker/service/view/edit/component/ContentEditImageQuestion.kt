@@ -1,5 +1,8 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.edit.component
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -21,6 +24,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -62,6 +66,25 @@ fun ContentEditImageQuestion(
         }
     }
 
+    val takePictureLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview(),
+        onResult = {
+            onBitmapChange(it)
+            bitmap = it
+        }
+    )
+
+    val askCameraPermitLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+        , onResult = { isGranted: Boolean ->
+            if (isGranted) {
+                CameraLauncher().takePicture(context) {
+                    takePictureLauncher.launch(null)
+                }
+            }
+        }
+    )
+
     LaunchedEffect(Unit){
         if(imageUrl.isNotEmpty()){
             if (imageUrl.contains("/")){
@@ -101,7 +124,18 @@ fun ContentEditImageQuestion(
                         title = context.getString(R.string.button_take_photo),
                         iconRes = R.drawable.ic_baseline_camera_alt_24,
                         action = {
-                            // todo
+                            if (ContextCompat.checkSelfPermission(
+                                    context,
+                                    Manifest.permission.CAMERA
+                                )
+                                != PackageManager.PERMISSION_GRANTED
+                            ) {
+                                askCameraPermitLauncher.launch(Manifest.permission.CAMERA)
+                            } else {
+                                CameraLauncher().takePicture(context) {
+                                    takePictureLauncher.launch(null)
+                                }
+                            }
                         }),
                     DialogMenuItem(
                         title = context.getString(R.string.button_select_gallery),
@@ -137,6 +171,14 @@ fun ContentEditImageQuestion(
             Image(bitmap = it.asImageBitmap(), contentDescription = "")
         } ?: run {
             Icon(Icons.Default.AddAPhoto, contentDescription = "add photo")
+        }
+    }
+}
+
+class CameraLauncher {
+    fun takePicture(context: Context, onLaunch: () -> Unit) {
+        if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            onLaunch()
         }
     }
 }
