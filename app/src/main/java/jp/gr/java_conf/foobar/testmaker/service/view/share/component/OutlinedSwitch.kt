@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -13,19 +13,15 @@ import androidx.compose.ui.unit.dp
 fun OutlinedSwitch(
     modifier: Modifier = Modifier,
     label: String,
-    initialValue: Boolean,
+    checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
-
-    var value by remember { mutableStateOf(initialValue) }
-
     OutlinedButton(
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp),
         onClick = {
-            value = !value
-            onCheckedChange(value)
+            onCheckedChange(!checked)
         },
         border = BorderStroke(
             ButtonDefaults.OutlinedBorderSize,
@@ -39,9 +35,8 @@ fun OutlinedSwitch(
         )
         Spacer(modifier = Modifier.weight(weight = 1f, fill = true))
         Switch(
-            checked = value,
+            checked = checked,
             onCheckedChange = {
-                value = it
                 onCheckedChange(it)
             })
     }

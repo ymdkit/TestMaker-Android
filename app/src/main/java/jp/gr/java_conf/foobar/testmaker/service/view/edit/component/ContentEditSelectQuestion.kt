@@ -217,7 +217,7 @@ fun ContentEditSelectQuestion(
             OutlinedSwitch(
                 modifier = Modifier.padding(bottom = 8.dp),
                 label = stringResource(id = R.string.switch_is_auto_generate_others),
-                initialValue = isAutoGenerateWrongChoices,
+                checked = isAutoGenerateWrongChoices,
                 onCheckedChange = {
                     isAutoGenerateWrongChoices = it
                 })

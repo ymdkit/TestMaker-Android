@@ -186,7 +186,7 @@ fun ContentEditCompleteQuestion(
             OutlinedSwitch(
                 modifier = Modifier.padding(bottom = 8.dp),
                 label = stringResource(id = R.string.switch_is_check_order),
-                initialValue = isCheckAnswerOrder,
+                checked = isCheckAnswerOrder,
                 onCheckedChange = {
                     isCheckAnswerOrder = it
                 })
