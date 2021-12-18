@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -28,6 +29,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.modules.GlideApp
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.CropImageDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
@@ -81,6 +83,8 @@ fun ContentEditImageQuestion(
                 CameraLauncher().takePicture(context) {
                     takePictureLauncher.launch(null)
                 }
+            } else {
+                context.showToast(context.getString(R.string.msg_camera_not_granted), Toast.LENGTH_LONG)
             }
         }
     )

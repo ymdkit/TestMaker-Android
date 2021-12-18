@@ -298,4 +298,5 @@
     <string name="header_other_settings">other settings</string>
     <string name="switch_is_check_order">check order</string>
     <string name="switch_is_auto_generate_others">auto generate other selections</string>
+    <string name="msg_camera_not_granted">no permssion to use camera</string>
 </resources>

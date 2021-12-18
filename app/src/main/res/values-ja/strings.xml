@@ -290,4 +290,5 @@
     <string name="header_other_settings">その他の設定</string>
     <string name="switch_is_check_order">解答順を正誤判定に含める</string>
     <string name="switch_is_auto_generate_others">選択肢の自動生成</string>
+    <string name="msg_camera_not_granted">カメラを使用する権限がありません。端末の設定画面から、暗記メーカーでのカメラの使用を許可してください</string>
 </resources>
