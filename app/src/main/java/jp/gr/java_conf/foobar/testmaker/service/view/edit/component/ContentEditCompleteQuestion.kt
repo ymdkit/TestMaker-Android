@@ -155,7 +155,8 @@ fun ContentEditCompleteQuestion(
             ContentEditImageQuestion(
                 imageUrl = editingImageUrl,
                 fragmentManager = fragmentManager,
-                onBitmapChange = {
+                value = bitmap,
+                onValueChange = {
                     bitmap = it
                     if (bitmap == null) {
                         editingImageUrl = ""

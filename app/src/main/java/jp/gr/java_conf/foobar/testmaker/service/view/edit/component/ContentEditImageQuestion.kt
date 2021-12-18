@@ -19,7 +19,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
@@ -42,13 +43,10 @@ import java.io.IOException
 fun ContentEditImageQuestion(
     imageUrl: String,
     fragmentManager: FragmentManager,
-    onBitmapChange: (Bitmap?) -> Unit
+    value: Bitmap?,
+    onValueChange: (Bitmap?) -> Unit
 ){
     val context = LocalContext.current
-
-    var bitmap: Bitmap? by remember {
-        mutableStateOf(null)
-    }
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
@@ -59,8 +57,7 @@ fun ContentEditImageQuestion(
                 CropImageDialogFragment(
                     bitmap = it,
                     onCrop = { newBitmap ->
-                        onBitmapChange(newBitmap)
-                        bitmap = newBitmap
+                        onValueChange(newBitmap)
                     }
                 ).show(fragmentManager, "")
             }
@@ -71,8 +68,7 @@ fun ContentEditImageQuestion(
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview(),
         onResult = {
-            onBitmapChange(it)
-            bitmap = it
+            onValueChange(it)
         }
     )
 
@@ -98,7 +94,7 @@ fun ContentEditImageQuestion(
 
                 try {
                     withContext(Dispatchers.IO){
-                        bitmap = target.get()
+                        onValueChange(target.get())
                     }
                 } catch (e: Exception) {
                     Log.d(this.javaClass.name,"${e.message}")
@@ -107,7 +103,7 @@ fun ContentEditImageQuestion(
             }else{
                 try {
                     val file = context.getFileStreamPath(imageUrl)
-                    bitmap =  BitmapFactory.decodeFile(file.absolutePath)
+                    onValueChange(BitmapFactory.decodeFile(file.absolutePath))
                 } catch (e: IOException) {
                     Log.d(this.javaClass.name,"${e.message}")
                 }
@@ -151,8 +147,7 @@ fun ContentEditImageQuestion(
                         title = context.getString(R.string.button_delete_image),
                         iconRes = R.drawable.ic_delete_white,
                         action = {
-                            bitmap = null
-                            onBitmapChange(null)
+                            onValueChange(null)
                         })
                 )
             ).show(
@@ -171,7 +166,7 @@ fun ContentEditImageQuestion(
             color = MaterialTheme.colors.onSurface
         )
         Spacer(modifier = Modifier.weight(weight = 1f, fill = true))
-        bitmap?.let {
+        value?.let {
             Image(bitmap = it.asImageBitmap(), contentDescription = "")
         } ?: run {
             Icon(Icons.Default.AddAPhoto, contentDescription = "add photo")
