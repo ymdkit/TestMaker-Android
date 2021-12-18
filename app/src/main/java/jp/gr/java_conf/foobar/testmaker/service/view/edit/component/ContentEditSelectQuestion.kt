@@ -165,7 +165,7 @@ fun ContentEditSelectQuestion(
                 min = 1,
                 max = WRONG_SIZE_MAX,
                 label = stringResource(id = R.string.picker_wrong_size),
-                initialValue = sizeOfWrongChoices,
+                value = sizeOfWrongChoices,
                 onValueChange = {
                     sizeOfWrongChoices = it
                     editingWrongChoices = List(WRONG_SIZE_MAX) { index ->

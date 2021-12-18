@@ -134,7 +134,7 @@ fun ContentEditCompleteQuestion(
                 min = 1,
                 max = ANSWERS_SIZE_MAX,
                 label = stringResource(id = R.string.picker_answers_size),
-                initialValue = sizeOfAnswers,
+                value = sizeOfAnswers,
                 onValueChange = {
                     sizeOfAnswers = it
                     editingAnswers = List(ANSWERS_SIZE_MAX) { index ->

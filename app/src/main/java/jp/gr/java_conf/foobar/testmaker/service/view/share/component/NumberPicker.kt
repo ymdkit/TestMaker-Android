@@ -17,11 +17,9 @@ fun NumberPicker(
     min: Int,
     max: Int,
     label: String,
-    initialValue: Int,
+    value: Int,
     onValueChange: (Int) -> Unit
 ) {
-
-    var value by remember { mutableStateOf(initialValue) }
 
     var showingDropDownMenu by remember { mutableStateOf(false) }
 
@@ -60,7 +58,6 @@ fun NumberPicker(
         (min..max).forEach {
             DropdownMenuItem(onClick = {
                 onValueChange(it)
-                value = it
                 showingDropDownMenu = false
             }) {
                 Text(it.toString())
