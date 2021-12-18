@@ -11,7 +11,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
@@ -75,7 +74,6 @@ fun ContentEditSelectQuestion(
     }
 
     val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
 
     val context = LocalContext.current
