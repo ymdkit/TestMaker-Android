@@ -166,6 +166,7 @@ fun ContentEditWriteQuestion(
                 editingAnswer = ""
                 editingExplanation = ""
                 bitmap = null
+                focusRequester.requestFocus()
             },
             modifier = Modifier
                 .fillMaxWidth()

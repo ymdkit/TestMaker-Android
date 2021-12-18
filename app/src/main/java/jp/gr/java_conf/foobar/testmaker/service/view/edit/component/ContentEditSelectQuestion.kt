@@ -257,6 +257,7 @@ fun ContentEditSelectQuestion(
                 editingExplanation = ""
                 editingWrongChoices = List(WRONG_SIZE_MAX) { "" }
                 bitmap = null
+                focusRequester.requestFocus()
             },
             modifier = Modifier
                 .fillMaxWidth()

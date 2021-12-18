@@ -224,6 +224,7 @@ fun ContentEditCompleteQuestion(
                 editingExplanation = ""
                 editingAnswers = List(ANSWERS_SIZE_MAX) { "" }
                 bitmap = null
+                focusRequester.requestFocus()
             },
             modifier = Modifier
                 .fillMaxWidth()
