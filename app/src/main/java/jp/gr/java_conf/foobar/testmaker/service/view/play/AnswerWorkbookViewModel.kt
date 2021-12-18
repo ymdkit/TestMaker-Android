@@ -109,7 +109,7 @@ class AnswerWorkbookViewModel(
                     index = index,
                     question = answeringQuestion,
                     choices = answeringQuestion.getChoices(
-                        workbook.randomExtractedAnswers
+                        workbook.getRandomExtractedAnswers(exclude = listOf(answeringQuestion.answer))
                     )
                 )
                 QuestionFormat.COMPLETE ->
@@ -127,7 +127,7 @@ class AnswerWorkbookViewModel(
                     index = index,
                     question = answeringQuestion,
                     choices = answeringQuestion.getChoices(
-                        workbook.randomExtractedAnswers
+                        workbook.getRandomExtractedAnswers(exclude = answeringQuestion.answers)
                     )
                 )
             }
