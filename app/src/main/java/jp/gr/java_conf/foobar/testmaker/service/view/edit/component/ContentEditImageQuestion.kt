@@ -68,7 +68,12 @@ fun ContentEditImageQuestion(
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview(),
         onResult = {
-            onValueChange(it)
+            CropImageDialogFragment(
+                bitmap = it,
+                onCrop = { newBitmap ->
+                    onValueChange(newBitmap)
+                }
+            ).show(fragmentManager, "")
         }
     )
 
