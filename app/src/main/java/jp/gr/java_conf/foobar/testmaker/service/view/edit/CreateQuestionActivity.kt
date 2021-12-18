@@ -19,6 +19,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditCompleteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectCompleteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectQuestion
@@ -47,6 +48,8 @@ class CreateQuestionActivity : AppCompatActivity() {
     private val testViewModel: TestViewModel by viewModel()
 
     private val workbook: Test by lazy { testViewModel.get(intent.getLongExtra(ARGUMENT_TEST_ID, -1L)) }
+
+    private val logger: TestMakerLogger by inject()
 
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,6 +122,7 @@ class CreateQuestionActivity : AppCompatActivity() {
                                                 test = workbook,
                                                 question = it.toQuestion())
 
+                                            logger.logCreateQuestion(it.toQuestion(),"self")
                                             showToast(getString(R.string.msg_create_question))
                                         },
                                         buttonTitle = stringResource(id = R.string.button_create_wuestion),
@@ -138,6 +142,7 @@ class CreateQuestionActivity : AppCompatActivity() {
                                                 test = workbook,
                                                 question = it.toQuestion())
 
+                                            logger.logCreateQuestion(it.toQuestion(),"self")
                                             showToast(getString(R.string.msg_create_question))
                                         },
                                         buttonTitle = stringResource(id = R.string.button_create_wuestion),
@@ -157,6 +162,7 @@ class CreateQuestionActivity : AppCompatActivity() {
                                                     test = workbook,
                                                     question = it.toQuestion())
 
+                                                logger.logCreateQuestion(it.toQuestion(),"self")
                                                 showToast(getString(R.string.msg_create_question))
                                             },
                                             buttonTitle = stringResource(id = R.string.button_create_wuestion),
@@ -178,6 +184,7 @@ class CreateQuestionActivity : AppCompatActivity() {
                                                     test = workbook,
                                                     question = it.toQuestion())
 
+                                                logger.logCreateQuestion(it.toQuestion(),"self")
                                                 showToast(getString(R.string.msg_create_question))
                                             },
                                             buttonTitle = stringResource(id = R.string.button_create_wuestion),
