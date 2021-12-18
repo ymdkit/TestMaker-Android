@@ -151,7 +151,7 @@
     <string name="title_activity_edit_test">問題集の編集</string>
     <string name="title_activity_edit_category">フォルダの編集</string>
     <string name="title_activity_edit_question">問題の編集</string>
-    <string name="hint_auto">自動生成</string>
+    <string name="hint_auto">自動生成（他の問題の答え）</string>
     <string name="empty_question">保存している問題はありません。\n画面下部のボタンから問題を追加してください</string>
     <string name="judge_question">OK</string>
     <string name="label_answer">正解</string>

@@ -129,10 +129,7 @@ fun ContentEditSelectQuestion(
                             .fillMaxWidth()
                             .padding(bottom = 8.dp),
                         enabled = false,
-                        value = editingWrongChoices[index],
-                        label = {
-                            Text(text = stringResource(R.string.hint_auto))
-                        },
+                        value = stringResource(R.string.hint_auto),
                         onValueChange = {}
                     )
                 } else {
@@ -238,7 +235,7 @@ fun ContentEditSelectQuestion(
                     imageUrl = newImageUrl,
                     isCheckOrder = false,
                     isAnswering = false,
-                    isAutoGenerateWrongChoices = false,
+                    isAutoGenerateWrongChoices = isAutoGenerateWrongChoices,
                     answerStatus = AnswerStatus.UNANSWERED,
                     order = order,
                 )

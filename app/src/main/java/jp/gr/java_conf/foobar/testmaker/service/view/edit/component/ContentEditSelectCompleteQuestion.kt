@@ -154,10 +154,7 @@ fun ContentEditSelectCompleteQuestion(
                             .fillMaxWidth()
                             .padding(bottom = 8.dp),
                         enabled = false,
-                        value = editingWrongChoices[index],
-                        label = {
-                            Text(text = stringResource(R.string.hint_auto))
-                        },
+                        value = stringResource(R.string.hint_auto),
                         onValueChange = {}
                     )
                 } else {
