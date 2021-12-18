@@ -68,9 +68,11 @@ fun ContentEditCompleteQuestion(
 
     var showingValidationError by remember { mutableStateOf(false) }
 
-    val validate =
-        !(editingProblem.isEmpty() || editingAnswers.take(sizeOfAnswers).any { it.isEmpty() }
-                )
+    fun validate(): Boolean {
+        if(editingProblem.isEmpty()) return false
+        if(editingAnswers.take(sizeOfAnswers).any { it.isEmpty() }) return false
+        return true
+    }
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -194,7 +196,7 @@ fun ContentEditCompleteQuestion(
         }
         Button(
             onClick = {
-                if (!validate) {
+                if (!validate()) {
                     showingValidationError = true
                     return@Button
                 }
