@@ -3,8 +3,6 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit.component
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -15,7 +13,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -133,17 +130,14 @@ fun ContentEditSelectCompleteQuestion(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                    value = editingAnswers[index],
+                    maxLines = 3,
                     label = {
                         Text(text = stringResource(R.string.hint_answer))
                     },
+                    value = editingAnswers[index],
                     onValueChange = {
                         editingAnswers = editingAnswers.replaced(index, it)
-                    },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        focusManager.clearFocus()
-                    })
+                    }
                 )
             }
             repeat(sizeOfWrongChoices.coerceIn(0, editingWrongChoices.size)) { index ->
