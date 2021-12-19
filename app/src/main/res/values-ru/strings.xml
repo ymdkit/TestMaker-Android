@@ -3,7 +3,6 @@
     <string name="app_name">ТестМейкер</string>
     <string name="message_delete_exam">делеция: %1$s ?</string>
     <string name="action_next">следующий</string>
-    <string name="save_question">Сохранить</string>
     <string name="number_questions">сумма</string>
     <string name="number_existing_questions">%1$d / %2$d</string>
     <string name="number_exams">сумма %1$d</string>
@@ -20,7 +19,6 @@
     <string name="trim">Порезы</string>
     <string name="cancel">отмена</string>
     <string name="message_delete">делеция %1$s ?</string>
-    <string name="message_explanation">комментарий</string>
     <string name="message_random">случайный</string>
     <string name="message_wrong_only">только Неверный ответ</string>
     <string name="message_switch_question">замена вопрос и ответ</string>

@@ -3,7 +3,6 @@
     <string name="app_name">暗記メーカー</string>
     <string name="message_delete_exam">「 %1$s 」 を削除してもよろしいですか？</string>
     <string name="action_next">次へ</string>
-    <string name="save_question">問題を保存</string>
     <string name="number_questions">出題数</string>
     <string name="number_existing_questions">達成率: %1$d / %2$d</string>
     <string name="number_exams">問題集数 %1$d</string>
@@ -20,7 +19,6 @@
     <string name="trim">トリミング</string>
     <string name="cancel">キャンセル</string>
     <string name="message_delete">「 %1$s 」を削除してもよろしいですか？</string>
-    <string name="message_explanation">解説文を入れる</string>
     <string name="message_random">出題順をランダムにする</string>
     <string name="message_wrong_only">間違えた問題のみ出題する</string>
     <string name="message_switch_question">問題文と解答を入れ替える（記述問題のみ）</string>
@@ -153,14 +151,7 @@
     <string name="title_activity_edit_test">問題集の編集</string>
     <string name="title_activity_edit_category">フォルダの編集</string>
     <string name="title_activity_edit_question">問題の編集</string>
-    <string name="message_image">問題中に画像を使用する</string>
-    <string name="label_setting_question">詳細設定</string>
-    <string name="message_reset_form">保存時に入力値をリセットする</string>
-    <string name="message_auto">選択肢を自動生成する（他の問題の答え）</string>
-    <string name="hint_auto">自動生成</string>
-    <string name="message_check_order">解答順を正誤判定に含める</string>
-    <string name="num_others">選択肢数</string>
-    <string name="num_answers">解答数</string>
+    <string name="hint_auto">自動生成（他の問題の答え）</string>
     <string name="empty_question">保存している問題はありません。\n画面下部のボタンから問題を追加してください</string>
     <string name="judge_question">OK</string>
     <string name="label_answer">正解</string>
@@ -246,7 +237,6 @@
     <string name="upload_dialog_already_uploaded">同名の問題集がすでにアップロードされています</string>
     <string name="upload_dialog_overwrite">内容を上書きする</string>
     <string name="upload_dialog_upload_as_other_test">別の問題集としてアップロードする</string>
-    <string name="edit_hint_select_answer">正解の選択肢</string>
     <string name="app_description">「暗記メーカー」は、自学自習の効率化を目的とした問題集作成用のアプリです。資格習得のための勉強や、複数人への問題集の配布のために利用できます。</string>
     <string name="msg_success_delete_category">フォルダを削除しました</string>
     <string name="button_delete_confirm">削除する</string>
@@ -281,4 +271,24 @@
     <string name="hint_answer_write">解答</string>
     <string name="text_download_count">%1$s回ダウンロード</string>
     <string name="text_workbook_size">%1$s問</string>
+    <string name="button_create_wuestion">問題を作成する</string>
+    <string name="header_optional">任意項目</string>
+    <string name="header_required">必須項目</string>
+    <string name="title_error_create_quesiton">入力エラー</string>
+    <string name="msg_error_create_quesiton">必須項目を全て入力してください</string>
+    <string name="msg_create_question">問題を作成しました</string>
+    <string name="button_add_image">画像</string>
+    <string name="title_image_menu">画像設定</string>
+    <string name="button_take_photo">写真を撮影</string>
+    <string name="button_select_gallery">ギャラリーから選択</string>
+    <string name="button_delete_image">画像の削除</string>
+    <string name="msg_update_question">問題内容を変更しました</string>
+    <string name="button_update_question">変更内容を保存する</string>
+    <string name="picker_wrong_size">不正解の数</string>
+    <string name="picker_answers_size">解答の数</string>
+    <string name="title_activity_create_question">問題の作成</string>
+    <string name="header_other_settings">その他の設定</string>
+    <string name="switch_is_check_order">解答順を正誤判定に含める</string>
+    <string name="switch_is_auto_generate_others">選択肢の自動生成</string>
+    <string name="msg_camera_not_granted">カメラを使用する権限がありません。端末の設定画面から、暗記メーカーでのカメラの使用を許可してください</string>
 </resources>

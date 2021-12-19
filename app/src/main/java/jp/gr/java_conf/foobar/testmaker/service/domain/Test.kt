@@ -24,31 +24,29 @@ data class Test(
     val source: String
 ) : Parcelable {
 
-    val randomExtractedAnswers
-        get() = questions.take(100).map {
-            when (it.type) {
-                Constants.WRITE, Constants.SELECT -> {
-                    listOf(it.answer)
+    fun getRandomExtractedAnswers(exclude: List<String>) =
+        questions
+            .asSequence()
+            .take(100)
+            .map {
+                when (it.type) {
+                    Constants.WRITE, Constants.SELECT -> {
+                        listOf(it.answer)
+                    }
+                    Constants.COMPLETE, Constants.SELECT_COMPLETE -> {
+                        it.answers
+                    }
+                    else -> emptyList()
                 }
-                Constants.COMPLETE, Constants.SELECT_COMPLETE -> {
-                    it.answers
-                }
-                else -> emptyList()
             }
-        }.flatten().distinct().shuffled()
+            .flatten()
+            .filter { !exclude.contains(it) }
+            .distinct()
+            .toList()
+            .shuffled()
 
     val questionsCorrectCount
         get() = questions.count { it.isCorrect }
-
-    fun getChoices(size: Int, answer: String, emptyString: String) =
-        List(size) { emptyString }.mapIndexed { index, value ->
-            if (index < randomExtractedAnswers.size && randomExtractedAnswers[index] != answer) randomExtractedAnswers[index] else value
-        }
-
-    fun getChoices(size: Int, answers: List<String>, emptyString: String) =
-        List(size) { emptyString }.mapIndexed { index, value ->
-            if (index < randomExtractedAnswers.size && !answers.contains(randomExtractedAnswers[index])) randomExtractedAnswers[index] else value
-        }
 
     val escapedTest: Test
         get() {

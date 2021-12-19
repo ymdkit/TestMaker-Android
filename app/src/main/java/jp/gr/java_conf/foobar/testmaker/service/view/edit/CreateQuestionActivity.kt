@@ -16,10 +16,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
-import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
+import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditCompleteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectCompleteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectQuestion
@@ -31,16 +31,14 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class EditQuestionActivity : AppCompatActivity() {
+class CreateQuestionActivity : AppCompatActivity() {
 
     companion object {
         const val ARGUMENT_TEST_ID = "testId"
-        const val ARGUMENT_QUESTION_ID = "questionId"
 
-        fun startActivity(activity: Activity, testId: Long, questionId: Long) {
-            val intent = Intent(activity, EditQuestionActivity::class.java).apply {
+        fun startActivity(activity: Activity, testId: Long) {
+            val intent = Intent(activity, CreateQuestionActivity::class.java).apply {
                 putExtra(ARGUMENT_TEST_ID, testId)
-                putExtra(ARGUMENT_QUESTION_ID, questionId)
             }
             activity.startActivity(intent)
         }
@@ -49,19 +47,9 @@ class EditQuestionActivity : AppCompatActivity() {
     val sharedPreferenceManager: SharedPreferenceManager by inject()
     private val testViewModel: TestViewModel by viewModel()
 
-    private val workbook: Test by lazy {
-        testViewModel.get(
-            intent.getLongExtra(
-                ARGUMENT_TEST_ID,
-                -1L
-            )
-        )
-    }
+    private val workbook: Test by lazy { testViewModel.get(intent.getLongExtra(ARGUMENT_TEST_ID, -1L)) }
 
-    private val question: QuestionModel by lazy {
-        workbook.questions.find { it.id == intent.getLongExtra(ARGUMENT_QUESTION_ID, -1L) }!!
-            .toQuestionModel()
-    }
+    private val logger: TestMakerLogger by inject()
 
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +62,7 @@ class EditQuestionActivity : AppCompatActivity() {
                         TopAppBar(
                             title = {
                                 Text(
-                                    text = getString(R.string.title_activity_edit_question),
+                                    text = getString(R.string.title_activity_create_question),
                                 )
                             },
                             elevation = 0.dp,
@@ -87,9 +75,7 @@ class EditQuestionActivity : AppCompatActivity() {
                                 pageCount = QuestionFormat.values().size,
                                 initialOffscreenLimit = 4,
                                 infiniteLoop = false,
-                                initialPage = QuestionFormat.values()
-                                    .indexOfFirst { it == question.format }
-                                    .coerceIn(0, QuestionFormat.values().size)
+                                initialPage = 0
                             )
                             val tabIndex = pagerState.currentPage
                             val coroutineScope = rememberCoroutineScope()
@@ -125,72 +111,83 @@ class EditQuestionActivity : AppCompatActivity() {
                             ) {
                                 when (QuestionFormat.values()[pagerState.currentPage]) {
                                     QuestionFormat.WRITE -> ContentEditWriteQuestion(
-                                        questionId = question.id,
-                                        order = question.order,
-                                        initialProblem = question.problem,
-                                        initialAnswer = question.answer,
-                                        initialExplanation = question.explanation,
-                                        initialImageUrl = question.imageUrl,
+                                        questionId = -1,
+                                        order = -1,
+                                        initialProblem = "",
+                                        initialAnswer = "",
+                                        initialExplanation = "",
+                                        initialImageUrl = "",
                                         onCreate = {
-                                            testViewModel.update(it.toQuestion())
-                                            showToast(getString(R.string.msg_update_question))
-                                            finish()
+                                            testViewModel.create(
+                                                test = workbook,
+                                                question = it.toQuestion())
+
+                                            logger.logCreateQuestion(it.toQuestion(),"self")
+                                            showToast(getString(R.string.msg_create_question))
                                         },
-                                        buttonTitle = stringResource(id = R.string.button_update_question),
+                                        buttonTitle = stringResource(id = R.string.button_create_wuestion),
                                         fragmentManager = supportFragmentManager
                                     )
-                                    QuestionFormat.SELECT ->
-                                        ContentEditSelectQuestion(
-                                            questionId = question.id,
-                                            order = question.order,
-                                            initialProblem = question.problem,
-                                            initialAnswer = question.answer,
-                                            initialWrongChoices = question.wrongChoices,
-                                            initialExplanation = question.explanation,
-                                            initialImageUrl = question.imageUrl,
-                                            initialIsAutoGenerateWrongChoices = question.isAutoGenerateWrongChoices,
-                                            onCreate = {
-                                                testViewModel.update(it.toQuestion())
-                                                showToast(getString(R.string.msg_update_question))
-                                                finish()
-                                            },
-                                            buttonTitle = stringResource(id = R.string.button_update_question),
-                                            fragmentManager = supportFragmentManager
-                                        )
+                                    QuestionFormat.SELECT -> ContentEditSelectQuestion(
+                                        questionId = -1,
+                                        order = -1,
+                                        initialProblem = "",
+                                        initialAnswer = "",
+                                        initialWrongChoices = listOf(),
+                                        initialExplanation = "",
+                                        initialIsAutoGenerateWrongChoices = false,
+                                        initialImageUrl = "",
+                                        onCreate = {
+                                            testViewModel.create(
+                                                test = workbook,
+                                                question = it.toQuestion())
+
+                                            logger.logCreateQuestion(it.toQuestion(),"self")
+                                            showToast(getString(R.string.msg_create_question))
+                                        },
+                                        buttonTitle = stringResource(id = R.string.button_create_wuestion),
+                                        fragmentManager = supportFragmentManager
+                                    )
                                     QuestionFormat.COMPLETE ->
                                         ContentEditCompleteQuestion(
-                                            questionId = question.id,
-                                            order = question.order,
-                                            initialProblem = question.problem,
-                                            initialAnswers = question.answers,
-                                            initialExplanation = question.explanation,
-                                            initialIsCheckAnswerOrder = question.isCheckOrder,
-                                            initialImageUrl = question.imageUrl,
+                                            questionId = -1,
+                                            order = -1,
+                                            initialProblem = "",
+                                            initialAnswers = listOf(),
+                                            initialExplanation = "",
+                                            initialIsCheckAnswerOrder = false,
+                                            initialImageUrl = "",
                                             onCreate = {
-                                                testViewModel.update(it.toQuestion())
-                                                showToast(getString(R.string.msg_update_question))
-                                                finish()
+                                                testViewModel.create(
+                                                    test = workbook,
+                                                    question = it.toQuestion())
+
+                                                logger.logCreateQuestion(it.toQuestion(),"self")
+                                                showToast(getString(R.string.msg_create_question))
                                             },
-                                            buttonTitle = stringResource(id = R.string.button_update_question),
+                                            buttonTitle = stringResource(id = R.string.button_create_wuestion),
                                             fragmentManager = supportFragmentManager
                                         )
                                     QuestionFormat.SELECT_COMPLETE ->
                                         ContentEditSelectCompleteQuestion(
-                                            questionId = question.id,
-                                            order = question.order,
-                                            initialProblem = question.problem,
-                                            initialAnswers = question.answers,
-                                            initialWrongChoices = question.wrongChoices,
-                                            initialExplanation = question.explanation,
-                                            initialImageUrl = question.imageUrl,
-                                            initialIsCheckAnswerOrder = question.isCheckOrder,
-                                            initialIsAutoGenerateWrongChoices = question.isAutoGenerateWrongChoices,
+                                            questionId = -1,
+                                            order = -1,
+                                            initialProblem = "",
+                                            initialAnswers = listOf(),
+                                            initialWrongChoices = listOf(),
+                                            initialExplanation = "",
+                                            initialImageUrl = "",
+                                            initialIsCheckAnswerOrder = false,
+                                            initialIsAutoGenerateWrongChoices = false,
                                             onCreate = {
-                                                testViewModel.update(it.toQuestion())
-                                                showToast(getString(R.string.msg_update_question))
-                                                finish()
+                                                testViewModel.create(
+                                                    test = workbook,
+                                                    question = it.toQuestion())
+
+                                                logger.logCreateQuestion(it.toQuestion(),"self")
+                                                showToast(getString(R.string.msg_create_question))
                                             },
-                                            buttonTitle = stringResource(id = R.string.button_update_question),
+                                            buttonTitle = stringResource(id = R.string.button_create_wuestion),
                                             fragmentManager = supportFragmentManager
                                         )
                                 }

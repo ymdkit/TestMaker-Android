@@ -22,7 +22,6 @@
     <string name="message_delete">delete %1$s ?</string>
     <string name="message_delete_exam">delete %1$s ?</string>
     <string name="message_delete_sound">sound</string>
-    <string name="message_explanation">add explanation</string>
     <string name="message_null_number">please input number</string>
     <string name="message_null_questions">\"please add questions\"</string>
     <string name="message_null_wrongs">wrong is nothing</string>
@@ -35,7 +34,6 @@
     <string name="number_questions">quantity</string>
     <string name="play">study</string>
     <string name="retry">retry</string>
-    <string name="save_question">save</string>
     <string name="share">share</string>
     <string name="title_activity_edit">edit</string>
     <string name="trim">trim</string>
@@ -157,14 +155,7 @@
     <string name="title_activity_edit_question">edit question</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="message_image">add image</string>
-    <string name="label_setting_question">setting</string>
-    <string name="message_reset_form">reset form when you saved</string>
-    <string name="message_auto">auto create selections</string>
     <string name="hint_auto">auto generate</string>
-    <string name="message_check_order">check order</string>
-    <string name="num_others">size of others</string>
-    <string name="num_answers">size of answer</string>
     <string name="empty_question">make your first question</string>
     <string name="judge_question">OK</string>
     <string name="label_answer">answer</string>
@@ -253,7 +244,6 @@
     <string name="upload_dialog_already_uploaded">already uploaded this test</string>
     <string name="upload_dialog_overwrite">overwrite</string>
     <string name="upload_dialog_upload_as_other_test">upload as other question</string>
-    <string name="edit_hint_select_answer">answer</string>
     <string name="app_description">TestMaker is application for making your own tests</string>
     <string name="msg_success_delete_category">category deleted</string>
     <string name="button_delete_confirm">delete</string>
@@ -289,4 +279,24 @@
     <string name="hint_answer_write">answer</string>
     <string name="text_download_count">%1$s downloads</string>
     <string name="text_workbook_size">%1$s questions</string>
+    <string name="button_create_wuestion">create question</string>
+    <string name="header_optional">optional</string>
+    <string name="header_required">required</string>
+    <string name="title_error_create_quesiton">error</string>
+    <string name="msg_error_create_quesiton">input required forms</string>
+    <string name="msg_create_question">create success</string>
+    <string name="button_add_image">add image</string>
+    <string name="title_image_menu">add image</string>
+    <string name="button_take_photo">take photo</string>
+    <string name="button_select_gallery">select gallery</string>
+    <string name="button_delete_image">delete image</string>
+    <string name="msg_update_question">update success</string>
+    <string name="button_update_question">save</string>
+    <string name="picker_wrong_size">wrong choices</string>
+    <string name="picker_answers_size">answers</string>
+    <string name="title_activity_create_question">create question</string>
+    <string name="header_other_settings">other settings</string>
+    <string name="switch_is_check_order">check order</string>
+    <string name="switch_is_auto_generate_others">auto generate other selections</string>
+    <string name="msg_camera_not_granted">no permssion to use camera</string>
 </resources>
