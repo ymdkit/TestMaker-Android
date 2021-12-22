@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentEditSelectQuestionBinding
+import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class EditSelectQuestionFragment : EditQuestionFragment() {
