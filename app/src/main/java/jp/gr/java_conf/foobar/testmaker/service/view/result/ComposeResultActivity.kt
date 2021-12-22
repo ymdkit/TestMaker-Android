@@ -26,7 +26,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.LegacyEditQuestionActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
@@ -138,7 +138,7 @@ class ComposeResultActivity : BaseActivity() {
                                             it.singleLineAnswer,
                                             it.isCorrect
                                         ).ItemResult(onClick = {
-                                            EditQuestionActivity.startActivity(
+                                            LegacyEditQuestionActivity.startActivity(
                                                 this@ComposeResultActivity,
                                                 testId,
                                                 it.id

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditCompleteQuestionViewModel" />
+
+        <variable
+            name="index"
+            type="Integer" />
+
+    </data>
+
+    <merge>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/MyTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:animatedVisibility="@{viewModel.sizeOfAnswers >= index + 1}">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/MyEditTextSingleLine"
+                android:hint="@string/hint_answer"
+                android:text="@={viewModel.answers[index]}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </merge>
+</layout>
