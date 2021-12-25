@@ -95,7 +95,7 @@ class LocalMainFragment : Fragment() {
             }
         })
 
-        categoryViewModel.categories.observeNonNull(this) {
+        categoryViewModel.categoriesLiveData.observeNonNull(this) {
             mainController.categories = it
         }
 

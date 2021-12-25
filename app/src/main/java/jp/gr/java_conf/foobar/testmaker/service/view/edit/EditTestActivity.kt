@@ -67,7 +67,7 @@ class EditTestActivity : BaseActivity() {
                 test = it
                 editTestViewModel.titleTest.value = it.title
                 binding.colorChooser.setColorId(it.color)
-                controller.selectedCategory = categoryViewModel.categories.value?.find { category -> it.category == category.name }
+                controller.selectedCategory = categoryViewModel.categoriesLiveData.value?.find { category -> it.category == category.name }
             }
         }
 
@@ -81,7 +81,7 @@ class EditTestActivity : BaseActivity() {
 
         binding.recyclerView.adapter = controller.adapter
 
-        categoryViewModel.categories.observeNonNull(this) {
+        categoryViewModel.categoriesLiveData.observeNonNull(this) {
             controller.categories = it
         }
 

@@ -25,10 +25,12 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
+import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
+import jp.gr.java_conf.foobar.testmaker.service.view.share.component.TextPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -45,6 +47,7 @@ class CreateWorkbookActivity : AppCompatActivity() {
 
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
     private val testViewModel: TestViewModel by viewModel()
+    private val categoryViewModel: CategoryViewModel by viewModel()
 
     private val logger: TestMakerLogger by inject()
 
@@ -58,7 +61,7 @@ class CreateWorkbookActivity : AppCompatActivity() {
             ColorPickerItem(colorId = R.color.blue, name = getString(R.string.blue)),
             ColorPickerItem(colorId = R.color.navy, name = getString(R.string.navy)),
             ColorPickerItem(colorId = R.color.purple, name = getString(R.string.purple)),
-            )
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +88,7 @@ class CreateWorkbookActivity : AppCompatActivity() {
 
                         var name by rememberSaveable { mutableStateOf("") }
                         var colorId by rememberSaveable { mutableStateOf(colors.first().colorId) }
+                        var folderName by rememberSaveable { mutableStateOf("") }
 
                         var showingValidationError by rememberSaveable { mutableStateOf(false) }
 
@@ -116,6 +120,7 @@ class CreateWorkbookActivity : AppCompatActivity() {
                                         })
                                     )
                                     ColorPicker(
+                                        modifier = Modifier.padding(bottom = 8.dp),
                                         label = stringResource(id = R.string.picker_color),
                                         entries = colors,
                                         value = colorId,
@@ -123,11 +128,20 @@ class CreateWorkbookActivity : AppCompatActivity() {
                                             colorId = it
                                         }
                                     )
+                                    TextPicker(
+                                        modifier = Modifier.padding(bottom = 8.dp),
+                                        label = stringResource(id = R.string.picker_folder),
+                                        entries = categoryViewModel.getCategories().map { it.name },
+                                        value = folderName,
+                                        onValueChange = {
+                                            folderName = it
+                                        })
+
                                 }
                                 Button(
                                     onClick = {
 
-                                        if(name.isEmpty()){
+                                        if (name.isEmpty()) {
                                             showingValidationError = true
                                             return@Button
                                         }
@@ -135,8 +149,9 @@ class CreateWorkbookActivity : AppCompatActivity() {
                                         testViewModel.create(
                                             title = name,
                                             color = colorId,
-                                            category = "", //todo
-                                            source = CreateTestSource.SELF.title)
+                                            category = folderName,
+                                            source = CreateTestSource.SELF.title
+                                        )
                                         logger.logCreateTestEvent(name, CreateTestSource.SELF.title)
 
                                         finish()
