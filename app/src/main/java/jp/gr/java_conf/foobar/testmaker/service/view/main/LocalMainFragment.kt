@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
@@ -28,7 +29,6 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.*
-import jp.gr.java_conf.foobar.testmaker.service.view.workbook.CreateWorkbookActivity
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -113,8 +113,7 @@ class LocalMainFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
 
             fab.setOnClickListener {
-                CreateWorkbookActivity.startActivity(requireActivity())
-                //EditTestActivity.startActivity(requireActivity())
+                findNavController().navigate(R.id.page_create_workbook)
             }
 
             recyclerView.layoutManager = StickyHeaderLinearLayoutManager(requireContext())
