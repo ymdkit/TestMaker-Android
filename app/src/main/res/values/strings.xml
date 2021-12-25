@@ -311,4 +311,6 @@
     <string name="blue">blue</string>
     <string name="navy">navy</string>
     <string name="purple">purple</string>
+    <string name="title_error_create_workbook">error</string>
+    <string name="msg_error_create_workbook">please input title</string>
 </resources>

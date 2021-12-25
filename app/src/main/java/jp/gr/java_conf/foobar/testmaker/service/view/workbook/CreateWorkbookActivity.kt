@@ -86,6 +86,8 @@ class CreateWorkbookActivity : AppCompatActivity() {
                         var name by rememberSaveable { mutableStateOf("") }
                         var colorId by rememberSaveable { mutableStateOf(colors.first().colorId) }
 
+                        var showingValidationError by rememberSaveable { mutableStateOf(false) }
+
                         Column {
                             Column(
                                 modifier = Modifier
@@ -126,6 +128,7 @@ class CreateWorkbookActivity : AppCompatActivity() {
                                     onClick = {
 
                                         if(name.isEmpty()){
+                                            showingValidationError = true
                                             return@Button
                                         }
 
@@ -143,6 +146,26 @@ class CreateWorkbookActivity : AppCompatActivity() {
                                         .height(48.dp)
                                 ) {
                                     Text(text = stringResource(id = R.string.button_create_workbook))
+                                }
+                                if (showingValidationError) {
+                                    AlertDialog(
+                                        onDismissRequest = {
+                                            showingValidationError = false
+                                        },
+                                        title = {
+                                            Text(stringResource(id = R.string.title_error_create_workbook))
+                                        },
+                                        text = {
+                                            Text(stringResource(id = R.string.msg_error_create_workbook))
+                                        },
+                                        confirmButton = {
+                                            TextButton(onClick = {
+                                                showingValidationError = false
+                                            }) {
+                                                Text(stringResource(id = R.string.ok))
+                                            }
+                                        }
+                                    )
                                 }
                             }
                             ComposeAdView(
