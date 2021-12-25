@@ -306,4 +306,5 @@
     <string name="title_error_create_workbook">作成エラー</string>
     <string name="msg_error_create_workbook">問題集のタイトルを入力してください</string>
     <string name="picker_folder">フォルダ</string>
+    <string name="new_folder">+ 新規作成</string>
 </resources>

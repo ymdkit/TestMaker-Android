@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
@@ -88,6 +89,7 @@ class CreateWorkbookActivity : AppCompatActivity() {
 
                         var name by rememberSaveable { mutableStateOf("") }
                         var colorId by rememberSaveable { mutableStateOf(colors.first().colorId) }
+                        var folders by rememberSaveable { mutableStateOf(categoryViewModel.getCategories()) }
                         var folderName by rememberSaveable { mutableStateOf("") }
 
                         var showingValidationError by rememberSaveable { mutableStateOf(false) }
@@ -131,10 +133,17 @@ class CreateWorkbookActivity : AppCompatActivity() {
                                     TextPicker(
                                         modifier = Modifier.padding(bottom = 8.dp),
                                         label = stringResource(id = R.string.picker_folder),
-                                        entries = categoryViewModel.getCategories().map { it.name },
+                                        entries = folders
+                                            .map { it.name } + listOf(
+                                            stringResource(id = R.string.new_folder)
+                                        ),
                                         value = folderName,
                                         onValueChange = {
-                                            folderName = it
+                                            if (it == getString(R.string.new_folder)) {
+                                                folders = folders + listOf(Category(name = "新しいフォルダ"))
+                                            } else {
+                                                folderName = it
+                                            }
                                         })
 
                                 }
