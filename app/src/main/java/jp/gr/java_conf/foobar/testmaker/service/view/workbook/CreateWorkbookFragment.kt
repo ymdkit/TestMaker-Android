@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
+import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
@@ -172,6 +173,8 @@ class CreateWorkbookFragment : Fragment() {
                                                 name,
                                                 CreateTestSource.SELF.title
                                             )
+
+                                            requireContext().showToast(getString(R.string.msg_create_success_workbook))
 
                                             findNavController().popBackStack()
                                         },

@@ -312,4 +312,5 @@
     <string name="title_error_create_folder">作成エラー</string>
     <string name="msg_error_create_folder">フォルダ名を入力してください</string>
     <string name="button_create_folder">フォルダを作成する</string>
+    <string name="msg_create_success_workbook">問題集を作成しました</string>
 </resources>
