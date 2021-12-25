@@ -299,4 +299,16 @@
     <string name="switch_is_check_order">check order</string>
     <string name="switch_is_auto_generate_others">auto generate other selections</string>
     <string name="msg_camera_not_granted">no permssion to use camera</string>
+    <string name="title_activity_create_workbook">create workbook</string>
+    <string name="hint_workbook_name">name</string>
+    <string name="button_create_workbook">create test</string>
+    <string name="picker_color">color</string>
+    <string name="red">red</string>
+    <string name="orange">orange</string>
+    <string name="yellow">yellow</string>
+    <string name="green">green</string>
+    <string name="dark_green">dark_green</string>
+    <string name="blue">blue</string>
+    <string name="navy">navy</string>
+    <string name="purple">purple</string>
 </resources>

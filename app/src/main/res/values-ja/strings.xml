@@ -291,4 +291,16 @@
     <string name="switch_is_check_order">解答順を正誤判定に含める</string>
     <string name="switch_is_auto_generate_others">選択肢の自動生成</string>
     <string name="msg_camera_not_granted">カメラを使用する権限がありません。端末の設定画面から、暗記メーカーでのカメラの使用を許可してください</string>
+    <string name="title_activity_create_workbook">問題集の作成</string>
+    <string name="hint_workbook_name">問題集のタイトル</string>
+    <string name="button_create_workbook">問題集を作成する</string>
+    <string name="picker_color">カラー</string>
+    <string name="red">レッド</string>
+    <string name="orange">オレンジ</string>
+    <string name="yellow">イエロー</string>
+    <string name="green">グリーン</string>
+    <string name="dark_green">ミント</string>
+    <string name="blue">ブルー</string>
+    <string name="navy">ネイビー</string>
+    <string name="purple">パープル</string>
 </resources>
