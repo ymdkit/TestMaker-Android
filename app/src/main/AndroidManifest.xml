@@ -45,6 +45,7 @@
         <activity
             android:name=".view.main.MainActivity"
             android:configChanges="uiMode"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -101,12 +102,6 @@
         <activity
             android:name="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionActivity"
             android:exported="false"
-            />
-
-        <activity
-            android:name="jp.gr.java_conf.foobar.testmaker.service.view.workbook.CreateWorkbookActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"
             />
 
     </application>
