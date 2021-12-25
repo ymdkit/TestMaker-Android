@@ -7,7 +7,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.CategoryReposit
 
 class CategoryViewModel(private val repository: CategoryRepository) : ViewModel() {
 
-    @Deprecated("")
     var categoriesLiveData: LiveData<List<Category>> = repository.getAsLiveData()
 
     fun getCategories() = repository.get()

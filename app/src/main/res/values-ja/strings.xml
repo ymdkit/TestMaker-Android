@@ -308,4 +308,8 @@
     <string name="picker_folder">フォルダ</string>
     <string name="new_folder">+ 新規作成</string>
     <string name="fragment_create_workbook">問題集の作成</string>
+    <string name="fragment_create_folder">フォルダの作成</string>
+    <string name="title_error_create_folder">作成エラー</string>
+    <string name="msg_error_create_folder">フォルダ名を入力してください</string>
+    <string name="button_create_folder">フォルダを作成する</string>
 </resources>

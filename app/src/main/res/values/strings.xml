@@ -316,4 +316,8 @@
     <string name="picker_folder">folder</string>
     <string name="new_folder">new folder</string>
     <string name="fragment_create_workbook">create workbook</string>
+    <string name="fragment_create_folder">create folder</string>
+    <string name="title_error_create_folder">error</string>
+    <string name="msg_error_create_folder">please input name</string>
+    <string name="button_create_folder">create folder</string>
 </resources>
