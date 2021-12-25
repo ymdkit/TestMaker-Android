@@ -145,7 +145,6 @@ class CreateWorkbookFragment : Fragment() {
                                             onValueChange = {
                                                 if (it == getString(R.string.new_folder)) {
                                                     findNavController().navigate(R.id.page_create_folder)
-                                                    // todo 作成後にそのままその値を設定する
                                                 } else {
                                                     folderName = it
                                                 }

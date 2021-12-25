@@ -128,7 +128,7 @@ class CreateFolderFragment : Fragment() {
                                                 return@Button
                                             }
 
-                                            val newCategory = categoryViewModel.create(
+                                            categoryViewModel.create(
                                                 Category(
                                                     name = name,
                                                     color = ContextCompat.getColor(
