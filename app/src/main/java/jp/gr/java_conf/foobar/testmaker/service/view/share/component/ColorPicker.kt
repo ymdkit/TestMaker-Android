@@ -18,8 +18,8 @@ fun ColorPicker(
     modifier: Modifier = Modifier,
     label: String,
     entries: List<ColorPickerItem>,
-    value: Int,
-    onValueChange: (Int) -> Unit
+    value: ColorPickerItem,
+    onValueChange: (ColorPickerItem) -> Unit
 ) {
 
     var showingDropDownMenu by remember { mutableStateOf(false) }
@@ -43,8 +43,8 @@ fun ColorPicker(
             )
             Spacer(modifier = Modifier.weight(weight = 1f, fill = true))
             Text(
-                text = entries.find { it.colorId == value }?.name ?: "",
-                color = colorResource(id = value)
+                text = value.name,
+                color = colorResource(id = value.colorId)
             )
             Icon(
                 Icons.Default.ArrowDropDown,
@@ -60,7 +60,7 @@ fun ColorPicker(
             }) {
             entries.forEach {
                 DropdownMenuItem(onClick = {
-                    onValueChange(it.colorId)
+                    onValueChange(it)
                     showingDropDownMenu = false
                 }) {
                     Text(it.name, color = colorResource(id = it.colorId))
@@ -71,6 +71,7 @@ fun ColorPicker(
 }
 
 data class ColorPickerItem(
+    val id: Int,
     val colorId: Int,
     val name: String
 )

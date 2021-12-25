@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -21,10 +22,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
@@ -48,14 +49,18 @@ class CreateWorkbookFragment : Fragment() {
 
     private val colors by lazy {
         listOf(
-            ColorPickerItem(colorId = R.color.red, name = getString(R.string.red)),
-            ColorPickerItem(colorId = R.color.orange, name = getString(R.string.orange)),
-            ColorPickerItem(colorId = R.color.yellow, name = getString(R.string.yellow)),
-            ColorPickerItem(colorId = R.color.green, name = getString(R.string.green)),
-            ColorPickerItem(colorId = R.color.dark_green, name = getString(R.string.dark_green)),
-            ColorPickerItem(colorId = R.color.blue, name = getString(R.string.blue)),
-            ColorPickerItem(colorId = R.color.navy, name = getString(R.string.navy)),
-            ColorPickerItem(colorId = R.color.purple, name = getString(R.string.purple)),
+            ColorPickerItem(id = 0, colorId = R.color.red, name = getString(R.string.red)),
+            ColorPickerItem(id = 1, colorId = R.color.orange, name = getString(R.string.orange)),
+            ColorPickerItem(id = 2, colorId = R.color.yellow, name = getString(R.string.yellow)),
+            ColorPickerItem(id = 3, colorId = R.color.green, name = getString(R.string.green)),
+            ColorPickerItem(
+                id = 4,
+                colorId = R.color.dark_green,
+                name = getString(R.string.dark_green)
+            ),
+            ColorPickerItem(id = 5, colorId = R.color.blue, name = getString(R.string.blue)),
+            ColorPickerItem(id = 6, colorId = R.color.navy, name = getString(R.string.navy)),
+            ColorPickerItem(id = 7, colorId = R.color.purple, name = getString(R.string.purple)),
         )
     }
 
@@ -85,8 +90,10 @@ class CreateWorkbookFragment : Fragment() {
                             }
 
                             var name by rememberSaveable { mutableStateOf("") }
-                            var colorId by rememberSaveable { mutableStateOf(colors.first().colorId) }
-                            var folders by rememberSaveable { mutableStateOf(categoryViewModel.getCategories()) }
+                            var color by remember { mutableStateOf(colors.first()) }
+                            val folders by categoryViewModel.categoriesLiveData.observeAsState(
+                                listOf()
+                            )
                             var folderName by rememberSaveable { mutableStateOf("") }
 
                             var showingValidationError by rememberSaveable { mutableStateOf(false) }
@@ -122,9 +129,9 @@ class CreateWorkbookFragment : Fragment() {
                                             modifier = Modifier.padding(bottom = 8.dp),
                                             label = stringResource(id = R.string.picker_color),
                                             entries = colors,
-                                            value = colorId,
+                                            value = color,
                                             onValueChange = {
-                                                colorId = it
+                                                color = it
                                             }
                                         )
                                         TextPicker(
@@ -137,8 +144,8 @@ class CreateWorkbookFragment : Fragment() {
                                             value = folderName,
                                             onValueChange = {
                                                 if (it == getString(R.string.new_folder)) {
-                                                    folders =
-                                                        folders + listOf(Category(name = "新しいフォルダ"))
+                                                    findNavController().navigate(R.id.page_create_folder)
+                                                    // todo 作成後にそのままその値を設定する
                                                 } else {
                                                     folderName = it
                                                 }
@@ -155,7 +162,10 @@ class CreateWorkbookFragment : Fragment() {
 
                                             testViewModel.create(
                                                 title = name,
-                                                color = colorId,
+                                                color = ContextCompat.getColor(
+                                                    context,
+                                                    color.colorId
+                                                ),
                                                 category = folderName,
                                                 source = CreateTestSource.SELF.title
                                             )
