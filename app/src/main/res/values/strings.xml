@@ -138,7 +138,7 @@
     <string name="sku_remove_ad">android.test.purchased</string>
     <string name="menu_feedback">feedback</string>
     <string name="email_subject_feedback">feedback</string>
-    <string name="email_body_feedback">It would be very helpful if you could provide a description of what you did and what you did with the screenshot. \n\n\n\n\n Android SDK%1$d </string>
+    <string name="email_body_feedback">It would be very helpful if you could provide a description of what you did and what you did with the screenshot. \n\n\n\n\n Android SDK%1$s\nApp version %2$s </string>
     <string name="empty_test">make your first test</string>
     <string name="title_activity_edit_question">edit question</string>
 

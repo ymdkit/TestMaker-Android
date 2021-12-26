@@ -136,7 +136,7 @@
     <string name="purchase_canceled">購入がキャンセルされました</string>
     <string name="menu_feedback">お問い合わせ</string>
     <string name="email_subject_feedback">「暗記メーカー」に関するお問い合わせ</string>
-    <string name="email_body_feedback">お問い合わせの内容について、どのような操作を行ったかや画面のスクリーンショットの添付をしていただけると助かります\n\n\n\n\n Android SDK%1$d より送信</string>
+    <string name="email_body_feedback">お問い合わせの内容について、どのような操作を行ったかや画面のスクリーンショットの添付をしていただけると助かります\n\n\n\n\n Android バージョン%1$s \nアプリバージョン %2$s</string>
     <string name="empty_test">保存している問題集はありません。\n画面下部のボタンから問題集を追加してください</string>
     <string name="title_activity_edit_question">問題の編集</string>
     <string name="hint_auto">自動生成（他の問題の解答）</string>

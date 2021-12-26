@@ -47,9 +47,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             setOnPreferenceClickListener {
 
                 EditTextDialogFragment.newInstance(
-                        title = getString(R.string.title_dialog_edit_user_name),
-                        defaultText = user.displayName ?: "",
-                        hint = getString(R.string.hint_user_name))
+                    title = getString(R.string.title_dialog_edit_user_name),
+                    defaultText = user.displayName ?: "",
+                    hint = getString(R.string.hint_user_name)
+                )
                 { text ->
 
                     auth.updateProfile(text) {
@@ -71,14 +72,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         logoutPreference?.apply {
             setOnPreferenceClickListener {
                 MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(getString(R.string.logout))
-                        .setMessage(getString(R.string.msg_logout))
-                        .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                            auth.logOut()
-                            MainActivity.startActivityWithClear(requireActivity())
-                        }
-                        .setNegativeButton(getString(R.string.cancel), null)
-                        .show()
+                    .setTitle(getString(R.string.logout))
+                    .setMessage(getString(R.string.msg_logout))
+                    .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                        auth.logOut()
+                        MainActivity.startActivityWithClear(requireActivity())
+                    }
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .show()
                 true
             }
         }
@@ -105,7 +106,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     studyPlus.startAuth(requireActivity(), REQUEST_CODE_AUTH)
                 } catch (e: ActivityNotFoundException) {
                     e.printStackTrace()
-                    Toast.makeText(requireContext(), getString(R.string.msg_download_study_plus), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.msg_download_study_plus),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 true
             }
@@ -136,7 +141,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 )
                 emailIntent.putExtra(
                     Intent.EXTRA_TEXT,
-                    getString(R.string.email_body_feedback, Build.VERSION.SDK_INT)
+                    getString(
+                        R.string.email_body_feedback,
+                        Build.VERSION.SDK_INT.toString(),
+                        BuildConfig.VERSION_NAME
+                    )
                 )
                 startActivity(Intent.createChooser(emailIntent, null))
                 true
