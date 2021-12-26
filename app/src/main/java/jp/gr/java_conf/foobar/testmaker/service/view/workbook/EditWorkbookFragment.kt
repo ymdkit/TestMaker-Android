@@ -158,7 +158,7 @@ class EditWorkbookFragment : Fragment() {
                                             onValueChange = {
                                                 if (it == getString(R.string.new_folder)) {
                                                     findNavController().navigate(
-                                                        CreateWorkbookFragmentDirections.actionCreateWorkbookToCreateFolder()
+                                                        EditWorkbookFragmentDirections.actionEditWorkbookToCreateFolder()
                                                     )
                                                 } else {
                                                     folderName = it
