@@ -15,7 +15,6 @@
     <string name="delete">delete</string>
     <string name="edit">edit</string>
     <string name="help">help</string>
-    <string name="image">image</string>
     <string name="load">load</string>
     <string name="menu">menu</string>
     <string name="message_delete">delete %1$s ?</string>

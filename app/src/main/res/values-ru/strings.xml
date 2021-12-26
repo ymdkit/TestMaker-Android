@@ -28,7 +28,6 @@
     <string name="message_null_questions">ноль вопрос</string>
     <string name="message_null_wrongs">ноль Неверный ответ</string>
     <string name="message_null_number">ноль сумма</string>
-    <string name="image">изображение</string>
     <string name="title_activity_edit">редактирование</string>
     <string name="add">прибавление</string>
     <string name="hint_explanation">комментарий</string>

@@ -51,15 +51,6 @@
         <item name="android:layout_height">?attr/actionBarSize</item>
     </style>
 
-    <style name="MyColorBoxStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@drawable/circle</item>
-        <item name="android:layout_margin">@dimen/element_spacing_small</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:contentDescription">@string/image</item>
-    </style>
-
     <style name="MyTextInputLayoutStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
 
         <item name="android:layout_width">match_parent</item>
