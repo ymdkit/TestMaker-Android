@@ -67,7 +67,6 @@
         <activity
             android:name=".view.edit.EditActivity"
             android:configChanges="uiMode"
-            android:label="編集"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.share.BaseActivity"

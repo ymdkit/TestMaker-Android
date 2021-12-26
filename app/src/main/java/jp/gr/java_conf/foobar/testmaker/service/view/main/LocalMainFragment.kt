@@ -25,7 +25,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.*
@@ -156,7 +155,9 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun editTest(test: Test) {
-        EditActivity.startActivity(requireActivity(), test.id)
+        findNavController().navigate(HomeFragmentDirections.actionHomeToListQuestion(
+            test.id
+        ))
     }
 
     private fun deleteTest(test: Test) {
