@@ -10,10 +10,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.ads.AdRequest
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentUploadGroupTestBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.UploadTestDestination
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseViewModel
@@ -27,6 +31,7 @@ class UploadGroupTestFragment : Fragment() {
     private val viewModel: FirebaseViewModel by viewModel()
     private val args: GroupDetailFragmentArgs by navArgs()
     private val logger: TestMakerLogger by inject()
+    private val sharedPreferenceManager: SharedPreferenceManager by inject()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -61,6 +66,17 @@ class UploadGroupTestFragment : Fragment() {
                             Toast.makeText(requireContext(), getString(R.string.msg_canceled), Toast.LENGTH_SHORT).show()
                         }
                 )
+            }
+
+            toolbar.setupWithNavController(
+                findNavController(),
+                AppBarConfiguration(findNavController().graph)
+            )
+
+            if (sharedPreferenceManager.isRemovedAd) {
+                adView.visibility = View.GONE
+            } else {
+                adView.loadAd(AdRequest.Builder().build())
             }
 
         }.root

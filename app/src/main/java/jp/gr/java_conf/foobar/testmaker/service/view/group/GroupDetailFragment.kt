@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.gms.ads.AdRequest
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupDetailBinding
@@ -20,6 +21,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.view.main.AccountMainFragment
@@ -43,6 +45,7 @@ class GroupDetailFragment : Fragment() {
     private val controller: GroupDetailController by lazy { GroupDetailController(requireContext()) }
     private val viewModel: GroupDetailViewModel by viewModel()
     private val auth: Auth by inject()
+    private val sharedPreferenceManager: SharedPreferenceManager by inject()
 
     private var group: Group? = null
 
@@ -135,6 +138,12 @@ class GroupDetailFragment : Fragment() {
                 findNavController(),
                 AppBarConfiguration(findNavController().graph)
             )
+
+            if (sharedPreferenceManager.isRemovedAd) {
+                adView.visibility = View.GONE
+            } else {
+                adView.loadAd(AdRequest.Builder().build())
+            }
 
         }.root
     }
