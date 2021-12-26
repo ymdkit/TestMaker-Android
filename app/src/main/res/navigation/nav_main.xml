@@ -99,12 +99,6 @@
         android:label="@string/title_activity_public_tests"
         tools:layout="@layout/fragment_group_list" />
 
-<!--    <fragment-->
-<!--        android:id="@id/page_group"-->
-<!--        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupContainerFragment"-->
-<!--        android:label="@string/title_page_group"-->
-<!--        tools:layout="@layout/fragment_group_list" />-->
-
     <fragment
         android:id="@id/page_group"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListFragment"
