@@ -19,7 +19,11 @@
 
         <action
             android:id="@+id/action_home_to_list_question"
-            app:destination="@id/page_list_question" />
+            app:destination="@id/page_list_question"
+            app:enterAnim="@anim/alpha_appear"
+            app:exitAnim="@anim/alpha_gone"
+            app:popEnterAnim="@anim/alpha_appear"
+            app:popExitAnim="@anim/alpha_gone" />
 
     </fragment>
 
