@@ -112,7 +112,7 @@ class LocalMainFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
 
             fab.setOnClickListener {
-                findNavController().navigate(R.id.page_create_workbook)
+                findNavController().navigate(HomeFragmentDirections.actionHomeToCreateWorkbook())
             }
 
             recyclerView.layoutManager = StickyHeaderLinearLayoutManager(requireContext())

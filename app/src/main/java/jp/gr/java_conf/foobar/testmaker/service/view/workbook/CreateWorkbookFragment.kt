@@ -145,7 +145,7 @@ class CreateWorkbookFragment : Fragment() {
                                             value = folderName,
                                             onValueChange = {
                                                 if (it == getString(R.string.new_folder)) {
-                                                    findNavController().navigate(R.id.page_create_folder)
+                                                    findNavController().navigate(CreateWorkbookFragmentDirections.actionCreateWorkbookToCreateFolder())
                                                 } else {
                                                     folderName = it
                                                 }
