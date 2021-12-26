@@ -31,7 +31,6 @@
     <string name="image">изображение</string>
     <string name="title_activity_edit">редактирование</string>
     <string name="add">прибавление</string>
-    <string name="hint_name">титульный</string>
     <string name="hint_explanation">комментарий</string>
     <string name="hint_answer">ответа</string>
     <string name="hint_question">вопрос</string>
@@ -39,7 +38,6 @@
     <string name="action_other">другое приложение</string>
     <string name="action_import">Импортировать</string>
     <string name="action_license">лицензия</string>
-    <string name="msg_save">Сохранить</string>
     <string-array name="sort_exam">
         <item>Алфавитный порядок(По убыванию)</item>
         <item>Алфавитный порядок(По возрастанию)</item>

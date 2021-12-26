@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="add">add</string>
-    <string name="hint_name">name test</string>
     <string name="hint_explanation">explanation</string>
     <string name="hint_answer">answer</string>
     <string name="hint_question">question</string>
@@ -82,7 +81,6 @@
         <item>large</item>
     </string-array>
 
-    <string name="msg_save">saved</string>
     <string name="config">config</string>
     <string name="search">search</string>
     <string name="ok">OK</string>
@@ -142,16 +140,7 @@
     <string name="menu_feedback">feedback</string>
     <string name="email_subject_feedback">feedback</string>
     <string name="email_body_feedback">It would be very helpful if you could provide a description of what you did and what you did with the screenshot. \n\n\n\n\n Android SDK%1$d </string>
-    <string name="label_color">color</string>
-    <string name="label_category">category</string>
-    <string name="text_add_category">new category</string>
-    <string name="text_header_category">category setting</string>
-    <string name="save_test">save test</string>
-    <string name="save_category">save category</string>
-    <string name="msg_save_test">saved test</string>
     <string name="empty_test">make your first test</string>
-    <string name="title_activity_edit_test">edit test</string>
-    <string name="title_activity_edit_category">edit category</string>
     <string name="title_activity_edit_question">edit question</string>
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -17,7 +17,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.*
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.category.EditCategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupDetailViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListViewModel
@@ -76,7 +75,6 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
     viewModel { TestViewModel(get()) }
     viewModel { MainViewModel(get(), get(), get(), get()) }
     viewModel { EditTestViewModel() }
-    viewModel { EditCategoryViewModel() }
     viewModel { FirebaseViewModel(get(), get(), get()) }
     viewModel { FirebaseMyPageViewModel(get(), get()) }
     viewModel { ShowTestsViewModel(get(), get(), get()) }

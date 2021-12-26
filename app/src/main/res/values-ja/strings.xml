@@ -31,7 +31,6 @@
     <string name="image">画像</string>
     <string name="title_activity_edit">編集</string>
     <string name="add">add</string>
-    <string name="hint_name">タイトル</string>
     <string name="hint_explanation">解説</string>
     <string name="hint_answer">解答</string>
     <string name="hint_question">問題文</string>
@@ -39,7 +38,6 @@
     <string name="action_other">開発者の他のアプリ</string>
     <string name="action_import">ファイルのインポート</string>
     <string name="action_license">ライセンス</string>
-    <string name="msg_save">保存しました</string>
     <string-array name="sort_exam">
         <item>五十音順(降順)</item>
         <item>五十音順(昇順)</item>
@@ -140,16 +138,7 @@
     <string name="menu_feedback">お問い合わせ</string>
     <string name="email_subject_feedback">「暗記メーカー」に関するお問い合わせ</string>
     <string name="email_body_feedback">お問い合わせの内容について、どのような操作を行ったかや画面のスクリーンショットの添付をしていただけると助かります\n\n\n\n\n Android SDK%1$d より送信</string>
-    <string name="label_color">カラー</string>
-    <string name="label_category">フォルダ</string>
-    <string name="text_add_category">新しいフォルダを追加</string>
-    <string name="text_header_category">フォルダ設定</string>
-    <string name="save_test">問題集を保存</string>
-    <string name="save_category">フォルダを保存</string>
-    <string name="msg_save_test">問題集を保存しました</string>
     <string name="empty_test">保存している問題集はありません。\n画面下部のボタンから問題集を追加してください</string>
-    <string name="title_activity_edit_test">問題集の編集</string>
-    <string name="title_activity_edit_category">フォルダの編集</string>
     <string name="title_activity_edit_question">問題の編集</string>
     <string name="hint_auto">自動生成（他の問題の解答）</string>
     <string name="empty_question">保存している問題はありません。\n画面下部のボタンから問題を追加してください</string>
