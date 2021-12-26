@@ -94,7 +94,10 @@ class QuestionListFragment : Fragment() {
             // ContextMenu の背景色に合わせてアイコンの色を変更
             menu?.forEach {
                 val drawable = it.icon
-                DrawableCompat.setTint(drawable, ContextCompat.getColor(requireContext(), R.color.colorText))
+                DrawableCompat.setTint(
+                    drawable,
+                    ContextCompat.getColor(requireContext(), R.color.colorText)
+                )
                 it.icon = drawable
             }
             return true
@@ -233,11 +236,14 @@ class QuestionListFragment : Fragment() {
                 CreateQuestionActivity.startActivity(requireActivity(), test.id)
             }
 
-            toolbar.setupWithNavController(findNavController(), AppBarConfiguration(findNavController().graph))
+            toolbar.setupWithNavController(
+                findNavController(),
+                AppBarConfiguration(findNavController().graph)
+            )
 
             if (sharedPreferenceManager.isRemovedAd) {
                 adView.visibility = View.GONE
-            }else{
+            } else {
                 adView.loadAd(AdRequest.Builder().build())
             }
 
@@ -250,7 +256,11 @@ class QuestionListFragment : Fragment() {
         binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_setting -> {
-                    EditTestActivity.startActivity(requireActivity(), test.id)
+                    findNavController().navigate(
+                        QuestionListFragmentDirections.actionQuestionListToEditWorkbook(
+                            workbookId = test.id
+                        )
+                    )
                     true
                 }
                 R.id.action_export -> {

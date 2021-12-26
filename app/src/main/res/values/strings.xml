@@ -322,4 +322,8 @@
     <string name="button_create_folder">create folder</string>
     <string name="msg_create_success_workbook">create question</string>
     <string name="fragment_list_question">questions</string>
+    <string name="fragment_edit_workbook">edit test</string>
+    <string name="title_edit_workbook">edit workbook</string>
+    <string name="msg_update_success_workbook">update success</string>
+    <string name="button_update_workbook">update</string>
 </resources>
