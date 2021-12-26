@@ -11,6 +11,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.IdpResponse
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupListBinding
@@ -82,6 +84,11 @@ class GroupListFragment : Fragment() {
                     createAndJoinGroup(text)
                 }.show(requireActivity().supportFragmentManager, "TAG")
             }
+
+            toolbar.setupWithNavController(
+                findNavController(),
+                AppBarConfiguration(findNavController().graph)
+            )
 
         }.root
     }
