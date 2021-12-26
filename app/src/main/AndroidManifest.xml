@@ -65,10 +65,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.edit.EditActivity"
-            android:configChanges="uiMode"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.share.BaseActivity"
             android:configChanges="uiMode" />
 
@@ -80,12 +76,6 @@
             android:name="jp.gr.java_conf.foobar.testmaker.service.view.result.ComposeResultActivity"
             android:exported="true"
             android:label="@string/title_activity_compose_result"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionsActivity"
-            android:exported="true"
-            android:label="@string/title_activity_edit"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
