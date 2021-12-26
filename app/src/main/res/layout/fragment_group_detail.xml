@@ -14,6 +14,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/layout_coordinator"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/adView"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    style="@style/Toolbar"
+                    android:layout_width="match_parent"
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:popupTheme="@style/Theme.AppCompat.DayNight"
+                    app:menu="@menu/menu_group_detail_guest"
+                    />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
@@ -71,8 +96,22 @@
             android:animatedVisibility="@{isLogin}"
             android:contentDescription="@null"
             android:src="@drawable/ic_baseline_cloud_upload_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_anchor="@id/recycler_view"
+            app:layout_anchorGravity="bottom|end"
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+            />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-8942090726462263/8420884238"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

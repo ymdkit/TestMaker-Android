@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -129,91 +131,82 @@ class GroupDetailFragment : Fragment() {
                 )
             }
 
+            toolbar.setupWithNavController(
+                findNavController(),
+                AppBarConfiguration(findNavController().graph)
+            )
+
         }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
+
+        binding.toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_invite_group -> {
+                    inviteGroup()
+                    true
+                }
+                R.id.menu_rename_group -> {
+
+                    group?.let {
+
+                        EditTextDialogFragment.newInstance(
+                            title = getString(R.string.title_rename_group),
+                            defaultText = it.name,
+                            hint = getString(R.string.hint_group_name)
+                        )
+                        { text ->
+
+                            renameGroup(text, it)
+
+                        }.show(requireActivity().supportFragmentManager, "TAG")
+
+                    }
+                    true
+
+                }
+                R.id.menu_delete_group -> {
+
+                    group?.let {
+
+                        ConfirmDangerDialogFragment.newInstance(
+                            getString(
+                                R.string.msg_delete_group,
+                                it.name
+                            ),
+                            getString(R.string.button_delete_confirm)
+                        ) {
+                            deleteAndExitGroup(it)
+
+                        }.show(requireActivity().supportFragmentManager, "TAG")
+
+                    }
+                    true
+                }
+                R.id.menu_exit_group -> {
+
+                    group?.let {
+
+                        ConfirmDangerDialogFragment.newInstance(
+                            getString(
+                                R.string.msg_exit_group,
+                                it.name
+                            ), getString(R.string.button_delete_confirm)
+                        ) {
+                            exitGroup(it.id)
+                        }.show(requireActivity().supportFragmentManager, "TAG")
+                    }
+                    true
+                }
+                else -> {
+                    true
+                }
+            }
+        }
+
         refresh()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_group_detail_guest, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-
-        auth.getUser()?.uid?.let { userId ->
-            group?.let { group ->
-                if (group.userId == userId) {
-                    menu.clear()
-                    requireActivity().menuInflater.inflate(R.menu.menu_group_detail_owner, menu)
-                }
-            }
-        }
-
-        super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_invite_group -> {
-                inviteGroup()
-            }
-            R.id.menu_rename_group -> {
-
-                group?.let {
-
-                    EditTextDialogFragment.newInstance(
-                        title = getString(R.string.title_rename_group),
-                        defaultText = it.name,
-                        hint = getString(R.string.hint_group_name)
-                    )
-                    { text ->
-
-                        renameGroup(text, it)
-
-                    }.show(requireActivity().supportFragmentManager, "TAG")
-
-                }
-
-            }
-            R.id.menu_delete_group -> {
-
-                group?.let {
-
-                    ConfirmDangerDialogFragment.newInstance(
-                        getString(
-                            R.string.msg_delete_group,
-                            it.name
-                        ),
-                        getString(R.string.button_delete_confirm)
-                    ) {
-                        deleteAndExitGroup(it)
-
-                    }.show(requireActivity().supportFragmentManager, "TAG")
-
-                }
-            }
-            R.id.menu_exit_group -> {
-
-                group?.let {
-
-                    ConfirmDangerDialogFragment.newInstance(
-                        getString(
-                            R.string.msg_exit_group,
-                            it.name
-                        ), getString(R.string.button_delete_confirm)
-                    ) {
-                        exitGroup(it.id)
-                    }.show(requireActivity().supportFragmentManager, "TAG")
-                }
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     private fun refresh() = lifecycleScope.launch {
@@ -228,7 +221,15 @@ class GroupDetailFragment : Fragment() {
 
         joinGroup()
         binding.swipeRefresh.isRefreshing = false
-        requireActivity().invalidateOptionsMenu()
+
+        auth.getUser()?.uid?.let { userId ->
+            group?.let { group ->
+                if (group.userId == userId) {
+                    binding.toolbar.menu.clear()
+                    binding.toolbar.inflateMenu(R.menu.menu_group_detail_owner)
+                }
+            }
+        }
     }
 
     private fun joinGroup() = lifecycleScope.launch {
