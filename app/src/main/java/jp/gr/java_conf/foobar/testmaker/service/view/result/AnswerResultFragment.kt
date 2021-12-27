@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ScrollState
@@ -61,6 +62,16 @@ class AnswerResultFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner, object: OnBackPressedCallback(
+                true
+            ) {
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack(R.id.page_home, false)
+                }
+            }
+        )
 
         return ComposeView(requireContext()).apply {
             setContent {
