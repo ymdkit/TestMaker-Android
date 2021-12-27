@@ -34,6 +34,29 @@
             app:popEnterAnim="@anim/alpha_appear"
             app:popExitAnim="@anim/alpha_gone" />
 
+        <action
+            android:id="@+id/action_home_to_answer_workbook"
+            app:destination="@id/page_answer_workbook"
+            app:enterAnim="@anim/alpha_appear"
+            app:exitAnim="@anim/alpha_gone"
+            app:popEnterAnim="@anim/alpha_appear"
+            app:popExitAnim="@anim/alpha_gone" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/page_answer_workbook"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookFragment"
+        android:label="@string/fragment_answer_workbook" >
+
+        <argument
+            android:name="workbookId"
+            app:argType="long" />
+
+        <argument
+            android:name="isRetry"
+            app:argType="boolean"
+            android:defaultValue="false"/>
     </fragment>
 
     <fragment

@@ -3,6 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.isGone
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -42,6 +43,17 @@ class MainActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.bottomBar.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when(destination.id){
+                R.id.page_answer_workbook -> {
+                    binding.bottomBar.isGone = true
+                }
+                else -> {
+                    binding.bottomBar.isGone = false
+                }
+            }
+        }
 
         lifecycleScope.launch {
             val pendingDynamicLinkData = withContext(Dispatchers.Default) {

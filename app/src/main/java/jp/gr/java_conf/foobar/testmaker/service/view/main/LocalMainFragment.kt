@@ -26,7 +26,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreat
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -217,7 +216,10 @@ class LocalMainFragment : Fragment() {
 
             testViewModel.update(result)
 
-            AnswerWorkbookActivity.startActivity(requireActivity(), result.id)
+            findNavController().navigate(HomeFragmentDirections.actionHomeToAnswerWorkbook(
+                workbookId = result.id,
+                isRetry = false
+            ))
         }
     }
 
