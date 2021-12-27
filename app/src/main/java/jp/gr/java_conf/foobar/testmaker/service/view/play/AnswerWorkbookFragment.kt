@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.ads.AdSize
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -27,6 +29,7 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.play.component.*
 import jp.gr.java_conf.foobar.testmaker.service.view.result.MyTopAppBar
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import org.koin.android.ext.android.inject
@@ -60,6 +63,21 @@ class AnswerWorkbookFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner, object: OnBackPressedCallback(
+                true
+            ) {
+                override fun handleOnBackPressed() {
+                    ConfirmDangerDialogFragment.newInstance(
+                        title = getString(R.string.play_dialog_confirm_interrupt),
+                        buttonText = getString(R.string.ok)
+                    ) {
+                        findNavController().popBackStack()
+                    }.show(childFragmentManager, "TAG")
+                }
+            }
+        )
 
         return ComposeView(requireContext()).apply {
             setContent {
