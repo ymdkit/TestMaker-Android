@@ -60,6 +60,14 @@
             app:exitAnim="@anim/alpha_gone"
             app:popEnterAnim="@anim/alpha_appear"
             app:popExitAnim="@anim/alpha_gone" />
+
+        <action
+            android:id="@+id/action_question_list_to_edit_question"
+            app:destination="@id/page_edit_question"
+            app:enterAnim="@anim/alpha_appear"
+            app:exitAnim="@anim/alpha_gone"
+            app:popEnterAnim="@anim/alpha_appear"
+            app:popExitAnim="@anim/alpha_gone" />
     </fragment>
 
     <fragment
@@ -69,6 +77,20 @@
 
         <argument
             android:name="workbookId"
+            app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/page_edit_question"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionFragment"
+        android:label="@string/fragment_create_question" >
+
+        <argument
+            android:name="workbookId"
+            app:argType="long" />
+
+        <argument
+            android:name="questionId"
             app:argType="long" />
     </fragment>
 

@@ -378,7 +378,10 @@ class QuestionListFragment : Fragment() {
     }
 
     fun editQuestion(question: Question) {
-        EditQuestionActivity.startActivity(requireActivity(), test.id, question.id)
+        findNavController().navigate(QuestionListFragmentDirections.actionQuestionListToEditQuestion(
+            workbookId = test.id,
+            questionId = question.id
+        ))
     }
 
     fun copyQuestion(question: Question) {
