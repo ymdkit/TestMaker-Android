@@ -306,4 +306,5 @@
     <string name="title_edit_workbook">問題集の編集</string>
     <string name="msg_update_success_workbook">変更内容を保存しました</string>
     <string name="button_update_workbook">変更内容を保存する</string>
+    <string name="fragment_create_question">create question</string>
 </resources>

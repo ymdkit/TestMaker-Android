@@ -233,7 +233,9 @@ class QuestionListFragment : Fragment() {
             recyclerView.adapter = controller.adapter
 
             fab.setOnClickListener {
-                CreateQuestionActivity.startActivity(requireActivity(), test.id)
+                findNavController().navigate(
+                    QuestionListFragmentDirections.actionQuestionListToCreateQuestion(test.id)
+                )
             }
 
             toolbar.setupWithNavController(
