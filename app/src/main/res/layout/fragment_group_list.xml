@@ -55,7 +55,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_not_login"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:animatedVisibility="@{!isLogin}"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
