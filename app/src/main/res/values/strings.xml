@@ -316,4 +316,5 @@
     <string name="button_update_workbook">update</string>
     <string name="fragment_create_question">create question</string>
     <string name="fragment_answer_workbook">answer</string>
+    <string name="button_modify_question">modify question</string>
 </resources>

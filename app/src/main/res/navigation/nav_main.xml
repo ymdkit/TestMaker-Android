@@ -66,6 +66,14 @@
             app:popEnterAnim="@anim/alpha_appear"
             app:popExitAnim="@anim/alpha_gone" />
 
+        <action
+            android:id="@+id/action_answer_workbook_to_edit_question"
+            app:destination="@id/page_edit_question"
+            app:enterAnim="@anim/alpha_appear"
+            app:exitAnim="@anim/alpha_gone"
+            app:popEnterAnim="@anim/alpha_appear"
+            app:popExitAnim="@anim/alpha_gone" />
+
     </fragment>
 
     <fragment

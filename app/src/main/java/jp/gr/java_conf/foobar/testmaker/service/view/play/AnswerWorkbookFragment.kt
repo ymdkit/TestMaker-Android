@@ -166,6 +166,12 @@ class AnswerWorkbookFragment : Fragment() {
                                                             state.question,
                                                             isCorrect
                                                         )
+                                                    },
+                                                    onModifyQuestion = {
+                                                        findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
+                                                            workbookId = testId,
+                                                            questionId = it.id
+                                                        ))
                                                     }
                                                 )
                                             }
@@ -175,6 +181,12 @@ class AnswerWorkbookFragment : Fragment() {
                                                     isSwap = sharedPreferenceManager.reverse,
                                                     onConfirmed = {
                                                         playViewModel.loadNext(state.index)
+                                                    },
+                                                    onModifyQuestion = {
+                                                        findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
+                                                            workbookId = testId,
+                                                            questionId = it.id
+                                                        ))
                                                     }
                                                 )
                                             }

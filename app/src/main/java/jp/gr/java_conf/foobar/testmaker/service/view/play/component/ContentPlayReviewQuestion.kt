@@ -10,13 +10,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
 
 @Composable
 fun ContentPlayReviewQuestion(
     state: PlayUiState.Review,
     isSwap: Boolean,
-    onConfirmed: () -> Unit
+    onConfirmed: () -> Unit,
+    onModifyQuestion: (QuestionModel) -> Unit
 ) {
 
     Column {
@@ -39,7 +41,8 @@ fun ContentPlayReviewQuestion(
                 ContentReview(
                     yourAnswer = state.yourAnswer,
                     isSwap = isSwap,
-                    question = state.question
+                    question = state.question,
+                    onModifyQuestion = onModifyQuestion
                 )
             }
         }

@@ -1,10 +1,9 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.play.component
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,7 +16,8 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 fun ContentReview(
     yourAnswer: String,
     isSwap: Boolean,
-    question: QuestionModel
+    question: QuestionModel,
+    onModifyQuestion: (QuestionModel) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         if (yourAnswer.isNotEmpty()) {
@@ -50,6 +50,14 @@ fun ContentReview(
                     modifier = Modifier.padding(vertical = 16.dp),
                     text = question.explanation
                 )
+            }
+        }
+        Row {
+            Spacer(modifier = Modifier.weight(fill = true, weight = 1f))
+            OutlinedButton(onClick = {
+                onModifyQuestion(question)
+            }) {
+                Text(stringResource(id = R.string.button_modify_question))
             }
         }
     }

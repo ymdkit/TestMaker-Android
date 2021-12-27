@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
 
 
@@ -18,6 +19,7 @@ fun ContentPlayManualReviewQuestion(
     state: PlayUiState.ManualReview,
     isSwap: Boolean,
     onJudged: (Boolean) -> Unit,
+    onModifyQuestion: (QuestionModel) -> Unit,
 ) {
     Column {
         Column(
@@ -38,7 +40,9 @@ fun ContentPlayManualReviewQuestion(
             ContentReview(
                 yourAnswer = "",
                 isSwap = isSwap,
-                question = state.question)
+                question = state.question,
+                onModifyQuestion = onModifyQuestion
+            )
         }
         ContainedWideButton(
             modifier = Modifier.padding(bottom = 16.dp),
