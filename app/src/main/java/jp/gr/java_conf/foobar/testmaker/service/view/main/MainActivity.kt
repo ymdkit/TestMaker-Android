@@ -46,7 +46,7 @@ class MainActivity : BaseActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id){
-                R.id.page_answer_workbook -> {
+                R.id.page_answer_workbook, R.id.page_answer_result -> {
                     binding.bottomBar.isGone = true
                 }
                 else -> {
