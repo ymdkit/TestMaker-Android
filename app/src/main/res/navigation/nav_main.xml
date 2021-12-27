@@ -57,6 +57,46 @@
             android:name="isRetry"
             app:argType="boolean"
             android:defaultValue="false"/>
+
+        <action
+            android:id="@+id/action_answer_workbook_to_answer_result"
+            app:destination="@id/page_answer_result"
+            app:enterAnim="@anim/alpha_appear"
+            app:exitAnim="@anim/alpha_gone"
+            app:popEnterAnim="@anim/alpha_appear"
+            app:popExitAnim="@anim/alpha_gone" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/page_answer_result"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.result.AnswerResultFragment"
+        android:label="@string/fragment_answer_workbook" >
+
+        <argument
+            android:name="workbookId"
+            app:argType="long" />
+
+        <argument
+            android:name="duration"
+            app:argType="long" />
+
+        <action
+            android:id="@+id/action_answer_result_to_answer_workbook"
+            app:destination="@id/page_answer_workbook"
+            app:enterAnim="@anim/alpha_appear"
+            app:exitAnim="@anim/alpha_gone"
+            app:popEnterAnim="@anim/alpha_appear"
+            app:popExitAnim="@anim/alpha_gone" />
+
+        <action
+            android:id="@+id/action_answer_result_to_edit_question"
+            app:destination="@id/page_edit_question"
+            app:enterAnim="@anim/alpha_appear"
+            app:exitAnim="@anim/alpha_gone"
+            app:popEnterAnim="@anim/alpha_appear"
+            app:popExitAnim="@anim/alpha_gone" />
+
     </fragment>
 
     <fragment

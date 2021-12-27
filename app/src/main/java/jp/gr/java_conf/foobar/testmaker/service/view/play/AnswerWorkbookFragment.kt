@@ -26,7 +26,6 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.play.component.*
-import jp.gr.java_conf.foobar.testmaker.service.view.result.ComposeResultActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.result.MyTopAppBar
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
@@ -162,11 +161,10 @@ class AnswerWorkbookFragment : Fragment() {
                                                 )
                                             }
                                             is PlayUiState.Finish -> {
-                                                ComposeResultActivity.startActivity(
-                                                    requireActivity(),
-                                                    testId,
-                                                    System.currentTimeMillis() - startTime
-                                                )
+                                                findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToAnswerResult(
+                                                    workbookId = testId,
+                                                    duration = System.currentTimeMillis() - startTime
+                                                ))
                                             }
                                             is PlayUiState.NoQuestionExist -> {
                                                 requireContext().showToast(stringResource(id = R.string.msg_empty_question))
