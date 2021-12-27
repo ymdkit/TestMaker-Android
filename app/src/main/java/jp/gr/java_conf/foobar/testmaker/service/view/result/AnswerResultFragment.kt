@@ -16,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -64,7 +65,7 @@ class AnswerResultFragment : Fragment() {
     ): View {
 
         requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner, object: OnBackPressedCallback(
+            viewLifecycleOwner, object : OnBackPressedCallback(
                 true
             ) {
                 override fun handleOnBackPressed() {
@@ -99,19 +100,6 @@ class AnswerResultFragment : Fragment() {
                                             centerText = viewModel.scoreText
                                         )
 
-                                        WideOutlinedButton(
-                                            onCLick = {
-                                                findNavController().popBackStack(R.id.page_home, false)
-                                            },
-                                            text = getString(R.string.home),
-                                            modifier = Modifier.padding(vertical = 8.dp)
-                                        )
-                                        WideOutlinedButton(
-                                            onCLick = { onCLickRetry() },
-                                            text = getString(R.string.retry),
-                                            modifier = Modifier.padding(vertical = 8.dp)
-                                        )
-
                                         val studyPlusRecordStatus: ResultViewModel.StudyPlusRecordStatus by viewModel.studyPlusRecordStatus.collectAsState()
 
                                         AnimatedVisibility(
@@ -143,14 +131,45 @@ class AnswerResultFragment : Fragment() {
                                                 it.singleLineAnswer,
                                                 it.isCorrect
                                             ).ItemResult(onClick = {
-                                                findNavController().navigate(AnswerResultFragmentDirections.actionAnswerResultToEditQuestion(
-                                                    workbookId = testId,
-                                                    questionId = it.id
-                                                ))
+                                                findNavController().navigate(
+                                                    AnswerResultFragmentDirections.actionAnswerResultToEditQuestion(
+                                                        workbookId = testId,
+                                                        questionId = it.id
+                                                    )
+                                                )
                                             })
                                         }
                                     }
-
+                                    Row(
+                                        modifier = Modifier.padding(16.dp)
+                                    ){
+                                        OutlinedButton(
+                                            modifier = Modifier
+                                                .weight(fill = true, weight = 1f)
+                                                .defaultMinSize(minHeight = 48.dp),
+                                            onClick = {
+                                                findNavController().popBackStack(
+                                                    R.id.page_home,
+                                                    false
+                                                )
+                                            }) {
+                                            Text(stringResource(R.string.home))
+                                        }
+                                        Spacer(modifier = Modifier.width(16.dp))
+                                        Button(
+                                            modifier = Modifier
+                                                .weight(fill = true, weight = 1f)
+                                                .defaultMinSize(minHeight = 48.dp),
+                                            colors = ButtonDefaults.buttonColors(
+                                                backgroundColor = MaterialTheme.colors.primary
+                                            ),
+                                            onClick = {
+                                                onClickRetry()
+                                            }
+                                        ) {
+                                            Text(stringResource(id = R.string.retry))
+                                        }
+                                    }
                                     ComposeAdView(isRemovedAd = sharedPreferenceManager.isRemovedAd)
                                 }
                             }
@@ -195,7 +214,7 @@ class AnswerResultFragment : Fragment() {
         }
     }
 
-    private fun onCLickRetry() {
+    private fun onClickRetry() {
         ListDialogFragment.newInstance(
             getString(R.string.retry),
             listOf(
@@ -213,20 +232,24 @@ class AnswerResultFragment : Fragment() {
 
     private fun retryAllQuestions() {
         sharedPreferenceManager.refine = false
-        findNavController().navigate(AnswerResultFragmentDirections.actionAnswerResultToAnswerWorkbook(
-            workbookId = testId,
-            isRetry = true
-        ))
+        findNavController().navigate(
+            AnswerResultFragmentDirections.actionAnswerResultToAnswerWorkbook(
+                workbookId = testId,
+                isRetry = true
+            )
+        )
     }
 
     private fun retryOnlyInCorrectQuestions() {
         if (viewModel.questions.any { !it.isCorrect }) {
             sharedPreferenceManager.refine = true
 
-            findNavController().navigate(AnswerResultFragmentDirections.actionAnswerResultToAnswerWorkbook(
-                workbookId = testId,
-                isRetry = true
-            ))
+            findNavController().navigate(
+                AnswerResultFragmentDirections.actionAnswerResultToAnswerWorkbook(
+                    workbookId = testId,
+                    isRetry = true
+                )
+            )
         } else {
             requireContext().showToast(getString(R.string.message_null_wrongs))
         }
