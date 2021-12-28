@@ -89,7 +89,7 @@
     <string name="hint_user_name">ユーザー名</string>
     <string name="login">ログイン</string>
     <string name="login_successed">ログインしました</string>
-    <string name="hint_overview">概要(問題集についての説明)</string>
+    <string name="hint_overview">問題集に関するコメント</string>
     <string name="message_non_exist_test">端末内に問題集が存在しません。「端末」タブから問題集を追加してください</string>
     <string name="num_questions">問題数 %1$d</string>
     <string name="always_review">正解時も解説を表示する</string>
@@ -311,7 +311,7 @@
     <string name="button_modify_question">内容を修正する</string>
     <string name="fragment_upload_workbook">問題集の共有</string>
     <string name="title_upload_workbook">問題集の共有</string>
-    <string name="button_upload_workbook">問題集を投稿する</string>
+    <string name="button_upload_workbook">問題集をアップロードする</string>
     <string name="picker_workbook">問題集</string>
     <string name="hint_upload_workbook">アップロードする問題集</string>
     <string name="msg_error_not_authorized">この機能を利用するにはログインが必要です</string>
@@ -325,4 +325,5 @@
     <string name="msg_empty_tests">アップロードできる問題集がありません。問題集を作成してください</string>
     <string name="label_workbook">問題集</string>
     <string name="title_publish_workbook">問題集の投稿</string>
+    <string name="button_publish_workbook">問題集を投稿する</string>
 </resources>

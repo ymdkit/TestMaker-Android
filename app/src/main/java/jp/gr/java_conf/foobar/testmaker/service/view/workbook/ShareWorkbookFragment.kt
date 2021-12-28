@@ -1,18 +1,16 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.workbook
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -34,7 +32,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTh
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class UploadWorkbookFragment : Fragment() {
+class ShareWorkbookFragment : Fragment() {
 
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
     private val testViewModel: TestViewModel by viewModel()
@@ -51,13 +49,17 @@ class UploadWorkbookFragment : Fragment() {
         return ComposeView(requireContext()).apply {
 
             setContent {
+
+                var comment by remember { mutableStateOf("") }
+                var isPrivate by remember { mutableStateOf(false) }
+
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
                             TopAppBar(
                                 title = {
                                     Text(
-                                        text = getString(R.string.title_activity_upload_test),
+                                        text = getString(R.string.title_upload_workbook),
                                     )
                                 },
                                 navigationIcon = {
@@ -83,11 +85,6 @@ class UploadWorkbookFragment : Fragment() {
                                 ) {
 
                                     val uiState = uploadWorkbookViewModel.uiState.collectAsState()
-                                    var showingDropDownMenu by remember { mutableStateOf(false) }
-
-                                    var workbook by remember { mutableStateOf(workbook)}
-                                    var comment by rememberSaveable { mutableStateOf("") }
-                                    var isPrivate by rememberSaveable { mutableStateOf(false) }
 
                                     when (val state = uiState.value) {
                                         is UploadWorkbookUiState.UnAuthorized -> {
@@ -115,54 +112,20 @@ class UploadWorkbookFragment : Fragment() {
                                                     .weight(weight = 1f, fill = true)
                                             ) {
 
-                                                Box {
-                                                    OutlinedButton(
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .height(56.dp),
-                                                        onClick = {
-                                                            showingDropDownMenu = true
-                                                        },
-                                                        border = BorderStroke(
-                                                            ButtonDefaults.OutlinedBorderSize,
-                                                            MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
-                                                        )
-                                                    ) {
-                                                        Text(
-                                                            text = stringResource(id = R.string.label_workbook),
-                                                            color = MaterialTheme.colors.onSurface
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(weight = 1f, fill = true))
-                                                        Text(
-                                                            text = workbook.title,
-                                                            color = MaterialTheme.colors.onSurface
-                                                        )
-                                                        Icon(
-                                                            Icons.Default.ArrowDropDown,
-                                                            contentDescription = null,
-                                                            tint = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
-                                                        )
-                                                    }
-
-                                                    DropdownMenu(
-                                                        expanded = showingDropDownMenu,
-                                                        onDismissRequest = {
-                                                            showingDropDownMenu = false
-                                                        }) {
-                                                        testViewModel.tests.forEach {
-                                                            DropdownMenuItem(onClick = {
-                                                                workbook = it
-                                                                showingDropDownMenu = false
-                                                            }) {
-                                                                Text(it.title)
-                                                            }
-                                                        }
-                                                    }
-                                                }
                                                 OutlinedTextField(
                                                     modifier = Modifier
                                                         .fillMaxWidth()
                                                         .padding(bottom = 8.dp),
+                                                    enabled = false,
+                                                    label = {
+                                                        Text(text = stringResource(R.string.hint_share_workbook))
+                                                    },
+                                                    value = workbook.title,
+                                                    onValueChange = {})
+                                                OutlinedTextField(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(bottom = 16.dp),
                                                     maxLines = 3,
                                                     label = {
                                                         Text(text = stringResource(R.string.hint_overview))
@@ -190,7 +153,7 @@ class UploadWorkbookFragment : Fragment() {
                                                     .fillMaxWidth()
                                                     .height(48.dp)
                                             ) {
-                                                Text(text = stringResource(id = R.string.button_upload_workbook))
+                                                Text(text = stringResource(id = R.string.button_share_workbook))
                                             }
                                         }
                                         is UploadWorkbookUiState.Loading -> {
@@ -203,8 +166,7 @@ class UploadWorkbookFragment : Fragment() {
                                             }
                                         }
                                         is UploadWorkbookUiState.UploadSuccess -> {
-                                            requireContext().showToast(requireContext().getString(R.string.msg_test_upload))
-                                            findNavController().popBackStack()
+                                            uploadWorkbookViewModel.createDynamicLinks(state.documentId)
                                         }
                                         is UploadWorkbookUiState.UploadDivided -> {
                                             requireContext().showToast(requireContext().getString(R.string.msg_test_upload_divided))
@@ -212,6 +174,23 @@ class UploadWorkbookFragment : Fragment() {
                                         }
                                         is UploadWorkbookUiState.UploadFailure -> {
                                             requireContext().showToast(requireContext().getString(R.string.msg_upload_test_failure))
+                                            uploadWorkbookViewModel.reEdit()
+                                        }
+                                        is UploadWorkbookUiState.CreateDynamicLinksSuccess -> {
+                                            val sendIntent: Intent = Intent().apply {
+                                                action = Intent.ACTION_SEND
+                                                putExtra(
+                                                    Intent.EXTRA_TEXT,
+                                                    getString(R.string.msg_share_test, workbook.title, state.uri)
+                                                )
+                                                type = "text/plain"
+                                            }
+                                            val shareIntent = Intent.createChooser(sendIntent, null)
+                                            startActivity(shareIntent)
+                                            findNavController().popBackStack()
+                                        }
+                                        is UploadWorkbookUiState.CreateDynamicLinksFailure -> {
+                                            requireContext().showToast(requireContext().getString(R.string.msg_failure_share_test))
                                             uploadWorkbookViewModel.reEdit()
                                         }
                                     }

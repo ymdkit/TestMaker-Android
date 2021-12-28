@@ -186,7 +186,7 @@ class PublishWorkbookFragment : Fragment() {
                                                     .fillMaxWidth()
                                                     .height(48.dp)
                                             ) {
-                                                Text(text = stringResource(id = R.string.button_upload_workbook))
+                                                Text(text = stringResource(id = R.string.button_publish_workbook))
                                             }
                                         }
                                         is UploadWorkbookUiState.Loading -> {

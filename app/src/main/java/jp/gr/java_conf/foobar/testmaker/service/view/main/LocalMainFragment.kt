@@ -172,7 +172,7 @@ class LocalMainFragment : Fragment() {
 
     private fun uploadTest(test: Test) {
         logger.logEvent("upload_from_share_local")
-        findNavController().navigate(HomeFragmentDirections.actionHomeToUploadWorkbook(
+        findNavController().navigate(HomeFragmentDirections.actionHomeToShareWorkbook(
             workbookId = test.id
         ))
     }

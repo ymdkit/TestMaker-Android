@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.DocumentSnapshot
@@ -26,7 +27,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.HomeFragment.Companion.REQUEST_WORKBOOK_CREATED
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.SignInRequestContract
-import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
@@ -123,9 +123,11 @@ class AccountMainFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                     return@setOnClickListener
+                }else{
+                    findNavController().navigate(HomeFragmentDirections.actionHomeToUploadWorkbook(
+                        testViewModel.tests.first().id
+                    ))
                 }
-
-                UploadTestActivity.startActivity(requireActivity())
             }
 
             progress.setOnRefreshListener {
