@@ -168,7 +168,7 @@
     <string name="upload_test">アップロード</string>
     <string name="label_spinner_tests_for_upload">アップロードする問題集</string>
     <string name="label_setting_public">公開設定</string>
-    <string name="check_private">限定公開（リンクを知っている人のみ利用可能）</string>
+    <string name="check_private">リンクを知っている人にのみ公開</string>
     <string name="load_ad">広告を読み込み中</string>
     <string name="client_network_error">インターネット接続がありません</string>
     <string name="title_dialog_private">公開設定の変更</string>
@@ -309,4 +309,13 @@
     <string name="fragment_create_question">問題の作成</string>
     <string name="fragment_answer_workbook">問題集の解答</string>
     <string name="button_modify_question">内容を修正する</string>
+    <string name="fragment_upload_workbook">問題集のアップロード</string>
+    <string name="title_upload_workbook">問題集のアップロード</string>
+    <string name="button_upload_workbook">問題集をアップロードする</string>
+    <string name="picker_workbook">問題集</string>
+    <string name="hint_upload_workbook">アップロードする問題集</string>
+    <string name="msg_error_not_authorized">この機能を利用するにはログインが必要です</string>
+    <string name="title_error_not_authorized">ログイン</string>
+    <string name="button_login">ログイン</string>
+    <string name="msg_failure_login">ログインに失敗しました（エラーコード %1$d）</string>
 </resources>
