@@ -39,6 +39,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -51,6 +52,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
+import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
@@ -65,6 +67,7 @@ class PublishedWorkbookListFragment : Fragment() {
         const val COLOR_MAX = 8F
     }
 
+    private val testViewModel: TestViewModel by viewModel()
     private val viewModel: FirebaseViewModel by viewModel()
     private val sharedPreferenceManager: SharedPreferenceManager by inject()
     private val logger: TestMakerLogger by inject()
@@ -181,13 +184,19 @@ class PublishedWorkbookListFragment : Fragment() {
                                                             secondaryText = {
                                                                 Row {
                                                                     Text(
-                                                                        text = stringResource(id = R.string.text_workbook_size, it.size),
+                                                                        text = stringResource(
+                                                                            id = R.string.text_workbook_size,
+                                                                            it.size
+                                                                        ),
                                                                     )
                                                                     Text(
                                                                         text = "・",
                                                                     )
                                                                     Text(
-                                                                        text = stringResource(id = R.string.text_download_count, it.downloadCount),
+                                                                        text = stringResource(
+                                                                            id = R.string.text_download_count,
+                                                                            it.downloadCount
+                                                                        ),
                                                                     )
                                                                 }
                                                             },
@@ -200,7 +209,16 @@ class PublishedWorkbookListFragment : Fragment() {
                                         Button(
                                             onClick = {
                                                 logger.logEvent("upload_from_firebase_activity")
-                                                UploadTestActivity.startActivity(requireActivity())
+
+                                                if(testViewModel.tests.isEmpty()){
+                                                    requireContext().showToast(requireContext().getString(R.string.msg_empty_tests))
+                                                }else{
+                                                    findNavController().navigate(
+                                                        PublishedWorkbookListFragmentDirections.actionSearchToPublishWorkbook(
+                                                            workbookId = testViewModel.tests.first().id
+                                                        )
+                                                    )
+                                                }
                                             },
                                             modifier = Modifier
                                                 .padding(16.dp)

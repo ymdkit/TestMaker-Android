@@ -311,7 +311,7 @@
     <string name="button_modify_question">内容を修正する</string>
     <string name="fragment_upload_workbook">問題集の共有</string>
     <string name="title_upload_workbook">問題集の共有</string>
-    <string name="button_upload_workbook">問題集をアップロードする</string>
+    <string name="button_upload_workbook">問題集を投稿する</string>
     <string name="picker_workbook">問題集</string>
     <string name="hint_upload_workbook">アップロードする問題集</string>
     <string name="msg_error_not_authorized">この機能を利用するにはログインが必要です</string>
@@ -321,4 +321,8 @@
     <string name="msg_upload_test_failure">問題集のアップロードに失敗しました。通信状況等をお確かめの上、再度アップロードをお試しください</string>
     <string name="button_share_workbook">アップロードして共有リンクを発行する</string>
     <string name="hint_share_workbook">共有する問題集</string>
+    <string name="fragment_publish_workbook">問題集のアップロード</string>
+    <string name="msg_empty_tests">アップロードできる問題集がありません。問題集を作成してください</string>
+    <string name="label_workbook">問題集</string>
+    <string name="title_publish_workbook">問題集の投稿</string>
 </resources>

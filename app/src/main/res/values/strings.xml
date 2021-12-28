@@ -329,4 +329,8 @@
     <string name="msg_upload_test_failure">upload failure</string>
     <string name="button_share_workbook">share test</string>
     <string name="hint_share_workbook">share test</string>
+    <string name="fragment_publish_workbook">upload test</string>
+    <string name="msg_empty_tests">no tests are exists</string>
+    <string name="label_workbook">test</string>
+    <string name="title_publish_workbook">publish test</string>
 </resources>
