@@ -25,7 +25,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -173,7 +172,9 @@ class LocalMainFragment : Fragment() {
 
     private fun uploadTest(test: Test) {
         logger.logEvent("upload_from_share_local")
-        UploadTestActivity.startActivityForResult(this, REQUEST_UPLOAD_TEST, test.id)
+        findNavController().navigate(HomeFragmentDirections.actionHomeToUploadWorkbook(
+            workbookId = test.id
+        ))
     }
 
     private fun initDialogPlayStart(test: Test) {

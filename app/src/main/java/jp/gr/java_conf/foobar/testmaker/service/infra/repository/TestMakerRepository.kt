@@ -26,6 +26,8 @@ class TestMakerRepository(
     suspend fun createTest(test: Test, overview: String, isPublic: Boolean) =
         remote.createTest(test, overview, isPublic)
 
+    suspend fun uploadWorkbook(test: Test, overview: String, isPublic: Boolean) =
+        remote.createTest(test, overview, isPublic)
 
     suspend fun createTestInGroup(test: Test, overview: String, groupId: String) {
         remote.createTest(test = test, overview = overview, isPublic = false, groupId = groupId)

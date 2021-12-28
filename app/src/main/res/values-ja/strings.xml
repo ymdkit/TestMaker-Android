@@ -318,4 +318,5 @@
     <string name="title_error_not_authorized">ログイン</string>
     <string name="button_login">ログイン</string>
     <string name="msg_failure_login">ログインに失敗しました（エラーコード %1$d）</string>
+    <string name="msg_upload_test_failure">問題集のアップロードに失敗しました。通信状況等をお確かめの上、再度アップロードをお試しください</string>
 </resources>
