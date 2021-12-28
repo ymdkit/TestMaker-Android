@@ -309,8 +309,8 @@
     <string name="fragment_create_question">問題の作成</string>
     <string name="fragment_answer_workbook">問題集の解答</string>
     <string name="button_modify_question">内容を修正する</string>
-    <string name="fragment_upload_workbook">問題集のアップロード</string>
-    <string name="title_upload_workbook">問題集のアップロード</string>
+    <string name="fragment_upload_workbook">問題集の共有</string>
+    <string name="title_upload_workbook">問題集の共有</string>
     <string name="button_upload_workbook">問題集をアップロードする</string>
     <string name="picker_workbook">問題集</string>
     <string name="hint_upload_workbook">アップロードする問題集</string>
@@ -319,4 +319,6 @@
     <string name="button_login">ログイン</string>
     <string name="msg_failure_login">ログインに失敗しました（エラーコード %1$d）</string>
     <string name="msg_upload_test_failure">問題集のアップロードに失敗しました。通信状況等をお確かめの上、再度アップロードをお試しください</string>
+    <string name="button_share_workbook">アップロードして共有リンクを発行する</string>
+    <string name="hint_share_workbook">共有する問題集</string>
 </resources>

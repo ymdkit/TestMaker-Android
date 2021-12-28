@@ -118,7 +118,7 @@ class UploadWorkbookFragment : Fragment() {
                                                         .padding(bottom = 8.dp),
                                                     enabled = false,
                                                     label = {
-                                                        Text(text = stringResource(R.string.hint_upload_workbook))
+                                                        Text(text = stringResource(R.string.hint_share_workbook))
                                                     },
                                                     value = workbook.title,
                                                     onValueChange = {})
@@ -153,7 +153,7 @@ class UploadWorkbookFragment : Fragment() {
                                                     .fillMaxWidth()
                                                     .height(48.dp)
                                             ) {
-                                                Text(text = stringResource(id = R.string.button_upload_workbook))
+                                                Text(text = stringResource(id = R.string.button_share_workbook))
                                             }
                                         }
                                         is UploadWorkbookUiState.Loading -> {

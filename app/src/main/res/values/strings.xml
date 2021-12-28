@@ -327,4 +327,6 @@
     <string name="button_login">login</string>
     <string name="msg_failure_login">login failure code %1$d</string>
     <string name="msg_upload_test_failure">upload failure</string>
+    <string name="button_share_workbook">share test</string>
+    <string name="hint_share_workbook">share test</string>
 </resources>
