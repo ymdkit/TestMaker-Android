@@ -28,8 +28,8 @@ android {
         minSdk = Deps.minSdkVersion
         targetSdk = Deps.targetSdkVersion
         multiDexEnabled = true
-        versionCode = 168
-        versionName = "5.0.8"
+        versionCode = 170
+        versionName = "5.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -105,7 +105,7 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.compose.ui:ui:1.0.5")
     implementation("androidx.compose.ui:ui-tooling:1.0.5")
-    implementation("androidx.compose.foundation:foundation:1.1.0-beta04")
+    implementation("androidx.compose.foundation:foundation:1.0.5")
     implementation("androidx.compose.material:material:1.0.5")
     implementation("androidx.compose.material:material-icons-core:1.0.5")
     implementation("androidx.compose.material:material-icons-extended:1.0.5")

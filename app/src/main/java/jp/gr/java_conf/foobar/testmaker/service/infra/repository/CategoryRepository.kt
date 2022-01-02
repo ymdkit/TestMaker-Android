@@ -10,7 +10,9 @@ class CategoryRepository(private val dataSource: CategoryDataSource, private val
 
     private var categories: MutableLiveData<List<Category>> = MutableLiveData(dataSource.get())
 
-    fun get(): LiveData<List<Category>> = categories
+    fun get(): List<Category> = dataSource.get()
+
+    fun getAsLiveData(): LiveData<List<Category>> = categories
 
     fun get(id: Long): Category = dataSource.get(id)
 

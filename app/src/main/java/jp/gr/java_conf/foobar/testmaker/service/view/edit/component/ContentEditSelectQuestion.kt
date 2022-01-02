@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -40,11 +41,11 @@ fun ContentEditSelectQuestion(
     fragmentManager: FragmentManager
 ) {
 
-    var editingProblem by remember { mutableStateOf(initialProblem) }
-    var editingAnswer by remember { mutableStateOf(initialAnswer) }
-    var editingExplanation by remember { mutableStateOf(initialExplanation) }
-    var editingImageUrl by remember { mutableStateOf(initialImageUrl) }
-    var editingWrongChoices by remember {
+    var editingProblem by rememberSaveable { mutableStateOf(initialProblem) }
+    var editingAnswer by rememberSaveable { mutableStateOf(initialAnswer) }
+    var editingExplanation by rememberSaveable { mutableStateOf(initialExplanation) }
+    var editingImageUrl by rememberSaveable { mutableStateOf(initialImageUrl) }
+    var editingWrongChoices by rememberSaveable {
         mutableStateOf(List(WRONG_SIZE_MAX) {
             if (it < initialWrongChoices.size) {
                 initialWrongChoices[it]
@@ -53,10 +54,10 @@ fun ContentEditSelectQuestion(
             }
         })
     }
-    var sizeOfWrongChoices by remember {
+    var sizeOfWrongChoices by rememberSaveable {
         mutableStateOf(if (initialWrongChoices.isNotEmpty()) initialWrongChoices.size else 2)
     }
-    var isAutoGenerateWrongChoices by remember {
+    var isAutoGenerateWrongChoices by rememberSaveable {
         mutableStateOf(initialIsAutoGenerateWrongChoices)
     }
 
@@ -64,7 +65,7 @@ fun ContentEditSelectQuestion(
         mutableStateOf(null)
     }
 
-    var showingValidationError by remember { mutableStateOf(false) }
+    var showingValidationError by rememberSaveable { mutableStateOf(false) }
 
     fun validate(): Boolean{
         if(editingProblem.isEmpty()) return false

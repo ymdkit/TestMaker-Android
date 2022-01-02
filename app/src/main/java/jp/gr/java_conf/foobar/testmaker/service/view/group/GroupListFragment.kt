@@ -11,12 +11,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.gms.ads.AdRequest
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupListBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.main.AccountMainFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
@@ -32,6 +36,7 @@ class GroupListFragment : Fragment() {
 
     private val viewModel: GroupListViewModel by viewModel()
     private val auth: Auth by inject()
+    private val sharedPreferenceManager: SharedPreferenceManager by inject()
 
     private lateinit var binding: FragmentGroupListBinding
 
@@ -81,6 +86,17 @@ class GroupListFragment : Fragment() {
                 { text ->
                     createAndJoinGroup(text)
                 }.show(requireActivity().supportFragmentManager, "TAG")
+            }
+
+            toolbar.setupWithNavController(
+                findNavController(),
+                AppBarConfiguration(findNavController().graph)
+            )
+
+            if (sharedPreferenceManager.isRemovedAd) {
+                adView.visibility = View.GONE
+            } else {
+                adView.loadAd(AdRequest.Builder().build())
             }
 
         }.root

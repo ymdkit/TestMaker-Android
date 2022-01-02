@@ -5,11 +5,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.airbnb.epoxy.EpoxyTouchHelper
+import com.google.android.gms.ads.AdRequest
 import jp.gr.java_conf.foobar.testmaker.service.ItemQuestionBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityEditBinding
+import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentQuestionListBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
@@ -18,9 +27,9 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.share.BaseActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
@@ -34,14 +43,15 @@ import java.util.*
  * Created by keita on 2017/02/12.
  */
 
-class EditActivity : BaseActivity() {
+class QuestionListFragment : Fragment() {
 
     private val testViewModel: TestViewModel by viewModel()
     private val service: CloudFunctionsService by inject()
     private val logger: TestMakerLogger by inject()
+    private val sharedPreferenceManager: SharedPreferenceManager by inject()
 
     private val controller: EditController by lazy {
-        EditController(this).apply {
+        EditController(requireContext()).apply {
             setOnClickListener(object : EditController.OnClickListener {
                 override fun onClickQuestion(question: Question) {
 
@@ -69,7 +79,7 @@ class EditActivity : BaseActivity() {
                                     iconRes = R.drawable.ic_delete_white,
                                     action = { deleteQuestion(question) })
                             )
-                        ).show(supportFragmentManager, "TAG")
+                        ).show(childFragmentManager, "TAG")
 
                     }
                 }
@@ -81,6 +91,15 @@ class EditActivity : BaseActivity() {
         override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
             val inflater: MenuInflater = mode?.menuInflater ?: return false
             inflater.inflate(R.menu.menu_edit_selected, menu)
+            // ContextMenu の背景色に合わせてアイコンの色を変更
+            menu?.forEach {
+                val drawable = it.icon
+                DrawableCompat.setTint(
+                    drawable,
+                    ContextCompat.getColor(requireContext(), R.color.colorText)
+                )
+                it.icon = drawable
+            }
             return true
         }
 
@@ -92,7 +111,7 @@ class EditActivity : BaseActivity() {
             when (item?.itemId) {
                 R.id.action_move -> {
                     if (controller.selectedQuestions.isEmpty()) {
-                        showToast(getString(R.string.msg_empty_selected_questions))
+                        requireContext().showToast(getString(R.string.msg_empty_selected_questions))
                         return true
                     }
 
@@ -104,7 +123,7 @@ class EditActivity : BaseActivity() {
                                 iconRes = R.drawable.ic_baseline_description_24,
                                 action = {
                                     testViewModel.move(controller.selectedQuestions, it)
-                                    showToast(
+                                    requireContext().showToast(
                                         getString(
                                             R.string.msg_succes_move_questions,
                                             it.title
@@ -115,12 +134,12 @@ class EditActivity : BaseActivity() {
                                 }
                             )
                         }
-                    ).show(supportFragmentManager, "TAG")
+                    ).show(childFragmentManager, "TAG")
                     return true
                 }
                 R.id.action_copy -> {
                     if (controller.selectedQuestions.isEmpty()) {
-                        showToast(getString(R.string.msg_empty_selected_questions))
+                        requireContext().showToast(getString(R.string.msg_empty_selected_questions))
                         return true
                     }
 
@@ -132,7 +151,7 @@ class EditActivity : BaseActivity() {
                                 iconRes = R.drawable.ic_baseline_description_24,
                                 action = {
                                     testViewModel.copy(controller.selectedQuestions, it)
-                                    showToast(
+                                    requireContext().showToast(
                                         getString(
                                             R.string.msg_succes_copy_questions,
                                             it.title
@@ -143,13 +162,13 @@ class EditActivity : BaseActivity() {
                                 }
                             )
                         }
-                    ).show(supportFragmentManager, "TAG")
+                    ).show(childFragmentManager, "TAG")
                     return true
                 }
                 R.id.action_delete -> {
 
                     if (controller.selectedQuestions.isEmpty()) {
-                        showToast(getString(R.string.msg_empty_selected_questions))
+                        requireContext().showToast(getString(R.string.msg_empty_selected_questions))
                         return true
                     }
 
@@ -161,11 +180,11 @@ class EditActivity : BaseActivity() {
                     ) {
 
                         testViewModel.delete(controller.selectedQuestions)
-                        showToast(getString(R.string.msg_succes_delete_questions))
+                        requireContext().showToast(getString(R.string.msg_succes_delete_questions))
                         logger.logEvent("delete_questions")
                         mode?.finish()
 
-                    }.show(supportFragmentManager, "TAG")
+                    }.show(childFragmentManager, "TAG")
                     return true
                 }
                 else -> {
@@ -182,53 +201,106 @@ class EditActivity : BaseActivity() {
 
     }
 
-    private val binding by lazy {
-        DataBindingUtil.setContentView<ActivityEditBinding>(
-            this,
-            R.layout.activity_edit
-        )
-    }
+    private lateinit var binding: FragmentQuestionListBinding
 
+    private val args: QuestionListFragmentArgs by navArgs()
     private lateinit var test: Test
+
     private var actionMode: ActionMode? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-        testViewModel.tests.find { it.id == intent.getLongExtra("id", -1L) }?.let {
-            test = it
-        }
-
-        binding.lifecycleOwner = this
-        binding.recyclerView.adapter = controller.adapter
-
-        binding.fab.setOnClickListener {
-            LegacyEditQuestionActivity.startActivity(this, test.id)
-        }
-
-        createAd(binding.adView)
-
-        initToolBar()
-        initViews()
+        test = testViewModel.tests.find { it.id == args.workbookId }!!
 
         testViewModel.testsLiveData.observeNonNull(this) {
             it.find { test.id == it.id }?.let {
                 test = it
             }
-            supportActionBar?.title = test.title
             controller.questions = test.questions.sortedBy { it.order }
         }
+
+        return DataBindingUtil.inflate<FragmentQuestionListBinding>(
+            inflater,
+            R.layout.fragment_question_list,
+            container,
+            false
+        ).apply {
+            binding = this
+
+            recyclerView.adapter = controller.adapter
+
+            fab.setOnClickListener {
+                findNavController().navigate(
+                    QuestionListFragmentDirections.actionQuestionListToCreateQuestion(test.id)
+                )
+            }
+
+            toolbar.setupWithNavController(
+                findNavController(),
+                AppBarConfiguration(findNavController().graph)
+            )
+
+            if (sharedPreferenceManager.isRemovedAd) {
+                adView.visibility = View.GONE
+            } else {
+                adView.loadAd(AdRequest.Builder().build())
+            }
+
+            initViews()
+
+        }.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        testViewModel.refresh()
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_setting -> {
+                    findNavController().navigate(
+                        QuestionListFragmentDirections.actionQuestionListToEditWorkbook(
+                            workbookId = test.id
+                        )
+                    )
+                    true
+                }
+                R.id.action_export -> {
+                    convertTestToCSV(test)
+                    true
+                }
+                android.R.id.home -> {
+                    findNavController().popBackStack()
+                    true
+                }
+                R.id.action_reset_achievement -> {
+                    test.let {
+                        testViewModel.update(
+                            Test.createFromRealmTest(
+                                RealmTest.createFromTest(it).apply {
+                                    resetAchievement()
+                                })
+                        )
+                    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_edit, menu)
+                    requireContext().showToast(getString(R.string.msg_reset_achievement))
+                    true
+                }
+                R.id.action_select -> {
+                    if (actionMode == null) {
+                        actionMode = requireActivity().startActionMode(actionModeCallback)
+                    } else {
+                        controller.selectedQuestions = emptyList()
+                    }
+                    true
+                }
+                else -> {
+                    super.onOptionsItemSelected(it)
+                }
+            }
+        }
 
-        val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
+        val searchView = binding.toolbar.menu.findItem(R.id.menu_search).actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(s: String): Boolean {
                 controller.searchWord = s
@@ -245,49 +317,17 @@ class EditActivity : BaseActivity() {
             controller.searchWord = ""
             false
         }
-
-        return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            R.id.action_setting -> {
-                EditTestActivity.startActivity(this, test.id)
-                true
-            }
-            R.id.action_export -> {
-                convertTestToCSV(test)
-                true
-            }
-            android.R.id.home -> {
-                finish()
-                true
-            }
-            R.id.action_reset_achievement -> {
-                test.let {
-                    testViewModel.update(
-                        Test.createFromRealmTest(
-                            RealmTest.createFromTest(it).apply {
-                                resetAchievement()
-                            })
-                    )
-                }
+    override fun onPause() {
+        super.onPause()
+        actionMode?.finish()
+    }
 
-                showToast(getString(R.string.msg_reset_achievement))
-                true
-            }
-            R.id.action_select -> {
-                if (actionMode == null) {
-                    actionMode = startActionMode(actionModeCallback)
-                } else {
-                    controller.selectedQuestions = emptyList()
-                }
-                true
-            }
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        testViewModel.refresh()
+    }
 
     private fun initViews() {
         EpoxyTouchHelper
@@ -314,7 +354,7 @@ class EditActivity : BaseActivity() {
 
     private fun convertTestToCSV(test: Test) {
 
-        executeJobWithDialog(
+        requireActivity().executeJobWithDialog(
             title = getString(R.string.converting),
             task = {
                 withContext(Dispatchers.IO) {
@@ -332,13 +372,16 @@ class EditActivity : BaseActivity() {
                 startActivity(shareIntent)
             },
             onFailure = {
-                showErrorToast(it)
+                requireContext().showErrorToast(it)
             }
         )
     }
 
     fun editQuestion(question: Question) {
-        LegacyEditQuestionActivity.startActivity(this, test.id, question.id)
+        findNavController().navigate(QuestionListFragmentDirections.actionQuestionListToEditQuestion(
+            workbookId = test.id,
+            questionId = question.id
+        ))
     }
 
     fun copyQuestion(question: Question) {
@@ -351,13 +394,13 @@ class EditActivity : BaseActivity() {
             getString(R.string.button_delete_confirm)
         ) {
             testViewModel.delete(question)
-        }.show(supportFragmentManager, "TAG")
+        }.show(childFragmentManager, "TAG")
     }
 
     companion object {
 
         fun startActivity(activity: Activity, id: Long) {
-            val intent = Intent(activity, EditActivity::class.java).apply {
+            val intent = Intent(activity, QuestionListFragment::class.java).apply {
                 putExtra("id", id)
             }
             activity.startActivity(intent)

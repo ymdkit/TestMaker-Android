@@ -3,7 +3,6 @@
     <string name="app_name">ТестМейкер</string>
     <string name="message_delete_exam">делеция: %1$s ?</string>
     <string name="action_next">следующий</string>
-    <string name="save_question">Сохранить</string>
     <string name="number_questions">сумма</string>
     <string name="number_existing_questions">%1$d / %2$d</string>
     <string name="number_exams">сумма %1$d</string>
@@ -20,7 +19,6 @@
     <string name="trim">Порезы</string>
     <string name="cancel">отмена</string>
     <string name="message_delete">делеция %1$s ?</string>
-    <string name="message_explanation">комментарий</string>
     <string name="message_random">случайный</string>
     <string name="message_wrong_only">только Неверный ответ</string>
     <string name="message_switch_question">замена вопрос и ответ</string>
@@ -30,10 +28,8 @@
     <string name="message_null_questions">ноль вопрос</string>
     <string name="message_null_wrongs">ноль Неверный ответ</string>
     <string name="message_null_number">ноль сумма</string>
-    <string name="image">изображение</string>
     <string name="title_activity_edit">редактирование</string>
     <string name="add">прибавление</string>
-    <string name="hint_name">титульный</string>
     <string name="hint_explanation">комментарий</string>
     <string name="hint_answer">ответа</string>
     <string name="hint_question">вопрос</string>
@@ -41,7 +37,6 @@
     <string name="action_other">другое приложение</string>
     <string name="action_import">Импортировать</string>
     <string name="action_license">лицензия</string>
-    <string name="msg_save">Сохранить</string>
     <string-array name="sort_exam">
         <item>Алфавитный порядок(По убыванию)</item>
         <item>Алфавитный порядок(По возрастанию)</item>

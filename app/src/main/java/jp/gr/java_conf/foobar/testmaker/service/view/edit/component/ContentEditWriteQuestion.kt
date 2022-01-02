@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -37,16 +38,16 @@ fun ContentEditWriteQuestion(
     fragmentManager: FragmentManager
 ) {
 
-    var editingProblem by remember { mutableStateOf(initialProblem) }
-    var editingAnswer by remember { mutableStateOf(initialAnswer) }
-    var editingExplanation by remember { mutableStateOf(initialExplanation) }
-    var editingImageUrl by remember { mutableStateOf(initialImageUrl) }
+    var editingProblem by rememberSaveable { mutableStateOf(initialProblem) }
+    var editingAnswer by rememberSaveable { mutableStateOf(initialAnswer) }
+    var editingExplanation by rememberSaveable { mutableStateOf(initialExplanation) }
+    var editingImageUrl by rememberSaveable { mutableStateOf(initialImageUrl) }
 
     var bitmap: Bitmap? by remember {
         mutableStateOf(null)
     }
 
-    var showingValidationError by remember { mutableStateOf(false) }
+    var showingValidationError by rememberSaveable { mutableStateOf(false) }
 
     val validate =
         !(editingProblem.isEmpty() || editingAnswer.isEmpty())

@@ -46,40 +46,9 @@
         <item name="android:backgroundTint">@color/colorPrimary</item>
     </style>
 
-    <style name="Button.Primary.RectImage">
-        <item name="android:layout_height">56dp</item>
-        <item name="android:layout_width">56dp</item>
-        <item name="android:contentDescription">@null</item>
-        <item name="android:scaleType">fitCenter</item>
-        <item name="android:padding">12dp</item>
-    </style>
-
-    <style name="ImageButton">
-        <item name="android:tint">@color/colorPrimary</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:foreground">?android:selectableItemBackground</item>
-        <item name="android:contentDescription">@null</item>
-    </style>
-
-    <style name="ImageButton.Operator">
-        <item name="android:scaleType">fitCenter</item>
-        <item name="android:padding">@dimen/element_spacing_normal</item>
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-    </style>
-
     <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
-    </style>
-
-    <style name="MyColorBoxStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@drawable/circle</item>
-        <item name="android:layout_margin">@dimen/element_spacing_small</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:contentDescription">@string/image</item>
     </style>
 
     <style name="MyTextInputLayoutStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
@@ -105,27 +74,5 @@
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
-    <style name="EditText.MultiLine">
-        <item name="android:inputType">textMultiLine</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="Switch">
-        <item name="android:foreground">?android:attr/selectableItemBackground</item>
-        <item name="android:textColor">?android:textColorSecondary</item>
-    </style>
-
     <style name="Text" />
-
-    <style name="Text.ExpandHeader">
-        <item name="android:foreground">?android:selectableItemBackground</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingStart">0dp</item>
-        <item name="android:paddingEnd">16dp</item>
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="drawableTint">@color/colorPrimary</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:layout_width">0dp</item>
-    </style>
 </resources>

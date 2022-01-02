@@ -25,7 +25,6 @@
                     app:contentInsetEnd="@dimen/view_width_normal"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-                    app:logo="@drawable/logo_text"
                     app:popupTheme="@style/Theme.AppCompat.DayNight"
                     app:title="@string/app_name" />
 

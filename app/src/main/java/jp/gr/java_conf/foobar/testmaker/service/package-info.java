@@ -1,9 +1,6 @@
 @EpoxyDataBindingLayouts({
         R.layout.card_category,
         R.layout.item_question,
-        R.layout.item_category,
-        R.layout.item_add_category,
-        R.layout.item_category_header,
         R.layout.item_test,
         R.layout.item_menu,
         R.layout.item_empty,

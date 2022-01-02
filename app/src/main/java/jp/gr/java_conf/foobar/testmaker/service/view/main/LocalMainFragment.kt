@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
@@ -24,10 +25,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.EditTestActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.online.UploadTestActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.share.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -95,7 +93,7 @@ class LocalMainFragment : Fragment() {
             }
         })
 
-        categoryViewModel.categories.observeNonNull(this) {
+        categoryViewModel.categoriesLiveData.observeNonNull(this) {
             mainController.categories = it
         }
 
@@ -113,7 +111,7 @@ class LocalMainFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
 
             fab.setOnClickListener {
-                EditTestActivity.startActivity(requireActivity())
+                findNavController().navigate(HomeFragmentDirections.actionHomeToCreateWorkbook())
             }
 
             recyclerView.layoutManager = StickyHeaderLinearLayoutManager(requireContext())
@@ -156,7 +154,9 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun editTest(test: Test) {
-        EditActivity.startActivity(requireActivity(), test.id)
+        findNavController().navigate(HomeFragmentDirections.actionHomeToListQuestion(
+            test.id
+        ))
     }
 
     private fun deleteTest(test: Test) {
@@ -216,10 +216,10 @@ class LocalMainFragment : Fragment() {
 
             testViewModel.update(result)
 
-            AnswerWorkbookActivity.startActivity(requireActivity(), result.id)
-
-//            PlayActivity.startActivity(requireActivity(), result.id)
-
+            findNavController().navigate(HomeFragmentDirections.actionHomeToAnswerWorkbook(
+                workbookId = result.id,
+                isRetry = false
+            ))
         }
     }
 

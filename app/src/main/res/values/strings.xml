@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="add">add</string>
-    <string name="hint_name">name test</string>
     <string name="hint_explanation">explanation</string>
     <string name="hint_answer">answer</string>
     <string name="hint_question">question</string>
@@ -16,13 +15,11 @@
     <string name="delete">delete</string>
     <string name="edit">edit</string>
     <string name="help">help</string>
-    <string name="image">image</string>
     <string name="load">load</string>
     <string name="menu">menu</string>
     <string name="message_delete">delete %1$s ?</string>
     <string name="message_delete_exam">delete %1$s ?</string>
     <string name="message_delete_sound">sound</string>
-    <string name="message_explanation">add explanation</string>
     <string name="message_null_number">please input number</string>
     <string name="message_null_questions">\"please add questions\"</string>
     <string name="message_null_wrongs">wrong is nothing</string>
@@ -35,7 +32,6 @@
     <string name="number_questions">quantity</string>
     <string name="play">study</string>
     <string name="retry">retry</string>
-    <string name="save_question">save</string>
     <string name="share">share</string>
     <string name="title_activity_edit">edit</string>
     <string name="trim">trim</string>
@@ -84,7 +80,6 @@
         <item>large</item>
     </string-array>
 
-    <string name="msg_save">saved</string>
     <string name="config">config</string>
     <string name="search">search</string>
     <string name="ok">OK</string>
@@ -143,28 +138,12 @@
     <string name="sku_remove_ad">android.test.purchased</string>
     <string name="menu_feedback">feedback</string>
     <string name="email_subject_feedback">feedback</string>
-    <string name="email_body_feedback">It would be very helpful if you could provide a description of what you did and what you did with the screenshot. \n\n\n\n\n Android SDK%1$d </string>
-    <string name="label_color">color</string>
-    <string name="label_category">category</string>
-    <string name="text_add_category">new category</string>
-    <string name="text_header_category">category setting</string>
-    <string name="save_test">save test</string>
-    <string name="save_category">save category</string>
-    <string name="msg_save_test">saved test</string>
+    <string name="email_body_feedback">It would be very helpful if you could provide a description of what you did and what you did with the screenshot. \n\n\n\n\n Android SDK%1$s\nApp version %2$s </string>
     <string name="empty_test">make your first test</string>
-    <string name="title_activity_edit_test">edit test</string>
-    <string name="title_activity_edit_category">edit category</string>
     <string name="title_activity_edit_question">edit question</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="message_image">add image</string>
-    <string name="label_setting_question">setting</string>
-    <string name="message_reset_form">reset form when you saved</string>
-    <string name="message_auto">auto create selections</string>
     <string name="hint_auto">auto generate</string>
-    <string name="message_check_order">check order</string>
-    <string name="num_others">size of others</string>
-    <string name="num_answers">size of answer</string>
     <string name="empty_question">make your first question</string>
     <string name="judge_question">OK</string>
     <string name="label_answer">answer</string>
@@ -253,7 +232,6 @@
     <string name="upload_dialog_already_uploaded">already uploaded this test</string>
     <string name="upload_dialog_overwrite">overwrite</string>
     <string name="upload_dialog_upload_as_other_test">upload as other question</string>
-    <string name="edit_hint_select_answer">answer</string>
     <string name="app_description">TestMaker is application for making your own tests</string>
     <string name="msg_success_delete_category">category deleted</string>
     <string name="button_delete_confirm">delete</string>
@@ -309,4 +287,34 @@
     <string name="switch_is_check_order">check order</string>
     <string name="switch_is_auto_generate_others">auto generate other selections</string>
     <string name="msg_camera_not_granted">no permssion to use camera</string>
+    <string name="title_activity_create_workbook">create workbook</string>
+    <string name="hint_workbook_name">name</string>
+    <string name="button_create_workbook">create test</string>
+    <string name="picker_color">color</string>
+    <string name="red">red</string>
+    <string name="orange">orange</string>
+    <string name="yellow">yellow</string>
+    <string name="green">green</string>
+    <string name="dark_green">dark_green</string>
+    <string name="blue">blue</string>
+    <string name="navy">navy</string>
+    <string name="purple">purple</string>
+    <string name="title_error_create_workbook">error</string>
+    <string name="msg_error_create_workbook">please input title</string>
+    <string name="picker_folder">folder</string>
+    <string name="new_folder">new folder</string>
+    <string name="fragment_create_workbook">create workbook</string>
+    <string name="fragment_create_folder">create folder</string>
+    <string name="title_error_create_folder">error</string>
+    <string name="msg_error_create_folder">please input name</string>
+    <string name="button_create_folder">create folder</string>
+    <string name="msg_create_success_workbook">create question</string>
+    <string name="fragment_list_question">questions</string>
+    <string name="fragment_edit_workbook">edit test</string>
+    <string name="title_edit_workbook">edit workbook</string>
+    <string name="msg_update_success_workbook">update success</string>
+    <string name="button_update_workbook">update</string>
+    <string name="fragment_create_question">create question</string>
+    <string name="fragment_answer_workbook">answer</string>
+    <string name="button_modify_question">modify question</string>
 </resources>

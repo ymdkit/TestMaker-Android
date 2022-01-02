@@ -3,7 +3,6 @@
     <string name="app_name">暗記メーカー</string>
     <string name="message_delete_exam">「 %1$s 」 を削除してもよろしいですか？</string>
     <string name="action_next">次へ</string>
-    <string name="save_question">問題を保存</string>
     <string name="number_questions">出題数</string>
     <string name="number_existing_questions">達成率: %1$d / %2$d</string>
     <string name="number_exams">問題集数 %1$d</string>
@@ -20,7 +19,6 @@
     <string name="trim">トリミング</string>
     <string name="cancel">キャンセル</string>
     <string name="message_delete">「 %1$s 」を削除してもよろしいですか？</string>
-    <string name="message_explanation">解説文を入れる</string>
     <string name="message_random">出題順をランダムにする</string>
     <string name="message_wrong_only">間違えた問題のみ出題する</string>
     <string name="message_switch_question">問題文と解答を入れ替える（記述問題のみ）</string>
@@ -30,10 +28,8 @@
     <string name="message_null_questions">問題が登録されていません</string>
     <string name="message_null_wrongs">間違えた問題がありません</string>
     <string name="message_null_number">出題数を入力してください</string>
-    <string name="image">画像</string>
     <string name="title_activity_edit">編集</string>
     <string name="add">add</string>
-    <string name="hint_name">タイトル</string>
     <string name="hint_explanation">解説</string>
     <string name="hint_answer">解答</string>
     <string name="hint_question">問題文</string>
@@ -41,7 +37,6 @@
     <string name="action_other">開発者の他のアプリ</string>
     <string name="action_import">ファイルのインポート</string>
     <string name="action_license">ライセンス</string>
-    <string name="msg_save">保存しました</string>
     <string-array name="sort_exam">
         <item>五十音順(降順)</item>
         <item>五十音順(昇順)</item>
@@ -141,26 +136,10 @@
     <string name="purchase_canceled">購入がキャンセルされました</string>
     <string name="menu_feedback">お問い合わせ</string>
     <string name="email_subject_feedback">「暗記メーカー」に関するお問い合わせ</string>
-    <string name="email_body_feedback">お問い合わせの内容について、どのような操作を行ったかや画面のスクリーンショットの添付をしていただけると助かります\n\n\n\n\n Android SDK%1$d より送信</string>
-    <string name="label_color">カラー</string>
-    <string name="label_category">フォルダ</string>
-    <string name="text_add_category">新しいフォルダを追加</string>
-    <string name="text_header_category">フォルダ設定</string>
-    <string name="save_test">問題集を保存</string>
-    <string name="save_category">フォルダを保存</string>
-    <string name="msg_save_test">問題集を保存しました</string>
+    <string name="email_body_feedback">お問い合わせの内容について、どのような操作を行ったかや画面のスクリーンショットの添付をしていただけると助かります\n\n\n\n\n Android バージョン%1$s \nアプリバージョン %2$s</string>
     <string name="empty_test">保存している問題集はありません。\n画面下部のボタンから問題集を追加してください</string>
-    <string name="title_activity_edit_test">問題集の編集</string>
-    <string name="title_activity_edit_category">フォルダの編集</string>
     <string name="title_activity_edit_question">問題の編集</string>
-    <string name="message_image">問題中に画像を使用する</string>
-    <string name="label_setting_question">詳細設定</string>
-    <string name="message_reset_form">保存時に入力値をリセットする</string>
-    <string name="message_auto">選択肢を自動生成する（他の問題の答え）</string>
-    <string name="hint_auto">自動生成（他の問題の答え）</string>
-    <string name="message_check_order">解答順を正誤判定に含める</string>
-    <string name="num_others">選択肢数</string>
-    <string name="num_answers">解答数</string>
+    <string name="hint_auto">自動生成（他の問題の解答）</string>
     <string name="empty_question">保存している問題はありません。\n画面下部のボタンから問題を追加してください</string>
     <string name="judge_question">OK</string>
     <string name="label_answer">正解</string>
@@ -246,7 +225,6 @@
     <string name="upload_dialog_already_uploaded">同名の問題集がすでにアップロードされています</string>
     <string name="upload_dialog_overwrite">内容を上書きする</string>
     <string name="upload_dialog_upload_as_other_test">別の問題集としてアップロードする</string>
-    <string name="edit_hint_select_answer">正解の選択肢</string>
     <string name="app_description">「暗記メーカー」は、自学自習の効率化を目的とした問題集作成用のアプリです。資格習得のための勉強や、複数人への問題集の配布のために利用できます。</string>
     <string name="msg_success_delete_category">フォルダを削除しました</string>
     <string name="button_delete_confirm">削除する</string>
@@ -301,4 +279,34 @@
     <string name="switch_is_check_order">解答順を正誤判定に含める</string>
     <string name="switch_is_auto_generate_others">選択肢の自動生成</string>
     <string name="msg_camera_not_granted">カメラを使用する権限がありません。端末の設定画面から、暗記メーカーでのカメラの使用を許可してください</string>
+    <string name="title_activity_create_workbook">問題集の作成</string>
+    <string name="hint_workbook_name">問題集のタイトル</string>
+    <string name="button_create_workbook">問題集を作成する</string>
+    <string name="picker_color">カラー</string>
+    <string name="red">レッド</string>
+    <string name="orange">オレンジ</string>
+    <string name="yellow">イエロー</string>
+    <string name="green">グリーン</string>
+    <string name="dark_green">ミント</string>
+    <string name="blue">ブルー</string>
+    <string name="navy">ネイビー</string>
+    <string name="purple">パープル</string>
+    <string name="title_error_create_workbook">作成エラー</string>
+    <string name="msg_error_create_workbook">問題集のタイトルを入力してください</string>
+    <string name="picker_folder">フォルダ</string>
+    <string name="new_folder">+ 新規作成</string>
+    <string name="fragment_create_workbook">問題集の作成</string>
+    <string name="fragment_create_folder">フォルダの作成</string>
+    <string name="title_error_create_folder">作成エラー</string>
+    <string name="msg_error_create_folder">フォルダ名を入力してください</string>
+    <string name="button_create_folder">フォルダを作成する</string>
+    <string name="msg_create_success_workbook">問題集を作成しました</string>
+    <string name="fragment_list_question">問題一覧</string>
+    <string name="fragment_edit_workbook">問題集の編集</string>
+    <string name="title_edit_workbook">問題集の編集</string>
+    <string name="msg_update_success_workbook">変更内容を保存しました</string>
+    <string name="button_update_workbook">変更内容を保存する</string>
+    <string name="fragment_create_question">問題の作成</string>
+    <string name="fragment_answer_workbook">問題集の解答</string>
+    <string name="button_modify_question">内容を修正する</string>
 </resources>
