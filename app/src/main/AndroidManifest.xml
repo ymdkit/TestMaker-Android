@@ -21,8 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".view.online.UploadTestActivity" />
-
         <meta-data
             android:name="studyplus_comsumer_key"
             android:value="${studyplus_consumer_key}" />

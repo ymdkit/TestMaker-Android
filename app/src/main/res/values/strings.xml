@@ -317,4 +317,21 @@
     <string name="fragment_create_question">create question</string>
     <string name="fragment_answer_workbook">answer</string>
     <string name="button_modify_question">modify question</string>
+    <string name="fragment_upload_workbook">upload_workbook</string>
+    <string name="title_upload_workbook">upload_workbook</string>
+    <string name="button_upload_workbook">upload test</string>
+    <string name="picker_workbook">test</string>
+    <string name="hint_upload_workbook">test</string>
+    <string name="msg_error_not_authorized">please login</string>
+    <string name="title_error_not_authorized">login</string>
+    <string name="button_login">login</string>
+    <string name="msg_failure_login">login failure code %1$d</string>
+    <string name="msg_upload_test_failure">upload failure</string>
+    <string name="button_share_workbook">share test</string>
+    <string name="hint_share_workbook">share test</string>
+    <string name="fragment_publish_workbook">upload test</string>
+    <string name="msg_empty_tests">no tests are exists</string>
+    <string name="label_workbook">test</string>
+    <string name="title_publish_workbook">publish test</string>
+    <string name="button_publish_workbook">publish test</string>
 </resources>

@@ -67,10 +67,12 @@ fun ContentEditSelectQuestion(
 
     var showingValidationError by rememberSaveable { mutableStateOf(false) }
 
-    fun validate(): Boolean{
-        if(editingProblem.isEmpty()) return false
-        if(editingAnswer.isEmpty()) return false
-        if(!isAutoGenerateWrongChoices && editingWrongChoices.take(sizeOfWrongChoices).any { it.isEmpty() }) return false
+    fun validate(): Boolean {
+        if (editingProblem.isEmpty()) return false
+        if (editingAnswer.isEmpty()) return false
+        if (!isAutoGenerateWrongChoices && editingWrongChoices.take(sizeOfWrongChoices)
+                .any { it.isEmpty() }
+        ) return false
         return true
     }
 
@@ -100,7 +102,6 @@ fun ContentEditSelectQuestion(
                     .focusRequester(focusRequester)
                     .padding(bottom = 8.dp),
                 value = editingProblem,
-                maxLines = 3,
                 label = {
                     Text(text = stringResource(R.string.hint_question))
                 },
@@ -112,7 +113,6 @@ fun ContentEditSelectQuestion(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                maxLines = 3,
                 label = {
                     Text(text = stringResource(R.string.hint_answer))
                 },
@@ -139,7 +139,6 @@ fun ContentEditSelectQuestion(
                             .fillMaxWidth()
                             .padding(bottom = 8.dp),
                         value = editingWrongChoices[index],
-                        maxLines = 3,
                         label = {
                             Text(text = stringResource(R.string.hint_other))
                         },
@@ -189,7 +188,7 @@ fun ContentEditSelectQuestion(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 value = editingExplanation,
-                maxLines = 3,
+
                 label = {
                     Text(text = stringResource(R.string.hint_explanation))
                 },

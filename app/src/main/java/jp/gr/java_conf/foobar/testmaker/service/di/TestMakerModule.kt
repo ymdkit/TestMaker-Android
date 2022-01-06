@@ -28,6 +28,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.result.ResultViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ShowTestsViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookViewModel
 import jp.studyplus.android.sdk.Studyplus
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
@@ -90,4 +91,5 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
             get()
         )
     }
+    viewModel { UploadWorkbookViewModel(get(), get(), get(), get()) }
 }

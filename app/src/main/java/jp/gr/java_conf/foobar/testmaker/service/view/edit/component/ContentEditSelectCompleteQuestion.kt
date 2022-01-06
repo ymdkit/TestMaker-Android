@@ -113,7 +113,7 @@ fun ContentEditSelectCompleteQuestion(
                     .focusRequester(focusRequester)
                     .padding(bottom = 8.dp),
                 value = editingProblem,
-                maxLines = 3,
+
                 label = {
                     Text(text = stringResource(R.string.hint_question))
                 },
@@ -128,7 +128,7 @@ fun ContentEditSelectCompleteQuestion(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                    maxLines = 3,
+
                     label = {
                         Text(text = stringResource(R.string.hint_answer))
                     },
@@ -155,7 +155,7 @@ fun ContentEditSelectCompleteQuestion(
                             .fillMaxWidth()
                             .padding(bottom = 8.dp),
                         value = editingWrongChoices[index],
-                        maxLines = 3,
+
                         label = {
                             Text(text = stringResource(R.string.hint_other))
                         },
@@ -222,7 +222,7 @@ fun ContentEditSelectCompleteQuestion(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 value = editingExplanation,
-                maxLines = 3,
+
                 label = {
                     Text(text = stringResource(R.string.hint_explanation))
                 },

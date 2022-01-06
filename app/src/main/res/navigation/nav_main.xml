@@ -42,6 +42,22 @@
             app:popEnterAnim="@anim/alpha_appear"
             app:popExitAnim="@anim/alpha_gone" />
 
+        <action
+            android:id="@+id/action_home_to_upload_workbook"
+            app:destination="@id/page_upload_workbook"
+            app:enterAnim="@anim/alpha_appear"
+            app:exitAnim="@anim/alpha_gone"
+            app:popEnterAnim="@anim/alpha_appear"
+            app:popExitAnim="@anim/alpha_gone" />
+
+        <action
+            android:id="@+id/action_home_to_share_workbook"
+            app:destination="@id/page_upload_workbook"
+            app:enterAnim="@anim/alpha_appear"
+            app:exitAnim="@anim/alpha_gone"
+            app:popEnterAnim="@anim/alpha_appear"
+            app:popExitAnim="@anim/alpha_gone" />
+
     </fragment>
 
     <fragment
@@ -205,10 +221,53 @@
         android:label="@string/fragment_create_folder" />
 
     <fragment
+        android:id="@+id/page_share_workbook"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.workbook.ShareWorkbookFragment"
+        android:label="@string/fragment_upload_workbook" >
+
+        <argument
+            android:name="workbookId"
+            app:argType="long" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/page_upload_workbook"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookFragment"
+        android:label="@string/fragment_upload_workbook" >
+
+        <argument
+            android:name="workbookId"
+            app:argType="long" />
+
+    </fragment>
+
+    <fragment
         android:id="@id/page_search"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.online.PublishedWorkbookListFragment"
         android:label="@string/title_activity_public_tests"
-        tools:layout="@layout/fragment_group_list" />
+        tools:layout="@layout/fragment_group_list" >
+
+        <action
+            android:id="@+id/action_search_to_publish_workbook"
+            app:destination="@id/page_publish_workbook"
+            app:enterAnim="@anim/alpha_appear"
+            app:exitAnim="@anim/alpha_gone"
+            app:popEnterAnim="@anim/alpha_appear"
+            app:popExitAnim="@anim/alpha_gone" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/page_publish_workbook"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.online.PublishWorkbookFragment"
+        android:label="@string/fragment_publish_workbook" >
+
+        <argument
+            android:name="workbookId"
+            app:argType="long" />
+
+    </fragment>
 
     <fragment
         android:id="@id/page_group"
