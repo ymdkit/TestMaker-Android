@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
@@ -122,12 +123,13 @@ class EditQuestionFragment : Fragment() {
                                         )
                                     }
                                 }
-                                Column(
+                                HorizontalPager(
                                     modifier = Modifier
                                         .padding(16.dp)
-                                        .weight(weight = 1f, fill = true)
-                                ) {
-                                    when (QuestionFormat.values()[pagerState.currentPage]) {
+                                        .weight(weight = 1f, fill = true),
+                                    state = pagerState
+                                ) { page ->
+                                    when (QuestionFormat.values()[page]) {
                                         QuestionFormat.WRITE -> ContentEditWriteQuestion(
                                             questionId = question.id,
                                             order = question.order,
