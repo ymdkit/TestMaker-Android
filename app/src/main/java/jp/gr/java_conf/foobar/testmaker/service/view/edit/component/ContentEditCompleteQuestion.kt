@@ -102,7 +102,6 @@ fun ContentEditCompleteQuestion(
                     .focusRequester(focusRequester)
                     .padding(bottom = 8.dp),
                 value = editingProblem,
-                maxLines = 3,
                 label = {
                     Text(text = stringResource(R.string.hint_question))
                 },
@@ -171,7 +170,6 @@ fun ContentEditCompleteQuestion(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 value = editingExplanation,
-                maxLines = 3,
                 label = {
                     Text(text = stringResource(R.string.hint_explanation))
                 },

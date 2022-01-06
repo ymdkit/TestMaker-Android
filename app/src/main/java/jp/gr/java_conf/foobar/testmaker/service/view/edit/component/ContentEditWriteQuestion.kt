@@ -79,7 +79,6 @@ fun ContentEditWriteQuestion(
                     .focusRequester(focusRequester)
                     .padding(bottom = 8.dp),
                 value = editingProblem,
-                maxLines = 3,
                 label = {
                     Text(text = stringResource(R.string.hint_question))
                 },
@@ -115,7 +114,7 @@ fun ContentEditWriteQuestion(
                 value = bitmap,
                 onValueChange = {
                     bitmap = it
-                    if(bitmap == null){
+                    if (bitmap == null) {
                         editingImageUrl = ""
                     }
                 }
@@ -125,7 +124,6 @@ fun ContentEditWriteQuestion(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 value = editingExplanation,
-                maxLines = 3,
                 label = {
                     Text(text = stringResource(R.string.hint_explanation))
                 },
