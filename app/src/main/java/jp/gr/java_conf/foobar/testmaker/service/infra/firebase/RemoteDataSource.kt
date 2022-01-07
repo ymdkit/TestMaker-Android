@@ -276,13 +276,18 @@ class RemoteDataSource(val context: Context, val auth: Auth) {
         val baos = ByteArrayOutputStream()
         val imageOptions = BitmapFactory.Options()
         imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
-        val input = context.openFileInput(localPath)
-        val bitmap = BitmapFactory.decodeStream(input, null, imageOptions)
-        bitmap?.compress(Bitmap.CompressFormat.JPEG, 50, baos)
-        val data = baos.toByteArray()
-        storageRef.putBytes(data)
-
-        return remotePath
+        runCatching {
+            context.openFileInput(localPath)
+        }.onSuccess {
+            val bitmap = BitmapFactory.decodeStream(it, null, imageOptions)
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 50, baos)
+            val data = baos.toByteArray()
+            storageRef.putBytes(data)
+            return remotePath
+        }.onFailure {
+            return ""
+        }
+        return ""
     }
 
     private fun testToFirebaseTest(
