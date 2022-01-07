@@ -222,7 +222,7 @@ fun ContentEditSelectQuestion(
 
                 val newImageUrl = bitmap?.let {
                     ImageStore().saveImage(it, context = context)
-                } ?: editingExplanation
+                } ?: editingImageUrl
 
                 val question = QuestionModel(
                     id = questionId,
