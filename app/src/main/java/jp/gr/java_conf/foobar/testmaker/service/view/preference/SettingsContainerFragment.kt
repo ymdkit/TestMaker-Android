@@ -47,6 +47,18 @@ class SettingsContainerFragment: Fragment() {
         return binding.root
     }
 
+    fun setStudyPlusAuthResult(data: Intent){
+        studyPlus.setAuthResult(data)
+        Toast.makeText(requireContext(), getString(R.string.msg_connect_success), Toast.LENGTH_LONG).show()
+
+        childFragmentManager.findFragmentById(R.id.settingsContainer)?.apply {
+
+            if (this is SettingsFragment) {
+                this.initStudyPlusPreferences()
+            }
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
