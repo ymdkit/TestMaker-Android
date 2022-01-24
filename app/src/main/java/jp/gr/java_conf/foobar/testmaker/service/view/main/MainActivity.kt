@@ -16,6 +16,8 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
+import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsContainerFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -115,6 +117,25 @@ class MainActivity : AppCompatActivity() {
                 showToast(getString(R.string.msg_failure_download_test))
             }
         )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            SettingsFragment.REQUEST_CODE_AUTH -> {
+                if (resultCode == RESULT_OK && data != null) {
+
+                    supportFragmentManager.findFragmentById(R.id.nav_main)?.childFragmentManager?.fragments?.get(0)
+                        ?.let {
+
+                        if (it is SettingsContainerFragment) {
+                            it.setStudyPlusAuthResult(data)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     companion object {
