@@ -9,10 +9,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 
 class LocalDataSource(private val realm: Realm, private val context: Context) {
 
-    fun getTest(testId: Long): RealmTest {
-        return realm.where(RealmTest::class.java).equalTo("id", testId).findFirst() ?: RealmTest()
-    }
-
     fun createObjectFromFirebase(firebaseTest: FirebaseTest, source: String): Test {
         realm.beginTransaction()
 

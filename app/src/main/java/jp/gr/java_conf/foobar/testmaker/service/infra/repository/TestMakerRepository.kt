@@ -3,7 +3,6 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
@@ -48,8 +47,6 @@ class TestMakerRepository(
     fun setUser(user: FirebaseUser?) {
         remote.setUser(user)
     }
-
-    fun getTest(testId: Long): RealmTest = local.getTest(testId)
 
     suspend fun getTestsByUserId(userId: String) = remote.getTestsByUserId(userId)
 
