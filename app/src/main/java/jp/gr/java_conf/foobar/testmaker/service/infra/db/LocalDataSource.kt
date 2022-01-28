@@ -36,16 +36,4 @@ class LocalDataSource(private val realm: Realm, private val context: Context) {
 
         return Test.createFromRealmTest(test)
     }
-
-    fun updateDocumentId(test: RealmTest, documentId: String) {
-        realm.beginTransaction()
-        test.documentId = documentId
-        realm.commitTransaction()
-    }
-
-    fun updateDocumentId(question: Quest, documentId: String) {
-        realm.beginTransaction()
-        question.documentId = documentId
-        realm.commitTransaction()
-    }
 }
