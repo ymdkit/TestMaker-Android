@@ -16,6 +16,7 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
+import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListFragmentDirections
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsContainerFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsFragment
 import kotlinx.coroutines.Dispatchers
@@ -74,9 +75,13 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(R.id.action_global_page_home)
     }
 
-    private fun navigateGroupPage() {
+    private fun navigateGroupPage(groupId: String) {
         binding.bottomBar.selectedItemId = R.id.page_group
-        navController.navigate(R.id.action_global_page_group)
+        navController.navigate(
+            GroupListFragmentDirections.actionGroupListToGroupDetail(
+                groupId = groupId
+            )
+        )
     }
 
     private fun handleDynamicLink(link: String) {
@@ -92,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 
                 if (params.size != 2) return@let
 
-                navigateGroupPage()
+                navigateGroupPage(groupId = params[1])
 
             } else {
                 actionDownload(params[0])
@@ -126,13 +131,15 @@ class MainActivity : AppCompatActivity() {
             SettingsFragment.REQUEST_CODE_AUTH -> {
                 if (resultCode == RESULT_OK && data != null) {
 
-                    supportFragmentManager.findFragmentById(R.id.nav_main)?.childFragmentManager?.fragments?.get(0)
+                    supportFragmentManager.findFragmentById(R.id.nav_main)?.childFragmentManager?.fragments?.get(
+                        0
+                    )
                         ?.let {
 
-                        if (it is SettingsContainerFragment) {
-                            it.setStudyPlusAuthResult(data)
+                            if (it is SettingsContainerFragment) {
+                                it.setStudyPlusAuthResult(data)
+                            }
                         }
-                    }
                 }
             }
         }
