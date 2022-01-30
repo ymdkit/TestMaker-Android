@@ -10,8 +10,8 @@
         app:destination="@id/page_home" />
 
     <action
-        android:id="@+id/action_global_page_group"
-        app:destination="@id/page_group" />
+        android:id="@+id/action_global_page_group_detail"
+        app:destination="@id/fragment_group_detail" />
 
     <fragment
         android:id="@id/page_home"

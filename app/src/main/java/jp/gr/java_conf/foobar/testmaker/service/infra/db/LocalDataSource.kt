@@ -9,10 +9,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 
 class LocalDataSource(private val realm: Realm, private val context: Context) {
 
-    fun getTest(testId: Long): RealmTest {
-        return realm.where(RealmTest::class.java).equalTo("id", testId).findFirst() ?: RealmTest()
-    }
-
     fun createObjectFromFirebase(firebaseTest: FirebaseTest, source: String): Test {
         realm.beginTransaction()
 
@@ -35,17 +31,5 @@ class LocalDataSource(private val realm: Realm, private val context: Context) {
         realm.commitTransaction()
 
         return Test.createFromRealmTest(test)
-    }
-
-    fun updateDocumentId(test: RealmTest, documentId: String) {
-        realm.beginTransaction()
-        test.documentId = documentId
-        realm.commitTransaction()
-    }
-
-    fun updateDocumentId(question: Quest, documentId: String) {
-        realm.beginTransaction()
-        question.documentId = documentId
-        realm.commitTransaction()
     }
 }

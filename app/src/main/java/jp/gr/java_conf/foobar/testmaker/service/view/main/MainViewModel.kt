@@ -23,7 +23,6 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
     fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test, source = CreateTestSource.DYNAMIC_LINKS.title)
 
     fun getUser(): FirebaseUser? = auth.getUser()
-    fun createUser(user: FirebaseUser?) = repository.setUser(user)
 
     private val billingClient = BillingClient.newBuilder(context).enablePendingPurchases().setListener(this).build()
     private val _billingStatus = MutableLiveData<BillingStatus>()
