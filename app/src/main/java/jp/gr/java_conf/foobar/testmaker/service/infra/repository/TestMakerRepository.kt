@@ -2,7 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.example.infra.local.db.TestDataSource
+import com.example.infra.local.db.WorkbookDataSource
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 
 class TestMakerRepository(
     private val remote: RemoteDataSource,
-    private val workbookDataSource: TestDataSource,
+    private val workbookDataSource: WorkbookDataSource,
     private val context: Context,
 ) {
 
@@ -39,7 +39,7 @@ class TestMakerRepository(
             test.addQuestion(question)
         }
 
-        workbookDataSource.create(test)
+        workbookDataSource.createWorkbook(test)
 
         return Test.createFromRealmTest(test)
     }

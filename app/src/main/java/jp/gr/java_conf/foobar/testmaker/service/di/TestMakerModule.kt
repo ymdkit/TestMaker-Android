@@ -2,7 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.di
 
 import android.content.pm.ApplicationInfo
 import com.example.infra.local.db.FolderDataSource
-import com.example.infra.local.db.TestDataSource
+import com.example.infra.local.db.WorkbookDataSource
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -41,7 +41,7 @@ fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
     single { GroupRepository(get()) }
     single { HistoryRepository(get()) }
     single { FolderDataSource(realm) }
-    single { TestDataSource(realm) }
+    single { WorkbookDataSource(realm) }
     single { Auth() }
     single { RemoteDataSource(get(), get()) }
     single { SharedPreferenceManager(get()) }

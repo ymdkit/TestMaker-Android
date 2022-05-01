@@ -17,10 +17,9 @@ class CategoryViewModel(private val repository: CategoryRepository) : ViewModel(
         repository.refresh()
     }
 
-    fun create(category: Category): Long {
-        val id = repository.create(category)
+    fun create(category: Category) {
+        repository.create(category)
         repository.refresh()
-        return id
     }
 
     fun update(category: Category) = repository.update(category)

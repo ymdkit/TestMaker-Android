@@ -2,42 +2,46 @@ package com.example.infra.local.db
 
 import com.example.infra.local.entity.RealmCategory
 import io.realm.Realm
+import io.realm.RealmModel
 
 class FolderDataSource(private val realm: Realm) {
 
-    fun create(category: RealmCategory): Long {
-        category.id = realm.where(RealmCategory::class.java).max("id")?.toLong()?.plus(1) ?: 0
-        category.order = category.id.toInt()
+    private inline fun <reified T : RealmModel> generateId(): Long =
+        realm.where(T::class.java).max("id")?.toLong()?.plus(1) ?: 1L
+
+    fun generateFolderId(): Long = generateId<RealmCategory>()
+
+    fun createFolder(folder: RealmCategory) =
         realm.executeTransaction {
-            it.copyToRealm(category)
+            it.copyToRealm(folder)
         }
-        return category.id
+
+    fun getFolderList(): List<RealmCategory> =
+        realm.copyFromRealm(
+            realm.where(RealmCategory::class.java)
+                .findAll()
+        )
+            ?.distinctBy { it.name }
+            ?.sortedBy { it.order }
+            ?: listOf()
+
+    fun getFolder(folderId: Long): RealmCategory =
+        realm.copyFromRealm(
+            realm.where(RealmCategory::class.java)
+                .equalTo("id", folderId)
+                .findFirst()
+                ?: RealmCategory()
+        )
+
+    fun updateFolder(folder: RealmCategory) {
+        realm.executeTransaction {
+            it.copyToRealmOrUpdate(folder)
+        }
     }
 
-    fun get(): List<RealmCategory> = realm.copyFromRealm(
-        realm.where(RealmCategory::class.java)
-            .findAll()
-    )
-        ?.distinctBy { it.name }
-        ?.sortedBy { it.order }
-        ?: listOf()
-
-    fun get(id: Long): RealmCategory = realm.copyFromRealm(
-        realm.where(RealmCategory::class.java)
-            .equalTo("id", id)
-            .findFirst()
-            ?: RealmCategory()
-    )
-
-    fun update(category: RealmCategory) {
+    fun delete(folder: RealmCategory) {
         realm.executeTransaction {
-            it.copyToRealmOrUpdate(category)
-        }
-    }
-
-    fun delete(category: RealmCategory) {
-        realm.executeTransaction {
-            realm.where(RealmCategory::class.java).equalTo("id", category.id).findFirst()
+            realm.where(RealmCategory::class.java).equalTo("id", folder.id).findFirst()
                 ?.deleteFromRealm()
         }
     }

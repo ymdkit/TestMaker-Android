@@ -18,8 +18,8 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
         repository.refresh()
     }
 
-    fun create(title: String, color: Int, category: String?, source: String): Long {
-        return repository.create(
+    fun create(title: String, color: Int, category: String?, source: String) =
+        repository.create(
             Test(
                 title = title,
                 color = color,
@@ -27,9 +27,8 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
                 source = source
             )
         )
-    }
 
-    fun create(test: Test): Long = repository.create(test)
+    fun create(test: Test) = repository.create(test)
 
     fun update(test: Test, title: String, color: Int, category: String?) {
         repository.update(test.copy(title = title, color = color, category = category ?: ""))
@@ -53,7 +52,7 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
         repository.delete(question)
     }
 
-    fun delete(questions: List<Question>){
+    fun delete(questions: List<Question>) {
         questions.forEach {
             delete(it)
         }
@@ -86,14 +85,14 @@ class TestViewModel(private val repository: TestRepository) : ViewModel() {
 
     }
 
-    fun move(questions: List<Question>, dest: Test){
+    fun move(questions: List<Question>, dest: Test) {
         questions.forEach {
             create(dest, it)
             delete(it)
         }
     }
 
-    fun copy(questions: List<Question>, dest: Test){
+    fun copy(questions: List<Question>, dest: Test) {
         questions.forEach {
             create(dest, it)
         }

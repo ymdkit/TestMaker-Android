@@ -10,23 +10,30 @@ class CategoryRepository(
 ) {
 
     private var categories: MutableLiveData<List<Category>> =
-        MutableLiveData(dataSource.get().map { Category.createFromRealmCategory(it) })
+        MutableLiveData(dataSource.getFolderList().map { Category.createFromRealmCategory(it) })
 
-    fun get(): List<Category> = dataSource.get().map { Category.createFromRealmCategory(it) }
+    fun get(): List<Category> =
+        dataSource.getFolderList().map { Category.createFromRealmCategory(it) }
 
 
     fun getAsLiveData(): LiveData<List<Category>> = categories
 
-    fun get(id: Long): Category = Category.createFromRealmCategory(dataSource.get(id))
+    fun get(id: Long): Category = Category.createFromRealmCategory(dataSource.getFolder(id))
 
     fun refresh() {
-        categories.value = dataSource.get().map { Category.createFromRealmCategory(it) }
+        categories.value = dataSource.getFolderList().map { Category.createFromRealmCategory(it) }
     }
 
-    fun create(category: Category): Long {
-        val id = dataSource.create(category.toRealmCategory())
+    fun create(category: Category) {
+        val folderId = dataSource.generateFolderId()
+
+        dataSource.createFolder(
+            category.copy(
+                id = folderId,
+                order = folderId.toInt()
+            ).toRealmCategory()
+        )
         refresh()
-        return id
     }
 
     fun delete(category: Category) {
@@ -36,13 +43,13 @@ class CategoryRepository(
 
     fun swap(from: Category, to: Category) {
         val tmp = from.order
-        dataSource.update(from.copy(order = to.order).toRealmCategory())
-        dataSource.update(to.copy(order = tmp).toRealmCategory())
+        dataSource.updateFolder(from.copy(order = to.order).toRealmCategory())
+        dataSource.updateFolder(to.copy(order = tmp).toRealmCategory())
         refresh()
     }
 
     fun update(category: Category) {
-        dataSource.update(category.toRealmCategory())
+        dataSource.updateFolder(category.toRealmCategory())
         refresh()
     }
 }

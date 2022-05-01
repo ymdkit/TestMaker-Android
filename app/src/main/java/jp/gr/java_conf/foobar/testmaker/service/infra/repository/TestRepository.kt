@@ -2,35 +2,39 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.infra.local.db.TestDataSource
+import com.example.infra.local.db.WorkbookDataSource
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
-class TestRepository(private val dataSource: TestDataSource) {
+class TestRepository(private val dataSource: WorkbookDataSource) {
 
     private var testsLiveData: MutableLiveData<List<Test>> =
-        MutableLiveData(dataSource.getAll().map { Test.createFromRealmTest(it) }
+        MutableLiveData(dataSource.getWorkbookList().map { Test.createFromRealmTest(it) }
         )
 
     private var tests: List<Test>? = null
 
     fun getAsLiveData(): LiveData<List<Test>> = testsLiveData
 
-    fun get(): List<Test> = tests ?: dataSource.getAll().map { Test.createFromRealmTest(it) }.also {
-        tests = it
-    }
+    fun get(): List<Test> =
+        tests ?: dataSource.getWorkbookList().map { Test.createFromRealmTest(it) }.also {
+            tests = it
+        }
 
-    fun get(id: Long): Test = Test.createFromRealmTest(dataSource.get(id))
+    fun get(id: Long): Test = Test.createFromRealmTest(dataSource.getWorkbook(id))
 
     fun refresh() {
-        tests = dataSource.getAll().map { Test.createFromRealmTest(it) }
+        tests = dataSource.getWorkbookList().map { Test.createFromRealmTest(it) }
         testsLiveData.value = tests
     }
 
-    fun create(test: Test): Long {
+    fun create(test: Test) {
+        val workbookId = dataSource.generateWorkbookId()
         val questionId = dataSource.generateQuestionId()
-        val id = dataSource.create(
+        dataSource.createWorkbook(
             test.copy(
+                id = workbookId,
+                order = workbookId.toInt(),
                 questions = test.questions.mapIndexed { index, question ->
                     question.copy(
                         id = questionId + index,
@@ -39,7 +43,6 @@ class TestRepository(private val dataSource: TestDataSource) {
                 }).toRealmTest()
         )
         refresh()
-        return id
     }
 
     fun update(test: Test) {
@@ -52,22 +55,22 @@ class TestRepository(private val dataSource: TestDataSource) {
                     order = index
                 )
             })
-            dataSource.update(result.toRealmTest())
+            dataSource.updateQuestion(result.toRealmTest())
         } else {
-            dataSource.update(test.toRealmTest())
+            dataSource.updateQuestion(test.toRealmTest())
         }
         refresh()
     }
 
     fun delete(test: Test) {
-        dataSource.delete(test.toRealmTest())
+        dataSource.deleteWorkbook(test.toRealmTest())
         refresh()
     }
 
     fun swap(from: Test, to: Test) {
         val tmp = from.order
-        dataSource.update(from.copy(order = to.order).toRealmTest())
-        dataSource.update(to.copy(order = tmp).toRealmTest())
+        dataSource.updateQuestion(from.copy(order = to.order).toRealmTest())
+        dataSource.updateQuestion(to.copy(order = tmp).toRealmTest())
         refresh()
     }
 
@@ -90,19 +93,19 @@ class TestRepository(private val dataSource: TestDataSource) {
     }
 
     fun update(question: Question) {
-        dataSource.update(question.toRealmQuestion())
+        dataSource.updateQuestion(question.toRealmQuestion())
         refresh()
     }
 
     fun delete(question: Question) {
-        dataSource.delete(question.toRealmQuestion())
+        dataSource.deleteQuestion(question.toRealmQuestion())
         refresh()
     }
 
     fun swap(from: Question, to: Question) {
         val tmp = from.order
-        dataSource.update(from.copy(order = to.order).toRealmQuestion())
-        dataSource.update(to.copy(order = tmp).toRealmQuestion())
+        dataSource.updateQuestion(from.copy(order = to.order).toRealmQuestion())
+        dataSource.updateQuestion(to.copy(order = tmp).toRealmQuestion())
         refresh()
     }
 
@@ -111,7 +114,7 @@ class TestRepository(private val dataSource: TestDataSource) {
             .filter {
                 it.order > index
             }.forEach {
-                dataSource.update(it.copy(order = it.order + 1).toRealmQuestion())
+                dataSource.updateQuestion(it.copy(order = it.order + 1).toRealmQuestion())
             }
 
         create(
