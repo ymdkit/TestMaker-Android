@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.di
 
 import android.content.pm.ApplicationInfo
+import com.example.infra.local.source.FolderDataSource
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -8,7 +9,6 @@ import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.SearchClient
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.CategoryDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.TestDataSource
@@ -38,11 +38,11 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 fun getTestMakerModules(realm: Realm, info: ApplicationInfo) = module {
     single { TestMakerRepository(get(), get()) }
     single { TestRepository(get()) }
-    single { CategoryRepository(get(), get()) }
+    single { CategoryRepository(get()) }
     single { GroupRepository(get()) }
     single { HistoryRepository(get()) }
     single { LocalDataSource(realm, get()) }
-    single { CategoryDataSource(realm) }
+    single { FolderDataSource(realm) }
     single { TestDataSource(realm) }
     single { Auth() }
     single { RemoteDataSource(get(), get()) }
