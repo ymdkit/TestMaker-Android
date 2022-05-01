@@ -21,12 +21,12 @@ android {
             keyPassword = env.TESTMAKER_KEY_PASS.value
         }
     }
-    compileSdk = Deps.compileSdkVersion
+    compileSdk = Dep.compileSdkVersion
 
     defaultConfig {
         applicationId = "jp.gr.java_conf.foobar.testmaker.service"
-        minSdk = Deps.minSdkVersion
-        targetSdk = Deps.targetSdkVersion
+        minSdk = Dep.minSdkVersion
+        targetSdk = Dep.targetSdkVersion
         multiDexEnabled = true
         versionCode = 176
         versionName = "5.1.6"
@@ -151,10 +151,10 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.9.2")
     implementation("com.squareup.moshi:moshi-kotlin:1.9.2")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Deps.kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Dep.kotlinVersion}")
     implementation("androidx.navigation:navigation-fragment-ktx:2.2.2")
     implementation("androidx.navigation:navigation-ui-ktx:2.2.2")
-    implementation("androidx.fragment:fragment-ktx:${Deps.fragmentVersion}")
+    implementation("androidx.fragment:fragment-ktx:${Dep.fragmentVersion}")
     implementation("androidx.activity:activity-compose:1.3.0")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")
     kapt("com.airbnb.android:epoxy-processor:3.11.0")

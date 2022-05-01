@@ -1,4 +1,4 @@
-object Deps {
+object Dep {
     const val compileSdkVersion = 31
     const val minSdkVersion = 23
     const val targetSdkVersion = 30
