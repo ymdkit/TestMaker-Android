@@ -165,6 +165,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0")
     androidTestImplementation("com.jraska:falcon:2.1.1")
 
+    implementation(project(":ui"))
     implementation(project(":infra"))
 }
 repositories {

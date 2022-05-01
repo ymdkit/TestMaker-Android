@@ -9,6 +9,17 @@ object Dep {
     const val hiltVersion = "2.41"
     const val retrofitVersion = "2.9.0"
     const val moshiVersion = "1.9.2"
+    const val composeVersion = "1.0.5"
+
+    object Compose {
+        const val ui = "androidx.compose.ui:ui:$composeVersion"
+        const val foundation = "androidx.compose.foundation:foundation:$composeVersion"
+        const val material = "androidx.compose.material:material:$composeVersion"
+        const val materialIconsCore =
+            "androidx.compose.material:material-icons-core:$composeVersion"
+        const val materialIconsExtended =
+            "androidx.compose.material:material-icons-extended:$composeVersion"
+    }
 
     object Hilt {
         const val android = "com.google.dagger:hilt-android:$hiltVersion"
