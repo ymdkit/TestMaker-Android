@@ -1,13 +1,13 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.db
 
+import com.example.infra.local.entity.RealmCategory
 import io.realm.Realm
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmCategory
 
 class CategoryDataSource(private val realm: Realm) {
 
     fun create(category: Category): Long {
-        val result = RealmCategory.createFromCategory(category)
+        val result = category.toRealmCategory()
         result.id = realm.where(RealmCategory::class.java).max("id")?.toLong()?.plus(1) ?: 0
         result.order = result.id.toInt()
         realm.executeTransaction {
@@ -26,11 +26,12 @@ class CategoryDataSource(private val realm: Realm) {
     fun get(id: Long): Category = Category.createFromRealmCategory(realm.copyFromRealm(realm.where(RealmCategory::class.java)
             .equalTo("id", id)
             .findFirst()
-            ?: RealmCategory()))
+            ?: RealmCategory()
+    ))
 
     fun update(category: Category) {
         realm.executeTransaction {
-            it.copyToRealmOrUpdate(RealmCategory.createFromCategory(category))
+            it.copyToRealmOrUpdate(category.toRealmCategory())
         }
     }
 

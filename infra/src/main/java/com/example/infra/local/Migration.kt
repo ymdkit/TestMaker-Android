@@ -1,10 +1,9 @@
-package jp.gr.java_conf.foobar.testmaker.service.infra.db
+package com.example.infra.local
 
 import io.realm.DynamicRealm
 import io.realm.DynamicRealmObject
 import io.realm.FieldAttribute
 import io.realm.RealmMigration
-import jp.gr.java_conf.foobar.testmaker.service.Constants
 
 /**
  * Created by keita on 2017/02/08.
@@ -58,7 +57,8 @@ class Migration : RealmMigration {
             val selectSchema = schema["Select"]
             personSchema!!.addRealmListField("answers", selectSchema)
                     ?.transform { obj: DynamicRealmObject ->
-                        if (obj.getInt("type") == Constants.COMPLETE) {
+                        // todo Fix hard coding to constant "COMPLETE"
+                        if (obj.getInt("type") == 2) {
                             for (i in obj.getList("selections").indices) {
                                 val answer = realm.createObject("Select")
                                 answer.setString("select", obj.getList("selections")[i]!!.getString("select"))

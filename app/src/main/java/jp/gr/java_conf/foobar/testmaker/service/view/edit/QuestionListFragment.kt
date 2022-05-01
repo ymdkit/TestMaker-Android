@@ -20,7 +20,6 @@ import jp.gr.java_conf.foobar.testmaker.service.ItemQuestionBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentQuestionListBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
@@ -277,7 +276,7 @@ class QuestionListFragment : Fragment() {
                     test.let {
                         testViewModel.update(
                             Test.createFromRealmTest(
-                                RealmTest.createFromTest(it).apply {
+                                it.toRealmTest().apply {
                                     resetAchievement()
                                 })
                         )

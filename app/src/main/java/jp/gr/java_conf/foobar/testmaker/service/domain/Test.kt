@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.domain
 
 import android.content.Context
 import android.os.Parcelable
+import com.example.infra.local.entity.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.TestMakerApplication
@@ -63,6 +64,22 @@ data class Test(
 
     fun getColorId(context: Context): Int =
         context.resources.getIntArray(R.array.color_list).indexOf(color).coerceAtLeast(0)
+    
+    fun toRealmTest(): RealmTest {
+        val realmTest = RealmTest()
+        realmTest.id = id
+        realmTest.color = color
+        realmTest.limit = limit
+        realmTest.startPosition = startPosition
+        realmTest.title = title
+        realmTest.setCategory(category)
+        realmTest.history = history
+        questions.forEach { realmTest.addQuestion(it.toRealmQuestion()) }
+        realmTest.documentId = documentId
+        realmTest.order = order
+        realmTest.source = source
+        return realmTest
+    }
 
     companion object {
         fun createFromRealmTest(realmTest: RealmTest) = Test(

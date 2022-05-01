@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.domain
 
 import android.os.Parcelable
+import com.example.infra.local.entity.Quest
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.QuestionResponse
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseQuestion
@@ -62,6 +63,25 @@ data class Question(
         answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT,
         order = order
     )
+
+    fun toRealmQuestion(): Quest {
+        val quest = Quest()
+        quest.id = id
+        quest.problem = question
+        quest.answer = answer
+        quest.explanation = explanation
+        quest.correct = isCorrect
+        quest.imagePath = imagePath
+        quest.setSelections(others.toTypedArray())
+        quest.setAnswers(answers.toTypedArray())
+        quest.type = type
+        quest.auto = isAutoGenerateOthers
+        quest.solving = isSolved
+        quest.order = order
+        quest.isCheckOrder = isCheckOrder
+        quest.documentId = documentId
+        return quest
+    }
 
     @IgnoredOnParcel
     private val format = when (type) {

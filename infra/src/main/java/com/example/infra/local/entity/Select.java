@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.domain;
+package com.example.infra.local.entity;
 
 import io.realm.RealmObject;
 

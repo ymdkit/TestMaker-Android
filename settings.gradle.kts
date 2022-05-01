@@ -6,3 +6,4 @@ pluginManagement {
     }
 }
 include(":app")
+include(":infra")

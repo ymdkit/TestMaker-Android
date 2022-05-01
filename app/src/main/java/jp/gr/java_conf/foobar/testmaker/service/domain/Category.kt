@@ -1,6 +1,7 @@
 package jp.gr.java_conf.foobar.testmaker.service.domain
 
 import android.os.Parcelable
+import com.example.infra.local.entity.RealmCategory
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -10,6 +11,16 @@ data class Category(
         val color: Int = 0,
         val order: Int = 0
 ): Parcelable {
+    
+    fun toRealmCategory(): RealmCategory {
+        val category = RealmCategory()
+        category.id = id
+        category.name =  name
+        category.color = color
+        category.order = order
+        return category
+    }
+
     companion object {
         fun createFromRealmCategory(from: RealmCategory) =
                 Category(

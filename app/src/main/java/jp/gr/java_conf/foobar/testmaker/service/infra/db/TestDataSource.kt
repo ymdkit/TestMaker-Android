@@ -1,10 +1,10 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.db
 
+import com.example.infra.local.entity.Quest
+import com.example.infra.local.entity.RealmTest
 import io.realm.Realm
 import io.realm.RealmModel
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
 class TestDataSource(private val realm: Realm) {
@@ -14,15 +14,15 @@ class TestDataSource(private val realm: Realm) {
 
     fun create(test: Test): Long {
         val questionId = generateId<Quest>()
-        val realmTest = RealmTest.createFromTest(
+        val realmTest =
             test.copy(
                 questions = test.questions.mapIndexed { index, question ->
                     question.copy(
                         id = questionId + index,
                         order = index
                     )
-                })
-        )
+                }).toRealmTest()
+
 
         realmTest.id = generateId<RealmTest>()
         realmTest.order = realmTest.id.toInt()
@@ -59,7 +59,7 @@ class TestDataSource(private val realm: Realm) {
                 )
             })
         }
-        update(RealmTest.createFromTest(result))
+        update(result.toRealmTest())
     }
 
     fun swap(from: Test, to: Test) {
@@ -92,7 +92,7 @@ class TestDataSource(private val realm: Realm) {
 
     fun update(question: Question) {
         realm.executeTransaction {
-            it.copyToRealmOrUpdate(Quest.createQuestFromQuestion(question))
+            it.copyToRealmOrUpdate(question.toRealmQuestion())
         }
     }
 

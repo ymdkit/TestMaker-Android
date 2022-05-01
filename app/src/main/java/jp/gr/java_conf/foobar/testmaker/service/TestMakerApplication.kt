@@ -3,13 +3,13 @@ package jp.gr.java_conf.foobar.testmaker.service
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import androidx.multidex.MultiDexApplication
+import com.example.infra.local.Migration
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import jp.gr.java_conf.foobar.testmaker.service.di.getTestMakerModules
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.Migration
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import org.koin.android.ext.android.startKoin
 import java.io.FileNotFoundException

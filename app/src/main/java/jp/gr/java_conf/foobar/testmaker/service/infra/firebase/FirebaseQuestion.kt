@@ -1,6 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.firebase
 
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
+import com.example.infra.local.entity.Quest
 
 data class FirebaseQuestion(val question: String = "",
                             val answer: String = "",

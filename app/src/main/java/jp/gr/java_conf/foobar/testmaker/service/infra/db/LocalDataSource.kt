@@ -1,9 +1,9 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.db
 
 import android.content.Context
+import com.example.infra.local.entity.Quest
+import com.example.infra.local.entity.RealmTest
 import io.realm.Realm
-import jp.gr.java_conf.foobar.testmaker.service.domain.Quest
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 

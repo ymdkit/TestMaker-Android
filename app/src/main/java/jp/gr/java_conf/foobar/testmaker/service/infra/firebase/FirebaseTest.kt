@@ -1,10 +1,10 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.firebase
 
 import android.content.Context
+import com.example.infra.local.entity.RealmTest
 import com.google.firebase.Timestamp
 import com.squareup.moshi.Json
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.RealmTest
 import java.text.SimpleDateFormat
 import java.util.*
 

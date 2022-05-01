@@ -171,6 +171,8 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.2.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0")
     androidTestImplementation("com.jraska:falcon:2.1.1")
+
+    implementation(project(":infra"))
 }
 repositories {
     mavenCentral()
