@@ -16,6 +16,10 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.airbnb.epoxy.EpoxyTouchHelper
+import com.example.infra.remote.CloudFunctionsApi
+import com.example.infra.remote.CloudFunctionsClient
+import com.example.infra.remote.ExportQuestionRequest
+import com.example.infra.remote.ExportWorkbookRequest
 import com.google.android.gms.ads.AdRequest
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.ItemQuestionBindingModel_
@@ -27,10 +31,8 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.modules.CloudFunctionsClient
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
@@ -51,7 +53,7 @@ class QuestionListFragment : Fragment() {
 
     @CloudFunctionsClient
     @Inject
-    lateinit var service: CloudFunctionsService
+    lateinit var service: CloudFunctionsApi
 
     @Inject
     lateinit var logger: TestMakerLogger
@@ -367,7 +369,28 @@ class QuestionListFragment : Fragment() {
             title = getString(R.string.converting),
             task = {
                 withContext(Dispatchers.IO) {
-                    service.testToText(test.escapedTest.copy(lang = if (Locale.getDefault().language == "ja") "ja" else "en"))
+
+                    service.testToText(workbook = ExportWorkbookRequest(
+                        id = test.id,
+                        color = test.color,
+                        title = test.title,
+                        lang = if (Locale.getDefault().language == "ja") "ja" else "en",
+                        questions = test.questions.map {
+                            ExportQuestionRequest(
+                                id = it.id,
+                                question = it.question,
+                                answer = it.answer,
+                                explanation = it.explanation,
+                                imagePath = it.imagePath,
+                                answers = it.answers,
+                                others = it.others,
+                                type = it.type,
+                                isAutoGenerateOthers = it.isAutoGenerateOthers,
+                                order = it.order,
+                                isCheckOrder = it.isCheckOrder
+                            )
+                        }
+                    ))
                 }
             },
             onSuccess = {

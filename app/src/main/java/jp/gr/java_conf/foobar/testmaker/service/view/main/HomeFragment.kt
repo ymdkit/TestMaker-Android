@@ -12,6 +12,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.*
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.android.billingclient.api.BillingClient
+import com.example.infra.remote.CloudFunctionsApi
+import com.example.infra.remote.CloudFunctionsClient
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,13 +25,11 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
-import jp.gr.java_conf.foobar.testmaker.service.modules.CloudFunctionsClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
 
     @CloudFunctionsClient
     @Inject
-    lateinit var service: CloudFunctionsService
+    lateinit var service: CloudFunctionsApi
 
     @Inject
     lateinit var logger: TestMakerLogger
@@ -183,7 +183,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    private fun loadTestByText(title: String = "", text: String) {
+    private fun loadTestByText(title: String = "no title", text: String) {
         requireActivity().executeJobWithDialog(
             title = getString(R.string.downloading),
             task = {

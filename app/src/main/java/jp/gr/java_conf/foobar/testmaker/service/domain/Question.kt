@@ -2,8 +2,8 @@ package jp.gr.java_conf.foobar.testmaker.service.domain
 
 import android.os.Parcelable
 import com.example.infra.local.entity.Quest
+import com.example.infra.remote.ImportQuestionResponse
 import jp.gr.java_conf.foobar.testmaker.service.Constants
-import jp.gr.java_conf.foobar.testmaker.service.infra.api.QuestionResponse
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseQuestion
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -113,17 +113,18 @@ data class Question(
                 documentId = realmQuestion.documentId
         )
 
-        fun createFromQuestionResponse(questionResponse: QuestionResponse, order: Int) = Question(
-            question = questionResponse.question,
-            answer = questionResponse.answer,
-            explanation = questionResponse.explanation,
-            answers = questionResponse.answers,
-            others = questionResponse.others,
-            type = questionResponse.type,
-            isCheckOrder = questionResponse.isCheckOrder,
-            isAutoGenerateOthers = questionResponse.isAutoGenerateOthers,
-            imagePath = questionResponse.imagePath,
-            order = order
+        fun createFromQuestionResponse(questionResponse: ImportQuestionResponse, order: Int) =
+            Question(
+                question = questionResponse.question,
+                answer = questionResponse.answer,
+                explanation = questionResponse.explanation,
+                answers = questionResponse.answers,
+                others = questionResponse.others,
+                type = questionResponse.type,
+                isCheckOrder = questionResponse.isCheckOrder,
+                isAutoGenerateOthers = questionResponse.isAutoGenerateOthers,
+                imagePath = questionResponse.imagePath,
+                order = order
         )
     }
 }

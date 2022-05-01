@@ -3,10 +3,10 @@ package jp.gr.java_conf.foobar.testmaker.service.domain
 import android.content.Context
 import android.os.Parcelable
 import com.example.infra.local.entity.RealmTest
+import com.example.infra.remote.ImportWorkbookResponse
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.TestMakerApplication
-import jp.gr.java_conf.foobar.testmaker.service.infra.api.TestResponse
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -96,7 +96,7 @@ data class Test(
             source = realmTest.source
         )
 
-        fun createFromTestResponse(testResponse: TestResponse) = Test(
+        fun createFromTestResponse(testResponse: ImportWorkbookResponse) = Test(
             title = testResponse.title,
             lang = testResponse.lang,
             questions = testResponse.questions.mapIndexed { index, it ->
