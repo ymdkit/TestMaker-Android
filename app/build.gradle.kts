@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.kapt")
+    id("dagger.hilt.android.plugin")
     id("kotlin-parcelize")
     id("realm-android")
     id("com.google.android.gms.oss-licenses-plugin")
@@ -97,6 +98,8 @@ android {
 }
 
 dependencies {
+    implementation(Dep.Hilt.android)
+    kapt(Dep.Hilt.compiler)
     implementation("androidx.constraintlayout:constraintlayout:2.1.0")
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("androidx.core:core-ktx:1.6.0")
