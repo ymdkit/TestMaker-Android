@@ -5,8 +5,11 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class Auth {
+@Singleton
+class Auth @Inject constructor() {
 
     fun getUser(): FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
@@ -15,8 +18,9 @@ class Auth {
     fun getAuthUIIntent(): Intent {
 
         val providers = arrayListOf(
-                AuthUI.IdpConfig.EmailBuilder().build(),
-                AuthUI.IdpConfig.GoogleBuilder().build())
+            AuthUI.IdpConfig.EmailBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build()
+        )
 
         return AuthUI.getInstance()
                 .createSignInIntentBuilder()

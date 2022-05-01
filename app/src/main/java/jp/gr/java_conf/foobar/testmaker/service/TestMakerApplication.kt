@@ -3,52 +3,22 @@ package jp.gr.java_conf.foobar.testmaker.service
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import androidx.multidex.MultiDexApplication
-import com.example.infra.local.Migration
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import jp.gr.java_conf.foobar.testmaker.service.di.getTestMakerModules
+import dagger.hilt.android.HiltAndroidApp
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import org.koin.android.ext.android.startKoin
-import java.io.FileNotFoundException
 
 /**
  * Created by keita on 2016/07/17.
  */
+@HiltAndroidApp
 class TestMakerApplication : MultiDexApplication() {
-
-    lateinit var config: RealmConfiguration
 
     override fun onCreate() {
         super.onCreate()
 
         instance = this
-
-        Realm.init(this)
-
-        config = RealmConfiguration.Builder()
-            .schemaVersion(18)
-            .build()
-
-        try {
-            Realm.migrateRealm(config, Migration())
-        } catch (ignored: FileNotFoundException) {
-            // If the Realm file doesn't exist, just ignore.
-        }
-
-        startKoin(
-            this, listOf(
-                getTestMakerModules(
-                    realm = Realm.getInstance(config),
-                    info = packageManager.getApplicationInfo(
-                        packageName,
-                        PackageManager.GET_META_DATA
-                    )
-                )
-            )
-        )
 
         var info: ApplicationInfo? = null
         try {

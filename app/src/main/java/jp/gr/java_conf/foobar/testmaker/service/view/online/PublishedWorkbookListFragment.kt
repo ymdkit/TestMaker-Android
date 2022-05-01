@@ -38,10 +38,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
@@ -58,19 +60,24 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class PublishedWorkbookListFragment : Fragment() {
 
     companion object {
         const val COLOR_MAX = 8F
     }
 
-    private val testViewModel: TestViewModel by viewModel()
-    private val viewModel: FirebaseViewModel by viewModel()
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
-    private val logger: TestMakerLogger by inject()
+    private val testViewModel: TestViewModel by viewModels()
+    private val viewModel: FirebaseViewModel by viewModels()
+
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
+
+    @Inject
+    lateinit var logger: TestMakerLogger
 
     @ExperimentalMaterialApi
     @ExperimentalGraphicsApi

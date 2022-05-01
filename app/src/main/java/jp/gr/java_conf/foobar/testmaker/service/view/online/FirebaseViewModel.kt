@@ -4,21 +4,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
+import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.SearchService
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
+import jp.gr.java_conf.foobar.testmaker.service.modules.SearchClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class FirebaseViewModel(
+@HiltViewModel
+class FirebaseViewModel @Inject constructor(
     private val repository: TestMakerRepository,
     private val auth: Auth,
-    private val service: SearchService
+    @SearchClient private val service: SearchService
 ) : ViewModel() {
 
     suspend fun downloadTest(testId: String): FirebaseTest = repository.downloadTest(testId)
@@ -34,9 +37,6 @@ class FirebaseViewModel(
             firebaseTest = test,
             source = CreateTestSource.PUBLIC_DOWNLOAD.title
         )
-
-    suspend fun createTest(test: Test, overview: String, isPublic: Boolean) =
-        repository.createTest(test, overview, isPublic)
 
     suspend fun uploadTestInGroup(test: Test, overview: String, groupId: String) =
         repository.createTestInGroup(test, overview, groupId)
@@ -62,20 +62,4 @@ class FirebaseViewModel(
             loading.value = false
         }
     }
-
-    suspend fun isAlreadyUploaded(title: String): FirebaseTest? {
-        val userId = getUser()?.uid ?: return null
-        return repository.getTestsByUserId(userId).firstOrNull { it.name == title }
-    }
-
-    suspend fun overwriteTest(
-        documentId: String,
-        test: Test,
-        overview: String,
-        isPublic: Boolean = true
-    ): RemoteDataSource.FirebasePostResponse {
-        repository.deleteTest(documentId)
-        return repository.createTest(test, overview, isPublic)
-    }
-
 }

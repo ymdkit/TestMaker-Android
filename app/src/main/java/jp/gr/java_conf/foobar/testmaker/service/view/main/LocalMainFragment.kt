@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.ItemTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -19,26 +22,30 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.share.*
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
+import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LocalMainFragment : Fragment() {
 
     private val mainController by lazy { MainController(requireContext()) }
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
+
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     private var binding: LocalMainFragmentBinding? = null
 
-    private val testViewModel: TestViewModel by sharedViewModel()
-    private val categoryViewModel: CategoryViewModel by viewModel()
-    private val dynamicLinksCreator: DynamicLinksCreator by inject()
-    private val logger: TestMakerLogger by inject()
+    private val testViewModel: TestViewModel by activityViewModels()
+    private val categoryViewModel: CategoryViewModel by viewModels()
+
+    @Inject
+    lateinit var logger: TestMakerLogger
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -150,9 +157,11 @@ class LocalMainFragment : Fragment() {
     }
 
     private fun editTest(test: Test) {
-        findNavController().navigate(HomeFragmentDirections.actionHomeToListQuestion(
-            test.id
-        ))
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeToListQuestion(
+                test.id
+            )
+        )
     }
 
     private fun deleteTest(test: Test) {
@@ -169,9 +178,11 @@ class LocalMainFragment : Fragment() {
 
     private fun uploadTest(test: Test) {
         logger.logEvent("upload_from_share_local")
-        findNavController().navigate(HomeFragmentDirections.actionHomeToShareWorkbook(
-            workbookId = test.id
-        ))
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeToShareWorkbook(
+                workbookId = test.id
+            )
+        )
     }
 
     private fun initDialogPlayStart(test: Test) {
@@ -214,10 +225,12 @@ class LocalMainFragment : Fragment() {
 
             testViewModel.update(result)
 
-            findNavController().navigate(HomeFragmentDirections.actionHomeToAnswerWorkbook(
-                workbookId = result.id,
-                isRetry = false
-            ))
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeToAnswerWorkbook(
+                    workbookId = result.id,
+                    isRetry = false
+                )
+            )
         }
     }
 

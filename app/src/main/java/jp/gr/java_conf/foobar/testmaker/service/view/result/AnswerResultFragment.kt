@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -29,6 +30,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.play.core.review.ReviewManagerFactory
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
@@ -38,10 +40,9 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AnswerResultFragment : Fragment() {
 
     companion object {
@@ -52,10 +53,16 @@ class AnswerResultFragment : Fragment() {
     private val testId: Long by lazy { args.workbookId }
     private val duration: Long by lazy { args.duration }
 
-    private val viewModel: ResultViewModel by viewModel { parametersOf(testId) }
-    private val auth: Auth by inject()
-    private val logger: TestMakerLogger by inject()
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
+    private val viewModel: ResultViewModel by viewModels()
+
+    @Inject
+    lateinit var auth: Auth
+
+    @Inject
+    lateinit var logger: TestMakerLogger
+
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     @ExperimentalAnimationApi
     @ExperimentalMaterialApi
@@ -63,6 +70,10 @@ class AnswerResultFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        viewModel.setup(
+            workbookId = testId
+        )
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner, object : OnBackPressedCallback(
@@ -142,7 +153,7 @@ class AnswerResultFragment : Fragment() {
                                     }
                                     Row(
                                         modifier = Modifier.padding(16.dp)
-                                    ){
+                                    ) {
                                         OutlinedButton(
                                             modifier = Modifier
                                                 .weight(fill = true, weight = 1f)

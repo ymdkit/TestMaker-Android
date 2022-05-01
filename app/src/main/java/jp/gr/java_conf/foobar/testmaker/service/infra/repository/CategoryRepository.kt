@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.infra.local.db.FolderDataSource
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CategoryRepository(
+@Singleton
+class CategoryRepository @Inject constructor(
     private val dataSource: FolderDataSource,
 ) {
 

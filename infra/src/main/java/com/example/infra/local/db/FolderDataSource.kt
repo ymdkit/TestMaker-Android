@@ -3,8 +3,13 @@ package com.example.infra.local.db
 import com.example.infra.local.entity.RealmCategory
 import io.realm.Realm
 import io.realm.RealmModel
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class FolderDataSource(private val realm: Realm) {
+@Singleton
+class FolderDataSource @Inject constructor(
+    private val realm: Realm
+) {
 
     private inline fun <reified T : RealmModel> generateId(): Long =
         realm.where(T::class.java).max("id")?.toLong()?.plus(1) ?: 1L

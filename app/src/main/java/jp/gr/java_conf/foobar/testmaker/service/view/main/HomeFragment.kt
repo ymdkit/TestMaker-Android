@@ -9,13 +9,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.*
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.android.billingclient.api.BillingClient
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentHomeBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
@@ -30,13 +29,13 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
+import jp.gr.java_conf.foobar.testmaker.service.modules.CloudFunctionsClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     companion object {
@@ -45,11 +44,18 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
-    val sharedPreferenceManager: SharedPreferenceManager by inject()
-    private val viewModel: MainViewModel by viewModel()
-    private val service: CloudFunctionsService by inject()
-    private val logger: TestMakerLogger by inject()
-    private val testViewModel: TestViewModel by sharedViewModel()
+    private val viewModel: MainViewModel by viewModels()
+
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
+
+    @CloudFunctionsClient
+    @Inject
+    lateinit var service: CloudFunctionsService
+
+    @Inject
+    lateinit var logger: TestMakerLogger
+    private val testViewModel: TestViewModel by activityViewModels()
 
     private val importFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
         it ?: return@registerForActivityResult
@@ -158,7 +164,10 @@ class HomeFragment : Fragment() {
                         for (purchase in it) {
                             when (purchase.sku) {
                                 getString(R.string.sku_remove_ad) -> {
-                                    requireContext().showToast(getString(R.string.msg_remove_ad_success), Toast.LENGTH_LONG)
+                                    requireContext().showToast(
+                                        getString(R.string.msg_remove_ad_success),
+                                        Toast.LENGTH_LONG
+                                    )
                                     binding.adView.visibility = View.GONE
                                     viewModel.removeAd()
                                 }

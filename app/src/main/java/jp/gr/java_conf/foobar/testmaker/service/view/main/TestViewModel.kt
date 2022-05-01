@@ -2,11 +2,16 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
+import javax.inject.Inject
 
-class TestViewModel(private val repository: TestRepository) : ViewModel() {
+@HiltViewModel
+class TestViewModel @Inject constructor(
+    private val repository: TestRepository
+) : ViewModel() {
 
     var testsLiveData: LiveData<List<Test>> = repository.getAsLiveData()
 

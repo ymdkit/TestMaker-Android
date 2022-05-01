@@ -5,8 +5,11 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
+import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.History
+import jp.gr.java_conf.foobar.testmaker.service.domain.Question
+import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.HistoryRepository
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 import jp.studyplus.android.sdk.PostCallback
@@ -18,9 +21,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import kotlin.properties.Delegates
 
-class ResultViewModel(
-    private val testId: Long,
+@HiltViewModel
+class ResultViewModel @Inject constructor(
     private val repository: HistoryRepository,
     private val testRepository: TestRepository,
     private val studyPlus: Studyplus
@@ -31,11 +36,16 @@ class ResultViewModel(
         RECORDED
     }
 
-    val test = testRepository.get().find { it.id == testId } ?: throw NullPointerException()
+    private var workbookId by Delegates.notNull<Long>()
 
-    val questions =
-        testRepository.get().find { it.id == testId }?.questions?.filter { it.isSolved }
-            ?: throw NullPointerException()
+    val test: Test by lazy {
+        testRepository.get().find { it.id == workbookId } ?: throw NullPointerException()
+    }
+
+    val questions: List<Question> by lazy {
+        testRepository.get().find { it.id == workbookId }?.questions?.filter { it.isSolved }
+            ?: listOf()
+    }
 
     val scoreList = listOf(questions.count { it.isCorrect },
         questions.count { !it.isCorrect }).map(Int::toFloat)
@@ -44,8 +54,14 @@ class ResultViewModel(
 
     val studyPlusRecordStatus = MutableStateFlow(StudyPlusRecordStatus.READY)
 
+    fun setup(
+        workbookId: Long
+    ) {
+        this.workbookId = workbookId
+    }
+
     fun createAnswerHistory(user: FirebaseUser) {
-        val test = testRepository.get().find { it.id == testId } ?: return
+        val test = testRepository.get().find { it.id == workbookId } ?: return
         if (test.documentId.isEmpty()) return
 
         val history = History(

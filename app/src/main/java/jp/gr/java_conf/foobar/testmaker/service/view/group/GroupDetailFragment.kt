@@ -3,10 +3,13 @@ package jp.gr.java_conf.foobar.testmaker.service.view.group
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -15,6 +18,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.gms.ads.AdRequest
 import com.google.firebase.firestore.DocumentSnapshot
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupDetailBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
@@ -33,24 +37,30 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
+@AndroidEntryPoint
 class GroupDetailFragment : Fragment() {
 
     private val args: GroupDetailFragmentArgs by navArgs()
     private val controller: GroupDetailController by lazy { GroupDetailController(requireContext()) }
-    private val viewModel: GroupDetailViewModel by viewModel()
-    private val auth: Auth by inject()
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
+    private val viewModel: GroupDetailViewModel by viewModels()
+
+    @Inject
+    lateinit var auth: Auth
+
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     private var group: Group? = null
 
     private lateinit var binding: FragmentGroupDetailBinding
-    private val dynamicLinksCreator: DynamicLinksCreator by inject()
+
+    @Inject
+    lateinit var dynamicLinksCreator: DynamicLinksCreator
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

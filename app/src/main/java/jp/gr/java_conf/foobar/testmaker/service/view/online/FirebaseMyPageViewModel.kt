@@ -1,17 +1,22 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.online
 
-import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
+import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
+import javax.inject.Inject
 
-class FirebaseMyPageViewModel(private val repository: TestMakerRepository, private val auth: Auth) :
+@HiltViewModel
+class FirebaseMyPageViewModel @Inject constructor(
+    private val repository: TestMakerRepository,
+    private val auth: Auth
+) :
     ViewModel() {
 
     val isLogin = MutableLiveData(false)
@@ -31,8 +36,6 @@ class FirebaseMyPageViewModel(private val repository: TestMakerRepository, priva
         )
 
     fun getUser(): FirebaseUser? = auth.getUser()
-
-    fun getAuthUIIntent(): Intent = auth.getAuthUIIntent()
 
     fun createUser(user: FirebaseUser?) = repository.setUser(user)
 }

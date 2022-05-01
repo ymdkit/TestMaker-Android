@@ -3,56 +3,63 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.db
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jp.gr.java_conf.foobar.testmaker.service.R
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class SharedPreferenceManager(private val context: Context) {
+@Singleton
+class SharedPreferenceManager @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("question", Context.MODE_PRIVATE)
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("question", Context.MODE_PRIVATE)
 
     var numOthers: Int
         get() = sharedPreferences.getInt("num_choose", 3)
         set(num) = sharedPreferences.edit().putInt("num_choose", num)
-                .apply()
+            .apply()
 
     var numAnswers: Int
         get() = sharedPreferences.getInt("num_write", 2)
         set(num) = sharedPreferences.edit().putInt("num_write", num)
-                .apply()
+            .apply()
 
     var numAnswersSelectComplete: Int
         get() = sharedPreferences.getInt("num_answers_select", 2)
         set(num) = sharedPreferences.edit().putInt("num_answers_select", num)
-                .apply()
+            .apply()
 
     var numOthersSelectComplete: Int
         get() = sharedPreferences.getInt("num_answers_select", 2)
         set(num) = sharedPreferences.edit().putInt("num_answers_select", num)
-                .apply()
+            .apply()
 
     var auto: Boolean
         get() = sharedPreferences.getBoolean("auto", false)
         set(num) = sharedPreferences.edit().putBoolean("auto", num)
-                .apply()
+            .apply()
 
     var explanation: Boolean
         get() = sharedPreferences.getBoolean("explanation", false)
         set(f) = sharedPreferences.edit().putBoolean("explanation", f)
-                .apply()
+            .apply()
 
     var isCheckOrder: Boolean
         get() = sharedPreferences.getBoolean("isCheckOrder", false)
         set(f) = sharedPreferences.edit().putBoolean("isCheckOrder", f)
-                .apply()
+            .apply()
 
     var isShowImageSetting: Boolean
         get() = sharedPreferences.getBoolean("isShowImageSetting", false)
         set(f) = sharedPreferences.edit().putBoolean("isShowImageSetting", f)
-                .apply()
+            .apply()
 
     var isResetForm: Boolean
         get() = sharedPreferences.getBoolean("isResetForm", true)
         set(f) = sharedPreferences.edit().putBoolean("isResetForm", f)
-                .apply()
+            .apply()
 
     var isRemovedAd: Boolean
         get() = sharedPreferences.getBoolean("isRemovedAd", false)
@@ -73,7 +80,7 @@ class SharedPreferenceManager(private val context: Context) {
     var audio: Boolean
         get() = defaultPreferences.getBoolean("audio", true)
         set(f) = defaultPreferences.edit().putBoolean("audio", f)
-                .apply()
+            .apply()
 
     var random: Boolean
         get() = defaultPreferences.getBoolean("random", true)
@@ -83,31 +90,34 @@ class SharedPreferenceManager(private val context: Context) {
     var reverse: Boolean
         get() = defaultPreferences.getBoolean("reverse", false)
         set(f) = defaultPreferences.edit().putBoolean("reverse", f)
-                .apply()
+            .apply()
 
     var refine: Boolean
         get() = defaultPreferences.getBoolean("refine", false)
         set(f) = defaultPreferences.edit().putBoolean("refine", f)
-                .apply()
+            .apply()
 
     var manual: Boolean
         get() = defaultPreferences.getBoolean("manual", false)
         set(f) = defaultPreferences.edit().putBoolean("manual", f)
-                .apply()
+            .apply()
 
     var alwaysReview: Boolean
         get() = defaultPreferences.getBoolean("alwaysReview", false)
         set(f) = defaultPreferences.edit().putBoolean("alwaysReview", f)
-                .apply()
+            .apply()
 
     var isShowPlaySettingDialog: Boolean
         get() = defaultPreferences.getBoolean("show_setting_dialog", true)
         set(f) = defaultPreferences.edit().putBoolean("show_setting_dialog", f)
-                .apply()
+            .apply()
 
     var uploadStudyPlus: String
-        get() = defaultPreferences.getString("study_plus", context.resources.getStringArray(R.array.upload_setting_study_plus_values)[1])
-                ?: "auto"
+        get() = defaultPreferences.getString(
+            "study_plus",
+            context.resources.getStringArray(R.array.upload_setting_study_plus_values)[1]
+        )
+            ?: "auto"
         set(i) = defaultPreferences.edit().putString("study_plus", i).apply()
 
     var playCount: Int

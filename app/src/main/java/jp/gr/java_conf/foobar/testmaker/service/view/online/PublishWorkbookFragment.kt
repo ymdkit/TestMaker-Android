@@ -19,9 +19,11 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.ads.AdSize
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
@@ -33,14 +35,15 @@ import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTh
 import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookFragmentArgs
 import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookUiState
 import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookViewModel
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PublishWorkbookFragment : Fragment() {
 
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
-    private val testViewModel: TestViewModel by viewModel()
-    private val uploadWorkbookViewModel: UploadWorkbookViewModel by viewModel()
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
+    private val testViewModel: TestViewModel by viewModels()
+    private val uploadWorkbookViewModel: UploadWorkbookViewModel by viewModels()
 
     private val args: UploadWorkbookFragmentArgs by navArgs()
     private val workbook: Test by lazy { testViewModel.get(args.workbookId) }
@@ -107,9 +110,13 @@ class PublishWorkbookFragment : Fragment() {
                                         }
                                         is UploadWorkbookUiState.Editing -> {
 
-                                            var workbook by remember { mutableStateOf(workbook)}
+                                            var workbook by remember { mutableStateOf(workbook) }
                                             var comment by rememberSaveable { mutableStateOf("") }
-                                            var showingDropDownMenu by remember { mutableStateOf(false) }
+                                            var showingDropDownMenu by remember {
+                                                mutableStateOf(
+                                                    false
+                                                )
+                                            }
 
                                             Column(
                                                 modifier = Modifier
@@ -126,14 +133,21 @@ class PublishWorkbookFragment : Fragment() {
                                                         },
                                                         border = BorderStroke(
                                                             ButtonDefaults.OutlinedBorderSize,
-                                                            MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+                                                            MaterialTheme.colors.onSurface.copy(
+                                                                alpha = ContentAlpha.disabled
+                                                            )
                                                         )
                                                     ) {
                                                         Text(
                                                             text = stringResource(id = R.string.label_workbook),
                                                             color = MaterialTheme.colors.onSurface
                                                         )
-                                                        Spacer(modifier = Modifier.weight(weight = 1f, fill = true))
+                                                        Spacer(
+                                                            modifier = Modifier.weight(
+                                                                weight = 1f,
+                                                                fill = true
+                                                            )
+                                                        )
                                                         Text(
                                                             text = workbook.title,
                                                             color = MaterialTheme.colors.onSurface
@@ -141,7 +155,9 @@ class PublishWorkbookFragment : Fragment() {
                                                         Icon(
                                                             Icons.Default.ArrowDropDown,
                                                             contentDescription = null,
-                                                            tint = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+                                                            tint = MaterialTheme.colors.onSurface.copy(
+                                                                alpha = ContentAlpha.disabled
+                                                            )
                                                         )
                                                     }
 
@@ -200,7 +216,8 @@ class PublishWorkbookFragment : Fragment() {
                                         }
                                         is UploadWorkbookUiState.UploadSuccess -> {
                                             requireContext().showToast(requireContext().getString(R.string.msg_test_upload))
-                                            findNavController().popBackStack()                                        }
+                                            findNavController().popBackStack()
+                                        }
                                         is UploadWorkbookUiState.UploadDivided -> {
                                             requireContext().showToast(requireContext().getString(R.string.msg_test_upload_divided))
                                             findNavController().popBackStack()

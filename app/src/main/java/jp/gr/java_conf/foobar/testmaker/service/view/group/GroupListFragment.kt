@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.gms.ads.AdRequest
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupListBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
@@ -27,16 +29,20 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragmen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class GroupListFragment : Fragment() {
 
     private val controller: GroupListController by lazy { GroupListController(requireContext()) }
 
-    private val viewModel: GroupListViewModel by viewModel()
-    private val auth: Auth by inject()
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
+    private val viewModel: GroupListViewModel by viewModels()
+
+    @Inject
+    lateinit var auth: Auth
+
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     private lateinit var binding: FragmentGroupListBinding
 

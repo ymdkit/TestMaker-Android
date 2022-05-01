@@ -10,16 +10,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdRequest
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentSettingsContainerBinding
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.studyplus.android.sdk.Studyplus
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
-class SettingsContainerFragment: Fragment() {
 
-    private val studyPlus by inject<Studyplus>()
-    val sharedPreferenceManager: SharedPreferenceManager by inject()
+@AndroidEntryPoint
+class SettingsContainerFragment : Fragment() {
+
+    @Inject
+    lateinit var studyPlus: Studyplus
+
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

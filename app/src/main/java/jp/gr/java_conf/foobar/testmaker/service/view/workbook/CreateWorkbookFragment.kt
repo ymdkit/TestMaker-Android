@@ -27,7 +27,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
@@ -40,16 +42,19 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.TextPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class CreateWorkbookFragment : Fragment() {
 
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
-    private val testViewModel: TestViewModel by viewModel()
-    private val categoryViewModel: CategoryViewModel by viewModel()
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
+    private val testViewModel: TestViewModel by viewModels()
+    private val categoryViewModel: CategoryViewModel by viewModels()
 
-    private val logger: TestMakerLogger by inject()
+    @Inject
+    lateinit var logger: TestMakerLogger
 
     private val colors by lazy {
         listOf(

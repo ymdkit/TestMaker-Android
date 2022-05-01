@@ -3,6 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.databinding.DataBindingUtil
@@ -10,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
@@ -23,17 +25,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.*
-import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: MainViewModel by viewModel()
-    private val testViewModel: TestViewModel by viewModel()
-    private val logger: TestMakerLogger by inject()
+    private val viewModel: MainViewModel by viewModels()
+    private val testViewModel: TestViewModel by viewModels()
+
+    @Inject
+    lateinit var logger: TestMakerLogger
 
     private val navController by lazy {
         (supportFragmentManager.findFragmentById(R.id.nav_main) as NavHostFragment).navController

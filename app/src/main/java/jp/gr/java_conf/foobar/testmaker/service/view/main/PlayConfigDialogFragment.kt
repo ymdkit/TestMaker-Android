@@ -8,14 +8,17 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.DialogStartBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import org.koin.android.ext.android.inject
-import java.util.*
 
+import java.util.*
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class PlayConfigDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
@@ -26,15 +29,16 @@ class PlayConfigDialogFragment : BottomSheetDialogFragment() {
         const val RESULT_START_POSITION = "result_start_position"
 
         fun newInstance(test: Test, requestKey: String): PlayConfigDialogFragment =
-                PlayConfigDialogFragment().apply {
-                    arguments = bundleOf(
-                            ARG_TEST to test,
-                            ARG_REQUEST_KEY to requestKey
-                    )
-                }
+            PlayConfigDialogFragment().apply {
+                arguments = bundleOf(
+                    ARG_TEST to test,
+                    ARG_REQUEST_KEY to requestKey
+                )
+            }
     }
 
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     private val test: Test by lazy {
         arguments?.getParcelable<Test>(ARG_TEST) ?: throw RuntimeException("test does not exist")
@@ -43,8 +47,17 @@ class PlayConfigDialogFragment : BottomSheetDialogFragment() {
         arguments?.getString(ARG_REQUEST_KEY) ?: throw RuntimeException("requestKey does not exist")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return DataBindingUtil.inflate<DialogStartBinding>(inflater, R.layout.dialog_start, container, false).apply {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return DataBindingUtil.inflate<DialogStartBinding>(
+            inflater,
+            R.layout.dialog_start,
+            container,
+            false
+        ).apply {
             lifecycleOwner = viewLifecycleOwner
 
             title = test.title
@@ -85,8 +98,8 @@ class PlayConfigDialogFragment : BottomSheetDialogFragment() {
                 }
 
                 setFragmentResult(requestKey, bundleOf(
-                        RESULT_LIMIT to setLimit.text.toString().toInt(),
-                        RESULT_START_POSITION to setStartPosition.text.toString().toInt()
+                    RESULT_LIMIT to setLimit.text.toString().toInt(),
+                    RESULT_START_POSITION to setStartPosition.text.toString().toInt()
                 ))
                 dismiss()
             }

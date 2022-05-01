@@ -23,7 +23,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
@@ -31,23 +33,28 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CreateFolderFragment : Fragment() {
 
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
-    private val categoryViewModel: CategoryViewModel by viewModel()
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
+    private val categoryViewModel: CategoryViewModel by viewModels()
 
     private val colors by lazy {
         listOf(
             ColorPickerItem(id = 0, colorId = R.color.red, name = getString(R.string.red)),
-            ColorPickerItem(id = 1,colorId = R.color.orange, name = getString(R.string.orange)),
-            ColorPickerItem(id = 2,colorId = R.color.yellow, name = getString(R.string.yellow)),
-            ColorPickerItem(id = 3,colorId = R.color.green, name = getString(R.string.green)),
-            ColorPickerItem(id = 4,colorId = R.color.dark_green, name = getString(R.string.dark_green)),
-            ColorPickerItem(id = 5,colorId = R.color.blue, name = getString(R.string.blue)),
-            ColorPickerItem(id = 6,colorId = R.color.navy, name = getString(R.string.navy)),
+            ColorPickerItem(id = 1, colorId = R.color.orange, name = getString(R.string.orange)),
+            ColorPickerItem(id = 2, colorId = R.color.yellow, name = getString(R.string.yellow)),
+            ColorPickerItem(id = 3, colorId = R.color.green, name = getString(R.string.green)),
+            ColorPickerItem(
+                id = 4,
+                colorId = R.color.dark_green,
+                name = getString(R.string.dark_green)
+            ),
+            ColorPickerItem(id = 5, colorId = R.color.blue, name = getString(R.string.blue)),
+            ColorPickerItem(id = 6, colorId = R.color.navy, name = getString(R.string.navy)),
             ColorPickerItem(id = 7,colorId = R.color.purple, name = getString(R.string.purple)),
         )
     }

@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
+import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.domain.UploadTestDestination
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
@@ -14,8 +15,10 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerReposi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UploadWorkbookViewModel(
+@HiltViewModel
+class UploadWorkbookViewModel @Inject constructor(
     auth: Auth,
     private val repository: TestMakerRepository,
     private val logger: TestMakerLogger,

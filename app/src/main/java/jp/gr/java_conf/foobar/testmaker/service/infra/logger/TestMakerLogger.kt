@@ -4,42 +4,42 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class TestMakerLogger(private val analytics: FirebaseAnalytics) {
-
-    fun logSearchEvent(term: String) =
-        analytics.logEvent(FirebaseAnalytics.Event.SEARCH) {
-            param(FirebaseAnalytics.Param.SEARCH_TERM, term)
-        }
+@Singleton
+class TestMakerLogger @Inject constructor(
+    private val analytics: FirebaseAnalytics
+) {
 
     fun logCreateTestEvent(title: String, source: String) =
-        analytics.logEvent("create_test"){
+        analytics.logEvent("create_test") {
             param(FirebaseAnalytics.Param.ITEM_NAME, title)
             param(FirebaseAnalytics.Param.SOURCE, source)
         }
 
     fun logAnsweredTestEvent(test: Test, count: Int) =
-        analytics.logEvent("answered_test"){
+        analytics.logEvent("answered_test") {
             param(FirebaseAnalytics.Param.ITEM_NAME, test.title)
             param(FirebaseAnalytics.Param.SOURCE, test.source)
             param("count", count.toLong())
         }
 
     fun logUploadTestEvent(test: Test, destination: String) =
-        analytics.logEvent("upload_test"){
+        analytics.logEvent("upload_test") {
             param(FirebaseAnalytics.Param.ITEM_NAME, test.title)
             param(FirebaseAnalytics.Param.SOURCE, test.source)
             param(FirebaseAnalytics.Param.DESTINATION, destination)
         }
 
     fun logExportTestEvent(test: Test) =
-        analytics.logEvent("export_test"){
+        analytics.logEvent("export_test") {
             param(FirebaseAnalytics.Param.ITEM_NAME, test.title)
             param(FirebaseAnalytics.Param.SOURCE, test.source)
         }
 
     fun logCreateQuestion(question: Question, source: String) =
-        analytics.logEvent("create_question"){
+        analytics.logEvent("create_question") {
             param(FirebaseAnalytics.Param.ITEM_NAME, question.question)
             param(FirebaseAnalytics.Param.SOURCE, source)
             param(FirebaseAnalytics.Param.CONTENT_TYPE, question.type.toLong())
@@ -50,7 +50,7 @@ class TestMakerLogger(private val analytics: FirebaseAnalytics) {
         }
 
     fun logAnswerQuestion(question: Question) =
-        analytics.logEvent("answer_question"){
+        analytics.logEvent("answer_question") {
             param(FirebaseAnalytics.Param.ITEM_NAME, question.question)
             param(FirebaseAnalytics.Param.CONTENT_TYPE, question.type.toLong())
             param("is_auto", question.isAutoGenerateOthers.toString())
@@ -60,6 +60,6 @@ class TestMakerLogger(private val analytics: FirebaseAnalytics) {
             param("is_correct", question.isCorrect.toString())
         }
 
-    fun logEvent(eventName: String) = analytics.logEvent(eventName){}
+    fun logEvent(eventName: String) = analytics.logEvent(eventName) {}
 
 }

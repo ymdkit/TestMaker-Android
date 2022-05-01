@@ -2,11 +2,12 @@ package jp.gr.java_conf.foobar.testmaker.service.view.play
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.AnswerStatus
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.*
+import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
 import kotlinx.coroutines.Dispatchers
@@ -14,14 +15,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import kotlin.properties.Delegates
 
-class AnswerWorkbookViewModel(
-    private val testId: Long,
-    private val isRetry: Boolean,
+@HiltViewModel
+class AnswerWorkbookViewModel @Inject constructor(
     private val preferences: SharedPreferenceManager,
     private val repository: TestRepository,
     private val logger: TestMakerLogger
 ) : ViewModel() {
+
+    private var workbookId by Delegates.notNull<Long>()
+    private var isRetry by Delegates.notNull<Boolean>()
 
     private val _uiState = MutableStateFlow<PlayUiState>(PlayUiState.Initial)
     val uiState: StateFlow<PlayUiState> = _uiState
@@ -31,15 +36,21 @@ class AnswerWorkbookViewModel(
 
     private var answeringQuestions: List<QuestionModel> = emptyList()
 
-    private val workbook: Test by lazy { repository.get(testId) }
+    private val workbook: Test by lazy { repository.get(workbookId) }
 
     private val isSwap = preferences.reverse
     private val isCaseInsensitive = preferences.isCaseInsensitive
 
-    init {
+    fun setup(
+        workbookId: Long,
+        isRetry: Boolean
+    ) {
+        this.workbookId = workbookId
+        this.isRetry = isRetry
+
         viewModelScope.launch {
 
-            val workbook = repository.get(testId)
+            val workbook = repository.get(workbookId)
             answeringQuestions = workbook.questions.map { it.toQuestionModel() }
 
             if (isRetry) {

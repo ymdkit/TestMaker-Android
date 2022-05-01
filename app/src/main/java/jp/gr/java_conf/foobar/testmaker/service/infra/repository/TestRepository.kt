@@ -5,8 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import com.example.infra.local.db.WorkbookDataSource
 import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class TestRepository(private val dataSource: WorkbookDataSource) {
+@Singleton
+class TestRepository @Inject constructor(
+    private val dataSource: WorkbookDataSource
+) {
 
     private var testsLiveData: MutableLiveData<List<Test>> =
         MutableLiveData(dataSource.getWorkbookList().map { Test.createFromRealmTest(it) }

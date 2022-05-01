@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.billingclient.api.*
 import com.google.firebase.auth.FirebaseUser
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
@@ -15,16 +17,25 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
+import javax.inject.Inject
 
-class MainViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val preference: SharedPreferenceManager, context: Context) : ViewModel(), PurchasesUpdatedListener, BillingClientStateListener, LifecycleObserver {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val repository: TestMakerRepository,
+    private val auth: Auth,
+    private val preference: SharedPreferenceManager,
+    @ApplicationContext context: Context
+) : ViewModel(), PurchasesUpdatedListener, BillingClientStateListener, LifecycleObserver {
 
     suspend fun downloadTest(testId: String): FirebaseTest = repository.downloadTest(testId)
 
-    fun convert(test: FirebaseTest) = repository.createObjectFromFirebase(test, source = CreateTestSource.DYNAMIC_LINKS.title)
+    fun convert(test: FirebaseTest) =
+        repository.createObjectFromFirebase(test, source = CreateTestSource.DYNAMIC_LINKS.title)
 
     fun getUser(): FirebaseUser? = auth.getUser()
 
-    private val billingClient = BillingClient.newBuilder(context).enablePendingPurchases().setListener(this).build()
+    private val billingClient =
+        BillingClient.newBuilder(context).enablePendingPurchases().setListener(this).build()
     private val _billingStatus = MutableLiveData<BillingStatus>()
     val billingStatus: LiveData<BillingStatus> = _billingStatus
 
@@ -36,12 +47,15 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
         }
     }
 
-    private fun getSkuDetails(billingItem: BillingItem, onResponse: (skuDetails: SkuDetails) -> Unit) {
+    private fun getSkuDetails(
+        billingItem: BillingItem,
+        onResponse: (skuDetails: SkuDetails) -> Unit
+    ) {
 
         val skuDetailsParams = SkuDetailsParams.newBuilder()
-                .setSkusList(billingItem.skuList())
-                .setType(billingItem.skyType)
-                .build()
+            .setSkusList(billingItem.skuList())
+            .setType(billingItem.skyType)
+            .build()
 
         billingClient.querySkuDetailsAsync(skuDetailsParams) { result, skuDetailList ->
 
@@ -74,15 +88,18 @@ class MainViewModel(private val repository: TestMakerRepository, private val aut
         _billingStatus.postValue(BillingStatus.ServiceDisconnected)
     }
 
-    override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
+    override fun onPurchasesUpdated(
+        billingResult: BillingResult,
+        purchases: MutableList<Purchase>?
+    ) {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
 
             for (purchase in purchases) {
                 if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
                     if (!purchase.isAcknowledged) {
                         val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                                .setPurchaseToken(purchase.purchaseToken)
-                                .build()
+                            .setPurchaseToken(purchase.purchaseToken)
+                            .build()
 
                         billingClient.acknowledgePurchase(acknowledgePurchaseParams) {}
                     }

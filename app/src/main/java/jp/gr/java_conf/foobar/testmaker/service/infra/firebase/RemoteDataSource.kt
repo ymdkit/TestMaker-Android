@@ -11,6 +11,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.domain.History
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
@@ -18,9 +19,14 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class RemoteDataSource(val context: Context, val auth: Auth) {
+@Singleton
+class RemoteDataSource @Inject constructor(
+    @ApplicationContext val context: Context,
+    val auth: Auth
+) {
 
     private var myTests: MutableLiveData<List<DocumentSnapshot>>? = null
 

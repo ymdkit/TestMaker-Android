@@ -19,9 +19,11 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.ads.AdSize
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
@@ -31,14 +33,16 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdVi
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.OutlinedSwitch
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.RequestLogin
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class UploadWorkbookFragment : Fragment() {
 
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
-    private val testViewModel: TestViewModel by viewModel()
-    private val uploadWorkbookViewModel: UploadWorkbookViewModel by viewModel()
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
+    private val testViewModel: TestViewModel by viewModels()
+    private val uploadWorkbookViewModel: UploadWorkbookViewModel by viewModels()
 
     private val args: UploadWorkbookFragmentArgs by navArgs()
 

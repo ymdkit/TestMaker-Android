@@ -2,11 +2,14 @@ package jp.gr.java_conf.foobar.testmaker.service.view.share
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
+import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
-import jp.gr.java_conf.foobar.testmaker.service.infra.repository.CategoryRepository
-import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
+import javax.inject.Inject
 
-class ShowTestsViewModel(private val repository: TestMakerRepository, private val auth: Auth, private val categoryRepository: CategoryRepository) : ViewModel() {
+@HiltViewModel
+class ShowTestsViewModel @Inject constructor(
+    private val auth: Auth,
+) : ViewModel() {
 
     fun getUser(): FirebaseUser? = auth.getUser()
 

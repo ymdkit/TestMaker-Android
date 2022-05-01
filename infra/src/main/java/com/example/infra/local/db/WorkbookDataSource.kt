@@ -4,8 +4,11 @@ import com.example.infra.local.entity.Quest
 import com.example.infra.local.entity.RealmTest
 import io.realm.Realm
 import io.realm.RealmModel
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class WorkbookDataSource(
+@Singleton
+class WorkbookDataSource @Inject constructor(
     private val realm: Realm
 ) {
 

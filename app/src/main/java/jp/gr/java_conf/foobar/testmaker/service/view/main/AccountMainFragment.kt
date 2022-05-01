@@ -9,12 +9,15 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.DocumentSnapshot
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.AccountMainFragmentBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
@@ -31,18 +34,22 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFr
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AccountMainFragment : Fragment() {
 
-    private val viewModel: FirebaseMyPageViewModel by viewModel()
-    private val testViewModel: TestViewModel by sharedViewModel()
-    private val firebaseAnalytic: FirebaseAnalytics by inject()
+    private val viewModel: FirebaseMyPageViewModel by viewModels()
+    private val testViewModel: TestViewModel by activityViewModels()
 
-    private val logger: TestMakerLogger by inject()
-    private val dynamicLinksCreator: DynamicLinksCreator by inject()
+    @Inject
+    lateinit var firebaseAnalytic: FirebaseAnalytics
+
+    @Inject
+    lateinit var logger: TestMakerLogger
+
+    @Inject
+    lateinit var dynamicLinksCreator: DynamicLinksCreator
 
     private var binding: AccountMainFragmentBinding? = null
 
@@ -123,10 +130,12 @@ class AccountMainFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                     return@setOnClickListener
-                }else{
-                    findNavController().navigate(HomeFragmentDirections.actionHomeToUploadWorkbook(
-                        testViewModel.tests.first().id
-                    ))
+                } else {
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionHomeToUploadWorkbook(
+                            testViewModel.tests.first().id
+                        )
+                    )
                 }
             }
 

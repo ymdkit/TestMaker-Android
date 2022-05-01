@@ -10,12 +10,14 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.google.android.gms.ads.AdRequest
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.ItemQuestionBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentQuestionListBinding
@@ -28,26 +30,34 @@ import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.api.CloudFunctionsService
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
+import jp.gr.java_conf.foobar.testmaker.service.modules.CloudFunctionsClient
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by keita on 2017/02/12.
  */
 
+@AndroidEntryPoint
 class QuestionListFragment : Fragment() {
 
-    private val testViewModel: TestViewModel by viewModel()
-    private val service: CloudFunctionsService by inject()
-    private val logger: TestMakerLogger by inject()
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
+    private val testViewModel: TestViewModel by viewModels()
+
+    @CloudFunctionsClient
+    @Inject
+    lateinit var service: CloudFunctionsService
+
+    @Inject
+    lateinit var logger: TestMakerLogger
+
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     private val controller: EditController by lazy {
         EditController(requireContext()).apply {
@@ -377,10 +387,12 @@ class QuestionListFragment : Fragment() {
     }
 
     fun editQuestion(question: Question) {
-        findNavController().navigate(QuestionListFragmentDirections.actionQuestionListToEditQuestion(
-            workbookId = test.id,
-            questionId = question.id
-        ))
+        findNavController().navigate(
+            QuestionListFragmentDirections.actionQuestionListToEditQuestion(
+                workbookId = test.id,
+                questionId = question.id
+            )
+        )
     }
 
     fun copyQuestion(question: Question) {
