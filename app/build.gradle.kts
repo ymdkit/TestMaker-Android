@@ -1,8 +1,8 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
     id("kotlin-parcelize")
-    id("kotlin-kapt")
     id("realm-android")
     id("com.google.android.gms.oss-licenses-plugin")
     id("com.google.gms.google-services")
