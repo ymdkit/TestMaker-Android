@@ -1,5 +1,7 @@
 package com.example.infra.local.entity
 
+import com.example.domain.model.Workbook
+import com.example.domain.model.WorkbookId
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -9,6 +11,16 @@ import io.realm.annotations.PrimaryKey
  */
 
 open class RealmTest : RealmObject() {
+
+    companion object {
+        fun fromWorkbook(workbook: Workbook): RealmTest =
+            RealmTest().apply {
+                id = workbook.id.value
+                color = workbook.color
+                title = workbook.name
+                workbook.questionList.forEach { addQuestion(Quest.fromQuestion(it)) }
+            }
+    }
 
     @PrimaryKey
     var id: Long = 0
@@ -46,4 +58,13 @@ open class RealmTest : RealmObject() {
         questions!!.forEach { it.correct = false }
 
     }
+
+    fun toWorkbook(): Workbook = Workbook(
+        id = WorkbookId(value = id),
+        name = title ?: "no title",
+        color = color,
+        questionList = questions?.map {
+            it.toQuestion()
+        } ?: listOf()
+    )
 }

@@ -45,4 +45,6 @@ dependencies {
     implementation(Dep.Moshi.moshi)
     implementation(Dep.Moshi.moshiKotlin)
     kapt(Dep.Moshi.moshiCodegen)
+
+    implementation(project(":domain"))
 }

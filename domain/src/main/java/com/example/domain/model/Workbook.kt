@@ -1,19 +1,11 @@
 package com.example.domain.model
 
 data class Workbook(
-    val id: Long,
+    val id: WorkbookId,
     val name: String,
-    val color: WorkbookColor,
+    val color: Int, // todo don't use resId directly
     val questionList: List<Question>
 )
 
-enum class WorkbookColor {
-    RED,
-    ORANGE,
-    YELLOW,
-    GREEN,
-    MINT,
-    BLUE,
-    NAVY,
-    PURPLE
-}
+@JvmInline
+value class WorkbookId(val value: Long)
