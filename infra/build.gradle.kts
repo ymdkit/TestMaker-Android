@@ -38,4 +38,11 @@ android {
 dependencies {
     implementation(Dep.Hilt.android)
     kapt(Dep.Hilt.compiler)
+
+    implementation(Dep.Retrofit.retrofit)
+    implementation(Dep.Retrofit.converter)
+    implementation(Dep.OkHttp.okHttp)
+    implementation(Dep.Moshi.moshi)
+    implementation(Dep.Moshi.moshiKotlin)
+    kapt(Dep.Moshi.moshiCodegen)
 }
