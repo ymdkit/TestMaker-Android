@@ -1,10 +1,11 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 
+import android.content.Context
 import androidx.lifecycle.LiveData
+import com.example.infra.local.db.TestDataSource
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.LocalDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import kotlinx.coroutines.Dispatchers
@@ -12,15 +13,36 @@ import kotlinx.coroutines.withContext
 
 
 class TestMakerRepository(
-    private val local: LocalDataSource,
-    private val remote: RemoteDataSource
+    private val remote: RemoteDataSource,
+    private val workbookDataSource: TestDataSource,
+    private val context: Context,
 ) {
 
     suspend fun downloadTest(testId: String): FirebaseTest = withContext(Dispatchers.Default) {
         remote.downloadTest(testId)
     }
 
-    fun createObjectFromFirebase(test: FirebaseTest, source: String) = local.createObjectFromFirebase(test, source = source)
+    fun createObjectFromFirebase(firebaseTest: FirebaseTest, source: String): Test {
+
+        val test = firebaseTest.toTest(context)
+
+        test.id = workbookDataSource.generateWorkbookId()
+        test.order = test.id.toInt()
+        test.source = source
+
+        val questionId = workbookDataSource.generateQuestionId()
+
+        firebaseTest.questions.forEachIndexed { index, it ->
+            val question = it.toQuest()
+            question.order = index
+            question.id = questionId + index
+            test.addQuestion(question)
+        }
+
+        workbookDataSource.create(test)
+
+        return Test.createFromRealmTest(test)
+    }
 
     suspend fun createTest(test: Test, overview: String, isPublic: Boolean) =
         remote.createTest(test, overview, isPublic)

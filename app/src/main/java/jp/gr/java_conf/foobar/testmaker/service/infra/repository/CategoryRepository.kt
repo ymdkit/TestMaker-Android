@@ -2,7 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.infra.local.source.FolderDataSource
+import com.example.infra.local.db.FolderDataSource
 import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 
 class CategoryRepository(

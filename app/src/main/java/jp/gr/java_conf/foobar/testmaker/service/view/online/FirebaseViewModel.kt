@@ -31,7 +31,7 @@ class FirebaseViewModel(
 
     fun convert(test: FirebaseTest) =
         repository.createObjectFromFirebase(
-            test = test,
+            firebaseTest = test,
             source = CreateTestSource.PUBLIC_DOWNLOAD.title
         )
 

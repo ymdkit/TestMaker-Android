@@ -27,6 +27,7 @@ data class FirebaseTest(var name: String = "",
 
     var questions: List<FirebaseQuestion> = listOf()
 
+    // todo Context への依存をなくす
     fun toTest(context: Context): RealmTest {
         val test = RealmTest()
         test.limit = 100

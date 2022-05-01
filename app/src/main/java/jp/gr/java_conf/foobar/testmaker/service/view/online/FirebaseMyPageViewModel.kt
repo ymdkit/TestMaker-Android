@@ -26,7 +26,7 @@ class FirebaseMyPageViewModel(private val repository: TestMakerRepository, priva
 
     fun convert(test: FirebaseTest) =
         repository.createObjectFromFirebase(
-            test = test,
+            firebaseTest = test,
             source = CreateTestSource.SELF_DOWNLOAD.title
         )
 
