@@ -23,21 +23,7 @@ class TestViewModel @Inject constructor(
         repository.refresh()
     }
 
-    fun create(title: String, color: Int, category: String?, source: String) =
-        repository.create(
-            Test(
-                title = title,
-                color = color,
-                category = category ?: "",
-                source = source
-            )
-        )
-
     fun create(test: Test) = repository.create(test)
-
-    fun update(test: Test, title: String, color: Int, category: String?) {
-        repository.update(test.copy(title = title, color = color, category = category ?: ""))
-    }
 
     fun update(test: Test) = repository.update(test)
 
