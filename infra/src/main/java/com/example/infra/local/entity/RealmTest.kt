@@ -18,6 +18,7 @@ open class RealmTest : RealmObject() {
                 id = workbook.id.value
                 color = workbook.color
                 title = workbook.name
+                order = workbook.order
                 setCategory(workbook.folderName)
                 workbook.questionList.forEach { addQuestion(Quest.fromQuestion(it)) }
             }
@@ -64,6 +65,7 @@ open class RealmTest : RealmObject() {
         id = WorkbookId(value = id),
         name = title ?: "no title",
         color = color,
+        order = order,
         folderName = getCategory(),
         questionList = questions?.map {
             it.toQuestion()
