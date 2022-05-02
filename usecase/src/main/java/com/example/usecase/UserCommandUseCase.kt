@@ -13,6 +13,9 @@ class UserCommandUseCase @Inject constructor(
     private val workBookRepository: WorkBookRepository
 ) {
 
+    suspend fun createFolder(name: String, color: Int) =
+        workBookRepository.createFolder(name, color)
+
     suspend fun updateFolder(folder: FolderUseCaseModel, newFolderName: String) {
         val workbookList = workBookRepository.getWorkbookListByFolderName(folder.name)
         workbookList.forEach {

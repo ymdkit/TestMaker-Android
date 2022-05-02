@@ -25,9 +25,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.example.ui.folder.CreateFolderViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Category
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
@@ -40,7 +40,7 @@ class CreateFolderFragment : Fragment() {
 
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager
-    private val categoryViewModel: CategoryViewModel by viewModels()
+    private val createFolderViewModel: CreateFolderViewModel by viewModels()
 
     private val colors by lazy {
         listOf(
@@ -135,13 +135,11 @@ class CreateFolderFragment : Fragment() {
                                                 return@Button
                                             }
 
-                                            categoryViewModel.create(
-                                                Category(
-                                                    name = name,
-                                                    color = ContextCompat.getColor(
-                                                        context,
-                                                        color.colorId
-                                                    )
+                                            createFolderViewModel.createFolder(
+                                                name = name,
+                                                color = ContextCompat.getColor(
+                                                    context,
+                                                    color.colorId
                                                 )
                                             )
 

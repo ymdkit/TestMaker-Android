@@ -43,8 +43,19 @@ class WorkbookRepositoryImpl @Inject constructor(
         return realmFolder.toFolder(workbookCount = workbookCount)
     }
 
-    override suspend fun createFolder(folder: Folder) {
-        folderDataSource.createFolder(RealmCategory.fromFolder(folder))
+    override suspend fun createFolder(
+        name: String,
+        color: Int
+    ) {
+        val folderId = folderDataSource.generateFolderId()
+        val newFolder = Folder(
+            id = FolderId(folderId),
+            name = name,
+            color = color,
+            order = folderId.toInt(),
+            workbookCount = 0
+        )
+        folderDataSource.createFolder(RealmCategory.fromFolder(newFolder))
         refreshFolderList()
     }
 

@@ -13,7 +13,7 @@ interface WorkBookRepository {
 
     suspend fun getFolderList(): List<Folder>
     suspend fun getFolder(folderId: FolderId): Folder
-    suspend fun createFolder(folder: Folder)
+    suspend fun createFolder(name: String, color: Int)
     suspend fun updateFolder(folder: Folder)
     suspend fun deleteFolder(folderId: FolderId)
     suspend fun getWorkbookList(): List<Workbook>
