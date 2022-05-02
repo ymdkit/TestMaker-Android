@@ -14,21 +14,11 @@ class CategoryViewModel @Inject constructor(
 
     var categoriesLiveData: LiveData<List<Category>> = repository.getAsLiveData()
 
-    fun getCategories() = repository.get()
-
     fun get(id: Long): Category = repository.get(id)
-
-    fun refresh() {
-        repository.refresh()
-    }
 
     fun create(category: Category) {
         repository.create(category)
         repository.refresh()
-    }
-
-    fun swap(from: Category, to: Category) {
-        repository.swap(from, to)
     }
 
 }
