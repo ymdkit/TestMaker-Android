@@ -15,11 +15,11 @@ class UserCommandUseCase @Inject constructor(
 
     suspend fun updateFolder(folder: FolderUseCaseModel, newFolderName: String) {
         val workbookList = workBookRepository.getWorkbookListByFolderName(folder.name)
-        workBookRepository.updateFolder(folder.copy(name = newFolderName).toFolder())
         workbookList.forEach {
             val newWorkbook = it.copy(folderName = newFolderName)
             workBookRepository.updateWorkbook(newWorkbook)
         }
+        workBookRepository.updateFolder(folder.copy(name = newFolderName).toFolder())
     }
 
     suspend fun deleteFolder(folder: FolderUseCaseModel) {
