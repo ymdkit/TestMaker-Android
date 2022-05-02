@@ -26,7 +26,7 @@ class MainController(
 
     interface OnClickListener {
         fun onClickTest(workbook: WorkbookUseCaseModel)
-        fun onClickCategoryMenu(folder: FolderUseCaseModel)
+        fun onClickFolderMenu(folder: FolderUseCaseModel)
     }
 
     fun setOnClickListener(listener: OnClickListener) {
@@ -40,7 +40,7 @@ class MainController(
 
     override fun buildModels() {
 
-        if (workbookList.isEmpty()) {
+        if (workbookList.isEmpty() && folderList.isEmpty()) {
             itemEmpty {
                 id("empty")
                 message(context.getString(R.string.empty_test))
@@ -57,7 +57,7 @@ class MainController(
 
         folderList.forEach {
             cardCategory {
-                id(it.id)
+                id("category-${it.id}")
                 color(it.color)
                 name(it.name)
                 size(
@@ -70,7 +70,7 @@ class MainController(
                     // todo フォルダ詳細画面への遷移
                 }
                 onClickMenu { _, _, _, _ ->
-                    listener?.onClickCategoryMenu(it)
+                    listener?.onClickFolderMenu(it)
                 }
             }
         }
@@ -84,7 +84,7 @@ class MainController(
 
         workbookList.forEach {
             itemTest {
-                id(it.id)
+                id("workbook-${it.id}")
                 name(it.name)
                 color(it.color)
                 size(
