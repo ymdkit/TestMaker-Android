@@ -41,14 +41,6 @@ class TestViewModel @Inject constructor(
 
     fun update(test: Test) = repository.update(test)
 
-    fun delete(test: Test) {
-        repository.delete(test)
-    }
-
-    fun swap(from: Test, to: Test) {
-        repository.swap(from, to)
-    }
-
     fun create(test: Test, question: Question): Long = repository.create(test, question)
 
     fun update(question: Question) = repository.update(question)
@@ -69,25 +61,6 @@ class TestViewModel @Inject constructor(
 
     fun insertAt(test: Test, question: Question, index: Int) {
         repository.insertAt(test, question, index)
-    }
-
-    fun deleteAllInCategory(name: String) {
-        repository.refresh()
-        repository.get().filter {
-            it.category == name
-        }.forEach {
-            repository.delete(it)
-        }
-    }
-
-    fun renameAllInCategory(oldCategory: String, newCategory: String) {
-        repository.refresh()
-        repository.get().filter {
-            it.category == oldCategory
-        }.forEach {
-            repository.update(it.copy(category = newCategory))
-        }
-
     }
 
     fun move(questions: List<Question>, dest: Test) {

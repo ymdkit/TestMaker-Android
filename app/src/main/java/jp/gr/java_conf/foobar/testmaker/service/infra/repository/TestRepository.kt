@@ -67,18 +67,6 @@ class TestRepository @Inject constructor(
         refresh()
     }
 
-    fun delete(test: Test) {
-        dataSource.deleteWorkbook(test.toRealmTest().id)
-        refresh()
-    }
-
-    fun swap(from: Test, to: Test) {
-        val tmp = from.order
-        dataSource.updateQuestion(from.copy(order = to.order).toRealmTest())
-        dataSource.updateQuestion(to.copy(order = tmp).toRealmTest())
-        refresh()
-    }
-
     fun create(test: Test, question: Question): Long {
 
         val questionId = dataSource.generateQuestionId()
