@@ -44,9 +44,9 @@ class FolderDataSource @Inject constructor(
         }
     }
 
-    fun delete(folder: RealmCategory) {
+    fun deleteFolder(folderId: Long) {
         realm.executeTransaction {
-            realm.where(RealmCategory::class.java).equalTo("id", folder.id).findFirst()
+            realm.where(RealmCategory::class.java).equalTo("id", folderId).findFirst()
                 ?.deleteFromRealm()
         }
     }
