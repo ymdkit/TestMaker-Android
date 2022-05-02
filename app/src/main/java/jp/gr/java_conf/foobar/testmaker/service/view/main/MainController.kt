@@ -2,57 +2,31 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import android.content.Context
 import com.airbnb.epoxy.EpoxyController
+import com.example.usecase.model.FolderUseCaseModel
+import com.example.usecase.model.WorkbookUseCaseModel
 import jp.gr.java_conf.foobar.testmaker.service.*
-import jp.gr.java_conf.foobar.testmaker.service.domain.Category
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 
-class MainController(private val context: Context) : EpoxyController() {
+class MainController(
+    private val context: Context
+) : EpoxyController() {
 
     private var listener: OnClickListener? = null
 
-    private var selectedCategory = ""
+    var folderList: List<FolderUseCaseModel> = emptyList()
         set(value) {
             field = value
-            refresh()
             requestModelBuild()
         }
 
-    var categories: List<Category> = emptyList()
+    var workbookList: List<WorkbookUseCaseModel> = emptyList()
         set(value) {
             field = value
-            refresh()
             requestModelBuild()
         }
-
-    var tests: List<Test> = emptyList()
-        set(value) {
-            field = value
-            refresh()
-            requestModelBuild()
-        }
-
-    private fun refresh() {
-        if (tests.isEmpty()) {
-            nonCategorizedTests = emptyList()
-            return
-        }
-
-        nonCategorizedTests = if (categories.isEmpty()) {
-            tests
-        } else {
-            tests.filter { !categories.map { it.name }.contains(it.category) }
-        }
-
-        categorizedTests = tests.filter { it.category == selectedCategory }
-    }
-
-    private var nonCategorizedTests: List<Test> = emptyList()
-
-    private var categorizedTests: List<Test> = emptyList()
 
     interface OnClickListener {
-        fun onClickTest(test: Test)
-        fun onClickCategoryMenu(category: Category)
+        fun onClickTest(workbook: WorkbookUseCaseModel)
+        fun onClickCategoryMenu(folder: FolderUseCaseModel)
     }
 
     fun setOnClickListener(listener: OnClickListener) {
@@ -66,7 +40,7 @@ class MainController(private val context: Context) : EpoxyController() {
 
     override fun buildModels() {
 
-        if (tests.isEmpty()) {
+        if (workbookList.isEmpty()) {
             itemEmpty {
                 id("empty")
                 message(context.getString(R.string.empty_test))
@@ -74,56 +48,53 @@ class MainController(private val context: Context) : EpoxyController() {
             return
         }
 
-        if (categories.isNotEmpty()) {
+        if (folderList.isNotEmpty()) {
             itemSectionHeader {
                 id("Folder")
                 title(context.getString(R.string.folder))
             }
         }
 
-        categories.forEach {
+        folderList.forEach {
             cardCategory {
-                id(it.name)
-                category(it)
-                size(context.getString(R.string.number_exams, tests.filter { test -> it.name == test.category }.size))
+                id(it.id)
+                color(it.color)
+                name(it.name)
+                size(
+                    context.getString(
+                        R.string.number_exams,
+                        it.workbookCount
+                    )
+                )
                 onClick { _, _, _, _ ->
-                    selectedCategory = if (selectedCategory == it.name) "" else it.name
+                    // todo フォルダ詳細画面への遷移
                 }
                 onClickMenu { _, _, _, _ ->
                     listener?.onClickCategoryMenu(it)
                 }
-                selected(categorizedTests.isNotEmpty() && categorizedTests.first().category == it.name)
-
-            }
-
-            if (categorizedTests.isNotEmpty() && categorizedTests.first().category == it.name) {
-
-                categorizedTests.forEach {
-                    itemTest {
-                        isCategorized(true)
-                        id(it.id)
-                        test(it)
-                        size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
-                        listener(listener)
-                    }
-                }
             }
         }
 
-        if (nonCategorizedTests.isNotEmpty()) {
+        if (workbookList.isNotEmpty()) {
             itemSectionHeader {
                 id("Test")
                 title(context.getString(R.string.test))
             }
         }
 
-        nonCategorizedTests.forEach {
+        workbookList.forEach {
             itemTest {
-                isCategorized(false)
                 id(it.id)
-                test(it)
-                size(context.getString(R.string.number_existing_questions, it.questionsCorrectCount, it.questions.size))
-                listener(listener)
+                name(it.name)
+                color(it.color)
+                size(
+                    context.getString(
+                        R.string.number_existing_questions,
+                        it.correctCount,
+                        it.questionCount
+                    )
+                )
+                onClick { _ -> listener?.onClickTest(it) }
             }
         }
     }

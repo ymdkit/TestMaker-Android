@@ -9,16 +9,20 @@
             type="Boolean" />
 
         <variable
-            name="test"
-            type="jp.gr.java_conf.foobar.testmaker.service.domain.Test" />
+            name="name"
+            type="String" />
+
+        <variable
+            name="color"
+            type="Integer" />
 
         <variable
             name="size"
             type="String" />
 
         <variable
-            name="listener"
-            type="jp.gr.java_conf.foobar.testmaker.service.view.main.MainController.OnClickListener" />
+            name="onClick"
+            type="android.view.View.OnClickListener" />
 
         <import type="jp.gr.java_conf.foobar.testmaker.service.R" />
 
@@ -28,10 +32,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="@{() -> listener.onClickTest(test)}"
-        android:background="?android:attr/selectableItemBackground"
+        android:onClick="@{onClick}"
         android:paddingStart="@{isCategorized ? @dimen/element_spacing_very_large : @dimen/element_spacing_none}"
         android:paddingEnd="0dp">
 
@@ -42,7 +46,7 @@
             android:layout_marginStart="16dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_baseline_description_24"
-            android:tintARGB="@{test.color}"
+            android:tintARGB="@{color}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -55,11 +59,11 @@
             android:layout_marginStart="@dimen/element_spacing_large"
             android:layout_marginEnd="@dimen/element_spacing_large"
             android:maxLines="1"
-            android:text="@{test.title}"
-            android:textStyle="bold"
+            android:text="@{name}"
             android:textSize="@dimen/text_size_large"
-            app:layout_constraintStart_toEndOf="@id/color"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/color"
             app:layout_constraintTop_toTopOf="@id/color" />
 
         <TextView
@@ -67,16 +71,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/element_spacing_large"
-            android:layout_marginEnd="@dimen/element_spacing_large"
             android:layout_marginTop="@dimen/element_spacing_small"
+            android:layout_marginEnd="@dimen/element_spacing_large"
             android:layout_marginBottom="@dimen/element_spacing_large"
             android:gravity="start"
             android:text="@{size}"
             android:textSize="@dimen/text_size_small"
-            app:layout_constraintTop_toBottomOf="@id/text_title_test"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/color"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_title_test" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
