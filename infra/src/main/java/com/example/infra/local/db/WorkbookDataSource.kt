@@ -40,9 +40,9 @@ class WorkbookDataSource @Inject constructor(
             it.copyToRealmOrUpdate(test)
         }
 
-    fun deleteWorkbook(workbook: RealmTest) =
+    fun deleteWorkbook(workbookId: Long) =
         realm.executeTransaction {
-            realm.where(RealmTest::class.java).equalTo("id", workbook.id).findFirst()
+            realm.where(RealmTest::class.java).equalTo("id", workbookId).findFirst()
                 ?.deleteFromRealm()
         }
 

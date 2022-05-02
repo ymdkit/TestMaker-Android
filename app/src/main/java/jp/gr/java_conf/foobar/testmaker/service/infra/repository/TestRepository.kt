@@ -68,7 +68,7 @@ class TestRepository @Inject constructor(
     }
 
     fun delete(test: Test) {
-        dataSource.deleteWorkbook(test.toRealmTest())
+        dataSource.deleteWorkbook(test.toRealmTest().id)
         refresh()
     }
 
