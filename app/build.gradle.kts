@@ -133,9 +133,9 @@ dependencies {
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
     implementation("com.firebaseui:firebase-ui-storage:4.1.0")
     implementation("com.firebaseui:firebase-ui-firestore:5.0.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.3")
+    implementation(Dep.Coroutine.android)
+    implementation(Dep.Coroutine.core)
+    implementation(Dep.Coroutine.playServices)
     implementation("com.github.bumptech.glide:glide:4.9.0")
     implementation("androidx.preference:preference:1.1.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0")
@@ -166,6 +166,7 @@ dependencies {
     androidTestImplementation("com.jraska:falcon:2.1.1")
 
     implementation(project(":ui"))
+    implementation(project(":usecase")) // todo モジュール分割中の一時的な処置を削除する
     implementation(project(":infra"))
 }
 repositories {

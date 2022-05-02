@@ -10,6 +10,7 @@ object Dep {
     const val retrofitVersion = "2.9.0"
     const val moshiVersion = "1.9.2"
     const val composeVersion = "1.0.5"
+    const val coroutineVersion = "1.6.1"
 
     object Compose {
         const val ui = "androidx.compose.ui:ui:$composeVersion"
@@ -39,5 +40,12 @@ object Dep {
         const val moshi = "com.squareup.moshi:moshi:$moshiVersion"
         const val moshiKotlin = "com.squareup.moshi:moshi-kotlin:$moshiVersion"
         const val moshiCodegen = "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+    }
+
+    object Coroutine {
+        const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
+        const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
+        const val playServices =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutineVersion"
     }
 }

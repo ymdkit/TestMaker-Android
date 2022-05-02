@@ -37,11 +37,7 @@ android {
 dependencies {
     implementation(Dep.Hilt.android)
     kapt(Dep.Hilt.compiler)
-    implementation(Dep.Compose.ui)
-    implementation(Dep.Compose.foundation)
-    implementation(Dep.Compose.material)
-    implementation(Dep.Compose.materialIconsCore)
-    implementation(Dep.Compose.materialIconsCore)
+    implementation(Dep.Coroutine.core)
 
-    implementation(project(":usecase"))
+    implementation(project(":domain"))
 }
