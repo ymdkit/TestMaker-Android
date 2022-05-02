@@ -4,7 +4,8 @@ data class Folder(
     val id: FolderId,
     val name: String,
     val color: Int,
-    val workbookList: List<Workbook>
+    val order: Int,
+    val workbookCount: Int
 )
 
 @JvmInline

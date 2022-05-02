@@ -26,10 +26,11 @@ open class RealmCategory : RealmObject() {
     var color = 0
     var order = 0
 
-    fun toFolder(): Folder = Folder(
+    fun toFolder(workbookCount: Int): Folder = Folder(
         id = FolderId(id),
         name = name,
         color = color,
-        order = order
+        order = order,
+        workbookCount = workbookCount
     )
 }
