@@ -9,12 +9,14 @@ data class FolderUseCaseModel(
     val workbookCount: Int
 ) {
     companion object {
-        fun fromFolder(folder: Folder): FolderUseCaseModel =
+        fun fromFolder(
+            folder: Folder
+        ): FolderUseCaseModel =
             FolderUseCaseModel(
                 id = folder.id.value,
                 name = folder.name,
                 color = folder.color,
-                workbookCount = folder.workbookList.count()
+                workbookCount = folder.workbookCount
             )
     }
 }
