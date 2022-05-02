@@ -11,6 +11,12 @@ object Dep {
     const val moshiVersion = "1.9.2"
     const val composeVersion = "1.0.5"
     const val coroutineVersion = "1.6.1"
+    const val lifeCycleVersion = "2.4.1"
+
+    object AndroidX {
+        const val lifeCycleViewModel =
+            "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVersion"
+    }
 
     object Compose {
         const val ui = "androidx.compose.ui:ui:$composeVersion"

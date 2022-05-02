@@ -37,6 +37,7 @@ android {
 dependencies {
     implementation(Dep.Hilt.android)
     kapt(Dep.Hilt.compiler)
+    implementation(Dep.AndroidX.lifeCycleViewModel)
     implementation(Dep.Compose.ui)
     implementation(Dep.Compose.foundation)
     implementation(Dep.Compose.material)
