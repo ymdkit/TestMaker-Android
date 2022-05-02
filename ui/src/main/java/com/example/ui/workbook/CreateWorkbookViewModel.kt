@@ -24,11 +24,6 @@ class CreateWorkbookViewModel @Inject constructor(
     val uiState: StateFlow<List<FolderUseCaseModel>>
         get() = _uiState
 
-    fun createWorkbook(name: String, color: Int, folderName: String) =
-        viewModelScope.launch {
-            userCommandUseCase.createWorkbook(name, color, folderName)
-        }
-
     fun setup() {
         folderListWatchUseCase.setup(scope = viewModelScope)
 
@@ -43,5 +38,10 @@ class CreateWorkbookViewModel @Inject constructor(
     fun load() = viewModelScope.launch {
         folderListWatchUseCase.load()
     }
+
+    fun createWorkbook(name: String, color: Int, folderName: String) =
+        viewModelScope.launch {
+            userCommandUseCase.createWorkbook(name, color, folderName)
+        }
 
 }
