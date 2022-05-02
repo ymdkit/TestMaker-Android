@@ -33,4 +33,5 @@ android {
 }
 
 dependencies {
+    implementation(Dep.Coroutine.core)
 }
