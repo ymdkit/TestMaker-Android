@@ -27,13 +27,6 @@ class CategoryViewModel @Inject constructor(
         repository.refresh()
     }
 
-    fun update(category: Category) = repository.update(category)
-
-    fun delete(category: Category) {
-        repository.delete(category)
-        repository.refresh()
-    }
-
     fun swap(from: Category, to: Category) {
         repository.swap(from, to)
     }

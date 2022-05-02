@@ -39,20 +39,10 @@ class CategoryRepository @Inject constructor(
         refresh()
     }
 
-    fun delete(category: Category) {
-        dataSource.delete(category.toRealmCategory())
-        refresh()
-    }
-
     fun swap(from: Category, to: Category) {
         val tmp = from.order
         dataSource.updateFolder(from.copy(order = to.order).toRealmCategory())
         dataSource.updateFolder(to.copy(order = tmp).toRealmCategory())
-        refresh()
-    }
-
-    fun update(category: Category) {
-        dataSource.updateFolder(category.toRealmCategory())
         refresh()
     }
 }
