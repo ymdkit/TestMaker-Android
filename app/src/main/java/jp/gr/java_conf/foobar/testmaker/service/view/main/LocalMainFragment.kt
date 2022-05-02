@@ -6,29 +6,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
+import com.example.ui.home.HomeViewModel
+import com.example.usecase.model.FolderUseCaseModel
+import com.example.usecase.model.WorkbookUseCaseModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.ItemTestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.Category
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
-import java.util.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -41,8 +41,7 @@ class LocalMainFragment : Fragment() {
 
     private var binding: LocalMainFragmentBinding? = null
 
-    private val testViewModel: TestViewModel by activityViewModels()
-    private val categoryViewModel: CategoryViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     @Inject
     lateinit var logger: TestMakerLogger
@@ -54,55 +53,47 @@ class LocalMainFragment : Fragment() {
 
         mainController.setOnClickListener(object : MainController.OnClickListener {
 
-            override fun onClickTest(test: Test) {
+            override fun onClickTest(workbook: WorkbookUseCaseModel) {
                 ListDialogFragment.newInstance(
-                    test.title,
+                    workbook.name,
                     listOf(
                         DialogMenuItem(
                             title = getString(R.string.play),
                             iconRes = R.drawable.ic_play_arrow_white_24dp,
-                            action = { playTest(test) }),
+                            action = { playWorkbook(workbook) }),
                         DialogMenuItem(
                             title = getString(R.string.edit),
                             iconRes = R.drawable.ic_edit_white,
-                            action = { editTest(test) }),
+                            action = { editWorkbook(workbook) }),
                         DialogMenuItem(
                             title = getString(R.string.delete),
                             iconRes = R.drawable.ic_delete_white,
-                            action = { deleteTest(test) }),
+                            action = { deleteWorkbook(workbook) }),
                         DialogMenuItem(
                             title = getString(R.string.share),
                             iconRes = R.drawable.ic_share_white,
-                            action = { uploadTest(test) })
+                            action = { uploadWorkbook(workbook) })
                     )
                 ).show(requireActivity().supportFragmentManager, "TAG")
             }
 
-            override fun onClickCategoryMenu(category: Category) {
+            override fun onClickFolderMenu(folder: FolderUseCaseModel) {
 
                 ListDialogFragment.newInstance(
-                    category.name,
+                    folder.name,
                     listOf(
                         DialogMenuItem(
                             title = getString(R.string.edit_category_name),
                             iconRes = R.drawable.ic_edit_white,
-                            action = { editCategory(category) }),
+                            action = { editFolder(folder) }),
                         DialogMenuItem(
                             title = getString(R.string.delete),
                             iconRes = R.drawable.ic_delete_white,
-                            action = { deleteCategory(category) })
+                            action = { deleteCategory(folder) })
                     )
                 ).show(requireActivity().supportFragmentManager, "TAG")
             }
         })
-
-        categoryViewModel.categoriesLiveData.observeNonNull(this) {
-            mainController.categories = it
-        }
-
-        testViewModel.testsLiveData.observeNonNull(this) {
-            mainController.tests = it
-        }
 
         return DataBindingUtil.inflate<LocalMainFragmentBinding>(
             inflater,
@@ -139,130 +130,131 @@ class LocalMainFragment : Fragment() {
                         val to = mainController.adapter.getModelAtPosition(toPosition)
 
                         if (from is ItemTestBindingModel_ && to is ItemTestBindingModel_) {
-                            testViewModel.swap(from.test(), to.test())
+                            homeViewModel.swapWorkbook(from.id(), to.id())
                         } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
-                            categoryViewModel.swap(from.category(), to.category())
+                            homeViewModel.swapFolder(from.id(), to.id())
                         }
                     }
                 })
         }.root
     }
 
-    private fun playTest(test: Test) {
-        if (test.questions.isEmpty()) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        homeViewModel.setup()
+        homeViewModel.load()
+
+        lifecycleScope.launchWhenCreated {
+            homeViewModel.uiState.onEach {
+                val uiState = it.getOrNull() ?: return@onEach
+                mainController.workbookList = uiState.workBookList
+                mainController.folderList = uiState.folderList
+            }.launchIn(this)
+        }
+
+    }
+
+    private fun playWorkbook(workbook: WorkbookUseCaseModel) {
+        if (workbook.questionCount == 0) {
             requireContext().showToast(getString(R.string.message_null_questions))
             return
         }
-        initDialogPlayStart(test)
+        initDialogPlayStart(workbook)
     }
 
-    private fun editTest(test: Test) {
+    private fun editWorkbook(workbook: WorkbookUseCaseModel) {
         findNavController().navigate(
             HomeFragmentDirections.actionHomeToListQuestion(
-                test.id
+                workbook.id
             )
         )
     }
 
-    private fun deleteTest(test: Test) {
+    private fun deleteWorkbook(workbook: WorkbookUseCaseModel) {
         ConfirmDangerDialogFragment.newInstance(
-            title = getString(R.string.message_delete_exam, test.title),
+            title = getString(R.string.message_delete_exam, workbook.name),
             buttonText = getString(R.string.button_delete_confirm),
             completion = {
-                testViewModel.delete(test)
-                categoryViewModel.refresh()
+                homeViewModel.deleteWorkbook(workbook)
                 requireContext().showToast(getString(R.string.msg_success_delete_test))
             }
         ).show(childFragmentManager, ConfirmDangerDialogFragment::class.java.simpleName)
     }
 
-    private fun uploadTest(test: Test) {
+    private fun uploadWorkbook(workbook: WorkbookUseCaseModel) {
         logger.logEvent("upload_from_share_local")
         findNavController().navigate(
             HomeFragmentDirections.actionHomeToShareWorkbook(
-                workbookId = test.id
+                workbookId = workbook.id
             )
         )
     }
 
-    private fun initDialogPlayStart(test: Test) {
+    private fun initDialogPlayStart(workbook: WorkbookUseCaseModel) {
 
         if (!sharedPreferenceManager.isShowPlaySettingDialog) {
-            startAnswer(test, (test.startPosition), test.limit)
+            startAnswer(workbook)
         } else {
-
-            childFragmentManager.setFragmentResultListener(
-                REQUEST_PLAY_CONFIG,
-                viewLifecycleOwner
-            ) { requestKey, bundle ->
-                if (requestKey != REQUEST_PLAY_CONFIG) return@setFragmentResultListener
-
-                val position = bundle.getInt(PlayConfigDialogFragment.RESULT_START_POSITION)
-                val limit = bundle.getInt(PlayConfigDialogFragment.RESULT_LIMIT)
-                startAnswer(test, (position - 1).coerceAtLeast(0), limit)
-            }
-
-            PlayConfigDialogFragment.newInstance(test, REQUEST_PLAY_CONFIG)
-                .show(childFragmentManager, "TAG")
+// todo 一時的にコメントアウト
+//            childFragmentManager.setFragmentResultListener(
+//                REQUEST_PLAY_CONFIG,
+//                viewLifecycleOwner
+//            ) { requestKey, bundle ->
+//                if (requestKey != REQUEST_PLAY_CONFIG) return@setFragmentResultListener
+//
+//                startAnswer(workbook)
+//            }
+//
+//            PlayConfigDialogFragment.newInstance(workbook, REQUEST_PLAY_CONFIG)
+//                .show(childFragmentManager, "TAG")
         }
     }
 
-    private fun startAnswer(test: Test, start: Int, limit: Int) {
+    private fun startAnswer(workbook: WorkbookUseCaseModel) {
 
-        var incorrect = false
-
-        for (element in test.questions) if (!(element.isCorrect)) incorrect = true
-
-        if (!incorrect && sharedPreferenceManager.refine) {
+        if (workbook.inCorrectCount == 0 && sharedPreferenceManager.refine) {
             requireContext().showToast(getString(R.string.message_null_wrongs))
         } else {
-
-            val result = test.copy(
-                limit = limit,
-                startPosition = start,
-                history = Calendar.getInstance().timeInMillis
-            )
-
-            testViewModel.update(result)
+            // todo 移行
+//            val result = workbook.copy(
+//                limit = limit,
+//                startPosition = start,
+//                history = Calendar.getInstance().timeInMillis
+//            )
+//
+//            testViewModel.update(result)
 
             findNavController().navigate(
                 HomeFragmentDirections.actionHomeToAnswerWorkbook(
-                    workbookId = result.id,
+                    workbookId = workbook.id,
                     isRetry = false
                 )
             )
         }
     }
 
-    private fun editCategory(category: Category) {
+    private fun editFolder(folder: FolderUseCaseModel) {
 
         EditTextDialogFragment.newInstance(
             title = getString(R.string.title_dialog_edit_category),
-            defaultText = category.name,
+            defaultText = folder.name,
             hint = getString(R.string.hint_category_name)
         )
-        { text ->
-            testViewModel.renameAllInCategory(category.name, text)
-            categoryViewModel.update(category.copy(name = text))
+        { newFolderName ->
+            homeViewModel.updateFolder(folder, newFolderName)
         }.show(requireActivity().supportFragmentManager, "TAG")
     }
 
-    private fun deleteCategory(category: Category) {
+    private fun deleteCategory(folder: FolderUseCaseModel) {
         ConfirmDangerDialogFragment.newInstance(
-            title = getString(R.string.message_delete_category, category.name),
+            title = getString(R.string.message_delete_category, folder.name),
             buttonText = getString(R.string.button_delete_confirm),
             completion = {
-                testViewModel.deleteAllInCategory(category.name)
-                categoryViewModel.delete(category)
+                homeViewModel.deleteFolder(folder = folder)
                 requireContext().showToast(getString(R.string.msg_success_delete_category))
             }
         ).show(childFragmentManager, ConfirmDangerDialogFragment::class.java.simpleName)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        testViewModel.refresh()
-        categoryViewModel.refresh()
     }
 
     companion object {
