@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class WorkbookListWatchUseCase @Inject constructor(
     private val repository: WorkBookRepository
 ) {
@@ -49,7 +51,6 @@ class WorkbookListWatchUseCase @Inject constructor(
                     }
                     _flow.emit(new)
                 }.launchIn(scope)
-
         }
     }
 

@@ -20,7 +20,7 @@ class WorkbookDataSource @Inject constructor(
 
     fun createWorkbook(workbook: RealmTest) =
         realm.executeTransaction { realm ->
-            realm.copyToRealm(workbook)
+            realm.copyToRealmOrUpdate(workbook)
         }
 
     fun getWorkbookList(): List<RealmTest> =

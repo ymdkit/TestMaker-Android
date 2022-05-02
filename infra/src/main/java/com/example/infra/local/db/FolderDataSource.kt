@@ -18,7 +18,7 @@ class FolderDataSource @Inject constructor(
 
     fun createFolder(folder: RealmCategory) =
         realm.executeTransaction {
-            it.copyToRealm(folder)
+            it.copyToRealmOrUpdate(folder)
         }
 
     fun getFolderList(): List<RealmCategory> =

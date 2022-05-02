@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FolderListWatchUseCase @Inject constructor(
     private val workBookRepository: WorkBookRepository
 ) {
