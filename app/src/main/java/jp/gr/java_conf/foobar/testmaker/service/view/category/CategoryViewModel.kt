@@ -14,5 +14,4 @@ class CategoryViewModel @Inject constructor(
 
     var categoriesLiveData: LiveData<List<Category>> = repository.getAsLiveData()
 
-    fun get(id: Long): Category = repository.get(id)
 }
