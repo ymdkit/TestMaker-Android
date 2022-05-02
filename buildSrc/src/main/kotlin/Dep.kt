@@ -16,6 +16,7 @@ object Dep {
     object AndroidX {
         const val lifeCycleViewModel =
             "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVersion"
+        const val preference = "androidx.preference:preference-ktx:1.2.0"
     }
 
     object Compose {
