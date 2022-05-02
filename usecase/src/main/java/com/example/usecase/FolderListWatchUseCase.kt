@@ -24,32 +24,14 @@ class FolderListWatchUseCase @Inject constructor(
     fun setup(scope: CoroutineScope) {
         scope.launch {
 
-            workBookRepository.createFolderFlow
-                .onEach {
-                    val new = _flow.value.map { list ->
-                        list + FolderUseCaseModel.fromFolder(it)
+            workBookRepository.updateFolderListFlow
+                .onEach { list ->
+                    val newFolderList = list.map {
+                        FolderUseCaseModel.fromFolder(it)
                     }
-                    _flow.emit(new)
-                }.launchIn(scope)
-
-            workBookRepository.updateFolderFlow
-                .onEach { folder ->
-                    val new = _flow.value.map { list ->
-                        list.map {
-                            if (folder.id.value == it.id) FolderUseCaseModel.fromFolder(
-                                folder
-                            ) else it
-                        }
-                    }
-                    _flow.emit(new)
-                }.launchIn(scope)
-
-            workBookRepository.deleteFolderFlow
-                .onEach { folderId ->
-                    val new = _flow.value.map { list ->
-                        list.filter { it.id != folderId.value }
-                    }
-                    _flow.emit(new)
+                    _flow.emit(_flow.value.map {
+                        newFolderList
+                    })
                 }.launchIn(scope)
 
         }

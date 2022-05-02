@@ -31,6 +31,19 @@ class UserCommandUseCase @Inject constructor(
         }
     }
 
+    suspend fun swapFolder(sourceFolderId: Long, destFolderId: Long) {
+        val sourceFolder = workBookRepository.getFolder(FolderId(sourceFolderId))
+        val destFolder = workBookRepository.getFolder(FolderId(destFolderId))
+        workBookRepository.updateFolder(sourceFolder.copy(order = destFolder.order))
+        workBookRepository.updateFolder(destFolder.copy(order = sourceFolder.order))
+    }
+
     suspend fun deleteWorkbook(workbook: WorkbookUseCaseModel) =
         workBookRepository.deleteWorkbook(WorkbookId(workbook.id))
+
+    suspend fun swapWorkbook(sourceWorkbookId: Long, destWorkbookId: Long) {
+        val sourceWorkbook = workBookRepository.getWorkbook(WorkbookId(sourceWorkbookId))
+        val destWorkbook = workBookRepository.getWorkbook(WorkbookId(destWorkbookId))
+        workBookRepository.swapWorkbook(sourceWorkbook, destWorkbook)
+    }
 }

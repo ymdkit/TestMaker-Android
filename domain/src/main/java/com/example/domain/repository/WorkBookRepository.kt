@@ -8,12 +8,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface WorkBookRepository {
 
-    val createFolderFlow: Flow<Folder>
-    val updateFolderFlow: Flow<Folder>
-    val deleteFolderFlow: Flow<FolderId>
-    val createWorkbookFlow: Flow<Workbook>
-    val updateWorkbookFlow: Flow<Workbook>
-    val deleteWorkbookFlow: Flow<WorkbookId>
+    val updateFolderListFlow: Flow<List<Folder>>
+    val updateWorkBookListFlow: Flow<List<Workbook>>
 
     suspend fun getFolderList(): List<Folder>
     suspend fun getFolder(folderId: FolderId): Folder
@@ -25,6 +21,7 @@ interface WorkBookRepository {
     suspend fun createWorkbook(workbook: Workbook)
     suspend fun updateWorkbook(workbook: Workbook)
     suspend fun deleteWorkbook(workbookId: WorkbookId)
+    suspend fun swapWorkbook(sourceWorkbook: Workbook, destWorkbook: Workbook)
 
     suspend fun getWorkbookListByFolderName(folderName: String): List<Workbook>
 }

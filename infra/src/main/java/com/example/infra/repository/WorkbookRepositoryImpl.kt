@@ -20,35 +20,15 @@ class WorkbookRepositoryImpl @Inject constructor(
     private val folderDataSource: FolderDataSource,
 ) : WorkBookRepository {
 
-    private val _createFolderFlow: MutableSharedFlow<Folder> =
+    private val _updateFolderListFlow: MutableSharedFlow<List<Folder>> =
         MutableSharedFlow()
-    override val createFolderFlow: Flow<Folder>
-        get() = _createFolderFlow
+    override val updateFolderListFlow: Flow<List<Folder>>
+        get() = _updateFolderListFlow
 
-    private val _updateFolderFlow: MutableSharedFlow<Folder> =
+    private val _updateWorkbookListFlow: MutableSharedFlow<List<Workbook>> =
         MutableSharedFlow()
-    override val updateFolderFlow: Flow<Folder>
-        get() = _updateFolderFlow
-
-    private val _deleteFolderFlow: MutableSharedFlow<FolderId> =
-        MutableSharedFlow()
-    override val deleteFolderFlow: Flow<FolderId>
-        get() = _deleteFolderFlow
-
-    private val _createWorkbookFlow: MutableSharedFlow<Workbook> =
-        MutableSharedFlow()
-    override val createWorkbookFlow: Flow<Workbook>
-        get() = _createWorkbookFlow
-
-    private val _updateWorkbookFlow: MutableSharedFlow<Workbook> =
-        MutableSharedFlow()
-    override val updateWorkbookFlow: Flow<Workbook>
-        get() = _updateWorkbookFlow
-
-    private val _deleteWorkbookFlow: MutableSharedFlow<WorkbookId> =
-        MutableSharedFlow()
-    override val deleteWorkbookFlow: Flow<WorkbookId>
-        get() = _deleteWorkbookFlow
+    override val updateWorkBookListFlow: Flow<List<Workbook>>
+        get() = _updateWorkbookListFlow
 
     override suspend fun getFolderList(): List<Folder> {
         return folderDataSource.getFolderList().map {
@@ -65,17 +45,17 @@ class WorkbookRepositoryImpl @Inject constructor(
 
     override suspend fun createFolder(folder: Folder) {
         folderDataSource.createFolder(RealmCategory.fromFolder(folder))
-        _createFolderFlow.emit(folder)
+        refreshFolderList()
     }
 
     override suspend fun updateFolder(folder: Folder) {
         folderDataSource.createFolder(RealmCategory.fromFolder(folder))
-        _updateFolderFlow.emit(folder)
+        refreshFolderList()
     }
 
     override suspend fun deleteFolder(folderId: FolderId) {
         folderDataSource.deleteFolder(folderId.value)
-        _deleteFolderFlow.emit(folderId)
+        refreshFolderList()
     }
 
     override suspend fun getWorkbookList(): List<Workbook> =
@@ -88,21 +68,35 @@ class WorkbookRepositoryImpl @Inject constructor(
 
     override suspend fun createWorkbook(workbook: Workbook) {
         this.workbookDataSource.createWorkbook(RealmTest.fromWorkbook(workbook))
-        _createWorkbookFlow.emit(workbook)
+        refreshWorkbookList()
     }
 
     override suspend fun updateWorkbook(workbook: Workbook) {
         this.workbookDataSource.createWorkbook(RealmTest.fromWorkbook(workbook))
-        _updateWorkbookFlow.emit(workbook)
+        refreshWorkbookList()
     }
 
     override suspend fun deleteWorkbook(workbookId: WorkbookId) {
         workbookDataSource.deleteWorkbook(workbookId.value)
-        _deleteWorkbookFlow.emit(workbookId)
+        refreshWorkbookList()
+    }
+
+    override suspend fun swapWorkbook(sourceWorkbook: Workbook, destWorkbook: Workbook) {
+        workbookDataSource.createWorkbook(RealmTest.fromWorkbook(sourceWorkbook.copy(order = destWorkbook.order)))
+        workbookDataSource.createWorkbook(RealmTest.fromWorkbook(destWorkbook.copy(order = sourceWorkbook.order)))
+        refreshWorkbookList()
     }
 
     override suspend fun getWorkbookListByFolderName(folderName: String): List<Workbook> =
         workbookDataSource.getWorkbookList()
             .filter { workbook -> workbook.getCategory() == folderName }
             .map { it.toWorkbook() }
+
+    private suspend fun refreshWorkbookList() {
+        _updateWorkbookListFlow.emit(getWorkbookList())
+    }
+
+    private suspend fun refreshFolderList() {
+        _updateFolderListFlow.emit(getFolderList())
+    }
 }
