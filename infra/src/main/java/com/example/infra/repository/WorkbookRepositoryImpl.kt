@@ -66,13 +66,26 @@ class WorkbookRepositoryImpl @Inject constructor(
     override suspend fun getWorkbook(workbookId: WorkbookId): Workbook =
         workbookDataSource.getWorkbook(id = workbookId.value).toWorkbook()
 
-    override suspend fun createWorkbook(workbook: Workbook) {
-        this.workbookDataSource.createWorkbook(RealmTest.fromWorkbook(workbook))
+    override suspend fun createWorkbook(
+        name: String,
+        color: Int,
+        folderName: String
+    ) {
+        val workbookId = workbookDataSource.generateWorkbookId()
+        val newWorkbook = Workbook(
+            id = WorkbookId(workbookId),
+            name = name,
+            color = color,
+            folderName = folderName,
+            order = workbookId.toInt(),
+            questionList = listOf()
+        )
+        workbookDataSource.createWorkbook(RealmTest.fromWorkbook(newWorkbook))
         refreshWorkbookList()
     }
 
     override suspend fun updateWorkbook(workbook: Workbook) {
-        this.workbookDataSource.createWorkbook(RealmTest.fromWorkbook(workbook))
+        workbookDataSource.createWorkbook(RealmTest.fromWorkbook(workbook))
         refreshWorkbookList()
     }
 

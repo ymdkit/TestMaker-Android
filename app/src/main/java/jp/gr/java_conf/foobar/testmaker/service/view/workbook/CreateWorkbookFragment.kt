@@ -15,7 +15,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -29,14 +28,13 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.example.ui.workbook.CreateWorkbookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
@@ -50,8 +48,7 @@ class CreateWorkbookFragment : Fragment() {
 
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager
-    private val testViewModel: TestViewModel by viewModels()
-    private val categoryViewModel: CategoryViewModel by viewModels()
+    private val createWorkbookViewModel: CreateWorkbookViewModel by viewModels()
 
     @Inject
     lateinit var logger: TestMakerLogger
@@ -111,9 +108,7 @@ class CreateWorkbookFragment : Fragment() {
 
                             var name by rememberSaveable { mutableStateOf("") }
                             var color by remember { mutableStateOf(colors.first()) }
-                            val folders by categoryViewModel.categoriesLiveData.observeAsState(
-                                listOf()
-                            )
+                            val folders by createWorkbookViewModel.uiState.collectAsState()
                             var folderName by rememberSaveable { mutableStateOf("") }
 
                             var showingValidationError by rememberSaveable { mutableStateOf(false) }
@@ -179,15 +174,15 @@ class CreateWorkbookFragment : Fragment() {
                                                 return@Button
                                             }
 
-                                            testViewModel.create(
-                                                title = name,
+                                            createWorkbookViewModel.createWorkbook(
+                                                name = name,
                                                 color = ContextCompat.getColor(
                                                     context,
                                                     color.colorId
                                                 ),
-                                                category = folderName,
-                                                source = CreateTestSource.SELF.title
+                                                folderName = folderName
                                             )
+
                                             logger.logCreateTestEvent(
                                                 name,
                                                 CreateTestSource.SELF.title
@@ -233,5 +228,11 @@ class CreateWorkbookFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        createWorkbookViewModel.setup()
+        createWorkbookViewModel.load()
     }
 }

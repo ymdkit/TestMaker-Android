@@ -38,6 +38,9 @@ class UserCommandUseCase @Inject constructor(
         workBookRepository.updateFolder(destFolder.copy(order = sourceFolder.order))
     }
 
+    suspend fun createWorkbook(name: String, color: Int, folderName: String) =
+        workBookRepository.createWorkbook(name, color, folderName)
+
     suspend fun deleteWorkbook(workbook: WorkbookUseCaseModel) =
         workBookRepository.deleteWorkbook(WorkbookId(workbook.id))
 
