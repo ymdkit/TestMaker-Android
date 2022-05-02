@@ -25,22 +25,20 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.example.ui.core.AdViewModel
+import com.example.ui.core.ComposeAdView
 import com.example.ui.folder.CreateFolderViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CreateFolderFragment : Fragment() {
 
-    @Inject
-    lateinit var sharedPreferenceManager: SharedPreferenceManager
     private val createFolderViewModel: CreateFolderViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
     private val colors by lazy {
         listOf(
@@ -172,9 +170,7 @@ class CreateFolderFragment : Fragment() {
                                         )
                                     }
                                 }
-                                ComposeAdView(
-                                    isRemovedAd = sharedPreferenceManager.isRemovedAd,
-                                )
+                                ComposeAdView(adViewModel)
                             }
                         }
                     )

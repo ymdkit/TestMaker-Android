@@ -25,6 +25,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.ui.core.AdViewModel
+import com.example.ui.core.ComposeAdView
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -38,7 +40,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import javax.inject.Inject
 
@@ -54,6 +55,7 @@ class AnswerResultFragment : Fragment() {
     private val duration: Long by lazy { args.duration }
 
     private val viewModel: ResultViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
     @Inject
     lateinit var auth: Auth
@@ -181,7 +183,7 @@ class AnswerResultFragment : Fragment() {
                                             Text(stringResource(id = R.string.retry))
                                         }
                                     }
-                                    ComposeAdView(isRemovedAd = sharedPreferenceManager.isRemovedAd)
+                                    ComposeAdView(viewModel = adViewModel)
                                 }
                             }
                         }

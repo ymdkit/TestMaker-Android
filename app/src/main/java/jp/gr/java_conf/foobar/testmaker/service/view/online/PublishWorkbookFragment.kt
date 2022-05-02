@@ -22,28 +22,26 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.ui.core.AdViewModel
+import com.example.ui.core.ComposeAdView
 import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.RequestLogin
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookFragmentArgs
 import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookUiState
 import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookViewModel
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class PublishWorkbookFragment : Fragment() {
 
-    @Inject
-    lateinit var sharedPreferenceManager: SharedPreferenceManager
     private val testViewModel: TestViewModel by viewModels()
     private val uploadWorkbookViewModel: UploadWorkbookViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
     private val args: UploadWorkbookFragmentArgs by navArgs()
     private val workbook: Test by lazy { testViewModel.get(args.workbookId) }
@@ -229,7 +227,7 @@ class PublishWorkbookFragment : Fragment() {
                                     }
                                 }
                                 ComposeAdView(
-                                    isRemovedAd = sharedPreferenceManager.isRemovedAd,
+                                    viewModel = adViewModel,
                                     adSize = AdSize.MEDIUM_RECTANGLE
                                 )
                             }

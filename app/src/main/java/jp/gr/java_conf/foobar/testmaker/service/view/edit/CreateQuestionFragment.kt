@@ -19,6 +19,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.ui.core.AdViewModel
+import com.example.ui.core.ComposeAdView
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -27,14 +29,12 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditCompleteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectCompleteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditWriteQuestion
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,11 +43,9 @@ import javax.inject.Inject
 class CreateQuestionFragment : Fragment() {
 
     @Inject
-    lateinit var sharedPreferenceManager: SharedPreferenceManager
-
-    @Inject
     lateinit var logger: TestMakerLogger
     private val testViewModel: TestViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
     private val args: CreateQuestionFragmentArgs by navArgs()
     private val workbook: Test by lazy { testViewModel.get(args.workbookId) }
@@ -218,9 +216,7 @@ class CreateQuestionFragment : Fragment() {
                                             )
                                     }
                                 }
-                                ComposeAdView(
-                                    isRemovedAd = sharedPreferenceManager.isRemovedAd,
-                                )
+                                ComposeAdView(viewModel = adViewModel)
                             }
                         }
                     )

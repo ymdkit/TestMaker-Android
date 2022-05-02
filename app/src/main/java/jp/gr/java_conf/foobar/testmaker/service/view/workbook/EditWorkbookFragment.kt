@@ -29,17 +29,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.ui.core.AdViewModel
+import com.example.ui.core.ComposeAdView
 import com.example.ui.workbook.EditWorkbookViewModel
 import com.example.usecase.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.QuestionListFragmentArgs
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.TextPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import javax.inject.Inject
@@ -48,9 +48,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class EditWorkbookFragment : Fragment() {
 
-    @Inject
-    lateinit var sharedPreferenceManager: SharedPreferenceManager
     private val editWorkbookViewModel: EditWorkbookViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
     @Inject
     lateinit var logger: TestMakerLogger
@@ -238,9 +237,7 @@ class EditWorkbookFragment : Fragment() {
                                                 )
                                             }
                                         }
-                                        ComposeAdView(
-                                            isRemovedAd = sharedPreferenceManager.isRemovedAd,
-                                        )
+                                        ComposeAdView(viewModel = adViewModel)
                                     }
                                 }
                                 else -> {

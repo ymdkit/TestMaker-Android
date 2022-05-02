@@ -29,8 +29,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        dataBinding = true
+        compose = true
+    }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.0.0"
     }
 }
 
@@ -42,7 +49,7 @@ dependencies {
     implementation(Dep.Compose.foundation)
     implementation(Dep.Compose.material)
     implementation(Dep.Compose.materialIconsCore)
-    implementation(Dep.Compose.materialIconsCore)
-
+    implementation(Dep.Compose.materialIconsExtended)
+    implementation(Dep.PlayServices.ads)
     implementation(project(":usecase"))
 }

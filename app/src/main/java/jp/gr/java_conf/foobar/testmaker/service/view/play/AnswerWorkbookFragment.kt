@@ -24,6 +24,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.ui.core.AdViewModel
+import com.example.ui.core.ComposeAdView
 import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -32,7 +34,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.play.component.*
 import jp.gr.java_conf.foobar.testmaker.service.view.result.MyTopAppBar
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import javax.inject.Inject
 
@@ -41,6 +42,7 @@ class AnswerWorkbookFragment : Fragment() {
 
     private val args: AnswerWorkbookFragmentArgs by navArgs()
     private val playViewModel: AnswerWorkbookViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager
@@ -256,7 +258,7 @@ class AnswerWorkbookFragment : Fragment() {
                                     }
                                 }
                                 ComposeAdView(
-                                    isRemovedAd = sharedPreferenceManager.isRemovedAd,
+                                    viewModel = adViewModel,
                                     adSize = AdSize.LARGE_BANNER
                                 )
                             }
