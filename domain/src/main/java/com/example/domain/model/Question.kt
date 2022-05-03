@@ -10,6 +10,9 @@ sealed class Question {
     abstract val answerStatus: AnswerStatus
     abstract val isAnswering: Boolean
     abstract val order: Int
+    abstract fun updated(
+        answerStatus: AnswerStatus
+    ): Question
 
     data class WriteQuestion(
         override val id: QuestionId,
@@ -21,7 +24,13 @@ sealed class Question {
         override val answerStatus: AnswerStatus,
         override val isAnswering: Boolean,
         override val order: Int
-    ) : Question()
+    ) : Question() {
+        override fun updated(
+            answerStatus: AnswerStatus
+        ): Question = copy(
+            answerStatus = answerStatus
+        )
+    }
 
     data class SelectQuestion(
         override val id: QuestionId,
@@ -35,7 +44,14 @@ sealed class Question {
         override val order: Int,
         val otherSelections: List<String>,
         val isAutoGenerateOtherSelections: Boolean
-    ) : Question()
+    ) : Question() {
+        override fun updated(
+            answerStatus: AnswerStatus
+        ): Question = copy(
+            answerStatus = answerStatus
+        )
+    }
+
 
     data class CompleteQuestion(
         override val id: QuestionId,
@@ -48,7 +64,14 @@ sealed class Question {
         override val isAnswering: Boolean,
         override val order: Int,
         val isCheckAnswerOrder: Boolean
-    ) : Question()
+    ) : Question() {
+        override fun updated(
+            answerStatus: AnswerStatus
+        ): Question = copy(
+            answerStatus = answerStatus
+        )
+    }
+
 
     data class SelectCompleteQuestion(
         override val id: QuestionId,
@@ -63,7 +86,13 @@ sealed class Question {
         val otherSelections: List<String>,
         val isAutoGenerateOtherSelections: Boolean,
         val isCheckAnswerOrder: Boolean
-    ) : Question()
+    ) : Question() {
+        override fun updated(
+            answerStatus: AnswerStatus
+        ): Question = copy(
+            answerStatus = answerStatus
+        )
+    }
 }
 
 enum class AnswerStatus {

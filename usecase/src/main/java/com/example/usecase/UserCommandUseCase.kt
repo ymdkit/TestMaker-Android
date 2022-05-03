@@ -1,5 +1,6 @@
 package com.example.usecase
 
+import com.example.domain.model.AnswerStatus
 import com.example.domain.model.FolderId
 import com.example.domain.model.WorkbookId
 import com.example.domain.repository.WorkBookRepository
@@ -63,5 +64,12 @@ class UserCommandUseCase @Inject constructor(
         val sourceWorkbook = workBookRepository.getWorkbook(WorkbookId(sourceWorkbookId))
         val destWorkbook = workBookRepository.getWorkbook(WorkbookId(destWorkbookId))
         workBookRepository.swapWorkbook(sourceWorkbook, destWorkbook)
+    }
+
+    suspend fun resetWorkbookAchievement(workbookId: Long) {
+        val workbook = workBookRepository.getWorkbook(WorkbookId(workbookId))
+        val newQuestionList =
+            workbook.questionList.map { it.updated(answerStatus = AnswerStatus.UNANSWERED) }
+        workBookRepository.updateWorkbook(workbook.copy(questionList = newQuestionList))
     }
 }
