@@ -58,6 +58,7 @@ class MainController(
         folderList.forEach {
             cardCategory {
                 id("category-${it.id}")
+                folderId(it.id)
                 color(it.color)
                 name(it.name)
                 size(
@@ -85,6 +86,7 @@ class MainController(
         workbookList.forEach {
             itemTest {
                 id("workbook-${it.id}")
+                workbookId(it.id)
                 name(it.name)
                 color(it.color)
                 size(

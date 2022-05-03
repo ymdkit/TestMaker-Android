@@ -130,9 +130,9 @@ class LocalMainFragment : Fragment() {
                         val to = mainController.adapter.getModelAtPosition(toPosition)
 
                         if (from is ItemTestBindingModel_ && to is ItemTestBindingModel_) {
-                            homeViewModel.swapWorkbook(from.id(), to.id())
+                            homeViewModel.swapWorkbook(from.workbookId(), to.workbookId())
                         } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
-                            homeViewModel.swapFolder(from.id(), to.id())
+                            homeViewModel.swapFolder(from.folderId(), to.folderId())
                         }
                     }
                 })

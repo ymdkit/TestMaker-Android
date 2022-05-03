@@ -5,6 +5,10 @@
     <data>
 
         <variable
+            name="workbookId"
+            type="Long" />
+
+        <variable
             name="isCategorized"
             type="Boolean" />
 

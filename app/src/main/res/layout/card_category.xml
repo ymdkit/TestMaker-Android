@@ -5,6 +5,10 @@
     <data>
 
         <variable
+            name="folderId"
+            type="Long" />
+
+        <variable
             name="name"
             type="String" />
 
