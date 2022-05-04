@@ -43,7 +43,7 @@ class UserWorkbookCommandUseCase @Inject constructor(
     suspend fun resetWorkbookAchievement(workbookId: Long) {
         val workbook = workBookRepository.getWorkbook(WorkbookId(workbookId))
         val newQuestionList =
-            workbook.questionList.map { it.updated(answerStatus = AnswerStatus.UNANSWERED) }
+            workbook.questionList.map { it.copy(answerStatus = AnswerStatus.UNANSWERED) }
         workBookRepository.updateWorkbook(workbook.copy(questionList = newQuestionList))
     }
 }
