@@ -46,6 +46,19 @@ class WorkbookDataSource @Inject constructor(
                 ?.deleteFromRealm()
         }
 
+    fun createQuestions(questionList: List<Quest>) =
+        realm.executeTransaction { realm ->
+            questionList.forEach {
+                realm.copyToRealmOrUpdate(it)
+            }
+        }
+
+    fun getQuestion(questionId: Long): Quest = realm.copyFromRealm(
+        realm.where(Quest::class.java)
+            .equalTo("id", questionId).findFirst() ?: Quest()
+    )
+
+
     fun updateQuestion(question: Quest) =
         realm.executeTransaction {
             it.copyToRealmOrUpdate(question)
