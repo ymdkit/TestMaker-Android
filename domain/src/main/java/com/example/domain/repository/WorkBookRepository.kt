@@ -1,9 +1,6 @@
 package com.example.domain.repository
 
-import com.example.domain.model.Folder
-import com.example.domain.model.FolderId
-import com.example.domain.model.Workbook
-import com.example.domain.model.WorkbookId
+import com.example.domain.model.*
 import kotlinx.coroutines.flow.Flow
 
 interface WorkBookRepository {
@@ -21,7 +18,9 @@ interface WorkBookRepository {
     suspend fun createWorkbook(name: String, color: Int, folderName: String)
     suspend fun updateWorkbook(workbook: Workbook)
     suspend fun deleteWorkbook(workbookId: WorkbookId)
+    suspend fun createQuestion(workbookId: WorkbookId, request: CreateQuestionRequest)
     suspend fun swapWorkbook(sourceWorkbook: Workbook, destWorkbook: Workbook)
-
     suspend fun getWorkbookListByFolderName(folderName: String): List<Workbook>
+    suspend fun getQuestion(questionId: QuestionId): Question
+    suspend fun updateQuestion(workbookId: WorkbookId, question: Question)
 }

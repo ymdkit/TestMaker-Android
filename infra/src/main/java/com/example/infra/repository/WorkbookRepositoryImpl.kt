@@ -1,12 +1,10 @@
 package com.example.infra.repository
 
-import com.example.domain.model.Folder
-import com.example.domain.model.FolderId
-import com.example.domain.model.Workbook
-import com.example.domain.model.WorkbookId
+import com.example.domain.model.*
 import com.example.domain.repository.WorkBookRepository
 import com.example.infra.local.db.FolderDataSource
 import com.example.infra.local.db.WorkbookDataSource
+import com.example.infra.local.entity.Quest
 import com.example.infra.local.entity.RealmCategory
 import com.example.infra.local.entity.RealmTest
 import kotlinx.coroutines.flow.Flow
@@ -115,6 +113,32 @@ class WorkbookRepositoryImpl @Inject constructor(
         workbookDataSource.getWorkbookList()
             .filter { workbook -> workbook.getCategory() == folderName }
             .map { it.toWorkbook() }
+
+    override suspend fun getQuestion(questionId: QuestionId): Question =
+        workbookDataSource.getQuestion(questionId.value).toQuestion()
+
+    override suspend fun createQuestion(
+        workbookId: WorkbookId,
+        request: CreateQuestionRequest
+    ) {
+        val newQuestionId = workbookDataSource.generateQuestionId()
+        val newQuestion = Quest.fromCreateQuestionRequest(
+            questionId = newQuestionId,
+            request = request
+        )
+
+        workbookDataSource.createQuestions(questionList = listOf(newQuestion))
+        val workbook = workbookDataSource.getWorkbook(workbookId.value).toWorkbook()
+        workbookDataSource.createWorkbook(
+            RealmTest.fromWorkbook(workbook.copy(questionList = workbook.questionList + newQuestion.toQuestion()))
+        )
+        refreshWorkbookList()
+    }
+
+    override suspend fun updateQuestion(workbookId: WorkbookId, question: Question) {
+        workbookDataSource.updateQuestion(Quest.fromQuestion(question))
+        refreshWorkbookList()
+    }
 
     private suspend fun refreshWorkbookList() {
         _updateWorkbookListFlow.emit(getWorkbookList())
