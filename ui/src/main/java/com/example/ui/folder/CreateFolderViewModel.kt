@@ -2,19 +2,19 @@ package com.example.ui.folder
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.usecase.UserCommandUseCase
+import com.example.usecase.UserFolderCommandUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateFolderViewModel @Inject constructor(
-    private val userCommandUseCase: UserCommandUseCase,
+    private val userFolderCommandUseCase: UserFolderCommandUseCase
 ) : ViewModel() {
 
     fun createFolder(name: String, color: Int) =
         viewModelScope.launch {
-            userCommandUseCase.createFolder(name, color)
+            userFolderCommandUseCase.createFolder(name, color)
         }
 
 }

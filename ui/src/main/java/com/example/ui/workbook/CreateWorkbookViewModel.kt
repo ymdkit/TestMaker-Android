@@ -3,7 +3,7 @@ package com.example.ui.workbook
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.usecase.FolderListWatchUseCase
-import com.example.usecase.UserCommandUseCase
+import com.example.usecase.UserWorkbookCommandUseCase
 import com.example.usecase.model.FolderUseCaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateWorkbookViewModel @Inject constructor(
-    private val userCommandUseCase: UserCommandUseCase,
+    private val userWorkbookCommandUseCase: UserWorkbookCommandUseCase,
     private val folderListWatchUseCase: FolderListWatchUseCase
 ) : ViewModel() {
 
@@ -41,7 +41,7 @@ class CreateWorkbookViewModel @Inject constructor(
 
     fun createWorkbook(name: String, color: Int, folderName: String) =
         viewModelScope.launch {
-            userCommandUseCase.createWorkbook(name, color, folderName)
+            userWorkbookCommandUseCase.createWorkbook(name, color, folderName)
         }
 
 }

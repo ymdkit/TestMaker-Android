@@ -3,7 +3,8 @@ package com.example.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.usecase.FolderListWatchUseCase
-import com.example.usecase.UserCommandUseCase
+import com.example.usecase.UserFolderCommandUseCase
+import com.example.usecase.UserWorkbookCommandUseCase
 import com.example.usecase.WorkbookListWatchUseCase
 import com.example.usecase.model.FolderUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val workbookListWatchUseCase: WorkbookListWatchUseCase,
     private val folderListWatchUseCase: FolderListWatchUseCase,
-    private val userCommandUseCase: UserCommandUseCase
+    private val userWorkbookCommandUseCase: UserWorkbookCommandUseCase,
+    private val userFolderCommandUseCase: UserFolderCommandUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<Resource<UiState>> =
@@ -54,27 +56,27 @@ class HomeViewModel @Inject constructor(
 
     fun updateFolder(folder: FolderUseCaseModel, newFolderName: String) =
         viewModelScope.launch {
-            userCommandUseCase.updateFolder(folder, newFolderName)
+            userFolderCommandUseCase.updateFolder(folder, newFolderName)
         }
 
     fun deleteFolder(folder: FolderUseCaseModel) =
         viewModelScope.launch {
-            userCommandUseCase.deleteFolder(folder)
+            userFolderCommandUseCase.deleteFolder(folder)
         }
 
     fun swapFolder(sourceFolderId: Long, destFolderId: Long) =
         viewModelScope.launch {
-            userCommandUseCase.swapFolder(sourceFolderId, destFolderId)
+            userFolderCommandUseCase.swapFolder(sourceFolderId, destFolderId)
         }
 
     fun deleteWorkbook(workbook: WorkbookUseCaseModel) =
         viewModelScope.launch {
-            userCommandUseCase.deleteWorkbook(workbook)
+            userWorkbookCommandUseCase.deleteWorkbook(workbook)
         }
 
     fun swapWorkbook(sourceWorkbookId: Long, destWorkbookId: Long) =
         viewModelScope.launch {
-            userCommandUseCase.swapWorkbooks(sourceWorkbookId, destWorkbookId)
+            userWorkbookCommandUseCase.swapWorkbooks(sourceWorkbookId, destWorkbookId)
         }
 
     private fun getNoFolderWorkbookList(

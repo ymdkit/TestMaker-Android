@@ -2,7 +2,8 @@ package com.example.ui.question
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.usecase.UserCommandUseCase
+import com.example.usecase.UserQuestionCommandUseCase
+import com.example.usecase.UserWorkbookCommandUseCase
 import com.example.usecase.WorkbookListWatchUseCase
 import com.example.usecase.WorkbookWatchUseCase
 import com.example.usecase.model.QuestionUseCaseModel
@@ -21,7 +22,8 @@ import kotlin.properties.Delegates
 class QuestionListViewModel @Inject constructor(
     private val workbookListWatchUseCase: WorkbookListWatchUseCase,
     private val workbookWatchUseCase: WorkbookWatchUseCase,
-    private val userCommandUseCase: UserCommandUseCase
+    private val userWorkbookCommandUseCase: UserWorkbookCommandUseCase,
+    private val userQuestionCommandUseCase: UserQuestionCommandUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState> =
@@ -71,12 +73,12 @@ class QuestionListViewModel @Inject constructor(
 
     fun resetWorkbookAchievement() =
         viewModelScope.launch {
-            userCommandUseCase.resetWorkbookAchievement(workbookId = workbookId)
+            userWorkbookCommandUseCase.resetWorkbookAchievement(workbookId = workbookId)
         }
 
     fun deleteQuestions(questionList: List<QuestionUseCaseModel>) =
         viewModelScope.launch {
-            userCommandUseCase.deleteQuestions(
+            userQuestionCommandUseCase.deleteQuestions(
                 workbookId = workbookId,
                 questionIdList = questionList.map { it.id }
             )
@@ -84,7 +86,7 @@ class QuestionListViewModel @Inject constructor(
 
     fun swapQuestions(sourceQuestionId: Long, destQuestionId: Long) =
         viewModelScope.launch {
-            userCommandUseCase.swapQuestions(
+            userQuestionCommandUseCase.swapQuestions(
                 workbookId = workbookId,
                 sourceQuestionId = sourceQuestionId,
                 destQuestionId = destQuestionId
@@ -96,7 +98,7 @@ class QuestionListViewModel @Inject constructor(
         questionList: List<QuestionUseCaseModel>
     ) =
         viewModelScope.launch {
-            userCommandUseCase.moveQuestionsToOtherWorkbook(
+            userQuestionCommandUseCase.moveQuestionsToOtherWorkbook(
                 sourceWorkbookId = workbookId,
                 destWorkbookId = destWorkbookId,
                 questionIdList = questionList.map { it.id }
@@ -108,7 +110,7 @@ class QuestionListViewModel @Inject constructor(
         questionList: List<QuestionUseCaseModel>
     ) =
         viewModelScope.launch {
-            userCommandUseCase.copyQuestionsToOtherWorkbook(
+            userQuestionCommandUseCase.copyQuestionsToOtherWorkbook(
                 sourceWorkbookId = workbookId,
                 destWorkbookId = destWorkbookId,
                 questionIdList = questionList.map { it.id }
@@ -118,7 +120,7 @@ class QuestionListViewModel @Inject constructor(
     fun copyQuestionInSameWorkbook(
         question: QuestionUseCaseModel
     ) = viewModelScope.launch {
-        userCommandUseCase.copyQuestionInSameWorkbook(
+        userQuestionCommandUseCase.copyQuestionInSameWorkbook(
             workbookId = workbookId,
             questionId = question.id
         )
@@ -129,7 +131,7 @@ class QuestionListViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(
             exportedWorkbook = Resource.Loading
         )
-        val result = userCommandUseCase.exportWorkbook(workbookId = workbookId)
+        val result = userWorkbookCommandUseCase.exportWorkbook(workbookId = workbookId)
         _uiState.value = _uiState.value.copy(
             exportedWorkbook = Resource.Success(value = result)
         )
