@@ -123,4 +123,17 @@ class UserCommandUseCase @Inject constructor(
             )
         }
     }
+
+    suspend fun copyQuestionInSameWorkbook(
+        workbookId: Long,
+        questionId: Long
+    ) {
+        val workbook = workBookRepository.getWorkbook(WorkbookId(workbookId))
+        val question = workbook.questionList.find { it.id.value == questionId } ?: return
+
+        workBookRepository.createQuestion(
+            workbookId = workbook.id,
+            request = CreateQuestionRequest.fromQuestion(question)
+        )
+    }
 }

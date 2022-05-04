@@ -334,4 +334,5 @@
     <string name="label_workbook">test</string>
     <string name="title_publish_workbook">publish test</string>
     <string name="button_publish_workbook">publish test</string>
+    <string name="msg_succes_copy_questions_in_same_workbook">copy succeed</string>
 </resources>
