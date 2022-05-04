@@ -48,9 +48,6 @@ class TestMakerRepository @Inject constructor(
         return Test.createFromRealmTest(test)
     }
 
-    suspend fun createTest(test: Test, overview: String, isPublic: Boolean) =
-        remote.createTest(test, overview, isPublic)
-
     suspend fun uploadWorkbook(test: Test, overview: String, isPublic: Boolean) =
         remote.createTest(test, overview, isPublic)
 
@@ -73,7 +70,4 @@ class TestMakerRepository @Inject constructor(
     fun setUser(user: FirebaseUser?) {
         remote.setUser(user)
     }
-
-    suspend fun getTestsByUserId(userId: String) = remote.getTestsByUserId(userId)
-
 }

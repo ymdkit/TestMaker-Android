@@ -58,31 +58,8 @@ class TestRepository @Inject constructor(
         refresh()
     }
 
-    fun create(test: Test, question: Question): Long {
-
-        val questionId = dataSource.generateQuestionId()
-        update(
-            test.copy(
-                questions = get(test.id).questions + listOf(
-                    question.copy(
-                        id = questionId,
-                        order = questionId.toInt()
-                    )
-                )
-            )
-        )
-
-        refresh()
-        return questionId
-    }
-
     fun update(question: Question) {
         dataSource.updateQuestion(question.toRealmQuestion())
-        refresh()
-    }
-
-    fun delete(question: Question) {
-        dataSource.deleteQuestion(question.toRealmQuestion())
         refresh()
     }
 }
