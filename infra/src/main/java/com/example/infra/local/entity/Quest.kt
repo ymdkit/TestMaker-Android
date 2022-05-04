@@ -1,8 +1,6 @@
 package com.example.infra.local.entity
 
-import com.example.domain.model.AnswerStatus
-import com.example.domain.model.Question
-import com.example.domain.model.QuestionId
+import com.example.domain.model.*
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -18,6 +16,7 @@ open class Quest : RealmObject() {
             when (question) {
                 is Question.WriteQuestion -> Quest().apply {
                     id = question.id.value
+                    type = QuestionType.WRITE.value
                     problem = question.problem
                     answer = question.answers.firstOrNull() ?: ""
                     explanation = question.explanation
@@ -28,6 +27,7 @@ open class Quest : RealmObject() {
                 }
                 is Question.SelectQuestion -> Quest().apply {
                     id = question.id.value
+                    type = QuestionType.SELECT.value
                     problem = question.problem
                     answer = question.answers.firstOrNull() ?: ""
                     explanation = question.explanation
@@ -40,6 +40,7 @@ open class Quest : RealmObject() {
                 }
                 is Question.CompleteQuestion -> Quest().apply {
                     id = question.id.value
+                    type = QuestionType.COMPLETE.value
                     problem = question.problem
                     explanation = question.explanation
                     imagePath = question.problemImageUrl
@@ -51,6 +52,7 @@ open class Quest : RealmObject() {
                 }
                 is Question.SelectCompleteQuestion -> Quest().apply {
                     id = question.id.value
+                    type = QuestionType.SELECT_COMPLETE.value
                     problem = question.problem
                     explanation = question.explanation
                     imagePath = question.problemImageUrl
