@@ -1,6 +1,10 @@
 package com.example.infra.local.entity
 
-import com.example.domain.model.*
+import com.example.core.QuestionType
+import com.example.domain.model.AnswerStatus
+import com.example.domain.model.CreateQuestionRequest
+import com.example.domain.model.Question
+import com.example.domain.model.QuestionId
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
@@ -13,57 +17,20 @@ open class Quest : RealmObject() {
 
     companion object {
         fun fromQuestion(question: Question) =
-            when (question) {
-                is Question.WriteQuestion -> Quest().apply {
-                    id = question.id.value
-                    type = QuestionType.WRITE.value
-                    problem = question.problem
-                    answer = question.answers.firstOrNull() ?: ""
-                    explanation = question.explanation
-                    imagePath = question.problemImageUrl
-                    correct = question.answerStatus == AnswerStatus.CORRECT
-                    solving = question.isAnswering
-                    order = question.order
-                }
-                is Question.SelectQuestion -> Quest().apply {
-                    id = question.id.value
-                    type = QuestionType.SELECT.value
-                    problem = question.problem
-                    answer = question.answers.firstOrNull() ?: ""
-                    explanation = question.explanation
-                    imagePath = question.problemImageUrl
-                    correct = question.answerStatus == AnswerStatus.CORRECT
-                    solving = question.isAnswering
-                    order = question.order
-                    setSelections(question.otherSelections.toTypedArray())
-                    auto = question.isAutoGenerateOtherSelections
-                }
-                is Question.CompleteQuestion -> Quest().apply {
-                    id = question.id.value
-                    type = QuestionType.COMPLETE.value
-                    problem = question.problem
-                    explanation = question.explanation
-                    imagePath = question.problemImageUrl
-                    correct = question.answerStatus == AnswerStatus.CORRECT
-                    solving = question.isAnswering
-                    order = question.order
-                    setAnswers(question.answers.toTypedArray())
-                    isCheckOrder = question.isCheckAnswerOrder
-                }
-                is Question.SelectCompleteQuestion -> Quest().apply {
-                    id = question.id.value
-                    type = QuestionType.SELECT_COMPLETE.value
-                    problem = question.problem
-                    explanation = question.explanation
-                    imagePath = question.problemImageUrl
-                    correct = question.answerStatus == AnswerStatus.CORRECT
-                    solving = question.isAnswering
-                    order = question.order
-                    setSelections(question.otherSelections.toTypedArray())
-                    setAnswers(question.answers.toTypedArray())
-                    isCheckOrder = question.isCheckAnswerOrder
-                    auto = question.isAutoGenerateOtherSelections
-                }
+            Quest().apply {
+                id = question.id.value
+                type = question.type.value
+                problem = question.problem
+                answer = question.answers.firstOrNull() ?: ""
+                explanation = question.explanation
+                imagePath = question.problemImageUrl
+                correct = question.answerStatus == AnswerStatus.CORRECT
+                solving = question.isAnswering
+                order = question.order
+                setSelections(question.otherSelections.toTypedArray())
+                setAnswers(question.answers.toTypedArray())
+                isCheckOrder = question.isCheckAnswerOrder
+                auto = question.isAutoGenerateOtherSelections
             }
 
         fun fromCreateQuestionRequest(questionId: Long, request: CreateQuestionRequest) =
@@ -125,74 +92,22 @@ open class Quest : RealmObject() {
     }
 
     fun toQuestion(): Question =
-        when (type) {
-            QuestionFormat.WRITE -> Question.WriteQuestion(
-                id = QuestionId(id),
-                problem = problem,
-                answers = listOf(answer),
-                explanation = explanation,
-                problemImageUrl = imagePath,
-                explanationImageUrl = "", // todo カラム追加
-                answerStatus = if (correct) AnswerStatus.CORRECT else AnswerStatus.INCORRECT, // todo 未解答状態への対応
-                isAnswering = solving,
-                order = order
-            )
-            QuestionFormat.SELECT -> Question.SelectQuestion(
-                id = QuestionId(id),
-                problem = problem,
-                answers = listOf(answer),
-                explanation = explanation,
-                problemImageUrl = imagePath,
-                explanationImageUrl = "", // todo カラム追加
-                answerStatus = if (correct) AnswerStatus.CORRECT else AnswerStatus.INCORRECT, // todo 未解答状態への対応
-                isAnswering = solving,
-                order = order,
-                otherSelections = selections.map { it.selection },
-                isAutoGenerateOtherSelections = auto
-            )
-            QuestionFormat.COMPLETE -> Question.CompleteQuestion(
-                id = QuestionId(id),
-                problem = problem,
-                explanation = explanation,
-                problemImageUrl = imagePath,
-                explanationImageUrl = "", // todo カラム追加
-                answerStatus = if (correct) AnswerStatus.CORRECT else AnswerStatus.INCORRECT, // todo 未解答状態への対応
-                isAnswering = solving,
-                order = order,
-                answers = answers.map { it.selection },
-                isCheckAnswerOrder = isCheckOrder
-            )
-            QuestionFormat.SELECT_COMPLETE -> Question.SelectCompleteQuestion(
-                id = QuestionId(id),
-                problem = problem,
-                explanation = explanation,
-                problemImageUrl = imagePath,
-                explanationImageUrl = "", // todo カラム追加
-                answerStatus = if (correct) AnswerStatus.CORRECT else AnswerStatus.INCORRECT, // todo 未解答状態への対応
-                isAnswering = solving,
-                order = order,
-                otherSelections = selections.map { it.selection },
-                isAutoGenerateOtherSelections = auto,
-                answers = answers.map { it.selection },
-                isCheckAnswerOrder = isCheckOrder
-            )
-            else -> Question.WriteQuestion(
-                id = QuestionId(id),
-                problem = "データが破損しています",
-                answers = listOf(answer),
-                explanation = explanation,
-                problemImageUrl = imagePath,
-                explanationImageUrl = "", // todo カラム追加
-                answerStatus = if (correct) AnswerStatus.CORRECT else AnswerStatus.INCORRECT, // todo 未解答状態への対応
-                isAnswering = solving,
-                order = order
-            )
-        }
-}
-
-object QuestionFormat {
-    const val WRITE = 0
-    const val SELECT = 1
-    const val COMPLETE = 2
-    const val SELECT_COMPLETE = 3
+        Question(
+            id = QuestionId(id),
+            type = QuestionType.valueOf(type),
+            problem = problem,
+            explanation = explanation,
+            problemImageUrl = imagePath,
+            explanationImageUrl = "", // todo カラム追加
+            answerStatus = if (correct) AnswerStatus.CORRECT else AnswerStatus.INCORRECT, // todo 未解答状態への対応
+            isAnswering = solving,
+            order = order,
+            otherSelections = selections.map { it.selection },
+            isAutoGenerateOtherSelections = auto,
+            answers = when (QuestionType.valueOf(type)) {
+                QuestionType.WRITE, QuestionType.SELECT -> listOf(answer)
+                QuestionType.COMPLETE, QuestionType.SELECT_COMPLETE -> answers.map { it.selection }
+            },
+            isCheckAnswerOrder = isCheckOrder
+        )
 }

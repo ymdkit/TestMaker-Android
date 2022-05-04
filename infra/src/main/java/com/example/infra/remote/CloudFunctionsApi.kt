@@ -1,7 +1,6 @@
 package com.example.infra.remote
 
 import com.example.domain.model.Question
-import com.example.domain.model.QuestionType
 import com.example.domain.model.Workbook
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -58,60 +57,19 @@ data class ExportQuestionRequest(
 ) {
     companion object {
         fun fromQuestion(question: Question) =
-            when (question) {
-                is Question.WriteQuestion -> ExportQuestionRequest(
-                    id = question.id.value,
-                    type = QuestionType.WRITE.value,
-                    question = question.problem,
-                    answer = question.answers.firstOrNull() ?: "",
-                    answers = question.answers,
-                    explanation = question.explanation,
-                    imagePath = question.problemImageUrl,
-                    others = listOf(),
-                    order = question.order,
-                    isAutoGenerateOthers = false,
-                    isCheckOrder = false
-                )
-                is Question.SelectQuestion -> ExportQuestionRequest(
-                    id = question.id.value,
-                    type = QuestionType.SELECT.value,
-                    question = question.problem,
-                    answer = question.answers.firstOrNull() ?: "",
-                    answers = question.answers,
-                    explanation = question.explanation,
-                    imagePath = question.problemImageUrl,
-                    others = question.otherSelections,
-                    order = question.order,
-                    isAutoGenerateOthers = question.isAutoGenerateOtherSelections,
-                    isCheckOrder = false
-                )
-                is Question.CompleteQuestion -> ExportQuestionRequest(
-                    id = question.id.value,
-                    type = QuestionType.COMPLETE.value,
-                    question = question.problem,
-                    answer = "",
-                    answers = question.answers,
-                    explanation = question.explanation,
-                    imagePath = question.problemImageUrl,
-                    others = listOf(),
-                    order = question.order,
-                    isAutoGenerateOthers = false,
-                    isCheckOrder = question.isCheckAnswerOrder
-                )
-                is Question.SelectCompleteQuestion -> ExportQuestionRequest(
-                    id = question.id.value,
-                    type = QuestionType.SELECT_COMPLETE.value,
-                    question = question.problem,
-                    answer = "",
-                    answers = question.answers,
-                    explanation = question.explanation,
-                    imagePath = question.problemImageUrl,
-                    others = question.otherSelections,
-                    order = question.order,
-                    isAutoGenerateOthers = question.isAutoGenerateOtherSelections,
-                    isCheckOrder = question.isCheckAnswerOrder
-                )
-            }
+            ExportQuestionRequest(
+                id = question.id.value,
+                type = question.type.value,
+                question = question.problem,
+                answer = "",
+                answers = question.answers,
+                explanation = question.explanation,
+                imagePath = question.problemImageUrl,
+                others = question.otherSelections,
+                order = question.order,
+                isAutoGenerateOthers = question.isAutoGenerateOtherSelections,
+                isCheckOrder = question.isCheckAnswerOrder
+            )
     }
 }
 
