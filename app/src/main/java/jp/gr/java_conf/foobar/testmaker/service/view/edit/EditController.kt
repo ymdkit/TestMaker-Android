@@ -2,8 +2,8 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
 import android.content.Context
 import com.airbnb.epoxy.EpoxyController
+import com.example.usecase.model.QuestionUseCaseModel
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.itemEmpty
 import jp.gr.java_conf.foobar.testmaker.service.itemQuestion
 
@@ -11,7 +11,7 @@ class EditController(private val context: Context) : EpoxyController() {
 
     private var listener: OnClickListener? = null
 
-    var questions: List<Question> = emptyList()
+    var questions: List<QuestionUseCaseModel> = emptyList()
         set(value) {
             field = value
             requestModelBuild()
@@ -23,14 +23,14 @@ class EditController(private val context: Context) : EpoxyController() {
             requestModelBuild()
         }
 
-    var selectedQuestions = listOf<Question>()
+    var selectedQuestions = listOf<QuestionUseCaseModel>()
         set(value) {
             field = value
             requestModelBuild()
         }
 
     interface OnClickListener {
-        fun onClickQuestion(question: Question)
+        fun onClickQuestion(question: QuestionUseCaseModel)
     }
 
     fun setOnClickListener(listener: OnClickListener) {
@@ -49,20 +49,20 @@ class EditController(private val context: Context) : EpoxyController() {
             val result =
                 if (searchWord.isNotEmpty())
                     questions.filter {
-                        it.question.contains(searchWord) || it.answer.contains(
-                            searchWord
-                        ) || it.answers.any { it.contains(searchWord) }
+                        it.problem.contains(searchWord) || it.answers.any { it.contains(searchWord) }
                     }
                 else questions
             result.forEachIndexed { index, it ->
                 itemQuestion {
                     id(it.id)
+                    questionId(it.id)
+                    problem(it.problem)
+                    answer(it.getSingleLineAnswer())
                     index((index + 1).toString())
-                    question(it)
                     onClick { _ ->
                         listener?.onClickQuestion(it)
                     }
-                    isSelected(selectedQuestions.any{ question -> it.id == question.id})
+                    isSelected(selectedQuestions.any { question -> it.id == question.id })
                 }
             }
         }
