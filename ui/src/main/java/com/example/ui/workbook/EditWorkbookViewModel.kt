@@ -31,7 +31,10 @@ class EditWorkbookViewModel @Inject constructor(
     fun setup(workbookId: Long) {
         this.workbookId = workbookId
         folderListWatchUseCase.setup(scope = viewModelScope)
-        workbookWatchUseCase.setup(workbookId)
+        workbookWatchUseCase.setup(
+            workbookId = workbookId,
+            scope = viewModelScope
+        )
 
         combine(
             workbookWatchUseCase.flow,
