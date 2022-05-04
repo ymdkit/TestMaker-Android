@@ -74,7 +74,7 @@ class HomeViewModel @Inject constructor(
 
     fun swapWorkbook(sourceWorkbookId: Long, destWorkbookId: Long) =
         viewModelScope.launch {
-            userCommandUseCase.swapWorkbook(sourceWorkbookId, destWorkbookId)
+            userCommandUseCase.swapWorkbooks(sourceWorkbookId, destWorkbookId)
         }
 
     private fun getNoFolderWorkbookList(
