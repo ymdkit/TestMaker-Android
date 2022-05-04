@@ -87,7 +87,6 @@ class QuestionListViewModel @Inject constructor(
     fun swapQuestions(sourceQuestionId: Long, destQuestionId: Long) =
         viewModelScope.launch {
             userQuestionCommandUseCase.swapQuestions(
-                workbookId = workbookId,
                 sourceQuestionId = sourceQuestionId,
                 destQuestionId = destQuestionId
             )
