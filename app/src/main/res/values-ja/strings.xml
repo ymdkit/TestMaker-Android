@@ -259,7 +259,7 @@
     <string name="hint_answer_write">解答</string>
     <string name="text_download_count">%1$s回ダウンロード</string>
     <string name="text_workbook_size">%1$s問</string>
-    <string name="button_create_wuestion">問題を作成する</string>
+    <string name="button_create_question">問題を作成する</string>
     <string name="header_optional">任意項目</string>
     <string name="header_required">必須項目</string>
     <string name="title_error_create_quesiton">入力エラー</string>
