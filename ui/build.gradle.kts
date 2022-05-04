@@ -52,4 +52,5 @@ dependencies {
     implementation(Dep.Compose.materialIconsExtended)
     implementation(Dep.PlayServices.ads)
     implementation(project(":usecase"))
+    implementation(project(":core"))
 }

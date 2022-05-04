@@ -40,4 +40,5 @@ dependencies {
     implementation(Dep.Coroutine.core)
 
     implementation(project(":domain"))
+    implementation(project(":core"))
 }

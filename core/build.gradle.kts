@@ -33,6 +33,4 @@ android {
 }
 
 dependencies {
-    implementation(Dep.Coroutine.core)
-    implementation(project(":core"))
 }

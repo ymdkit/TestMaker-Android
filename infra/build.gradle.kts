@@ -48,4 +48,5 @@ dependencies {
     implementation(Dep.AndroidX.preference)
 
     implementation(project(":domain"))
+    implementation(project(":core"))
 }

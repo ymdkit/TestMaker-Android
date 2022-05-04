@@ -168,6 +168,7 @@ dependencies {
     implementation(project(":ui"))
     implementation(project(":usecase")) // todo モジュール分割中の一時的な処置を削除する
     implementation(project(":infra"))
+    implementation(project(":core"))
 }
 repositories {
     mavenCentral()
