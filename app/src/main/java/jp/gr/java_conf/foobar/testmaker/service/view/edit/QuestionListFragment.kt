@@ -31,7 +31,6 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -245,16 +244,6 @@ class QuestionListFragment : Fragment() {
                 AppBarConfiguration(findNavController().graph)
             )
 
-            lifecycleScope.launch {
-                adViewModel.isRemovedAd.onEach {
-                    if (it) {
-                        adView.visibility = View.GONE
-                    } else {
-                        adView.loadAd(AdRequest.Builder().build())
-                    }
-                }
-            }
-
             initViews()
 
         }.root
@@ -262,6 +251,7 @@ class QuestionListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        adViewModel.setup()
         questionListViewModel.setup(workbookId = args.workbookId)
         questionListViewModel.load()
 
@@ -273,6 +263,14 @@ class QuestionListFragment : Fragment() {
                 val exportedWorkbook = it.exportedWorkbook.getOrNull() ?: return@onEach
                 shareExportedWorkbook(exportedWorkbook = exportedWorkbook)
 
+            }.launchIn(this)
+
+            adViewModel.isRemovedAd.onEach {
+                if (it) {
+                    binding.adView.visibility = View.GONE
+                } else {
+                    binding.adView.loadAd(AdRequest.Builder().build())
+                }
             }.launchIn(this)
         }
 
