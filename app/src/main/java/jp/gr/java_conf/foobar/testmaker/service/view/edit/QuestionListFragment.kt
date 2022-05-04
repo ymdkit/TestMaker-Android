@@ -16,6 +16,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.airbnb.epoxy.EpoxyTouchHelper
+import com.example.ui.core.AdViewModel
 import com.example.ui.question.QuestionListViewModel
 import com.example.usecase.model.QuestionUseCaseModel
 import com.google.android.gms.ads.AdRequest
@@ -24,13 +25,13 @@ import jp.gr.java_conf.foobar.testmaker.service.ItemQuestionBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentQuestionListBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -40,13 +41,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class QuestionListFragment : Fragment() {
 
+    private val args: QuestionListFragmentArgs by navArgs()
     private val questionListViewModel: QuestionListViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
     @Inject
     lateinit var logger: TestMakerLogger
-
-    @Inject
-    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     private val controller: EditController by lazy {
         EditController(requireContext()).apply {
@@ -216,8 +216,6 @@ class QuestionListFragment : Fragment() {
 
     private lateinit var binding: FragmentQuestionListBinding
 
-    private val args: QuestionListFragmentArgs by navArgs()
-
     private var actionMode: ActionMode? = null
 
     override fun onCreateView(
@@ -247,13 +245,14 @@ class QuestionListFragment : Fragment() {
                 AppBarConfiguration(findNavController().graph)
             )
 
-
-
-
-            if (sharedPreferenceManager.isRemovedAd) {
-                adView.visibility = View.GONE
-            } else {
-                adView.loadAd(AdRequest.Builder().build())
+            lifecycleScope.launch {
+                adViewModel.isRemovedAd.onEach {
+                    if (it) {
+                        adView.visibility = View.GONE
+                    } else {
+                        adView.loadAd(AdRequest.Builder().build())
+                    }
+                }
             }
 
             initViews()
