@@ -7,6 +7,9 @@ import com.example.infra.local.db.WorkbookDataSource
 import com.example.infra.local.entity.Quest
 import com.example.infra.local.entity.RealmCategory
 import com.example.infra.local.entity.RealmTest
+import com.example.infra.remote.CloudFunctionsApi
+import com.example.infra.remote.CloudFunctionsClient
+import com.example.infra.remote.ExportWorkbookRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
@@ -16,6 +19,8 @@ import javax.inject.Singleton
 class WorkbookRepositoryImpl @Inject constructor(
     private val workbookDataSource: WorkbookDataSource,
     private val folderDataSource: FolderDataSource,
+    @CloudFunctionsClient
+    private val cloudFunctionsApi: CloudFunctionsApi,
 ) : WorkBookRepository {
 
     private val _updateFolderListFlow: MutableSharedFlow<List<Folder>> =
@@ -102,6 +107,15 @@ class WorkbookRepositoryImpl @Inject constructor(
         workbookDataSource.deleteWorkbook(workbookId.value)
         refreshWorkbookList()
     }
+
+    override suspend fun exportWorkbook(workbook: Workbook) =
+        ExportedWorkbook(
+            value = cloudFunctionsApi.testToText(
+                workbook = ExportWorkbookRequest.fromWorkbook(
+                    workbook
+                )
+            ).text
+        )
 
     override suspend fun swapWorkbook(sourceWorkbook: Workbook, destWorkbook: Workbook) {
         workbookDataSource.createWorkbook(RealmTest.fromWorkbook(sourceWorkbook.copy(order = destWorkbook.order)))

@@ -57,6 +57,11 @@ class UserCommandUseCase @Inject constructor(
     suspend fun deleteWorkbook(workbook: WorkbookUseCaseModel) =
         workBookRepository.deleteWorkbook(WorkbookId(workbook.id))
 
+    suspend fun exportWorkbook(workbookId: Long): String {
+        val workbook = workBookRepository.getWorkbook(WorkbookId(workbookId))
+        return workBookRepository.exportWorkbook(workbook).value
+    }
+
     suspend fun swapWorkbooks(sourceWorkbookId: Long, destWorkbookId: Long) {
         val sourceWorkbook = workBookRepository.getWorkbook(WorkbookId(sourceWorkbookId))
         val destWorkbook = workBookRepository.getWorkbook(WorkbookId(destWorkbookId))
