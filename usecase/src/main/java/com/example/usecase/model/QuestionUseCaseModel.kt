@@ -14,6 +14,8 @@ sealed class QuestionUseCaseModel {
     abstract val isAnswering: Boolean
     abstract val order: Int
 
+    fun getSingleLineAnswer() = answers.joinToString(" ")
+
     data class WriteQuestionUseCaseModel(
         override val id: Long,
         override val problem: String,
