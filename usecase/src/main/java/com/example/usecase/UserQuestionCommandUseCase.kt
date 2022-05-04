@@ -19,17 +19,15 @@ class UserQuestionCommandUseCase @Inject constructor(
         workBookRepository.updateWorkbook(workbook.copy(questionList = newQuestionList))
     }
 
-    suspend fun swapQuestions(workbookId: Long, sourceQuestionId: Long, destQuestionId: Long) {
+    suspend fun swapQuestions(sourceQuestionId: Long, destQuestionId: Long) {
         val sourceQuestion =
             workBookRepository.getQuestion(questionId = QuestionId(sourceQuestionId))
         val destQuestion = workBookRepository.getQuestion(questionId = QuestionId(destQuestionId))
         workBookRepository.updateQuestion(
-            workbookId = WorkbookId(workbookId),
-            question = sourceQuestion.updated(order = destQuestion.order)
+            question = sourceQuestion.copy(order = destQuestion.order)
         )
         workBookRepository.updateQuestion(
-            workbookId = WorkbookId(workbookId),
-            question = destQuestion.updated(order = sourceQuestion.order)
+            question = destQuestion.copy(order = sourceQuestion.order)
         )
     }
 

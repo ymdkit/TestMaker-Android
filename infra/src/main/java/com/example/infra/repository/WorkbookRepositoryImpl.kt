@@ -149,7 +149,7 @@ class WorkbookRepositoryImpl @Inject constructor(
         refreshWorkbookList()
     }
 
-    override suspend fun updateQuestion(workbookId: WorkbookId, question: Question) {
+    override suspend fun updateQuestion(question: Question) {
         workbookDataSource.updateQuestion(Quest.fromQuestion(question))
         refreshWorkbookList()
     }
