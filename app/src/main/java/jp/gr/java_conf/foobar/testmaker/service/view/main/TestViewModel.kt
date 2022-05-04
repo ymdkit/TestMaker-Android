@@ -25,8 +25,4 @@ class TestViewModel @Inject constructor(
     fun create(test: Test, question: Question): Long = repository.create(test, question)
 
     fun update(question: Question) = repository.update(question)
-
-    fun delete(question: Question) {
-        repository.delete(question)
-    }
 }
