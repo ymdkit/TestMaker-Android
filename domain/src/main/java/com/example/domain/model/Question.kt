@@ -11,7 +11,8 @@ sealed class Question {
     abstract val isAnswering: Boolean
     abstract val order: Int
     abstract fun updated(
-        answerStatus: AnswerStatus
+        answerStatus: AnswerStatus = this.answerStatus,
+        order: Int = this.order
     ): Question
 
     data class WriteQuestion(
@@ -26,9 +27,11 @@ sealed class Question {
         override val order: Int
     ) : Question() {
         override fun updated(
-            answerStatus: AnswerStatus
+            answerStatus: AnswerStatus,
+            order: Int
         ): Question = copy(
-            answerStatus = answerStatus
+            answerStatus = answerStatus,
+            order = order
         )
     }
 
@@ -46,9 +49,11 @@ sealed class Question {
         val isAutoGenerateOtherSelections: Boolean
     ) : Question() {
         override fun updated(
-            answerStatus: AnswerStatus
+            answerStatus: AnswerStatus,
+            order: Int
         ): Question = copy(
-            answerStatus = answerStatus
+            answerStatus = answerStatus,
+            order = order
         )
     }
 
@@ -66,9 +71,11 @@ sealed class Question {
         val isCheckAnswerOrder: Boolean
     ) : Question() {
         override fun updated(
-            answerStatus: AnswerStatus
+            answerStatus: AnswerStatus,
+            order: Int
         ): Question = copy(
-            answerStatus = answerStatus
+            answerStatus = answerStatus,
+            order = order
         )
     }
 
@@ -88,9 +95,11 @@ sealed class Question {
         val isCheckAnswerOrder: Boolean
     ) : Question() {
         override fun updated(
-            answerStatus: AnswerStatus
+            answerStatus: AnswerStatus,
+            order: Int
         ): Question = copy(
-            answerStatus = answerStatus
+            answerStatus = answerStatus,
+            order = order
         )
     }
 }
