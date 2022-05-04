@@ -1,6 +1,5 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.edit
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -11,35 +10,27 @@ import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.airbnb.epoxy.EpoxyTouchHelper
-import com.example.infra.remote.CloudFunctionsApi
-import com.example.infra.remote.CloudFunctionsClient
-import com.example.infra.remote.ExportQuestionRequest
-import com.example.infra.remote.ExportWorkbookRequest
+import com.example.ui.question.QuestionListViewModel
+import com.example.usecase.model.QuestionUseCaseModel
 import com.google.android.gms.ads.AdRequest
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.ItemQuestionBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentQuestionListBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.Question
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
-import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.util.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 /**
@@ -49,11 +40,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class QuestionListFragment : Fragment() {
 
-    private val testViewModel: TestViewModel by viewModels()
-
-    @CloudFunctionsClient
-    @Inject
-    lateinit var service: CloudFunctionsApi
+    private val questionListViewModel: QuestionListViewModel by viewModels()
 
     @Inject
     lateinit var logger: TestMakerLogger
@@ -64,7 +51,7 @@ class QuestionListFragment : Fragment() {
     private val controller: EditController by lazy {
         EditController(requireContext()).apply {
             setOnClickListener(object : EditController.OnClickListener {
-                override fun onClickQuestion(question: Question) {
+                override fun onClickQuestion(question: QuestionUseCaseModel) {
 
                     if (actionMode != null) {
                         selectedQuestions = if (selectedQuestions.any { question.id == it.id }) {
@@ -75,7 +62,7 @@ class QuestionListFragment : Fragment() {
                     } else {
 
                         ListDialogFragment.newInstance(
-                            question.question,
+                            question.problem,
                             listOf(
                                 DialogMenuItem(
                                     title = getString(R.string.edit),
@@ -121,6 +108,9 @@ class QuestionListFragment : Fragment() {
         override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
             when (item?.itemId) {
                 R.id.action_move -> {
+                    val workbookList =
+                        questionListViewModel.uiState.value.workbookList.getOrNull() ?: return true
+
                     if (controller.selectedQuestions.isEmpty()) {
                         requireContext().showToast(getString(R.string.msg_empty_selected_questions))
                         return true
@@ -128,16 +118,21 @@ class QuestionListFragment : Fragment() {
 
                     ListDialogFragment.newInstance(
                         getString(R.string.msg_move_questions),
-                        testViewModel.tests.filterNot { it.id == test.id }.map {
+                        workbookList.filterNot { it.id == args.workbookId }.map {
                             DialogMenuItem(
-                                title = it.title,
+                                title = it.name,
                                 iconRes = R.drawable.ic_baseline_description_24,
                                 action = {
-                                    testViewModel.move(controller.selectedQuestions, it)
+
+                                    questionListViewModel.moveQuestionsToOtherWorkbook(
+                                        destWorkbookId = it.id,
+                                        questionList = controller.selectedQuestions
+                                    )
+
                                     requireContext().showToast(
                                         getString(
                                             R.string.msg_succes_move_questions,
-                                            it.title
+                                            it.name
                                         )
                                     )
                                     logger.logEvent("move_questions")
@@ -149,6 +144,9 @@ class QuestionListFragment : Fragment() {
                     return true
                 }
                 R.id.action_copy -> {
+                    val workbookList =
+                        questionListViewModel.uiState.value.workbookList.getOrNull() ?: return true
+
                     if (controller.selectedQuestions.isEmpty()) {
                         requireContext().showToast(getString(R.string.msg_empty_selected_questions))
                         return true
@@ -156,16 +154,19 @@ class QuestionListFragment : Fragment() {
 
                     ListDialogFragment.newInstance(
                         getString(R.string.msg_copy_questions),
-                        testViewModel.tests.filterNot { it.id == test.id }.map {
+                        workbookList.filterNot { it.id == args.workbookId }.map {
                             DialogMenuItem(
-                                title = it.title,
+                                title = it.name,
                                 iconRes = R.drawable.ic_baseline_description_24,
                                 action = {
-                                    testViewModel.copy(controller.selectedQuestions, it)
+                                    questionListViewModel.copyQuestionsToOtherWorkbook(
+                                        destWorkbookId = it.id,
+                                        questionList = controller.selectedQuestions
+                                    )
                                     requireContext().showToast(
                                         getString(
                                             R.string.msg_succes_copy_questions,
-                                            it.title
+                                            it.name
                                         )
                                     )
                                     logger.logEvent("copy_questions")
@@ -190,7 +191,8 @@ class QuestionListFragment : Fragment() {
                         getString(R.string.button_delete_confirm)
                     ) {
 
-                        testViewModel.delete(controller.selectedQuestions)
+                        questionListViewModel.deleteQuestions(controller.selectedQuestions)
+
                         requireContext().showToast(getString(R.string.msg_succes_delete_questions))
                         logger.logEvent("delete_questions")
                         mode?.finish()
@@ -215,7 +217,6 @@ class QuestionListFragment : Fragment() {
     private lateinit var binding: FragmentQuestionListBinding
 
     private val args: QuestionListFragmentArgs by navArgs()
-    private lateinit var test: Test
 
     private var actionMode: ActionMode? = null
 
@@ -223,15 +224,6 @@ class QuestionListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        test = testViewModel.tests.find { it.id == args.workbookId }!!
-
-        testViewModel.testsLiveData.observeNonNull(this) {
-            it.find { test.id == it.id }?.let {
-                test = it
-            }
-            controller.questions = test.questions.sortedBy { it.order }
-        }
 
         return DataBindingUtil.inflate<FragmentQuestionListBinding>(
             inflater,
@@ -245,7 +237,8 @@ class QuestionListFragment : Fragment() {
 
             fab.setOnClickListener {
                 findNavController().navigate(
-                    QuestionListFragmentDirections.actionQuestionListToCreateQuestion(test.id)
+                    QuestionListFragmentDirections
+                        .actionQuestionListToCreateQuestion(args.workbookId)
                 )
             }
 
@@ -253,6 +246,9 @@ class QuestionListFragment : Fragment() {
                 findNavController(),
                 AppBarConfiguration(findNavController().graph)
             )
+
+
+
 
             if (sharedPreferenceManager.isRemovedAd) {
                 adView.visibility = View.GONE
@@ -266,18 +262,33 @@ class QuestionListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        questionListViewModel.setup(workbookId = args.workbookId)
+        questionListViewModel.load()
+
+        lifecycleScope.launchWhenCreated {
+            questionListViewModel.uiState.onEach {
+                val workbook = it.workbook.getOrNull() ?: return@onEach
+                controller.questions = workbook.questionList
+
+                val exportedWorkbook = it.exportedWorkbook.getOrNull() ?: return@onEach
+                shareExportedWorkbook(exportedWorkbook = exportedWorkbook)
+
+            }.launchIn(this)
+        }
+
         binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_setting -> {
                     findNavController().navigate(
                         QuestionListFragmentDirections.actionQuestionListToEditWorkbook(
-                            workbookId = test.id
+                            workbookId = args.workbookId
                         )
                     )
                     true
                 }
                 R.id.action_export -> {
-                    convertTestToCSV(test)
+                    questionListViewModel.exportWorkbook()
                     true
                 }
                 android.R.id.home -> {
@@ -285,14 +296,8 @@ class QuestionListFragment : Fragment() {
                     true
                 }
                 R.id.action_reset_achievement -> {
-                    test.let {
-                        testViewModel.update(
-                            Test.createFromRealmTest(
-                                it.toRealmTest().apply {
-                                    resetAchievement()
-                                })
-                        )
-                    }
+                    questionListViewModel
+                        .resetWorkbookAchievement()
 
                     requireContext().showToast(getString(R.string.msg_reset_achievement))
                     true
@@ -335,11 +340,6 @@ class QuestionListFragment : Fragment() {
         actionMode?.finish()
     }
 
-    override fun onResume() {
-        super.onResume()
-        testViewModel.refresh()
-    }
-
     private fun initViews() {
         EpoxyTouchHelper
             .initDragging(controller)
@@ -357,88 +357,44 @@ class QuestionListFragment : Fragment() {
                     val to = controller.adapter.getModelAtPosition(toPosition)
 
                     if (from is ItemQuestionBindingModel_ && to is ItemQuestionBindingModel_) {
-                        testViewModel.swap(from.question(), to.question())
+                        questionListViewModel.swapQuestions(from.questionId(), to.questionId())
                     }
                 }
             })
     }
 
-    private fun convertTestToCSV(test: Test) {
-
-        requireActivity().executeJobWithDialog(
-            title = getString(R.string.converting),
-            task = {
-                withContext(Dispatchers.IO) {
-
-                    service.testToText(workbook = ExportWorkbookRequest(
-                        id = test.id,
-                        color = test.color,
-                        title = test.title,
-                        lang = if (Locale.getDefault().language == "ja") "ja" else "en",
-                        questions = test.questions.map {
-                            ExportQuestionRequest(
-                                id = it.id,
-                                question = it.question,
-                                answer = it.answer,
-                                explanation = it.explanation,
-                                imagePath = it.imagePath,
-                                answers = it.answers,
-                                others = it.others,
-                                type = it.type,
-                                isAutoGenerateOthers = it.isAutoGenerateOthers,
-                                order = it.order,
-                                isCheckOrder = it.isCheckOrder
-                            )
-                        }
-                    ))
-                }
-            },
-            onSuccess = {
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, it.text)
-                    type = "text/plain"
-                }
-
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                startActivity(shareIntent)
-            },
-            onFailure = {
-                requireContext().showErrorToast(it)
-            }
-        )
+    private fun shareExportedWorkbook(exportedWorkbook: String) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, exportedWorkbook)
+            type = "text/plain"
+        }
+        startActivity(Intent.createChooser(sendIntent, null))
     }
 
-    fun editQuestion(question: Question) {
+    fun editQuestion(question: QuestionUseCaseModel) {
         findNavController().navigate(
             QuestionListFragmentDirections.actionQuestionListToEditQuestion(
-                workbookId = test.id,
+                workbookId = args.workbookId,
                 questionId = question.id
             )
         )
     }
 
-    fun copyQuestion(question: Question) {
-        testViewModel.insertAt(test, question.copy(), question.order)
+    fun copyQuestion(question: QuestionUseCaseModel) {
+        questionListViewModel.copyQuestionInSameWorkbook(
+            question = question
+        )
+        requireContext().showToast(getString(R.string.msg_succes_copy_questions_in_same_workbook))
     }
 
-    fun deleteQuestion(question: Question) {
+    fun deleteQuestion(question: QuestionUseCaseModel) {
         ConfirmDangerDialogFragment.newInstance(
-            getString(R.string.message_delete, question.question),
+            getString(R.string.message_delete, question.problem),
             getString(R.string.button_delete_confirm)
         ) {
-            testViewModel.delete(question)
+            questionListViewModel.deleteQuestions(listOf(question))
         }.show(childFragmentManager, "TAG")
-    }
-
-    companion object {
-
-        fun startActivity(activity: Activity, id: Long) {
-            val intent = Intent(activity, QuestionListFragment::class.java).apply {
-                putExtra("id", id)
-            }
-            activity.startActivity(intent)
-        }
     }
 }
 
