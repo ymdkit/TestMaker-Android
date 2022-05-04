@@ -1,8 +1,6 @@
 package com.example.usecase
 
-import com.example.domain.model.AnswerStatus
-import com.example.domain.model.FolderId
-import com.example.domain.model.WorkbookId
+import com.example.domain.model.*
 import com.example.domain.repository.WorkBookRepository
 import com.example.usecase.model.FolderUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
@@ -56,11 +54,10 @@ class UserCommandUseCase @Inject constructor(
         )
     }
 
-
     suspend fun deleteWorkbook(workbook: WorkbookUseCaseModel) =
         workBookRepository.deleteWorkbook(WorkbookId(workbook.id))
 
-    suspend fun swapWorkbook(sourceWorkbookId: Long, destWorkbookId: Long) {
+    suspend fun swapWorkbooks(sourceWorkbookId: Long, destWorkbookId: Long) {
         val sourceWorkbook = workBookRepository.getWorkbook(WorkbookId(sourceWorkbookId))
         val destWorkbook = workBookRepository.getWorkbook(WorkbookId(destWorkbookId))
         workBookRepository.swapWorkbook(sourceWorkbook, destWorkbook)
@@ -71,5 +68,59 @@ class UserCommandUseCase @Inject constructor(
         val newQuestionList =
             workbook.questionList.map { it.updated(answerStatus = AnswerStatus.UNANSWERED) }
         workBookRepository.updateWorkbook(workbook.copy(questionList = newQuestionList))
+    }
+
+    suspend fun deleteQuestions(workbookId: Long, questionIdList: List<Long>) {
+        val workbook = workBookRepository.getWorkbook(WorkbookId(workbookId))
+        val newQuestionList =
+            workbook.questionList.filterNot { questionIdList.contains(it.id.value) }
+        workBookRepository.updateWorkbook(workbook.copy(questionList = newQuestionList))
+    }
+
+    suspend fun swapQuestions(workbookId: Long, sourceQuestionId: Long, destQuestionId: Long) {
+        val sourceQuestion =
+            workBookRepository.getQuestion(questionId = QuestionId(sourceQuestionId))
+        val destQuestion = workBookRepository.getQuestion(questionId = QuestionId(destQuestionId))
+        workBookRepository.updateQuestion(
+            workbookId = WorkbookId(workbookId),
+            question = sourceQuestion.updated(order = destQuestion.order)
+        )
+        workBookRepository.updateQuestion(
+            workbookId = WorkbookId(workbookId),
+            question = destQuestion.updated(order = sourceQuestion.order)
+        )
+    }
+
+    suspend fun moveQuestionsToOtherWorkbook(
+        sourceWorkbookId: Long,
+        destWorkbookId: Long,
+        questionIdList: List<Long>
+    ) {
+        val sourceWorkbook = workBookRepository.getWorkbook(WorkbookId(sourceWorkbookId))
+        val destWorkbook = workBookRepository.getWorkbook(WorkbookId(destWorkbookId))
+        val questionList =
+            sourceWorkbook.questionList.filter { questionIdList.contains(it.id.value) }
+
+        workBookRepository.updateWorkbook(sourceWorkbook.copy(questionList = sourceWorkbook.questionList.filterNot {
+            questionIdList.contains(it.id.value)
+        }))
+        workBookRepository.updateWorkbook(destWorkbook.copy(questionList = destWorkbook.questionList + questionList))
+    }
+
+    suspend fun copyQuestionsToOtherWorkbook(
+        sourceWorkbookId: Long,
+        destWorkbookId: Long,
+        questionIdList: List<Long>
+    ) {
+        val sourceWorkbook = workBookRepository.getWorkbook(WorkbookId(sourceWorkbookId))
+        val questionList =
+            sourceWorkbook.questionList.filter { questionIdList.contains(it.id.value) }
+
+        questionList.forEach {
+            workBookRepository.createQuestion(
+                workbookId = WorkbookId(value = destWorkbookId),
+                request = CreateQuestionRequest.fromQuestion(it)
+            )
+        }
     }
 }

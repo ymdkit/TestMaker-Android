@@ -65,6 +65,21 @@ open class Quest : RealmObject() {
                     auto = question.isAutoGenerateOtherSelections
                 }
             }
+
+        fun fromCreateQuestionRequest(questionId: Long, request: CreateQuestionRequest) =
+            Quest().apply {
+                this.id = questionId
+                this.problem = request.problem
+                this.answer = request.answers.firstOrNull() ?: ""
+                this.type = request.questionType.value
+                this.explanation = request.explanation
+                this.imagePath = request.problemImageUrl
+                this.order = questionId.toInt()
+                this.setSelections(request.otherSelections.toTypedArray())
+                this.setAnswers(request.answers.toTypedArray())
+                this.isCheckOrder = request.isCheckAnswerOrder
+                this.auto = request.isAutoGenerateOtherSelections
+            }
     }
 
     @PrimaryKey
