@@ -19,8 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
@@ -28,11 +27,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import com.example.ui.question.QuestionImage
 import com.google.firebase.storage.FirebaseStorage
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.modules.GlideApp
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.CropImageDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.ImageStore
 import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.Dispatchers
@@ -41,38 +42,43 @@ import java.io.IOException
 
 @Composable
 fun ContentEditImageQuestion(
-    imageUrl: String,
+    image: QuestionImage,
     fragmentManager: FragmentManager,
-    value: Bitmap?,
-    onValueChange: (Bitmap?) -> Unit
-){
+    onValueChange: (QuestionImage) -> Unit
+) {
     val context = LocalContext.current
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
-
-            val parcelFileDescriptor = context.contentResolver.openFileDescriptor(it, "r")
-            val fileDescriptor = parcelFileDescriptor!!.fileDescriptor
-            BitmapFactory.decodeFileDescriptor(fileDescriptor)?.let {
-                CropImageDialogFragment(
-                    bitmap = it,
-                    onCrop = { newBitmap ->
-                        onValueChange(newBitmap)
-                    }
-                ).show(fragmentManager, "")
-            }
-            parcelFileDescriptor.close()
-        }
+    var bitmap: Bitmap? by remember {
+        mutableStateOf(null)
     }
+
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+
+                val parcelFileDescriptor = context.contentResolver.openFileDescriptor(it, "r")
+                val fileDescriptor = parcelFileDescriptor!!.fileDescriptor
+                BitmapFactory.decodeFileDescriptor(fileDescriptor)?.let {
+                    CropImageDialogFragment(
+                        bitmap = it,
+                        onCrop = { newBitmap ->
+                            bitmap = newBitmap
+                        }
+                    ).show(fragmentManager, "")
+                }
+                parcelFileDescriptor.close()
+            }
+        }
 
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview(),
         onResult = { bitmap: Bitmap? ->
-            bitmap?.let{
+            bitmap?.let {
                 CropImageDialogFragment(
                     bitmap = it,
                     onCrop = { newBitmap ->
-                        onValueChange(newBitmap)
+                        val path = ImageStore().saveImage(newBitmap, context = context)
+                        onValueChange(QuestionImage.LocalImage(path = path))
                     }
                 ).show(fragmentManager, "")
             }
@@ -80,39 +86,44 @@ fun ContentEditImageQuestion(
     )
 
     val askCameraPermitLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-        , onResult = { isGranted: Boolean ->
+        contract = ActivityResultContracts.RequestPermission(), onResult = { isGranted: Boolean ->
             if (isGranted) {
                 CameraLauncher().takePicture(context) {
                     takePictureLauncher.launch(null)
                 }
             } else {
-                context.showToast(context.getString(R.string.msg_camera_not_granted), Toast.LENGTH_LONG)
+                context.showToast(
+                    context.getString(R.string.msg_camera_not_granted),
+                    Toast.LENGTH_LONG
+                )
             }
         }
     )
 
-    LaunchedEffect(Unit){
-        if(imageUrl.isNotEmpty()){
-            if (imageUrl.contains("/")){
+    LaunchedEffect(Unit) {
+        when (image) {
+            is QuestionImage.Empty -> {
+                bitmap = null
+            }
+            is QuestionImage.FireStoreImage -> {
                 val storage = FirebaseStorage.getInstance()
-                val storageRef = storage.reference.child(imageUrl)
+                val storageRef = storage.reference.child(image.ref)
                 val target = GlideApp.with(context).asBitmap().load(storageRef).submit()
 
-                try {
-                    withContext(Dispatchers.IO){
-                        onValueChange(target.get())
+                withContext(Dispatchers.IO) {
+                    try {
+                        bitmap = (target.get())
+                    } catch (e: Exception) {
+                        Log.d(this.javaClass.name, "${e.message}")
                     }
-                } catch (e: Exception) {
-                    Log.d(this.javaClass.name,"${e.message}")
                 }
-
-            }else{
+            }
+            is QuestionImage.LocalImage -> {
                 try {
-                    val file = context.getFileStreamPath(imageUrl)
-                    onValueChange(BitmapFactory.decodeFile(file.absolutePath))
+                    val file = context.getFileStreamPath(image.path)
+                    bitmap = BitmapFactory.decodeFile(file.absolutePath)
                 } catch (e: IOException) {
-                    Log.d(this.javaClass.name,"${e.message}")
+                    Log.d(this.javaClass.name, "${e.message}")
                 }
             }
         }
@@ -154,7 +165,7 @@ fun ContentEditImageQuestion(
                         title = context.getString(R.string.button_delete_image),
                         iconRes = R.drawable.ic_delete_white,
                         action = {
-                            onValueChange(null)
+                            onValueChange(QuestionImage.Empty)
                         })
                 )
             ).show(
@@ -173,7 +184,7 @@ fun ContentEditImageQuestion(
             color = MaterialTheme.colors.onSurface
         )
         Spacer(modifier = Modifier.weight(weight = 1f, fill = true))
-        value?.let {
+        bitmap?.let {
             Image(bitmap = it.asImageBitmap(), contentDescription = "")
         } ?: run {
             Icon(Icons.Default.AddAPhoto, contentDescription = "add photo")
