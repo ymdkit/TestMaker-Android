@@ -1,5 +1,6 @@
 package com.example.usecase
 
+import com.example.core.QuestionType
 import com.example.domain.model.CreateQuestionRequest
 import com.example.domain.model.QuestionId
 import com.example.domain.model.WorkbookId
@@ -11,6 +12,61 @@ import javax.inject.Singleton
 class UserQuestionCommandUseCase @Inject constructor(
     private val workBookRepository: WorkBookRepository
 ) {
+
+    suspend fun createQuestion(
+        workbookId: Long,
+        type: Int,
+        problem: String,
+        answers: List<String>,
+        explanation: String,
+        problemImageUrl: String,
+        explanationImageUrl: String,
+        otherSelections: List<String>,
+        isAutoGenerateOtherSelections: Boolean,
+        isCheckAnswerOrder: Boolean
+    ) =
+        workBookRepository.createQuestion(
+            workbookId = WorkbookId(workbookId),
+            request = CreateQuestionRequest(
+                questionType = QuestionType.valueOf(value = type),
+                problem = problem,
+                answers = answers,
+                explanation = explanation,
+                problemImageUrl = problemImageUrl,
+                explanationImageUrl = explanationImageUrl,
+                otherSelections = otherSelections,
+                isAutoGenerateOtherSelections = isAutoGenerateOtherSelections,
+                isCheckAnswerOrder = isCheckAnswerOrder
+            )
+        )
+
+    suspend fun updateQuestionContents(
+        questionId: Long,
+        type: QuestionType,
+        problem: String,
+        answers: List<String>,
+        explanation: String,
+        problemImageUrl: String,
+        explanationImageUrl: String,
+        otherSelections: List<String>,
+        isAutoGenerateOtherSelections: Boolean,
+        isCheckAnswerOrder: Boolean
+    ) {
+        val question = workBookRepository.getQuestion(QuestionId(questionId))
+        workBookRepository.updateQuestion(
+            question.copy(
+                type = type,
+                problem = problem,
+                answers = answers,
+                explanation = explanation,
+                problemImageUrl = problemImageUrl,
+                explanationImageUrl = explanationImageUrl,
+                otherSelections = otherSelections,
+                isAutoGenerateOtherSelections = isAutoGenerateOtherSelections,
+                isCheckAnswerOrder = isCheckAnswerOrder
+            )
+        )
+    }
 
     suspend fun deleteQuestions(workbookId: Long, questionIdList: List<Long>) {
         val workbook = workBookRepository.getWorkbook(WorkbookId(workbookId))
