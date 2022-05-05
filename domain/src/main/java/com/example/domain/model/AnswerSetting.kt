@@ -8,6 +8,7 @@ data class AnswerSetting(
     val questionCondition: QuestionCondition,
     val isSelfScoring: Boolean,
     val isAlwaysShowExplanation: Boolean,
+    val isCaseInsensitive: Boolean,
     val isPlaySound: Boolean,
     val isShowAnswerSettingDialog: Boolean,
     val questionCount: Int,

@@ -10,6 +10,7 @@ data class AnswerSettingUseCaseModel(
     val isSelfScoring: Boolean,
     val isAlwaysShowExplanation: Boolean,
     val isPlaySound: Boolean,
+    val isCaseInsensitive: Boolean,
     val isShowAnswerSettingDialog: Boolean,
     val questionCount: Int,
     val startPosition: Int,
@@ -24,6 +25,7 @@ data class AnswerSettingUseCaseModel(
                 isAlwaysShowExplanation = setting.isAlwaysShowExplanation,
                 isPlaySound = setting.isPlaySound,
                 isShowAnswerSettingDialog = setting.isShowAnswerSettingDialog,
+                isCaseInsensitive = setting.isCaseInsensitive,
                 questionCount = setting.questionCount,
                 startPosition = setting.startPosition
             )
@@ -37,6 +39,7 @@ data class AnswerSettingUseCaseModel(
             isSelfScoring = isSelfScoring,
             isAlwaysShowExplanation = isAlwaysShowExplanation,
             isPlaySound = isPlaySound,
+            isCaseInsensitive = isCaseInsensitive,
             isShowAnswerSettingDialog = isShowAnswerSettingDialog,
             questionCount = questionCount,
             startPosition = startPosition

@@ -39,6 +39,7 @@ class PreferenceRepositoryImpl @Inject constructor(
             isSelfScoring = preference.isSelfScoring,
             isAlwaysShowExplanation = preference.isAlwaysShowExplanation,
             isPlaySound = preference.isPlaySound,
+            isCaseInsensitive = preference.isCaseInsensitive,
             isShowAnswerSettingDialog = preference.isShowAnswerSettingDialog,
             // todo 設定値を変更できるようにする
             questionCount = preference.questionCount,
@@ -52,6 +53,7 @@ class PreferenceRepositoryImpl @Inject constructor(
         preference.isSelfScoring = answerSetting.isSelfScoring
         preference.isAlwaysShowExplanation = answerSetting.isAlwaysShowExplanation
         preference.isPlaySound = answerSetting.isPlaySound
+        preference.isCaseInsensitive = answerSetting.isCaseInsensitive
         preference.isShowAnswerSettingDialog = answerSetting.isShowAnswerSettingDialog
         preference.questionCount = answerSetting.questionCount
         preference.startPosition = answerSetting.startPosition
