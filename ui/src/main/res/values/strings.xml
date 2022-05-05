@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add">add</string>
+    <string name="hint_explanation">explanation</string>
+    <string name="hint_answer">answer</string>
+    <string name="hint_question">question</string>
+    <string name="hint_other">other choice</string>
+    <string name="action_import">import file</string>
+    <string name="action_license">license</string>
+    <string name="action_next">next</string>
+    <string name="action_other">other apps</string>
+    <string name="app_name">TestMaker</string>
+    <string name="cancel">cancel</string>
+    <string name="confirm">confirm</string>
+    <string name="delete">delete</string>
+    <string name="edit">edit</string>
+    <string name="help">help</string>
+    <string name="load">load</string>
+    <string name="menu">menu</string>
+    <string name="message_delete">delete %1$s ?</string>
+    <string name="message_delete_exam">delete %1$s ?</string>
+    <string name="message_delete_sound">sound</string>
+    <string name="message_null_number">please input number</string>
+    <string name="message_null_questions">\"please add questions\"</string>
+    <string name="message_null_wrongs">wrong is nothing</string>
+    <string name="message_random">random order</string>
+    <string name="message_self">judge self</string>
+    <string name="message_success_load">loaded %1$s</string>
+    <string name="message_switch_question">exchange question for answer</string>
+    <string name="message_wrong_only">only wrong questions</string>
+    <string name="number_exams">%1$d tests</string>
+    <string name="number_questions">quantity</string>
+    <string name="play">study</string>
+    <string name="retry">retry</string>
+    <string name="share">share</string>
+    <string name="title_activity_edit">edit</string>
+    <string name="trim">trim</string>
+    <string name="way">option</string>
+    <string-array name="sort_exam">
+        <item>alphabetical(descending)</item>
+        <item>alphabetical(ascending)</item>
+        <item>latest</item>
+    </string-array>
+
+    <string-array name="action_image">
+        <item>camera</item>
+        <item>gallery</item>
+        <item>delete</item>
+    </string-array>
+
+    <string-array name="action_reload">
+        <item>all</item>
+        <item>wrong only</item>
+    </string-array>
+
+    <string-array name="action_share">
+        <item>share link</item>
+        <item>convert to CSV</item>
+    </string-array>
+
+    <string-array name="sort_online">
+        <item>number of downloaded (descending)</item>
+        <item>upload date (descending)</item>
+        <item>upload date (ascending)</item>
+    </string-array>
+
+    <string-array name="actions_question">
+        <item>move to</item>
+        <item>copy to</item>
+    </string-array>
+
+    <string-array name="upload_setting_study_plus">
+        <item>not upload</item>
+        <item>auto upload</item>
+        <item>manual upload</item>
+    </string-array>
+
+    <string-array name="play_font_size">
+        <item>normal</item>
+        <item>large</item>
+    </string-array>
+
+    <string name="config">config</string>
+    <string name="search">search</string>
+    <string name="ok">OK</string>
+    <string name="number">No.%1$s</string>
+    <string name="number_existing_questions">%1$d / %2$d solved</string>
+    <string name="info">info</string>
+    <string name="hint_user_name">name</string>
+    <string name="login">log in</string>
+    <string name="login_successed">login success</string>
+    <string name="hint_overview">overview</string>
+    <string name="message_non_exist_test">create test yourself</string>
+    <string name="num_questions">%1$d questions</string>
+    <string name="always_review">show explanation when you correct</string>
+    <string name="test">test</string>
+    <string name="msg_download_study_plus">download latest studyplus from Play store</string>
+    <string name="msg_connect_success">success</string>
+    <string name="msg_upload_study_plus">success upload to Studyplus</string>
+    <string name="action_remove_ad">remove ad</string>
+    <string name="alrady_removed_ad">already parchased</string>
+    <string name="error">loading error</string>
+    <string name="case_insensitive">case-insensitive</string>
+    <string name="position_start">start</string>
+    <string name="message_null_start">input start position</string>
+    <string name="reset_achievement">reset achievement</string>
+    <string name="msg_reset_achievement">reset achievement</string>
+    <string name="write">write</string>
+    <string name="select">select</string>
+    <string name="complete">answers</string>
+    <string name="select_complete">select answers</string>
+    <string name="start">start</string>
+    <string name="is_random">random order</string>
+    <string name="text_info_creator">creator: %1$s</string>
+    <string name="text_info_created_at">upload: %1$s</string>
+    <string name="text_info_overview">overview: %1$s</string>
+    <string name="msg_not_login">please login</string>
+    <string name="logout">logout</string>
+    <string name="msg_logout">logout this service?</string>
+    <string name="report">report</string>
+    <string name="report_subject">report of test [id: %1$s]</string>
+    <string name="report_body" />
+    <string name="msg_test_upload">upload success</string>
+    <string name="setting">setting</string>
+    <string name="setting_sound">sound</string>
+    <string name="preference_group_other">other</string>
+    <string name="summary_setting_reverse_answer" />
+    <string name="setting_show_dialog">show dialog before play</string>
+    <string name="preference_group_study_plus">Studyplus</string>
+    <string name="preference_study_plus">Connect Studyplus</string>
+    <string name="preference_post_study_plus">post your study</string>
+    <string name="version_app">アプリのバージョン</string>
+    <string name="uploading">upload now</string>
+    <string name="downloading">download</string>
+    <string name="msg_success_download_test">download %1$s</string>
+    <string name="msg_share_test">share %1$s \n %2$s</string>
+    <string name="purchase_canceled">canceled</string>
+    <string name="sku_remove_ad">android.test.purchased</string>
+    <string name="menu_feedback">feedback</string>
+    <string name="email_subject_feedback">feedback</string>
+    <string name="email_body_feedback">It would be very helpful if you could provide a description of what you did and what you did with the screenshot. \n\n\n\n\n Android SDK%1$s\nApp version %2$s </string>
+    <string name="empty_test">make your first test</string>
+    <string name="title_activity_edit_question">edit question</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hint_auto">auto generate</string>
+    <string name="empty_question">make your first question</string>
+    <string name="judge_question">OK</string>
+    <string name="label_answer">answer</string>
+    <string name="label_explanation">explanation</string>
+    <string name="empty" />
+    <string name="label_your_answer">your answer</string>
+    <string name="judge_correct">Good!</string>
+    <string name="judge_incorrect">oops!</string>
+    <string name="self_judge_correct">correct</string>
+    <string name="self_judge_incorrect">incorrect</string>
+    <string name="label_result">result</string>
+    <string name="home">home</string>
+    <string name="label_result_questions">questions</string>
+    <string name="menu_upload_studyplus">upload studyplus</string>
+    <string name="msg_loading">now loading</string>
+    <string name="network_error">network error</string>
+    <string name="tab_local">device</string>
+    <string name="tab_remote">online</string>
+    <string name="msg_please_login">please login</string>
+    <string name="preference_group_account">account</string>
+    <string name="setting_user_name">user name</string>
+    <string name="msg_update_user_name">update user name</string>
+    <string name="empty_uploaded_test">upload your first test</string>
+    <string name="converting">convert to csv</string>
+    <string name="title_activity_upload_test">upload test</string>
+    <string name="upload_test">upload</string>
+    <string name="label_spinner_tests_for_upload">select test</string>
+    <string name="label_setting_public">publicity</string>
+    <string name="check_private">private (need to watch Ad)</string>
+    <string name="load_ad">loading_ad</string>
+    <string name="client_network_error">connect internet</string>
+    <string name="title_dialog_private">Publishing Setting</string>
+    <string name="msg_dialog_private">you can use this function by watching Ad</string>
+    <string name="label_public">public</string>
+    <string name="label_private">private</string>
+    <string name="folder">Folder</string>
+    <string name="download">download</string>
+    <string name="copy_question">copy</string>
+    <string name="msg_canceled">canceled</string>
+    <string name="edit_category_name">edit name</string>
+    <string name="message_delete_category">delete %1$s ?</string>
+    <string name="hint_category">folder name</string>
+    <string name="title_dialog_edit_category">edit folder name</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="group_list_fragment_label">GroupList</string>
+    <string name="group_detail_fragment_label">Group</string>
+    <string name="group">group</string>
+    <string name="title_create_group">create group</string>
+    <string name="hint_group_name">group name</string>
+    <string name="msg_success_create_group">group created</string>
+    <string name="msg_not_login_in_group">if you login, you can create groups</string>
+    <string name="msg_success_delete_test">test deleted</string>
+    <string name="upload_group_test_fragment_label">upload test</string>
+    <string name="history_test_fragment_label">history</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="invite_group">invite group</string>
+    <string name="rename_group">rename group</string>
+    <string name="delete_group">delete group</string>
+    <string name="msg_delete_group">delete group %1$s</string>
+    <string name="msg_success_delete_group">delete succeess</string>
+    <string name="msg_invite_group">please join group %1$s \n %2$s</string>
+    <string name="empty_group">make your first group!</string>
+    <string name="title_rename_group">rename group</string>
+    <string name="msg_success_rename_group">rename success</string>
+    <string name="exit_group">exit</string>
+    <string name="msg_exit_group">exit %1$s ?</string>
+    <string name="msg_success_exit_group">exit group success</string>
+    <string name="msg_group_deleted">this group already deleted</string>
+    <string name="history">history</string>
+    <string name="empty_histories">no histories</string>
+    <string name="section_history">histories</string>
+    <string name="item_title_history"> %1$s corrects %3$d / %2$d</string>
+    <string name="msg_failure_invite_group">faikure to create link</string>
+    <string name="msg_creating_invite_group_link">creating link</string>
+    <string name="msg_failure_share_test">failure to create link</string>
+    <string name="msg_creating_share_test_link">creating link</string>
+    <string name="msg_failure_download_test">failure to download test</string>
+    <string name="msg_failure_delete_test">failure to delete test</string>
+    <string name="hint_category_name">folder name</string>
+    <string name="msg_empty_text">please input</string>
+    <string name="title_dialog_edit_user_name">edit username</string>
+    <string name="title_activity_compose_result">ComposeResultActivity</string>
+    <string name="result_dialog_item_retry_all">All Questions</string>
+    <string name="result_dialog_item_retry_only_incorrect">Only Incorect Questions</string>
+    <string name="play_dialog_confirm_interrupt">Do you want to interrupt your answer?</string>
+    <string name="upload_dialog_already_uploaded">already uploaded this test</string>
+    <string name="upload_dialog_overwrite">overwrite</string>
+    <string name="upload_dialog_upload_as_other_test">upload as other question</string>
+    <string name="app_description">TestMaker is application for making your own tests</string>
+    <string name="msg_success_delete_category">category deleted</string>
+    <string name="button_delete_confirm">delete</string>
+    <string name="menu_export">export</string>
+    <string name="msg_success_login">login success</string>
+    <string name="detail">info</string>
+    <string name="user_name_online">creator: %1$s</string>
+    <string name="date_online">create: %1$s</string>
+    <string name="overview_online">overview: %1$s</string>
+    <string name="title_activity_public_tests">PublicTestsActivity</string>
+    <string name="label_public_tests">public tests</string>
+    <string name="menu_select">select</string>
+    <string name="menu_delete">delete</string>
+    <string name="msg_delete_selected_questions">delete all questions?</string>
+    <string name="msg_succes_delete_questions">deleted questions</string>
+    <string name="menu_move">move</string>
+    <string name="msg_move_questions">select destination to move</string>
+    <string name="msg_succes_move_questions">moved questions to %1$s</string>
+    <string name="menu_copy">copy</string>
+    <string name="msg_copy_questions">select destination to copy</string>
+    <string name="msg_succes_copy_questions">copied success to %1$s</string>
+    <string name="msg_empty_selected_questions">select questions</string>
+    <string name="msg_test_upload_divided">Due to the large number of problems, it has been split and uploaded.</string>
+    <string name="title_page_search">search</string>
+    <string name="title_page_home">home</string>
+    <string name="title_page_group">group</string>
+    <string name="title_page_settings">settings</string>
+    <string name="msg_empty_published_workbooks">no tests are exists</string>
+    <string name="msg_remove_ad_success">removed ad. please restart.</string>
+    <string name="title_activity_play">answer test</string>
+    <string name="msg_empty_question">please edit question settings (no questions are exist)</string>
+    <string name="no_answer">no_answer</string>
+    <string name="hint_answer_write">answer</string>
+    <string name="text_download_count">%1$s downloads</string>
+    <string name="text_workbook_size">%1$s questions</string>
+    <string name="button_create_question">create question</string>
+    <string name="header_optional">optional</string>
+    <string name="header_required">required</string>
+    <string name="title_error_create_quesiton">error</string>
+    <string name="msg_error_create_quesiton">input required forms</string>
+    <string name="msg_create_question">create success</string>
+    <string name="button_add_image">add image</string>
+    <string name="title_image_menu">add image</string>
+    <string name="button_take_photo">take photo</string>
+    <string name="button_select_gallery">select gallery</string>
+    <string name="button_delete_image">delete image</string>
+    <string name="msg_update_question">update success</string>
+    <string name="button_update_question">save</string>
+    <string name="picker_wrong_size">wrong choices</string>
+    <string name="picker_answers_size">answers</string>
+    <string name="title_activity_create_question">create question</string>
+    <string name="header_other_settings">other settings</string>
+    <string name="switch_is_check_order">check order</string>
+    <string name="switch_is_auto_generate_others">auto generate other selections</string>
+    <string name="msg_camera_not_granted">no permssion to use camera</string>
+    <string name="title_activity_create_workbook">create workbook</string>
+    <string name="hint_workbook_name">name</string>
+    <string name="button_create_workbook">create test</string>
+    <string name="picker_color">color</string>
+    <string name="red">red</string>
+    <string name="orange">orange</string>
+    <string name="yellow">yellow</string>
+    <string name="green">green</string>
+    <string name="dark_green">dark_green</string>
+    <string name="blue">blue</string>
+    <string name="navy">navy</string>
+    <string name="purple">purple</string>
+    <string name="title_error_create_workbook">error</string>
+    <string name="msg_error_create_workbook">please input title</string>
+    <string name="picker_folder">folder</string>
+    <string name="new_folder">new folder</string>
+    <string name="fragment_create_workbook">create workbook</string>
+    <string name="fragment_create_folder">create folder</string>
+    <string name="title_error_create_folder">error</string>
+    <string name="msg_error_create_folder">please input name</string>
+    <string name="button_create_folder">create folder</string>
+    <string name="msg_create_success_workbook">create question</string>
+    <string name="fragment_list_question">questions</string>
+    <string name="fragment_edit_workbook">edit test</string>
+    <string name="title_edit_workbook">edit workbook</string>
+    <string name="msg_update_success_workbook">update success</string>
+    <string name="button_update_workbook">update</string>
+    <string name="fragment_create_question">create question</string>
+    <string name="fragment_answer_workbook">answer</string>
+    <string name="button_modify_question">modify question</string>
+    <string name="fragment_upload_workbook">upload_workbook</string>
+    <string name="title_upload_workbook">upload_workbook</string>
+    <string name="button_upload_workbook">upload test</string>
+    <string name="picker_workbook">test</string>
+    <string name="hint_upload_workbook">test</string>
+    <string name="msg_error_not_authorized">please login</string>
+    <string name="title_error_not_authorized">login</string>
+    <string name="button_login">login</string>
+    <string name="msg_failure_login">login failure code %1$d</string>
+    <string name="msg_upload_test_failure">upload failure</string>
+    <string name="button_share_workbook">share test</string>
+    <string name="hint_share_workbook">share test</string>
+    <string name="fragment_publish_workbook">upload test</string>
+    <string name="msg_empty_tests">no tests are exists</string>
+    <string name="label_workbook">test</string>
+    <string name="title_publish_workbook">publish test</string>
+    <string name="button_publish_workbook">publish test</string>
+    <string name="msg_succes_copy_questions_in_same_workbook">copy succeed</string>
+</resources>
