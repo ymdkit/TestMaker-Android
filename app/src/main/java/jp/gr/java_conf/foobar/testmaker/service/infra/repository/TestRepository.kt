@@ -1,7 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 
 import com.example.infra.local.db.WorkbookDataSource
-import jp.gr.java_conf.foobar.testmaker.service.domain.Question
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,28 +37,6 @@ class TestRepository @Inject constructor(
                     )
                 }).toRealmTest()
         )
-        refresh()
-    }
-
-    fun update(test: Test) {
-        val questionId = dataSource.generateQuestionId()
-        if (test.questions.size >= 2 && test.questions[0].id == test.questions[1].id) {
-            val result = test.copy(questions =
-            test.questions.mapIndexed { index, question ->
-                question.copy(
-                    id = questionId + index,
-                    order = index
-                )
-            })
-            dataSource.updateQuestion(result.toRealmTest())
-        } else {
-            dataSource.updateQuestion(test.toRealmTest())
-        }
-        refresh()
-    }
-
-    fun update(question: Question) {
-        dataSource.updateQuestion(question.toRealmQuestion())
         refresh()
     }
 }
