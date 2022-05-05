@@ -76,7 +76,7 @@ class PreferenceDataSource @Inject constructor(
 
     private val defaultPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
-    var audio: Boolean
+    var isPlaySound: Boolean
         get() = defaultPreferences.getBoolean("audio", true)
         set(f) = defaultPreferences.edit().putBoolean("audio", f)
             .apply()
@@ -86,7 +86,7 @@ class PreferenceDataSource @Inject constructor(
         set(f) = defaultPreferences.edit().putBoolean("random", f).apply()
 
 
-    var reverse: Boolean
+    var isSwapProblemAndAnswer: Boolean
         get() = defaultPreferences.getBoolean("reverse", false)
         set(f) = defaultPreferences.edit().putBoolean("reverse", f)
             .apply()
@@ -96,20 +96,28 @@ class PreferenceDataSource @Inject constructor(
         set(f) = defaultPreferences.edit().putBoolean("refine", f)
             .apply()
 
-    var manual: Boolean
+    var isSelfScoring: Boolean
         get() = defaultPreferences.getBoolean("manual", false)
         set(f) = defaultPreferences.edit().putBoolean("manual", f)
             .apply()
 
-    var alwaysReview: Boolean
+    var isAlwaysShowExplanation: Boolean
         get() = defaultPreferences.getBoolean("alwaysReview", false)
         set(f) = defaultPreferences.edit().putBoolean("alwaysReview", f)
             .apply()
 
-    var isShowPlaySettingDialog: Boolean
+    var isShowAnswerSettingDialog: Boolean
         get() = defaultPreferences.getBoolean("show_setting_dialog", true)
         set(f) = defaultPreferences.edit().putBoolean("show_setting_dialog", f)
             .apply()
+
+    var questionCount: Int
+        get() = sharedPreferences.getInt("question_count", 100)
+        set(i) = sharedPreferences.edit().putInt("question_count", i).apply()
+
+    var startPosition: Int
+        get() = sharedPreferences.getInt("start_position", 1)
+        set(i) = sharedPreferences.edit().putInt("start_position", i).apply()
 
     var uploadStudyPlus: String
         get() = defaultPreferences.getString(

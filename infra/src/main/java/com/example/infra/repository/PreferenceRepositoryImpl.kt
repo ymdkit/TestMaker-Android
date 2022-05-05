@@ -1,5 +1,7 @@
 package com.example.infra.repository
 
+import com.example.core.QuestionCondition
+import com.example.domain.model.AnswerSetting
 import com.example.domain.repository.PreferenceRepository
 import com.example.infra.local.preference.PreferenceDataSource
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +17,11 @@ class PreferenceRepositoryImpl @Inject constructor(
     override val updateIsRemovedAdFlow: Flow<Boolean>
         get() = _updateIsRemovedAdFlow
 
+    private val _updateAnswerSettingFlow: MutableSharedFlow<AnswerSetting> =
+        MutableSharedFlow()
+    override val updateAnswerSettingFlow: Flow<AnswerSetting>
+        get() = _updateAnswerSettingFlow
+
 
     override fun putIsRemovedAd(isRemovedAd: Boolean) {
         preference.isRemovedAd = isRemovedAd
@@ -23,4 +30,31 @@ class PreferenceRepositoryImpl @Inject constructor(
 
     override fun isRemovedAd(): Boolean =
         preference.isRemovedAd
+
+    override fun getAnswerSetting(): AnswerSetting =
+        AnswerSetting(
+            isRandomOrder = preference.random,
+            isSwapProblemAndAnswer = preference.isSwapProblemAndAnswer,
+            questionCondition = if (preference.refine) QuestionCondition.WRONG else QuestionCondition.ALL,
+            isSelfScoring = preference.isSelfScoring,
+            isAlwaysShowExplanation = preference.isAlwaysShowExplanation,
+            isPlaySound = preference.isPlaySound,
+            isShowAnswerSettingDialog = preference.isShowAnswerSettingDialog,
+            // todo 設定値を変更できるようにする
+            questionCount = preference.questionCount,
+            startPosition = preference.startPosition
+        )
+
+    override suspend fun putAnswerSetting(answerSetting: AnswerSetting) {
+        preference.random = answerSetting.isRandomOrder
+        preference.isSwapProblemAndAnswer = answerSetting.isSwapProblemAndAnswer
+        preference.refine = answerSetting.questionCondition == QuestionCondition.WRONG
+        preference.isSelfScoring = answerSetting.isSelfScoring
+        preference.isAlwaysShowExplanation = answerSetting.isAlwaysShowExplanation
+        preference.isPlaySound = answerSetting.isPlaySound
+        preference.isShowAnswerSettingDialog = answerSetting.isShowAnswerSettingDialog
+        preference.questionCount = answerSetting.questionCount
+        preference.startPosition = answerSetting.startPosition
+        _updateAnswerSettingFlow.emit(answerSetting)
+    }
 }

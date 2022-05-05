@@ -1,6 +1,7 @@
 package com.example.usecase
 
 import com.example.domain.repository.PreferenceRepository
+import com.example.usecase.model.AnswerSettingUseCaseModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,5 +12,8 @@ class UserPreferenceCommandUseCase @Inject constructor(
 
     fun putIsRemovedAd(isRemovedAd: Boolean) =
         preferenceRepository.putIsRemovedAd(isRemovedAd)
+
+    suspend fun putAnswerSetting(answerSetting: AnswerSettingUseCaseModel) =
+        preferenceRepository.putAnswerSetting(answerSetting.toAnswerSetting())
 
 }
