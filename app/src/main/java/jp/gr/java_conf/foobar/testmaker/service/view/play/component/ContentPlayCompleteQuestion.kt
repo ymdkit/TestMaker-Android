@@ -42,7 +42,7 @@ fun ContentPlayCompleteQuestion(
 
     Column {
         var yourAnswers: List<String> by remember {
-            mutableStateOf(List(state.question.getAnswers(isSwap).count()) { "" })
+            mutableStateOf(List(state.question.getSwappableAnswers(isSwap).count()) { "" })
         }
 
         Column(
@@ -92,7 +92,7 @@ fun ContentPlayCompleteQuestion(
             modifier = Modifier.padding(vertical = 8.dp),
             onClick = {
                 onAnswered(yourAnswers)
-                yourAnswers = List(state.question.getAnswers(isSwap).count()) { "" }
+                yourAnswers = List(state.question.getSwappableAnswers(isSwap).count()) { "" }
             },
             text = stringResource(R.string.judge_question),
             color = MaterialTheme.colors.secondary

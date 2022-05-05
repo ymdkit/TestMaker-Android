@@ -5,6 +5,7 @@ import com.example.domain.model.CreateQuestionRequest
 import com.example.domain.model.QuestionId
 import com.example.domain.model.WorkbookId
 import com.example.domain.repository.WorkBookRepository
+import com.example.usecase.model.QuestionUseCaseModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,6 +40,9 @@ class UserQuestionCommandUseCase @Inject constructor(
                 isCheckAnswerOrder = isCheckAnswerOrder
             )
         )
+
+    suspend fun updateQuestion(question: QuestionUseCaseModel) =
+        workBookRepository.updateQuestion(question.toQuestion())
 
     suspend fun updateQuestionContents(
         questionId: Long,

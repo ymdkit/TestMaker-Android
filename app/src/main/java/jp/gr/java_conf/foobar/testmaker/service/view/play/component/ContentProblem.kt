@@ -8,13 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
+import com.example.usecase.model.QuestionUseCaseModel
 
 @Composable
 fun ContentProblem(
     index: Int,
-    question: QuestionModel,
-    isSwap: Boolean)
+    question: QuestionUseCaseModel,
+    isSwap: Boolean
+)
 {
 
     Column {
@@ -28,12 +29,15 @@ fun ContentProblem(
         SelectionContainer {
             Text(
                 modifier = Modifier.padding(vertical = 16.dp),
-                text = question.getProblem(isSwap)
+                text = if (isSwap) question.getSingleLineAnswer() else question.problem
             )
         }
-        if (question.imageUrl.isNotEmpty()) {
+        if (question.problemImageUrl.isNotEmpty()) {
             Column(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                ContentBitmap(modifier = Modifier.height(200.dp), imageUrl = question.imageUrl)
+                ContentBitmap(
+                    modifier = Modifier.height(200.dp),
+                    imageUrl = question.problemImageUrl
+                )
             }
         }
     }

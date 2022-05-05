@@ -1,6 +1,6 @@
 package com.example.usecase.model
 
-import com.example.domain.model.AnswerStatus
+import com.example.core.AnswerStatus
 import com.example.domain.model.Workbook
 
 data class WorkbookUseCaseModel(
@@ -29,4 +29,19 @@ data class WorkbookUseCaseModel(
     }
 
     val isQuestionListEmpty = questionCount == 0
+
+    fun getRandomExtractedAnswers(
+        exclude: List<String>
+    ) =
+        questionList
+            .asSequence()
+            .take(100)
+            .map {
+                it.answers
+            }
+            .flatten()
+            .filter { !exclude.contains(it) }
+            .distinct()
+            .toList()
+            .shuffled()
 }

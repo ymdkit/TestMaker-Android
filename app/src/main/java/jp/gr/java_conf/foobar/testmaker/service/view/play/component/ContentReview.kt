@@ -9,15 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.usecase.model.QuestionUseCaseModel
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 
 @Composable
 fun ContentReview(
     yourAnswer: String,
     isSwap: Boolean,
-    question: QuestionModel,
-    onModifyQuestion: (QuestionModel) -> Unit
+    question: QuestionUseCaseModel,
+    onModifyQuestion: (QuestionUseCaseModel) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         if (yourAnswer.isNotEmpty()) {
@@ -37,7 +37,7 @@ fun ContentReview(
         SelectionContainer {
             Text(
                 modifier = Modifier.padding(vertical = 16.dp),
-                text = question.getAnswerForReview(isSwap = isSwap)
+                text = if (isSwap) question.problem else question.getMultipleLineAnswer()
             )
         }
         if (question.explanation.isNotEmpty()) {

@@ -86,7 +86,7 @@ fun ContentPlaySelectCompleteQuestion(
                         val selectedIndex = yourAnswers.indexOfFirst { it == text }
 
                         Text(
-                            text = if (isSelectedList[index] && state.question.isCheckOrder) "${selectedIndex + 1} $text" else text,
+                            text = if (isSelectedList[index] && state.question.isCheckAnswerOrder) "${selectedIndex + 1} $text" else text,
                             modifier = Modifier.padding(start = 8.dp)
                         )
                     }

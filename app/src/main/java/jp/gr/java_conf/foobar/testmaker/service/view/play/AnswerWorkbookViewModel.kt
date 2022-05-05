@@ -2,15 +2,13 @@ package jp.gr.java_conf.foobar.testmaker.service.view.play
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.AnswerStatus
+import com.example.core.QuestionType
+import com.example.usecase.*
+import com.example.usecase.model.QuestionUseCaseModel
+import com.example.usecase.model.WorkbookUseCaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jp.gr.java_conf.foobar.testmaker.service.domain.AnswerStatus
-import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
-import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,12 +19,15 @@ import kotlin.properties.Delegates
 @HiltViewModel
 class AnswerWorkbookViewModel @Inject constructor(
     private val preferences: SharedPreferenceManager,
-    private val repository: TestRepository,
-    private val logger: TestMakerLogger
+    private val userQuestionCommandUseCase: UserQuestionCommandUseCase,
+    private val userWorkbookCommandUseCase: UserWorkbookCommandUseCase,
+    private val workbookGetUseCase: WorkbookGetUseCase,
+    private val answerSettingWatchUseCase: AnswerSettingWatchUseCase,
+    private val judgeUseCase: QuestionJudgeUseCase,
+    private val getOrGenerateSelectionListUseCase: GetOrGenerateSelectionListUseCase
 ) : ViewModel() {
 
     private var workbookId by Delegates.notNull<Long>()
-    private var isRetry by Delegates.notNull<Boolean>()
 
     private val _uiState = MutableStateFlow<PlayUiState>(PlayUiState.Initial)
     val uiState: StateFlow<PlayUiState> = _uiState
@@ -34,32 +35,31 @@ class AnswerWorkbookViewModel @Inject constructor(
     private val _answerEffectState = MutableStateFlow(AnswerEffectState.None)
     val answerEffectState: StateFlow<AnswerEffectState> = _answerEffectState
 
-    private var answeringQuestions: List<QuestionModel> = emptyList()
+    private var answeringQuestions: List<QuestionUseCaseModel> = emptyList()
 
-    private val workbook: Test by lazy { repository.get(workbookId) }
-
-    private val isSwap = preferences.reverse
-    private val isCaseInsensitive = preferences.isCaseInsensitive
+    private lateinit var workbook: WorkbookUseCaseModel
 
     fun setup(
         workbookId: Long,
         isRetry: Boolean
     ) {
         this.workbookId = workbookId
-        this.isRetry = isRetry
+        answerSettingWatchUseCase.setup(viewModelScope)
 
         viewModelScope.launch {
+            workbook = workbookGetUseCase.getWorkbook(workbookId = workbookId)
 
-            val workbook = repository.get(workbookId)
-            answeringQuestions = workbook.questions.map { it.toQuestionModel() }
+            answeringQuestions = workbook.questionList
 
             if (isRetry) {
                 answeringQuestions = answeringQuestions.filter { it.isAnswering }
             } else {
-                answeringQuestions = answeringQuestions.drop(workbook.startPosition)
+                answeringQuestions = answeringQuestions.drop(
+                    answerSettingWatchUseCase.flow.value.startPosition
+                )
             }
 
-            resetAnswering()
+            userWorkbookCommandUseCase.resetWorkbookIsAnswering(workbookId)
 
             if (preferences.refine) {
                 answeringQuestions =
@@ -70,7 +70,9 @@ class AnswerWorkbookViewModel @Inject constructor(
                 answeringQuestions = answeringQuestions.shuffled()
             }
 
-            answeringQuestions = answeringQuestions.take(workbook.limit)
+            answeringQuestions = answeringQuestions.take(
+                answerSettingWatchUseCase.flow.value.questionCount
+            )
 
             if (answeringQuestions.isEmpty()) {
                 _uiState.value = PlayUiState.NoQuestionExist
@@ -79,15 +81,6 @@ class AnswerWorkbookViewModel @Inject constructor(
 
             loadNext(-1)
         }
-    }
-
-    private fun resetAnswering() {
-        repository.update(
-            workbook.copy(
-                questions = workbook.questions
-                    .map { it.copy(isSolved = false) }
-            )
-        )
     }
 
     fun loadNext(oldIndex: Int) {
@@ -102,10 +95,10 @@ class AnswerWorkbookViewModel @Inject constructor(
             }
 
             val answeringQuestion = answeringQuestions[index].copy(isAnswering = true)
-            repository.update(answeringQuestion.toQuestion())
+            userQuestionCommandUseCase.updateQuestion(answeringQuestion)
 
-            _uiState.value = when (answeringQuestion.format) {
-                QuestionFormat.WRITE ->
+            _uiState.value = when (answeringQuestion.type) {
+                QuestionType.WRITE ->
                     if (preferences.manual)
                         PlayUiState.Manual(
                             index = index,
@@ -116,14 +109,15 @@ class AnswerWorkbookViewModel @Inject constructor(
                             index = index,
                             question = answeringQuestion
                         )
-                QuestionFormat.SELECT -> PlayUiState.Select(
+                QuestionType.SELECT -> PlayUiState.Select(
                     index = index,
                     question = answeringQuestion,
-                    choices = answeringQuestion.getChoices(
-                        workbook.getRandomExtractedAnswers(exclude = listOf(answeringQuestion.answer))
+                    choices = getOrGenerateSelectionListUseCase.getOrGenerateSelectionList(
+                        workbook = workbook,
+                        question = answeringQuestion
                     )
                 )
-                QuestionFormat.COMPLETE ->
+                QuestionType.COMPLETE ->
                     if (preferences.manual)
                         PlayUiState.Manual(
                             index = index,
@@ -134,27 +128,34 @@ class AnswerWorkbookViewModel @Inject constructor(
                             index = index,
                             question = answeringQuestion
                         )
-                QuestionFormat.SELECT_COMPLETE -> PlayUiState.SelectComplete(
+                QuestionType.SELECT_COMPLETE -> PlayUiState.SelectComplete(
                     index = index,
                     question = answeringQuestion,
-                    choices = answeringQuestion.getChoices(
-                        workbook.getRandomExtractedAnswers(exclude = answeringQuestion.answers)
+                    choices = getOrGenerateSelectionListUseCase.getOrGenerateSelectionList(
+                        workbook = workbook,
+                        question = answeringQuestion
                     )
                 )
             }
         }
     }
 
-    fun judgeIsCorrect(index: Int, question: QuestionModel, yourAnswer: String) {
+    fun judgeIsCorrect(index: Int, question: QuestionUseCaseModel, yourAnswer: String) {
         viewModelScope.launch {
-            val isCorrect = question.isCorrect(yourAnswer, isSwap, isCaseInsensitive)
+            val isCorrect = judgeUseCase.judge(
+                expect = question,
+                actual = listOf(yourAnswer)
+            )
             setupReview(index, question, yourAnswer, isCorrect)
         }
     }
 
-    fun judgeIsCorrect(index: Int, question: QuestionModel, yourAnswers: List<String>) {
+    fun judgeIsCorrect(index: Int, question: QuestionUseCaseModel, yourAnswers: List<String>) {
         viewModelScope.launch {
-            val isCorrect = question.isCorrect(yourAnswers, isSwap, isCaseInsensitive)
+            val isCorrect = judgeUseCase.judge(
+                expect = question,
+                actual = yourAnswers
+            )
 
             setupReview(
                 index,
@@ -167,28 +168,26 @@ class AnswerWorkbookViewModel @Inject constructor(
 
     private fun setupReview(
         index: Int,
-        question: QuestionModel,
+        question: QuestionUseCaseModel,
         yourAnswer: String,
         isCorrect: Boolean
     ) {
-        val judgedQuestion = question.copy(
-            answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
-        )
-        repository.update(judgedQuestion.toQuestion())
-
-        logger.logAnswerQuestion(judgedQuestion.toQuestion())
-
-        _answerEffectState.value =
-            if (isCorrect) AnswerEffectState.Correct else AnswerEffectState.Incorrect
-
-        if (preferences.alwaysReview || !isCorrect) {
-            _uiState.value = PlayUiState.Review(
-                index = index,
-                question = judgedQuestion,
-                yourAnswer = yourAnswer
+        viewModelScope.launch {
+            val judgedQuestion = question.copy(
+                answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
             )
-        } else {
-            viewModelScope.launch(Dispatchers.Default) {
+            userQuestionCommandUseCase.updateQuestion(judgedQuestion)
+
+            _answerEffectState.value =
+                if (isCorrect) AnswerEffectState.Correct else AnswerEffectState.Incorrect
+
+            if (preferences.alwaysReview || !isCorrect) {
+                _uiState.value = PlayUiState.Review(
+                    index = index,
+                    question = judgedQuestion,
+                    yourAnswer = yourAnswer
+                )
+            } else {
                 _uiState.value = PlayUiState.WaitingNextQuestion(index, question)
                 delay(800)
                 loadNext(index)
@@ -196,23 +195,19 @@ class AnswerWorkbookViewModel @Inject constructor(
         }
     }
 
-    fun confirm(index: Int, question: QuestionModel) {
+    fun confirm(index: Int, question: QuestionUseCaseModel) {
         _uiState.value = PlayUiState.ManualReview(
             index = index,
             question = question
         )
     }
 
-    fun selfJudge(index: Int, question: QuestionModel, isCorrect: Boolean) {
+    fun selfJudge(index: Int, question: QuestionUseCaseModel, isCorrect: Boolean) {
         viewModelScope.launch {
             val judgedQuestion = question.copy(
                 answerStatus = if (isCorrect) AnswerStatus.CORRECT else AnswerStatus.INCORRECT
             )
-
-            repository.update(judgedQuestion.toQuestion())
-
-            logger.logAnswerQuestion(judgedQuestion.toQuestion())
-
+            userQuestionCommandUseCase.updateQuestion(judgedQuestion)
             loadNext(index)
         }
     }
@@ -221,24 +216,29 @@ class AnswerWorkbookViewModel @Inject constructor(
 
 sealed class PlayUiState {
     object Initial : PlayUiState()
-    data class Write(val index: Int, val question: QuestionModel) : PlayUiState()
-    data class Select(val index: Int, val question: QuestionModel, val choices: List<String>) :
+    data class Write(val index: Int, val question: QuestionUseCaseModel) : PlayUiState()
+    data class Select(
+        val index: Int,
+        val question: QuestionUseCaseModel,
+        val choices: List<String>
+    ) :
         PlayUiState()
 
-    data class Complete(val index: Int, val question: QuestionModel) : PlayUiState()
+    data class Complete(val index: Int, val question: QuestionUseCaseModel) : PlayUiState()
     data class SelectComplete(
         val index: Int,
-        val question: QuestionModel,
+        val question: QuestionUseCaseModel,
         val choices: List<String>
     ) : PlayUiState()
 
-    data class Manual(val index: Int, val question: QuestionModel) : PlayUiState()
-    data class ManualReview(val index: Int, val question: QuestionModel) : PlayUiState()
-    data class Review(val index: Int, val question: QuestionModel, val yourAnswer: String) :
+    data class Manual(val index: Int, val question: QuestionUseCaseModel) : PlayUiState()
+    data class ManualReview(val index: Int, val question: QuestionUseCaseModel) : PlayUiState()
+    data class Review(val index: Int, val question: QuestionUseCaseModel, val yourAnswer: String) :
         PlayUiState()
 
     // 正解時に確実に再 Compose するための State
-    data class WaitingNextQuestion(val index: Int, val question: QuestionModel) : PlayUiState()
+    data class WaitingNextQuestion(val index: Int, val question: QuestionUseCaseModel) :
+        PlayUiState()
 
     object NoQuestionExist : PlayUiState()
 

@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.usecase.model.QuestionUseCaseModel
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionModel
 import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
 
 
@@ -19,7 +19,7 @@ fun ContentPlayManualReviewQuestion(
     state: PlayUiState.ManualReview,
     isSwap: Boolean,
     onJudged: (Boolean) -> Unit,
-    onModifyQuestion: (QuestionModel) -> Unit,
+    onModifyQuestion: (QuestionUseCaseModel) -> Unit,
 ) {
     Column {
         Column(
