@@ -4,8 +4,8 @@ import android.content.Context
 import com.airbnb.epoxy.EpoxyController
 import com.example.usecase.model.QuestionUseCaseModel
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.itemEmpty
-import jp.gr.java_conf.foobar.testmaker.service.itemQuestion
+import jp.gr.java_conf.foobar.testmaker.service.empty
+import jp.gr.java_conf.foobar.testmaker.service.question
 
 class EditController(private val context: Context) : EpoxyController() {
 
@@ -40,9 +40,9 @@ class EditController(private val context: Context) : EpoxyController() {
     override fun buildModels() {
 
         if (questions.isEmpty()) {
-            itemEmpty {
+            empty {
                 id("empty")
-                message(context.getString(R.string.empty_question))
+                message(this@EditController.context.getString(R.string.empty_question))
             }
 
         } else {
@@ -53,16 +53,16 @@ class EditController(private val context: Context) : EpoxyController() {
                     }
                 else questions
             result.forEachIndexed { index, it ->
-                itemQuestion {
+                question {
                     id(it.id)
                     questionId(it.id)
                     problem(it.problem)
                     answer(it.getSingleLineAnswer())
                     index((index + 1).toString())
                     onClick { _ ->
-                        listener?.onClickQuestion(it)
+                        this@EditController.listener?.onClickQuestion(it)
                     }
-                    isSelected(selectedQuestions.any { question -> it.id == question.id })
+                    isSelected(this@EditController.selectedQuestions.any { question -> it.id == question.id })
                 }
             }
         }

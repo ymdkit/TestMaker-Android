@@ -1,7 +1,7 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.share
+package com.example.ui.core
 
 import com.airbnb.epoxy.EpoxyController
-import jp.gr.java_conf.foobar.testmaker.service.itemMenu
+import com.example.ui.dialogMenu
 
 class ListDialogController(private val onItemSelected: () -> Unit) : EpoxyController() {
 
@@ -15,13 +15,13 @@ class ListDialogController(private val onItemSelected: () -> Unit) : EpoxyContro
 
         menus.forEachIndexed { index, it ->
 
-            itemMenu {
+            dialogMenu {
                 id(index)
                 text(it.title)
                 iconRes(it.iconRes)
                 onClick { _, _, _, _ ->
                     it.action()
-                    onItemSelected()
+                    this@ListDialogController.onItemSelected()
                 }
             }
         }

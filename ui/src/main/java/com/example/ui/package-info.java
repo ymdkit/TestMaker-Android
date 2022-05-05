@@ -1,8 +1,7 @@
-package jp.gr.java_conf.foobar.testmaker.service;
+package com.example.ui;
 
 import com.airbnb.epoxy.EpoxyDataBindingPattern;
 
 @EpoxyDataBindingPattern(rClass = R.class, layoutPrefix = "item_")
 interface EpoxyConfig {
 }
-

@@ -4,9 +4,9 @@ import android.content.Context
 import com.airbnb.epoxy.EpoxyController
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
-import jp.gr.java_conf.foobar.testmaker.service.itemEmpty
-import jp.gr.java_conf.foobar.testmaker.service.itemGroup
-import jp.gr.java_conf.foobar.testmaker.service.itemSectionHeader
+import jp.gr.java_conf.foobar.testmaker.service.empty
+import jp.gr.java_conf.foobar.testmaker.service.group
+import jp.gr.java_conf.foobar.testmaker.service.sectionHeader
 
 class GroupListController(private val context: Context) : EpoxyController() {
 
@@ -29,24 +29,24 @@ class GroupListController(private val context: Context) : EpoxyController() {
     override fun buildModels() {
 
         if (groups.isEmpty()) {
-            itemEmpty {
+            empty {
                 id("empty")
-                message(context.getString(R.string.empty_group))
+                message(this@GroupListController.context.getString(R.string.empty_group))
             }
             return
         }
 
-        itemSectionHeader {
+        sectionHeader {
             id("Group")
-            title(context.getString(R.string.group))
+            title(this@GroupListController.context.getString(R.string.group))
         }
 
         groups.forEach {
 
-            itemGroup {
+            group {
                 id(it.id)
                 group(it)
-                listener(listener)
+                listener(this@GroupListController.listener)
             }
         }
     }

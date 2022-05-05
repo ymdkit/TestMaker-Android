@@ -35,34 +35,34 @@ class MainController(
 
     override fun isStickyHeader(position: Int): Boolean {
         if (position >= adapter.itemCount) return false
-        return adapter.getModelAtPosition(position)::class == ItemSectionHeaderBindingModel_::class
+        return adapter.getModelAtPosition(position)::class == SectionHeaderBindingModel_::class
     }
 
     override fun buildModels() {
 
         if (workbookList.isEmpty() && folderList.isEmpty()) {
-            itemEmpty {
+            empty {
                 id("empty")
-                message(context.getString(R.string.empty_test))
+                message(this@MainController.context.getString(R.string.empty_test))
             }
             return
         }
 
         if (folderList.isNotEmpty()) {
-            itemSectionHeader {
+            sectionHeader {
                 id("Folder")
-                title(context.getString(R.string.folder))
+                title(this@MainController.context.getString(R.string.folder))
             }
         }
 
         folderList.forEach {
-            cardCategory {
+            folder {
                 id("category-${it.id}")
                 folderId(it.id)
                 color(it.color)
                 name(it.name)
                 size(
-                    context.getString(
+                    this@MainController.context.getString(
                         R.string.number_exams,
                         it.workbookCount
                     )
@@ -71,32 +71,32 @@ class MainController(
                     // todo フォルダ詳細画面への遷移
                 }
                 onClickMenu { _, _, _, _ ->
-                    listener?.onClickFolderMenu(it)
+                    this@MainController.listener?.onClickFolderMenu(it)
                 }
             }
         }
 
         if (workbookList.isNotEmpty()) {
-            itemSectionHeader {
+            sectionHeader {
                 id("Test")
-                title(context.getString(R.string.test))
+                title(this@MainController.context.getString(R.string.test))
             }
         }
 
         workbookList.forEach {
-            itemTest {
+            test {
                 id("workbook-${it.id}")
                 workbookId(it.id)
                 name(it.name)
                 color(it.color)
                 size(
-                    context.getString(
+                    this@MainController.context.getString(
                         R.string.number_existing_questions,
                         it.correctCount,
                         it.questionCount
                     )
                 )
-                onClick { _ -> listener?.onClickTest(it) }
+                onClick { _ -> this@MainController.listener?.onClickTest(it) }
             }
         }
     }

@@ -14,27 +14,27 @@ class TestHistoryController(private val context: Context) : EpoxyController() {
         }
 
     override fun isStickyHeader(position: Int): Boolean {
-        return adapter.getModelAtPosition(position)::class == ItemSectionHeaderBindingModel_::class
+        return adapter.getModelAtPosition(position)::class == SectionHeaderBindingModel_::class
     }
 
     override fun buildModels() {
 
         if (histories.isEmpty()) {
-            itemEmpty {
+            empty {
                 id("empty")
-                message(context.getString(R.string.empty_histories))
+                message(this@TestHistoryController.context.getString(R.string.empty_histories))
             }
             return
         }
 
-        itemSectionHeader {
+        sectionHeader {
             id("History")
-            title(context.getString(R.string.section_history))
+            title(this@TestHistoryController.context.getString(R.string.section_history))
         }
 
         histories.forEach {
 
-            itemHistory {
+            history {
                 id(it.id)
                 history(it)
             }

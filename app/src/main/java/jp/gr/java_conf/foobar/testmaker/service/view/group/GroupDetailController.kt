@@ -26,35 +26,44 @@ class GroupDetailController(private val context: Context) : EpoxyController() {
     }
 
     override fun isStickyHeader(position: Int): Boolean {
-        return adapter.getModelAtPosition(position)::class == ItemSectionHeaderBindingModel_::class
+        return adapter.getModelAtPosition(position)::class == SectionHeaderBindingModel_::class
     }
 
     override fun buildModels() {
 
         if (tests.isEmpty()) {
-            itemEmpty {
+            empty {
                 id("empty")
-                message(context.getString(R.string.empty_uploaded_test))
+                message(this@GroupDetailController.context.getString(R.string.empty_uploaded_test))
             }
             return
         }
 
-        itemSectionHeader {
+        sectionHeader {
             id("Test")
-            title(context.getString(R.string.test))
+            title(this@GroupDetailController.context.getString(R.string.test))
         }
 
         tests.forEach {
 
             val data = it.toObject(FirebaseTest::class.java) ?: return
 
-            itemTestGroup {
-                size(context.getString(R.string.num_questions, data.size))
+            testGroup {
+                size(
+                    this@GroupDetailController.context.getString(
+                        R.string.num_questions,
+                        data.size
+                    )
+                )
                 title(data.name)
                 id(it.id)
                 document(it)
-                colorId(context.resources.getIntArray(R.array.color_list)[abs(data.color).coerceAtMost(7)])
-                listener(listener)
+                colorId(
+                    this@GroupDetailController.context.resources.getIntArray(R.array.color_list)[abs(
+                        data.color
+                    ).coerceAtMost(7)]
+                )
+                listener(this@GroupDetailController.listener)
             }
 
         }

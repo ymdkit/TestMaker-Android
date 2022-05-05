@@ -26,36 +26,49 @@ class AccountMainController(private val context: Context) : EpoxyController() {
     }
 
     override fun isStickyHeader(position: Int): Boolean {
-        return adapter.getModelAtPosition(position)::class == ItemSectionHeaderBindingModel_::class
+        return adapter.getModelAtPosition(position)::class == SectionHeaderBindingModel_::class
     }
 
     override fun buildModels() {
 
         if (tests.isEmpty()) {
-            itemEmpty {
+            empty {
                 id("empty")
-                message(context.getString(R.string.empty_uploaded_test))
+                message(this@AccountMainController.context.getString(R.string.empty_uploaded_test))
             }
             return
         }
 
-        itemSectionHeader {
+        sectionHeader {
             id("Test")
-            title(context.getString(R.string.test))
+            title(this@AccountMainController.context.getString(R.string.test))
         }
 
         tests.forEach {
 
             val data = it.toObject(FirebaseTest::class.java) ?: return
 
-            cardTestAccount {
-                size(context.getString(R.string.num_questions, data.size))
+            testAccount {
+                size(
+                    this@AccountMainController.context.getString(
+                        R.string.num_questions,
+                        data.size
+                    )
+                )
                 title(data.name)
                 id(it.id)
                 document(it)
-                publicity(if (data.public) context.getString(R.string.label_public) else context.getString(R.string.label_private))
-                colorId(context.resources.getIntArray(R.array.color_list)[abs(data.color).coerceAtMost(7)])
-                listener(listener)
+                publicity(
+                    if (data.public) this@AccountMainController.context.getString(R.string.label_public) else this@AccountMainController.context.getString(
+                        R.string.label_private
+                    )
+                )
+                colorId(
+                    this@AccountMainController.context.resources.getIntArray(R.array.color_list)[abs(
+                        data.color
+                    ).coerceAtMost(7)]
+                )
+                listener(this@AccountMainController.listener)
             }
 
         }
