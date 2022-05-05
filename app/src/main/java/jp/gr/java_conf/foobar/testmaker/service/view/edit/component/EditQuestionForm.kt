@@ -46,7 +46,7 @@ fun EditQuestionForm(
                 .fillMaxWidth()
                 .height(48.dp)
         ) {
-            Text(text = stringResource(id = R.string.button_create_question))
+            Text(text = stringResource(id = R.string.button_update_question))
         }
     }
 }

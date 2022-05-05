@@ -2,14 +2,13 @@ package com.example.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.usecase.FolderListWatchUseCase
-import com.example.usecase.UserFolderCommandUseCase
-import com.example.usecase.UserWorkbookCommandUseCase
-import com.example.usecase.WorkbookListWatchUseCase
+import com.example.usecase.*
 import com.example.usecase.model.FolderUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
 import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,12 +19,25 @@ class HomeViewModel @Inject constructor(
     private val folderListWatchUseCase: FolderListWatchUseCase,
     private val userWorkbookCommandUseCase: UserWorkbookCommandUseCase,
     private val userFolderCommandUseCase: UserFolderCommandUseCase,
+    private val answerSettingGetUseCase: AnswerSettingWatchUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<Resource<UiState>> =
         MutableStateFlow(Resource.Empty)
     val uiState: StateFlow<Resource<UiState>>
         get() = _uiState
+
+    private val _navigateToAnswerSettingEvent: Channel<NavigateToAnswerSettingArgs> = Channel()
+    val navigateToAnswerSettingEvent: ReceiveChannel<NavigateToAnswerSettingArgs>
+        get() = _navigateToAnswerSettingEvent
+
+    private val _navigateToAnswerWorkbookEvent: Channel<NavigateToAnswerWorkbookArgs> = Channel()
+    val navigateToAnswerWorkbookEvent: ReceiveChannel<NavigateToAnswerWorkbookArgs>
+        get() = _navigateToAnswerWorkbookEvent
+
+    private val _questionListEmptyEvent: Channel<Unit> = Channel()
+    val questionListEmptyEvent: ReceiveChannel<Unit>
+        get() = _questionListEmptyEvent
 
     fun setup() {
         workbookListWatchUseCase.setup(scope = viewModelScope)
@@ -69,6 +81,41 @@ class HomeViewModel @Inject constructor(
             userFolderCommandUseCase.swapFolder(sourceFolderId, destFolderId)
         }
 
+    fun onAnswerWorkbookClicked(workbook: WorkbookUseCaseModel) =
+        viewModelScope.launch {
+
+            if (workbook.isQuestionListEmpty) {
+                _questionListEmptyEvent.send(Unit)
+                return@launch
+            }
+
+            if (answerSettingGetUseCase.getAnswerSetting().isShowAnswerSettingDialog) {
+                _navigateToAnswerSettingEvent.send(
+                    NavigateToAnswerSettingArgs(
+                        workbookId = workbook.id,
+                        workbookName = workbook.name
+                    )
+                )
+            } else {
+                _navigateToAnswerWorkbookEvent.send(
+                    NavigateToAnswerWorkbookArgs(
+                        workbookId = workbook.id,
+                        isRetry = false
+                    )
+                )
+            }
+        }
+
+    fun onStartAnswerClicked(workbookId: Long) =
+        viewModelScope.launch {
+            _navigateToAnswerWorkbookEvent.send(
+                NavigateToAnswerWorkbookArgs(
+                    workbookId = workbookId,
+                    isRetry = false
+                )
+            )
+        }
+
     fun deleteWorkbook(workbook: WorkbookUseCaseModel) =
         viewModelScope.launch {
             userWorkbookCommandUseCase.deleteWorkbook(workbook)
@@ -91,4 +138,14 @@ class HomeViewModel @Inject constructor(
 data class UiState(
     val folderList: List<FolderUseCaseModel>,
     val workBookList: List<WorkbookUseCaseModel>
+)
+
+data class NavigateToAnswerWorkbookArgs(
+    val workbookId: Long,
+    val isRetry: Boolean
+)
+
+data class NavigateToAnswerSettingArgs(
+    val workbookId: Long,
+    val workbookName: String
 )

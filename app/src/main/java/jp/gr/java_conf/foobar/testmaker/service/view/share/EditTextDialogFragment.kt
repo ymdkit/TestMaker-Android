@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.share
 
 import android.app.Dialog
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
@@ -10,6 +11,7 @@ import com.example.ui.core.showToast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.DialogEditTextBinding
+import jp.gr.java_conf.foobar.testmaker.service.extensions.requireIntArgument
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireStringArgument
 
 class EditTextDialogFragment: DialogFragment() {
@@ -19,17 +21,20 @@ class EditTextDialogFragment: DialogFragment() {
         const val ARG_TITLE = "title"
         const val ARG_DEFAULT_TEXT = "default_text"
         const val ARG_HINT = "hint"
+        const val ARG_INPUT_TYPE = "input_type"
 
         fun newInstance(
             title: String,
             defaultText: String,
             hint: String,
+            inputType: Int = InputType.TYPE_CLASS_TEXT,
             completion: (String) -> Unit
         ) = EditTextDialogFragment().apply {
             arguments = bundleOf(
                 ARG_TITLE to title,
                 ARG_DEFAULT_TEXT to defaultText,
-                ARG_HINT to hint
+                ARG_HINT to hint,
+                ARG_INPUT_TYPE to inputType
             )
             this.completion = completion
         }
@@ -51,6 +56,7 @@ class EditTextDialogFragment: DialogFragment() {
             val binding = DataBindingUtil.inflate<DialogEditTextBinding>(LayoutInflater.from(activity), R.layout.dialog_edit_text, null, false).apply {
                 placeholder = requireStringArgument(ARG_HINT)
                 editText.setText(requireStringArgument(ARG_DEFAULT_TEXT))
+                editText.inputType = requireIntArgument(ARG_INPUT_TYPE)
             }
 
             MaterialAlertDialogBuilder(it)

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.EpoxyModel
@@ -23,12 +23,12 @@ import jp.gr.java_conf.foobar.testmaker.service.FolderBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.TestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBinding
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,12 +36,10 @@ class LocalMainFragment : Fragment() {
 
     private val mainController by lazy { MainController(requireContext()) }
 
-    @Inject
-    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     private var binding: LocalMainFragmentBinding? = null
 
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     @Inject
     lateinit var logger: TestMakerLogger
@@ -60,7 +58,7 @@ class LocalMainFragment : Fragment() {
                         DialogMenuItem(
                             title = getString(R.string.play),
                             iconRes = R.drawable.ic_play_arrow_white_24dp,
-                            action = { playWorkbook(workbook) }),
+                            action = { homeViewModel.onAnswerWorkbookClicked(workbook) }),
                         DialogMenuItem(
                             title = getString(R.string.edit),
                             iconRes = R.drawable.ic_edit_white,
@@ -151,16 +149,38 @@ class LocalMainFragment : Fragment() {
                 mainController.workbookList = uiState.workBookList
                 mainController.folderList = uiState.folderList
             }.launchIn(this)
+
+            homeViewModel.navigateToAnswerSettingEvent
+                .receiveAsFlow()
+                .onEach {
+                    AnswerSettingDialogFragment.newInstance(
+                        workbookId = it.workbookId,
+                        workbookName = it.workbookName
+                    )
+                        .show(childFragmentManager, "TAG")
+                }
+                .launchIn(this)
+
+            homeViewModel.navigateToAnswerWorkbookEvent
+                .receiveAsFlow()
+                .onEach {
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionHomeToAnswerWorkbook(
+                            workbookId = it.workbookId,
+                            isRetry = it.isRetry
+                        )
+                    )
+                }
+                .launchIn(this)
+
+            homeViewModel.questionListEmptyEvent
+                .receiveAsFlow()
+                .onEach {
+                    requireContext().showToast(getString(R.string.message_null_questions))
+                }
+                .launchIn(this)
         }
 
-    }
-
-    private fun playWorkbook(workbook: WorkbookUseCaseModel) {
-        if (workbook.questionCount == 0) {
-            requireContext().showToast(getString(R.string.message_null_questions))
-            return
-        }
-        initDialogPlayStart(workbook)
     }
 
     private fun editWorkbook(workbook: WorkbookUseCaseModel) {
@@ -191,49 +211,6 @@ class LocalMainFragment : Fragment() {
         )
     }
 
-    private fun initDialogPlayStart(workbook: WorkbookUseCaseModel) {
-
-        if (!sharedPreferenceManager.isShowPlaySettingDialog) {
-            startAnswer(workbook)
-        } else {
-// todo 一時的にコメントアウト
-//            childFragmentManager.setFragmentResultListener(
-//                REQUEST_PLAY_CONFIG,
-//                viewLifecycleOwner
-//            ) { requestKey, bundle ->
-//                if (requestKey != REQUEST_PLAY_CONFIG) return@setFragmentResultListener
-//
-//                startAnswer(workbook)
-//            }
-//
-//            PlayConfigDialogFragment.newInstance(workbook, REQUEST_PLAY_CONFIG)
-//                .show(childFragmentManager, "TAG")
-        }
-    }
-
-    private fun startAnswer(workbook: WorkbookUseCaseModel) {
-
-        if (workbook.inCorrectCount == 0 && sharedPreferenceManager.refine) {
-            requireContext().showToast(getString(R.string.message_null_wrongs))
-        } else {
-            // todo 移行
-//            val result = workbook.copy(
-//                limit = limit,
-//                startPosition = start,
-//                history = Calendar.getInstance().timeInMillis
-//            )
-//
-//            testViewModel.update(result)
-
-            findNavController().navigate(
-                HomeFragmentDirections.actionHomeToAnswerWorkbook(
-                    workbookId = workbook.id,
-                    isRetry = false
-                )
-            )
-        }
-    }
-
     private fun editFolder(folder: FolderUseCaseModel) {
 
         EditTextDialogFragment.newInstance(
@@ -255,9 +232,5 @@ class LocalMainFragment : Fragment() {
                 requireContext().showToast(getString(R.string.msg_success_delete_category))
             }
         ).show(childFragmentManager, ConfirmDangerDialogFragment::class.java.simpleName)
-    }
-
-    companion object {
-        const val REQUEST_PLAY_CONFIG = "request_play_config"
     }
 }

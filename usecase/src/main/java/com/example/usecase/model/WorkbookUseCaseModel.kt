@@ -27,4 +27,6 @@ data class WorkbookUseCaseModel(
                 inCorrectCount = workbook.questionList.count { it.answerStatus == AnswerStatus.INCORRECT },
             )
     }
+
+    val isQuestionListEmpty = questionCount == 0
 }
