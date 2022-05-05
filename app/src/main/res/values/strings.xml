@@ -335,4 +335,8 @@
     <string name="title_publish_workbook">publish test</string>
     <string name="button_publish_workbook">publish test</string>
     <string name="msg_succes_copy_questions_in_same_workbook">copy succeed</string>
+    <string name="position_start_value">%1$d</string>
+    <string name="question_count_value">%1$d questions</string>
+    <string name="hint_position_start">start position</string>
+    <string name="title_edit_position_start">start position</string>
 </resources>
