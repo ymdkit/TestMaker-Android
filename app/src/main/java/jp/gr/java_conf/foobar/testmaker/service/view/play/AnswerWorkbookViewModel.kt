@@ -3,12 +3,12 @@ package jp.gr.java_conf.foobar.testmaker.service.view.play
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.AnswerStatus
+import com.example.core.QuestionCondition
 import com.example.core.QuestionType
 import com.example.usecase.*
 import com.example.usecase.model.QuestionUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,6 @@ import kotlin.properties.Delegates
 
 @HiltViewModel
 class AnswerWorkbookViewModel @Inject constructor(
-    private val preferences: SharedPreferenceManager,
     private val userQuestionCommandUseCase: UserQuestionCommandUseCase,
     private val userWorkbookCommandUseCase: UserWorkbookCommandUseCase,
     private val workbookGetUseCase: WorkbookGetUseCase,
@@ -61,12 +60,12 @@ class AnswerWorkbookViewModel @Inject constructor(
 
             userWorkbookCommandUseCase.resetWorkbookIsAnswering(workbookId)
 
-            if (preferences.refine) {
+            if (answerSettingWatchUseCase.flow.value.questionCondition == QuestionCondition.WRONG) {
                 answeringQuestions =
                     answeringQuestions.filter { it.answerStatus == AnswerStatus.INCORRECT }
             }
 
-            if (preferences.random) {
+            if (answerSettingWatchUseCase.flow.value.isRandomOrder) {
                 answeringQuestions = answeringQuestions.shuffled()
             }
 
@@ -99,7 +98,7 @@ class AnswerWorkbookViewModel @Inject constructor(
 
             _uiState.value = when (answeringQuestion.type) {
                 QuestionType.WRITE ->
-                    if (preferences.manual)
+                    if (answerSettingWatchUseCase.flow.value.isSelfScoring)
                         PlayUiState.Manual(
                             index = index,
                             question = answeringQuestion
@@ -118,7 +117,7 @@ class AnswerWorkbookViewModel @Inject constructor(
                     )
                 )
                 QuestionType.COMPLETE ->
-                    if (preferences.manual)
+                    if (answerSettingWatchUseCase.flow.value.isSelfScoring)
                         PlayUiState.Manual(
                             index = index,
                             question = answeringQuestion
@@ -181,7 +180,7 @@ class AnswerWorkbookViewModel @Inject constructor(
             _answerEffectState.value =
                 if (isCorrect) AnswerEffectState.Correct else AnswerEffectState.Incorrect
 
-            if (preferences.alwaysReview || !isCorrect) {
+            if (answerSettingWatchUseCase.flow.value.isAlwaysShowExplanation || !isCorrect) {
                 _uiState.value = PlayUiState.Review(
                     index = index,
                     question = judgedQuestion,
