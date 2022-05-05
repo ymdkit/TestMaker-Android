@@ -1,9 +1,9 @@
-package jp.gr.java_conf.foobar.testmaker.service.extensions
+package com.example.ui.core
 
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import jp.gr.java_conf.foobar.testmaker.service.R
+import com.example.ui.R
 import java.net.UnknownHostException
 
 fun Context.showToast(message: String, length: Int = Toast.LENGTH_SHORT) {

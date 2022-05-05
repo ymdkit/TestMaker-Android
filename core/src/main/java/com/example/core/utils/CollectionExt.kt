@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.extensions
+package com.example.core.utils
 
 inline fun <T> Iterable<T>.allIndexed(predicate: (index: Int, T) -> Boolean): Boolean {
     if (this is Collection && isEmpty()) return true
