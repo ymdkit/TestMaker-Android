@@ -1,7 +1,7 @@
 package com.example.infra.local.entity
 
+import com.example.core.AnswerStatus
 import com.example.core.QuestionType
-import com.example.domain.model.AnswerStatus
 import com.example.domain.model.CreateQuestionRequest
 import com.example.domain.model.Question
 import com.example.domain.model.QuestionId

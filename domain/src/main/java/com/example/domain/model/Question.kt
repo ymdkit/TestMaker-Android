@@ -1,5 +1,6 @@
 package com.example.domain.model
 
+import com.example.core.AnswerStatus
 import com.example.core.QuestionType
 
 data class Question(
@@ -17,12 +18,6 @@ data class Question(
     val isAutoGenerateOtherSelections: Boolean,
     val isCheckAnswerOrder: Boolean
 )
-
-enum class AnswerStatus {
-    CORRECT,
-    INCORRECT,
-    UNANSWERED
-}
 
 @JvmInline
 value class QuestionId(val value: Long)

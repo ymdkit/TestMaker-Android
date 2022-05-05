@@ -1,8 +1,9 @@
 package com.example.usecase.model
 
+import com.example.core.AnswerStatus
 import com.example.core.QuestionType
-import com.example.domain.model.AnswerStatus
 import com.example.domain.model.Question
+import com.example.domain.model.QuestionId
 
 data class QuestionUseCaseModel(
     val id: Long,
@@ -20,6 +21,8 @@ data class QuestionUseCaseModel(
     val isCheckAnswerOrder: Boolean
 ) {
     fun getSingleLineAnswer() = answers.joinToString(" ")
+    fun getMultipleLineAnswer() = answers.joinToString("\n")
+    fun getSwappableAnswers(isSwap: Boolean) = if (isSwap) listOf(problem) else answers
 
     companion object {
         fun fromQuestion(question: Question): QuestionUseCaseModel =
@@ -39,4 +42,22 @@ data class QuestionUseCaseModel(
                 isCheckAnswerOrder = question.isCheckAnswerOrder
             )
     }
+
+    fun toQuestion() =
+        Question(
+            id = QuestionId(id),
+            type = type,
+            problem = problem,
+            answers = answers,
+            explanation = explanation,
+            problemImageUrl = problemImageUrl,
+            explanationImageUrl = explanationImageUrl,
+            answerStatus = answerStatus,
+            isAnswering = isAnswering,
+            order = order,
+            otherSelections = otherSelections,
+            isAutoGenerateOtherSelections = isAutoGenerateOtherSelections,
+            isCheckAnswerOrder = isCheckAnswerOrder
+        )
+
 }
