@@ -12,21 +12,21 @@ import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
+import com.example.ui.core.DialogMenuItem
+import com.example.ui.core.ListDialogFragment
+import com.example.ui.core.showToast
 import com.example.ui.home.HomeViewModel
 import com.example.usecase.model.FolderUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
 import dagger.hilt.android.AndroidEntryPoint
-import jp.gr.java_conf.foobar.testmaker.service.CardCategoryBindingModel_
-import jp.gr.java_conf.foobar.testmaker.service.ItemTestBindingModel_
+import jp.gr.java_conf.foobar.testmaker.service.FolderBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.TestBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBinding
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -116,8 +116,8 @@ class LocalMainFragment : Fragment() {
                 .withRecyclerView(recyclerView)
                 .forVerticalList()
                 .withTargets(
-                    CardCategoryBindingModel_::class.java,
-                    ItemTestBindingModel_::class.java
+                    FolderBindingModel_::class.java,
+                    TestBindingModel_::class.java
                 )
                 .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<EpoxyModel<*>>() {
                     override fun onModelMoved(
@@ -129,9 +129,9 @@ class LocalMainFragment : Fragment() {
                         val from = mainController.adapter.getModelAtPosition(fromPosition)
                         val to = mainController.adapter.getModelAtPosition(toPosition)
 
-                        if (from is ItemTestBindingModel_ && to is ItemTestBindingModel_) {
+                        if (from is TestBindingModel_ && to is TestBindingModel_) {
                             homeViewModel.swapWorkbook(from.workbookId(), to.workbookId())
-                        } else if (from is CardCategoryBindingModel_ && to is CardCategoryBindingModel_) {
+                        } else if (from is FolderBindingModel_ && to is FolderBindingModel_) {
                             homeViewModel.swapFolder(from.folderId(), to.folderId())
                         }
                     }

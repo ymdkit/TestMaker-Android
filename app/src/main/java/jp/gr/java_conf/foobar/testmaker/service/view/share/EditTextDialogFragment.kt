@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import com.example.ui.core.showToast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.DialogEditTextBinding
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireStringArgument
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 
 class EditTextDialogFragment: DialogFragment() {
 

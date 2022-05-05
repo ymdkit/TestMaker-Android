@@ -17,18 +17,18 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.example.ui.core.AdViewModel
+import com.example.ui.core.DialogMenuItem
+import com.example.ui.core.ListDialogFragment
+import com.example.ui.core.showToast
 import com.example.ui.question.QuestionListViewModel
 import com.example.usecase.model.QuestionUseCaseModel
 import com.google.android.gms.ads.AdRequest
 import dagger.hilt.android.AndroidEntryPoint
-import jp.gr.java_conf.foobar.testmaker.service.ItemQuestionBindingModel_
+import jp.gr.java_conf.foobar.testmaker.service.QuestionBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentQuestionListBinding
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -342,18 +342,18 @@ class QuestionListFragment : Fragment() {
             .initDragging(controller)
             .withRecyclerView(binding.recyclerView)
             .forVerticalList()
-            .withTarget(ItemQuestionBindingModel_::class.java)
-            .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<ItemQuestionBindingModel_>() {
+            .withTarget(QuestionBindingModel_::class.java)
+            .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<QuestionBindingModel_>() {
                 override fun onModelMoved(
                     fromPosition: Int,
                     toPosition: Int,
-                    modelBeingMoved: ItemQuestionBindingModel_,
+                    modelBeingMoved: QuestionBindingModel_,
                     itemView: View?
                 ) {
                     val from = controller.adapter.getModelAtPosition(fromPosition)
                     val to = controller.adapter.getModelAtPosition(toPosition)
 
-                    if (from is ItemQuestionBindingModel_ && to is ItemQuestionBindingModel_) {
+                    if (from is QuestionBindingModel_ && to is QuestionBindingModel_) {
                         questionListViewModel.swapQuestions(from.questionId(), to.questionId())
                     }
                 }

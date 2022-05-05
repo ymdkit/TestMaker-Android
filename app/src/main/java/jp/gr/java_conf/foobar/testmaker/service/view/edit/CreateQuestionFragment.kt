@@ -23,13 +23,13 @@ import androidx.navigation.fragment.navArgs
 import com.example.core.QuestionType
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.ComposeAdView
+import com.example.ui.core.showToast
 import com.example.ui.question.CreateQuestionViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.CreateQuestionForm
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import kotlinx.coroutines.flow.launchIn

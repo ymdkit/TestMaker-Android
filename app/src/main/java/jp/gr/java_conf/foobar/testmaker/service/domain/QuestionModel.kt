@@ -1,6 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.domain
 
-import jp.gr.java_conf.foobar.testmaker.service.extensions.allIndexed
+import com.example.core.utils.allIndexed
 import java.util.*
 
 data class QuestionModel(

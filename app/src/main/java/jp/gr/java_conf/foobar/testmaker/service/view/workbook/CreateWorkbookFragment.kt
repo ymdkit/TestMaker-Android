@@ -30,11 +30,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.ComposeAdView
+import com.example.ui.core.showToast
 import com.example.ui.workbook.CreateWorkbookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
