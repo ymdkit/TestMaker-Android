@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.edit.component
+package com.example.ui.question
 
 import android.Manifest
 import android.content.Context
@@ -27,15 +27,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
-import com.example.ui.question.QuestionImage
+import com.example.ui.R
+import com.example.ui.core.DialogMenuItem
+import com.example.ui.core.GlideApp
+import com.example.ui.core.ListDialogFragment
+import com.example.ui.core.showToast
 import com.google.firebase.storage.FirebaseStorage
-import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.modules.GlideApp
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.CropImageDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.ImageStore
-import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException

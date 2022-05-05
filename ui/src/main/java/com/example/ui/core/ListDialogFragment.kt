@@ -1,13 +1,13 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.share
+package com.example.ui.core
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import com.example.ui.R
+import com.example.ui.databinding.DialogListMenusBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.databinding.DialogListMenusBinding
 
 class ListDialogFragment : BottomSheetDialogFragment() {
 

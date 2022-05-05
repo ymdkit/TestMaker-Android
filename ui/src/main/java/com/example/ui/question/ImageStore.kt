@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.edit
+package com.example.ui.question
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,6 +7,7 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 
+// todo ファイルの置き場所を再考する
 class ImageStore {
 
     // return file name

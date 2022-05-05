@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.edit
+package com.example.ui.question
 
 import android.app.Dialog
 import android.graphics.Bitmap
@@ -6,9 +6,9 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import com.example.ui.R
+import com.example.ui.databinding.DialogCropBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.databinding.DialogCropBinding
 import kotlinx.coroutines.launch
 
 //todo fragmentの再生成を考慮する（ViewModel 等で bitmap を保持する）

@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.edit.component
+package com.example.ui.question
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,10 +26,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import com.example.core.Constants
-import com.example.ui.question.FormQuestionViewModel
-import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.extensions.replaced
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.NumberPicker
+import com.example.core.utils.replaced
+import com.example.ui.R
+import com.example.ui.core.NumberPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.OutlinedSwitch
 
 @OptIn(ExperimentalMaterialApi::class)

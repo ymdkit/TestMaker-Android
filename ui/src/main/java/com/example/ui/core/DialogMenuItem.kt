@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.share
+package com.example.ui.core
 
 
 data class DialogMenuItem(
