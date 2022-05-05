@@ -12,6 +12,8 @@ object Dep {
     const val composeVersion = "1.0.5"
     const val coroutineVersion = "1.6.1"
     const val lifeCycleVersion = "2.4.1"
+    const val epoxyVersion = "5.0.0-beta03"
+    const val glideVersion = "4.13.0"
 
     object AndroidX {
         const val lifeCycleViewModel =
@@ -27,6 +29,36 @@ object Dep {
             "androidx.compose.material:material-icons-core:$composeVersion"
         const val materialIconsExtended =
             "androidx.compose.material:material-icons-extended:$composeVersion"
+        const val activity = "androidx.activity:activity-compose:1.4.0"
+    }
+
+    object Epoxy {
+        const val core = "com.airbnb.android:epoxy:$epoxyVersion"
+        const val dataBinding = "com.airbnb.android:epoxy-databinding:$epoxyVersion"
+        const val processor = "com.airbnb.android:epoxy-processor:$epoxyVersion"
+    }
+
+    object Material {
+        const val core = "com.google.android.material:material:1.5.0"
+    }
+
+    object Firebase {
+        const val bom = "com.google.firebase:firebase-bom:26.2.0"
+        const val core = "com.google.firebase:firebase-core"
+        const val storage = "com.google.firebase:firebase-storage"
+        const val auth = "com.google.firebase:firebase-auth"
+        const val fireStore = "com.google.firebase:firebase-firestore"
+        const val dynamicLinks = "com.google.firebase:firebase-dynamic-links-ktx"
+        const val analytics = "com.google.firebase:firebase-analytics-ktx"
+        const val crashlytics = "com.google.firebase:firebase-crashlytics"
+        const val authUi = "com.firebaseui:firebase-ui-auth:7.2.0"
+        const val storageUi = "com.firebaseui:firebase-ui-storage:4.1.0"
+        const val fireStoreUi = "com.firebaseui:firebase-ui-firestore:5.0.0"
+    }
+
+    object Glide {
+        const val core = "com.github.bumptech.glide:glide:$glideVersion"
+        const val compiler = "com.github.bumptech.glide:compiler:$glideVersion"
     }
 
     object PlayServices {
@@ -59,4 +91,9 @@ object Dep {
         const val playServices =
             "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutineVersion"
     }
+
+    object Misc {
+        const val cropView = "com.isseiaoki:simplecropview:1.1.4"
+    }
+
 }
