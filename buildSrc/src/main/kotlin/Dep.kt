@@ -94,6 +94,7 @@ object Dep {
 
     object Misc {
         const val cropView = "com.isseiaoki:simplecropview:1.1.4"
+        const val photoView = "com.github.chrisbanes:PhotoView:2.0.0"
     }
 
 }

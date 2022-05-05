@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.play.component
+package com.example.ui.answer
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -13,10 +13,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.ui.R
+import com.example.ui.core.GlideApp
 import com.github.chrisbanes.photoview.PhotoView
 import com.google.firebase.storage.FirebaseStorage
-import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.modules.GlideApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext

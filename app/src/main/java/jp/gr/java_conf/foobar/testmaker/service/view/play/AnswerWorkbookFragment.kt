@@ -24,14 +24,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.ui.answer.*
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.ComposeAdView
+import com.example.ui.core.FadeInAndOutAnimation
 import com.example.ui.core.showToast
 import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.view.play.component.*
 import jp.gr.java_conf.foobar.testmaker.service.view.result.MyTopAppBar
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme

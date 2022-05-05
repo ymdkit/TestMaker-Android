@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.play.component
+package com.example.ui.core
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi

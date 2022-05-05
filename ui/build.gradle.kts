@@ -57,6 +57,7 @@ dependencies {
     implementation(Dep.PlayServices.ads)
     implementation(Dep.Material.core)
     api(Dep.Misc.cropView)
+    implementation(Dep.Misc.photoView)
     implementation(platform(Dep.Firebase.bom))
     implementation(Dep.Firebase.storage)
     implementation(Dep.Firebase.storageUi)

@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.play.component
+package com.example.ui.core
 
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth

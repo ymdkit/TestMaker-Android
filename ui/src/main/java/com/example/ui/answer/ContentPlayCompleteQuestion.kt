@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.play.component
+package com.example.ui.answer
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,8 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.core.utils.replaced
-import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.view.play.PlayUiState
+import com.example.ui.R
+import com.example.ui.core.ContainedWideButton
 import kotlinx.coroutines.delay
 
 @Composable

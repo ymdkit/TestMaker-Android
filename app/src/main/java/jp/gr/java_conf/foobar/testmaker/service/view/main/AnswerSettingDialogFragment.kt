@@ -24,13 +24,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.core.QuestionCondition
 import com.example.ui.answer.AnswerSettingViewModel
+import com.example.ui.core.ContainedWideButton
 import com.example.ui.home.HomeViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireLongArgument
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireStringArgument
-import jp.gr.java_conf.foobar.testmaker.service.view.play.component.ContainedWideButton
 import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 

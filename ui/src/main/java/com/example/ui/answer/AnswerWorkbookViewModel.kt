@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.play
+package com.example.ui.answer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

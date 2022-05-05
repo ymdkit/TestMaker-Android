@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.play.component
+package com.example.ui.answer
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
