@@ -189,10 +189,9 @@ class AnswerResultFragment : Fragment() {
         }
     }
 
-    @ExperimentalMaterialApi
-    @ExperimentalAnimationApi
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.setup(workbookId = args.workbookId)
 
         requestReview()
 

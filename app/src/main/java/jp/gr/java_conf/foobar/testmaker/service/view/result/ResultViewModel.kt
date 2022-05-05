@@ -47,10 +47,12 @@ class ResultViewModel @Inject constructor(
             ?: listOf()
     }
 
-    val scoreList = listOf(questions.count { it.isCorrect },
-        questions.count { !it.isCorrect }).map(Int::toFloat)
+    val scoreList by lazy {
+        listOf(questions.count { it.isCorrect },
+            questions.count { !it.isCorrect }).map(Int::toFloat)
+    }
 
-    val scoreText = "${questions.count { it.isCorrect }}/${questions.size}"
+    val scoreText by lazy { "${questions.count { it.isCorrect }}/${questions.size}" }
 
     val studyPlusRecordStatus = MutableStateFlow(StudyPlusRecordStatus.READY)
 
