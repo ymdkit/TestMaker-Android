@@ -19,6 +19,7 @@ interface WorkBookRepository {
     suspend fun updateWorkbook(workbook: Workbook)
     suspend fun deleteWorkbook(workbookId: WorkbookId)
     suspend fun exportWorkbook(workbook: Workbook): ExportedWorkbook
+    suspend fun importWorkbook(workbookName: String, exportedWorkbook: ExportedWorkbook): Workbook
     suspend fun createQuestion(workbookId: WorkbookId, request: CreateQuestionRequest)
     suspend fun swapWorkbook(sourceWorkbook: Workbook, destWorkbook: Workbook)
     suspend fun getWorkbookListByFolderName(folderName: String): List<Workbook>

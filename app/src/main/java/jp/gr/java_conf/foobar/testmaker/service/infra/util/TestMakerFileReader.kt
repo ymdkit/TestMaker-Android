@@ -20,7 +20,7 @@ object TestMakerFileReader {
             val inputStream = activity.contentResolver.openInputStream(uri) ?: throw NullPointerException()
             val text = inputStream.bufferedReader().use(BufferedReader::readText).replaceFirst("\uFEFF", "")
             inputStream.close()
-            title to text
+            title to text.replace("\n", "¥n").replace("<", "&lt;")
         }.onSuccess {
             return it
         }.onFailure {

@@ -22,21 +22,4 @@ class TestRepository @Inject constructor(
     fun refresh() {
         tests = dataSource.getWorkbookList().map { Test.createFromRealmTest(it) }
     }
-
-    fun create(test: Test) {
-        val workbookId = dataSource.generateWorkbookId()
-        val questionId = dataSource.generateQuestionId()
-        dataSource.createWorkbook(
-            test.copy(
-                id = workbookId,
-                order = workbookId.toInt(),
-                questions = test.questions.mapIndexed { index, question ->
-                    question.copy(
-                        id = questionId + index,
-                        order = index
-                    )
-                }).toRealmTest()
-        )
-        refresh()
-    }
 }

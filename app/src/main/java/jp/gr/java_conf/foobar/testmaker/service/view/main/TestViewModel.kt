@@ -18,6 +18,4 @@ class TestViewModel @Inject constructor(
     fun refresh() {
         repository.refresh()
     }
-
-    fun create(test: Test) = repository.create(test)
 }

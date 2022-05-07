@@ -9,30 +9,28 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.android.billingclient.api.BillingClient
-import com.example.infra.remote.CloudFunctionsApi
-import com.example.infra.remote.CloudFunctionsClient
-import com.example.ui.core.showErrorToast
 import com.example.ui.core.showToast
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentHomeBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
 import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.util.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -43,24 +41,18 @@ class HomeFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentHomeBinding
-
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by activityViewModels()
 
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager
 
-    @CloudFunctionsClient
-    @Inject
-    lateinit var service: CloudFunctionsApi
-
     @Inject
     lateinit var logger: TestMakerLogger
-    private val testViewModel: TestViewModel by activityViewModels()
 
     private val importFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
         it ?: return@registerForActivityResult
         val (title, content) = TestMakerFileReader.readFileFromUri(it, requireActivity())
-        loadTestByText(title = title, text = content)
+        loadTestByText(title = title, exportedWorkbook = content)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,7 +101,7 @@ class HomeFragment : Fragment() {
 
         val navigationView = binding.navView
         navigationView.setNavigationItemSelectedListener { menuItem ->
-
+            binding.drawerLayout.close()
             when (menuItem.itemId) {
                 R.id.nav_import -> importFile.launch(arrayOf("text/*"))
                 R.id.nav_remove_ad -> {
@@ -183,30 +175,24 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    private fun loadTestByText(title: String = "no title", text: String) {
-        requireActivity().executeJobWithDialog(
-            title = getString(R.string.downloading),
-            task = {
-                withContext(Dispatchers.IO) {
-                    service.textToTest(
-                        title,
-                        text.replace("\n", "¥n").replace("<", "&lt;"),
-                        if (Locale.getDefault().language == "ja") "ja" else "en"
-                    )
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        lifecycleScope.launchWhenCreated {
+
+            viewModel.importWorkbookCompletionEvent
+                .receiveAsFlow()
+                .onEach {
+                    requireContext().showToast(getString(R.string.message_success_load, it))
                 }
-            },
-            onSuccess = {
-                testViewModel.create(Test.createFromTestResponse(it))
-                logger.logCreateTestEvent(it.title, CreateTestSource.FILE_IMPORT.title)
-                Toast.makeText(
-                    requireContext(),
-                    requireContext().getString(R.string.message_success_load, it.title),
-                    Toast.LENGTH_LONG
-                ).show()
-            },
-            onFailure = {
-                requireContext().showErrorToast(it)
-            }
+                .launchIn(this)
+        }
+    }
+
+    private fun loadTestByText(title: String = "no title", exportedWorkbook: String) {
+        viewModel.importWorkbook(
+            workbookName = title,
+            exportedWorkbook = exportedWorkbook
         )
     }
 

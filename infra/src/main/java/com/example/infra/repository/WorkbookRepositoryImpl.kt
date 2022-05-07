@@ -1,5 +1,6 @@
 package com.example.infra.repository
 
+import com.example.core.QuestionType
 import com.example.domain.model.*
 import com.example.domain.repository.WorkBookRepository
 import com.example.infra.local.db.FolderDataSource
@@ -12,6 +13,7 @@ import com.example.infra.remote.CloudFunctionsClient
 import com.example.infra.remote.ExportWorkbookRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -118,6 +120,61 @@ class WorkbookRepositoryImpl @Inject constructor(
                 )
             ).text
         )
+
+    override suspend fun importWorkbook(
+        workbookName: String,
+        exportedWorkbook: ExportedWorkbook,
+    ): Workbook {
+        val importedWorkbook = cloudFunctionsApi.textToTest(
+            workbookName = workbookName,
+            text = exportedWorkbook.value,
+            lang = if (Locale.getDefault().language == "ja") "ja" else "en"
+        )
+
+        val newQuestionId = workbookDataSource.generateQuestionId()
+        val newQuestionList = importedWorkbook.questions.mapIndexed { index, it ->
+
+            val questionType = QuestionType.valueOf(it.type)
+            val newAnswerList = when (questionType) {
+                QuestionType.WRITE -> listOf(it.answer)
+                QuestionType.SELECT -> listOf(it.answer)
+                QuestionType.COMPLETE -> it.answers
+                QuestionType.SELECT_COMPLETE -> it.answers
+            }
+
+            Quest.fromCreateQuestionRequest(
+                questionId = newQuestionId + index,
+                request = CreateQuestionRequest(
+                    questionType = questionType,
+                    problem = it.question,
+                    answers = newAnswerList,
+                    explanation = it.explanation,
+                    problemImageUrl = it.imagePath,
+                    explanationImageUrl = "", // todo
+                    otherSelections = it.others,
+                    isAutoGenerateOtherSelections = it.isAutoGenerateOthers,
+                    isCheckAnswerOrder = it.isCheckOrder
+                ),
+            )
+        }
+
+        val newWorkbookId = workbookDataSource.generateWorkbookId()
+        val newWorkbook = Workbook(
+            id = WorkbookId(value = newWorkbookId),
+            remoteId = "",
+            name = importedWorkbook.title,
+            color = 0, // todo
+            order = newWorkbookId.toInt(),
+            folderName = "",
+            questionList = newQuestionList.map { it.toQuestion() }
+        )
+
+        workbookDataSource.createQuestions(questionList = newQuestionList)
+        workbookDataSource.createWorkbook(workbook = RealmTest.fromWorkbook(newWorkbook))
+        refreshWorkbookList()
+
+        return newWorkbook
+    }
 
     override suspend fun swapWorkbook(sourceWorkbook: Workbook, destWorkbook: Workbook) {
         workbookDataSource.createWorkbook(RealmTest.fromWorkbook(sourceWorkbook.copy(order = destWorkbook.order)))

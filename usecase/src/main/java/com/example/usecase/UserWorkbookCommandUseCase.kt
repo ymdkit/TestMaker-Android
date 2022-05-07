@@ -1,6 +1,7 @@
 package com.example.usecase
 
 import com.example.core.AnswerStatus
+import com.example.domain.model.ExportedWorkbook
 import com.example.domain.model.WorkbookId
 import com.example.domain.repository.WorkBookRepository
 import com.example.usecase.model.WorkbookUseCaseModel
@@ -33,6 +34,17 @@ class UserWorkbookCommandUseCase @Inject constructor(
         val workbook = workBookRepository.getWorkbook(WorkbookId(workbookId))
         return workBookRepository.exportWorkbook(workbook).value
     }
+
+    suspend fun importWorkbook(
+        workbookName: String,
+        exportedWorkbook: String,
+    ): WorkbookUseCaseModel =
+        WorkbookUseCaseModel.fromWorkbook(
+            workBookRepository.importWorkbook(
+                workbookName = workbookName,
+                exportedWorkbook = ExportedWorkbook(value = exportedWorkbook),
+            )
+        )
 
     suspend fun swapWorkbooks(sourceWorkbookId: Long, destWorkbookId: Long) {
         val sourceWorkbook = workBookRepository.getWorkbook(WorkbookId(sourceWorkbookId))

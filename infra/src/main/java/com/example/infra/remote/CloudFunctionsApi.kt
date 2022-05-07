@@ -13,7 +13,7 @@ interface CloudFunctionsApi {
     @FormUrlEncoded
     @POST("textToTest")
     suspend fun textToTest(
-        @Field("title") title: String,
+        @Field("title") workbookName: String,
         @Field("text") text: String,
         @Field("lang") lang: String
     ): ImportWorkbookResponse
