@@ -15,7 +15,7 @@ interface WorkBookRepository {
     suspend fun deleteFolder(folderId: FolderId)
     suspend fun getWorkbookList(): List<Workbook>
     suspend fun getWorkbook(workbookId: WorkbookId): Workbook
-    suspend fun createWorkbook(name: String, color: Int, folderName: String)
+    suspend fun createWorkbook(name: String, remoteId: String, color: Int, folderName: String)
     suspend fun updateWorkbook(workbook: Workbook)
     suspend fun deleteWorkbook(workbookId: WorkbookId)
     suspend fun exportWorkbook(workbook: Workbook): ExportedWorkbook

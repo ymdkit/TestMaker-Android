@@ -5,6 +5,7 @@ import com.example.domain.model.Workbook
 
 data class WorkbookUseCaseModel(
     val id: Long,
+    val remoteId: String,
     val name: String,
     val color: Int, // todo don't use resId directly
     val folderName: String,
@@ -17,6 +18,7 @@ data class WorkbookUseCaseModel(
         fun fromWorkbook(workbook: Workbook): WorkbookUseCaseModel =
             WorkbookUseCaseModel(
                 id = workbook.id.value,
+                remoteId = workbook.remoteId,
                 name = workbook.name,
                 color = workbook.color,
                 folderName = workbook.folderName,

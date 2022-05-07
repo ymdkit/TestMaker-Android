@@ -22,10 +22,16 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.ui.core.*
+import com.example.core.QuestionCondition
+import com.example.ui.core.AdViewModel
+import com.example.ui.core.ComposeAdView
+import com.example.ui.core.DialogMenuItem
+import com.example.ui.core.ListDialogFragment
+import com.example.usecase.utils.Resource
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -37,6 +43,9 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -69,10 +78,6 @@ class AnswerResultFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        viewModel.setup(
-            workbookId = testId
-        )
-
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner, object : OnBackPressedCallback(
                 true
@@ -85,102 +90,115 @@ class AnswerResultFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
+
+                val uiState by viewModel.uiState.collectAsState()
+
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
                             MyTopAppBar(getString(R.string.label_result))
                         },
                         content = {
-                            Surface(color = MaterialTheme.colors.surface) {
-                                Column {
-                                    Column(
-                                        modifier = Modifier
-                                            .padding(16.dp)
-                                            .verticalScroll(state = ScrollState(0))
-                                            .weight(weight = 1f, fill = true)
-                                    ) {
-                                        ItemPieChart(
-                                            dataSet =
-                                            PieDataSet(
-                                                viewModel.scoreList.map {
-                                                    PieEntry(it)
-                                                }, ""
-                                            ),
-                                            centerText = viewModel.scoreText
-                                        )
-
-                                        val studyPlusRecordStatus: ResultViewModel.StudyPlusRecordStatus by viewModel.studyPlusRecordStatus.collectAsState()
-
-                                        AnimatedVisibility(
-                                            visible = sharedPreferenceManager.uploadStudyPlus == resources.getStringArray(
-                                                R.array.upload_setting_study_plus_values
-                                            )[2] && studyPlusRecordStatus == ResultViewModel.StudyPlusRecordStatus.READY
-                                        ) {
-                                            WideOutlinedButton(
-                                                onCLick = {
-                                                    viewModel.createStudyPlusRecord(
-                                                        duration, requireContext()
-                                                    )
-                                                },
-                                                text = getString(R.string.menu_upload_studyplus),
-                                                modifier = Modifier.padding(vertical = 8.dp)
-                                            )
-                                        }
-
-                                        Text(
-                                            text = getString(R.string.label_result_questions),
-                                            color = MaterialTheme.colors.primary,
-                                            modifier = Modifier.padding(vertical = 4.dp)
-                                        )
-
-                                        viewModel.questions.mapIndexed { index, it ->
-                                            ItemResultModel(
-                                                index + 1,
-                                                it.question,
-                                                it.singleLineAnswer,
-                                                it.isCorrect
-                                            ).ItemResult(onClick = {
-                                                findNavController().navigate(
-                                                    AnswerResultFragmentDirections.actionAnswerResultToEditQuestion(
-                                                        workbookId = testId,
-                                                        questionId = it.id
-                                                    )
+                            when (val state = uiState) {
+                                is Resource.Success -> {
+                                    Surface(color = MaterialTheme.colors.surface) {
+                                        Column {
+                                            // todo LazyColumn に変更する
+                                            Column(
+                                                modifier = Modifier
+                                                    .padding(16.dp)
+                                                    .verticalScroll(state = ScrollState(0))
+                                                    .weight(weight = 1f, fill = true)
+                                            ) {
+                                                ItemPieChart(
+                                                    dataSet =
+                                                    PieDataSet(
+                                                        listOf(
+                                                            state.value.correctCount,
+                                                            state.value.incorrectCount
+                                                        )
+                                                            .map {
+                                                                PieEntry(it)
+                                                            }, ""
+                                                    ),
+                                                    centerText = state.value.scoreText
                                                 )
-                                            })
-                                        }
-                                    }
-                                    Row(
-                                        modifier = Modifier.padding(16.dp)
-                                    ) {
-                                        OutlinedButton(
-                                            modifier = Modifier
-                                                .weight(fill = true, weight = 1f)
-                                                .defaultMinSize(minHeight = 48.dp),
-                                            onClick = {
-                                                findNavController().popBackStack(
-                                                    R.id.page_home,
-                                                    false
+
+                                                val studyPlusRecordStatus: ResultViewModel.StudyPlusRecordStatus by viewModel.studyPlusRecordStatus.collectAsState()
+
+                                                AnimatedVisibility(
+                                                    visible = sharedPreferenceManager.uploadStudyPlus == resources.getStringArray(
+                                                        R.array.upload_setting_study_plus_values
+                                                    )[2] && studyPlusRecordStatus == ResultViewModel.StudyPlusRecordStatus.READY
+                                                ) {
+                                                    WideOutlinedButton(
+                                                        onCLick = {
+                                                            viewModel.createStudyPlusRecord(
+                                                                duration, requireContext()
+                                                            )
+                                                        },
+                                                        text = getString(R.string.menu_upload_studyplus),
+                                                        modifier = Modifier.padding(vertical = 8.dp)
+                                                    )
+                                                }
+
+                                                Text(
+                                                    text = getString(R.string.label_result_questions),
+                                                    color = MaterialTheme.colors.primary,
+                                                    modifier = Modifier.padding(vertical = 4.dp)
                                                 )
-                                            }) {
-                                            Text(stringResource(R.string.home))
-                                        }
-                                        Spacer(modifier = Modifier.width(16.dp))
-                                        Button(
-                                            modifier = Modifier
-                                                .weight(fill = true, weight = 1f)
-                                                .defaultMinSize(minHeight = 48.dp),
-                                            colors = ButtonDefaults.buttonColors(
-                                                backgroundColor = MaterialTheme.colors.primary
-                                            ),
-                                            onClick = {
-                                                onClickRetry()
+
+                                                state.value.answeringQuestionList.mapIndexed { index, it ->
+                                                    ItemResultModel(
+                                                        index + 1,
+                                                        it.problem,
+                                                        it.getSingleLineAnswer(),
+                                                        it.answerStatus
+                                                    ).ItemResult(onClick = {
+                                                        findNavController().navigate(
+                                                            AnswerResultFragmentDirections.actionAnswerResultToEditQuestion(
+                                                                workbookId = testId,
+                                                                questionId = it.id
+                                                            )
+                                                        )
+                                                    })
+                                                }
                                             }
-                                        ) {
-                                            Text(stringResource(id = R.string.retry))
+                                            Row(
+                                                modifier = Modifier.padding(16.dp)
+                                            ) {
+                                                OutlinedButton(
+                                                    modifier = Modifier
+                                                        .weight(fill = true, weight = 1f)
+                                                        .defaultMinSize(minHeight = 48.dp),
+                                                    onClick = {
+                                                        findNavController().popBackStack(
+                                                            R.id.page_home,
+                                                            false
+                                                        )
+                                                    }) {
+                                                    Text(stringResource(R.string.home))
+                                                }
+                                                Spacer(modifier = Modifier.width(16.dp))
+                                                Button(
+                                                    modifier = Modifier
+                                                        .weight(fill = true, weight = 1f)
+                                                        .defaultMinSize(minHeight = 48.dp),
+                                                    colors = ButtonDefaults.buttonColors(
+                                                        backgroundColor = MaterialTheme.colors.primary
+                                                    ),
+                                                    onClick = {
+                                                        onClickRetry()
+                                                    }
+                                                ) {
+                                                    Text(stringResource(id = R.string.retry))
+                                                }
+                                            }
+                                            ComposeAdView(viewModel = adViewModel)
                                         }
                                     }
-                                    ComposeAdView(viewModel = adViewModel)
                                 }
+                                else -> {}
                             }
                         }
                     )
@@ -204,7 +222,19 @@ class AnswerResultFragment : Fragment() {
                 viewModel.createStudyPlusRecord(duration, requireContext())
         }
 
-        logger.logAnsweredTestEvent(viewModel.test, viewModel.questions.size)
+        lifecycleScope.launchWhenCreated {
+            viewModel.navigateToAnswerWorkbookEvent
+                .receiveAsFlow()
+                .onEach {
+                    findNavController().navigate(
+                        AnswerResultFragmentDirections.actionAnswerResultToAnswerWorkbook(
+                            workbookId = it.workbookId,
+                            isRetry = it.isRetry
+                        )
+                    )
+                }
+                .launchIn(this)
+        }
     }
 
     private fun requestReview() {
@@ -229,38 +259,21 @@ class AnswerResultFragment : Fragment() {
                 DialogMenuItem(
                     title = getString(R.string.result_dialog_item_retry_all),
                     iconRes = R.drawable.ic_play_arrow_white_24dp,
-                    action = { retryAllQuestions() }),
+                    action = {
+                        viewModel.retryQuestions(
+                            questionCondition = QuestionCondition.ALL
+                        )
+                    }),
                 DialogMenuItem(
                     title = getString(R.string.result_dialog_item_retry_only_incorrect),
                     iconRes = R.drawable.ic_baseline_error_24,
-                    action = { retryOnlyInCorrectQuestions() })
+                    action = {
+                        viewModel.retryQuestions(
+                            questionCondition = QuestionCondition.WRONG
+                        )
+                    })
             )
         ).show(childFragmentManager, "TAG")
-    }
-
-    private fun retryAllQuestions() {
-        sharedPreferenceManager.refine = false
-        findNavController().navigate(
-            AnswerResultFragmentDirections.actionAnswerResultToAnswerWorkbook(
-                workbookId = testId,
-                isRetry = true
-            )
-        )
-    }
-
-    private fun retryOnlyInCorrectQuestions() {
-        if (viewModel.questions.any { !it.isCorrect }) {
-            sharedPreferenceManager.refine = true
-
-            findNavController().navigate(
-                AnswerResultFragmentDirections.actionAnswerResultToAnswerWorkbook(
-                    workbookId = testId,
-                    isRetry = true
-                )
-            )
-        } else {
-            requireContext().showToast(getString(R.string.message_null_wrongs))
-        }
     }
 }
 

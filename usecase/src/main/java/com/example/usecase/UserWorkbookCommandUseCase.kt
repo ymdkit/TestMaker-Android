@@ -12,8 +12,8 @@ class UserWorkbookCommandUseCase @Inject constructor(
     private val workBookRepository: WorkBookRepository
 ) {
 
-    suspend fun createWorkbook(name: String, color: Int, folderName: String) =
-        workBookRepository.createWorkbook(name, color, folderName)
+    suspend fun createWorkbook(name: String, remoteId: String, color: Int, folderName: String) =
+        workBookRepository.createWorkbook(name, remoteId, color, folderName)
 
     suspend fun updateWorkbook(workbookId: Long, name: String, color: Int, folderName: String) {
         val workbook = workBookRepository.getWorkbook(workbookId = WorkbookId(workbookId))

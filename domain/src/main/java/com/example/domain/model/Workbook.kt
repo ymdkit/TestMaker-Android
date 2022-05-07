@@ -2,6 +2,7 @@ package com.example.domain.model
 
 data class Workbook(
     val id: WorkbookId,
+    val remoteId: String,
     val name: String,
     val color: Int, // todo don't use resId directly
     val order: Int,

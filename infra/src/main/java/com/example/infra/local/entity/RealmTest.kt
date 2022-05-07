@@ -19,6 +19,7 @@ open class RealmTest : RealmObject() {
                 color = workbook.color
                 title = workbook.name
                 order = workbook.order
+                documentId = workbook.remoteId
                 setCategory(workbook.folderName)
                 workbook.questionList.forEach { addQuestion(Quest.fromQuestion(it)) }
             }
@@ -54,15 +55,9 @@ open class RealmTest : RealmObject() {
 
     fun questionsNonNull(): List<Quest> = questions?.sortedBy { it.order } ?: listOf()
 
-    fun resetAchievement() {
-
-        questions ?: return
-        questions!!.forEach { it.correct = false }
-
-    }
-
     fun toWorkbook(): Workbook = Workbook(
         id = WorkbookId(value = id),
+        remoteId = documentId,
         name = title ?: "no title",
         color = color,
         order = order,

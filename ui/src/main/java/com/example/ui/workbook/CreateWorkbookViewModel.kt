@@ -41,7 +41,7 @@ class CreateWorkbookViewModel @Inject constructor(
 
     fun createWorkbook(name: String, color: Int, folderName: String) =
         viewModelScope.launch {
-            userWorkbookCommandUseCase.createWorkbook(name, color, folderName)
+            userWorkbookCommandUseCase.createWorkbook(name, "", color, folderName)
         }
 
 }

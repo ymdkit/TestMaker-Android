@@ -82,12 +82,14 @@ class WorkbookRepositoryImpl @Inject constructor(
 
     override suspend fun createWorkbook(
         name: String,
+        remoteId: String,
         color: Int,
         folderName: String
     ) {
         val workbookId = workbookDataSource.generateWorkbookId()
         val newWorkbook = Workbook(
             id = WorkbookId(workbookId),
+            remoteId = remoteId,
             name = name,
             color = color,
             folderName = folderName,
