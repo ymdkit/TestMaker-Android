@@ -15,26 +15,6 @@ class PreferenceDataSource @Inject constructor(
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("question", Context.MODE_PRIVATE)
 
-    var numOthers: Int
-        get() = sharedPreferences.getInt("num_choose", 3)
-        set(num) = sharedPreferences.edit().putInt("num_choose", num)
-            .apply()
-
-    var numAnswers: Int
-        get() = sharedPreferences.getInt("num_write", 2)
-        set(num) = sharedPreferences.edit().putInt("num_write", num)
-            .apply()
-
-    var numAnswersSelectComplete: Int
-        get() = sharedPreferences.getInt("num_answers_select", 2)
-        set(num) = sharedPreferences.edit().putInt("num_answers_select", num)
-            .apply()
-
-    var numOthersSelectComplete: Int
-        get() = sharedPreferences.getInt("num_answers_select", 2)
-        set(num) = sharedPreferences.edit().putInt("num_answers_select", num)
-            .apply()
-
     var auto: Boolean
         get() = sharedPreferences.getBoolean("auto", false)
         set(num) = sharedPreferences.edit().putBoolean("auto", num)
@@ -45,21 +25,6 @@ class PreferenceDataSource @Inject constructor(
         set(f) = sharedPreferences.edit().putBoolean("explanation", f)
             .apply()
 
-    var isCheckOrder: Boolean
-        get() = sharedPreferences.getBoolean("isCheckOrder", false)
-        set(f) = sharedPreferences.edit().putBoolean("isCheckOrder", f)
-            .apply()
-
-    var isShowImageSetting: Boolean
-        get() = sharedPreferences.getBoolean("isShowImageSetting", false)
-        set(f) = sharedPreferences.edit().putBoolean("isShowImageSetting", f)
-            .apply()
-
-    var isResetForm: Boolean
-        get() = sharedPreferences.getBoolean("isResetForm", true)
-        set(f) = sharedPreferences.edit().putBoolean("isResetForm", f)
-            .apply()
-
     var isRemovedAd: Boolean
         get() = sharedPreferences.getBoolean("isRemovedAd", false)
         set(i) = sharedPreferences.edit().putBoolean("isRemovedAd", i).apply()
@@ -67,10 +32,6 @@ class PreferenceDataSource @Inject constructor(
     var isCaseInsensitive: Boolean
         get() = sharedPreferences.getBoolean("isCaseInsensitive", false)
         set(i) = sharedPreferences.edit().putBoolean("isCaseInsensitive", i).apply()
-
-    var sort: Int
-        get() = sharedPreferences.getInt("sort", -1)
-        set(i) = sharedPreferences.edit().putInt("sort", i).apply()
 
     //preferencesと連携するため
 
@@ -116,7 +77,7 @@ class PreferenceDataSource @Inject constructor(
         set(i) = sharedPreferences.edit().putInt("question_count", i).apply()
 
     var startPosition: Int
-        get() = sharedPreferences.getInt("start_position", 1)
+        get() = sharedPreferences.getInt("start_position", 0)
         set(i) = sharedPreferences.edit().putInt("start_position", i).apply()
 
     var uploadStudyPlus: String

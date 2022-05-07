@@ -41,7 +41,6 @@ class PreferenceRepositoryImpl @Inject constructor(
             isPlaySound = preference.isPlaySound,
             isCaseInsensitive = preference.isCaseInsensitive,
             isShowAnswerSettingDialog = preference.isShowAnswerSettingDialog,
-            // todo 設定値を変更できるようにする
             questionCount = preference.questionCount,
             startPosition = preference.startPosition
         )

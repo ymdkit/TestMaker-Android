@@ -118,12 +118,14 @@ class AnswerSettingDialogFragment : BottomSheetDialogFragment() {
                             )
                             EditNumberListItem(
                                 label = stringResource(id = R.string.position_start),
-                                value = uiState.startPosition,
+                                value = uiState.startPosition + 1,
                                 valueString = stringResource(
                                     id = R.string.position_start_value,
-                                    uiState.startPosition
+                                    uiState.startPosition + 1
                                 ),
-                                onValueChanged = answerSettingViewModel::onStartPositionChanged
+                                onValueChanged = {
+                                    answerSettingViewModel.onStartPositionChanged(it - 1)
+                                }
                             )
                             EditNumberListItem(
                                 label = stringResource(id = R.string.number_questions),
