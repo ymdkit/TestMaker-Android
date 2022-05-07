@@ -50,7 +50,13 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.page_answer_workbook, R.id.page_answer_result -> {
+                R.id.page_answer_workbook,
+                R.id.page_create_workbook,
+                R.id.page_edit_workbook,
+                R.id.page_create_folder,
+                R.id.page_create_question,
+                R.id.page_edit_question,
+                R.id.page_answer_result -> {
                     binding.bottomBar.isGone = true
                 }
                 else -> {

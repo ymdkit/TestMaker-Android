@@ -41,7 +41,7 @@
         <activity
             android:name=".view.main.MainActivity"
             android:configChanges="uiMode"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -60,9 +60,6 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.share.BaseActivity"
-            android:configChanges="uiMode" />
 
         <meta-data
             android:name="com.google.android.gms.version"

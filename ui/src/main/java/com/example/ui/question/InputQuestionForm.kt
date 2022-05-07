@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -215,9 +214,6 @@ fun InputQuestionForm(
                     onCheckedChange = viewModel::onIsAutoGenerateOtherSelectionsChanged
                 )
             }
-        }
-        item {
-            Spacer(modifier = Modifier.height((LocalConfiguration.current.screenHeightDp / 3).dp))
         }
     }
 }
