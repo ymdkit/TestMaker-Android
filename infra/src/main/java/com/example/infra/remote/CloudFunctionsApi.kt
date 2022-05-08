@@ -61,7 +61,7 @@ data class ExportQuestionRequest(
                 id = question.id.value,
                 type = question.type.value,
                 question = question.problem,
-                answer = "",
+                answer = question.answers.firstOrNull() ?: "",
                 answers = question.answers,
                 explanation = question.explanation,
                 imagePath = question.problemImageUrl,
