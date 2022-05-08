@@ -106,12 +106,11 @@ class PublishedWorkbookListFragment : Fragment() {
                                     } else {
                                         Text(
                                             text = getString(R.string.label_public_tests),
-                                            color = MaterialTheme.colors.onPrimary
                                         )
                                     }
 
                                 },
-                                backgroundColor = MaterialTheme.colors.primary,
+                                backgroundColor = Color.Transparent,
                                 actions = {
                                     IconButton(onClick = {
                                         isSearching.value = !isSearching.value
@@ -226,10 +225,6 @@ class PublishedWorkbookListFragment : Fragment() {
                                                 .clip(CircleShape)
                                                 .align(Alignment.BottomEnd),
                                             contentPadding = PaddingValues(vertical = 16.dp),
-                                            colors = ButtonDefaults.buttonColors(
-                                                backgroundColor = MaterialTheme.colors.secondary
-                                            ),
-
                                             ) {
                                             Image(
                                                 painter = painterResource(id = R.drawable.ic_baseline_cloud_upload_24),

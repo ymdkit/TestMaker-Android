@@ -10,7 +10,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            style="@style/Toolbar"
+            android:layout_height="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_constraintTop_toTopOf="parent"
@@ -43,15 +43,18 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_overview"
-                style="@style/MyTextInputLayoutStyle"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/element_spacing_small"
                 android:layout_marginTop="@dimen/element_spacing_small"
                 app:layout_constraintTop_toBottomOf="@id/spinner">
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edit_overview"
-                    style="@style/MyEditTextMultiLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:maxLines="3"
                     android:hint="@string/hint_overview"
                     android:maxLength="140" />
 
@@ -79,7 +82,6 @@
                 android:layout_height="56dp"
                 android:layout_margin="@dimen/element_spacing_normal"
                 android:text="@string/upload_test"
-                android:theme="@style/ThemeOverlay.Button.Accent"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
