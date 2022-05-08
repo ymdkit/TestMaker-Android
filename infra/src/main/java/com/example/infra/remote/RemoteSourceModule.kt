@@ -1,5 +1,6 @@
 package com.example.infra.remote
 
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -63,5 +64,9 @@ object AppModule {
     fun provideCloudFunctionsApi(
         @CloudFunctionsClient retrofit: Retrofit
     ): CloudFunctionsApi = retrofit.create(CloudFunctionsApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
 }

@@ -46,6 +46,8 @@ dependencies {
     kapt(Dep.Moshi.moshiCodegen)
     implementation(Dep.Coroutine.core)
     implementation(Dep.AndroidX.preference)
+    implementation(platform(Dep.Firebase.bom))
+    implementation(Dep.Firebase.auth)
 
     implementation(project(":domain"))
     implementation(project(":core"))

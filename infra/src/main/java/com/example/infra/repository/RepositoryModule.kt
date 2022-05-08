@@ -1,6 +1,7 @@
 package com.example.infra.repository
 
 import com.example.domain.repository.PreferenceRepository
+import com.example.domain.repository.UserRepository
 import com.example.domain.repository.WorkBookRepository
 import dagger.Binds
 import dagger.Module
@@ -23,5 +24,11 @@ abstract class RepositoryModule {
     abstract fun bindPreferenceRepository(
         preferenceRepositoryImpl: PreferenceRepositoryImpl
     ): PreferenceRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
+    ): UserRepository
 
 }
