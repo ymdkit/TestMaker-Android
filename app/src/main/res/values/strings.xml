@@ -339,4 +339,8 @@
     <string name="question_count_value">%1$d questions</string>
     <string name="hint_position_start">start position</string>
     <string name="title_edit_position_start">start position</string>
+    <string name="msg_success_logout">success logout</string>
+    <string name="dialog_edit_display_name">edit user name</string>
+    <string name="confirm_logout">logout?</string>
+    <string name="button_logout">logout</string>
 </resources>
