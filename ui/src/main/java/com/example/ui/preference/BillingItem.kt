@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.infra.billing
+package com.example.ui.preference
 
 
 data class BillingItem(
