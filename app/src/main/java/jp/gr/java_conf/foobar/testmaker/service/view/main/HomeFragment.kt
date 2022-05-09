@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.res.ResourcesCompat
@@ -15,16 +14,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.android.billingclient.api.BillingClient
 import com.example.ui.core.showToast
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentHomeBinding
-import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
-import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingItem
-import jp.gr.java_conf.foobar.testmaker.service.infra.billing.BillingStatus
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
@@ -103,13 +98,8 @@ class HomeFragment : Fragment() {
         navigationView.setNavigationItemSelectedListener { menuItem ->
             binding.drawerLayout.close()
             when (menuItem.itemId) {
+                // todo 問題作成画面に移動させる
                 R.id.nav_import -> importFile.launch(arrayOf("text/*"))
-                R.id.nav_remove_ad -> {
-                    viewModel.purchaseRemoveAd(
-                        requireActivity(),
-                        BillingItem(getString(R.string.sku_remove_ad), BillingClient.SkuType.INAPP)
-                    )
-                }
             }
             false
         }
@@ -123,54 +113,6 @@ class HomeFragment : Fragment() {
         )
         binding.drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
-
-        viewModel.startBillingConnection()
-        viewModel.billingStatus.observeNonNull(this) {
-            when (it) {
-                is BillingStatus.Error -> {
-                    when (it.responseCode) {
-                        BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.alrady_removed_ad),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            binding.adView.visibility = View.GONE
-                            viewModel.removeAd()
-                        }
-                        BillingClient.BillingResponseCode.USER_CANCELED -> Toast.makeText(
-                            requireContext(),
-                            getString(R.string.purchase_canceled),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        else -> Toast.makeText(
-                            requireContext(),
-                            getString(R.string.error),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-                is BillingStatus.PurchaseSuccess -> {
-
-                    it.purchases?.let {
-                        for (purchase in it) {
-                            when (purchase.sku) {
-                                getString(R.string.sku_remove_ad) -> {
-                                    requireContext().showToast(
-                                        getString(R.string.msg_remove_ad_success),
-                                        Toast.LENGTH_LONG
-                                    )
-                                    binding.adView.visibility = View.GONE
-                                    viewModel.removeAd()
-                                }
-                            }
-                        }
-                    }
-                }
-                else -> {
-                }
-            }
-        }
 
         return binding.root
     }

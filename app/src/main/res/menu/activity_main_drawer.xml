@@ -5,9 +5,5 @@
             android:id="@+id/nav_import"
             android:icon="@drawable/ic_file_download_white"
             android:title="@string/action_import" />
-        <item
-            android:id="@+id/nav_remove_ad"
-            android:icon="@drawable/ic_remove_ad_white"
-            android:title="@string/action_remove_ad" />
     </group>
 </menu>
