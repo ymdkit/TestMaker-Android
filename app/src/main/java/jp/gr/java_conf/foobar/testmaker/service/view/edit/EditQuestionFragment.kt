@@ -150,6 +150,7 @@ class EditQuestionFragment : Fragment() {
             workbookId = args.workbookId,
             questionId = args.questionId
         )
+        adViewModel.setup()
 
         lifecycleScope.launchWhenCreated {
             editQuestionViewModel.onUpdateQuestion

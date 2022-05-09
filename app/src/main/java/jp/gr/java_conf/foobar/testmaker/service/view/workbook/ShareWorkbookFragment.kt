@@ -20,8 +20,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
-import com.example.ui.core.ComposeAdView
 import com.example.ui.core.showToast
 import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
@@ -197,7 +197,7 @@ class ShareWorkbookFragment : Fragment() {
                                         }
                                     }
                                 }
-                                ComposeAdView(
+                                AdView(
                                     viewModel = adViewModel,
                                     adSize = AdSize.MEDIUM_RECTANGLE
                                 )
@@ -207,5 +207,10 @@ class ShareWorkbookFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        adViewModel.setup()
     }
 }

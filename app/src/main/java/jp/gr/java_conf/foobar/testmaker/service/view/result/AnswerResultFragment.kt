@@ -208,6 +208,7 @@ class AnswerResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setup(workbookId = args.workbookId)
+        adViewModel.setup()
 
         requestReview()
 

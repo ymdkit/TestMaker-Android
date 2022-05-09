@@ -254,6 +254,7 @@ class EditWorkbookFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         editWorkbookViewModel.setup(workbookId = args.workbookId)
+        adViewModel.setup()
         editWorkbookViewModel.load()
     }
 }

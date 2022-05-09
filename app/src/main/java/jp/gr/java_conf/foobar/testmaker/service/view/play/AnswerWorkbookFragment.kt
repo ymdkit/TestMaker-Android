@@ -265,10 +265,14 @@ class AnswerWorkbookFragment : Fragment() {
                             }
                         }
                     )
-
                 }
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        adViewModel.setup()
     }
 
     override fun onDestroy() {

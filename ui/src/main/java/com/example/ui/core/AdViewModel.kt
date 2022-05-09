@@ -6,6 +6,7 @@ import com.example.usecase.IsRemovedAdWatchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +17,7 @@ class AdViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _isRemovedAd: MutableStateFlow<Boolean> =
-        MutableStateFlow(false)
+        MutableStateFlow(isRemovedAdWatchUseCase.get())
     val isRemovedAd: StateFlow<Boolean>
         get() = _isRemovedAd
 
@@ -26,7 +27,7 @@ class AdViewModel @Inject constructor(
         viewModelScope.launch {
             isRemovedAdWatchUseCase.flow.onEach {
                 _isRemovedAd.emit(it)
-            }
+            }.launchIn(this)
         }
     }
 }

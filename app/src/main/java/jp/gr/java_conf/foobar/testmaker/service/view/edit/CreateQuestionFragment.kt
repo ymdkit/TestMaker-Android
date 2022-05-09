@@ -145,6 +145,7 @@ class CreateQuestionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createQuestionViewModel.setup(workbookId = args.workbookId)
+        adViewModel.setup()
 
         lifecycleScope.launchWhenCreated {
             createQuestionViewModel.onCreateQuestion
