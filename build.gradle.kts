@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath("io.realm:realm-gradle-plugin:6.0.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dep.kotlinVersion}")
         classpath("com.google.gms:google-services:4.3.10")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.5")
         classpath("gradle.plugin.com.github.konifar.gradle:plugin:0.3.3")
@@ -25,7 +25,7 @@ buildscript {
 plugins {
     id("com.android.application") version "7.1.2" apply false
     id("com.android.library") version "7.1.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.5.10" apply false
+    id("org.jetbrains.kotlin.android") version Dep.kotlinVersion apply false
     id("org.jetbrains.kotlin.kapt") version Dep.kotlinVersion apply false
 }
 

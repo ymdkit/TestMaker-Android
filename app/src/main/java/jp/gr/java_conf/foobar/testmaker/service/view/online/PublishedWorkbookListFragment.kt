@@ -72,8 +72,10 @@ class PublishedWorkbookListFragment : Fragment() {
     @Inject
     lateinit var logger: TestMakerLogger
 
-    @ExperimentalMaterialApi
-    @ExperimentalGraphicsApi
+    @OptIn(
+        ExperimentalMaterialApi::class,
+        ExperimentalGraphicsApi::class
+    )
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -90,14 +92,14 @@ class PublishedWorkbookListFragment : Fragment() {
 
                 val tests by viewModel.tests.observeAsState(emptyList())
                 val isRefreshing by viewModel.loading.observeAsState(true)
-                val isSearching = mutableStateOf(false)
+                var isSearching by remember { mutableStateOf(false) }
 
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
                             TopAppBar(
                                 title = {
-                                    if (isSearching.value) {
+                                    if (isSearching) {
                                         SearchTextField(
                                             modifier = Modifier.fillMaxWidth()
                                         ) {
@@ -113,12 +115,12 @@ class PublishedWorkbookListFragment : Fragment() {
                                 backgroundColor = Color.Transparent,
                                 actions = {
                                     IconButton(onClick = {
-                                        isSearching.value = !isSearching.value
+                                        isSearching = !isSearching
                                     }) {
                                         Image(
                                             painter = painterResource(
                                                 id =
-                                                if (isSearching.value) R.drawable.ic_close_white
+                                                if (isSearching) R.drawable.ic_close_white
                                                 else R.drawable.ic_baseline_search_24
                                             ),
                                             contentDescription = "search",

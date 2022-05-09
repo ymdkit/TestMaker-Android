@@ -71,8 +71,7 @@ class AnswerResultFragment : Fragment() {
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager
 
-    @ExperimentalAnimationApi
-    @ExperimentalMaterialApi
+    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

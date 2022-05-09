@@ -3,13 +3,13 @@ object Dep {
     const val minSdkVersion = 23
     const val targetSdkVersion = 30
 
-    const val kotlinVersion = "1.5.10"
+    const val kotlinVersion = "1.6.10"
     const val fragmentVersion = "1.3.2"
     const val navVersion = "2.3.3"
     const val hiltVersion = "2.41"
     const val retrofitVersion = "2.9.0"
     const val moshiVersion = "1.9.2"
-    const val composeVersion = "1.0.5"
+    const val composeVersion = "1.1.1"
     const val coroutineVersion = "1.6.1"
     const val lifeCycleVersion = "2.4.1"
     const val epoxyVersion = "5.0.0-beta03"

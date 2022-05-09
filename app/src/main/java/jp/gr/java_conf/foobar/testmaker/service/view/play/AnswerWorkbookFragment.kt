@@ -62,7 +62,7 @@ class AnswerWorkbookFragment : Fragment() {
         soundIncorrect = MediaPlayer.create(requireContext(), R.raw.mistake)
     }
 
-    @ExperimentalAnimationApi
+    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
