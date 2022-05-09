@@ -21,8 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.core.QuestionType
+import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
-import com.example.ui.core.ComposeAdView
 import com.example.ui.core.showToast
 import com.example.ui.question.EditQuestionViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -45,7 +45,7 @@ class EditQuestionFragment : Fragment() {
     private val editQuestionViewModel: EditQuestionViewModel by viewModels()
 
 
-    @ExperimentalPagerApi
+    @OptIn(ExperimentalPagerApi::class)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -135,7 +135,7 @@ class EditQuestionFragment : Fragment() {
                                         fragmentManager = childFragmentManager
                                     )
                                 }
-                                ComposeAdView(viewModel = adViewModel)
+                                AdView(viewModel = adViewModel)
                             }
                         }
                     )

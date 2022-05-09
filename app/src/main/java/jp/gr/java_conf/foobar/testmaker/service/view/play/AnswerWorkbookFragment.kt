@@ -25,8 +25,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.ui.answer.*
+import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
-import com.example.ui.core.ComposeAdView
 import com.example.ui.core.FadeInAndOutAnimation
 import com.example.ui.core.showToast
 import com.google.android.gms.ads.AdSize
@@ -258,7 +258,7 @@ class AnswerWorkbookFragment : Fragment() {
                                         }
                                     }
                                 }
-                                ComposeAdView(
+                                AdView(
                                     viewModel = adViewModel,
                                     adSize = AdSize.LARGE_BANNER
                                 )

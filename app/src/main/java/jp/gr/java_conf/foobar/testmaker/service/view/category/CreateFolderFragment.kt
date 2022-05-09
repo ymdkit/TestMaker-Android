@@ -25,8 +25,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
-import com.example.ui.core.ComposeAdView
 import com.example.ui.folder.CreateFolderViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -170,7 +170,7 @@ class CreateFolderFragment : Fragment() {
                                         )
                                     }
                                 }
-                                ComposeAdView(adViewModel)
+                                AdView(adViewModel)
                             }
                         }
                     )

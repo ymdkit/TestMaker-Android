@@ -13,7 +13,7 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 
 @Composable
-fun ComposeAdView(
+fun AdView(
     viewModel: AdViewModel,
     adSize: AdSize = AdSize.BANNER
 ) {

@@ -211,9 +211,13 @@ class PublishedWorkbookListFragment : Fragment() {
                                             onClick = {
                                                 logger.logEvent("upload_from_firebase_activity")
 
-                                                if(testViewModel.tests.isEmpty()){
-                                                    requireContext().showToast(requireContext().getString(R.string.msg_empty_tests))
-                                                }else{
+                                                if (testViewModel.tests.isEmpty()) {
+                                                    requireContext().showToast(
+                                                        requireContext().getString(
+                                                            R.string.msg_empty_tests
+                                                        )
+                                                    )
+                                                } else {
                                                     findNavController().navigate(
                                                         PublishedWorkbookListFragmentDirections.actionSearchToPublishWorkbook(
                                                             workbookId = testViewModel.tests.first().id
@@ -227,14 +231,14 @@ class PublishedWorkbookListFragment : Fragment() {
                                                 .clip(CircleShape)
                                                 .align(Alignment.BottomEnd),
                                             contentPadding = PaddingValues(vertical = 16.dp),
-                                            ) {
+                                        ) {
                                             Image(
                                                 painter = painterResource(id = R.drawable.ic_baseline_cloud_upload_24),
                                                 contentDescription = ""
                                             )
                                         }
                                     }
-                                    ComposeAdView(viewModel = adViewModel)
+                                    AdView(viewModel = adViewModel)
                                 }
                             }
                         }

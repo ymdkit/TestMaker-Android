@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
@@ -27,8 +26,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.core.QuestionCondition
+import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
-import com.example.ui.core.ComposeAdView
 import com.example.ui.core.DialogMenuItem
 import com.example.ui.core.ListDialogFragment
 import com.example.usecase.utils.Resource
@@ -193,7 +192,7 @@ class AnswerResultFragment : Fragment() {
                                                     Text(stringResource(id = R.string.retry))
                                                 }
                                             }
-                                            ComposeAdView(viewModel = adViewModel)
+                                            AdView(viewModel = adViewModel)
                                         }
                                     }
                                 }
