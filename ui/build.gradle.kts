@@ -55,6 +55,7 @@ dependencies {
     implementation(Dep.Epoxy.dataBinding)
     kapt(Dep.Epoxy.processor)
     implementation(Dep.PlayServices.ads)
+    api(Dep.BillingClient.billing)
     implementation(Dep.Material.core)
     api(Dep.Misc.cropView)
     implementation(Dep.Misc.photoView)

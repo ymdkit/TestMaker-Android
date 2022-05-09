@@ -65,6 +65,10 @@ object Dep {
         const val ads = "com.google.android.gms:play-services-ads:19.3.0"
     }
 
+    object BillingClient {
+        const val billing = "com.android.billingclient:billing-ktx:4.1.0"
+    }
+
     object Hilt {
         const val android = "com.google.dagger:hilt-android:$hiltVersion"
         const val compiler = "com.google.dagger:hilt-compiler:$hiltVersion"

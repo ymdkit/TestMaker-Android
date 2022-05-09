@@ -150,7 +150,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.2.2")
     implementation("androidx.fragment:fragment-ktx:${Dep.fragmentVersion}")
     api("androidx.multidex:multidex:2.0.1")
-    api("com.android.billingclient:billing:3.0.2")
+    api(Dep.BillingClient.billing)
     testImplementation("org.robolectric:robolectric:4.3.1")
     testImplementation("junit:junit:4.13")
     androidTestImplementation("androidx.test.ext:junit:1.1.1")
