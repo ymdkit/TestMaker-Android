@@ -48,6 +48,7 @@ dependencies {
     implementation(Dep.AndroidX.preference)
     implementation(platform(Dep.Firebase.bom))
     implementation(Dep.Firebase.auth)
+    implementation(Dep.Firebase.fireStore)
 
     implementation(project(":domain"))
     implementation(project(":core"))

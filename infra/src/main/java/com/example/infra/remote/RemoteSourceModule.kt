@@ -1,6 +1,7 @@
 package com.example.infra.remote
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -67,6 +68,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+    fun provideFirebaseAuth(): FirebaseAuth =
+        FirebaseAuth.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFirebaseFireStore(): FirebaseFirestore =
+        FirebaseFirestore.getInstance()
 
 }
