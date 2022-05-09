@@ -16,18 +16,21 @@ class IsRemovedAdWatchUseCase @Inject constructor(
 ) {
 
     private val _flow: MutableStateFlow<Boolean> =
-        MutableStateFlow(false)
+        MutableStateFlow(repository.isRemovedAd())
     val flow: StateFlow<Boolean> = _flow
-
 
     fun setup(scope: CoroutineScope) {
         scope.launch {
-            _flow.emit(repository.isRemovedAd())
-
             repository.updateIsRemovedAdFlow.onEach {
                 _flow.emit(it)
             }.launchIn(this)
         }
     }
+
+    suspend fun load() {
+        _flow.emit(repository.isRemovedAd())
+    }
+
+    fun get() = repository.isRemovedAd()
 }
 

@@ -9,7 +9,7 @@ interface PreferenceRepository {
     val updateAnswerSettingFlow: Flow<AnswerSetting>
 
     fun isRemovedAd(): Boolean
-    fun putIsRemovedAd(isRemovedAd: Boolean)
+    suspend fun putIsRemovedAd(isRemovedAd: Boolean)
     fun getAnswerSetting(): AnswerSetting
     suspend fun putAnswerSetting(answerSetting: AnswerSetting)
 }

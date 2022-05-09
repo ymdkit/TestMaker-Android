@@ -10,7 +10,7 @@ class UserPreferenceCommandUseCase @Inject constructor(
     private val preferenceRepository: PreferenceRepository
 ) {
 
-    fun putIsRemovedAd(isRemovedAd: Boolean) =
+    suspend fun putIsRemovedAd(isRemovedAd: Boolean) =
         preferenceRepository.putIsRemovedAd(isRemovedAd)
 
     suspend fun putAnswerSetting(answerSetting: AnswerSettingUseCaseModel) =

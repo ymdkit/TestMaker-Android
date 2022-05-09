@@ -23,9 +23,9 @@ class PreferenceRepositoryImpl @Inject constructor(
         get() = _updateAnswerSettingFlow
 
 
-    override fun putIsRemovedAd(isRemovedAd: Boolean) {
+    override suspend fun putIsRemovedAd(isRemovedAd: Boolean) {
         preference.isRemovedAd = isRemovedAd
-        _updateIsRemovedAdFlow.tryEmit(isRemovedAd)
+        _updateIsRemovedAdFlow.emit(isRemovedAd)
     }
 
     override fun isRemovedAd(): Boolean =
