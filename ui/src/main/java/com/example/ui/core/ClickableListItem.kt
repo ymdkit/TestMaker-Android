@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun ClickableListItem(
     text: String,
+    secondaryText: String = "",
     onClick: () -> Unit
 ) {
     ListItem(
@@ -19,6 +20,9 @@ fun ClickableListItem(
         },
         text = {
             Text(text = text)
-        }
+        },
+        secondaryText = if (secondaryText.isNotEmpty()) { ->
+            Text(text = secondaryText)
+        } else null
     )
 }
