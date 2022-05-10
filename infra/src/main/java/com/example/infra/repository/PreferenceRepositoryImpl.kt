@@ -1,6 +1,7 @@
 package com.example.infra.repository
 
 import com.example.core.QuestionCondition
+import com.example.core.TestMakerColor
 import com.example.domain.model.AnswerSetting
 import com.example.domain.repository.PreferenceRepository
 import com.example.infra.local.preference.PreferenceDataSource
@@ -22,6 +23,10 @@ class PreferenceRepositoryImpl @Inject constructor(
     override val updateAnswerSettingFlow: Flow<AnswerSetting>
         get() = _updateAnswerSettingFlow
 
+    private val _updateThemeColorFlow: MutableSharedFlow<TestMakerColor> =
+        MutableSharedFlow()
+    override val updateThemeColorFlow: Flow<TestMakerColor>
+        get() = _updateThemeColorFlow
 
     override suspend fun putIsRemovedAd(isRemovedAd: Boolean) {
         preference.isRemovedAd = isRemovedAd
@@ -58,4 +63,13 @@ class PreferenceRepositoryImpl @Inject constructor(
         preference.startPosition = answerSetting.startPosition
         _updateAnswerSettingFlow.emit(answerSetting)
     }
+
+    override suspend fun putThemeColor(color: TestMakerColor) {
+        preference.themeColor = color.name
+        _updateThemeColorFlow.emit(color)
+    }
+
+    override fun getThemeColor(): TestMakerColor =
+        TestMakerColor.values().firstOrNull { it.name == preference.themeColor }
+            ?: TestMakerColor.BLUE
 }

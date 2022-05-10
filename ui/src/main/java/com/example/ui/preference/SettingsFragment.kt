@@ -38,6 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingsFragment : Fragment() {
@@ -45,6 +46,9 @@ class SettingsFragment : Fragment() {
     private val preferenceViewModel: PreferenceViewModel by viewModels()
     private val purchaseViewModel: PurchaseViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
+
+    @Inject
+    lateinit var colorMapper: ColorMapper
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
@@ -152,6 +156,22 @@ class SettingsFragment : Fragment() {
                                             onValueSubmitted = {
                                                 preferenceViewModel.onQuestionCountChanged(it.toInt())
                                             },
+                                        )
+                                    }
+                                    item {
+                                        Spacer(modifier = Modifier.height(16.dp))
+                                    }
+                                    item {
+                                        SectionHeaderListItem(
+                                            text = stringResource(id = R.string.preference_group_appearance)
+                                        )
+                                    }
+                                    item {
+                                        ColorDropDownListItem(
+                                            label = stringResource(id = R.string.prefrence_theme_color),
+                                            value = colorMapper.colorToLabel(uiState.themeColor),
+                                            colorMapper = colorMapper,
+                                            onValueChange = preferenceViewModel::onThemeColorChanged
                                         )
                                     }
                                     item {

@@ -331,4 +331,16 @@
     <string name="dialog_edit_display_name">ユーザ名の変更</string>
     <string name="confirm_logout">ログアウトしますか？</string>
     <string name="button_logout">ログアウト</string>
+    <string name="preference_group_appearance">表示設定</string>
+    <string name="prefrence_theme_color">テーマカラー</string>
+    <string name="color_blue">ブルー</string>
+    <string name="color_red">レッド</string>
+    <string name="color_green">グリーン</string>
+    <string name="color_orange">オレンジ</string>
+    <string name="color_yellow">イエロー</string>
+    <string name="color_pink">ピンク</string>
+    <string name="color_purple">パープル</string>
+    <string name="color_teal">ティール</string>
+    <string name="color_indigo">インディゴ</string>
+    <string name="color_brown">ブラウン</string>
 </resources>

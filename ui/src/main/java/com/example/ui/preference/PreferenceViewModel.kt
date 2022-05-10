@@ -3,10 +3,8 @@ package com.example.ui.preference
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.QuestionCondition
-import com.example.usecase.AnswerSettingWatchUseCase
-import com.example.usecase.UserAuthCommandUseCase
-import com.example.usecase.UserPreferenceCommandUseCase
-import com.example.usecase.UserWatchUseCase
+import com.example.core.TestMakerColor
+import com.example.usecase.*
 import com.example.usecase.model.AnswerSettingUseCaseModel
 import com.example.usecase.model.UserUseCaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +23,7 @@ class PreferenceViewModel @Inject constructor(
     private val preferenceCommandUseCase: UserPreferenceCommandUseCase,
     private val userWatchUseCase: UserWatchUseCase,
     private val userAuthCommandUseCase: UserAuthCommandUseCase,
+    private val themeColorWatchUseCase: ThemeColorWatchUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<PreferenceUiState> =
@@ -32,7 +31,7 @@ class PreferenceViewModel @Inject constructor(
             PreferenceUiState(
                 answerSetting = answerSettingWatchUseCase.getAnswerSetting(),
                 user = null,
-                editingDisplayNameState = EditTextState.Empty
+                themeColor = TestMakerColor.BLUE
             )
         )
     val uiState: StateFlow<PreferenceUiState>
@@ -47,6 +46,9 @@ class PreferenceViewModel @Inject constructor(
             scope = viewModelScope
         )
         userWatchUseCase.setup(
+            scope = viewModelScope
+        )
+        themeColorWatchUseCase.setup(
             scope = viewModelScope
         )
 
@@ -65,6 +67,16 @@ class PreferenceViewModel @Inject constructor(
                     _uiState.emit(
                         _uiState.value.copy(
                             user = it
+                        )
+                    )
+                }
+                .launchIn(this)
+
+            themeColorWatchUseCase.flow
+                .onEach {
+                    _uiState.emit(
+                        _uiState.value.copy(
+                            themeColor = it
                         )
                     )
                 }
@@ -153,6 +165,11 @@ class PreferenceViewModel @Inject constructor(
             )
         }
 
+    fun onThemeColorChanged(value: TestMakerColor) =
+        viewModelScope.launch {
+            preferenceCommandUseCase.putThemeColor(value)
+        }
+
     fun onUserCreated() =
         viewModelScope.launch {
             userAuthCommandUseCase.registerUser()
@@ -167,9 +184,6 @@ class PreferenceViewModel @Inject constructor(
     fun onDisplayNameSubmitted(value: String) =
         viewModelScope.launch {
             userAuthCommandUseCase.updateUser(displayName = value)
-            _uiState.value = _uiState.value.copy(
-                editingDisplayNameState = EditTextState.Empty
-            )
         }
 
     fun onAdRemoved() =
@@ -181,7 +195,7 @@ class PreferenceViewModel @Inject constructor(
 data class PreferenceUiState(
     val answerSetting: AnswerSettingUseCaseModel,
     val user: UserUseCaseModel?,
-    val editingDisplayNameState: EditTextState
+    val themeColor: TestMakerColor
 )
 
 sealed class EditTextState {

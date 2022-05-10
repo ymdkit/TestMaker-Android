@@ -339,4 +339,16 @@
     <string name="dialog_edit_display_name">edit user name</string>
     <string name="confirm_logout">logout?</string>
     <string name="button_logout">logout</string>
+    <string name="preference_group_appearance">appearance</string>
+    <string name="prefrence_theme_color">theme color</string>
+    <string name="color_blue">blue</string>
+    <string name="color_red">red</string>
+    <string name="color_green">green</string>
+    <string name="color_orange">orange</string>
+    <string name="color_yellow">yellow</string>
+    <string name="color_pink">pink</string>
+    <string name="color_purple">purple</string>
+    <string name="color_teal">teal</string>
+    <string name="color_indigo">indigo</string>
+    <string name="color_brown">brown</string>
 </resources>

@@ -3,6 +3,7 @@ package com.example.infra.local.preference
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.example.core.TestMakerColor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -91,5 +92,13 @@ class PreferenceDataSource @Inject constructor(
     var playCount: Int
         get() = defaultPreferences.getInt("play_count", 0)
         set(i) = defaultPreferences.edit().putInt("play_count", i).apply()
+
+    var themeColor: String
+        get() = defaultPreferences.getString(
+            "theme_color",
+            TestMakerColor.BLUE.name
+        )
+            ?: TestMakerColor.BLUE.name
+        set(i) = defaultPreferences.edit().putString("theme_color", i).apply()
 
 }
