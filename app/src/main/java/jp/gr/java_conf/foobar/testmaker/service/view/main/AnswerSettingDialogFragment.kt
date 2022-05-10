@@ -1,37 +1,37 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import android.os.Bundle
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ListItem
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.core.QuestionCondition
 import com.example.ui.answer.AnswerSettingViewModel
+import com.example.ui.core.CheckboxListItem
 import com.example.ui.core.ContainedWideButton
+import com.example.ui.core.EditTextListItem
 import com.example.ui.home.HomeViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireLongArgument
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireStringArgument
-import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 
 @AndroidEntryPoint
@@ -56,6 +56,7 @@ class AnswerSettingDialogFragment : BottomSheetDialogFragment() {
     private val answerSettingViewModel: AnswerSettingViewModel by viewModels()
     private val homeViewModel: HomeViewModel by activityViewModels()
 
+    // todo 画面表示時の初期の高さを調整する
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -116,25 +117,23 @@ class AnswerSettingDialogFragment : BottomSheetDialogFragment() {
                                 checked = uiState.isShowAnswerSettingDialog,
                                 onCheckedChanged = answerSettingViewModel::onIsShowAnswerSettingDialogChanged
                             )
-                            EditNumberListItem(
+                            EditTextListItem(
                                 label = stringResource(id = R.string.position_start),
-                                value = uiState.startPosition + 1,
-                                valueString = stringResource(
-                                    id = R.string.position_start_value,
-                                    uiState.startPosition + 1
-                                ),
-                                onValueChanged = {
-                                    answerSettingViewModel.onStartPositionChanged(it - 1)
-                                }
+                                value = (uiState.startPosition + 1).toString(),
+                                keyboardType = KeyboardType.Number,
+                                dialogTitle = stringResource(id = R.string.position_start),
+                                onValueSubmitted = {
+                                    answerSettingViewModel.onStartPositionChanged(it.toInt() - 1)
+                                },
                             )
-                            EditNumberListItem(
+                            EditTextListItem(
                                 label = stringResource(id = R.string.number_questions),
-                                value = uiState.questionCount,
-                                valueString = stringResource(
-                                    id = R.string.question_count_value,
-                                    uiState.questionCount
-                                ),
-                                onValueChanged = answerSettingViewModel::onQuestionCountChanged
+                                value = uiState.questionCount.toString(),
+                                keyboardType = KeyboardType.Number,
+                                dialogTitle = stringResource(id = R.string.number_questions),
+                                onValueSubmitted = {
+                                    answerSettingViewModel.onQuestionCountChanged(it.toInt())
+                                },
                             )
                             ContainedWideButton(
                                 modifier = Modifier.padding(4.dp),
@@ -156,59 +155,6 @@ class AnswerSettingDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         answerSettingViewModel.setup()
-    }
-
-    @OptIn(ExperimentalMaterialApi::class)
-    @Composable
-    private fun CheckboxListItem(
-        label: String,
-        checked: Boolean,
-        onCheckedChanged: (Boolean) -> Unit
-    ) {
-        ListItem(
-            modifier = Modifier
-                .padding(vertical = 4.dp)
-                .clickable {
-                    onCheckedChanged(!checked)
-                },
-            text = { Text(text = label) },
-            trailing = {
-                Switch(
-                    checked = checked,
-                    onCheckedChange = onCheckedChanged
-                )
-            }
-        )
-    }
-
-    @OptIn(ExperimentalMaterialApi::class)
-    @Composable
-    private fun EditNumberListItem(
-        label: String,
-        value: Int,
-        valueString: String,
-        onValueChanged: (Int) -> Unit
-    ) {
-        ListItem(
-            modifier = Modifier.clickable {
-                EditTextDialogFragment.newInstance(
-                    title = label,
-                    defaultText = value.toString(),
-                    hint = "",
-                    inputType = InputType.TYPE_CLASS_NUMBER
-                )
-                { newValue ->
-                    onValueChanged(newValue.toInt())
-                }.show(requireActivity().supportFragmentManager, "TAG")
-            },
-            text = {
-                Row {
-                    Text(text = label)
-                    Spacer(modifier = Modifier.weight(weight = 1f))
-                    Text(text = valueString)
-                }
-            }
-        )
     }
 }
 
