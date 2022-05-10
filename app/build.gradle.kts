@@ -100,6 +100,7 @@ android {
 dependencies {
     implementation(Dep.Hilt.android)
     kapt(Dep.Hilt.compiler)
+    implementation(Dep.AndroidX.fragment)
     implementation("androidx.constraintlayout:constraintlayout:2.1.0")
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("androidx.core:core-ktx:1.6.0")
@@ -118,7 +119,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-swiperefresh:0.18.0")
     implementation("com.google.accompanist:accompanist-pager:0.12.0")
     implementation(Dep.PlayServices.ads)
-    implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("com.google.android.play:core-ktx:1.8.0")
     implementation(Dep.Misc.studyPlus)
     implementation(platform(Dep.Firebase.bom))
@@ -148,7 +148,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Dep.kotlinVersion}")
     implementation("androidx.navigation:navigation-fragment-ktx:2.2.2")
     implementation("androidx.navigation:navigation-ui-ktx:2.2.2")
-    implementation("androidx.fragment:fragment-ktx:${Dep.fragmentVersion}")
     api("androidx.multidex:multidex:2.0.1")
     api(Dep.BillingClient.billing)
     testImplementation("org.robolectric:robolectric:4.3.1")

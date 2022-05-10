@@ -327,7 +327,7 @@
 
     <fragment
         android:id="@id/page_settings"
-        android:name="jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsFragment"
+        android:name="com.example.ui.preference.SettingsFragment"
         android:label="@string/title_page_settings"
         tools:layout="@layout/fragment_group_list" />
 

@@ -19,6 +19,7 @@ object Dep {
         const val lifeCycleViewModel =
             "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVersion"
         const val preference = "androidx.preference:preference-ktx:1.2.0"
+        const val fragment = "androidx.fragment:fragment-ktx:$fragmentVersion"
     }
 
     object Compose {
@@ -63,6 +64,7 @@ object Dep {
 
     object PlayServices {
         const val ads = "com.google.android.gms:play-services-ads:19.3.0"
+        const val oss = "com.google.android.gms:play-services-oss-licenses:17.0.0"
     }
 
     object BillingClient {

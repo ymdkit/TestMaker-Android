@@ -327,4 +327,8 @@
     <string name="title_publish_workbook">問題集の投稿</string>
     <string name="button_publish_workbook">問題集を投稿する</string>
     <string name="msg_succes_copy_questions_in_same_workbook">問題をコピーしました</string>
+    <string name="msg_success_logout">ログアウトしました</string>
+    <string name="dialog_edit_display_name">ユーザ名の変更</string>
+    <string name="confirm_logout">ログアウトしますか？</string>
+    <string name="button_logout">ログアウト</string>
 </resources>

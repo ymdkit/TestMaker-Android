@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.preference
+package com.example.ui.preference
 
 import android.content.Intent
 import android.net.Uri
@@ -28,18 +28,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.BillingClient
 import com.example.core.QuestionCondition
+import com.example.ui.R
 import com.example.ui.core.*
-import com.example.ui.preference.BillingItem
-import com.example.ui.preference.BillingUiState
-import com.example.ui.preference.PreferenceViewModel
-import com.example.ui.preference.PurchaseViewModel
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
-import jp.gr.java_conf.foobar.testmaker.service.BuildConfig
-import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -253,7 +248,7 @@ class SettingsFragment : Fragment() {
                                     item {
                                         ClickableListItem(
                                             text = stringResource(id = R.string.version_app),
-                                            secondaryText = BuildConfig.VERSION_NAME,
+                                            secondaryText = getAppVersion(),
                                             onClick = {}
                                         )
                                     }
@@ -358,9 +353,16 @@ class SettingsFragment : Fragment() {
                 getString(
                     R.string.email_body_feedback,
                     Build.VERSION.SDK_INT.toString(),
-                    BuildConfig.VERSION_NAME
+                    getAppVersion()
                 )
             )
         }, null)
+
+    // todo Dagger の Module に移動させる
+    private fun getAppVersion() =
+        requireContext()
+            .packageManager
+            .getPackageInfo(requireContext().packageName, 0)
+            .versionName
 
 }

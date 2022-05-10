@@ -335,4 +335,8 @@
     <string name="title_publish_workbook">publish test</string>
     <string name="button_publish_workbook">publish test</string>
     <string name="msg_succes_copy_questions_in_same_workbook">copy succeed</string>
+    <string name="msg_success_logout">success logout</string>
+    <string name="dialog_edit_display_name">edit user name</string>
+    <string name="confirm_logout">logout?</string>
+    <string name="button_logout">logout</string>
 </resources>
