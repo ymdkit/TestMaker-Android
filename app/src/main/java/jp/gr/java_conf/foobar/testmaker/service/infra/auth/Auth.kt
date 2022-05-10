@@ -4,7 +4,6 @@ import android.content.Intent
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,8 +11,6 @@ import javax.inject.Singleton
 class Auth @Inject constructor() {
 
     fun getUser(): FirebaseUser? = FirebaseAuth.getInstance().currentUser
-
-    fun logOut() = FirebaseAuth.getInstance().signOut()
 
     fun getAuthUIIntent(): Intent {
 
@@ -30,16 +27,4 @@ class Auth @Inject constructor() {
                         "https://ankimaker.com/privacy")
                 .build()
     }
-
-    fun updateProfile(userName: String, completion: () -> Unit) {
-        val user = getUser() ?: return
-
-        val profileUpdates = UserProfileChangeRequest.Builder()
-                .setDisplayName(userName).build()
-
-        user.updateProfile(profileUpdates).addOnSuccessListener {
-            completion()
-        }
-    }
-
 }
