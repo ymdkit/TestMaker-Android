@@ -28,11 +28,11 @@ import androidx.navigation.findNavController
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.folder.CreateFolderViewModel
+import com.example.ui.theme.TestMakerAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 
 @AndroidEntryPoint
 class CreateFolderFragment : Fragment() {

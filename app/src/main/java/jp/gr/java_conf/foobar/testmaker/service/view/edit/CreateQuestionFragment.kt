@@ -25,13 +25,13 @@ import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.showToast
 import com.example.ui.question.CreateQuestionViewModel
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.CreateQuestionForm
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow

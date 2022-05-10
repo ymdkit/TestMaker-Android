@@ -29,13 +29,13 @@ import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.FadeInAndOutAnimation
 import com.example.ui.core.showToast
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.view.result.MyTopAppBar
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint

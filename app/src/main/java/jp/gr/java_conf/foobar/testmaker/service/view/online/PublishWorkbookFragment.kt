@@ -25,13 +25,13 @@ import androidx.navigation.fragment.navArgs
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.showToast
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.RequestLogin
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookFragmentArgs
 import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookUiState
 import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookViewModel

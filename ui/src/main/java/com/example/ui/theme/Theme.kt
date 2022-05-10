@@ -1,12 +1,15 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.ui.theme
+package com.example.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
+    primary = Color(0XFF0099CC),
+    secondaryVariant = Color(0XFF0099CC)
 //    primary = Color(0XFF0099CC),
 //    secondary = Color(0XFFBA7827),
 //    secondaryVariant = Color(0XFF0099CC),
@@ -19,6 +22,8 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
+    primary = Color(0XFF0099CC),
+    secondaryVariant = Color(0XFF0099CC)
 //    primary = Color(0XFF33B5E5),
 //    secondary = Color(0XFFFFA144),
 //    secondaryVariant = Color(0XFF0099CC),

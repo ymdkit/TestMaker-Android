@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.ui.theme
+package com.example.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

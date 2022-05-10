@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireStringArgument
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.DangerDialogContent
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 
 class ConfirmDangerDialogFragment : BottomSheetDialogFragment() {
 

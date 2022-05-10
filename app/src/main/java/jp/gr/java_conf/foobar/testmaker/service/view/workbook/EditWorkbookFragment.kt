@@ -32,6 +32,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.showToast
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.EditWorkbookViewModel
 import com.example.usecase.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +42,6 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.QuestionListFragmentAr
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.TextPicker
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import javax.inject.Inject
 
 

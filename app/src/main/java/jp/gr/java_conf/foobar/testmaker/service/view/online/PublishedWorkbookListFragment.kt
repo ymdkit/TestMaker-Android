@@ -42,6 +42,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.example.ui.core.*
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +54,6 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -169,7 +169,7 @@ class PublishedWorkbookListFragment : Fragment() {
                                                                     modifier = Modifier
                                                                         .size(40.dp)
                                                                         .padding(8.dp),
-                                                                    tint = Color.Companion.hsv(
+                                                                    tint = Color.hsv(
                                                                         360F * it.color.toFloat() / COLOR_MAX,
                                                                         0.5F,
                                                                         0.9F

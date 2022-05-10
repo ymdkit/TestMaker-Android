@@ -30,6 +30,7 @@ import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.DialogMenuItem
 import com.example.ui.core.ListDialogFragment
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.usecase.utils.Resource
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -41,7 +42,6 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow

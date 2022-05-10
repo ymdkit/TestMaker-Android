@@ -27,12 +27,12 @@ import com.example.ui.core.CheckboxListItem
 import com.example.ui.core.ContainedWideButton
 import com.example.ui.core.EditTextListItem
 import com.example.ui.home.HomeViewModel
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireLongArgument
 import jp.gr.java_conf.foobar.testmaker.service.extensions.requireStringArgument
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
 
 @AndroidEntryPoint
 class AnswerSettingDialogFragment : BottomSheetDialogFragment() {
