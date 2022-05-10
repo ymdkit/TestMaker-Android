@@ -4,9 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.QuestionCondition
 import com.example.usecase.AnswerSettingWatchUseCase
+import com.example.usecase.UserAuthCommandUseCase
 import com.example.usecase.UserPreferenceCommandUseCase
+import com.example.usecase.UserWatchUseCase
 import com.example.usecase.model.AnswerSettingUseCaseModel
+import com.example.usecase.model.UserUseCaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -17,28 +22,50 @@ import javax.inject.Inject
 @HiltViewModel
 class PreferenceViewModel @Inject constructor(
     private val answerSettingWatchUseCase: AnswerSettingWatchUseCase,
-    private val preferenceCommandUseCase: UserPreferenceCommandUseCase
+    private val preferenceCommandUseCase: UserPreferenceCommandUseCase,
+    private val userWatchUseCase: UserWatchUseCase,
+    private val userAuthCommandUseCase: UserAuthCommandUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<PreferenceUiState> =
         MutableStateFlow(
             PreferenceUiState(
                 answerSetting = answerSettingWatchUseCase.getAnswerSetting(),
+                user = null,
+                editingDisplayNameState = EditTextState.Empty
             )
         )
     val uiState: StateFlow<PreferenceUiState>
         get() = _uiState
 
+    private val _logoutEvent: Channel<Unit> = Channel()
+    val logoutEvent: ReceiveChannel<Unit>
+        get() = _logoutEvent
+
     fun setup() {
         answerSettingWatchUseCase.setup(
+            scope = viewModelScope
+        )
+        userWatchUseCase.setup(
             scope = viewModelScope
         )
 
         viewModelScope.launch {
             answerSettingWatchUseCase.flow
                 .onEach {
-                    _uiState.value = PreferenceUiState(
-                        answerSetting = it,
+                    _uiState.emit(
+                        _uiState.value.copy(
+                            answerSetting = it
+                        )
+                    )
+                }
+                .launchIn(this)
+            userWatchUseCase.flow
+                .onEach {
+                    _uiState.emit(
+                        _uiState.value.copy(
+                            user = it
+                        )
                     )
                 }
                 .launchIn(this)
@@ -126,27 +153,38 @@ class PreferenceViewModel @Inject constructor(
             )
         }
 
-    fun onLoginButtonClicked() =
+    fun onUserCreated() =
         viewModelScope.launch {
-
+            userAuthCommandUseCase.registerUser()
         }
 
     fun onLogoutButtonClicked() =
         viewModelScope.launch {
-
+            userAuthCommandUseCase.logout()
+            _logoutEvent.send(Unit)
         }
 
-    fun onUserNameChanged(value: String) =
+    fun onDisplayNameSubmitted(value: String) =
         viewModelScope.launch {
-
+            userAuthCommandUseCase.updateUser(displayName = value)
+            _uiState.value = _uiState.value.copy(
+                editingDisplayNameState = EditTextState.Empty
+            )
         }
 
-    fun onRemoveAdButtonClicked() =
+    fun onAdRemoved() =
         viewModelScope.launch {
-
+            preferenceCommandUseCase.putIsRemovedAd(isRemovedAd = true)
         }
 }
 
 data class PreferenceUiState(
     val answerSetting: AnswerSettingUseCaseModel,
+    val user: UserUseCaseModel?,
+    val editingDisplayNameState: EditTextState
 )
+
+sealed class EditTextState {
+    object Empty : EditTextState()
+    data class Editing(val value: String) : EditTextState()
+}

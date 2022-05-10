@@ -3,6 +3,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
@@ -19,8 +20,6 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListFragmentDirections
-import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsContainerFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -61,6 +60,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> {
                     binding.bottomBar.isGone = false
+                }
+            }
+
+            when (destination.id) {
+                R.id.page_settings -> {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+                }
+                else -> {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
                 }
             }
         }
@@ -130,27 +138,6 @@ class MainActivity : AppCompatActivity() {
                 showToast(getString(R.string.msg_failure_download_test))
             }
         )
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        when (requestCode) {
-            SettingsFragment.REQUEST_CODE_AUTH -> {
-                if (resultCode == RESULT_OK && data != null) {
-
-                    supportFragmentManager.findFragmentById(R.id.nav_main)?.childFragmentManager?.fragments?.get(
-                        0
-                    )
-                        ?.let {
-
-                            if (it is SettingsContainerFragment) {
-                                it.setStudyPlusAuthResult(data)
-                            }
-                        }
-                }
-            }
-        }
     }
 
     companion object {
