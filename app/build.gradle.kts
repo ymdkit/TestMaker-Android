@@ -120,7 +120,7 @@ dependencies {
     implementation(Dep.PlayServices.ads)
     implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
     implementation("com.google.android.play:core-ktx:1.8.0")
-    implementation("com.github.studyplus:Studyplus-Android-SDK:3.0.0")
+    implementation(Dep.Misc.studyPlus)
     implementation(platform(Dep.Firebase.bom))
     implementation(Dep.Firebase.core)
     implementation(Dep.Firebase.auth)

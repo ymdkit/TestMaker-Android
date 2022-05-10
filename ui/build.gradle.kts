@@ -64,6 +64,7 @@ dependencies {
     implementation(Dep.Firebase.storageUi)
     implementation(Dep.Glide.core)
     kapt(Dep.Glide.compiler)
+    implementation(Dep.Misc.studyPlus)
     implementation(project(":usecase"))
     implementation(project(":core"))
 }
