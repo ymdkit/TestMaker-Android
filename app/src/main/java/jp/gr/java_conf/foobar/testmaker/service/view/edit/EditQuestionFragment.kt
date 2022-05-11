@@ -82,9 +82,6 @@ class EditQuestionFragment : Fragment() {
                                 val uiState by editQuestionViewModel.uiState.collectAsState()
 
                                 val pagerState = rememberPagerState(
-                                    pageCount = QuestionType.values().size,
-                                    initialOffscreenLimit = 4,
-                                    infiniteLoop = false,
                                     initialPage = 0
                                 )
 
@@ -128,7 +125,8 @@ class EditQuestionFragment : Fragment() {
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .weight(weight = 1f, fill = true),
-                                    state = pagerState
+                                    state = pagerState,
+                                    count = QuestionType.values().count()
                                 ) {
                                     EditQuestionForm(
                                         viewModel = editQuestionViewModel,

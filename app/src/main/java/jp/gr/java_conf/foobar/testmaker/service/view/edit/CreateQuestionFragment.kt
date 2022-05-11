@@ -80,10 +80,8 @@ class CreateQuestionFragment : Fragment() {
 
                                 val uiState by createQuestionViewModel.uiState.collectAsState()
 
+                                QuestionType.values().size
                                 val pagerState = rememberPagerState(
-                                    pageCount = QuestionType.values().size,
-                                    initialOffscreenLimit = 4,
-                                    infiniteLoop = false,
                                     initialPage = 0
                                 )
 
@@ -126,7 +124,8 @@ class CreateQuestionFragment : Fragment() {
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .weight(weight = 1f, fill = true),
-                                    state = pagerState
+                                    state = pagerState,
+                                    count = QuestionType.values().size
                                 ) {
                                     CreateQuestionForm(
                                         viewModel = createQuestionViewModel,

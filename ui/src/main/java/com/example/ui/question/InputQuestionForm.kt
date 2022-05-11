@@ -13,7 +13,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -40,10 +39,6 @@ fun InputQuestionForm(
 ) {
     val focusManager = LocalFocusManager.current
     val uiState by viewModel.uiState.collectAsState()
-
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
 
     LazyColumn(
         modifier = modifier
