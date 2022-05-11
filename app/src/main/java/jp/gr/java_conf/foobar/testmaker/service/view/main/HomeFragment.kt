@@ -23,6 +23,7 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentHomeBinding
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
+import jp.gr.java_conf.foobar.testmaker.service.view.workbook.WorkbookListFragment
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -80,7 +81,7 @@ class HomeFragment : Fragment() {
         binding.viewPager.adapter = ViewPagerAdapter(
             requireActivity(),
             listOf(
-                LocalMainFragment(),
+                WorkbookListFragment(),
                 AccountMainFragment()
             )
         )

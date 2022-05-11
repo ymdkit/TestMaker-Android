@@ -81,7 +81,7 @@ class MainController(
         if (workbookList.isNotEmpty()) {
             sectionHeader {
                 id("Test")
-                title(this@MainController.context.getString(R.string.test))
+                title(this@MainController.context.getString(R.string.workbook))
             }
         }
 

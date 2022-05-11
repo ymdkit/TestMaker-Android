@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.AnswerStatus
 import com.example.core.QuestionCondition
-import com.example.ui.home.NavigateToAnswerWorkbookArgs
+import com.example.ui.workbook.NavigateToAnswerWorkbookArgs
 import com.example.usecase.AnswerSettingWatchUseCase
 import com.example.usecase.UserPreferenceCommandUseCase
 import com.example.usecase.WorkbookWatchUseCase
