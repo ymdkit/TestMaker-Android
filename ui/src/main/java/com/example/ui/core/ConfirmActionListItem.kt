@@ -14,6 +14,7 @@ import com.example.ui.R
 
 @Composable
 fun ConfirmActionListItem(
+    icon: @Composable (() -> Unit)? = null,
     label: String,
     secondaryLabel: String = "",
     confirmMessage: String,
@@ -24,6 +25,7 @@ fun ConfirmActionListItem(
     var isOpen: Boolean by remember { mutableStateOf(false) }
 
     ClickableListItem(
+        icon = icon,
         text = label,
         secondaryText = secondaryLabel,
         onClick = {

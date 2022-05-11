@@ -1,5 +1,6 @@
 package com.example.ui.workbook
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
@@ -21,8 +22,12 @@ import com.example.usecase.model.WorkbookUseCaseModel
 @Composable
 fun WorkbookListItem(
     workbook: WorkbookUseCaseModel,
+    onClick: (WorkbookUseCaseModel) -> Unit
 ) {
     ListItem(
+        modifier = Modifier.clickable {
+            onClick(workbook)
+        },
         icon = {
             Icon(
                 modifier = Modifier

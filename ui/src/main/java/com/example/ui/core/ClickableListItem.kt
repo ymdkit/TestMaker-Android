@@ -10,11 +10,13 @@ import androidx.compose.ui.Modifier
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ClickableListItem(
+    icon: @Composable (() -> Unit)? = null,
     text: String,
     secondaryText: String = "",
     onClick: () -> Unit
 ) {
     ListItem(
+        icon = icon,
         modifier = Modifier.clickable {
             onClick()
         },
