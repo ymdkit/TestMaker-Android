@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -175,19 +176,48 @@ class CreateWorkbookFragment : Fragment() {
                                             modifier = Modifier.padding(bottom = 8.dp),
                                             text = stringResource(id = R.string.section_create_workbook_by_import),
                                         )
-                                        ClickableListItem(
-                                            text = stringResource(id = R.string.action_import),
-                                            onClick = { importFile.launch(arrayOf("text/*")) }
-                                        )
-                                        ClickableListItem(
-                                            text = stringResource(id = R.string.help_import),
+                                        OutlinedButton(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(56.dp)
+                                                .padding(bottom = 8.dp),
+                                            border = BorderStroke(
+                                                ButtonDefaults.OutlinedBorderSize,
+                                                MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+                                            ),
+                                            onClick = { importFile.launch(arrayOf("text/*")) }) {
+                                            Text(text = stringResource(id = R.string.action_import))
+                                        }
+                                        OutlinedButton(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(56.dp)
+                                                .padding(bottom = 8.dp),
+                                            border = BorderStroke(
+                                                ButtonDefaults.OutlinedBorderSize,
+                                                MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+                                            ),
                                             onClick = {
                                                 startActivity(Intent(Intent.ACTION_VIEW).apply {
                                                     data =
                                                         Uri.parse("https://ankimaker.com/howto/edit_csv")
                                                 })
-                                            }
-                                        )
+                                            }) {
+                                            Text(text = stringResource(id = R.string.help_import))
+                                        }
+//                                        ClickableListItem(
+//                                            text = stringResource(id = R.string.action_import),
+//                                            onClick = { importFile.launch(arrayOf("text/*")) }
+//                                        )
+//                                        ClickableListItem(
+//                                            text = stringResource(id = R.string.help_import),
+//                                            onClick = {
+//                                                startActivity(Intent(Intent.ACTION_VIEW).apply {
+//                                                    data =
+//                                                        Uri.parse("https://ankimaker.com/howto/edit_csv")
+//                                                })
+//                                            }
+//                                        )
                                     }
                                 }
                                 Button(
