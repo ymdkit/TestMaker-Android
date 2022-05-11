@@ -335,4 +335,7 @@
     <string name="dialog_edit_display_name">ユーザ名の変更</string>
     <string name="confirm_logout">ログアウトしますか？</string>
     <string name="button_logout">ログアウト</string>
+    <string name="section_create_workbook_by_app">手動で作成</string>
+    <string name="section_create_workbook_by_import">その他の方法で作成</string>
+    <string name="help_import">「ファイルのインポート」とは？</string>
 </resources>

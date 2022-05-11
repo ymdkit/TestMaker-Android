@@ -2,65 +2,50 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/app_bar"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:contentInsetEnd="@dimen/view_width_normal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                app:title="@string/app_name" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent">
+                app:tabInlineLabel="true" />
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:contentInsetEnd="@dimen/view_width_normal"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-                    app:title="@string/app_name" />
+        </com.google.android.material.appbar.AppBarLayout>
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:tabInlineLabel="true" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/adView"
+            app:layout_constraintTop_toBottomOf="@id/app_bar" />
 
-            </com.google.android.material.appbar.AppBarLayout>
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/view_pager"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@id/adView"
-                app:layout_constraintTop_toBottomOf="@id/app_bar" />
-
-            <com.google.android.gms.ads.AdView
-                android:id="@+id/adView"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                app:adSize="BANNER"
-                app:adUnitId="ca-app-pub-8942090726462263/8420884238"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view"
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true"
-            app:headerLayout="@layout/nav_header_main"
-            app:menu="@menu/activity_main_drawer" />
+            android:layout_height="50dp"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-8942090726462263/8420884238"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.drawerlayout.widget.DrawerLayout>
 
 </layout>
