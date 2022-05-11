@@ -12,7 +12,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
@@ -78,7 +77,6 @@ class SettingsFragment : Fragment() {
                             Column {
                                 LazyColumn(
                                     modifier = Modifier
-                                        .padding(horizontal = 16.dp)
                                         .weight(1f)
                                 ) {
                                     item {
