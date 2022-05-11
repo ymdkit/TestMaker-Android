@@ -1,12 +1,13 @@
 package com.example.usecase.model
 
+import com.example.core.TestMakerColor
 import com.example.domain.model.Folder
 import com.example.domain.model.FolderId
 
 data class FolderUseCaseModel(
     val id: Long,
     val name: String,
-    val color: Int,
+    val color: TestMakerColor,
     val order: Int,
     val workbookCount: Int
 ) {

@@ -1,6 +1,7 @@
 package com.example.usecase
 
 import com.example.core.AnswerStatus
+import com.example.core.TestMakerColor
 import com.example.domain.model.ExportedWorkbook
 import com.example.domain.model.WorkbookId
 import com.example.domain.repository.WorkBookRepository
@@ -13,10 +14,20 @@ class UserWorkbookCommandUseCase @Inject constructor(
     private val workBookRepository: WorkBookRepository
 ) {
 
-    suspend fun createWorkbook(name: String, remoteId: String, color: Int, folderName: String) =
+    suspend fun createWorkbook(
+        name: String,
+        remoteId: String,
+        color: TestMakerColor,
+        folderName: String
+    ) =
         workBookRepository.createWorkbook(name, remoteId, color, folderName)
 
-    suspend fun updateWorkbook(workbookId: Long, name: String, color: Int, folderName: String) {
+    suspend fun updateWorkbook(
+        workbookId: Long,
+        name: String,
+        color: TestMakerColor,
+        folderName: String
+    ) {
         val workbook = workBookRepository.getWorkbook(workbookId = WorkbookId(workbookId))
         workBookRepository.updateWorkbook(
             workbook.copy(

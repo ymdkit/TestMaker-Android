@@ -2,6 +2,7 @@ package com.example.ui.workbook
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.TestMakerColor
 import com.example.usecase.FolderListWatchUseCase
 import com.example.usecase.UserWorkbookCommandUseCase
 import com.example.usecase.WorkbookWatchUseCase
@@ -58,7 +59,7 @@ class EditWorkbookViewModel @Inject constructor(
         workbookWatchUseCase.load()
     }
 
-    fun updateWorkbook(name: String, color: Int, folderName: String) =
+    fun updateWorkbook(name: String, color: TestMakerColor, folderName: String) =
         viewModelScope.launch {
             userWorkbookCommandUseCase.updateWorkbook(
                 workbookId = workbookId,

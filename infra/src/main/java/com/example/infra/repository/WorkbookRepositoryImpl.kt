@@ -1,6 +1,7 @@
 package com.example.infra.repository
 
 import com.example.core.QuestionType
+import com.example.core.TestMakerColor
 import com.example.domain.model.*
 import com.example.domain.repository.WorkBookRepository
 import com.example.infra.local.db.FolderDataSource
@@ -50,7 +51,7 @@ class WorkbookRepositoryImpl @Inject constructor(
 
     override suspend fun createFolder(
         name: String,
-        color: Int
+        color: TestMakerColor
     ) {
         val folderId = folderDataSource.generateFolderId()
         val newFolder = Folder(
@@ -85,7 +86,7 @@ class WorkbookRepositoryImpl @Inject constructor(
     override suspend fun createWorkbook(
         name: String,
         remoteId: String,
-        color: Int,
+        color: TestMakerColor,
         folderName: String
     ) {
         val workbookId = workbookDataSource.generateWorkbookId()
@@ -163,7 +164,7 @@ class WorkbookRepositoryImpl @Inject constructor(
             id = WorkbookId(value = newWorkbookId),
             remoteId = "",
             name = importedWorkbook.title,
-            color = 0, // todo
+            color = TestMakerColor.BLUE,
             order = newWorkbookId.toInt(),
             folderName = "",
             questionList = newQuestionList.map { it.toQuestion() }

@@ -1,5 +1,6 @@
 package com.example.infra.local
 
+import com.example.core.TestMakerColor
 import io.realm.DynamicRealm
 import io.realm.DynamicRealmObject
 import io.realm.FieldAttribute
@@ -171,6 +172,38 @@ class Migration : RealmMigration {
 
             oldVersion++
         }
+        if (oldVersion == 18L) {
+            val testSchema = schema["RealmTest"]
+            testSchema
+                ?.addField("themeColor", String::class.java, FieldAttribute.REQUIRED)
+                ?.transform { obj: DynamicRealmObject ->
+                    obj["themeColor"] = migrateColor(obj.getInt("color"))
+                }
+
+            val folderSchema = schema["RealmCategory"]
+            folderSchema
+                ?.addField("themeColor", String::class.java, FieldAttribute.REQUIRED)
+                ?.transform { obj: DynamicRealmObject ->
+                    obj["themeColor"] = migrateColor(obj.getInt("color"))
+                }
+
+            oldVersion++
+        }
         //schemaVersion変えるの忘れるな(TestMakerApplication内)
+
+
     }
+
+    private fun migrateColor(color: Int): String =
+        when (color) {
+            -26215 -> TestMakerColor.RED.name
+            -13159 -> TestMakerColor.ORANGE.name
+            -103 -> TestMakerColor.YELLOW.name
+            -6684775 -> TestMakerColor.GREEN.name
+            -6684724 -> TestMakerColor.TEAL.name
+            -6684673 -> TestMakerColor.BLUE.name
+            -6710785 -> TestMakerColor.INDIGO.name
+            -26113 -> TestMakerColor.PURPLE.name
+            else -> TestMakerColor.BLUE.name
+        }
 }

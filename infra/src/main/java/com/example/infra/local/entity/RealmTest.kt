@@ -1,5 +1,6 @@
 package com.example.infra.local.entity
 
+import com.example.core.TestMakerColor
 import com.example.domain.model.Workbook
 import com.example.domain.model.WorkbookId
 import io.realm.RealmList
@@ -16,7 +17,7 @@ open class RealmTest : RealmObject() {
         fun fromWorkbook(workbook: Workbook): RealmTest =
             RealmTest().apply {
                 id = workbook.id.value
-                color = workbook.color
+                themeColor = workbook.color.name
                 title = workbook.name
                 order = workbook.order
                 documentId = workbook.remoteId
@@ -27,7 +28,10 @@ open class RealmTest : RealmObject() {
 
     @PrimaryKey
     var id: Long = 0
+
+    @Deprecated("migrate to themeColor")
     var color: Int = 0
+    var themeColor: String = TestMakerColor.BLUE.name
     var limit: Int = 100
     var startPosition: Int = 0
     var title: String? = null
@@ -59,7 +63,8 @@ open class RealmTest : RealmObject() {
         id = WorkbookId(value = id),
         remoteId = documentId,
         name = title ?: "no title",
-        color = color,
+        color = TestMakerColor.values().firstOrNull { it.name == themeColor }
+            ?: TestMakerColor.BLUE,
         order = order,
         folderName = getCategory(),
         questionList = questions?.map {

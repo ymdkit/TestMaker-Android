@@ -2,6 +2,7 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import android.content.Context
 import com.airbnb.epoxy.EpoxyController
+import com.example.ui.core.ColorMapper
 import com.example.usecase.model.FolderUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
 import jp.gr.java_conf.foobar.testmaker.service.*
@@ -39,6 +40,7 @@ class MainController(
     }
 
     override fun buildModels() {
+        val colorMapper = ColorMapper(context)
 
         if (workbookList.isEmpty() && folderList.isEmpty()) {
             empty {
@@ -59,7 +61,7 @@ class MainController(
             folder {
                 id("category-${it.id}")
                 folderId(it.id)
-                color(it.color)
+                color(colorMapper.colorToLegacyGraphicColor(it.color))
                 name(it.name)
                 size(
                     this@MainController.context.getString(
@@ -88,7 +90,7 @@ class MainController(
                 id("workbook-${it.id}")
                 workbookId(it.id)
                 name(it.name)
-                color(it.color)
+                color(colorMapper.colorToLegacyGraphicColor(it.color))
                 size(
                     this@MainController.context.getString(
                         R.string.number_existing_questions,

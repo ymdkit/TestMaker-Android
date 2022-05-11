@@ -1,13 +1,14 @@
 package com.example.usecase.model
 
 import com.example.core.AnswerStatus
+import com.example.core.TestMakerColor
 import com.example.domain.model.Workbook
 
 data class WorkbookUseCaseModel(
     val id: Long,
     val remoteId: String,
     val name: String,
-    val color: Int, // todo don't use resId directly
+    val color: TestMakerColor,
     val folderName: String,
     val questionList: List<QuestionUseCaseModel>,
     val questionCount: Int,

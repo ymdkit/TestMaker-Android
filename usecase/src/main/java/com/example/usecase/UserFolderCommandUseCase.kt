@@ -1,5 +1,6 @@
 package com.example.usecase
 
+import com.example.core.TestMakerColor
 import com.example.domain.model.FolderId
 import com.example.domain.repository.WorkBookRepository
 import com.example.usecase.model.FolderUseCaseModel
@@ -11,7 +12,7 @@ class UserFolderCommandUseCase @Inject constructor(
     private val workBookRepository: WorkBookRepository
 ) {
 
-    suspend fun createFolder(name: String, color: Int) =
+    suspend fun createFolder(name: String, color: TestMakerColor) =
         workBookRepository.createFolder(name, color)
 
     suspend fun updateFolder(folder: FolderUseCaseModel, newFolderName: String) {

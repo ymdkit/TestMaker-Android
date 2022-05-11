@@ -1,10 +1,12 @@
 package com.example.domain.model
 
+import com.example.core.TestMakerColor
+
 data class Workbook(
     val id: WorkbookId,
     val remoteId: String,
     val name: String,
-    val color: Int, // todo don't use resId directly
+    val color: TestMakerColor,
     val order: Int,
     val folderName: String,
     val questionList: List<Question>

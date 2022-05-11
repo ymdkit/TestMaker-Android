@@ -34,7 +34,7 @@ data class ExportWorkbookRequest(
         fun fromWorkbook(workbook: Workbook) =
             ExportWorkbookRequest(
                 id = workbook.id.value,
-                color = workbook.color,
+                color = 0, // todo
                 title = workbook.name,
                 lang = if (Locale.getDefault().language == "ja") "ja" else "en",
                 questions = workbook.questionList.map { ExportQuestionRequest.fromQuestion(it) }

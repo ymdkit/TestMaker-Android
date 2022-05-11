@@ -39,4 +39,18 @@ class ColorMapper @Inject constructor(
             TestMakerColor.BROWN -> Brown
         }
 
+    fun colorToLegacyGraphicColor(color: TestMakerColor) =
+        when (color) {
+            TestMakerColor.BLUE -> context.getColor(R.color.color_blue)
+            TestMakerColor.RED -> context.getColor(R.color.color_red)
+            TestMakerColor.GREEN -> context.getColor(R.color.color_green)
+            TestMakerColor.ORANGE -> context.getColor(R.color.color_orange)
+            TestMakerColor.YELLOW -> context.getColor(R.color.color_yellow)
+            TestMakerColor.PINK -> context.getColor(R.color.color_pink)
+            TestMakerColor.PURPLE -> context.getColor(R.color.color_purple)
+            TestMakerColor.TEAL -> context.getColor(R.color.color_teal)
+            TestMakerColor.INDIGO -> context.getColor(R.color.color_indigo)
+            TestMakerColor.BROWN -> context.getColor(R.color.color_brown)
+        }
+
 }

@@ -24,13 +24,13 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
+import com.example.ui.core.ColorMapper
 import com.example.ui.core.showToast
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.EditWorkbookViewModel
@@ -40,7 +40,6 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.QuestionListFragmentArgs
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.TextPicker
 import javax.inject.Inject
 
@@ -54,22 +53,8 @@ class EditWorkbookFragment : Fragment() {
     @Inject
     lateinit var logger: TestMakerLogger
 
-    private val colors by lazy {
-        listOf(
-            ColorPickerItem(id = 0, colorId = R.color.red, name = getString(R.string.red)),
-            ColorPickerItem(id = 1, colorId = R.color.orange, name = getString(R.string.orange)),
-            ColorPickerItem(id = 2, colorId = R.color.yellow, name = getString(R.string.yellow)),
-            ColorPickerItem(id = 3, colorId = R.color.green, name = getString(R.string.green)),
-            ColorPickerItem(
-                id = 4,
-                colorId = R.color.dark_green,
-                name = getString(R.string.dark_green)
-            ),
-            ColorPickerItem(id = 5, colorId = R.color.blue, name = getString(R.string.blue)),
-            ColorPickerItem(id = 6, colorId = R.color.navy, name = getString(R.string.navy)),
-            ColorPickerItem(id = 7, colorId = R.color.purple, name = getString(R.string.purple)),
-        )
-    }
+    @Inject
+    lateinit var colorMapper: ColorMapper
 
     private val args: QuestionListFragmentArgs by navArgs()
 
@@ -118,14 +103,7 @@ class EditWorkbookFragment : Fragment() {
                                     }
 
                                     var name by rememberSaveable { mutableStateOf(workbook.name) }
-                                    var color by remember {
-                                        mutableStateOf(colors.find {
-                                            workbook.color == ContextCompat.getColor(
-                                                context,
-                                                it.colorId
-                                            )
-                                        } ?: colors.first())
-                                    }
+                                    var color by remember { mutableStateOf(workbook.color) }
                                     var folderName by rememberSaveable { mutableStateOf(workbook.folderName) }
 
                                     var showingValidationError by rememberSaveable {
@@ -164,8 +142,8 @@ class EditWorkbookFragment : Fragment() {
                                                 ColorPicker(
                                                     modifier = Modifier.padding(bottom = 8.dp),
                                                     label = stringResource(id = R.string.picker_color),
-                                                    entries = colors,
                                                     value = color,
+                                                    colorMapper = colorMapper,
                                                     onValueChange = {
                                                         color = it
                                                     }
@@ -199,10 +177,7 @@ class EditWorkbookFragment : Fragment() {
 
                                                     editWorkbookViewModel.updateWorkbook(
                                                         name = name,
-                                                        color = ContextCompat.getColor(
-                                                            context,
-                                                            color.colorId
-                                                        ),
+                                                        color = color,
                                                         folderName = folderName
                                                     )
 

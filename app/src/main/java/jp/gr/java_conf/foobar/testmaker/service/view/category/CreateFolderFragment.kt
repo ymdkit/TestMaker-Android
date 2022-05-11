@@ -21,18 +21,19 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.example.core.TestMakerColor
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
+import com.example.ui.core.ColorMapper
 import com.example.ui.folder.CreateFolderViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CreateFolderFragment : Fragment() {
@@ -40,22 +41,8 @@ class CreateFolderFragment : Fragment() {
     private val createFolderViewModel: CreateFolderViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
 
-    private val colors by lazy {
-        listOf(
-            ColorPickerItem(id = 0, colorId = R.color.red, name = getString(R.string.red)),
-            ColorPickerItem(id = 1, colorId = R.color.orange, name = getString(R.string.orange)),
-            ColorPickerItem(id = 2, colorId = R.color.yellow, name = getString(R.string.yellow)),
-            ColorPickerItem(id = 3, colorId = R.color.green, name = getString(R.string.green)),
-            ColorPickerItem(
-                id = 4,
-                colorId = R.color.dark_green,
-                name = getString(R.string.dark_green)
-            ),
-            ColorPickerItem(id = 5, colorId = R.color.blue, name = getString(R.string.blue)),
-            ColorPickerItem(id = 6, colorId = R.color.navy, name = getString(R.string.navy)),
-            ColorPickerItem(id = 7,colorId = R.color.purple, name = getString(R.string.purple)),
-        )
-    }
+    @Inject
+    lateinit var colorMapper: ColorMapper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,7 +71,7 @@ class CreateFolderFragment : Fragment() {
                             }
 
                             var name by rememberSaveable { mutableStateOf("") }
-                            var color by remember { mutableStateOf(colors.first()) }
+                            var color by remember { mutableStateOf(TestMakerColor.BLUE) }
 
                             var showingValidationError by rememberSaveable { mutableStateOf(false) }
 
@@ -118,8 +105,8 @@ class CreateFolderFragment : Fragment() {
                                         ColorPicker(
                                             modifier = Modifier.padding(bottom = 8.dp),
                                             label = stringResource(id = R.string.picker_color),
-                                            entries = colors,
                                             value = color,
+                                            colorMapper = colorMapper,
                                             onValueChange = {
                                                 color = it
                                             }
@@ -135,10 +122,7 @@ class CreateFolderFragment : Fragment() {
 
                                             createFolderViewModel.createFolder(
                                                 name = name,
-                                                color = ContextCompat.getColor(
-                                                    context,
-                                                    color.colorId
-                                                )
+                                                color = color
                                             )
 
                                             findNavController().popBackStack()

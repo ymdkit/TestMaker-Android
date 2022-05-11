@@ -10,16 +10,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import com.example.core.TestMakerColor
+import com.example.ui.core.ColorMapper
 
 @Composable
 fun ColorPicker(
     modifier: Modifier = Modifier,
     label: String,
-    entries: List<ColorPickerItem>,
-    value: ColorPickerItem,
-    onValueChange: (ColorPickerItem) -> Unit
+    value: TestMakerColor,
+    colorMapper: ColorMapper,
+    onValueChange: (TestMakerColor) -> Unit
 ) {
 
     var showingDropDownMenu by remember { mutableStateOf(false) }
@@ -43,8 +44,8 @@ fun ColorPicker(
             )
             Spacer(modifier = Modifier.weight(weight = 1f, fill = true))
             Text(
-                text = value.name,
-                color = colorResource(id = value.colorId)
+                text = colorMapper.colorToLabel(value),
+                color = colorMapper.colorToGraphicColor(value)
             )
             Icon(
                 Icons.Default.ArrowDropDown,
@@ -58,12 +59,15 @@ fun ColorPicker(
             onDismissRequest = {
                 showingDropDownMenu = false
             }) {
-            entries.forEach {
+            TestMakerColor.values().forEach {
                 DropdownMenuItem(onClick = {
                     onValueChange(it)
                     showingDropDownMenu = false
                 }) {
-                    Text(it.name, color = colorResource(id = it.colorId))
+                    Text(
+                        text = colorMapper.colorToLabel(it),
+                        color = colorMapper.colorToGraphicColor(it)
+                    )
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.example.ui.workbook
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.TestMakerColor
 import com.example.usecase.FolderListWatchUseCase
 import com.example.usecase.UserWorkbookCommandUseCase
 import com.example.usecase.model.FolderUseCaseModel
@@ -39,7 +40,7 @@ class CreateWorkbookViewModel @Inject constructor(
         folderListWatchUseCase.load()
     }
 
-    fun createWorkbook(name: String, color: Int, folderName: String) =
+    fun createWorkbook(name: String, color: TestMakerColor, folderName: String) =
         viewModelScope.launch {
             userWorkbookCommandUseCase.createWorkbook(name, "", color, folderName)
         }

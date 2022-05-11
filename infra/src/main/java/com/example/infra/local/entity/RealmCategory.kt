@@ -1,5 +1,6 @@
 package com.example.infra.local.entity
 
+import com.example.core.TestMakerColor
 import com.example.domain.model.Folder
 import com.example.domain.model.FolderId
 import io.realm.RealmObject
@@ -12,7 +13,7 @@ open class RealmCategory : RealmObject() {
         fun fromFolder(folder: Folder): RealmCategory =
             RealmCategory().apply {
                 id = folder.id.value
-                color = folder.color
+                themeColor = folder.color.name
                 name = folder.name
                 order = folder.order
             }
@@ -23,13 +24,17 @@ open class RealmCategory : RealmObject() {
 
     @Required
     var name: String = ""
+
+    @Deprecated("migrate to themeColor")
     var color = 0
+    var themeColor = TestMakerColor.BLUE.name
     var order = 0
 
     fun toFolder(workbookCount: Int): Folder = Folder(
         id = FolderId(id),
         name = name,
-        color = color,
+        color = TestMakerColor.values().firstOrNull { it.name == themeColor }
+            ?: TestMakerColor.BLUE,
         order = order,
         workbookCount = workbookCount
     )
