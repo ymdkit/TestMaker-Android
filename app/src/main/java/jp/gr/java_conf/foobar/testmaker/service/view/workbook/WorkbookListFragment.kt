@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -27,6 +28,8 @@ import com.example.ui.workbook.FolderListItem
 import com.example.ui.workbook.WorkbookListItem
 import com.example.ui.workbook.WorkbookListViewModel
 import com.example.usecase.utils.Resource
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.view.main.AnswerSettingDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.main.HomeFragmentDirections
@@ -38,7 +41,7 @@ class WorkbookListFragment : Fragment() {
     private val adViewModel: AdViewModel by viewModels()
     private val workbookListViewModel: WorkbookListViewModel by viewModels()
 
-    @OptIn(ExperimentalMaterialApi::class)
+    @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -128,69 +131,106 @@ class WorkbookListFragment : Fragment() {
                             Scaffold(
                                 content = {
                                     Column {
-                                        when (val state =
-                                            uiState.value.folderListWithWorkbookList) {
-                                            is Resource.Success -> {
-                                                val workbookList = state.value.workbookList
-                                                val folderList = state.value.folderList
-                                                if (workbookList.isEmpty() && folderList.isEmpty()) {
-                                                    Column(
-                                                        modifier = Modifier.fillMaxSize(),
-                                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                                        verticalArrangement = Arrangement.Center
-                                                    ) {
-                                                        Text(
-                                                            text = stringResource(id = R.string.empty_test)
-                                                        )
-                                                    }
-                                                } else {
-                                                    LazyColumn(
-                                                        modifier = Modifier
-                                                            .weight(1f)
-                                                    ) {
-                                                        if (folderList.isNotEmpty()) {
-                                                            item {
-                                                                SectionHeaderListItem(
-                                                                    text = stringResource(
-                                                                        id = R.string.folder
+                                        val tabList = listOf(
+                                            stringResource(id = R.string.tab_local),
+                                            stringResource(id = R.string.tab_remote)
+                                        )
+                                        val pagerState = rememberPagerState(
+                                            initialPage = 0
+                                        )
+                                        TabRow(selectedTabIndex = pagerState.currentPage) {
+                                            tabList.forEachIndexed { index, it ->
+                                                Tab(
+                                                    selected = pagerState.currentPage == index,
+                                                    onClick = {
+                                                        scope.launch {
+                                                            pagerState.animateScrollToPage(index)
+                                                        }
+                                                    },
+                                                    text = { Text(it) },
+                                                )
+                                            }
+                                        }
+                                        HorizontalPager(
+                                            modifier = Modifier
+                                                .weight(1f),
+                                            state = pagerState,
+                                            count = tabList.size
+                                        ) { index ->
+                                            when (index) {
+                                                0 -> {
+                                                    when (val state =
+                                                        uiState.value.folderListWithWorkbookList) {
+                                                        is Resource.Success -> {
+                                                            val workbookList =
+                                                                state.value.workbookList
+                                                            val folderList = state.value.folderList
+                                                            if (workbookList.isEmpty() && folderList.isEmpty()) {
+                                                                Column(
+                                                                    modifier = Modifier.fillMaxSize(),
+                                                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                                                    verticalArrangement = Arrangement.Center
+                                                                ) {
+                                                                    Text(
+                                                                        text = stringResource(id = R.string.empty_test)
                                                                     )
-                                                                )
-                                                            }
-                                                        }
-                                                        folderList.forEach {
-                                                            item {
-                                                                FolderListItem(folder = it)
-                                                            }
-                                                        }
-                                                        if (workbookList.isNotEmpty()) {
-                                                            item {
-                                                                SectionHeaderListItem(
-                                                                    text = stringResource(
-                                                                        id = R.string.workbook
-                                                                    )
-                                                                )
-                                                            }
-                                                        }
-                                                        workbookList.forEach {
-                                                            item {
-                                                                WorkbookListItem(
-                                                                    workbook = it,
-                                                                    onClick = {
-                                                                        scope.launch {
-                                                                            drawerState.expand()
+                                                                }
+                                                            } else {
+                                                                LazyColumn(
+                                                                    modifier = Modifier
+                                                                        .fillMaxHeight()
+                                                                ) {
+                                                                    if (folderList.isNotEmpty()) {
+                                                                        item {
+                                                                            SectionHeaderListItem(
+                                                                                text = stringResource(
+                                                                                    id = R.string.folder
+                                                                                )
+                                                                            )
                                                                         }
-                                                                        workbookListViewModel.onWorkbookClicked(
-                                                                            it
-                                                                        )
                                                                     }
-                                                                )
+                                                                    folderList.forEach {
+                                                                        item {
+                                                                            FolderListItem(folder = it)
+                                                                        }
+                                                                    }
+                                                                    if (workbookList.isNotEmpty()) {
+                                                                        item {
+                                                                            SectionHeaderListItem(
+                                                                                text = stringResource(
+                                                                                    id = R.string.workbook
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                    }
+                                                                    workbookList.forEach {
+                                                                        item {
+                                                                            WorkbookListItem(
+                                                                                workbook = it,
+                                                                                onClick = {
+                                                                                    scope.launch {
+                                                                                        drawerState.expand()
+                                                                                    }
+                                                                                    workbookListViewModel.onWorkbookClicked(
+                                                                                        it
+                                                                                    )
+                                                                                }
+                                                                            )
+                                                                        }
+                                                                    }
+                                                                }
                                                             }
+                                                        }
+                                                        else -> {
+                                                            // todo
                                                         }
                                                     }
                                                 }
-                                            }
-                                            else -> {
-                                                // todo
+                                                1 -> {
+                                                    Column {
+
+                                                    }
+                                                }
                                             }
                                         }
                                         AdView(viewModel = adViewModel)
