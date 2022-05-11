@@ -101,6 +101,7 @@ class WorkbookRepositoryImpl @Inject constructor(
         )
         workbookDataSource.createWorkbook(RealmTest.fromWorkbook(newWorkbook))
         refreshWorkbookList()
+        refreshFolderList()
     }
 
     override suspend fun updateWorkbook(workbook: Workbook) {
@@ -111,6 +112,7 @@ class WorkbookRepositoryImpl @Inject constructor(
     override suspend fun deleteWorkbook(workbookId: WorkbookId) {
         workbookDataSource.deleteWorkbook(workbookId.value)
         refreshWorkbookList()
+        refreshFolderList()
     }
 
     override suspend fun exportWorkbook(workbook: Workbook) =
