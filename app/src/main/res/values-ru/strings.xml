@@ -82,7 +82,7 @@
     <string name="message_non_exist_test">0 вопрос</string>
     <string name="num_questions">%1$d вопрос</string>
     <string name="always_review">в любое время комментарий</string>
-    <string name="test">тест</string>
+    <string name="workbook">тест</string>
     <string name="msg_download_study_plus">скачать Studyplus </string>
     <string name="msg_connect_success">соединение</string>
     <string name="msg_upload_study_plus">вклад Studyplus </string>

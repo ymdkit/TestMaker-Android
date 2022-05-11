@@ -93,7 +93,7 @@
     <string name="message_non_exist_test">端末内に問題集が存在しません。「端末」タブから問題集を追加してください</string>
     <string name="num_questions">問題数 %1$d</string>
     <string name="always_review">正解時も解説を表示する</string>
-    <string name="test">問題集</string>
+    <string name="workbook">問題集</string>
     <string name="msg_download_study_plus">最新版の Studyplus をストアからダウンロードしてください</string>
     <string name="msg_connect_success">連携しました</string>
     <string name="msg_upload_study_plus">勉強結果を Studyplus に投稿しました</string>

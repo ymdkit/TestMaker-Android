@@ -93,7 +93,7 @@
     <string name="message_non_exist_test">create test yourself</string>
     <string name="num_questions">%1$d questions</string>
     <string name="always_review">show explanation when you correct</string>
-    <string name="test">test</string>
+    <string name="workbook">test</string>
     <string name="msg_download_study_plus">download latest studyplus from Play store</string>
     <string name="msg_connect_success">success</string>
     <string name="msg_upload_study_plus">success upload to Studyplus</string>
