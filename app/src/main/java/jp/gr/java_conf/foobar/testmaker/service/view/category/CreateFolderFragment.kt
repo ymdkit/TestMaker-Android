@@ -28,6 +28,7 @@ import com.example.core.TestMakerColor
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.ColorMapper
+import com.example.ui.core.TestMakerTopAppBar
 import com.example.ui.folder.CreateFolderViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,12 +55,8 @@ class CreateFolderFragment : Fragment() {
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
-                            TopAppBar(
-                                title = {
-                                    Text(
-                                        text = getString(R.string.fragment_create_folder),
-                                    )
-                                },
+                            TestMakerTopAppBar(
+                                title = stringResource(id = R.string.fragment_create_folder)
                             )
                         },
                         content = {

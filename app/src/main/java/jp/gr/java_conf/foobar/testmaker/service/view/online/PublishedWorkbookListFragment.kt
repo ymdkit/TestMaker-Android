@@ -100,6 +100,7 @@ class PublishedWorkbookListFragment : Fragment() {
                             TopAppBar(
                                 title = {
                                     if (isSearching) {
+                                        // todo 検索バーの文字が見えない問題を修正
                                         SearchTextField(
                                             modifier = Modifier.fillMaxWidth()
                                         ) {
@@ -110,9 +111,9 @@ class PublishedWorkbookListFragment : Fragment() {
                                             text = getString(R.string.label_public_tests),
                                         )
                                     }
-
                                 },
                                 backgroundColor = Color.Transparent,
+                                elevation = 0.dp,
                                 actions = {
                                     IconButton(onClick = {
                                         isSearching = !isSearching

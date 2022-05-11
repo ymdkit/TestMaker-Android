@@ -28,10 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.core.TestMakerColor
-import com.example.ui.core.AdView
-import com.example.ui.core.AdViewModel
-import com.example.ui.core.ColorMapper
-import com.example.ui.core.showToast
+import com.example.ui.core.*
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.CreateWorkbookViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,12 +61,8 @@ class CreateWorkbookFragment : Fragment() {
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
-                            TopAppBar(
-                                title = {
-                                    Text(
-                                        text = getString(R.string.title_activity_create_workbook),
-                                    )
-                                },
+                            TestMakerTopAppBar(
+                                title = stringResource(id = R.string.fragment_create_folder),
                                 navigationIcon = {
                                     Icon(
                                         imageVector = Icons.Filled.ArrowBack,
@@ -144,7 +137,9 @@ class CreateWorkbookFragment : Fragment() {
                                             value = folderName,
                                             onValueChange = {
                                                 if (it == getString(R.string.new_folder)) {
-                                                    findNavController().navigate(CreateWorkbookFragmentDirections.actionCreateWorkbookToCreateFolder())
+                                                    findNavController().navigate(
+                                                        CreateWorkbookFragmentDirections.actionCreateWorkbookToCreateFolder()
+                                                    )
                                                 } else {
                                                     folderName = it
                                                 }
