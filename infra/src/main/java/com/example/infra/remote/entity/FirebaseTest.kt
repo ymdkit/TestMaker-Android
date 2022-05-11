@@ -1,9 +1,11 @@
-package jp.gr.java_conf.foobar.testmaker.service.infra.firebase
+package com.example.infra.remote.entity
 
-import android.content.Context
+import com.example.core.TestMakerColor
+import com.example.domain.model.DocumentId
+import com.example.domain.model.SharedWorkbook
+import com.example.domain.model.UserId
 import com.example.infra.local.entity.RealmTest
 import com.google.firebase.Timestamp
-import jp.gr.java_conf.foobar.testmaker.service.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,12 +28,12 @@ data class FirebaseTest(
 
     var questions: List<FirebaseQuestion> = listOf()
 
-    // todo Context への依存をなくす
-    fun toTest(context: Context): RealmTest {
+    @Deprecated("remove this method as soon as possible")
+    fun toTest(): RealmTest {
         val test = RealmTest()
         test.limit = 100
         test.title = name
-        test.color = context.resources.getIntArray(R.array.color_list)[Math.min(Math.abs(color), 7)]
+        test.themeColor = TestMakerColor.BLUE.name
         test.documentId = documentId
         return test
     }
@@ -44,5 +46,17 @@ data class FirebaseTest(
 
         return df.format(date)
     }
+
+    fun toSharedWorkbook(documentId: String): SharedWorkbook =
+        SharedWorkbook(
+            id = DocumentId(documentId),
+            name = name,
+            userId = UserId(value = userId),
+            userName = userName,
+            questionListCont = size,
+            downloadCount = downloadCount,
+            isPublic = public,
+            groupId = groupId,
+        )
 
 }

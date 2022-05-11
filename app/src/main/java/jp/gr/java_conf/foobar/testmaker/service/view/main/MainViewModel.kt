@@ -2,9 +2,9 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
+import com.example.infra.remote.entity.FirebaseTest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject

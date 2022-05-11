@@ -1,13 +1,11 @@
 package jp.gr.java_conf.foobar.testmaker.service.infra.repository
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.infra.local.db.WorkbookDataSource
+import com.example.infra.remote.entity.FirebaseTest
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
-import dagger.hilt.android.qualifiers.ApplicationContext
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,7 +17,6 @@ import javax.inject.Singleton
 class TestMakerRepository @Inject constructor(
     private val remote: RemoteDataSource,
     private val workbookDataSource: WorkbookDataSource,
-    @ApplicationContext private val context: Context,
 ) {
 
     suspend fun downloadTest(testId: String): FirebaseTest = withContext(Dispatchers.Default) {
@@ -28,7 +25,7 @@ class TestMakerRepository @Inject constructor(
 
     fun createObjectFromFirebase(firebaseTest: FirebaseTest, source: String): Test {
 
-        val test = firebaseTest.toTest(context)
+        val test = firebaseTest.toTest()
 
         test.id = workbookDataSource.generateWorkbookId()
         test.order = test.id.toInt()

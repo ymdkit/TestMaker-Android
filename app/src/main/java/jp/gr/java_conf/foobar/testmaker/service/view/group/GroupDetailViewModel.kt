@@ -1,11 +1,11 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.group
 
 import androidx.lifecycle.ViewModel
+import com.example.infra.remote.entity.FirebaseTest
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.domain.Group
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.GroupRepository
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 import javax.inject.Inject

@@ -45,6 +45,7 @@ dependencies {
     implementation(Dep.Moshi.moshiKotlin)
     kapt(Dep.Moshi.moshiCodegen)
     implementation(Dep.Coroutine.core)
+    implementation(Dep.Coroutine.playServices)
     implementation(Dep.AndroidX.preference)
     implementation(platform(Dep.Firebase.bom))
     implementation(Dep.Firebase.auth)

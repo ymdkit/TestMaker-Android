@@ -3,8 +3,8 @@ package jp.gr.java_conf.foobar.testmaker.service.domain
 import android.os.Parcelable
 import com.example.infra.local.entity.Quest
 import com.example.infra.remote.ImportQuestionResponse
+import com.example.infra.remote.entity.FirebaseQuestion
 import jp.gr.java_conf.foobar.testmaker.service.Constants
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseQuestion
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 

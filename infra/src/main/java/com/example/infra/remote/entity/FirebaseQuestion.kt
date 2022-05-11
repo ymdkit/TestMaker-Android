@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.infra.firebase
+package com.example.infra.remote.entity
 
 import com.example.infra.local.entity.Quest
 

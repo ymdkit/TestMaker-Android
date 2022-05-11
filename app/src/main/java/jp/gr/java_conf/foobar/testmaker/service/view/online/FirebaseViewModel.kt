@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.infra.remote.SearchApi
 import com.example.infra.remote.SearchClient
+import com.example.infra.remote.entity.FirebaseTest
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

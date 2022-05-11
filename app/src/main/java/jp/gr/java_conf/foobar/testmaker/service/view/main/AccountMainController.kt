@@ -2,9 +2,9 @@ package jp.gr.java_conf.foobar.testmaker.service.view.main
 
 import android.content.Context
 import com.airbnb.epoxy.EpoxyController
+import com.example.infra.remote.entity.FirebaseTest
 import com.google.firebase.firestore.DocumentSnapshot
 import jp.gr.java_conf.foobar.testmaker.service.*
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import kotlin.math.abs
 
 class AccountMainController(private val context: Context) : EpoxyController() {

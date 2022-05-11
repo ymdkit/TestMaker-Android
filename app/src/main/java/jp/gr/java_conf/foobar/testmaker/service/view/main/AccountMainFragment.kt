@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
+import com.example.infra.remote.entity.FirebaseTest
 import com.example.ui.core.DialogMenuItem
 import com.example.ui.core.ListDialogFragment
 import com.example.ui.core.showToast
@@ -27,7 +28,6 @@ import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.HomeFragment.Companion.REQUEST_WORKBOOK_CREATED
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
