@@ -41,7 +41,7 @@ class AccountMainController(private val context: Context) : EpoxyController() {
 
         sectionHeader {
             id("Test")
-            title(this@AccountMainController.context.getString(R.string.test))
+            title(this@AccountMainController.context.getString(R.string.workbook))
         }
 
         tests.forEach {

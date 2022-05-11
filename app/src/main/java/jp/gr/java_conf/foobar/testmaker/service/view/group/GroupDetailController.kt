@@ -41,7 +41,7 @@ class GroupDetailController(private val context: Context) : EpoxyController() {
 
         sectionHeader {
             id("Test")
-            title(this@GroupDetailController.context.getString(R.string.test))
+            title(this@GroupDetailController.context.getString(R.string.workbook))
         }
 
         tests.forEach {
