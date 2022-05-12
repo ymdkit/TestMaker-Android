@@ -1,42 +1,39 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.group
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.databinding.DataBindingUtil
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
-import com.example.ui.core.showToast
-import com.firebase.ui.auth.IdpResponse
-import com.google.android.gms.ads.AdRequest
+import com.example.ui.core.*
+import com.example.ui.group.GroupListItem
+import com.example.ui.group.GroupListViewModel
+import com.example.ui.theme.TestMakerAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupListBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.view.main.AccountMainFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class GroupListFragment : Fragment() {
 
-    private val controller: GroupListController by lazy { GroupListController(requireContext()) }
-
-    private val viewModel: GroupListViewModel by viewModels()
+    private val groupListViewModel: GroupListViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
     @Inject
     lateinit var auth: Auth
@@ -44,117 +41,77 @@ class GroupListFragment : Fragment() {
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager
 
-    private lateinit var binding: FragmentGroupListBinding
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        controller.setOnClickListener(object : GroupListController.OnClickListener {
-            override fun onClickGroup(group: Group) {
-                findNavController().navigate(
-                    GroupListFragmentDirections.actionGroupListToGroupDetail(
-                        groupId = group.id
-                    )
-                )
+        return ComposeView(requireContext()).apply {
+            setContent {
+                val uiState = groupListViewModel.uiState.collectAsState()
+
+                // swipeRefresh の導入
+                TestMakerAndroidTheme {
+                    Column {
+                        Scaffold(
+                            modifier = Modifier.weight(1f),
+                            topBar = { TestMakerTopAppBar(title = stringResource(id = R.string.group_list_fragment_label)) },
+                            content = {
+                                // todo 非ログイン時の UI + ログイン機構
+                                ResourceContent(
+                                    resource = uiState.value.groupList,
+                                    onSuccess = {
+                                        LazyColumn(
+                                            modifier = Modifier.fillMaxHeight()
+                                        ) {
+                                            it.forEach {
+                                                item {
+                                                    GroupListItem(
+                                                        group = it,
+                                                        onClick = {
+                                                            findNavController().navigate(
+                                                                GroupListFragmentDirections.actionGroupListToGroupDetail(
+                                                                    groupId = it.id
+                                                                )
+                                                            )
+                                                        })
+                                                }
+                                            }
+
+                                        }
+                                    },
+                                    onRetry = groupListViewModel::load
+                                )
+                            },
+                            floatingActionButton = {
+                                FloatingActionButton(onClick = groupListViewModel::onCreateGroupButtonClicked) {
+                                    Icon(
+                                        Icons.Filled.Add,
+                                        contentDescription = "create group"
+                                    )
+                                }
+                            }
+                        )
+                        AdView(viewModel = adViewModel)
+                    }
+                    if (uiState.value.showingCreateGroupDialog) {
+                        EditTextDialog(
+                            title = stringResource(id = R.string.title_create_group),
+                            value = uiState.value.editingGroupName,
+                            onValueChanged = groupListViewModel::onGroupNameChanged,
+                            placeholder = stringResource(id = R.string.hint_group_name),
+                            onDismiss = groupListViewModel::onCancelCreateGroupButtonClicked,
+                            onSubmit = groupListViewModel::onCreateGroup
+                        )
+                    }
+                }
             }
-        })
-
-        return DataBindingUtil.inflate<FragmentGroupListBinding>(
-            inflater,
-            R.layout.fragment_group_list,
-            container,
-            false
-        ).apply {
-            binding = this
-            isLogin = (auth.getUser() != null)
-
-            buttonLogin.setOnClickListener {
-                startActivityForResult(
-                    auth.getAuthUIIntent(),
-                    AccountMainFragment.REQUEST_SIGN_IN
-                )
-            }
-
-            recyclerView.adapter = controller.adapter
-
-            swipeRefresh.setOnRefreshListener {
-                refresh()
-            }
-
-            buttonAdd.setOnClickListener {
-                EditTextDialogFragment.newInstance(
-                    title = getString(R.string.title_create_group),
-                    hint = getString(R.string.hint_group_name),
-                    defaultText = ""
-                )
-                { text ->
-                    createAndJoinGroup(text)
-                }.show(requireActivity().supportFragmentManager, "TAG")
-            }
-
-            toolbar.setupWithNavController(
-                findNavController(),
-                AppBarConfiguration(findNavController().graph)
-            )
-
-            if (sharedPreferenceManager.isRemovedAd) {
-                adView.visibility = View.GONE
-            } else {
-                adView.loadAd(AdRequest.Builder().build())
-            }
-
-        }.root
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        refresh()
-    }
-
-    private fun refresh() = lifecycleScope.launch {
-        auth.getUser()?.uid?.let {
-            controller.groups = viewModel.getGroups(it)
-        }
-        binding.swipeRefresh.isRefreshing = false
-    }
-
-    private fun createAndJoinGroup(groupName: String) = lifecycleScope.launch {
-        auth.getUser()?.uid?.let {
-            val group = viewModel.createGroup(it, groupName)
-            viewModel.joinGroup(it, group)
-            refresh()
-
-            withContext(Dispatchers.Main) {
-                requireContext().showToast(getString(R.string.msg_success_create_group))
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-
-        if (requestCode == MainActivity.REQUEST_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
-
-            if (resultCode == Activity.RESULT_OK) {
-
-                auth.getUser()?.let {
-                    binding.isLogin = true
-                    viewModel.createUser(it)
-                    refresh()
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.login_successed),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-            } else {
-                response?.error?.errorCode
-            }
-        }
+        groupListViewModel.setup()
+        groupListViewModel.load()
     }
 }

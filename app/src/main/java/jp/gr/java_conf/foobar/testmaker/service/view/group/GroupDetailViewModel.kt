@@ -1,11 +1,11 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.group
 
 import androidx.lifecycle.ViewModel
+import com.example.infra.remote.entity.FirebaseGroup
 import com.example.infra.remote.entity.FirebaseTest
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
-import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.GroupRepository
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
 import javax.inject.Inject
@@ -23,13 +23,13 @@ class GroupDetailViewModel @Inject constructor(
 
     suspend fun deleteTest(documentId: String) = testMakerRepository.deleteTest(documentId)
 
-    suspend fun getGroup(groupId: String): Group? = repository.getGroup(groupId)
+    suspend fun getGroup(groupId: String): FirebaseGroup? = repository.getGroup(groupId)
     suspend fun deleteGroup(groupId: String) = repository.deleteGroup(groupId)
     suspend fun exitGroup(userId: String, groupId: String) = repository.exitGroup(userId, groupId)
-    suspend fun joinGroup(userId: String, group: Group, groupId: String) =
+    suspend fun joinGroup(userId: String, group: FirebaseGroup, groupId: String) =
         repository.joinGroup(userId, group, groupId)
 
-    suspend fun renameGroup(name: String, group: Group) =
+    suspend fun renameGroup(name: String, group: FirebaseGroup) =
         repository.updateGroup(group.copy(name = name))
 
     fun createUser(user: FirebaseUser) = repository.createUser(user)

@@ -1,9 +1,6 @@
 package com.example.infra.repository
 
-import com.example.domain.repository.PreferenceRepository
-import com.example.domain.repository.SharedWorkbookRepository
-import com.example.domain.repository.UserRepository
-import com.example.domain.repository.WorkBookRepository
+import com.example.domain.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -37,5 +34,11 @@ abstract class RepositoryModule {
     abstract fun bindUserRepository(
         userRepositoryImpl: UserRepositoryImpl
     ): UserRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindGroupRepository(
+        groupRepositoryImpl: GroupRepositoryImpl
+    ): GroupRepository
 
 }

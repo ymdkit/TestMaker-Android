@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.infra.remote.entity.FirebaseGroup
 import com.example.infra.remote.entity.FirebaseQuestion
 import com.example.infra.remote.entity.FirebaseTest
 import com.google.firebase.auth.FirebaseUser
@@ -14,7 +15,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
-import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.domain.History
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
@@ -94,29 +94,13 @@ class RemoteDataSource @Inject constructor(
             }
     }
 
-    suspend fun getGroups(userId: String): List<Group> = db.collection("users")
-        .document(userId)
-        .collection("groups")
-        .orderBy("createdAt", Query.Direction.DESCENDING)
-        .limit(100)
-        .get()
-        .await()
-        .toObjects(Group::class.java)
-
-    suspend fun createGroup(userId: String, groupName: String): Group {
-        val ref = db.collection("groups").document()
-        val group = Group(id = ref.id, userId = userId, name = groupName)
-        ref.set(group).await()
-        return group
-    }
-
     suspend fun deleteTest(documentId: String) =
         db.collection(TESTS)
             .document(documentId)
             .delete()
             .await()
 
-    suspend fun joinGroup(userId: String, group: Group) =
+    suspend fun joinGroup(userId: String, group: FirebaseGroup) =
         db.collection("users")
             .document(userId)
             .collection("groups")
@@ -146,10 +130,10 @@ class RemoteDataSource @Inject constructor(
             .document(groupId)
             .get()
             .await()
-            .toObject(Group::class.java)
+            .toObject(FirebaseGroup::class.java)
             ?.copy(id = groupId)
 
-    suspend fun updateGroup(group: Group) =
+    suspend fun updateGroup(group: FirebaseGroup) =
         db.collection("groups")
             .document(group.id)
             .set(group)
@@ -178,15 +162,6 @@ class RemoteDataSource @Inject constructor(
             .document()
         ref.set(history.copy(id = ref.id)).await()
     }
-
-    suspend fun getTestsByUserId(userId: String) =
-        db.collection(TESTS)
-            .whereEqualTo("userId", userId)
-            .get()
-            .await()
-            .map {
-                it.toObject(FirebaseTest::class.java).copy(documentId = it.id)
-            }
 
     suspend fun createTest(
         test: Test,

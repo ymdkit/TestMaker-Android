@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.example.infra.remote.entity.FirebaseGroup
 import com.example.infra.remote.entity.FirebaseTest
 import com.example.ui.core.DialogMenuItem
 import com.example.ui.core.ListDialogFragment
@@ -25,7 +26,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentGroupDetailBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.Group
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
@@ -55,7 +55,7 @@ class GroupDetailFragment : Fragment() {
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager
 
-    private var group: Group? = null
+    private var group: FirebaseGroup? = null
 
     private lateinit var binding: FragmentGroupDetailBinding
 
@@ -288,12 +288,12 @@ class GroupDetailFragment : Fragment() {
         )
     }
 
-    private fun renameGroup(name: String, group: Group) = lifecycleScope.launch {
+    private fun renameGroup(name: String, group: FirebaseGroup) = lifecycleScope.launch {
         viewModel.renameGroup(name, group)
         requireContext().showToast(getString(R.string.msg_success_rename_group))
     }
 
-    private fun deleteAndExitGroup(group: Group) = lifecycleScope.launch {
+    private fun deleteAndExitGroup(group: FirebaseGroup) = lifecycleScope.launch {
 
         auth.getUser()?.uid?.let {
             viewModel.exitGroup(it, group.id)
