@@ -23,10 +23,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.ui.R
 import com.example.ui.core.*
 import com.example.ui.theme.TestMakerAndroidTheme
-import com.example.ui.workbook.FolderListItem
-import com.example.ui.workbook.SharedWorkbookListItem
-import com.example.ui.workbook.WorkbookListItem
-import com.example.ui.workbook.WorkbookListViewModel
+import com.example.ui.workbook.*
 import com.example.usecase.utils.Resource
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -39,6 +36,7 @@ class WorkbookListFragment : Fragment() {
 
     private val adViewModel: AdViewModel by viewModels()
     private val workbookListViewModel: WorkbookListViewModel by viewModels()
+    private val myWorkbookListViewModel: MyWorkbookListViewModel by viewModels()
 
     @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
     override fun onCreateView(
@@ -48,7 +46,6 @@ class WorkbookListFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                val uiState = workbookListViewModel.uiState.collectAsState()
 
                 val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
                 val scope = rememberCoroutineScope()
@@ -94,6 +91,8 @@ class WorkbookListFragment : Fragment() {
                                 ) { index ->
                                     when (index) {
                                         0 -> {
+                                            val uiState =
+                                                workbookListViewModel.uiState.collectAsState()
                                             // todo 背景色の改善
                                             BottomDrawer(
                                                 drawerState = drawerState,
@@ -279,6 +278,8 @@ class WorkbookListFragment : Fragment() {
                                             )
                                         }
                                         1 -> {
+                                            val uiState =
+                                                myWorkbookListViewModel.uiState.collectAsState()
                                             Scaffold(
                                                 content = {
                                                     when (val state =
@@ -330,14 +331,14 @@ class WorkbookListFragment : Fragment() {
                                                 floatingActionButton = {
                                                     FloatingActionButton(onClick = {
                                                         // todo 問題集が空の時の対策
-                                                        val workbook =
-                                                            uiState.value.resources.getOrNull()?.workbookList?.firstOrNull()
-                                                                ?: return@FloatingActionButton
-                                                        findNavController().navigate(
-                                                            WorkbookListFragmentDirections.actionHomeToUploadWorkbook(
-                                                                workbookId = workbook.id
-                                                            )
-                                                        )
+//                                                        val workbook =
+//                                                            uiState.value.resources.getOrNull()?.workbookList?.firstOrNull()
+//                                                                ?: return@FloatingActionButton
+//                                                        findNavController().navigate(
+//                                                            WorkbookListFragmentDirections.actionHomeToUploadWorkbook(
+//                                                                workbookId = workbook.id
+//                                                            )
+//                                                        )
                                                     }) {
                                                         Icon(
                                                             Icons.Filled.CloudUpload,
@@ -362,6 +363,8 @@ class WorkbookListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adViewModel.setup()
         workbookListViewModel.setup()
+        myWorkbookListViewModel.setup()
         workbookListViewModel.load()
+        myWorkbookListViewModel.load()
     }
 }
