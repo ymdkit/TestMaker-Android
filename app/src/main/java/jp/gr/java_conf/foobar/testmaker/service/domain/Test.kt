@@ -3,7 +3,6 @@ package jp.gr.java_conf.foobar.testmaker.service.domain
 import android.content.Context
 import android.os.Parcelable
 import com.example.infra.local.entity.RealmTest
-import com.example.infra.remote.ImportWorkbookResponse
 import jp.gr.java_conf.foobar.testmaker.service.Constants
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.TestMakerApplication
@@ -46,40 +45,8 @@ data class Test(
             .toList()
             .shuffled()
 
-    val questionsCorrectCount
-        get() = questions.count { it.isCorrect }
-
-    val escapedTest: Test
-        get() {
-            return copy(questions =
-            questions.map {
-                it.copy(
-                    question = it.question.replace("\n", "¥n"),
-                    answers = it.answers.map { it.replace("\n", "¥n") },
-                    others = it.others.map { it.replace("\n", "¥n") },
-                    explanation = it.explanation.replace("\n", "¥n")
-                )
-            })
-        }
-
     fun getColorId(context: Context): Int =
         context.resources.getIntArray(R.array.color_list).indexOf(color).coerceAtLeast(0)
-    
-    fun toRealmTest(): RealmTest {
-        val realmTest = RealmTest()
-        realmTest.id = id
-        realmTest.color = color
-        realmTest.limit = limit
-        realmTest.startPosition = startPosition
-        realmTest.title = title
-        realmTest.setCategory(category)
-        realmTest.history = history
-        questions.forEach { realmTest.addQuestion(it.toRealmQuestion()) }
-        realmTest.documentId = documentId
-        realmTest.order = order
-        realmTest.source = source
-        return realmTest
-    }
 
     companion object {
         fun createFromRealmTest(realmTest: RealmTest) = Test(
@@ -94,16 +61,6 @@ data class Test(
             realmTest.documentId,
             realmTest.order,
             source = realmTest.source
-        )
-
-        fun createFromTestResponse(testResponse: ImportWorkbookResponse) = Test(
-            title = testResponse.title,
-            lang = testResponse.lang,
-            questions = testResponse.questions.mapIndexed { index, it ->
-                Question
-                    .createFromQuestionResponse(it, order = index)
-            },
-            source = CreateTestSource.FILE_IMPORT.title
         )
     }
 

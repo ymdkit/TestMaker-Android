@@ -4,7 +4,6 @@ import android.os.Parcelable
 import com.example.infra.local.entity.Quest
 import com.example.infra.remote.ImportQuestionResponse
 import com.example.infra.remote.entity.FirebaseQuestion
-import jp.gr.java_conf.foobar.testmaker.service.Constants
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
@@ -25,14 +24,6 @@ data class Question(
         var isCheckOrder: Boolean = false,
         var documentId: String = ""
 ) : Parcelable {
-
-    @IgnoredOnParcel
-    val singleLineAnswer =
-        when(type){
-            Constants.WRITE, Constants.SELECT -> answer
-            Constants.COMPLETE, Constants.SELECT_COMPLETE -> answers.joinToString(" ")
-            else -> answer
-        }
 
     fun toFirebaseQuestion(imageUrl: String = "") = FirebaseQuestion(
         question = question,
