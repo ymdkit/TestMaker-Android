@@ -33,6 +33,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.main.HomeFragment.Companion
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.online.SignInRequestContract
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.workbook.WorkbookListFragmentDirections
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -132,7 +133,7 @@ class AccountMainFragment : Fragment() {
                     return@setOnClickListener
                 } else {
                     findNavController().navigate(
-                        HomeFragmentDirections.actionHomeToUploadWorkbook(
+                        WorkbookListFragmentDirections.actionHomeToUploadWorkbook(
                             testViewModel.tests.first().id
                         )
                     )

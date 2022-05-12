@@ -26,6 +26,7 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.LocalMainFragmentBin
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import jp.gr.java_conf.foobar.testmaker.service.view.share.EditTextDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.workbook.WorkbookListFragmentDirections
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -103,7 +104,7 @@ class LocalMainFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
 
             fab.setOnClickListener {
-                findNavController().navigate(HomeFragmentDirections.actionHomeToCreateWorkbook())
+                findNavController().navigate(WorkbookListFragmentDirections.actionHomeToCreateWorkbook())
             }
 
             recyclerView.layoutManager = StickyHeaderLinearLayoutManager(requireContext())
@@ -165,7 +166,7 @@ class LocalMainFragment : Fragment() {
                 .receiveAsFlow()
                 .onEach {
                     findNavController().navigate(
-                        HomeFragmentDirections.actionHomeToAnswerWorkbook(
+                        WorkbookListFragmentDirections.actionHomeToAnswerWorkbook(
                             workbookId = it.workbookId,
                             isRetry = it.isRetry
                         )
@@ -185,7 +186,7 @@ class LocalMainFragment : Fragment() {
 
     private fun editWorkbook(workbook: WorkbookUseCaseModel) {
         findNavController().navigate(
-            HomeFragmentDirections.actionHomeToListQuestion(
+            WorkbookListFragmentDirections.actionHomeToListQuestion(
                 workbook.id
             )
         )
@@ -205,7 +206,7 @@ class LocalMainFragment : Fragment() {
     private fun uploadWorkbook(workbook: WorkbookUseCaseModel) {
         logger.logEvent("upload_from_share_local")
         findNavController().navigate(
-            HomeFragmentDirections.actionHomeToShareWorkbook(
+            WorkbookListFragmentDirections.actionHomeToShareWorkbook(
                 workbookId = workbook.id
             )
         )

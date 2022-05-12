@@ -27,14 +27,13 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
 
     override suspend fun getWorkbookListByUserId(userId: UserId): List<SharedWorkbook> {
         val documents = db.collection(COLLECTION_NAME)
-            .whereEqualTo("userId", userId)
+            .whereEqualTo("userId", userId.value)
             .orderBy("created_at", Query.Direction.DESCENDING)
             .limit(300)
             .get()
             .await()
-            .documents
 
-        return documents.map { it.toObject(FirebaseTest::class.java)!!.toSharedWorkbook(it.id) }
+        return documents.map { it.toObject(FirebaseTest::class.java).toSharedWorkbook(it.id) }
     }
 
     override suspend fun createWorkbook(workbook: SharedWorkbook) {

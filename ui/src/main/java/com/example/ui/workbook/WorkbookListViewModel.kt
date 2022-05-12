@@ -7,6 +7,7 @@ import com.example.ui.home.NavigateToAnswerSettingArgs
 import com.example.ui.home.NavigateToAnswerWorkbookArgs
 import com.example.usecase.*
 import com.example.usecase.model.FolderUseCaseModel
+import com.example.usecase.model.SharedWorkbookUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
 import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,13 +25,15 @@ class WorkbookListViewModel @Inject constructor(
     private val userWorkbookCommandUseCase: UserWorkbookCommandUseCase,
     private val userFolderCommandUseCase: UserFolderCommandUseCase,
     private val answerSettingGetUseCase: AnswerSettingWatchUseCase,
+    private val sharedWorkbookListWatchUseCase: SharedWorkbookListWatchUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<WorkbookListUiState> =
         MutableStateFlow(
             WorkbookListUiState(
-                folderListWithWorkbookList = Resource.Empty,
-                selectedWorkbook = null
+                resources = Resource.Empty,
+                selectedWorkbook = null,
+                myWorkbookList = Resource.Empty
             )
         )
     val uiState: StateFlow<WorkbookListUiState>
@@ -52,16 +55,17 @@ class WorkbookListViewModel @Inject constructor(
     fun setup() {
         workbookListWatchUseCase.setup(scope = viewModelScope)
         folderListWatchUseCase.setup(scope = viewModelScope)
+        sharedWorkbookListWatchUseCase.setup(scope = viewModelScope)
 
         viewModelScope.launch {
             combine(
                 folderListWatchUseCase.flow,
-                workbookListWatchUseCase.flow
+                workbookListWatchUseCase.flow,
             ) { folderListResource, workbookListResource ->
                 Resource.merge(
                     folderListResource, workbookListResource
                 ) { folderList, workbookList ->
-                    FolderListWithWorkbookList(
+                    WorkbookListResources(
                         folderList = folderList,
                         workbookList = workbookList
                     )
@@ -69,7 +73,15 @@ class WorkbookListViewModel @Inject constructor(
             }
                 .onEach {
                     _uiState.value = _uiState.value.copy(
-                        folderListWithWorkbookList = it
+                        resources = it
+                    )
+                }
+                .launchIn(this)
+
+            sharedWorkbookListWatchUseCase.flow
+                .onEach {
+                    _uiState.value = _uiState.value.copy(
+                        myWorkbookList = it
                     )
                 }
                 .launchIn(this)
@@ -82,6 +94,7 @@ class WorkbookListViewModel @Inject constructor(
         viewModelScope.launch {
             workbookListWatchUseCase.load()
             folderListWatchUseCase.load()
+            sharedWorkbookListWatchUseCase.load()
         }
 
     fun updateFolder(folder: FolderUseCaseModel, newFolderName: String) =
@@ -161,12 +174,12 @@ class WorkbookListViewModel @Inject constructor(
 }
 
 data class WorkbookListUiState(
-    val folderListWithWorkbookList: Resource<FolderListWithWorkbookList>,
+    val resources: Resource<WorkbookListResources>,
     val selectedWorkbook: WorkbookUseCaseModel?,
+    val myWorkbookList: Resource<List<SharedWorkbookUseCaseModel>>
+)
 
-    )
-
-data class FolderListWithWorkbookList(
+data class WorkbookListResources(
     val folderList: List<FolderUseCaseModel>,
     val workbookList: List<WorkbookUseCaseModel>,
 )
