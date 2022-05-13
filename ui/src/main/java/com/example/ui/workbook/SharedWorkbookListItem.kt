@@ -46,7 +46,7 @@ fun SharedWorkbookListItem(
         }  ${
             stringResource(
                 id = R.string.num_questions,
-                workbook.questionListCont
+                workbook.questionListCount
             )
         }",
         onClick = { onClick(workbook) }
