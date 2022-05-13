@@ -47,6 +47,7 @@ class QuestionJudgeUseCase @Inject constructor(
             actualAnswerList = actualAnswerList.sorted()
         }
 
-        return expectAnswerList.allIndexed { index, it -> it == actualAnswerList[index] }
+        return expectAnswerList.size == actualAnswerList.size &&
+                expectAnswerList.allIndexed { index, it -> it == actualAnswerList[index] }
     }
 }
