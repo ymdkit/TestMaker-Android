@@ -1,10 +1,12 @@
 package com.example.ui.group
 
 import android.net.Uri
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.usecase.GroupCommandUseCase
 import com.example.usecase.GroupWorkbookListWatchUseCase
+import com.example.usecase.SharedWorkbookCommandUseCase
 import com.example.usecase.UserWatchUseCase
 import com.example.usecase.model.GroupUseCaseModel
 import com.example.usecase.model.SharedWorkbookUseCaseModel
@@ -19,10 +21,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalMaterialApi::class)
 @HiltViewModel
 class GroupWorkbookListViewModel @Inject constructor(
     private val groupWorkbookListWatchUseCase: GroupWorkbookListWatchUseCase,
     private val groupCommandUseCase: GroupCommandUseCase,
+    private val sharedWorkbookCommandUseCase: SharedWorkbookCommandUseCase,
     private val userWatchUseCase: UserWatchUseCase,
 ) : ViewModel() {
 
@@ -34,6 +38,7 @@ class GroupWorkbookListViewModel @Inject constructor(
                 isOwner = false,
                 showingEditGroupDialog = false,
                 editingGroupName = "",
+                selectedSharedWorkbook = null
             )
         )
     val uiState: StateFlow<GroupWorkbookListUiState>
@@ -46,6 +51,14 @@ class GroupWorkbookListViewModel @Inject constructor(
     private val _exitGroupEvent: Channel<Unit> = Channel()
     val exitGroupEvent: ReceiveChannel<Unit>
         get() = _exitGroupEvent
+
+    private val _shareWorkbookEvent: Channel<Pair<String, Uri>> = Channel()
+    val shareWorkbookEvent: ReceiveChannel<Pair<String, Uri>>
+        get() = _shareWorkbookEvent
+
+    private val _downloadWorkbookEvent: Channel<String> = Channel()
+    val downloadWorkbookEvent: ReceiveChannel<String>
+        get() = _downloadWorkbookEvent
 
     private lateinit var group: GroupUseCaseModel
 
@@ -139,12 +152,40 @@ class GroupWorkbookListViewModel @Inject constructor(
             groupCommandUseCase.exitGroup(group)
             _exitGroupEvent.send(Unit)
         }
+
+    fun onWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                selectedSharedWorkbook = workbook
+            )
+        }
+
+    fun onDownloadWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
+        viewModelScope.launch {
+            sharedWorkbookCommandUseCase.downloadWorkbook(documentId = workbook.id)
+            _downloadWorkbookEvent.send(workbook.name)
+        }
+
+    fun onShareWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
+        viewModelScope.launch {
+            val uri = sharedWorkbookCommandUseCase.shareWorkbook(workbook = workbook)
+            _shareWorkbookEvent.send(workbook.name to uri)
+        }
+
+    fun onDeleteWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
+        viewModelScope.launch {
+            sharedWorkbookCommandUseCase.deleteWorkbookFromGroup(
+                groupId = group.id,
+                workbook = workbook
+            )
+        }
 }
 
-data class GroupWorkbookListUiState(
+data class GroupWorkbookListUiState @OptIn(ExperimentalMaterialApi::class) constructor(
     val workbookList: Resource<List<SharedWorkbookUseCaseModel>>,
     val showingMenu: Boolean,
     val showingEditGroupDialog: Boolean,
     val editingGroupName: String,
     val isOwner: Boolean,
+    val selectedSharedWorkbook: SharedWorkbookUseCaseModel?,
 )
