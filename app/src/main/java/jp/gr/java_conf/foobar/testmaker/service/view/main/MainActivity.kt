@@ -19,7 +19,6 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListFragmentDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -93,11 +92,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateGroupPage(groupId: String) {
         binding.bottomBar.selectedItemId = R.id.page_group
-        navController.navigate(
-            GroupListFragmentDirections.actionGroupListToGroupDetail(
-                groupId = groupId
-            )
-        )
+        // todo
+//        navController.navigate(
+//            GroupListFragmentDirections.actionGroupListToGroupDetail(
+//                groupId = groupId
+//            )
+//        )
     }
 
     private fun handleDynamicLink(link: String) {

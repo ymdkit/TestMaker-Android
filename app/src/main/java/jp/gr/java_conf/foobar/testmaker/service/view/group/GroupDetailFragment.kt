@@ -66,7 +66,7 @@ class GroupDetailFragment : Fragment() {
                 TestMakerAndroidTheme {
                     BottomDrawer(
                         drawerState = drawerState,
-                        gesturesEnabled = drawerState.isExpanded,
+                        gesturesEnabled = !drawerState.isClosed,
                         drawerContent = {
                             val workbook = uiState.value.selectedSharedWorkbook
 

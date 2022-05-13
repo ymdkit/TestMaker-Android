@@ -3,10 +3,10 @@ package com.example.ui.workbook
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ui.home.NavigateToAnswerSettingArgs
 import com.example.ui.home.NavigateToAnswerWorkbookArgs
 import com.example.usecase.*
 import com.example.usecase.model.FolderUseCaseModel
+import com.example.usecase.model.SharedWorkbookUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
 import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,15 +30,11 @@ class WorkbookListViewModel @Inject constructor(
         MutableStateFlow(
             WorkbookListUiState(
                 resources = Resource.Empty,
-                selectedWorkbook = null
+                workbookListDrawerState = WorkbookListDrawerState.None
             )
         )
     val uiState: StateFlow<WorkbookListUiState>
         get() = _uiState
-
-    private val _navigateToAnswerSettingEvent: Channel<NavigateToAnswerSettingArgs> = Channel()
-    val navigateToAnswerSettingEvent: ReceiveChannel<NavigateToAnswerSettingArgs>
-        get() = _navigateToAnswerSettingEvent
 
     private val _navigateToAnswerWorkbookEvent: Channel<NavigateToAnswerWorkbookArgs> = Channel()
     val navigateToAnswerWorkbookEvent: ReceiveChannel<NavigateToAnswerWorkbookArgs>
@@ -101,7 +97,14 @@ class WorkbookListViewModel @Inject constructor(
     fun onWorkbookClicked(workbook: WorkbookUseCaseModel) =
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
-                selectedWorkbook = workbook
+                workbookListDrawerState = WorkbookListDrawerState.OperateWorkbook(workbook = workbook)
+            )
+        }
+
+    fun onSharedWorkbookClicked(sharedWorkbook: SharedWorkbookUseCaseModel) =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                workbookListDrawerState = WorkbookListDrawerState.OperateSharedWorkbook(workbook = sharedWorkbook)
             )
         }
 
@@ -114,11 +117,8 @@ class WorkbookListViewModel @Inject constructor(
             }
 
             if (answerSettingGetUseCase.getAnswerSetting().isShowAnswerSettingDialog) {
-                _navigateToAnswerSettingEvent.send(
-                    NavigateToAnswerSettingArgs(
-                        workbookId = workbook.id,
-                        workbookName = workbook.name
-                    )
+                _uiState.value = _uiState.value.copy(
+                    workbookListDrawerState = WorkbookListDrawerState.AnswerSetting(workbook = workbook)
                 )
             } else {
                 _navigateToAnswerWorkbookEvent.send(
@@ -161,8 +161,17 @@ class WorkbookListViewModel @Inject constructor(
 
 data class WorkbookListUiState(
     val resources: Resource<WorkbookListResources>,
-    val selectedWorkbook: WorkbookUseCaseModel?
+    val workbookListDrawerState: WorkbookListDrawerState
 )
+
+sealed class WorkbookListDrawerState {
+    object None : WorkbookListDrawerState()
+    data class OperateWorkbook(val workbook: WorkbookUseCaseModel) : WorkbookListDrawerState()
+    data class OperateSharedWorkbook(val workbook: SharedWorkbookUseCaseModel) :
+        WorkbookListDrawerState()
+
+    data class AnswerSetting(val workbook: WorkbookUseCaseModel) : WorkbookListDrawerState()
+}
 
 data class WorkbookListResources(
     val folderList: List<FolderUseCaseModel>,
