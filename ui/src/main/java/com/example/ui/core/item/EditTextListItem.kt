@@ -1,8 +1,10 @@
-package com.example.ui.core
+package com.example.ui.core.item
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.KeyboardType
+import com.example.ui.core.ClickableListItem
+import com.example.ui.core.EditTextDialog
 import com.example.ui.preference.EditTextState
 
 @Composable

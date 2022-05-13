@@ -1,4 +1,4 @@
-package com.example.ui.core
+package com.example.ui.core.item
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.ui.R
+import com.example.ui.core.ClickableListItem
 
 @Composable
 fun ConfirmActionListItem(

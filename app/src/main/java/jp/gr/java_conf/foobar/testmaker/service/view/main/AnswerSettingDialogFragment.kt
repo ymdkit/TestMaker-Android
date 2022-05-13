@@ -23,9 +23,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.core.QuestionCondition
 import com.example.ui.answer.AnswerSettingViewModel
-import com.example.ui.core.CheckboxListItem
 import com.example.ui.core.ContainedWideButton
-import com.example.ui.core.EditTextListItem
+import com.example.ui.core.item.CheckboxListItem
+import com.example.ui.core.item.EditTextListItem
 import com.example.ui.home.HomeViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

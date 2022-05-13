@@ -1,17 +1,17 @@
-package com.example.ui.core
+package com.example.ui.core.item
 
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import com.example.core.TestMakerColor
+import com.example.ui.core.ClickableListItem
 
 @Composable
-fun ColorDropDownListItem(
+fun DropDownListItem(
     label: String,
     value: String,
-    colorMapper: ColorMapper,
-    onValueChange: (TestMakerColor) -> Unit,
+    keyValueList: List<Pair<String, String>>,
+    onValueChange: (String) -> Unit,
 ) {
 
     var showingDropDownMenu: Boolean by remember { mutableStateOf(false) }
@@ -28,15 +28,12 @@ fun ColorDropDownListItem(
         onDismissRequest = {
             showingDropDownMenu = false
         }) {
-        TestMakerColor.values().forEach {
+        keyValueList.forEach {
             DropdownMenuItem(onClick = {
-                onValueChange(it)
+                onValueChange(it.second)
                 showingDropDownMenu = false
             }) {
-                Text(
-                    text = colorMapper.colorToLabel(it),
-                    color = colorMapper.colorToGraphicColor(it)
-                )
+                Text(it.first)
             }
         }
     }

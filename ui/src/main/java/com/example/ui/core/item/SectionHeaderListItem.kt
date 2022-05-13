@@ -1,4 +1,4 @@
-package com.example.ui.core
+package com.example.ui.core.item
 
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
