@@ -4,6 +4,8 @@ import android.net.Uri
 import com.example.domain.model.*
 import com.example.domain.repository.SharedWorkbookRepository
 import com.example.infra.remote.DynamicLinksCreator
+import com.example.infra.remote.SearchApi
+import com.example.infra.remote.SearchClient
 import com.example.infra.remote.entity.FirebaseQuestion
 import com.example.infra.remote.entity.FirebaseTest
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,6 +17,7 @@ import javax.inject.Inject
 
 class SharedWorkbookRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore,
+    @SearchClient private val searchApi: SearchApi,
     private val dynamicLinksCreator: DynamicLinksCreator
 ) : SharedWorkbookRepository {
 
@@ -32,6 +35,9 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
         MutableSharedFlow()
     override val updateGroupWorkbookListFlow: Flow<List<SharedWorkbook>>
         get() = _updateGroupWorkbookListFlow
+
+    override suspend fun getWorkbookList(query: String): List<SharedWorkbook> =
+        searchApi.tests(keyword = query).map { it.toSharedWorkbook() }
 
     override suspend fun getWorkbookListByUserId(userId: UserId): List<SharedWorkbook> {
         val documents = db.collection(WORKBOOK_COLLECTION_NAME)

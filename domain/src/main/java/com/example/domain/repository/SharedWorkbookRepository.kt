@@ -9,6 +9,7 @@ interface SharedWorkbookRepository {
     val updateWorkbookListFlow: Flow<List<SharedWorkbook>>
     val updateGroupWorkbookListFlow: Flow<List<SharedWorkbook>>
 
+    suspend fun getWorkbookList(query: String): List<SharedWorkbook>
     suspend fun getWorkbookListByUserId(userId: UserId): List<SharedWorkbook>
     suspend fun getWorkbookListByGroupId(groupId: GroupId): List<SharedWorkbook>
     suspend fun findWorkbookById(documentId: DocumentId): SharedWorkbook?

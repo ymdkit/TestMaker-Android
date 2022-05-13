@@ -4,8 +4,8 @@ import android.net.Uri
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.usecase.SharedOwnWorkbookListWatchUseCase
 import com.example.usecase.SharedWorkbookCommandUseCase
-import com.example.usecase.SharedWorkbookListWatchUseCase
 import com.example.usecase.model.SharedWorkbookUseCaseModel
 import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalMaterialApi::class)
 @HiltViewModel
 class MyWorkbookListViewModel @Inject constructor(
-    private val sharedWorkbookListWatchUseCase: SharedWorkbookListWatchUseCase,
+    private val sharedOwnWorkbookListWatchUseCase: SharedOwnWorkbookListWatchUseCase,
     private val sharedWorkbookCommandUseCase: SharedWorkbookCommandUseCase
 ) : ViewModel() {
 
@@ -45,11 +45,11 @@ class MyWorkbookListViewModel @Inject constructor(
 
     @OptIn(ExperimentalMaterialApi::class)
     fun setup() {
-        sharedWorkbookListWatchUseCase.setup(scope = viewModelScope)
+        sharedOwnWorkbookListWatchUseCase.setup(scope = viewModelScope)
 
         viewModelScope.launch {
 
-            sharedWorkbookListWatchUseCase.flow
+            sharedOwnWorkbookListWatchUseCase.flow
                 .onEach {
                     _uiState.value = _uiState.value.copy(
                         myWorkbookList = it
@@ -61,7 +61,7 @@ class MyWorkbookListViewModel @Inject constructor(
 
     fun load() =
         viewModelScope.launch {
-            sharedWorkbookListWatchUseCase.load()
+            sharedOwnWorkbookListWatchUseCase.load()
         }
 
     fun onWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =

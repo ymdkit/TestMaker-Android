@@ -1,5 +1,8 @@
 package com.example.infra.remote
 
+import com.example.domain.model.DocumentId
+import com.example.domain.model.SharedWorkbook
+import com.example.domain.model.UserId
 import com.squareup.moshi.Json
 import retrofit2.http.*
 
@@ -26,7 +29,20 @@ data class SearchWorkbookResponse(
     @Json(name = "user_name") val userName: String,
     @Json(name = "created_at") val createdAt: TimeStampResponse,
     @Json(name = "updated_at") val updatedAt: TimeStampResponse
-)
+) {
+    fun toSharedWorkbook() =
+        SharedWorkbook(
+            id = DocumentId(value = documentId),
+            name = name,
+            userId = UserId(value = userId),
+            userName = userName,
+            comment = comment,
+            questionListCount = size,
+            downloadCount = 0,
+            isPublic = true,
+            groupId = null
+        )
+}
 
 data class TimeStampResponse(
     @Json(name = "secs_since_epoch") val secs: Long,

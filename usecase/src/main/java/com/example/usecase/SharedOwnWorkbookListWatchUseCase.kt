@@ -1,6 +1,7 @@
 package com.example.usecase
 
 import com.example.domain.repository.SharedWorkbookRepository
+import com.example.domain.repository.UserRepository
 import com.example.usecase.model.SharedWorkbookUseCaseModel
 import com.example.usecase.utils.Resource
 import kotlinx.coroutines.CoroutineScope
@@ -13,8 +14,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SharedWorkbookListWatchUseCase @Inject constructor(
+class SharedOwnWorkbookListWatchUseCase @Inject constructor(
     private val repository: SharedWorkbookRepository,
+    private val userRepository: UserRepository,
 ) {
 
     private val _flow: MutableStateFlow<Resource<List<SharedWorkbookUseCaseModel>>> =
@@ -31,13 +33,18 @@ class SharedWorkbookListWatchUseCase @Inject constructor(
         }
     }
 
-    suspend fun load(query: String) {
+    suspend fun load() {
         _flow.emit(Resource.Loading)
+        val user = userRepository.getUserOrNull()
 
-        val workbookList = repository.getWorkbookList(query = query)
-        _flow.emit(Resource.Success(workbookList.map {
-            SharedWorkbookUseCaseModel.fromSharedWorkbook(it)
-        }))
+        if (user != null) {
+            val workbookList = repository.getWorkbookListByUserId(userId = user.id)
+            _flow.emit(Resource.Success(workbookList.map {
+                SharedWorkbookUseCaseModel.fromSharedWorkbook(it)
+            }))
+        } else {
+            _flow.emit(Resource.Failure("does not exist user"))
+        }
     }
 }
 
