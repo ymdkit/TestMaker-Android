@@ -1,6 +1,7 @@
 package com.example.infra.repository
 
 import com.example.domain.model.DocumentId
+import com.example.domain.model.GroupId
 import com.example.domain.model.SharedWorkbook
 import com.example.domain.model.UserId
 import com.example.domain.repository.SharedWorkbookRepository
@@ -22,14 +23,30 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
 
     private val _updateWorkbookListFlow: MutableSharedFlow<List<SharedWorkbook>> =
         MutableSharedFlow()
-    override val updateWorkBookListFlow: Flow<List<SharedWorkbook>>
+    override val updateWorkbookListFlow: Flow<List<SharedWorkbook>>
         get() = _updateWorkbookListFlow
+
+    private val _updateGroupWorkbookListFlow: MutableSharedFlow<List<SharedWorkbook>> =
+        MutableSharedFlow()
+    override val updateGroupWorkbookListFlow: Flow<List<SharedWorkbook>>
+        get() = _updateGroupWorkbookListFlow
 
     override suspend fun getWorkbookListByUserId(userId: UserId): List<SharedWorkbook> {
         val documents = db.collection(COLLECTION_NAME)
             .whereEqualTo("userId", userId.value)
             .orderBy("created_at", Query.Direction.DESCENDING)
             .limit(300)
+            .get()
+            .await()
+
+        return documents.map { it.toObject(FirebaseTest::class.java).toSharedWorkbook(it.id) }
+    }
+
+    override suspend fun getWorkbookListByGroupId(groupId: GroupId): List<SharedWorkbook> {
+        val documents = db.collection(COLLECTION_NAME)
+            .whereEqualTo("groupId", groupId.value)
+            .orderBy("created_at", Query.Direction.DESCENDING)
+            .limit(100)
             .get()
             .await()
 
