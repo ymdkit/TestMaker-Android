@@ -31,7 +31,7 @@ class UploadGroupTestFragment : Fragment() {
     private lateinit var binding: FragmentUploadGroupTestBinding
     private val testViewModel: TestViewModel by viewModels()
     private val viewModel: FirebaseViewModel by viewModels()
-    private val args: GroupDetailFragmentArgs by navArgs()
+    private val args: UploadGroupTestFragmentArgs by navArgs()
 
     @Inject
     lateinit var logger: TestMakerLogger
