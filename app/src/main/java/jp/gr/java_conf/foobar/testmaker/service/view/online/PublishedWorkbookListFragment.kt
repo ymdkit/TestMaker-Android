@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,7 +24,6 @@ import androidx.compose.ui.graphics.ExperimentalGraphicsApi
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -186,13 +184,9 @@ class PublishedWorkbookListFragment : Fragment() {
                                                 onClick =
                                                 sharedWorkbookListViewModel::onSearchButtonClicked
                                             ) {
-                                                Image(
-                                                    painter = painterResource(
-                                                        id =
-                                                        if (uiState.isSearching) R.drawable.ic_close_white
-                                                        else R.drawable.ic_baseline_search_24
-                                                    ),
-                                                    contentDescription = "search",
+                                                Icon(
+                                                    imageVector = if (uiState.isSearching) Icons.Filled.Close else Icons.Filled.Search,
+                                                    contentDescription = "search"
                                                 )
                                             }
                                         },
