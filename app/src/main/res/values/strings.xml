@@ -344,4 +344,6 @@
     <string name="section_create_workbook_by_app">create workbook</string>
     <string name="section_create_workbook_by_import">import workbook</string>
     <string name="help_import">import help</string>
+    <string name="workbook_post_user">posted by</string>
+    <string name="overview">overview</string>
 </resources>

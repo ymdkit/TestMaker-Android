@@ -336,4 +336,6 @@
     <string name="section_create_workbook_by_app">手動で作成</string>
     <string name="section_create_workbook_by_import">その他の方法で作成</string>
     <string name="help_import">「ファイルのインポート」とは？</string>
+    <string name="workbook_post_user">投稿者</string>
+    <string name="overview">コメント</string>
 </resources>
