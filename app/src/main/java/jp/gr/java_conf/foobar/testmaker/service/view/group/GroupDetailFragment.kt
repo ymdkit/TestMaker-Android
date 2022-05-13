@@ -153,12 +153,18 @@ class GroupDetailFragment : Fragment() {
                                         )
                                     },
                                     label = stringResource(id = R.string.delete),
-                                    confirmMessage = stringResource(id = R.string.message_delete),
+                                    confirmMessage = stringResource(
+                                        id = com.example.ui.R.string.message_delete,
+                                        workbook.name
+                                    ),
                                     confirmButtonText = stringResource(id = R.string.delete),
                                     onConfirmed = {
-                                        groupWorkbookListViewModel.onDeleteWorkbookClicked(
-                                            workbook
-                                        )
+                                        scope.launch {
+                                            groupWorkbookListViewModel.onDeleteWorkbookClicked(
+                                                workbook
+                                            )
+                                            drawerState.close()
+                                        }
                                     }
                                 )
                             } else {

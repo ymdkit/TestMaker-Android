@@ -7,6 +7,9 @@ import com.example.usecase.utils.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,6 +24,13 @@ class SharedWorkbookListWatchUseCase @Inject constructor(
     val flow: StateFlow<Resource<List<SharedWorkbookUseCaseModel>>> = _flow
 
     fun setup(scope: CoroutineScope) {
+        scope.launch {
+            repository.updateWorkbookListFlow.onEach {
+                _flow.emit(Resource.Success(it.map {
+                    SharedWorkbookUseCaseModel.fromSharedWorkbook(it)
+                }))
+            }.launchIn(this)
+        }
     }
 
     suspend fun load() {

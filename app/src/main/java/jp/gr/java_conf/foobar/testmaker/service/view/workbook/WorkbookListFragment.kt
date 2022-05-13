@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.workbook
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.ui.R
 import com.example.ui.core.*
@@ -30,6 +33,10 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.view.main.AnswerSettingDialogFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -48,7 +55,6 @@ class WorkbookListFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
 
-                val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
                 val scope = rememberCoroutineScope()
                 TestMakerAndroidTheme {
                     Scaffold(
@@ -94,6 +100,9 @@ class WorkbookListFragment : Fragment() {
                                         0 -> {
                                             val uiState =
                                                 workbookListViewModel.uiState.collectAsState()
+                                            val drawerState =
+                                                rememberBottomDrawerState(BottomDrawerValue.Closed)
+
                                             // todo 背景色の改善
                                             BottomDrawer(
                                                 drawerState = drawerState,
@@ -285,61 +294,142 @@ class WorkbookListFragment : Fragment() {
                                         1 -> {
                                             val uiState =
                                                 myWorkbookListViewModel.uiState.collectAsState()
-                                            Column {
+                                            val drawerState =
+                                                rememberBottomDrawerState(BottomDrawerValue.Closed)
 
+                                            BottomDrawer(
+                                                drawerState = drawerState,
+                                                gesturesEnabled = drawerState.isExpanded,
+                                                drawerContent = {
+                                                    val workbook =
+                                                        uiState.value.selectedSharedWorkbook
 
-                                                Scaffold(
-                                                    modifier = Modifier.weight(1f),
-                                                    content = {
-                                                        when (val state =
-                                                            uiState.value.myWorkbookList) {
-                                                            is Resource.Success -> {
-                                                                LazyColumn(
-                                                                    modifier = Modifier
-                                                                        .fillMaxHeight()
-                                                                ) {
-                                                                    item {
-                                                                        Spacer(
-                                                                            modifier = Modifier.height(
-                                                                                8.dp
-                                                                            )
-                                                                        )
-                                                                    }
-                                                                    if (state.value.isNotEmpty()) {
+                                                    if (workbook != null) {
+                                                        ListItem(
+                                                            text = {
+                                                                Text(
+                                                                    text = workbook.name,
+                                                                    fontWeight = FontWeight.Bold
+                                                                )
+                                                            }
+                                                        )
+                                                        ClickableListItem(
+                                                            icon = {
+                                                                Icon(
+                                                                    imageVector = Icons.Filled.Download,
+                                                                    contentDescription = "download"
+                                                                )
+                                                            },
+                                                            text = stringResource(id = jp.gr.java_conf.foobar.testmaker.service.R.string.download)
+                                                        ) {
+                                                            myWorkbookListViewModel.onDownloadWorkbookClicked(
+                                                                workbook = workbook
+                                                            )
+                                                        }
+                                                        ClickableListItem(
+                                                            icon = {
+                                                                Icon(
+                                                                    imageVector = Icons.Filled.Share,
+                                                                    contentDescription = "share"
+                                                                )
+                                                            },
+                                                            text = stringResource(id = jp.gr.java_conf.foobar.testmaker.service.R.string.share)
+                                                        ) {
+                                                            scope.launch {
+                                                                myWorkbookListViewModel.onShareWorkbookClicked(
+                                                                    workbook = workbook
+                                                                )
+                                                                drawerState.close()
+                                                            }
+                                                        }
+                                                        ConfirmActionListItem(
+                                                            icon = {
+                                                                Icon(
+                                                                    imageVector = Icons.Filled.Delete,
+                                                                    contentDescription = "delete"
+                                                                )
+                                                            },
+                                                            label = stringResource(id = R.string.delete),
+                                                            confirmMessage = stringResource(
+                                                                id = R.string.message_delete,
+                                                                workbook.name
+                                                            ),
+                                                            confirmButtonText = stringResource(id = R.string.delete),
+                                                            onConfirmed = {
+                                                                scope.launch {
+                                                                    myWorkbookListViewModel.onDeleteWorkbookClicked(
+                                                                        workbook
+                                                                    )
+                                                                    drawerState.close()
+                                                                }
+                                                            }
+                                                        )
+                                                    } else {
+                                                        Spacer(modifier = Modifier.height(1.dp))
+                                                    }
+                                                }
+                                            ) {
+                                                Column {
+                                                    Scaffold(
+                                                        modifier = Modifier.weight(1f),
+                                                        content = {
+                                                            when (val state =
+                                                                uiState.value.myWorkbookList) {
+                                                                is Resource.Success -> {
+                                                                    LazyColumn(
+                                                                        modifier = Modifier
+                                                                            .fillMaxHeight()
+                                                                    ) {
                                                                         item {
-                                                                            Text(
-                                                                                modifier = Modifier.padding(
-                                                                                    horizontal = 16.dp
-                                                                                ),
-                                                                                text = stringResource(
-                                                                                    id = R.string.workbook
+                                                                            Spacer(
+                                                                                modifier = Modifier.height(
+                                                                                    8.dp
                                                                                 )
                                                                             )
                                                                         }
-                                                                    }
-                                                                    state.value.forEach {
-                                                                        item {
-                                                                            SharedWorkbookListItem(
-                                                                                workbook = it,
-                                                                                onClick = {}
-                                                                            )
+                                                                        if (state.value.isNotEmpty()) {
+                                                                            item {
+                                                                                Text(
+                                                                                    modifier = Modifier.padding(
+                                                                                        horizontal = 16.dp
+                                                                                    ),
+                                                                                    text = stringResource(
+                                                                                        id = R.string.workbook
+                                                                                    )
+                                                                                )
+                                                                            }
+                                                                        }
+                                                                        state.value.forEach {
+                                                                            item {
+                                                                                SharedWorkbookListItem(
+                                                                                    workbook = it,
+                                                                                    onClick = {
+                                                                                        scope.launch {
+                                                                                            myWorkbookListViewModel.onWorkbookClicked(
+                                                                                                it
+                                                                                            )
+                                                                                            drawerState.open()
+                                                                                        }
+                                                                                    }
+                                                                                )
+
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
-                                                            }
-                                                            else -> {
-                                                                Box(
-                                                                    modifier = Modifier.fillMaxSize(),
-                                                                    contentAlignment = Alignment.Center
-                                                                ) {
-                                                                    CircularProgressIndicator()
+                                                                else -> {
+                                                                    Box(
+                                                                        modifier = Modifier.fillMaxSize(),
+                                                                        contentAlignment = Alignment.Center
+                                                                    ) {
+                                                                        CircularProgressIndicator()
+                                                                    }
                                                                 }
                                                             }
-                                                        }
-                                                    },
-                                                    floatingActionButton = {
-                                                        FloatingActionButton(onClick = {
-                                                            // todo 問題集が空の時の対策
+                                                        },
+                                                        floatingActionButton = {
+                                                            FloatingActionButton(onClick = {
+                                                                // todo 問題集が空の時の対策
 //                                                        val workbook =
 //                                                            uiState.value.resources.getOrNull()?.workbookList?.firstOrNull()
 //                                                                ?: return@FloatingActionButton
@@ -348,15 +438,16 @@ class WorkbookListFragment : Fragment() {
 //                                                                workbookId = workbook.id
 //                                                            )
 //                                                        )
-                                                        }) {
-                                                            Icon(
-                                                                Icons.Filled.CloudUpload,
-                                                                contentDescription = "upload workbook"
-                                                            )
+                                                            }) {
+                                                                Icon(
+                                                                    Icons.Filled.CloudUpload,
+                                                                    contentDescription = "upload workbook"
+                                                                )
+                                                            }
                                                         }
-                                                    }
-                                                )
-                                                AdView(viewModel = adViewModel)
+                                                    )
+                                                    AdView(viewModel = adViewModel)
+                                                }
                                             }
                                         }
                                     }
@@ -376,5 +467,47 @@ class WorkbookListFragment : Fragment() {
         myWorkbookListViewModel.setup()
         workbookListViewModel.load()
         myWorkbookListViewModel.load()
+
+        lifecycleScope.launchWhenCreated {
+            myWorkbookListViewModel.shareWorkbookEvent
+                .receiveAsFlow()
+                .onEach {
+                    startActivity(
+                        actionSendIntent(
+                            text = getString(
+                                jp.gr.java_conf.foobar.testmaker.service.R.string.msg_share_test,
+                                it.first,
+                                it.second
+                            )
+                        )
+                    )
+                }
+                .launchIn(this)
+
+            myWorkbookListViewModel.downloadWorkbookEvent
+                .receiveAsFlow()
+                .onEach {
+                    requireContext().showToast(
+                        getString(
+                            jp.gr.java_conf.foobar.testmaker.service.R.string.msg_success_download_test,
+                            it
+                        )
+                    )
+                    val hostActivity = requireActivity() as? MainActivity
+                    hostActivity?.navigateHomePage()
+                }
+                .launchIn(this)
+        }
     }
+
+    // todo 共通化
+    private fun actionSendIntent(text: String) =
+        Intent.createChooser(Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(
+                Intent.EXTRA_TEXT,
+                text
+            )
+            type = "text/plain"
+        }, null)
 }
