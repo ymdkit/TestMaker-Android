@@ -269,8 +269,9 @@ class CreateWorkbookFragment : Fragment() {
                                         }
                                     )
                                 }
+                                Spacer(modifier = Modifier.height(4.dp))
+                                AdView(viewModel = adViewModel)
                             }
-                            AdView(viewModel = adViewModel)
                         }
                     )
                 }
