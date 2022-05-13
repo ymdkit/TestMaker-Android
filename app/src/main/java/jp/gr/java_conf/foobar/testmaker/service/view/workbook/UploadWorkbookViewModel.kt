@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.domain.UploadTestDestination
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.LegacyDynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
@@ -22,7 +22,7 @@ class UploadWorkbookViewModel @Inject constructor(
     auth: Auth,
     private val repository: TestMakerRepository,
     private val logger: TestMakerLogger,
-    private val dynamicLinksCreator: DynamicLinksCreator
+    private val dynamicLinksCreator: LegacyDynamicLinksCreator
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UploadWorkbookUiState>(UploadWorkbookUiState.Initial)
