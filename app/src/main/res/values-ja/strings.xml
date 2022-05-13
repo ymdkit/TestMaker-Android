@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">暗記メーカー</string>
     <string name="message_delete_exam">「 %1$s 」 を削除してもよろしいですか？</string>
     <string name="action_next">次へ</string>
     <string name="number_questions">出題数</string>
@@ -225,7 +224,6 @@
     <string name="upload_dialog_already_uploaded">同名の問題集がすでにアップロードされています</string>
     <string name="upload_dialog_overwrite">内容を上書きする</string>
     <string name="upload_dialog_upload_as_other_test">別の問題集としてアップロードする</string>
-    <string name="app_description">「暗記メーカー」は、自学自習の効率化を目的とした問題集作成用のアプリです。資格習得のための勉強や、複数人への問題集の配布のために利用できます。</string>
     <string name="msg_success_delete_category">フォルダを削除しました</string>
     <string name="button_delete_confirm">削除する</string>
     <string name="menu_export">エクスポート</string>

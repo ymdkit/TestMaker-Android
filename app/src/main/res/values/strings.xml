@@ -9,7 +9,6 @@
     <string name="action_license">license</string>
     <string name="action_next">next</string>
     <string name="action_other">other apps</string>
-    <string name="app_name">TestMaker</string>
     <string name="cancel">cancel</string>
     <string name="confirm">confirm</string>
     <string name="delete">delete</string>
@@ -232,7 +231,6 @@
     <string name="upload_dialog_already_uploaded">already uploaded this test</string>
     <string name="upload_dialog_overwrite">overwrite</string>
     <string name="upload_dialog_upload_as_other_test">upload as other question</string>
-    <string name="app_description">TestMaker is application for making your own tests</string>
     <string name="msg_success_delete_category">category deleted</string>
     <string name="button_delete_confirm">delete</string>
     <string name="menu_export">export</string>
