@@ -88,7 +88,7 @@ class WorkbookRepositoryImpl @Inject constructor(
         remoteId: String,
         color: TestMakerColor,
         folderName: String
-    ) {
+    ): Workbook {
         val workbookId = workbookDataSource.generateWorkbookId()
         val newWorkbook = Workbook(
             id = WorkbookId(workbookId),
@@ -102,6 +102,7 @@ class WorkbookRepositoryImpl @Inject constructor(
         workbookDataSource.createWorkbook(RealmTest.fromWorkbook(newWorkbook))
         refreshWorkbookList()
         refreshFolderList()
+        return newWorkbook
     }
 
     override suspend fun updateWorkbook(workbook: Workbook) {

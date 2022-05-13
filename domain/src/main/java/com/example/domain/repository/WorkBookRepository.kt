@@ -21,7 +21,7 @@ interface WorkBookRepository {
         remoteId: String,
         color: TestMakerColor,
         folderName: String
-    )
+    ): Workbook
 
     suspend fun updateWorkbook(workbook: Workbook)
     suspend fun deleteWorkbook(workbookId: WorkbookId)
