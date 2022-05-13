@@ -36,6 +36,16 @@ class GroupCommandUseCase @Inject constructor(
         )
     }
 
+    suspend fun deleteGroup(group: GroupUseCaseModel) {
+        val user = userRepository.getUserOrNull() ?: return
+        if (group.userId != user.id.value) return
+
+        groupRepository.deleteGroup(
+            userId = user.id,
+            groupId = GroupId(group.id)
+        )
+    }
+
     suspend fun inviteGroup(groupId: String) =
         groupRepository.inviteGroup(groupId = GroupId(groupId))
 }

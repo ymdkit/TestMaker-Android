@@ -16,5 +16,5 @@ interface GroupRepository {
     suspend fun inviteGroup(groupId: GroupId): Uri
     suspend fun joinGroup(userId: UserId, group: Group)
     suspend fun exitGroup(userId: UserId, groupId: GroupId)
-    suspend fun deleteGroup(groupId: GroupId)
+    suspend fun deleteGroup(userId: UserId, groupId: GroupId)
 }

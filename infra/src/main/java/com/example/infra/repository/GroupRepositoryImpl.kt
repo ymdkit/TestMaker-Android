@@ -80,17 +80,27 @@ class GroupRepositoryImpl @Inject constructor(
     }
 
     override suspend fun exitGroup(userId: UserId, groupId: GroupId) {
+        exit(userId = userId, groupId = groupId)
+        _updateGroupListFlow.emit(getBelongingGroupList(userId = userId))
+    }
+
+    override suspend fun deleteGroup(userId: UserId, groupId: GroupId) {
+        db.collection(GROUP_COLLECTION_NAME)
+            .document(groupId.value)
+            .delete()
+            .await()
+
+        exit(userId = userId, groupId = groupId)
+        _updateGroupListFlow.emit(getBelongingGroupList(userId = userId))
+    }
+
+    private suspend fun exit(userId: UserId, groupId: GroupId) {
         db.collection(USER_COLLECTION_NAME)
             .document(userId.value)
             .collection(GROUP_COLLECTION_NAME)
             .document(groupId.value)
             .delete()
             .await()
-        _updateGroupListFlow.emit(getBelongingGroupList(userId = userId))
-    }
-
-    override suspend fun deleteGroup(groupId: GroupId) {
-        TODO("Not yet implemented")
     }
 
 }
