@@ -3,7 +3,6 @@ package com.example.ui.answer
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -36,7 +35,6 @@ fun ContentPlayManualQuestion(
         ContainedWideButton(
             onClick = onAnswered,
             text = stringResource(R.string.confirm),
-            color = MaterialTheme.colors.secondary
         )
     }
 }

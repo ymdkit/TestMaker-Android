@@ -25,16 +25,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.ui.answer.*
-import com.example.ui.core.AdView
-import com.example.ui.core.AdViewModel
-import com.example.ui.core.FadeInAndOutAnimation
-import com.example.ui.core.showToast
+import com.example.ui.core.*
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.view.result.MyTopAppBar
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import javax.inject.Inject
 
@@ -93,7 +89,7 @@ class AnswerWorkbookFragment : Fragment() {
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
-                            MyTopAppBar(getString(R.string.title_activity_play))
+                            TestMakerTopAppBar(title = stringResource(id = R.string.title_activity_play))
                         },
                         content = {
                             val uiState = playViewModel.uiState.collectAsState()

@@ -4,13 +4,13 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.ui.R
 import com.example.ui.core.ContainedWideButton
+import com.example.ui.core.OutlinedWideButton
 import com.example.usecase.model.QuestionUseCaseModel
 
 
@@ -48,12 +48,11 @@ fun ContentPlayManualReviewQuestion(
             modifier = Modifier.padding(bottom = 16.dp),
             onClick = { onJudged(true) },
             text = stringResource(R.string.self_judge_correct),
-            color = MaterialTheme.colors.secondary
         )
-        ContainedWideButton(
+        OutlinedWideButton(
             modifier = Modifier.padding(bottom = 16.dp),
             onClick = { onJudged(false) },
-            text = stringResource(R.string.self_judge_incorrect)
+            text = stringResource(R.string.self_judge_incorrect),
         )
     }
 }

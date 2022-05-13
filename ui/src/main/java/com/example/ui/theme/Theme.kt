@@ -13,7 +13,7 @@ import com.example.ui.core.ColorMapper
 
 private val DarkColorPalette = darkColors(
     primary = Color(0XFF0099CC),
-    secondaryVariant = Color(0XFF0099CC)
+    secondaryVariant = Color(0XFF0099CC),
 //    primary = Color(0XFF0099CC),
 //    secondary = Color(0XFFBA7827),
 //    secondaryVariant = Color(0XFF0099CC),
@@ -27,7 +27,7 @@ private val DarkColorPalette = darkColors(
 
 private val LightColorPalette = lightColors(
     primary = Color(0XFF0099CC),
-    secondaryVariant = Color(0XFF0099CC)
+    secondaryVariant = Color(0XFF0099CC),
 //    primary = Color(0XFF33B5E5),
 //    secondary = Color(0XFFFFA144),
 //    secondaryVariant = Color(0XFF0099CC),
