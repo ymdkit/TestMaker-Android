@@ -338,4 +338,7 @@
     <string name="help_import">「ファイルのインポート」とは？</string>
     <string name="workbook_post_user">投稿者</string>
     <string name="overview">コメント</string>
+    <string name="finish_answer">終了</string>
+    <string name="button_finish">終了する</string>
+    <string name="msg_finish_answer">解答を終了しますか？</string>
 </resources>

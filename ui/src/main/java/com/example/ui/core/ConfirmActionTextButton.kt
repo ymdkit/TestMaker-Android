@@ -1,14 +1,12 @@
-package com.example.ui.core.item
+package com.example.ui.core
 
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
-import com.example.ui.core.ClickableListItem
-import com.example.ui.core.ConfirmDialog
 
 @Composable
-fun ConfirmActionListItem(
-    icon: @Composable (() -> Unit)? = null,
+fun ConfirmActionTextButton(
     label: String,
-    secondaryLabel: String = "",
     confirmMessage: String,
     confirmButtonText: String,
     onConfirmed: () -> Unit,
@@ -16,14 +14,11 @@ fun ConfirmActionListItem(
 
     var isOpen: Boolean by remember { mutableStateOf(false) }
 
-    ClickableListItem(
-        icon = icon,
-        text = label,
-        secondaryText = secondaryLabel,
-        onClick = {
-            isOpen = true
-        }
-    )
+    TextButton(onClick = {
+        isOpen = true
+    }) {
+        Text(text = label)
+    }
     if (isOpen) {
         ConfirmDialog(
             onDismissRequest = { isOpen = false },

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.ui.answer.*
 import com.example.ui.core.*
@@ -31,7 +30,6 @@ import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -69,27 +67,31 @@ class AnswerWorkbookFragment : Fragment() {
             args.isRetry
         )
 
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner, object : OnBackPressedCallback(
-                true
-            ) {
-                override fun handleOnBackPressed() {
-                    ConfirmDangerDialogFragment.newInstance(
-                        title = getString(R.string.play_dialog_confirm_interrupt),
-                        buttonText = getString(R.string.ok)
-                    ) {
-                        findNavController().popBackStack()
-                    }.show(childFragmentManager, "TAG")
-                }
-            }
-        )
+        // 誤って戻らないようにするため、システムの「戻る」を上書きする
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { /* do nothing */ }
 
         return ComposeView(requireContext()).apply {
             setContent {
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
-                            TestMakerTopAppBar(title = stringResource(id = R.string.title_activity_play))
+                            TestMakerTopAppBar(
+                                title = stringResource(id = R.string.title_activity_play),
+                                actions = {
+                                    ConfirmActionTextButton(
+                                        label = stringResource(id = R.string.finish_answer),
+                                        confirmMessage = stringResource(id = R.string.msg_finish_answer),
+                                        confirmButtonText = stringResource(id = R.string.button_finish)
+                                    ) {
+                                        findNavController().navigate(
+                                            AnswerWorkbookFragmentDirections.actionAnswerWorkbookToAnswerResult(
+                                                workbookId = testId,
+                                                duration = System.currentTimeMillis() - startTime
+                                            )
+                                        )
+                                    }
+                                }
+                            )
                         },
                         content = {
                             val uiState = playViewModel.uiState.collectAsState()

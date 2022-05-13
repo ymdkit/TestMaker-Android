@@ -346,4 +346,7 @@
     <string name="help_import">import help</string>
     <string name="workbook_post_user">posted by</string>
     <string name="overview">overview</string>
+    <string name="finish_answer">finish</string>
+    <string name="button_finish">finish</string>
+    <string name="msg_finish_answer">finish answer?</string>
 </resources>
