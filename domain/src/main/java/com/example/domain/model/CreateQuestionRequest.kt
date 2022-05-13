@@ -26,6 +26,19 @@ data class CreateQuestionRequest(
                 isAutoGenerateOtherSelections = question.isAutoGenerateOtherSelections,
                 isCheckAnswerOrder = question.isCheckAnswerOrder
             )
+
+        fun fromSharedQuestion(question: SharedQuestion) =
+            CreateQuestionRequest(
+                questionType = question.questionType,
+                problem = question.problem,
+                answers = question.answerList,
+                explanation = question.explanation,
+                problemImageUrl = question.problemImageUrl,
+                explanationImageUrl = question.explanationImageUrl,
+                otherSelections = question.otherSelectionList,
+                isAutoGenerateOtherSelections = question.isAutoGenerateOtherSelections,
+                isCheckAnswerOrder = question.isCheckAnswerOrder
+            )
     }
 }
 

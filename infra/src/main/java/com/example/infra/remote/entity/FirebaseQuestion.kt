@@ -1,5 +1,8 @@
 package com.example.infra.remote.entity
 
+import com.example.core.QuestionType
+import com.example.domain.model.DocumentId
+import com.example.domain.model.SharedQuestion
 import com.example.infra.local.entity.Quest
 
 data class FirebaseQuestion(val question: String = "",
@@ -34,5 +37,25 @@ data class FirebaseQuestion(val question: String = "",
 
         return quest
     }
+
+    fun toSharedQuestion(documentId: String) = SharedQuestion(
+        id = DocumentId(documentId),
+        problem = question,
+        explanation = explanation,
+        answerList = when (type) {
+            QuestionType.WRITE.value -> listOf(answer)
+            QuestionType.SELECT.value -> listOf(answer)
+            QuestionType.COMPLETE.value -> answers
+            QuestionType.SELECT_COMPLETE.value -> answers
+            else -> listOf(answer)
+        },
+        otherSelectionList = others,
+        problemImageUrl = imageRef,
+        explanationImageUrl = "",
+        questionType = QuestionType.values().firstOrNull { it.value == type } ?: QuestionType.WRITE,
+        isCheckAnswerOrder = checkOrder,
+        isAutoGenerateOtherSelections = auto,
+        order = order
+    )
 
 }
