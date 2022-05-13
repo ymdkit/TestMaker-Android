@@ -53,7 +53,7 @@ data class FirebaseTest(
             name = name,
             userId = UserId(value = userId),
             userName = userName,
-            questionListCont = size,
+            questionListCount = size,
             downloadCount = downloadCount,
             isPublic = public,
             groupId = groupId,
