@@ -1,7 +1,9 @@
 package com.example.usecase
 
+import com.example.domain.model.GroupId
 import com.example.domain.repository.GroupRepository
 import com.example.domain.repository.UserRepository
+import com.example.usecase.model.GroupUseCaseModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,4 +25,17 @@ class GroupCommandUseCase @Inject constructor(
             group = newGroup
         )
     }
+
+    suspend fun updateGroup(group: GroupUseCaseModel) {
+        val user = userRepository.getUserOrNull() ?: return
+        if (group.userId != user.id.value) return
+
+        groupRepository.updateGroup(
+            userId = user.id,
+            group = group.toGroup()
+        )
+    }
+
+    suspend fun inviteGroup(groupId: String) =
+        groupRepository.inviteGroup(groupId = GroupId(groupId))
 }
