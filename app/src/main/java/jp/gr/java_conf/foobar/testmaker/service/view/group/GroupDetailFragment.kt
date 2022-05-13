@@ -28,6 +28,9 @@ import com.example.ui.core.*
 import com.example.ui.core.item.ConfirmActionListItem
 import com.example.ui.group.GroupWorkbookListViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
+import com.example.usecase.utils.Resource
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
@@ -234,67 +237,73 @@ class GroupDetailFragment : Fragment() {
                                 },
                                 content = {
                                     // todo 非ログイン時の UI + ログイン機構
-                                    // todo 問題集が存在していない時の表示
-                                    ResourceContent(
-                                        resource = uiState.value.workbookList,
-                                        onSuccess = {
-                                            if (it.isNotEmpty()) {
-                                                LazyColumn(
-                                                    modifier = Modifier.fillMaxHeight()
-                                                ) {
-                                                    item {
-                                                        Text(
-                                                            modifier = Modifier.padding(16.dp),
-                                                            text = stringResource(
-                                                                id = R.string.workbook
-                                                            )
-                                                        )
-                                                    }
-                                                    it.forEach {
+                                    SwipeRefresh(state = rememberSwipeRefreshState(
+                                        isRefreshing = uiState.value.isRefreshing
+                                    ), onRefresh = {
+                                        groupWorkbookListViewModel.load()
+                                    }) {
+                                        when (val state = uiState.value.workbookList) {
+                                            is Resource.Success -> {
+                                                if (state.value.isNotEmpty()) {
+                                                    LazyColumn(
+                                                        modifier = Modifier.fillMaxHeight()
+                                                    ) {
                                                         item {
-                                                            ClickableListItem(
-                                                                icon = {
-                                                                    Icon(
-                                                                        modifier = Modifier
-                                                                            .size(40.dp)
-                                                                            .padding(8.dp),
-                                                                        imageVector = Icons.Filled.Description,
-                                                                        // todo 動的に色を変更
-                                                                        tint = MaterialTheme.colors.primary,
-                                                                        contentDescription = "workbook",
-                                                                    )
-                                                                },
-                                                                text = it.name,
-                                                                secondaryText = stringResource(
-                                                                    id = R.string.num_questions,
-                                                                    it.questionListCount
-                                                                ),
-                                                                onClick = {
-                                                                    scope.launch {
-                                                                        groupWorkbookListViewModel.onWorkbookClicked(
-                                                                            workbook = it
-                                                                        )
-                                                                        drawerState.expand()
-                                                                    }
-
-                                                                }
+                                                            Text(
+                                                                modifier = Modifier.padding(16.dp),
+                                                                text = stringResource(
+                                                                    id = R.string.workbook
+                                                                )
                                                             )
                                                         }
+                                                        state.value.forEach {
+                                                            item {
+                                                                ClickableListItem(
+                                                                    icon = {
+                                                                        Icon(
+                                                                            modifier = Modifier
+                                                                                .size(40.dp)
+                                                                                .padding(8.dp),
+                                                                            imageVector = Icons.Filled.Description,
+                                                                            // todo 動的に色を変更
+                                                                            tint = MaterialTheme.colors.primary,
+                                                                            contentDescription = "workbook",
+                                                                        )
+                                                                    },
+                                                                    text = it.name,
+                                                                    secondaryText = stringResource(
+                                                                        id = R.string.num_questions,
+                                                                        it.questionListCount
+                                                                    ),
+                                                                    onClick = {
+                                                                        scope.launch {
+                                                                            groupWorkbookListViewModel.onWorkbookClicked(
+                                                                                workbook = it
+                                                                            )
+                                                                            drawerState.expand()
+                                                                        }
+
+                                                                    }
+                                                                )
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .fillMaxSize()
+                                                            .padding(16.dp),
+                                                        contentAlignment = Alignment.Center
+                                                    ) {
+                                                        Text(text = stringResource(id = R.string.empty_uploaded_test))
                                                     }
                                                 }
-                                            } else {
-                                                Box(
-                                                    modifier = Modifier
-                                                        .fillMaxSize()
-                                                        .padding(16.dp),
-                                                    contentAlignment = Alignment.Center
-                                                ) {
-                                                    Text(text = stringResource(id = R.string.empty_uploaded_test))
-                                                }
                                             }
-                                        },
-                                        onRetry = groupWorkbookListViewModel::load
-                                    )
+                                            else -> {
+                                                // do nothing
+                                            }
+                                        }
+                                    }
                                 },
                                 floatingActionButton = {
                                     FloatingActionButton(onClick = {

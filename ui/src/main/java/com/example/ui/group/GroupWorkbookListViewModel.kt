@@ -12,12 +12,10 @@ import com.example.usecase.model.GroupUseCaseModel
 import com.example.usecase.model.SharedWorkbookUseCaseModel
 import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,7 +36,8 @@ class GroupWorkbookListViewModel @Inject constructor(
                 isOwner = false,
                 showingEditGroupDialog = false,
                 editingGroupName = "",
-                selectedSharedWorkbook = null
+                selectedSharedWorkbook = null,
+                isRefreshing = true
             )
         )
     val uiState: StateFlow<GroupWorkbookListUiState>
@@ -62,6 +61,7 @@ class GroupWorkbookListViewModel @Inject constructor(
 
     private lateinit var group: GroupUseCaseModel
 
+    @OptIn(FlowPreview::class)
     fun setup(group: GroupUseCaseModel) {
         this.group = group
         groupWorkbookListWatchUseCase.setup(
@@ -71,9 +71,11 @@ class GroupWorkbookListViewModel @Inject constructor(
         userWatchUseCase.setup(scope = viewModelScope)
 
         groupWorkbookListWatchUseCase.flow
+            .debounce(500)
             .onEach {
                 _uiState.value = _uiState.value.copy(
-                    workbookList = it
+                    workbookList = it,
+                    isRefreshing = false
                 )
             }.launchIn(viewModelScope)
 
@@ -88,6 +90,9 @@ class GroupWorkbookListViewModel @Inject constructor(
 
     fun load() =
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isRefreshing = true
+            )
             groupWorkbookListWatchUseCase.load()
         }
 
@@ -188,4 +193,5 @@ data class GroupWorkbookListUiState @OptIn(ExperimentalMaterialApi::class) const
     val editingGroupName: String,
     val isOwner: Boolean,
     val selectedSharedWorkbook: SharedWorkbookUseCaseModel?,
+    val isRefreshing: Boolean,
 )
