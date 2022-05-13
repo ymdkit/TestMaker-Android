@@ -7,7 +7,7 @@ data class SharedWorkbookUseCaseModel(
     val name: String,
     val userId: String,
     val userName: String,
-    val questionListCont: Int,
+    val questionListCount: Int,
     val downloadCount: Int,
     val isPublic: Boolean,
     val groupId: String?
@@ -19,7 +19,7 @@ data class SharedWorkbookUseCaseModel(
                 name = workbook.name,
                 userId = workbook.userId.value,
                 userName = workbook.userName,
-                questionListCont = workbook.questionListCont,
+                questionListCount = workbook.questionListCount,
                 downloadCount = workbook.downloadCount,
                 isPublic = workbook.isPublic,
                 groupId = workbook.groupId,

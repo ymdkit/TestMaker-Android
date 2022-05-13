@@ -5,7 +5,7 @@ data class SharedWorkbook(
     val name: String,
     val userId: UserId,
     val userName: String,
-    val questionListCont: Int,
+    val questionListCount: Int,
     val downloadCount: Int,
     val isPublic: Boolean,
     val groupId: String?
