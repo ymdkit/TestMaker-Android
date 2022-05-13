@@ -285,10 +285,10 @@
         android:label="@string/group_detail_fragment_label"
         tools:layout="@layout/fragment_group_detail">
 
+
         <argument
-            android:name="groupId"
-            app:argType="string"
-            android:defaultValue="" />
+            android:name="group"
+            app:argType="com.example.usecase.model.GroupUseCaseModel" />
 
         <action
             android:id="@+id/action_group_detail_to_upload_test"

@@ -71,7 +71,7 @@ class GroupListFragment : Fragment() {
                                                         onClick = {
                                                             findNavController().navigate(
                                                                 GroupListFragmentDirections.actionGroupListToGroupDetail(
-                                                                    groupId = it.id
+                                                                    group = it
                                                                 )
                                                             )
                                                         })
