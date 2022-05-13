@@ -19,8 +19,9 @@ class UserWorkbookCommandUseCase @Inject constructor(
         remoteId: String,
         color: TestMakerColor,
         folderName: String
-    ) =
+    ) {
         workBookRepository.createWorkbook(name, remoteId, color, folderName)
+    }
 
     suspend fun updateWorkbook(
         workbookId: Long,
