@@ -34,8 +34,6 @@ class GroupWorkbookListViewModel @Inject constructor(
                 isOwner = false,
                 showingEditGroupDialog = false,
                 editingGroupName = "",
-                showingDeleteGroupDialog = false,
-                showingExitGroupDialog = false,
             )
         )
     val uiState: StateFlow<GroupWorkbookListUiState>
@@ -44,6 +42,10 @@ class GroupWorkbookListViewModel @Inject constructor(
     private val _inviteGroupEvent: Channel<Pair<String, Uri>> = Channel()
     val inviteGroupEvent: ReceiveChannel<Pair<String, Uri>>
         get() = _inviteGroupEvent
+
+    private val _exitGroupEvent: Channel<Unit> = Channel()
+    val exitGroupEvent: ReceiveChannel<Unit>
+        get() = _exitGroupEvent
 
     private lateinit var group: GroupUseCaseModel
 
@@ -128,16 +130,14 @@ class GroupWorkbookListViewModel @Inject constructor(
 
     fun onDeleteGroupButtonClicked() =
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                showingDeleteGroupDialog = true
-            )
+            groupCommandUseCase.deleteGroup(group)
+            _exitGroupEvent.send(Unit)
         }
 
     fun onExitGroupButtonClicked() =
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                showingExitGroupDialog = true
-            )
+            groupCommandUseCase.exitGroup(group)
+            _exitGroupEvent.send(Unit)
         }
 }
 
@@ -146,7 +146,5 @@ data class GroupWorkbookListUiState(
     val showingMenu: Boolean,
     val showingEditGroupDialog: Boolean,
     val editingGroupName: String,
-    val showingDeleteGroupDialog: Boolean,
-    val showingExitGroupDialog: Boolean,
     val isOwner: Boolean,
 )

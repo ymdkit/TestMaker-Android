@@ -46,6 +46,14 @@ class GroupCommandUseCase @Inject constructor(
         )
     }
 
+    suspend fun exitGroup(group: GroupUseCaseModel) {
+        val user = userRepository.getUserOrNull() ?: return
+        groupRepository.exitGroup(
+            userId = user.id,
+            groupId = GroupId(group.id)
+        )
+    }
+
     suspend fun inviteGroup(groupId: String) =
         groupRepository.inviteGroup(groupId = GroupId(groupId))
 }
