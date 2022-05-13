@@ -15,7 +15,7 @@ class DynamicLinksCreator @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    suspend fun createShareTestDynamicLinks(documentId: String) =
+    suspend fun createShareWorkbookDynamicLinks(documentId: String) =
         createDynamicLinks(link = Uri.parse("https://ankimaker.com/${documentId}"))
 
     suspend fun createInviteGroupDynamicLinks(groupId: String) =
