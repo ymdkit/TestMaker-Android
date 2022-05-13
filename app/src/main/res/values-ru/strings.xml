@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ТестМейкер</string>
     <string name="message_delete_exam">делеция: %1$s ?</string>
     <string name="action_next">следующий</string>
     <string name="number_questions">сумма</string>

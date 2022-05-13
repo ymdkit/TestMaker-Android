@@ -13,6 +13,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
@@ -23,23 +24,17 @@ import com.example.ui.core.*
 import com.example.ui.group.GroupListItem
 import com.example.ui.group.GroupListViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
+import com.example.usecase.utils.Resource
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class GroupListFragment : Fragment() {
 
     private val groupListViewModel: GroupListViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
-
-    @Inject
-    lateinit var auth: Auth
-
-    @Inject
-    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,56 +43,68 @@ class GroupListFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
-                val uiState = groupListViewModel.uiState.collectAsState()
+                val uiState by groupListViewModel.uiState.collectAsState()
 
-                // swipeRefresh の導入
                 TestMakerAndroidTheme {
                     Column {
                         Scaffold(
                             modifier = Modifier.weight(1f),
                             topBar = { TestMakerTopAppBar(title = stringResource(id = R.string.group_list_fragment_label)) },
-                            content = {
-                                // todo 非ログイン時の UI + ログイン機構
-                                ResourceContent(
-                                    resource = uiState.value.groupList,
-                                    onSuccess = {
-                                        LazyColumn(
-                                            modifier = Modifier.fillMaxHeight()
-                                        ) {
-                                            it.forEach {
-                                                item {
-                                                    GroupListItem(
-                                                        group = it,
-                                                        onClick = {
-                                                            findNavController().navigate(
-                                                                GroupListFragmentDirections.actionGroupListToGroupDetail(
-                                                                    group = it
-                                                                )
-                                                            )
-                                                        })
+                        ) {
+                            RequireAuthentication(
+                                isLogin = uiState.isLogin,
+                                content = {
+                                    Scaffold(
+                                        content = {
+                                            SwipeRefresh(
+                                                state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
+                                                onRefresh = groupListViewModel::load
+                                            ) {
+                                                when (val state = uiState.groupList) {
+                                                    is Resource.Success -> {
+                                                        LazyColumn(
+                                                            modifier = Modifier.fillMaxHeight()
+                                                        ) {
+                                                            state.value.forEach {
+                                                                item {
+                                                                    GroupListItem(
+                                                                        group = it,
+                                                                        onClick = {
+                                                                            findNavController().navigate(
+                                                                                GroupListFragmentDirections.actionGroupListToGroupDetail(
+                                                                                    group = it
+                                                                                )
+                                                                            )
+                                                                        })
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    else -> {
+                                                        // todo
+                                                    }
                                                 }
                                             }
-
+                                        },
+                                        floatingActionButton = {
+                                            FloatingActionButton(onClick = groupListViewModel::onCreateGroupButtonClicked) {
+                                                Icon(
+                                                    Icons.Filled.Add,
+                                                    contentDescription = "create group"
+                                                )
+                                            }
                                         }
-                                    },
-                                    onRetry = groupListViewModel::load
-                                )
-                            },
-                            floatingActionButton = {
-                                FloatingActionButton(onClick = groupListViewModel::onCreateGroupButtonClicked) {
-                                    Icon(
-                                        Icons.Filled.Add,
-                                        contentDescription = "create group"
                                     )
-                                }
-                            }
-                        )
+                                },
+                                onLogin = groupListViewModel::onUserCreated
+                            )
+                        }
                         AdView(viewModel = adViewModel)
                     }
-                    if (uiState.value.showingCreateGroupDialog) {
+                    if (uiState.showingCreateGroupDialog) {
                         EditTextDialog(
                             title = stringResource(id = R.string.title_create_group),
-                            value = uiState.value.editingGroupName,
+                            value = uiState.editingGroupName,
                             onValueChanged = groupListViewModel::onGroupNameChanged,
                             placeholder = stringResource(id = R.string.hint_group_name),
                             onDismiss = groupListViewModel::onCancelCreateGroupButtonClicked,
