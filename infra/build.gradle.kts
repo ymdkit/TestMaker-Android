@@ -48,6 +48,7 @@ dependencies {
     implementation(Dep.Coroutine.playServices)
     implementation(Dep.AndroidX.preference)
     implementation(platform(Dep.Firebase.bom))
+    implementation(Dep.Firebase.dynamicLinks)
     implementation(Dep.Firebase.auth)
     implementation(Dep.Firebase.fireStore)
 

@@ -11,7 +11,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class DynamicLinksCreator @Inject constructor(
+class LegacyDynamicLinksCreator @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 

@@ -27,7 +27,7 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.AccountMainFragmentB
 import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
 import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.DynamicLinksCreator
+import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.LegacyDynamicLinksCreator
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.HomeFragment.Companion.REQUEST_WORKBOOK_CREATED
 import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseMyPageViewModel
@@ -50,7 +50,7 @@ class AccountMainFragment : Fragment() {
     lateinit var logger: TestMakerLogger
 
     @Inject
-    lateinit var dynamicLinksCreator: DynamicLinksCreator
+    lateinit var dynamicLinksCreator: LegacyDynamicLinksCreator
 
     private var binding: AccountMainFragmentBinding? = null
 
