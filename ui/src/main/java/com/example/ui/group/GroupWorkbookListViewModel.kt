@@ -4,10 +4,7 @@ import android.net.Uri
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.usecase.GroupCommandUseCase
-import com.example.usecase.GroupWorkbookListWatchUseCase
-import com.example.usecase.SharedWorkbookCommandUseCase
-import com.example.usecase.UserWatchUseCase
+import com.example.usecase.*
 import com.example.usecase.model.GroupUseCaseModel
 import com.example.usecase.model.SharedWorkbookUseCaseModel
 import com.example.usecase.utils.Resource
@@ -26,6 +23,7 @@ class GroupWorkbookListViewModel @Inject constructor(
     private val groupCommandUseCase: GroupCommandUseCase,
     private val sharedWorkbookCommandUseCase: SharedWorkbookCommandUseCase,
     private val userWatchUseCase: UserWatchUseCase,
+    private val userAuthCommandUseCase: UserAuthCommandUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<GroupWorkbookListUiState> =
@@ -37,7 +35,8 @@ class GroupWorkbookListViewModel @Inject constructor(
                 showingEditGroupDialog = false,
                 editingGroupName = "",
                 selectedSharedWorkbook = null,
-                isRefreshing = true
+                isRefreshing = true,
+                isLogin = false
             )
         )
     val uiState: StateFlow<GroupWorkbookListUiState>
@@ -82,7 +81,8 @@ class GroupWorkbookListViewModel @Inject constructor(
         userWatchUseCase.flow
             .onEach {
                 _uiState.value = _uiState.value.copy(
-                    isOwner = it != null && group.userId == it.id
+                    isOwner = it != null && group.userId == it.id,
+                    isLogin = it != null
                 )
             }
             .launchIn(viewModelScope)
@@ -94,6 +94,12 @@ class GroupWorkbookListViewModel @Inject constructor(
                 isRefreshing = true
             )
             groupWorkbookListWatchUseCase.load()
+        }
+
+    fun onUserCreated() =
+        viewModelScope.launch {
+            userAuthCommandUseCase.registerUser()
+            load()
         }
 
     fun onInviteButtonClicked() =
@@ -194,4 +200,5 @@ data class GroupWorkbookListUiState @OptIn(ExperimentalMaterialApi::class) const
     val isOwner: Boolean,
     val selectedSharedWorkbook: SharedWorkbookUseCaseModel?,
     val isRefreshing: Boolean,
+    val isLogin: Boolean,
 )

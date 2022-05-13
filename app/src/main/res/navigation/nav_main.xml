@@ -281,7 +281,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_group_detail"
-        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupDetailFragment"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupWorkbookListFragment"
         android:label="@string/group_detail_fragment_label"
         tools:layout="@layout/fragment_group_detail">
 

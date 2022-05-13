@@ -1,5 +1,6 @@
 package com.example.ui.core
 
+import android.app.Activity.RESULT_OK
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -7,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.ui.R
@@ -16,13 +18,24 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 @Composable
 fun RequireAuthentication(
     isLogin: Boolean,
+    onLogin: () -> Unit,
     content: @Composable () -> Unit,
-    onLogin: () -> Unit
 ) {
 
+    val context = LocalContext.current
     val launcher =
         rememberLauncherForActivityResult(FirebaseAuthUIActivityResultContract()) {
-            onLogin()
+            if (it.resultCode == RESULT_OK) {
+                onLogin()
+            } else {
+                val response = it.idpResponse
+                context.showToast(
+                    context.getString(
+                        R.string.msg_failure_login,
+                        response?.error?.errorCode
+                    )
+                )
+            }
         }
 
     if (isLogin) {

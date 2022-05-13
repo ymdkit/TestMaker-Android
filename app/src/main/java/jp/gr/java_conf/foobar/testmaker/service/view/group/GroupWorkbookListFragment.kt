@@ -12,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,9 +44,9 @@ import kotlinx.coroutines.launch
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 @AndroidEntryPoint
-class GroupDetailFragment : Fragment() {
+class GroupWorkbookListFragment : Fragment() {
 
-    private val args: GroupDetailFragmentArgs by navArgs()
+    private val args: GroupWorkbookListFragmentArgs by navArgs()
 
     private val groupWorkbookListViewModel: GroupWorkbookListViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
@@ -58,17 +59,16 @@ class GroupDetailFragment : Fragment() {
 
         return ComposeView(requireContext()).apply {
             setContent {
-                val uiState = groupWorkbookListViewModel.uiState.collectAsState()
+                val uiState by groupWorkbookListViewModel.uiState.collectAsState()
                 val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
                 val scope = rememberCoroutineScope()
 
-                // todo swipeRefresh の導入
                 TestMakerAndroidTheme {
                     BottomDrawer(
                         drawerState = drawerState,
                         gesturesEnabled = !drawerState.isClosed,
                         drawerContent = {
-                            val workbook = uiState.value.selectedSharedWorkbook
+                            val workbook = uiState.selectedSharedWorkbook
 
                             if (workbook != null) {
                                 ListItem(
@@ -124,7 +124,7 @@ class GroupDetailFragment : Fragment() {
                                     scope.launch {
                                         drawerState.close()
                                         findNavController().navigate(
-                                            GroupDetailFragmentDirections.actionGroupDetailToHistoryTest(
+                                            GroupWorkbookListFragmentDirections.actionGroupDetailToHistoryTest(
                                                 documentId = workbook.id
                                             )
                                         )
@@ -205,10 +205,10 @@ class GroupDetailFragment : Fragment() {
                                                 )
                                             }
                                             DropdownMenu(
-                                                expanded = uiState.value.showingMenu,
+                                                expanded = uiState.showingMenu,
                                                 onDismissRequest = groupWorkbookListViewModel::onMenuToggleButtonClicked
                                             ) {
-                                                if (uiState.value.isOwner) {
+                                                if (uiState.isOwner) {
                                                     DropdownMenuItem(
                                                         onClick = groupWorkbookListViewModel::onEditGroupButtonClicked
                                                     ) {
@@ -241,93 +241,102 @@ class GroupDetailFragment : Fragment() {
                                         title = stringResource(id = R.string.group_detail_fragment_label)
                                     )
                                 },
-                                content = {
-                                    // todo 非ログイン時の UI + ログイン機構
-                                    SwipeRefresh(state = rememberSwipeRefreshState(
-                                        isRefreshing = uiState.value.isRefreshing
-                                    ), onRefresh = {
-                                        groupWorkbookListViewModel.load()
-                                    }) {
-                                        when (val state = uiState.value.workbookList) {
-                                            is Resource.Success -> {
-                                                if (state.value.isNotEmpty()) {
-                                                    LazyColumn(
-                                                        modifier = Modifier.fillMaxHeight()
-                                                    ) {
-                                                        item {
-                                                            Text(
-                                                                modifier = Modifier.padding(16.dp),
-                                                                text = stringResource(
-                                                                    id = R.string.workbook
-                                                                )
-                                                            )
-                                                        }
-                                                        state.value.forEach {
-                                                            item {
-                                                                ClickableListItem(
-                                                                    icon = {
-                                                                        Icon(
-                                                                            modifier = Modifier
-                                                                                .size(40.dp)
-                                                                                .padding(8.dp),
-                                                                            imageVector = Icons.Filled.Description,
-                                                                            // todo 動的に色を変更
-                                                                            tint = MaterialTheme.colors.primary,
-                                                                            contentDescription = "workbook",
+                            ) {
+                                Scaffold(
+                                    content = {
+                                        RequireAuthentication(
+                                            isLogin = uiState.isLogin,
+                                            onLogin = groupWorkbookListViewModel::onUserCreated
+                                        ) {
+                                            SwipeRefresh(state = rememberSwipeRefreshState(
+                                                isRefreshing = uiState.isRefreshing
+                                            ), onRefresh = {
+                                                groupWorkbookListViewModel.load()
+                                            }) {
+                                                when (val state = uiState.workbookList) {
+                                                    is Resource.Success -> {
+                                                        if (state.value.isNotEmpty()) {
+                                                            LazyColumn(
+                                                                modifier = Modifier.fillMaxHeight()
+                                                            ) {
+                                                                item {
+                                                                    Text(
+                                                                        modifier = Modifier.padding(
+                                                                            16.dp
+                                                                        ),
+                                                                        text = stringResource(
+                                                                            id = R.string.workbook
                                                                         )
-                                                                    },
-                                                                    text = it.name,
-                                                                    secondaryText = stringResource(
-                                                                        id = R.string.num_questions,
-                                                                        it.questionListCount
-                                                                    ),
-                                                                    onClick = {
-                                                                        scope.launch {
-                                                                            groupWorkbookListViewModel.onWorkbookClicked(
-                                                                                workbook = it
-                                                                            )
-                                                                            drawerState.expand()
-                                                                        }
+                                                                    )
+                                                                }
+                                                                state.value.forEach {
+                                                                    item {
+                                                                        ClickableListItem(
+                                                                            icon = {
+                                                                                Icon(
+                                                                                    modifier = Modifier
+                                                                                        .size(40.dp)
+                                                                                        .padding(8.dp),
+                                                                                    imageVector = Icons.Filled.Description,
+                                                                                    // todo 動的に色を変更
+                                                                                    tint = MaterialTheme.colors.primary,
+                                                                                    contentDescription = "workbook",
+                                                                                )
+                                                                            },
+                                                                            text = it.name,
+                                                                            secondaryText = stringResource(
+                                                                                id = R.string.num_questions,
+                                                                                it.questionListCount
+                                                                            ),
+                                                                            onClick = {
+                                                                                scope.launch {
+                                                                                    groupWorkbookListViewModel.onWorkbookClicked(
+                                                                                        workbook = it
+                                                                                    )
+                                                                                    drawerState.expand()
+                                                                                }
 
+                                                                            }
+                                                                        )
                                                                     }
-                                                                )
+                                                                }
+                                                            }
+                                                        } else {
+                                                            Box(
+                                                                modifier = Modifier
+                                                                    .fillMaxSize()
+                                                                    .padding(16.dp),
+                                                                contentAlignment = Alignment.Center
+                                                            ) {
+                                                                Text(text = stringResource(id = R.string.empty_uploaded_test))
                                                             }
                                                         }
                                                     }
-                                                } else {
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .fillMaxSize()
-                                                            .padding(16.dp),
-                                                        contentAlignment = Alignment.Center
-                                                    ) {
-                                                        Text(text = stringResource(id = R.string.empty_uploaded_test))
+                                                    else -> {
+                                                        // do nothing
                                                     }
                                                 }
                                             }
-                                            else -> {
-                                                // do nothing
-                                            }
+                                        }
+                                    },
+                                    floatingActionButton = {
+                                        FloatingActionButton(onClick = {
+                                            // todo
+                                        }) {
+                                            Icon(
+                                                Icons.Filled.CloudUpload,
+                                                contentDescription = "upload workbook"
+                                            )
                                         }
                                     }
-                                },
-                                floatingActionButton = {
-                                    FloatingActionButton(onClick = {
-                                        // todo
-                                    }) {
-                                        Icon(
-                                            Icons.Filled.CloudUpload,
-                                            contentDescription = "upload workbook"
-                                        )
-                                    }
-                                }
-                            )
+                                )
+                            }
                             AdView(viewModel = adViewModel)
                         }
-                        if (uiState.value.showingEditGroupDialog) {
+                        if (uiState.showingEditGroupDialog) {
                             EditTextDialog(
                                 title = stringResource(id = R.string.title_rename_group),
-                                value = uiState.value.editingGroupName,
+                                value = uiState.editingGroupName,
                                 onValueChanged = groupWorkbookListViewModel::onGroupNameChanged,
                                 placeholder = stringResource(id = R.string.hint_group_name),
                                 onDismiss = groupWorkbookListViewModel::onCancelEditGroupButtonClicked,
@@ -347,19 +356,9 @@ class GroupDetailFragment : Fragment() {
 //            false
 //        ).apply {
 //            binding = this
-//            isLogin = (auth.getUser() != null)
-//
-//            buttonLogin.setOnClickListener {
-//                startActivityForResult(
-//                    auth.getAuthUIIntent(),
-//                    AccountMainFragment.REQUEST_SIGN_IN
-//                )
-//            }
 //
 //
-//            swipeRefresh.setOnRefreshListener {
-//                refresh()
-//            }
+//
 //
 //            buttonAdd.setOnClickListener {
 //                findNavController().navigate(
@@ -445,46 +444,12 @@ class GroupDetailFragment : Fragment() {
 //        joinGroup()
 //        binding.swipeRefresh.isRefreshing = false
 //
-//        auth.getUser()?.uid?.let { userId ->
-//            group?.let { group ->
-//                if (group.userId == userId) {
-//                    binding.toolbar.menu.clear()
-//                    binding.toolbar.inflateMenu(R.menu.menu_group_detail_owner)
-//                }
-//            }
-//        }
 //    }
 //
 //    private fun joinGroup() = lifecycleScope.launch {
 //        group?.let { group ->
 //            auth.getUser()?.uid?.let { userId ->
 //                viewModel.joinGroup(userId, group, args.groupId)
-//            }
-//        }
-//    }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//
-//        if (requestCode == MainActivity.REQUEST_SIGN_IN) {
-//            val response = IdpResponse.fromResultIntent(data)
-//
-//            if (resultCode == Activity.RESULT_OK) {
-//
-//                auth.getUser()?.let {
-//                    binding.isLogin = true
-//                    viewModel.createUser(it)
-//                    refresh()
-//                    Toast.makeText(
-//                        requireContext(),
-//                        getString(R.string.login_successed),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//
-//            } else {
-//                response?.error?.errorCode
 //            }
 //        }
 //    }
