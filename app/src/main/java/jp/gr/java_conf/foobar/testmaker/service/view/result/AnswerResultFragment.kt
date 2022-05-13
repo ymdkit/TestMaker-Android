@@ -1,5 +1,6 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.result
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -26,10 +27,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.core.QuestionCondition
-import com.example.ui.core.AdView
-import com.example.ui.core.AdViewModel
-import com.example.ui.core.DialogMenuItem
-import com.example.ui.core.ListDialogFragment
+import com.example.ui.core.*
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.usecase.utils.Resource
 import com.github.mikephil.charting.charts.PieChart
@@ -94,7 +92,7 @@ class AnswerResultFragment : Fragment() {
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
-                            MyTopAppBar(getString(R.string.label_result))
+                            TestMakerTopAppBar(title = stringResource(id = R.string.label_result))
                         },
                         content = {
                             when (val state = uiState) {
@@ -277,19 +275,6 @@ class AnswerResultFragment : Fragment() {
 }
 
 @Composable
-fun MyTopAppBar(title: String) {
-    TopAppBar(
-        title = {
-            Text(
-                text = title,
-                color = MaterialTheme.colors.onPrimary
-            )
-        },
-        backgroundColor = MaterialTheme.colors.primary
-    )
-}
-
-@Composable
 fun WideOutlinedButton(onCLick: () -> Unit, text: String, modifier: Modifier = Modifier) {
     OutlinedButton(
         onClick = onCLick,
@@ -304,22 +289,19 @@ fun WideOutlinedButton(onCLick: () -> Unit, text: String, modifier: Modifier = M
 
 @Composable
 fun ItemPieChart(dataSet: PieDataSet, centerText: String) {
+    val primaryColor = MaterialTheme.colors.primary
+
     AndroidView(
         factory = {
             PieChart(it).apply {
                 this.data = PieData(dataSet.apply {
                     setDrawValues(false)
-                    colors = listOf(R.color.colorAccent, R.color.colorPrimary).map { id ->
-                        ContextCompat.getColor(context, id)
-                    }
+                    colors = listOf(primaryColor.toArgb(), Color.GRAY)
                 })
                 this.centerText = centerText
                 setCenterTextSize(24f)
                 setCenterTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorPrimary
-                    )
+                    primaryColor.toArgb()
                 )
                 legend.isEnabled = false
                 setDrawEntryLabels(false)

@@ -144,9 +144,12 @@ class WorkbookListFragment : Fragment() {
                                     AnswerSetting(
                                         workbookName = state.workbook.name,
                                         onStartButtonClicked = {
-                                            workbookListViewModel.onStartAnswerClicked(
-                                                state.workbook.id
-                                            )
+                                            scope.launch {
+                                                drawerState.close()
+                                                workbookListViewModel.onStartAnswerClicked(
+                                                    state.workbook.id
+                                                )
+                                            }
                                         },
                                         answerSettingViewModel = answerSettingViewModel
                                     )
