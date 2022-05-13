@@ -1,9 +1,7 @@
 package com.example.domain.repository
 
-import com.example.domain.model.DocumentId
-import com.example.domain.model.GroupId
-import com.example.domain.model.SharedWorkbook
-import com.example.domain.model.UserId
+import android.net.Uri
+import com.example.domain.model.*
 import kotlinx.coroutines.flow.Flow
 
 interface SharedWorkbookRepository {
@@ -13,6 +11,11 @@ interface SharedWorkbookRepository {
 
     suspend fun getWorkbookListByUserId(userId: UserId): List<SharedWorkbook>
     suspend fun getWorkbookListByGroupId(groupId: GroupId): List<SharedWorkbook>
+    suspend fun findWorkbookById(documentId: DocumentId): SharedWorkbook?
     suspend fun createWorkbook(workbook: SharedWorkbook)
-    suspend fun deleteWorkbook(workbookId: DocumentId)
+    suspend fun deleteWorkbook(userId: UserId, workbookId: DocumentId)
+    suspend fun deleteWorkbookFromGroup(groupId: GroupId, workbookId: DocumentId)
+    suspend fun shareWorkbook(documentId: DocumentId): Uri
+    suspend fun getQuestionListByWorkbookId(documentId: DocumentId): List<SharedQuestion>
+
 }
