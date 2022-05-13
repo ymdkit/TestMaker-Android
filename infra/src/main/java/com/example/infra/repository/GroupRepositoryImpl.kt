@@ -1,9 +1,11 @@
 package com.example.infra.repository
 
+import android.net.Uri
 import com.example.domain.model.Group
 import com.example.domain.model.GroupId
 import com.example.domain.model.UserId
 import com.example.domain.repository.GroupRepository
+import com.example.infra.remote.DynamicLinksCreator
 import com.example.infra.remote.entity.FirebaseGroup
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -13,7 +15,8 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class GroupRepositoryImpl @Inject constructor(
-    private val db: FirebaseFirestore
+    private val db: FirebaseFirestore,
+    private val dynamicLinksCreator: DynamicLinksCreator
 ) : GroupRepository {
 
     companion object {
@@ -44,6 +47,27 @@ class GroupRepositoryImpl @Inject constructor(
 
         return group.toGroup()
     }
+
+    override suspend fun updateGroup(userId: UserId, group: Group) {
+        db.collection(GROUP_COLLECTION_NAME)
+            .document(group.id.value)
+            .set(FirebaseGroup.fromGroup(group))
+            .await()
+
+        db.collection(USER_COLLECTION_NAME)
+            .document(userId.value)
+            .collection(GROUP_COLLECTION_NAME)
+            .document(group.id.value)
+            .set(FirebaseGroup.fromGroup(group))
+            .await()
+
+        _updateGroupListFlow.emit(getBelongingGroupList(userId = userId))
+    }
+
+
+    override suspend fun inviteGroup(groupId: GroupId): Uri =
+        dynamicLinksCreator.createInviteGroupDynamicLinks(groupId = groupId.value).shortLink
+            ?: Uri.EMPTY
 
     override suspend fun joinGroup(userId: UserId, group: Group) {
         db.collection(USER_COLLECTION_NAME)
