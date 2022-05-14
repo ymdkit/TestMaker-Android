@@ -46,7 +46,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
+
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -67,8 +67,6 @@ class AnswerResultFragment : Fragment() {
     private val viewModel: ResultViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
 
-    @Inject
-    lateinit var logger: TestMakerLogger
 
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager

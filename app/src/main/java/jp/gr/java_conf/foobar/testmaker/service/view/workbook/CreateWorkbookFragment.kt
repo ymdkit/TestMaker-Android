@@ -37,8 +37,6 @@ import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.CreateWorkbookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
-import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.TextPicker
@@ -53,9 +51,6 @@ class CreateWorkbookFragment : Fragment() {
 
     private val createWorkbookViewModel: CreateWorkbookViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
-
-    @Inject
-    lateinit var logger: TestMakerLogger
 
     @Inject
     lateinit var colorMapper: ColorMapper
@@ -232,11 +227,6 @@ class CreateWorkbookFragment : Fragment() {
                                             name = name,
                                             color = color,
                                             folderName = folderName
-                                        )
-
-                                        logger.logCreateTestEvent(
-                                            name,
-                                            CreateTestSource.SELF.title
                                         )
 
                                         requireContext().showToast(getString(R.string.msg_create_success_workbook))

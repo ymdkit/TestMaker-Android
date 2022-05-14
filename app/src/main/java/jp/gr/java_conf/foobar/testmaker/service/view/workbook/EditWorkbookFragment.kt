@@ -37,7 +37,6 @@ import com.example.ui.workbook.EditWorkbookViewModel
 import com.example.usecase.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.QuestionListFragmentArgs
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.TextPicker
@@ -49,9 +48,6 @@ class EditWorkbookFragment : Fragment() {
 
     private val editWorkbookViewModel: EditWorkbookViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
-
-    @Inject
-    lateinit var logger: TestMakerLogger
 
     @Inject
     lateinit var colorMapper: ColorMapper

@@ -29,12 +29,10 @@ import com.example.usecase.utils.Resource
 import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class UploadGroupTestFragment : Fragment() {
@@ -44,8 +42,6 @@ class UploadGroupTestFragment : Fragment() {
     private val uploadWorkbookViewModel: UploadWorkbookViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
 
-    @Inject
-    lateinit var logger: TestMakerLogger
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -44,13 +44,11 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -59,8 +57,6 @@ class PublishedWorkbookListFragment : Fragment() {
     private val sharedWorkbookListViewModel: SharedWorkbookListViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
 
-    @Inject
-    lateinit var logger: TestMakerLogger
 
     @OptIn(
         ExperimentalMaterialApi::class,
