@@ -51,6 +51,7 @@ dependencies {
     implementation(Dep.Firebase.dynamicLinks)
     implementation(Dep.Firebase.auth)
     implementation(Dep.Firebase.fireStore)
+    implementation(Dep.Firebase.storage)
 
     implementation(project(":domain"))
     implementation(project(":core"))

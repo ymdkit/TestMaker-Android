@@ -1,6 +1,10 @@
 package com.example.infra.repository
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import com.example.core.QuestionImage
 import com.example.domain.model.*
 import com.example.domain.repository.SharedWorkbookRepository
 import com.example.infra.remote.DynamicLinksCreator
@@ -10,14 +14,18 @@ import com.example.infra.remote.entity.FirebaseQuestion
 import com.example.infra.remote.entity.FirebaseTest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.tasks.await
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 class SharedWorkbookRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore,
     @SearchClient private val searchApi: SearchApi,
+    @ApplicationContext private val context: Context,
     private val dynamicLinksCreator: DynamicLinksCreator
 ) : SharedWorkbookRepository {
 
@@ -114,6 +122,18 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
                             .collection(QUESTION_COLLECTION_NAME)
                             .document()
 
+
+                        val newImageUrl =
+                            when (val problemImage = it.problemImageUrl) {
+                                is QuestionImage.LocalImage -> {
+                                    val imageRef = "${user.id}/${problemImage.getRawString()}"
+                                    uploadImage(problemImage.getRawString(), imageRef)
+                                    imageRef
+                                }
+                                else -> {
+                                    problemImage.getRawString()
+                                }
+                            }
                         // todo 画像のアップロード
 
                         batch.set(
@@ -125,7 +145,7 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
                                     explanation = it.explanation,
                                     answerList = it.answers,
                                     otherSelectionList = it.otherSelections,
-                                    problemImageUrl = it.problemImageUrl,
+                                    problemImageUrl = newImageUrl,
                                     explanationImageUrl = "",
                                     questionType = it.type,
                                     isCheckAnswerOrder = it.isCheckAnswerOrder,
@@ -138,6 +158,23 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
                 }.await()
             }
         _updateWorkbookListFlow.emit(getWorkbookListByUserId(userId = user.id))
+    }
+
+    private fun uploadImage(localPath: String, remotePath: String) {
+        val storage = FirebaseStorage.getInstance()
+        val storageRef = storage.reference.child(remotePath)
+
+        val baos = ByteArrayOutputStream()
+        val imageOptions = BitmapFactory.Options()
+        imageOptions.inPreferredConfig = Bitmap.Config.RGB_565
+        runCatching {
+            context.openFileInput(localPath)
+        }.onSuccess {
+            val bitmap = BitmapFactory.decodeStream(it, null, imageOptions)
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 50, baos)
+            val data = baos.toByteArray()
+            storageRef.putBytes(data)
+        }
     }
 
     override suspend fun deleteWorkbook(userId: UserId, workbookId: DocumentId) {

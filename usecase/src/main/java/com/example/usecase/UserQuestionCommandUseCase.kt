@@ -1,5 +1,6 @@
 package com.example.usecase
 
+import com.example.core.QuestionImage
 import com.example.core.QuestionType
 import com.example.domain.model.CreateQuestionRequest
 import com.example.domain.model.QuestionId
@@ -50,8 +51,8 @@ class UserQuestionCommandUseCase @Inject constructor(
         problem: String,
         answers: List<String>,
         explanation: String,
-        problemImageUrl: String,
-        explanationImageUrl: String,
+        problemImageUrl: QuestionImage,
+        explanationImageUrl: QuestionImage,
         otherSelections: List<String>,
         isAutoGenerateOtherSelections: Boolean,
         isCheckAnswerOrder: Boolean

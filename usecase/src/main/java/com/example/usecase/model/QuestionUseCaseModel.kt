@@ -1,6 +1,7 @@
 package com.example.usecase.model
 
 import com.example.core.AnswerStatus
+import com.example.core.QuestionImage
 import com.example.core.QuestionType
 import com.example.domain.model.Question
 import com.example.domain.model.QuestionId
@@ -11,8 +12,8 @@ data class QuestionUseCaseModel(
     val problem: String,
     val answers: List<String>,
     val explanation: String,
-    val problemImageUrl: String,
-    val explanationImageUrl: String,
+    val problemImageUrl: QuestionImage,
+    val explanationImageUrl: QuestionImage,
     val answerStatus: AnswerStatus,
     val isAnswering: Boolean,
     val order: Int,

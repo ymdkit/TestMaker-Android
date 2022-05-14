@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import com.example.core.QuestionImage
 import com.example.ui.R
 import com.example.ui.core.ClickableListItem
 import com.example.ui.core.GlideApp

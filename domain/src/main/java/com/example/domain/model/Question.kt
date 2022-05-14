@@ -1,6 +1,7 @@
 package com.example.domain.model
 
 import com.example.core.AnswerStatus
+import com.example.core.QuestionImage
 import com.example.core.QuestionType
 
 data class Question(
@@ -9,8 +10,8 @@ data class Question(
     val problem: String,
     val answers: List<String>,
     val explanation: String,
-    val problemImageUrl: String,
-    val explanationImageUrl: String,
+    val problemImageUrl: QuestionImage,
+    val explanationImageUrl: QuestionImage,
     val answerStatus: AnswerStatus,
     val isAnswering: Boolean,
     val order: Int,

@@ -1,6 +1,7 @@
 package com.example.infra.local.entity
 
 import com.example.core.AnswerStatus
+import com.example.core.QuestionImage
 import com.example.core.QuestionType
 import com.example.domain.model.CreateQuestionRequest
 import com.example.domain.model.Question
@@ -23,7 +24,7 @@ open class Quest : RealmObject() {
                 problem = question.problem
                 answer = question.answers.firstOrNull() ?: ""
                 explanation = question.explanation
-                imagePath = question.problemImageUrl
+                imagePath = question.problemImageUrl.getRawString()
                 correct = question.answerStatus == AnswerStatus.CORRECT
                 solving = question.isAnswering
                 order = question.order
@@ -97,8 +98,8 @@ open class Quest : RealmObject() {
             type = QuestionType.valueOf(type),
             problem = problem,
             explanation = explanation,
-            problemImageUrl = imagePath,
-            explanationImageUrl = "", // todo カラム追加
+            problemImageUrl = QuestionImage.fromRawString(imagePath),
+            explanationImageUrl = QuestionImage.Empty, // todo カラム追加
             answerStatus = if (correct) AnswerStatus.CORRECT else AnswerStatus.INCORRECT, // todo 未解答状態への対応
             isAnswering = solving,
             order = order,

@@ -64,7 +64,7 @@ data class ExportQuestionRequest(
                 answer = question.answers.firstOrNull() ?: "",
                 answers = question.answers,
                 explanation = question.explanation,
-                imagePath = question.problemImageUrl,
+                imagePath = question.problemImageUrl.getRawString(),
                 others = question.otherSelections,
                 order = question.order,
                 isAutoGenerateOthers = question.isAutoGenerateOtherSelections,

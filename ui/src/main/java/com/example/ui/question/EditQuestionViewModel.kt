@@ -2,6 +2,7 @@ package com.example.ui.question
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.QuestionImage
 import com.example.core.QuestionType
 import com.example.usecase.UserQuestionCommandUseCase
 import com.example.usecase.WorkbookWatchUseCase
@@ -161,8 +162,8 @@ class EditQuestionViewModel @Inject constructor(
                 problem = inputValues.problem,
                 answers = inputValues.answerList,
                 explanation = inputValues.explanation,
-                problemImageUrl = inputValues.problemImage.getRawString(),
-                explanationImageUrl = inputValues.explanationImage.getRawString(),
+                problemImageUrl = inputValues.problemImage,
+                explanationImageUrl = inputValues.explanationImage,
                 otherSelections = inputValues.otherSelectionList,
                 isAutoGenerateOtherSelections = inputValues.isAutoGenerateOtherSelections,
                 isCheckAnswerOrder = inputValues.isCheckAnswerOrder

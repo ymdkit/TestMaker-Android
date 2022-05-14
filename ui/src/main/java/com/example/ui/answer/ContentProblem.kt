@@ -1,6 +1,9 @@
 package com.example.ui.answer
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -15,8 +18,7 @@ fun ContentProblem(
     index: Int,
     question: QuestionUseCaseModel,
     isSwap: Boolean
-)
-{
+) {
 
     Column {
         Row {
@@ -32,13 +34,10 @@ fun ContentProblem(
                 text = if (isSwap) question.getSingleLineAnswer() else question.problem
             )
         }
-        if (question.problemImageUrl.isNotEmpty()) {
-            Column(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                ContentBitmap(
-                    modifier = Modifier.height(200.dp),
-                    imageUrl = question.problemImageUrl
-                )
-            }
+        Column(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            ContentBitmap(
+                image = question.problemImageUrl
+            )
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.ui.question
 
+import com.example.core.QuestionImage
 import com.example.core.QuestionType
 import com.example.usecase.model.QuestionUseCaseModel
 
@@ -23,8 +24,8 @@ data class FormQuestionUiState(
                 answerList = question.answers,
                 otherSelectionList = question.otherSelections,
                 explanation = question.explanation,
-                problemImage = QuestionImage.fromRawString(question.problemImageUrl),
-                explanationImage = QuestionImage.fromRawString(question.explanationImageUrl),
+                problemImage = question.problemImageUrl,
+                explanationImage = question.explanationImageUrl,
                 isAutoGenerateOtherSelections = question.isAutoGenerateOtherSelections,
                 isCheckAnswerOrder = question.isCheckAnswerOrder
             )
@@ -49,30 +50,4 @@ data class FormQuestionUiState(
         listOf(QuestionType.SELECT, QuestionType.SELECT_COMPLETE).contains(questionType)
     val shouldShowIsCheckAnswerOrder =
         listOf(QuestionType.COMPLETE, QuestionType.SELECT_COMPLETE).contains(questionType)
-}
-
-sealed class QuestionImage {
-    object Empty : QuestionImage()
-    data class FireStoreImage(val ref: String) : QuestionImage()
-    data class LocalImage(val path: String) : QuestionImage()
-
-    companion object {
-        fun fromRawString(rawString: String) =
-            if (rawString.isNotEmpty()) {
-                if (rawString.contains("/")) {
-                    FireStoreImage(ref = rawString)
-                } else {
-                    LocalImage(path = rawString)
-                }
-            } else {
-                Empty
-            }
-    }
-
-    fun getRawString() =
-        when (this) {
-            is Empty -> ""
-            is FireStoreImage -> ref
-            is LocalImage -> path
-        }
 }

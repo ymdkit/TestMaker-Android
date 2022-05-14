@@ -20,8 +20,8 @@ data class CreateQuestionRequest(
                 problem = question.problem,
                 answers = question.answers,
                 explanation = question.explanation,
-                problemImageUrl = question.problemImageUrl,
-                explanationImageUrl = question.explanationImageUrl,
+                problemImageUrl = question.problemImageUrl.getRawString(),
+                explanationImageUrl = question.explanationImageUrl.getRawString(),
                 otherSelections = question.otherSelections,
                 isAutoGenerateOtherSelections = question.isAutoGenerateOtherSelections,
                 isCheckAnswerOrder = question.isCheckAnswerOrder

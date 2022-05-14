@@ -3,55 +3,56 @@ package com.example.ui.answer
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.example.ui.R
+import com.example.core.QuestionImage
 import com.example.ui.core.GlideApp
 import com.github.chrisbanes.photoview.PhotoView
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
 @Composable
-fun ContentBitmap(modifier: Modifier = Modifier,imageUrl: String){
+fun ContentBitmap(
+    image: QuestionImage
+) {
     val context = LocalContext.current
 
     var bitmap: Bitmap? by remember {
         mutableStateOf(null)
     }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(image) {
+        when (image) {
+            is QuestionImage.Empty -> {
+                bitmap = null
+            }
+            is QuestionImage.FireStoreImage -> {
+                val storage = FirebaseStorage.getInstance()
+                val storageRef = storage.reference.child(image.ref)
+                val target = GlideApp.with(context).asBitmap().load(storageRef).submit()
 
-        if (imageUrl.contains("/")){
-            val storage = FirebaseStorage.getInstance()
-            val storageRef = storage.reference.child(imageUrl)
-            val target = GlideApp.with(context).asBitmap().load(storageRef).submit()
-
-            coroutineScope{
-                try {
-                    withContext(Dispatchers.IO){
-                        bitmap = target.get()
+                withContext(Dispatchers.IO) {
+                    try {
+                        bitmap = (target.get())
+                    } catch (e: Exception) {
+                        Log.d(this.javaClass.name, "${e.message}")
                     }
-                } catch (e: Exception) {
-                    Log.d(this.javaClass.name,"${e.message}")
                 }
             }
-        }else{
-            try {
-                val file = context.getFileStreamPath(imageUrl)
-                bitmap =  BitmapFactory.decodeFile(file.absolutePath)
-            } catch (e: IOException) {
-                Log.d(this.javaClass.name,"${e.message}")
+            is QuestionImage.LocalImage -> {
+                try {
+                    val file = context.getFileStreamPath(image.path)
+                    bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                } catch (e: IOException) {
+                    Log.d(this.javaClass.name, "${e.message}")
+                }
             }
         }
     }
@@ -66,12 +67,6 @@ fun ContentBitmap(modifier: Modifier = Modifier,imageUrl: String){
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-        )
-    } ?: run {
-        Image(
-            modifier = modifier.padding(16.dp),
-            painter = painterResource(id = R.drawable.ic_insert_photo_white_24dp),
-            contentDescription = ""
         )
     }
 }

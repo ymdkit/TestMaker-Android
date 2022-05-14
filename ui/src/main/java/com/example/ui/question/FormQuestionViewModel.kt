@@ -1,5 +1,6 @@
 package com.example.ui.question
 
+import com.example.core.QuestionImage
 import com.example.core.QuestionType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
