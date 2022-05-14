@@ -103,7 +103,7 @@
     <string name="position_start">開始位置</string>
     <string name="message_null_start">有効な開始位置を入力してください</string>
     <string name="reset_achievement">達成率のリセット</string>
-    <string name="msg_reset_achievement">達成率をリセットしました</string>
+    <string name="msg_reset_achievement">達成度をリセットしますか？</string>
     <string name="select">選択</string>
     <string name="write">記述</string>
     <string name="complete">完答</string>
@@ -341,4 +341,5 @@
     <string name="finish_answer">終了</string>
     <string name="button_finish">終了する</string>
     <string name="msg_finish_answer">解答を終了しますか？</string>
+    <string name="reset">リセットする</string>
 </resources>

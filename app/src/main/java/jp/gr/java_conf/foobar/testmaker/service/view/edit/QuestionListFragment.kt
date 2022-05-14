@@ -9,10 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,6 +23,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.airbnb.epoxy.EpoxyTouchHelper
@@ -43,6 +41,9 @@ import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentQuestionList
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.online.SearchTextField
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -314,6 +315,45 @@ class QuestionListFragment : Fragment() {
                                                     contentDescription = "search"
                                                 )
                                             }
+                                            IconButton(onClick = questionListViewModel::onMenuToggleButtonClicked) {
+                                                Icon(
+                                                    imageVector = Icons.Default.MoreVert,
+                                                    contentDescription = "more"
+                                                )
+                                            }
+                                            DropdownMenu(
+                                                expanded = uiState.showingMenu,
+                                                onDismissRequest = questionListViewModel::onMenuToggleButtonClicked
+                                            ) {
+                                                DropdownMenuItem(
+                                                    onClick = {
+                                                        findNavController().navigate(
+                                                            QuestionListFragmentDirections.actionQuestionListToEditWorkbook(
+                                                                workbookId = args.workbookId
+                                                            )
+                                                        )
+                                                        questionListViewModel.onMenuToggleButtonClicked()
+                                                    }
+                                                ) {
+                                                    Text(stringResource(id = R.string.title_edit_workbook))
+                                                }
+                                                DropdownMenuItem(
+                                                    onClick = {
+                                                        questionListViewModel.onMenuToggleButtonClicked()
+                                                        questionListViewModel.exportWorkbook()
+                                                    }
+                                                ) {
+                                                    Text(stringResource(id = R.string.menu_export))
+                                                }
+                                                ConfirmActionDropDownMenu(
+                                                    label = stringResource(id = R.string.reset_achievement),
+                                                    confirmMessage = stringResource(
+                                                        id = R.string.msg_reset_achievement,
+                                                    ),
+                                                    confirmButtonText = stringResource(id = R.string.reset),
+                                                    onConfirmed = questionListViewModel::resetWorkbookAchievement
+                                                )
+                                            }
                                         }
                                     )
                                 },
@@ -374,36 +414,17 @@ class QuestionListFragment : Fragment() {
         questionListViewModel.setup(workbookId = args.workbookId)
         questionListViewModel.load()
 
-//        lifecycleScope.launchWhenCreated {
-//            questionListViewModel.uiState.onEach {
-//
-//                val exportedWorkbook = it.exportedWorkbook.getOrNull() ?: return@onEach
-//                shareExportedWorkbook(exportedWorkbook = exportedWorkbook)
-//
-//            }.launchIn(this)
-//        }
+        lifecycleScope.launchWhenCreated {
+            questionListViewModel.exportWorkbookEvent
+                .receiveAsFlow()
+                .onEach {
+                    shareExportedWorkbook(exportedWorkbook = it)
+                }
+                .launchIn(this)
+        }
 
 //        binding.toolbar.setOnMenuItemClickListener {
 //            when (it.itemId) {
-//                R.id.action_setting -> {
-//                    findNavController().navigate(
-//                        QuestionListFragmentDirections.actionQuestionListToEditWorkbook(
-//                            workbookId = args.workbookId
-//                        )
-//                    )
-//                    true
-//                }
-//                R.id.action_export -> {
-//                    questionListViewModel.exportWorkbook()
-//                    true
-//                }
-//                R.id.action_reset_achievement -> {
-//                    questionListViewModel
-//                        .resetWorkbookAchievement()
-//
-//                    requireContext().showToast(getString(R.string.msg_reset_achievement))
-//                    true
-//                }
 //                R.id.action_select -> {
 //                    if (actionMode == null) {
 //                        actionMode = requireActivity().startActionMode(actionModeCallback)

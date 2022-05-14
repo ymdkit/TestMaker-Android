@@ -10,6 +10,8 @@ import com.example.usecase.model.QuestionUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
 import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -32,13 +34,18 @@ class QuestionListViewModel @Inject constructor(
                 workbookList = Resource.Empty,
                 questionList = Resource.Empty,
                 selectedQuestion = null,
-                exportedWorkbook = Resource.Empty,
                 isSearching = false,
-                query = ""
+                query = "",
+                showingMenu = false,
+                isExporting = false
             )
         )
     val uiState: StateFlow<UiState>
         get() = _uiState
+
+    private val _exportWorkbookEvent: Channel<String> = Channel()
+    val exportWorkbookEvent: ReceiveChannel<String>
+        get() = _exportWorkbookEvent
 
     private var workbookId by Delegates.notNull<Long>()
 
@@ -95,6 +102,13 @@ class QuestionListViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 query = value
+            )
+        }
+
+    fun onMenuToggleButtonClicked() =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                showingMenu = !_uiState.value.showingMenu
             )
         }
 
@@ -161,12 +175,14 @@ class QuestionListViewModel @Inject constructor(
 
     // todo UseCase 層に移動させる + 例外キャッチ
     fun exportWorkbook() = viewModelScope.launch {
+        if (_uiState.value.isExporting) return@launch
         _uiState.value = _uiState.value.copy(
-            exportedWorkbook = Resource.Loading
+            isExporting = true
         )
         val result = userWorkbookCommandUseCase.exportWorkbook(workbookId = workbookId)
+        _exportWorkbookEvent.send(result)
         _uiState.value = _uiState.value.copy(
-            exportedWorkbook = Resource.Success(value = result)
+            isExporting = false
         )
     }
 }
@@ -175,7 +191,8 @@ data class UiState(
     val workbookList: Resource<List<WorkbookUseCaseModel>>,
     val questionList: Resource<List<QuestionUseCaseModel>>,
     val selectedQuestion: QuestionUseCaseModel?,
-    val exportedWorkbook: Resource<String>,
     val isSearching: Boolean,
     val query: String,
+    val showingMenu: Boolean,
+    val isExporting: Boolean,
 )

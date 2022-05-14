@@ -103,7 +103,7 @@
     <string name="position_start">start</string>
     <string name="message_null_start">input start position</string>
     <string name="reset_achievement">reset achievement</string>
-    <string name="msg_reset_achievement">reset achievement</string>
+    <string name="msg_reset_achievement">reset achievement?</string>
     <string name="write">write</string>
     <string name="select">select</string>
     <string name="complete">answers</string>
@@ -349,4 +349,5 @@
     <string name="finish_answer">finish</string>
     <string name="button_finish">finish</string>
     <string name="msg_finish_answer">finish answer?</string>
+    <string name="reset">reset</string>
 </resources>
