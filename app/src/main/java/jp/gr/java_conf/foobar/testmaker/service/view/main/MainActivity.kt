@@ -1,7 +1,5 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.main
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -30,7 +28,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
-    private val testViewModel: TestViewModel by viewModels()
 
     @Inject
     lateinit var logger: TestMakerLogger
@@ -89,7 +86,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigateHomePage() {
-        testViewModel.refresh()
         binding.bottomBar.selectedItemId = R.id.page_home
         navController.navigate(R.id.action_global_page_home)
     }
@@ -134,7 +130,6 @@ class MainActivity : AppCompatActivity() {
             },
             onSuccess = {
                 viewModel.convert(it)
-                testViewModel.refresh()
                 showToast(getString(R.string.msg_success_download_test, it.name))
                 logger.logCreateTestEvent(it.name, CreateTestSource.DYNAMIC_LINKS.title)
             },
@@ -145,14 +140,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-
         const val REQUEST_SIGN_IN = 12346
-
-        fun startActivityWithClear(activity: Activity) {
-            val intent = Intent(activity, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            }
-            activity.startActivity(intent)
-        }
     }
 }

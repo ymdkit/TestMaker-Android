@@ -12,25 +12,27 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
+import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Photo
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.example.ui.R
-import com.example.ui.core.DialogMenuItem
+import com.example.ui.core.ClickableListItem
 import com.example.ui.core.GlideApp
-import com.example.ui.core.ListDialogFragment
 import com.example.ui.core.showToast
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
@@ -48,6 +50,7 @@ fun ContentEditImageQuestion(
     var bitmap: Bitmap? by remember {
         mutableStateOf(null)
     }
+    var showingDialog by remember { mutableStateOf(false) }
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -97,7 +100,7 @@ fun ContentEditImageQuestion(
         }
     )
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(image) {
         when (image) {
             is QuestionImage.Empty -> {
                 bitmap = null
@@ -131,45 +134,7 @@ fun ContentEditImageQuestion(
             .fillMaxWidth()
             .height(56.dp)
             .padding(bottom = 8.dp),
-        onClick = {
-            ListDialogFragment.newInstance(
-                context.getString(R.string.title_image_menu),
-                listOf(
-                    DialogMenuItem(
-                        title = context.getString(R.string.button_take_photo),
-                        iconRes = R.drawable.ic_baseline_camera_alt_24,
-                        action = {
-                            if (ContextCompat.checkSelfPermission(
-                                    context,
-                                    Manifest.permission.CAMERA
-                                )
-                                != PackageManager.PERMISSION_GRANTED
-                            ) {
-                                askCameraPermitLauncher.launch(Manifest.permission.CAMERA)
-                            } else {
-                                CameraLauncher().takePicture(context) {
-                                    takePictureLauncher.launch(null)
-                                }
-                            }
-                        }),
-                    DialogMenuItem(
-                        title = context.getString(R.string.button_select_gallery),
-                        iconRes = R.drawable.ic_insert_photo_white_24dp,
-                        action = {
-                            launcher.launch("image/*")
-                        }),
-                    DialogMenuItem(
-                        title = context.getString(R.string.button_delete_image),
-                        iconRes = R.drawable.ic_delete_white,
-                        action = {
-                            onValueChange(QuestionImage.Empty)
-                        })
-                )
-            ).show(
-                fragmentManager,
-                "TAG"
-            )
-        },
+        onClick = { showingDialog = true },
         border = BorderStroke(
             ButtonDefaults.OutlinedBorderSize,
             MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
@@ -185,6 +150,85 @@ fun ContentEditImageQuestion(
             Image(bitmap = it.asImageBitmap(), contentDescription = "")
         } ?: run {
             Icon(Icons.Default.AddAPhoto, contentDescription = "add photo")
+        }
+    }
+    if (showingDialog) {
+
+
+        Dialog(onDismissRequest = { showingDialog = false }) {
+            Surface(shape = RoundedCornerShape(8.dp)) {
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            start = 24.dp,
+                            top = 32.dp,
+                            end = 8.dp,
+                            bottom = 8.dp
+                        )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 16.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.title_image_menu),
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        ClickableListItem(
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Camera,
+                                    contentDescription = "camera"
+                                )
+                            },
+                            text = stringResource(id = R.string.button_take_photo),
+                            onClick = {
+                                if (ContextCompat.checkSelfPermission(
+                                        context,
+                                        Manifest.permission.CAMERA
+                                    )
+                                    != PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    askCameraPermitLauncher.launch(Manifest.permission.CAMERA)
+                                } else {
+                                    showingDialog = false
+                                    CameraLauncher().takePicture(context) {
+                                        takePictureLauncher.launch(null)
+                                    }
+                                }
+                            }
+                        )
+                        ClickableListItem(
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Photo,
+                                    contentDescription = "gallery"
+                                )
+                            },
+                            text = stringResource(id = R.string.button_select_gallery),
+                            onClick = {
+                                showingDialog = false
+                                launcher.launch("image/*")
+                            }
+                        )
+                        ClickableListItem(
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "trash"
+                                )
+                            },
+                            text = stringResource(id = R.string.button_delete_image),
+                            onClick = {
+                                showingDialog = false
+                                onValueChange(QuestionImage.Empty)
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }

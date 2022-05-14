@@ -11,13 +11,18 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
@@ -27,7 +32,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.core.QuestionCondition
-import com.example.ui.core.*
+import com.example.ui.core.AdView
+import com.example.ui.core.AdViewModel
+import com.example.ui.core.ClickableListItem
+import com.example.ui.core.TestMakerTopAppBar
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.usecase.utils.Resource
 import com.github.mikephil.charting.charts.PieChart
@@ -43,6 +51,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -88,116 +97,167 @@ class AnswerResultFragment : Fragment() {
             setContent {
 
                 val uiState by viewModel.uiState.collectAsState()
+                val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
+                val scope = rememberCoroutineScope()
 
                 TestMakerAndroidTheme {
-                    Scaffold(
-                        topBar = {
-                            TestMakerTopAppBar(title = stringResource(id = R.string.label_result))
-                        },
-                        content = {
-                            when (val state = uiState) {
-                                is Resource.Success -> {
-                                    Surface(color = MaterialTheme.colors.surface) {
-                                        Column {
-                                            // todo LazyColumn に変更する
-                                            Column(
-                                                modifier = Modifier
-                                                    .padding(16.dp)
-                                                    .verticalScroll(state = ScrollState(0))
-                                                    .weight(weight = 1f, fill = true)
-                                            ) {
-                                                ItemPieChart(
-                                                    dataSet =
-                                                    PieDataSet(
-                                                        listOf(
-                                                            state.value.correctCount,
-                                                            state.value.incorrectCount
-                                                        )
-                                                            .map {
-                                                                PieEntry(it)
-                                                            }, ""
-                                                    ),
-                                                    centerText = state.value.scoreText
-                                                )
-
-                                                val studyPlusRecordStatus: ResultViewModel.StudyPlusRecordStatus by viewModel.studyPlusRecordStatus.collectAsState()
-
-                                                AnimatedVisibility(
-                                                    visible = sharedPreferenceManager.uploadStudyPlus == resources.getStringArray(
-                                                        R.array.upload_setting_study_plus_values
-                                                    )[2] && studyPlusRecordStatus == ResultViewModel.StudyPlusRecordStatus.READY
-                                                ) {
-                                                    WideOutlinedButton(
-                                                        onCLick = {
-                                                            viewModel.createStudyPlusRecord(
-                                                                duration, requireContext()
-                                                            )
-                                                        },
-                                                        text = getString(R.string.menu_upload_studyplus),
-                                                        modifier = Modifier.padding(vertical = 8.dp)
-                                                    )
-                                                }
-
-                                                Text(
-                                                    text = getString(R.string.label_result_questions),
-                                                    color = MaterialTheme.colors.primary,
-                                                    modifier = Modifier.padding(vertical = 4.dp)
-                                                )
-
-                                                state.value.answeringQuestionList.mapIndexed { index, it ->
-                                                    ItemResultModel(
-                                                        index + 1,
-                                                        it.problem,
-                                                        it.getSingleLineAnswer(),
-                                                        it.answerStatus
-                                                    ).ItemResult(onClick = {
-                                                        findNavController().navigate(
-                                                            AnswerResultFragmentDirections.actionAnswerResultToEditQuestion(
-                                                                workbookId = testId,
-                                                                questionId = it.id
-                                                            )
-                                                        )
-                                                    })
-                                                }
-                                            }
-                                            Row(
-                                                modifier = Modifier.padding(16.dp)
-                                            ) {
-                                                OutlinedButton(
-                                                    modifier = Modifier
-                                                        .weight(fill = true, weight = 1f)
-                                                        .defaultMinSize(minHeight = 48.dp),
-                                                    onClick = {
-                                                        findNavController().popBackStack(
-                                                            R.id.page_home,
-                                                            false
-                                                        )
-                                                    }) {
-                                                    Text(stringResource(R.string.home))
-                                                }
-                                                Spacer(modifier = Modifier.width(16.dp))
-                                                Button(
-                                                    modifier = Modifier
-                                                        .weight(fill = true, weight = 1f)
-                                                        .defaultMinSize(minHeight = 48.dp),
-                                                    colors = ButtonDefaults.buttonColors(
-                                                        backgroundColor = MaterialTheme.colors.primary
-                                                    ),
-                                                    onClick = {
-                                                        onClickRetry()
-                                                    }
-                                                ) {
-                                                    Text(stringResource(id = R.string.retry))
-                                                }
-                                            }
-                                            AdView(viewModel = adViewModel)
-                                        }
-                                    }
+                    BottomDrawer(
+                        drawerState = drawerState,
+                        gesturesEnabled = !drawerState.isClosed,
+                        drawerContent = {
+                            ListItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(id = R.string.retry),
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
-                                else -> {}
+                            )
+                            ClickableListItem(
+                                icon = {
+                                    Icon(
+                                        imageVector = Icons.Filled.PlayArrow,
+                                        contentDescription = "all"
+                                    )
+                                },
+                                text = stringResource(id = R.string.result_dialog_item_retry_all)
+                            ) {
+                                scope.launch {
+                                    drawerState.close()
+                                    viewModel.retryQuestions(
+                                        questionCondition = QuestionCondition.ALL
+                                    )
+                                }
+                            }
+                            ClickableListItem(
+                                icon = {
+                                    Icon(
+                                        imageVector = Icons.Filled.Error,
+                                        contentDescription = "wrong"
+                                    )
+                                },
+                                text = stringResource(id = R.string.result_dialog_item_retry_only_incorrect)
+                            ) {
+                                scope.launch {
+                                    drawerState.close()
+                                    viewModel.retryQuestions(
+                                        questionCondition = QuestionCondition.WRONG
+                                    )
+                                }
                             }
                         }
-                    )
+                    ) {
+                        Scaffold(
+                            topBar = {
+                                TestMakerTopAppBar(title = stringResource(id = R.string.label_result))
+                            },
+                            content = {
+                                when (val state = uiState) {
+                                    is Resource.Success -> {
+                                        Surface(color = MaterialTheme.colors.surface) {
+                                            Column {
+                                                // todo LazyColumn に変更する
+                                                Column(
+                                                    modifier = Modifier
+                                                        .padding(16.dp)
+                                                        .verticalScroll(state = ScrollState(0))
+                                                        .weight(weight = 1f, fill = true)
+                                                ) {
+                                                    ItemPieChart(
+                                                        dataSet =
+                                                        PieDataSet(
+                                                            listOf(
+                                                                state.value.correctCount,
+                                                                state.value.incorrectCount
+                                                            )
+                                                                .map {
+                                                                    PieEntry(it)
+                                                                }, ""
+                                                        ),
+                                                        centerText = state.value.scoreText
+                                                    )
+
+                                                    val studyPlusRecordStatus: ResultViewModel.StudyPlusRecordStatus by viewModel.studyPlusRecordStatus.collectAsState()
+
+                                                    AnimatedVisibility(
+                                                        visible = sharedPreferenceManager.uploadStudyPlus == resources.getStringArray(
+                                                            R.array.upload_setting_study_plus_values
+                                                        )[2] && studyPlusRecordStatus == ResultViewModel.StudyPlusRecordStatus.READY
+                                                    ) {
+                                                        WideOutlinedButton(
+                                                            onCLick = {
+                                                                viewModel.createStudyPlusRecord(
+                                                                    duration, requireContext()
+                                                                )
+                                                            },
+                                                            text = getString(R.string.menu_upload_studyplus),
+                                                            modifier = Modifier.padding(vertical = 8.dp)
+                                                        )
+                                                    }
+
+                                                    Text(
+                                                        text = getString(R.string.label_result_questions),
+                                                        color = MaterialTheme.colors.primary,
+                                                        modifier = Modifier.padding(vertical = 4.dp)
+                                                    )
+
+                                                    state.value.answeringQuestionList.mapIndexed { index, it ->
+                                                        ItemResultModel(
+                                                            index + 1,
+                                                            it.problem,
+                                                            it.getSingleLineAnswer(),
+                                                            it.answerStatus
+                                                        ).ItemResult(onClick = {
+                                                            findNavController().navigate(
+                                                                AnswerResultFragmentDirections.actionAnswerResultToEditQuestion(
+                                                                    workbookId = testId,
+                                                                    questionId = it.id
+                                                                )
+                                                            )
+                                                        })
+                                                    }
+                                                }
+                                                Row(
+                                                    modifier = Modifier.padding(16.dp)
+                                                ) {
+                                                    OutlinedButton(
+                                                        modifier = Modifier
+                                                            .weight(fill = true, weight = 1f)
+                                                            .defaultMinSize(minHeight = 48.dp),
+                                                        onClick = {
+                                                            findNavController().popBackStack(
+                                                                R.id.page_home,
+                                                                false
+                                                            )
+                                                        }) {
+                                                        Text(stringResource(R.string.home))
+                                                    }
+                                                    Spacer(modifier = Modifier.width(16.dp))
+                                                    Button(
+                                                        modifier = Modifier
+                                                            .weight(fill = true, weight = 1f)
+                                                            .defaultMinSize(minHeight = 48.dp),
+                                                        colors = ButtonDefaults.buttonColors(
+                                                            backgroundColor = MaterialTheme.colors.primary
+                                                        ),
+                                                        onClick = {
+                                                            scope.launch {
+                                                                drawerState.open()
+                                                            }
+                                                        }
+                                                    ) {
+                                                        Text(stringResource(id = R.string.retry))
+                                                    }
+                                                }
+                                                AdView(viewModel = adViewModel)
+                                            }
+                                        }
+                                    }
+                                    else -> {}
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -247,30 +307,6 @@ class AnswerResultFragment : Fragment() {
                 manager.launchReviewFlow(requireActivity(), reviewInfo)
             }
         }
-    }
-
-    private fun onClickRetry() {
-        ListDialogFragment.newInstance(
-            getString(R.string.retry),
-            listOf(
-                DialogMenuItem(
-                    title = getString(R.string.result_dialog_item_retry_all),
-                    iconRes = R.drawable.ic_play_arrow_white_24dp,
-                    action = {
-                        viewModel.retryQuestions(
-                            questionCondition = QuestionCondition.ALL
-                        )
-                    }),
-                DialogMenuItem(
-                    title = getString(R.string.result_dialog_item_retry_only_incorrect),
-                    iconRes = R.drawable.ic_baseline_error_24,
-                    action = {
-                        viewModel.retryQuestions(
-                            questionCondition = QuestionCondition.WRONG
-                        )
-                    })
-            )
-        ).show(childFragmentManager, "TAG")
     }
 }
 

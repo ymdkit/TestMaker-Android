@@ -41,8 +41,4 @@ class TestMakerRepository @Inject constructor(
 
         return Test.createFromRealmTest(test)
     }
-
-    suspend fun createTestInGroup(test: Test, overview: String, groupId: String) {
-        remote.createTest(test = test, overview = overview, isPublic = false, groupId = groupId)
-    }
 }

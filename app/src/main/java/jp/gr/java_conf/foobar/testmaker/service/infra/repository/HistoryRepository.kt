@@ -9,7 +9,6 @@ import javax.inject.Singleton
 class HistoryRepository @Inject constructor(
     private val dataSource: RemoteDataSource
 ) {
-    suspend fun getHistories(documentId: String) = dataSource.getHistories(documentId)
     suspend fun createHistory(documentId: String, history: FirebaseHistory) =
         dataSource.createHistory(documentId, history)
 }
