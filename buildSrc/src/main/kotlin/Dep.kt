@@ -33,12 +33,6 @@ object Dep {
         const val activity = "androidx.activity:activity-compose:1.4.0"
     }
 
-    object Epoxy {
-        const val core = "com.airbnb.android:epoxy:$epoxyVersion"
-        const val dataBinding = "com.airbnb.android:epoxy-databinding:$epoxyVersion"
-        const val processor = "com.airbnb.android:epoxy-processor:$epoxyVersion"
-    }
-
     object Material {
         const val core = "com.google.android.material:material:1.5.0"
     }
