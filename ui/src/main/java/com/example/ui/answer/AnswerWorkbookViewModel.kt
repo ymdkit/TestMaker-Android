@@ -23,7 +23,8 @@ class AnswerWorkbookViewModel @Inject constructor(
     private val workbookGetUseCase: WorkbookGetUseCase,
     private val answerSettingWatchUseCase: AnswerSettingWatchUseCase,
     private val judgeUseCase: QuestionJudgeUseCase,
-    private val getOrGenerateSelectionListUseCase: GetOrGenerateSelectionListUseCase
+    private val getOrGenerateSelectionListUseCase: GetOrGenerateSelectionListUseCase,
+    private val answerHistoryCommandUseCase: AnswerHistoryCommandUseCase,
 ) : ViewModel() {
 
     private var workbookId by Delegates.notNull<Long>()
@@ -90,6 +91,14 @@ class AnswerWorkbookViewModel @Inject constructor(
 
             if (index >= answeringQuestions.size) {
                 _uiState.value = PlayUiState.Finish
+
+                if (workbook.remoteId.isNotEmpty()) {
+                    answerHistoryCommandUseCase.createHistory(
+                        workbookId = workbook.remoteId,
+                        numCorrect = answeringQuestions.count { it.answerStatus == AnswerStatus.CORRECT },
+                        numSolved = answeringQuestions.size,
+                    )
+                }
                 return@launch
             }
 

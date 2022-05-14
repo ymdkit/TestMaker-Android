@@ -16,6 +16,19 @@ data class FirebaseHistory(
     val numCorrect: Int = 0,
     val numSolved: Int = 0
 ) {
+
+    companion object {
+        fun fromHistory(history: AnswerHistory) =
+            FirebaseHistory(
+                id = history.id.value,
+                userId = history.userId.value,
+                userName = history.userName,
+                createdAt = Timestamp.now(),
+                numCorrect = history.numCorrect,
+                numSolved = history.numSolved
+            )
+    }
+
     fun getDate(): String {
         val local = Locale.getDefault()
         val format = DateFormat.getBestDateTimePattern(local, "MMMd")

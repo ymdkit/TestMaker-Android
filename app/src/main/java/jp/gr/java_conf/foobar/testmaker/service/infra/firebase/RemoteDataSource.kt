@@ -3,13 +3,11 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.firebase
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.example.infra.remote.entity.FirebaseHistory
 import com.example.infra.remote.entity.FirebaseQuestion
 import com.example.infra.remote.entity.FirebaseTest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
-import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
@@ -18,7 +16,6 @@ import javax.inject.Singleton
 @Singleton
 class RemoteDataSource @Inject constructor(
     @ApplicationContext val context: Context,
-    val auth: Auth
 ) {
 
     private val db = FirebaseFirestore.getInstance()
@@ -39,14 +36,6 @@ class RemoteDataSource @Inject constructor(
             .get()
             .await()
             .toObjects(FirebaseQuestion::class.java).sortedBy { q -> q.order }
-    }
-
-    suspend fun createHistory(documentId: String, history: FirebaseHistory) {
-        val ref = db.collection(TESTS)
-            .document(documentId)
-            .collection("histories")
-            .document()
-        ref.set(history.copy(id = ref.id)).await()
     }
 
 
