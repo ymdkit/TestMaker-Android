@@ -4,34 +4,46 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Toast
-import androidx.databinding.DataBindingUtil
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.ads.AdRequest
+import com.example.ui.core.*
+import com.example.ui.theme.TestMakerAndroidTheme
+import com.example.usecase.utils.Resource
+import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentUploadGroupTestBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.UploadTestDestination
-import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.online.FirebaseViewModel
+import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class UploadGroupTestFragment : Fragment() {
 
-    private lateinit var binding: FragmentUploadGroupTestBinding
-    private val testViewModel: TestViewModel by viewModels()
-    private val viewModel: FirebaseViewModel by viewModels()
     private val args: UploadGroupTestFragmentArgs by navArgs()
+
+    private val uploadWorkbookViewModel: UploadWorkbookViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
     @Inject
     lateinit var logger: TestMakerLogger
@@ -42,68 +54,172 @@ class UploadGroupTestFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            testViewModel.tests.map { it.title }.toTypedArray()
-        )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        return ComposeView(requireContext()).apply {
 
-        return DataBindingUtil.inflate<FragmentUploadGroupTestBinding>(
-            inflater,
-            R.layout.fragment_upload_group_test,
-            container,
-            false
-        ).apply {
-            binding = this
-            spinner.adapter = adapter
+            setContent {
+                val uiState by uploadWorkbookViewModel.uiState.collectAsState()
 
-            buttonUpload.setOnClickListener {
-                requireActivity().executeJobWithDialog(
-                    title = getString(R.string.uploading),
-                    task = {
-                        viewModel.uploadTestInGroup(
-                            testViewModel.tests[binding.spinner.selectedItemPosition],
-                            binding.editOverview.text.toString(),
-                            args.groupId
-                        )
-                    },
-                    onSuccess = {
-                        logger.logUploadTestEvent(
-                            test = testViewModel.tests[binding.spinner.selectedItemPosition],
-                            destination = UploadTestDestination.GROUP.title
-                        )
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.msg_test_upload),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        findNavController().popBackStack()
+                TestMakerAndroidTheme {
+                    Scaffold(
+                        topBar = {
+                            TestMakerTopAppBar(
+                                title = stringResource(id = R.string.title_activity_upload_test),
+                                navigationIcon = {
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowBack,
+                                        contentDescription = "Back",
+                                        modifier = Modifier
+                                            .padding(16.dp)
+                                            .clickable {
+                                                findNavController().popBackStack()
+                                            }
+                                    )
+                                }
+                            )
+                        },
+                        content = {
+                            Column {
+                                Scaffold(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .weight(weight = 1f, fill = true)
+                                ) {
+                                    RequireAuthentication(
+                                        isLogin = uiState.isLogin,
+                                        onLogin = uploadWorkbookViewModel::onUserCreated
+                                    ) {
 
-                    },
-                    onFailure = {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.msg_canceled),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                )
+                                        when (val state = uiState.workbookList) {
+                                            is Resource.Success -> {
+                                                Column {
+                                                    LazyColumn(
+                                                        modifier = Modifier
+                                                            .weight(weight = 1f, fill = true)
+                                                    ) {
+                                                        item {
+                                                            Box {
+                                                                OutlinedButton(
+                                                                    modifier = Modifier
+                                                                        .fillMaxWidth()
+                                                                        .height(56.dp),
+                                                                    onClick = uploadWorkbookViewModel::onToggleDropDownMenu,
+                                                                    border = BorderStroke(
+                                                                        ButtonDefaults.OutlinedBorderSize,
+                                                                        MaterialTheme.colors.onSurface.copy(
+                                                                            alpha = ContentAlpha.disabled
+                                                                        )
+                                                                    )
+                                                                ) {
+                                                                    Text(
+                                                                        text = stringResource(id = R.string.label_workbook),
+                                                                        color = MaterialTheme.colors.onSurface
+                                                                    )
+                                                                    Spacer(
+                                                                        modifier = Modifier.weight(
+                                                                            weight = 1f,
+                                                                            fill = true
+                                                                        )
+                                                                    )
+                                                                    Text(
+                                                                        // todo StringResource
+                                                                        text = uiState.selectedWorkbook?.name
+                                                                            ?: "投稿可能な問題集が存在しません",
+                                                                        color = MaterialTheme.colors.onSurface
+                                                                    )
+                                                                    Icon(
+                                                                        Icons.Default.ArrowDropDown,
+                                                                        contentDescription = null,
+                                                                        tint = MaterialTheme.colors.onSurface.copy(
+                                                                            alpha = ContentAlpha.disabled
+                                                                        )
+                                                                    )
+                                                                }
+                                                                DropdownMenu(
+                                                                    expanded = uiState.showingDropDownMenu,
+                                                                    onDismissRequest = uploadWorkbookViewModel::onToggleDropDownMenu
+                                                                ) {
+                                                                    state.value.forEach {
+                                                                        DropdownMenuItem(onClick = {
+                                                                            uploadWorkbookViewModel.onWorkbookSelected(
+                                                                                it
+                                                                            )
+                                                                            uploadWorkbookViewModel.onToggleDropDownMenu()
+                                                                        }) {
+                                                                            Text(it.name)
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        item {
+                                                            OutlinedTextField(
+                                                                modifier = Modifier
+                                                                    .fillMaxWidth()
+                                                                    .padding(bottom = 8.dp),
+                                                                maxLines = 3,
+                                                                label = {
+                                                                    Text(text = stringResource(R.string.hint_overview))
+                                                                },
+                                                                value = uiState.comment,
+                                                                onValueChange = uploadWorkbookViewModel::onCommentChanged
+                                                            )
+                                                        }
+                                                    }
+                                                    Button(
+                                                        enabled = !uiState.isUploading,
+                                                        onClick = uploadWorkbookViewModel::uploadWorkbook,
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .height(48.dp)
+                                                    ) {
+                                                        if (uiState.isUploading) {
+                                                            CircularProgressIndicator(
+                                                                modifier = Modifier.size(32.dp),
+                                                                color = MaterialTheme.colors.onPrimary
+                                                            )
+                                                        } else {
+                                                            Text(text = stringResource(id = R.string.button_upload_workbook))
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else -> {
+                                                // todo
+                                            }
+                                        }
+                                    }
+                                }
+                                AdView(
+                                    viewModel = adViewModel,
+                                    adSize = AdSize.MEDIUM_RECTANGLE
+                                )
+                            }
+                        }
+                    )
+                }
             }
+        }
+    }
 
-            toolbar.setupWithNavController(
-                findNavController(),
-                AppBarConfiguration(findNavController().graph)
-            )
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        adViewModel.setup()
+        uploadWorkbookViewModel.setup(args.groupId, true)
 
-            if (sharedPreferenceManager.isRemovedAd) {
-                adView.visibility = View.GONE
-            } else {
-                adView.loadAd(AdRequest.Builder().build())
-            }
-
-        }.root
+        lifecycleScope.launchWhenCreated {
+            uploadWorkbookViewModel.uploadWorkbookEvent
+                .receiveAsFlow()
+                .onEach {
+                    requireContext().showToast(
+                        requireContext().getString(
+                            R.string.msg_test_upload
+                        )
+                    )
+                    findNavController().popBackStack()
+                }
+                .launchIn(this)
+        }
     }
 }

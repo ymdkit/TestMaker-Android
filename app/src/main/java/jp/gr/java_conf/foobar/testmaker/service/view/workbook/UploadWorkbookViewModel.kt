@@ -43,7 +43,15 @@ class UploadWorkbookViewModel @Inject constructor(
     val uploadWorkbookEvent: ReceiveChannel<Unit>
         get() = _uploadWorkbookEvent
 
-    fun setup() {
+    private lateinit var groupId: String
+
+    fun setup(groupId: String, isPrivateUpload: Boolean) {
+        this.groupId = groupId
+
+        _uiState.value = _uiState.value.copy(
+            isPrivateUpload = isPrivateUpload
+        )
+
         workbookListWatchUseCase.setup(viewModelScope)
         userWatchUseCase.setup(viewModelScope)
 
@@ -106,7 +114,7 @@ class UploadWorkbookViewModel @Inject constructor(
             isUploading = true
         )
         sharedWorkbookCommandUseCase.uploadWorkbook(
-            groupId = "",
+            groupId = groupId,
             isPublic = !_uiState.value.isPrivateUpload,
             comment = _uiState.value.comment,
             workbook = workbook,

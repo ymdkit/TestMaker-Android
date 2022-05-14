@@ -66,7 +66,8 @@ class MainActivity : AppCompatActivity() {
 
             when (destination.id) {
                 R.id.page_settings,
-                R.id.page_upload_workbook -> {
+                R.id.page_upload_workbook,
+                R.id.fragment_upload_group_test -> {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
                 }
                 else -> {

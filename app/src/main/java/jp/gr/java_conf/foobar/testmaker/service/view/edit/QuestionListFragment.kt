@@ -16,6 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
@@ -330,84 +331,99 @@ class QuestionListFragment : Fragment() {
                                 content = {
                                     when (val state = uiState.questionList) {
                                         is Resource.Success -> {
-                                            // todo 0件表示
-
-                                            var overscrollJob by remember {
-                                                mutableStateOf<Job?>(
-                                                    null
-                                                )
-                                            }
-                                            val dragDropListState =
-                                                rememberDragDropListState(onMove = { from, to ->
-                                                    // note この部分で state にアクセスしても、初期状態のままなので2回目以降の入れ替わりが正しく動作しない
-                                                    questionListViewModel.swapQuestions(from, to)
-                                                })
-                                            LazyColumn(
-                                                state = dragDropListState.lazyListState,
-                                                modifier = Modifier
-                                                    .fillMaxHeight()
-                                                    .pointerInput(Unit) {
-                                                        detectDragGesturesAfterLongPress(
-                                                            onDrag = { change, offset ->
-                                                                change.consumeAllChanges()
-                                                                dragDropListState.onDrag(offset)
-
-                                                                if (overscrollJob?.isActive == true)
-                                                                    return@detectDragGesturesAfterLongPress
-
-                                                                dragDropListState
-                                                                    .checkForOverScroll()
-                                                                    .takeIf { it != 0f }
-                                                                    ?.let {
-                                                                        overscrollJob =
-                                                                            scope.launch {
-                                                                                dragDropListState.lazyListState.scrollBy(
-                                                                                    it
-                                                                                )
-                                                                            }
-                                                                    }
-                                                                    ?: run { overscrollJob?.cancel() }
-                                                            },
-                                                            onDragStart = { offset ->
-                                                                dragDropListState.onDragStart(
-                                                                    offset
-                                                                )
-                                                            },
-                                                            onDragEnd = { dragDropListState.onDragInterrupted() },
-                                                            onDragCancel = { dragDropListState.onDragInterrupted() }
+                                            if (state.value.isNotEmpty()) {
+                                                var overscrollJob by remember {
+                                                    mutableStateOf<Job?>(
+                                                        null
+                                                    )
+                                                }
+                                                val dragDropListState =
+                                                    rememberDragDropListState(onMove = { from, to ->
+                                                        // note この部分で state にアクセスしても、初期状態のままなので2回目以降の入れ替わりが正しく動作しない
+                                                        questionListViewModel.swapQuestions(
+                                                            from,
+                                                            to
                                                         )
-                                                    }
-                                            ) {
-                                                itemsIndexed(state.value) { index, it ->
-                                                    QuestionListItem(
-                                                        modifier = Modifier.composed {
-                                                            val offsetOrNull =
-                                                                dragDropListState.elementDisplacement.takeIf {
-                                                                    index == dragDropListState.currentIndexOfDraggedItem
-                                                                }
-                                                            Modifier
-                                                                .graphicsLayer {
-                                                                    translationY =
-                                                                        offsetOrNull ?: 0f
-                                                                }
-                                                        },
-                                                        index = index + 1,
-                                                        isSelected = it.second,
-                                                        question = it.first,
-                                                        onClick = {
-                                                            if (uiState.isSelectMode) {
-                                                                questionListViewModel.onQuestionSelected(
-                                                                    it
-                                                                )
-                                                            } else {
-                                                                scope.launch {
-                                                                    questionListViewModel.onQuestionClicked(
+                                                    })
+                                                LazyColumn(
+                                                    state = dragDropListState.lazyListState,
+                                                    modifier = Modifier
+                                                        .fillMaxHeight()
+                                                        .pointerInput(Unit) {
+                                                            detectDragGesturesAfterLongPress(
+                                                                onDrag = { change, offset ->
+                                                                    change.consumeAllChanges()
+                                                                    dragDropListState.onDrag(offset)
+
+                                                                    if (overscrollJob?.isActive == true)
+                                                                        return@detectDragGesturesAfterLongPress
+
+                                                                    dragDropListState
+                                                                        .checkForOverScroll()
+                                                                        .takeIf { it != 0f }
+                                                                        ?.let {
+                                                                            overscrollJob =
+                                                                                scope.launch {
+                                                                                    dragDropListState.lazyListState.scrollBy(
+                                                                                        it
+                                                                                    )
+                                                                                }
+                                                                        }
+                                                                        ?: run { overscrollJob?.cancel() }
+                                                                },
+                                                                onDragStart = { offset ->
+                                                                    dragDropListState.onDragStart(
+                                                                        offset
+                                                                    )
+                                                                },
+                                                                onDragEnd = { dragDropListState.onDragInterrupted() },
+                                                                onDragCancel = { dragDropListState.onDragInterrupted() }
+                                                            )
+                                                        }
+                                                ) {
+                                                    itemsIndexed(state.value) { index, it ->
+                                                        QuestionListItem(
+                                                            modifier = Modifier.composed {
+                                                                val offsetOrNull =
+                                                                    dragDropListState.elementDisplacement.takeIf {
+                                                                        index == dragDropListState.currentIndexOfDraggedItem
+                                                                    }
+                                                                Modifier
+                                                                    .graphicsLayer {
+                                                                        translationY =
+                                                                            offsetOrNull ?: 0f
+                                                                    }
+                                                            },
+                                                            index = index + 1,
+                                                            isSelected = it.second,
+                                                            question = it.first,
+                                                            onClick = {
+                                                                if (uiState.isSelectMode) {
+                                                                    questionListViewModel.onQuestionSelected(
                                                                         it
                                                                     )
-                                                                    drawerState.open()
+                                                                } else {
+                                                                    scope.launch {
+                                                                        questionListViewModel.onQuestionClicked(
+                                                                            it
+                                                                        )
+                                                                        drawerState.open()
+                                                                    }
                                                                 }
                                                             }
-                                                        }
+                                                        )
+                                                    }
+                                                }
+                                            } else {
+                                                Column(
+                                                    modifier = Modifier.fillMaxSize(),
+                                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                                    verticalArrangement = Arrangement.Center
+                                                ) {
+                                                    Text(
+                                                        text = stringResource(
+                                                            id = R.string.empty_question
+                                                        )
                                                     )
                                                 }
                                             }

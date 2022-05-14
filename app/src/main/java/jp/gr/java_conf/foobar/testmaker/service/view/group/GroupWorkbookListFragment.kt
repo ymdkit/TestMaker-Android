@@ -321,7 +321,11 @@ class GroupWorkbookListFragment : Fragment() {
                                     },
                                     floatingActionButton = {
                                         FloatingActionButton(onClick = {
-                                            // todo
+                                            findNavController().navigate(
+                                                GroupWorkbookListFragmentDirections.actionGroupDetailToUploadTest(
+                                                    groupId = args.group.id
+                                                )
+                                            )
                                         }) {
                                             Icon(
                                                 Icons.Filled.CloudUpload,
