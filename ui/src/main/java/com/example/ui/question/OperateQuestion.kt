@@ -6,7 +6,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DriveFileMove
 import androidx.compose.material.icons.filled.FileCopy
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,7 +20,6 @@ import com.example.usecase.model.QuestionUseCaseModel
 fun OperateQuestion(
     question: QuestionUseCaseModel,
     onEdit: () -> Unit,
-    onMove: () -> Unit,
     onCopy: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -38,16 +36,6 @@ fun OperateQuestion(
         },
         text = stringResource(id = R.string.edit),
         onClick = onEdit
-    )
-    ClickableListItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Filled.DriveFileMove,
-                contentDescription = "move workbook"
-            )
-        },
-        text = stringResource(id = R.string.move_question),
-        onClick = onMove
     )
     ClickableListItem(
         icon = {

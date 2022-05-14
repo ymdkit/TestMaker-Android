@@ -33,11 +33,12 @@ class QuestionListViewModel @Inject constructor(
             UiState(
                 workbookList = Resource.Empty,
                 questionList = Resource.Empty,
-                selectedQuestion = null,
                 isSearching = false,
                 query = "",
                 showingMenu = false,
-                isExporting = false
+                isExporting = false,
+                isSelectMode = false,
+                drawerState = QuestionListDrawerState.None
             )
         )
     val uiState: StateFlow<UiState>
@@ -63,7 +64,7 @@ class QuestionListViewModel @Inject constructor(
         workbookWatchUseCase.flow
             .onEach {
                 _uiState.value = _uiState.value.copy(
-                    questionList = it.map { it.questionList }
+                    questionList = it.map { it.questionList.map { it to false } }
                 )
             }.launchIn(viewModelScope)
 
@@ -108,14 +109,37 @@ class QuestionListViewModel @Inject constructor(
     fun onMenuToggleButtonClicked() =
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
-                showingMenu = !_uiState.value.showingMenu
+                showingMenu = !_uiState.value.showingMenu,
             )
         }
+
+    fun onSelectModeChanged(value: Boolean) =
+        viewModelScope.launch {
+            val currentQuestionList = _uiState.value.questionList.getOrNull() ?: return@launch
+            _uiState.value = _uiState.value.copy(
+                isSelectMode = value,
+                questionList = Resource.Success(currentQuestionList.map { it.first to false })
+
+            )
+        }
+
+    fun onQuestionSelected(value: QuestionUseCaseModel) =
+        viewModelScope.launch {
+            // todo 可読性が悪いのでテストを書く + 書き方を変える
+            val currentQuestionList = _uiState.value.questionList.getOrNull() ?: return@launch
+            val newQuestionList =
+                currentQuestionList.map { if (it.first.id == value.id) it.first to !it.second else it.first to it.second }
+
+            _uiState.value = _uiState.value.copy(
+                questionList = Resource.Success(newQuestionList)
+            )
+        }
+
 
     fun onQuestionClicked(value: QuestionUseCaseModel) =
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
-                selectedQuestion = value
+                drawerState = QuestionListDrawerState.OperateQuestion(value)
             )
         }
 
@@ -132,6 +156,16 @@ class QuestionListViewModel @Inject constructor(
             )
         }
 
+    fun deleteSelectedQuestionList() =
+        viewModelScope.launch {
+            val selectedQuestionList =
+                _uiState.value.selectedQuestionList?.map { it.id } ?: return@launch
+            userQuestionCommandUseCase.deleteQuestions(
+                workbookId = workbookId,
+                questionIdList = selectedQuestionList
+            )
+        }
+
     fun swapQuestions(sourceQuestionId: Long, destQuestionId: Long) =
         viewModelScope.launch {
             userQuestionCommandUseCase.swapQuestions(
@@ -140,27 +174,45 @@ class QuestionListViewModel @Inject constructor(
             )
         }
 
+    fun onMoveQuestionListButtonClicked() =
+        viewModelScope.launch {
+            val workbookList = _uiState.value.workbookList.getOrNull() ?: return@launch
+            _uiState.value = _uiState.value.copy(
+                drawerState = QuestionListDrawerState.SelectMoveDestinationWorkbook(workbookList)
+            )
+        }
+
     fun moveQuestionsToOtherWorkbook(
         destWorkbookId: Long,
-        questionList: List<QuestionUseCaseModel>
     ) =
         viewModelScope.launch {
+            val selectedQuestionList =
+                _uiState.value.selectedQuestionList?.map { it.id } ?: return@launch
             userQuestionCommandUseCase.moveQuestionsToOtherWorkbook(
                 sourceWorkbookId = workbookId,
                 destWorkbookId = destWorkbookId,
-                questionIdList = questionList.map { it.id }
+                questionIdList = selectedQuestionList
+            )
+        }
+
+    fun onCopyQuestionListButtonClicked() =
+        viewModelScope.launch {
+            val workbookList = _uiState.value.workbookList.getOrNull() ?: return@launch
+            _uiState.value = _uiState.value.copy(
+                drawerState = QuestionListDrawerState.SelectCopyDestinationWorkbook(workbookList)
             )
         }
 
     fun copyQuestionsToOtherWorkbook(
         destWorkbookId: Long,
-        questionList: List<QuestionUseCaseModel>
     ) =
         viewModelScope.launch {
+            val selectedQuestionList =
+                _uiState.value.selectedQuestionList?.map { it.id } ?: return@launch
             userQuestionCommandUseCase.copyQuestionsToOtherWorkbook(
                 sourceWorkbookId = workbookId,
                 destWorkbookId = destWorkbookId,
-                questionIdList = questionList.map { it.id }
+                questionIdList = selectedQuestionList
             )
         }
 
@@ -189,10 +241,23 @@ class QuestionListViewModel @Inject constructor(
 
 data class UiState(
     val workbookList: Resource<List<WorkbookUseCaseModel>>,
-    val questionList: Resource<List<QuestionUseCaseModel>>,
-    val selectedQuestion: QuestionUseCaseModel?,
+    val questionList: Resource<List<Pair<QuestionUseCaseModel, Boolean>>>,
     val isSearching: Boolean,
     val query: String,
     val showingMenu: Boolean,
     val isExporting: Boolean,
-)
+    val isSelectMode: Boolean,
+    val drawerState: QuestionListDrawerState
+) {
+    val selectedQuestionList = questionList.getOrNull()?.filter { it.second }?.map { it.first }
+}
+
+sealed class QuestionListDrawerState {
+    object None : QuestionListDrawerState()
+    data class OperateQuestion(val question: QuestionUseCaseModel) : QuestionListDrawerState()
+    data class SelectMoveDestinationWorkbook(val workbookList: List<WorkbookUseCaseModel>) :
+        QuestionListDrawerState()
+
+    data class SelectCopyDestinationWorkbook(val workbookList: List<WorkbookUseCaseModel>) :
+        QuestionListDrawerState()
+}

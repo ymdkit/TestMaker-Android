@@ -350,4 +350,6 @@
     <string name="button_finish">finish</string>
     <string name="msg_finish_answer">finish answer?</string>
     <string name="reset">reset</string>
+    <string name="title_select_move_dest_work_book">select workbook</string>
+    <string name="title_select_copy_dest_work_book">select workbook</string>
 </resources>

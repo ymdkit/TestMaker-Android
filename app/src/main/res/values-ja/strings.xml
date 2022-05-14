@@ -342,4 +342,6 @@
     <string name="button_finish">終了する</string>
     <string name="msg_finish_answer">解答を終了しますか？</string>
     <string name="reset">リセットする</string>
+    <string name="title_select_move_dest_work_book">移動先の問題集</string>
+    <string name="title_select_copy_dest_work_book">コピー先の問題集</string>
 </resources>
