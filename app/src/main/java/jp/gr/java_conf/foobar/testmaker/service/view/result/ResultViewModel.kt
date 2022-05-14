@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.AnswerStatus
 import com.example.core.QuestionCondition
+import com.example.infra.remote.entity.FirebaseHistory
 import com.example.ui.workbook.NavigateToAnswerWorkbookArgs
 import com.example.usecase.AnswerSettingWatchUseCase
 import com.example.usecase.UserPreferenceCommandUseCase
@@ -16,7 +17,6 @@ import com.example.usecase.utils.Resource
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.History
 import jp.gr.java_conf.foobar.testmaker.service.infra.repository.HistoryRepository
 import jp.studyplus.android.sdk.PostCallback
 import jp.studyplus.android.sdk.Studyplus
@@ -114,7 +114,7 @@ class ResultViewModel @Inject constructor(
             val state = _uiState.value.getOrNull() ?: return@launch
             if (state.workbook.remoteId.isEmpty()) return@launch
 
-            val history = History(
+            val history = FirebaseHistory(
                 userId = user.uid,
                 userName = user.displayName ?: "",
                 numCorrect = state.correctCount.toInt(),

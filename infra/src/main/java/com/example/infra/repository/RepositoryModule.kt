@@ -41,4 +41,10 @@ abstract class RepositoryModule {
         groupRepositoryImpl: GroupRepositoryImpl
     ): GroupRepository
 
+    @Singleton
+    @Binds
+    abstract fun answerHistoryRepository(
+        answerHistoryRepositoryImpl: AnswerHistoryRepositoryImpl
+    ): AnswerHistoryRepository
+
 }
