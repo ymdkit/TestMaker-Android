@@ -130,7 +130,7 @@
     <string name="preference_post_study_plus">勉強結果の投稿</string>
     <string name="uploading">問題集をアップロード中</string>
     <string name="downloading">問題集をダウンロード中</string>
-    <string name="msg_success_download_test">問題集 %1$s をダウンロードしました</string>
+    <string name="msg_success_download_test">問題集をダウンロードしました</string>
     <string name="msg_share_test">問題集「 %1$s 」が共有されました。下記のリンクから問題集を受け取ってください\n %2$s</string>
     <string name="purchase_canceled">購入がキャンセルされました</string>
     <string name="menu_feedback">お問い合わせ</string>

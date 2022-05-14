@@ -14,11 +14,11 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
-import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -73,13 +73,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenCreated {
+
+            viewModel.downloadWorkbookEvent
+                .receiveAsFlow()
+                .onEach {
+                    showToast(getString(R.string.msg_success_download_test))
+                }
+                .launchIn(this)
+
+
             val pendingDynamicLinkData = withContext(Dispatchers.Default) {
                 FirebaseDynamicLinks.getInstance()
                     .getDynamicLink(intent).await()
             }
 
-            pendingDynamicLinkData ?: return@launch
+            pendingDynamicLinkData ?: return@launchWhenCreated
             val deepLink = pendingDynamicLinkData.link
             handleDynamicLink(deepLink.toString())
         }
@@ -116,30 +125,10 @@ class MainActivity : AppCompatActivity() {
                 navigateGroupPage(groupId = params[1])
 
             } else {
-                actionDownload(params[0])
+                val workbookId = params[0]
+                // todo 読み込み中の UI
+                viewModel.downloadWorkbook(workbookId)
             }
         }
-    }
-
-    private fun actionDownload(documentId: String) = lifecycleScope.launch {
-
-        executeJobWithDialog(
-            title = getString(R.string.downloading),
-            task = {
-                viewModel.downloadTest(documentId)
-            },
-            onSuccess = {
-                viewModel.convert(it)
-                showToast(getString(R.string.msg_success_download_test, it.name))
-                logger.logCreateTestEvent(it.name, CreateTestSource.DYNAMIC_LINKS.title)
-            },
-            onFailure = {
-                showToast(getString(R.string.msg_failure_download_test))
-            }
-        )
-    }
-
-    companion object {
-        const val REQUEST_SIGN_IN = 12346
     }
 }
