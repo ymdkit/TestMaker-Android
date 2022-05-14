@@ -351,4 +351,6 @@
     <string name="color_teal">teal</string>
     <string name="color_indigo">indigo</string>
     <string name="color_brown">brown</string>
+    <string name="move_question">move</string>
+    <string name="msg_delete_question">delete this question?</string>
 </resources>

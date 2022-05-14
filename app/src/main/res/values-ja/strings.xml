@@ -176,7 +176,7 @@
     <string name="label_private">限定公開</string>
     <string name="folder">フォルダ</string>
     <string name="download">ダウンロードする</string>
-    <string name="copy_question">コピーする</string>
+    <string name="copy_question">複製する</string>
     <string name="msg_canceled">キャンセルしました</string>
     <string name="edit_category_name">名前を変更する</string>
     <string name="message_delete_category">「 %1$s 」を削除してもよろしいですか？（フォルダ内の問題集も全て削除されます）</string>
@@ -299,7 +299,7 @@
     <string name="msg_error_create_folder">フォルダ名を入力してください</string>
     <string name="button_create_folder">フォルダを作成する</string>
     <string name="msg_create_success_workbook">問題集を作成しました</string>
-    <string name="fragment_list_question">問題一覧</string>
+    <string name="pgae_list_question">問題一覧</string>
     <string name="fragment_edit_workbook">問題集の編集</string>
     <string name="title_edit_workbook">問題集の編集</string>
     <string name="msg_update_success_workbook">変更内容を保存しました</string>
