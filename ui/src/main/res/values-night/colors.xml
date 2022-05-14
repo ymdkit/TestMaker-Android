@@ -2,8 +2,4 @@
 <resources>
 
     <color name="colorPrimary">@android:color/holo_blue_dark</color>
-    <color name="colorAccent">#ba7827</color>
-    <color name="colorIcon">#99ffffff</color>
-    <color name="colorText">#99ffffff</color>
-
 </resources>
