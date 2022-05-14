@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.ClickableListItem
@@ -246,7 +247,11 @@ class PublishedWorkbookListFragment : Fragment() {
                                     }
                                 },
                                 floatingActionButton = {
-                                    FloatingActionButton(onClick = { /* todo */ }) {
+                                    FloatingActionButton(onClick = {
+                                        findNavController().navigate(
+                                            PublishedWorkbookListFragmentDirections.actionSearchToUploadWorkbook()
+                                        )
+                                    }) {
                                         Icon(
                                             Icons.Filled.CloudUpload,
                                             contentDescription = "upload workbook"
