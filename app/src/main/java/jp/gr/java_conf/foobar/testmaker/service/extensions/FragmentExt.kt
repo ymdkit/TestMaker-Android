@@ -9,9 +9,5 @@ fun Fragment.requireStringArgument(key: String): String =
 fun Fragment.requireIntArgument(key: String): Int =
     requireArguments().getInt(key)
 
-fun Fragment.requireLongArgument(key: String): Long =
-    requireArguments().getLong(key)
-
-
 fun <T : Parcelable> Fragment.requireParcelableArgument(key: String): T =
     requireArguments().getParcelable(key)!!

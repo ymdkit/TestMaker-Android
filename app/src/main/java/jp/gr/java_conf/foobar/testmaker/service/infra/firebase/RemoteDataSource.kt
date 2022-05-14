@@ -6,15 +6,12 @@ import android.graphics.BitmapFactory
 import com.example.infra.remote.entity.FirebaseHistory
 import com.example.infra.remote.entity.FirebaseQuestion
 import com.example.infra.remote.entity.FirebaseTest
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
 import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -75,25 +72,6 @@ class RemoteDataSource @Inject constructor(
         }
         return ""
     }
-
-    private fun testToFirebaseTest(
-        test: Test,
-        user: FirebaseUser,
-        overview: String,
-        isPublic: Boolean,
-        size: Int,
-        groupId: String
-    ) = FirebaseTest(
-        userId = user.uid,
-        userName = user.displayName ?: "Anonymous",
-        overview = overview,
-        size = size,
-        locale = Locale.getDefault().language,
-        public = isPublic,
-        name = test.title,
-        color = test.getColorId(context),
-        groupId = groupId
-    )
 
     companion object {
         const val TESTS = "tests"

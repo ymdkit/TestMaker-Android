@@ -34,11 +34,6 @@ class SharedPreferenceManager @Inject constructor(
         set(f) = defaultPreferences.edit().putBoolean("reverse", f)
             .apply()
 
-    var refine: Boolean
-        get() = defaultPreferences.getBoolean("refine", false)
-        set(f) = defaultPreferences.edit().putBoolean("refine", f)
-            .apply()
-
     var uploadStudyPlus: String
         get() = defaultPreferences.getString(
             "study_plus",
