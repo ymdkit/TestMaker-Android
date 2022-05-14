@@ -18,8 +18,6 @@ class TestMakerApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        instance = this
-
         var info: ApplicationInfo? = null
         try {
             info = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
@@ -46,9 +44,5 @@ class TestMakerApplication : Application() {
                 SharedPreferenceManager(applicationContext).isRemovedAd = true
             }
         }
-    }
-
-    companion object {
-        lateinit var instance: TestMakerApplication private set  // <- これ
     }
 }
