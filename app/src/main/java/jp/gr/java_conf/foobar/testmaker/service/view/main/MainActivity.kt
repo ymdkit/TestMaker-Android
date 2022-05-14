@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.page_create_workbook,
                 R.id.page_upload_workbook,
                 R.id.page_edit_workbook,
+                R.id.page_list_question,
                 R.id.page_create_folder,
                 R.id.page_create_question,
                 R.id.page_edit_question,

@@ -126,7 +126,7 @@
     <fragment
         android:id="@+id/page_list_question"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.edit.QuestionListFragment"
-        android:label="@string/fragment_list_question">
+        android:label="@string/pgae_list_question">
 
         <argument
             android:name="workbookId"

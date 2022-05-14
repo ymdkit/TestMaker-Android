@@ -2,6 +2,7 @@ package com.example.usecase
 
 import com.example.domain.model.WorkbookId
 import com.example.domain.repository.WorkBookRepository
+import com.example.usecase.model.QuestionUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
 import com.example.usecase.utils.Resource
 import kotlinx.coroutines.CoroutineScope
@@ -38,12 +39,17 @@ class WorkbookWatchUseCase @Inject constructor(
         }
     }
 
-    suspend fun load() {
+    suspend fun load(
+        questionFilter: (QuestionUseCaseModel) -> Boolean = { true }
+    ) {
         _flow.emit(Resource.Loading)
-        val workbook = repository.getWorkbook(WorkbookId(workbookId))
+        val workbook =
+            WorkbookUseCaseModel.fromWorkbook(repository.getWorkbook(WorkbookId(workbookId)))
         _flow.emit(
             Resource.Success(
-                WorkbookUseCaseModel.fromWorkbook(workbook)
+                workbook.copy(
+                    questionList = workbook.questionList.filter(questionFilter)
+                )
             )
         )
     }

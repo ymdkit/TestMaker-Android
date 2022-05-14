@@ -3,34 +3,47 @@ package jp.gr.java_conf.foobar.testmaker.service.view.edit
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.widget.SearchView
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.forEach
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.airbnb.epoxy.EpoxyTouchHelper
-import com.example.ui.core.AdViewModel
-import com.example.ui.core.DialogMenuItem
-import com.example.ui.core.ListDialogFragment
-import com.example.ui.core.showToast
+import com.example.ui.core.*
+import com.example.ui.question.OperateQuestion
+import com.example.ui.question.QuestionListItem
 import com.example.ui.question.QuestionListViewModel
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.usecase.model.QuestionUseCaseModel
-import com.google.android.gms.ads.AdRequest
+import com.example.usecase.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.QuestionBindingModel_
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.FragmentQuestionListBinding
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
+import jp.gr.java_conf.foobar.testmaker.service.view.online.SearchTextField
 import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -64,17 +77,9 @@ class QuestionListFragment : Fragment() {
                             question.problem,
                             listOf(
                                 DialogMenuItem(
-                                    title = getString(R.string.edit),
-                                    iconRes = R.drawable.ic_edit_white,
-                                    action = { editQuestion(question) }),
-                                DialogMenuItem(
                                     title = getString(R.string.copy_question),
                                     iconRes = R.drawable.ic_baseline_file_copy_24,
                                     action = { copyQuestion(question) }),
-                                DialogMenuItem(
-                                    title = getString(R.string.delete),
-                                    iconRes = R.drawable.ic_delete_white,
-                                    action = { deleteQuestion(question) })
                             )
                         ).show(childFragmentManager, "TAG")
 
@@ -217,36 +222,150 @@ class QuestionListFragment : Fragment() {
 
     private var actionMode: ActionMode? = null
 
+    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        return DataBindingUtil.inflate<FragmentQuestionListBinding>(
-            inflater,
-            R.layout.fragment_question_list,
-            container,
-            false
-        ).apply {
-            binding = this
+        return ComposeView(requireContext()).apply {
+            setContent {
+                TestMakerAndroidTheme {
 
-            recyclerView.adapter = controller.adapter
+                    val uiState by questionListViewModel.uiState.collectAsState()
+                    val drawerState =
+                        rememberBottomDrawerState(BottomDrawerValue.Closed)
+                    val scope = rememberCoroutineScope()
 
-            fab.setOnClickListener {
-                findNavController().navigate(
-                    QuestionListFragmentDirections
-                        .actionQuestionListToCreateQuestion(args.workbookId)
-                )
+                    BottomDrawer(
+                        drawerState = drawerState,
+                        gesturesEnabled = !drawerState.isClosed,
+                        drawerContent = {
+                            val question = uiState.selectedQuestion
+                            if (question != null) {
+                                OperateQuestion(
+                                    question = question,
+                                    onEdit = {
+                                        findNavController().navigate(
+                                            QuestionListFragmentDirections.actionQuestionListToEditQuestion(
+                                                workbookId = args.workbookId,
+                                                questionId = question.id
+                                            )
+                                        )
+                                    },
+                                    onMove = { /*TODO*/ },
+                                    onCopy = {
+                                        scope.launch {
+                                            drawerState.close()
+                                            copyQuestion(question)
+                                        }
+                                    },
+                                    onDelete = {
+                                        scope.launch {
+                                            drawerState.close()
+                                            questionListViewModel.deleteQuestions(listOf(question))
+                                        }
+                                    },
+                                )
+                            } else {
+                                Spacer(modifier = Modifier.height(1.dp))
+                            }
+                        }) {
+                        Column {
+                            Scaffold(
+                                modifier = Modifier.weight(1f),
+                                topBar = {
+                                    TopAppBar(
+                                        navigationIcon = {
+                                            Icon(
+                                                imageVector = Icons.Filled.ArrowBack,
+                                                contentDescription = "Back",
+                                                modifier = Modifier
+                                                    .padding(16.dp)
+                                                    .clickable {
+                                                        findNavController().popBackStack()
+                                                    }
+                                            )
+                                        },
+                                        title = {
+                                            if (uiState.isSearching) {
+                                                SearchTextField(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    value = uiState.query,
+                                                    onValueChange = questionListViewModel::onQueryChanged,
+                                                    onSearch = questionListViewModel::load
+                                                )
+                                            } else {
+                                                Text(
+                                                    text = stringResource(id = R.string.pgae_list_question),
+                                                )
+                                            }
+                                        },
+                                        backgroundColor = Color.Transparent,
+                                        elevation = 0.dp,
+                                        actions = {
+                                            IconButton(
+                                                onClick = {
+                                                    questionListViewModel.onSearchButtonClicked(!uiState.isSearching)
+                                                }
+                                            ) {
+                                                Icon(
+                                                    imageVector = if (uiState.isSearching) Icons.Filled.Close else Icons.Filled.Search,
+                                                    contentDescription = "search"
+                                                )
+                                            }
+                                        }
+                                    )
+                                },
+                                content = {
+                                    when (val state = uiState.questionList) {
+                                        is Resource.Success -> {
+                                            // todo 0件表示
+                                            LazyColumn(
+                                                modifier = Modifier.fillMaxHeight()
+                                            ) {
+                                                itemsIndexed(state.value) { index, it ->
+                                                    QuestionListItem(
+                                                        index = index + 1,
+                                                        question = it,
+                                                        onClick = {
+                                                            scope.launch {
+                                                                questionListViewModel.onQuestionClicked(
+                                                                    it
+                                                                )
+                                                                drawerState.open()
+                                                            }
+                                                        }
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        else -> {
+                                            // do nothing
+                                        }
+                                    }
+
+                                },
+                                floatingActionButton = {
+                                    FloatingActionButton(onClick = {
+                                        findNavController().navigate(
+                                            QuestionListFragmentDirections
+                                                .actionQuestionListToCreateQuestion(args.workbookId)
+                                        )
+                                    }) {
+                                        Icon(
+                                            Icons.Filled.Add,
+                                            contentDescription = "create question"
+                                        )
+                                    }
+                                }
+                            )
+                            AdView(viewModel = adViewModel)
+                        }
+                    }
+                }
             }
-
-            toolbar.setupWithNavController(
-                findNavController(),
-                AppBarConfiguration(findNavController().graph)
-            )
-
-            initViews()
-
-        }.root
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -255,81 +374,50 @@ class QuestionListFragment : Fragment() {
         questionListViewModel.setup(workbookId = args.workbookId)
         questionListViewModel.load()
 
-        lifecycleScope.launchWhenCreated {
-            questionListViewModel.uiState.onEach {
-                val workbook = it.workbook.getOrNull() ?: return@onEach
-                controller.questions = workbook.questionList
+//        lifecycleScope.launchWhenCreated {
+//            questionListViewModel.uiState.onEach {
+//
+//                val exportedWorkbook = it.exportedWorkbook.getOrNull() ?: return@onEach
+//                shareExportedWorkbook(exportedWorkbook = exportedWorkbook)
+//
+//            }.launchIn(this)
+//        }
 
-                val exportedWorkbook = it.exportedWorkbook.getOrNull() ?: return@onEach
-                shareExportedWorkbook(exportedWorkbook = exportedWorkbook)
-
-            }.launchIn(this)
-
-            adViewModel.isRemovedAd.onEach {
-                if (it) {
-                    binding.adView.visibility = View.GONE
-                } else {
-                    binding.adView.loadAd(AdRequest.Builder().build())
-                }
-            }.launchIn(this)
-        }
-
-        binding.toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.action_setting -> {
-                    findNavController().navigate(
-                        QuestionListFragmentDirections.actionQuestionListToEditWorkbook(
-                            workbookId = args.workbookId
-                        )
-                    )
-                    true
-                }
-                R.id.action_export -> {
-                    questionListViewModel.exportWorkbook()
-                    true
-                }
-                android.R.id.home -> {
-                    findNavController().popBackStack()
-                    true
-                }
-                R.id.action_reset_achievement -> {
-                    questionListViewModel
-                        .resetWorkbookAchievement()
-
-                    requireContext().showToast(getString(R.string.msg_reset_achievement))
-                    true
-                }
-                R.id.action_select -> {
-                    if (actionMode == null) {
-                        actionMode = requireActivity().startActionMode(actionModeCallback)
-                    } else {
-                        controller.selectedQuestions = emptyList()
-                    }
-                    true
-                }
-                else -> {
-                    super.onOptionsItemSelected(it)
-                }
-            }
-        }
-
-        val searchView = binding.toolbar.menu.findItem(R.id.menu_search).actionView as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(s: String): Boolean {
-                controller.searchWord = s
-                return false
-            }
-
-            override fun onQueryTextChange(s: String): Boolean {
-                controller.searchWord = s
-                return false
-            }
-        })
-
-        searchView.setOnCloseListener {
-            controller.searchWord = ""
-            false
-        }
+//        binding.toolbar.setOnMenuItemClickListener {
+//            when (it.itemId) {
+//                R.id.action_setting -> {
+//                    findNavController().navigate(
+//                        QuestionListFragmentDirections.actionQuestionListToEditWorkbook(
+//                            workbookId = args.workbookId
+//                        )
+//                    )
+//                    true
+//                }
+//                R.id.action_export -> {
+//                    questionListViewModel.exportWorkbook()
+//                    true
+//                }
+//                R.id.action_reset_achievement -> {
+//                    questionListViewModel
+//                        .resetWorkbookAchievement()
+//
+//                    requireContext().showToast(getString(R.string.msg_reset_achievement))
+//                    true
+//                }
+//                R.id.action_select -> {
+//                    if (actionMode == null) {
+//                        actionMode = requireActivity().startActionMode(actionModeCallback)
+//                    } else {
+//                        controller.selectedQuestions = emptyList()
+//                    }
+//                    true
+//                }
+//                else -> {
+//                    super.onOptionsItemSelected(it)
+//                }
+//            }
+//        }
+//
     }
 
     override fun onPause() {
@@ -369,29 +457,12 @@ class QuestionListFragment : Fragment() {
         startActivity(Intent.createChooser(sendIntent, null))
     }
 
-    fun editQuestion(question: QuestionUseCaseModel) {
-        findNavController().navigate(
-            QuestionListFragmentDirections.actionQuestionListToEditQuestion(
-                workbookId = args.workbookId,
-                questionId = question.id
-            )
-        )
-    }
 
-    fun copyQuestion(question: QuestionUseCaseModel) {
+    private fun copyQuestion(question: QuestionUseCaseModel) {
         questionListViewModel.copyQuestionInSameWorkbook(
             question = question
         )
         requireContext().showToast(getString(R.string.msg_succes_copy_questions_in_same_workbook))
-    }
-
-    fun deleteQuestion(question: QuestionUseCaseModel) {
-        ConfirmDangerDialogFragment.newInstance(
-            getString(R.string.message_delete, question.problem),
-            getString(R.string.button_delete_confirm)
-        ) {
-            questionListViewModel.deleteQuestions(listOf(question))
-        }.show(childFragmentManager, "TAG")
     }
 }
 

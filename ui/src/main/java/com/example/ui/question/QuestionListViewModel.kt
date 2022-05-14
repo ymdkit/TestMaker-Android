@@ -30,8 +30,11 @@ class QuestionListViewModel @Inject constructor(
         MutableStateFlow(
             UiState(
                 workbookList = Resource.Empty,
-                workbook = Resource.Empty,
-                exportedWorkbook = Resource.Empty
+                questionList = Resource.Empty,
+                selectedQuestion = null,
+                exportedWorkbook = Resource.Empty,
+                isSearching = false,
+                query = ""
             )
         )
     val uiState: StateFlow<UiState>
@@ -53,7 +56,7 @@ class QuestionListViewModel @Inject constructor(
         workbookWatchUseCase.flow
             .onEach {
                 _uiState.value = _uiState.value.copy(
-                    workbook = it
+                    questionList = it.map { it.questionList }
                 )
             }.launchIn(viewModelScope)
 
@@ -67,8 +70,39 @@ class QuestionListViewModel @Inject constructor(
 
     fun load() =
         viewModelScope.launch {
-            workbookWatchUseCase.load()
+            val query = _uiState.value.query
+            workbookWatchUseCase.load(
+                questionFilter = {
+                    it.problem.contains(query) ||
+                            it.answers.any { it.contains(query) } ||
+                            it.otherSelections.any { it.contains(query) } ||
+                            it.explanation.contains(query)
+                }
+            )
             workbookListWatchUseCase.load()
+        }
+
+    fun onSearchButtonClicked(value: Boolean) =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isSearching = value,
+                query = ""
+            )
+            load()
+        }
+
+    fun onQueryChanged(value: String) =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                query = value
+            )
+        }
+
+    fun onQuestionClicked(value: QuestionUseCaseModel) =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                selectedQuestion = value
+            )
         }
 
     fun resetWorkbookAchievement() =
@@ -139,6 +173,9 @@ class QuestionListViewModel @Inject constructor(
 
 data class UiState(
     val workbookList: Resource<List<WorkbookUseCaseModel>>,
-    val workbook: Resource<WorkbookUseCaseModel>,
+    val questionList: Resource<List<QuestionUseCaseModel>>,
+    val selectedQuestion: QuestionUseCaseModel?,
     val exportedWorkbook: Resource<String>,
+    val isSearching: Boolean,
+    val query: String,
 )
