@@ -12,7 +12,6 @@ object Dep {
     const val composeVersion = "1.1.1"
     const val coroutineVersion = "1.6.1"
     const val lifeCycleVersion = "2.4.1"
-    const val epoxyVersion = "5.0.0-beta03"
     const val glideVersion = "4.13.0"
 
     object AndroidX {
