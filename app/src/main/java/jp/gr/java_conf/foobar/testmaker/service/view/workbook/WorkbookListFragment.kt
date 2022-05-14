@@ -25,7 +25,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.core.utils.Resource
-import com.example.ui.R
 import com.example.ui.answer.AnswerSetting
 import com.example.ui.answer.AnswerSettingViewModel
 import com.example.ui.core.AdView
@@ -37,6 +36,7 @@ import com.example.ui.workbook.*
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
+import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -65,7 +65,6 @@ class WorkbookListFragment : Fragment() {
 
                 val scope = rememberCoroutineScope()
                 TestMakerAndroidTheme {
-                    // todo 背景色の改善
                     BottomDrawer(
                         drawerState = drawerState,
                         gesturesEnabled = !drawerState.isClosed,
@@ -435,10 +434,7 @@ class WorkbookListFragment : Fragment() {
                 .receiveAsFlow()
                 .onEach {
                     requireContext().showToast(
-                        getString(
-                            jp.gr.java_conf.foobar.testmaker.service.R.string.msg_success_download_test,
-                            it
-                        )
+                        getString(R.string.msg_success_download_test)
                     )
                     val hostActivity = requireActivity() as? MainActivity
                     hostActivity?.navigateHomePage()
