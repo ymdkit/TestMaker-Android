@@ -73,9 +73,3 @@ fun ColorPicker(
         }
     }
 }
-
-data class ColorPickerItem(
-    val id: Int,
-    val colorId: Int,
-    val name: String
-)
