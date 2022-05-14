@@ -32,6 +32,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.core.utils.Resource
 import com.example.ui.core.*
 import com.example.ui.question.OperateQuestion
 import com.example.ui.question.QuestionListDrawerState
@@ -39,7 +40,6 @@ import com.example.ui.question.QuestionListItem
 import com.example.ui.question.QuestionListViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.usecase.model.QuestionUseCaseModel
-import com.example.usecase.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.online.SearchTextField

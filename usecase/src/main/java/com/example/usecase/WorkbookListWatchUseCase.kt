@@ -1,8 +1,8 @@
 package com.example.usecase
 
+import com.example.core.utils.Resource
 import com.example.domain.repository.WorkBookRepository
 import com.example.usecase.model.WorkbookUseCaseModel
-import com.example.usecase.utils.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

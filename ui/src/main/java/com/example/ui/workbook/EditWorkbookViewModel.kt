@@ -3,12 +3,12 @@ package com.example.ui.workbook
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.TestMakerColor
+import com.example.core.utils.Resource
 import com.example.usecase.FolderListWatchUseCase
 import com.example.usecase.UserWorkbookCommandUseCase
 import com.example.usecase.WorkbookWatchUseCase
 import com.example.usecase.model.FolderUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
-import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

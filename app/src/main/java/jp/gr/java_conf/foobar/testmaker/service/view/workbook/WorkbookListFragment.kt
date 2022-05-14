@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.core.utils.Resource
 import com.example.ui.R
 import com.example.ui.answer.AnswerSetting
 import com.example.ui.answer.AnswerSettingViewModel
@@ -33,7 +34,6 @@ import com.example.ui.core.TestMakerTopAppBar
 import com.example.ui.core.showToast
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.*
-import com.example.usecase.utils.Resource
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint

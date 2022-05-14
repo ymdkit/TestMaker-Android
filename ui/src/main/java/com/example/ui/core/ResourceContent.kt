@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.usecase.utils.Resource
+import com.example.core.utils.Resource
 
 @Composable
 fun <T> ResourceContent(

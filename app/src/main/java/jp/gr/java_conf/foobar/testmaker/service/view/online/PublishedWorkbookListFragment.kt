@@ -33,13 +33,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.core.utils.Resource
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.ClickableListItem
 import com.example.ui.core.showToast
 import com.example.ui.sharedworkbook.SharedWorkbookListViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
-import com.example.usecase.utils.Resource
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dagger.hilt.android.AndroidEntryPoint

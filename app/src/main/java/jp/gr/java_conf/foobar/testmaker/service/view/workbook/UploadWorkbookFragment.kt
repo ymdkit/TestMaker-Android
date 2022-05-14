@@ -22,9 +22,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.core.utils.Resource
 import com.example.ui.core.*
 import com.example.ui.theme.TestMakerAndroidTheme
-import com.example.usecase.utils.Resource
+import com.example.ui.workbook.UploadWorkbookViewModel
 import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R

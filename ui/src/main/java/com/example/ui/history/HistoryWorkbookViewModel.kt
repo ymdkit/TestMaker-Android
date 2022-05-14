@@ -1,10 +1,10 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.group
+package com.example.ui.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.utils.Resource
 import com.example.usecase.AnswerHistoryListWatchUseCase
 import com.example.usecase.model.AnswerHistoryUseCaseModel
-import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn

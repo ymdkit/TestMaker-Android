@@ -2,13 +2,13 @@ package com.example.ui.question
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.utils.Resource
 import com.example.usecase.UserQuestionCommandUseCase
 import com.example.usecase.UserWorkbookCommandUseCase
 import com.example.usecase.WorkbookListWatchUseCase
 import com.example.usecase.WorkbookWatchUseCase
 import com.example.usecase.model.QuestionUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
-import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel

@@ -1,9 +1,9 @@
 package com.example.usecase
 
+import com.example.core.utils.Resource
 import com.example.domain.model.DocumentId
 import com.example.domain.repository.AnswerHistoryRepository
 import com.example.usecase.model.AnswerHistoryUseCaseModel
-import com.example.usecase.utils.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

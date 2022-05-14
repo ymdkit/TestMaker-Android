@@ -1,4 +1,4 @@
-package com.example.usecase.utils
+package com.example.core.utils
 
 sealed class Resource<out T> {
     object Empty : Resource<Nothing>()

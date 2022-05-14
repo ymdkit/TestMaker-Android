@@ -18,11 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.example.core.utils.Resource
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.TestMakerTopAppBar
+import com.example.ui.history.HistoryWorkbookViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
-import com.example.usecase.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 

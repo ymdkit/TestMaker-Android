@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.result
+package com.example.ui.answer
 
 import android.content.Context
 import android.widget.Toast
@@ -6,15 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.AnswerStatus
 import com.example.core.QuestionCondition
+import com.example.core.utils.Resource
+import com.example.ui.R
 import com.example.ui.workbook.NavigateToAnswerWorkbookArgs
 import com.example.usecase.AnswerSettingWatchUseCase
 import com.example.usecase.UserPreferenceCommandUseCase
 import com.example.usecase.WorkbookWatchUseCase
 import com.example.usecase.model.AnswerSettingUseCaseModel
 import com.example.usecase.model.WorkbookUseCaseModel
-import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.studyplus.android.sdk.PostCallback
 import jp.studyplus.android.sdk.Studyplus
 import jp.studyplus.android.sdk.StudyplusError

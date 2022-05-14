@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.main
+package com.example.ui.home
 
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel

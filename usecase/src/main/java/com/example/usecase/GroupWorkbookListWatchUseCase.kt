@@ -1,10 +1,10 @@
 package com.example.usecase
 
+import com.example.core.utils.Resource
 import com.example.domain.model.GroupId
 import com.example.domain.repository.SharedWorkbookRepository
 import com.example.domain.repository.UserRepository
 import com.example.usecase.model.SharedWorkbookUseCaseModel
-import com.example.usecase.utils.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

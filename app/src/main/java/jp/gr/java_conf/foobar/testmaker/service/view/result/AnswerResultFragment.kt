@@ -32,12 +32,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.core.QuestionCondition
+import com.example.core.utils.Resource
+import com.example.ui.answer.ResultViewModel
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.ClickableListItem
 import com.example.ui.core.TestMakerTopAppBar
 import com.example.ui.theme.TestMakerAndroidTheme
-import com.example.usecase.utils.Resource
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -46,7 +47,6 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow

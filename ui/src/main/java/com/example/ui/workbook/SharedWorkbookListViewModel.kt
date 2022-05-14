@@ -4,10 +4,10 @@ import android.net.Uri
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.utils.Resource
 import com.example.usecase.SharedOwnWorkbookListWatchUseCase
 import com.example.usecase.SharedWorkbookCommandUseCase
 import com.example.usecase.model.SharedWorkbookUseCaseModel
-import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
