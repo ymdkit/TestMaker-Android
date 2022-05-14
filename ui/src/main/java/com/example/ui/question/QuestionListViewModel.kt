@@ -166,11 +166,27 @@ class QuestionListViewModel @Inject constructor(
             )
         }
 
-    fun swapQuestions(sourceQuestionId: Long, destQuestionId: Long) =
+    fun swapQuestions(from: Int, to: Int) =
         viewModelScope.launch {
+            val currentQuestionList =
+                _uiState.value.questionList.getOrNull()?.map { it.first } ?: return@launch
+            val sourceQuestion =
+                currentQuestionList[from]
+            val destQuestion =
+                currentQuestionList[to]
+
+            val newQuestionList = currentQuestionList.map {
+                if (it.id == sourceQuestion.id) destQuestion else if (it.id == destQuestion.id) sourceQuestion else it
+            }
+            _uiState.value = _uiState.value.copy(
+                questionList = Resource.Success(newQuestionList.map {
+                    it to false
+                })
+            )
+
             userQuestionCommandUseCase.swapQuestions(
-                sourceQuestionId = sourceQuestionId,
-                destQuestionId = destQuestionId
+                sourceQuestionId = sourceQuestion.id,
+                destQuestionId = destQuestion.id
             )
         }
 

@@ -19,13 +19,14 @@ import com.example.usecase.model.QuestionUseCaseModel
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun QuestionListItem(
+    modifier: Modifier = Modifier,
     index: Int,
     isSelected: Boolean,
     question: QuestionUseCaseModel,
     onClick: (QuestionUseCaseModel) -> Unit
 ) {
     ListItem(
-        modifier = Modifier.clickable {
+        modifier = modifier.clickable {
             onClick(question)
         },
         icon = {

@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,11 +15,13 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.online.SearchTextField
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -326,11 +331,66 @@ class QuestionListFragment : Fragment() {
                                     when (val state = uiState.questionList) {
                                         is Resource.Success -> {
                                             // todo 0件表示
+
+                                            var overscrollJob by remember {
+                                                mutableStateOf<Job?>(
+                                                    null
+                                                )
+                                            }
+                                            val dragDropListState =
+                                                rememberDragDropListState(onMove = { from, to ->
+                                                    // note この部分で state にアクセスしても、初期状態のままなので2回目以降の入れ替わりが正しく動作しない
+                                                    questionListViewModel.swapQuestions(from, to)
+                                                })
                                             LazyColumn(
-                                                modifier = Modifier.fillMaxHeight()
+                                                state = dragDropListState.lazyListState,
+                                                modifier = Modifier
+                                                    .fillMaxHeight()
+                                                    .pointerInput(Unit) {
+                                                        detectDragGesturesAfterLongPress(
+                                                            onDrag = { change, offset ->
+                                                                change.consumeAllChanges()
+                                                                dragDropListState.onDrag(offset)
+
+                                                                if (overscrollJob?.isActive == true)
+                                                                    return@detectDragGesturesAfterLongPress
+
+                                                                dragDropListState
+                                                                    .checkForOverScroll()
+                                                                    .takeIf { it != 0f }
+                                                                    ?.let {
+                                                                        overscrollJob =
+                                                                            scope.launch {
+                                                                                dragDropListState.lazyListState.scrollBy(
+                                                                                    it
+                                                                                )
+                                                                            }
+                                                                    }
+                                                                    ?: run { overscrollJob?.cancel() }
+                                                            },
+                                                            onDragStart = { offset ->
+                                                                dragDropListState.onDragStart(
+                                                                    offset
+                                                                )
+                                                            },
+                                                            onDragEnd = { dragDropListState.onDragInterrupted() },
+                                                            onDragCancel = { dragDropListState.onDragInterrupted() }
+                                                        )
+                                                    }
                                             ) {
                                                 itemsIndexed(state.value) { index, it ->
                                                     QuestionListItem(
+                                                        modifier = Modifier.composed {
+                                                            val offsetOrNull =
+                                                                dragDropListState.elementDisplacement.takeIf {
+                                                                    index == dragDropListState.currentIndexOfDraggedItem
+                                                                }
+                                                            Modifier
+                                                                .graphicsLayer {
+                                                                    translationY =
+                                                                        offsetOrNull ?: 0f
+                                                                }
+                                                        },
                                                         index = index + 1,
                                                         isSelected = it.second,
                                                         question = it.first,
@@ -395,29 +455,6 @@ class QuestionListFragment : Fragment() {
                 .launchIn(this)
         }
     }
-
-//    private fun initViews() {
-//        EpoxyTouchHelper
-//            .initDragging(controller)
-//            .withRecyclerView(binding.recyclerView)
-//            .forVerticalList()
-//            .withTarget(QuestionBindingModel_::class.java)
-//            .andCallbacks(object : EpoxyTouchHelper.DragCallbacks<QuestionBindingModel_>() {
-//                override fun onModelMoved(
-//                    fromPosition: Int,
-//                    toPosition: Int,
-//                    modelBeingMoved: QuestionBindingModel_,
-//                    itemView: View?
-//                ) {
-//                    val from = controller.adapter.getModelAtPosition(fromPosition)
-//                    val to = controller.adapter.getModelAtPosition(toPosition)
-//
-//                    if (from is QuestionBindingModel_ && to is QuestionBindingModel_) {
-//                        questionListViewModel.swapQuestions(from.questionId(), to.questionId())
-//                    }
-//                }
-//            })
-//    }
 
     private fun shareExportedWorkbook(exportedWorkbook: String) {
         val sendIntent: Intent = Intent().apply {
