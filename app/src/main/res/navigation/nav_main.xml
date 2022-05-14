@@ -236,10 +236,6 @@
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookFragment"
         android:label="@string/fragment_upload_workbook" >
 
-        <argument
-            android:name="workbookId"
-            app:argType="long" />
-
     </fragment>
 
     <fragment

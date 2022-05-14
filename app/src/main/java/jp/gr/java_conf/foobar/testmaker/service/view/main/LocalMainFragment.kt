@@ -206,9 +206,7 @@ class LocalMainFragment : Fragment() {
     private fun uploadWorkbook(workbook: WorkbookUseCaseModel) {
         logger.logEvent("upload_from_share_local")
         findNavController().navigate(
-            WorkbookListFragmentDirections.actionHomeToShareWorkbook(
-                workbookId = workbook.id
-            )
+            WorkbookListFragmentDirections.actionHomeToShareWorkbook()
         )
     }
 

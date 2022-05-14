@@ -72,8 +72,72 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun createWorkbook(workbook: SharedWorkbook) {
-        TODO("Not yet implemented")
+    override suspend fun createWorkbook(
+        user: User,
+        groupId: GroupId?,
+        isPublic: Boolean,
+        workbook: Workbook,
+        comment: String
+    ) {
+        val workbookRef = db.collection(WORKBOOK_COLLECTION_NAME).document()
+        val workbookDocumentId = workbookRef.id
+        val batchOperationLimit = 500
+
+        workbook.questionList.sortedBy { it.order }.chunked(batchOperationLimit - 1)
+            .forEachIndexed { index, list ->
+
+                val newWorkbookName = if (index == 0) workbook.name else "${workbook.name}($index)"
+
+                val newWorkbook = FirebaseTest.fromSharedWorkbook(
+                    SharedWorkbook(
+                        id = DocumentId(workbookDocumentId),
+                        name = newWorkbookName,
+                        userId = user.id,
+                        userName = user.displayName,
+                        comment = comment,
+                        questionListCount = workbook.questionList.size,
+                        downloadCount = 0,
+                        isPublic = isPublic,
+                        groupId = groupId,
+                    )
+                )
+
+                db.runBatch { batch ->
+                    batch.set(
+                        workbookRef,
+                        newWorkbook
+                    )
+                    list.forEach {
+                        val questionRef = db
+                            .collection(WORKBOOK_COLLECTION_NAME)
+                            .document(workbookDocumentId)
+                            .collection(QUESTION_COLLECTION_NAME)
+                            .document()
+
+                        // todo 画像のアップロード
+
+                        batch.set(
+                            questionRef,
+                            FirebaseQuestion.fromSharedQuestion(
+                                SharedQuestion(
+                                    id = DocumentId(questionRef.id),
+                                    problem = it.problem,
+                                    explanation = it.explanation,
+                                    answerList = it.answers,
+                                    otherSelectionList = it.otherSelections,
+                                    problemImageUrl = it.problemImageUrl,
+                                    explanationImageUrl = "",
+                                    questionType = it.type,
+                                    isCheckAnswerOrder = it.isCheckAnswerOrder,
+                                    isAutoGenerateOtherSelections = it.isAutoGenerateOtherSelections,
+                                    order = it.order
+                                )
+                            )
+                        )
+                    }
+                }.await()
+            }
+        _updateWorkbookListFlow.emit(getWorkbookListByUserId(userId = user.id))
     }
 
     override suspend fun deleteWorkbook(userId: UserId, workbookId: DocumentId) {

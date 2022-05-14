@@ -13,7 +13,14 @@ interface SharedWorkbookRepository {
     suspend fun getWorkbookListByUserId(userId: UserId): List<SharedWorkbook>
     suspend fun getWorkbookListByGroupId(groupId: GroupId): List<SharedWorkbook>
     suspend fun findWorkbookById(documentId: DocumentId): SharedWorkbook?
-    suspend fun createWorkbook(workbook: SharedWorkbook)
+    suspend fun createWorkbook(
+        user: User,
+        groupId: GroupId?,
+        isPublic: Boolean,
+        workbook: Workbook,
+        comment: String
+    )
+
     suspend fun deleteWorkbook(userId: UserId, workbookId: DocumentId)
     suspend fun deleteWorkbookFromGroup(groupId: GroupId, workbookId: DocumentId)
     suspend fun shareWorkbook(documentId: DocumentId): Uri

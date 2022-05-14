@@ -3,6 +3,7 @@ package com.example.usecase.model
 import com.example.core.AnswerStatus
 import com.example.core.TestMakerColor
 import com.example.domain.model.Workbook
+import com.example.domain.model.WorkbookId
 
 data class WorkbookUseCaseModel(
     val id: Long,
@@ -13,7 +14,8 @@ data class WorkbookUseCaseModel(
     val questionList: List<QuestionUseCaseModel>,
     val questionCount: Int,
     val correctCount: Int,
-    val inCorrectCount: Int
+    val inCorrectCount: Int,
+    val order: Int
 ) {
     companion object {
         fun fromWorkbook(workbook: Workbook): WorkbookUseCaseModel =
@@ -28,6 +30,7 @@ data class WorkbookUseCaseModel(
                 questionCount = workbook.questionList.count(),
                 correctCount = workbook.questionList.count { it.answerStatus == AnswerStatus.CORRECT },
                 inCorrectCount = workbook.questionList.count { it.answerStatus == AnswerStatus.INCORRECT },
+                order = workbook.order
             )
     }
 
@@ -47,4 +50,15 @@ data class WorkbookUseCaseModel(
             .distinct()
             .toList()
             .shuffled()
+
+    fun toWorkbook(): Workbook =
+        Workbook(
+            id = WorkbookId(value = id),
+            remoteId = remoteId,
+            name = name,
+            color = color,
+            order = order,
+            folderName = folderName,
+            questionList = questionList.map { it.toQuestion() }
+        )
 }

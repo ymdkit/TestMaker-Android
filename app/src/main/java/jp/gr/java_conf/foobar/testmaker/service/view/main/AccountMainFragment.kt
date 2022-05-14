@@ -134,7 +134,6 @@ class AccountMainFragment : Fragment() {
                 } else {
                     findNavController().navigate(
                         WorkbookListFragmentDirections.actionHomeToUploadWorkbook(
-                            testViewModel.tests.first().id
                         )
                     )
                 }

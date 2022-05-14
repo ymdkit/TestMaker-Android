@@ -24,7 +24,7 @@ data class SharedWorkbookUseCaseModel(
                 questionListCount = workbook.questionListCount,
                 downloadCount = workbook.downloadCount,
                 isPublic = workbook.isPublic,
-                groupId = workbook.groupId,
+                groupId = workbook.groupId?.value ?: "",
             )
     }
 }

@@ -9,7 +9,7 @@ data class SharedWorkbook(
     val questionListCount: Int,
     val downloadCount: Int,
     val isPublic: Boolean,
-    val groupId: String?
+    val groupId: GroupId?
 )
 
 @JvmInline

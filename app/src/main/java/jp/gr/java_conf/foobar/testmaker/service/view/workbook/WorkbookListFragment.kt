@@ -367,15 +367,9 @@ class WorkbookListFragment : Fragment() {
                                                             },
                                                             floatingActionButton = {
                                                                 FloatingActionButton(onClick = {
-                                                                    // todo 問題集が空の時の対策
-//                                                        val workbook =
-//                                                            uiState.value.resources.getOrNull()?.workbookList?.firstOrNull()
-//                                                                ?: return@FloatingActionButton
-//                                                        findNavController().navigate(
-//                                                            WorkbookListFragmentDirections.actionHomeToUploadWorkbook(
-//                                                                workbookId = workbook.id
-//                                                            )
-//                                                        )
+                                                                    findNavController().navigate(
+                                                                        WorkbookListFragmentDirections.actionHomeToUploadWorkbook()
+                                                                    )
                                                                 }) {
                                                                     Icon(
                                                                         Icons.Filled.CloudUpload,

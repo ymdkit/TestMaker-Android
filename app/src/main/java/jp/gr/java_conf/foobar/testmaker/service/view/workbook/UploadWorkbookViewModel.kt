@@ -1,101 +1,129 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.workbook
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseUser
+import com.example.usecase.SharedWorkbookCommandUseCase
+import com.example.usecase.UserAuthCommandUseCase
+import com.example.usecase.UserWatchUseCase
+import com.example.usecase.WorkbookListWatchUseCase
+import com.example.usecase.model.WorkbookUseCaseModel
+import com.example.usecase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.domain.UploadTestDestination
-import jp.gr.java_conf.foobar.testmaker.service.infra.auth.Auth
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.LegacyDynamicLinksCreator
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.RemoteDataSource
-import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.infra.repository.TestMakerRepository
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class UploadWorkbookViewModel @Inject constructor(
-    auth: Auth,
-    private val repository: TestMakerRepository,
-    private val logger: TestMakerLogger,
-    private val dynamicLinksCreator: LegacyDynamicLinksCreator
+    private val workbookListWatchUseCase: WorkbookListWatchUseCase,
+    private val userWatchUseCase: UserWatchUseCase,
+    private val sharedWorkbookCommandUseCase: SharedWorkbookCommandUseCase,
+    private val userAuthCommandUseCase: UserAuthCommandUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UploadWorkbookUiState>(UploadWorkbookUiState.Initial)
+    private val _uiState = MutableStateFlow(
+        UploadWorkbookUiState(
+            workbookList = Resource.Empty,
+            selectedWorkbook = null,
+            isLogin = false,
+            isPrivateUpload = false,
+            comment = "",
+            showingDropDownMenu = false,
+            isUploading = false
+        )
+    )
     val uiState: StateFlow<UploadWorkbookUiState> = _uiState
 
-    init {
-        auth.getUser()?.let {
-            _uiState.value = UploadWorkbookUiState.Editing
-        } ?: run {
-            _uiState.value = UploadWorkbookUiState.UnAuthorized
-        }
-    }
+    private val _uploadWorkbookEvent: Channel<Unit> = Channel()
+    val uploadWorkbookEvent: ReceiveChannel<Unit>
+        get() = _uploadWorkbookEvent
 
-    fun setUser(user: FirebaseUser) {
-        _uiState.value = UploadWorkbookUiState.Editing
-    }
+    fun setup() {
+        workbookListWatchUseCase.setup(viewModelScope)
+        userWatchUseCase.setup(viewModelScope)
 
-    fun uploadWorkbook(workbook: Test, comment: String, isPrivate: Boolean) {
-        viewModelScope.launch {
-
-            _uiState.value = UploadWorkbookUiState.Loading
-
-            val response = repository.uploadWorkbook(
-                test = workbook,
-                overview = comment,
-                isPublic = !isPrivate
-            )
-
-            when (response) {
-                is RemoteDataSource.FirebasePostResponse.Success -> {
-                    logger.logUploadTestEvent(
-                        test = workbook,
-                        destination = if (isPrivate) UploadTestDestination.PRIVATE.title else UploadTestDestination.PUBLIC.title
-                    )
-
-                    _uiState.value = UploadWorkbookUiState.UploadSuccess(response.documentId)
-                }
-                is RemoteDataSource.FirebasePostResponse.Divided -> {
-                    _uiState.value = UploadWorkbookUiState.UploadDivided
-                }
-                is RemoteDataSource.FirebasePostResponse.Failure -> {
-                    _uiState.value = UploadWorkbookUiState.UploadFailure
-                }
+        workbookListWatchUseCase.flow
+            .onEach {
+                val newWorkbookList = it.map { it.filter { it.questionCount > 0 } }
+                _uiState.value = _uiState.value.copy(
+                    workbookList = newWorkbookList,
+                    selectedWorkbook = newWorkbookList.getOrNull()?.firstOrNull()
+                )
             }
-        }
-    }
+            .launchIn(viewModelScope)
 
-    fun createDynamicLinks(documentId: String) {
-        viewModelScope.launch {
-            _uiState.value = UploadWorkbookUiState.Loading
-
-            dynamicLinksCreator.createShareTestDynamicLinks(documentId).shortLink?.let {
-                _uiState.value = UploadWorkbookUiState.CreateDynamicLinksSuccess(it)
-            } ?: run {
-                _uiState.value = UploadWorkbookUiState.CreateDynamicLinksFailure
+        userWatchUseCase.flow
+            .onEach {
+                _uiState.value = _uiState.value.copy(
+                    isLogin = it != null
+                )
             }
-        }
+            .launchIn(viewModelScope)
     }
 
-    fun reEdit() {
-        _uiState.value = UploadWorkbookUiState.Editing
+    fun load() =
+        viewModelScope.launch {
+            workbookListWatchUseCase.load()
+        }
+
+    fun onUserCreated() =
+        viewModelScope.launch {
+            userAuthCommandUseCase.registerUser()
+        }
+
+    fun onToggleDropDownMenu() = viewModelScope.launch {
+        _uiState.value = _uiState.value.copy(
+            showingDropDownMenu = !_uiState.value.showingDropDownMenu
+        )
+    }
+
+    fun onWorkbookSelected(workbook: WorkbookUseCaseModel) = viewModelScope.launch {
+        _uiState.value = _uiState.value.copy(
+            selectedWorkbook = workbook
+        )
+    }
+
+    fun onCommentChanged(value: String) = viewModelScope.launch {
+        _uiState.value = _uiState.value.copy(
+            comment = value
+        )
+    }
+
+    fun onIsPrivateUploadChanged(value: Boolean) = viewModelScope.launch {
+        _uiState.value = _uiState.value.copy(
+            isPrivateUpload = value
+        )
+    }
+
+    fun uploadWorkbook() = viewModelScope.launch {
+        val workbook = _uiState.value.selectedWorkbook ?: return@launch
+        _uiState.value = _uiState.value.copy(
+            isUploading = true
+        )
+        sharedWorkbookCommandUseCase.uploadWorkbook(
+            groupId = "",
+            isPublic = !_uiState.value.isPrivateUpload,
+            comment = _uiState.value.comment,
+            workbook = workbook,
+        )
+        _uiState.value = _uiState.value.copy(
+            isUploading = false
+        )
+        _uploadWorkbookEvent.send(Unit)
     }
 }
 
-
-sealed class UploadWorkbookUiState {
-    object Initial : UploadWorkbookUiState()
-    object UnAuthorized : UploadWorkbookUiState()
-    object Editing : UploadWorkbookUiState()
-    object Loading : UploadWorkbookUiState()
-    class UploadSuccess(val documentId: String) : UploadWorkbookUiState()
-    object UploadDivided : UploadWorkbookUiState()
-    object UploadFailure : UploadWorkbookUiState()
-    class CreateDynamicLinksSuccess(val uri: Uri) : UploadWorkbookUiState()
-    object CreateDynamicLinksFailure : UploadWorkbookUiState()
-}
+data class UploadWorkbookUiState(
+    val workbookList: Resource<List<WorkbookUseCaseModel>>,
+    val selectedWorkbook: WorkbookUseCaseModel?,
+    val isLogin: Boolean,
+    val isPrivateUpload: Boolean,
+    val comment: String,
+    val showingDropDownMenu: Boolean,
+    val isUploading: Boolean
+)

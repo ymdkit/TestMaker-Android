@@ -17,6 +17,22 @@ data class FirebaseQuestion(val question: String = "",
                             val order: Int = 0
 ) {
 
+    companion object {
+        fun fromSharedQuestion(question: SharedQuestion) =
+            FirebaseQuestion(
+                question = question.problem,
+                answer = question.answerList.firstOrNull() ?: "",
+                answers = question.answerList,
+                others = question.otherSelectionList,
+                explanation = question.explanation,
+                imageRef = question.problemImageUrl,
+                type = question.questionType.value,
+                auto = question.isAutoGenerateOtherSelections,
+                checkOrder = question.isCheckAnswerOrder,
+                order = question.order
+            )
+    }
+
     fun toQuest(): Quest {
 
         val quest = Quest()

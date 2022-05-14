@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.page_answer_workbook,
                 R.id.page_create_workbook,
+                R.id.page_upload_workbook,
                 R.id.page_edit_workbook,
                 R.id.page_create_folder,
                 R.id.page_create_question,
@@ -63,7 +64,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             when (destination.id) {
-                R.id.page_settings -> {
+                R.id.page_settings,
+                R.id.page_upload_workbook -> {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
                 }
                 else -> {

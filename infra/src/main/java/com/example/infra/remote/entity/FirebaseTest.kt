@@ -2,6 +2,7 @@ package com.example.infra.remote.entity
 
 import com.example.core.TestMakerColor
 import com.example.domain.model.DocumentId
+import com.example.domain.model.GroupId
 import com.example.domain.model.SharedWorkbook
 import com.example.domain.model.UserId
 import com.example.infra.local.entity.RealmTest
@@ -25,6 +26,24 @@ data class FirebaseTest(
     var public: Boolean = true,
     var groupId: String = ""
 ) {
+
+    companion object {
+        fun fromSharedWorkbook(workbook: SharedWorkbook) =
+            FirebaseTest().apply {
+                documentId = workbook.id.value
+                name = workbook.name
+                // todo 値の反映
+                color = 0
+                userId = workbook.userId.value
+                userName = workbook.userName
+                overview = workbook.comment
+                locale = Locale.getDefault().language
+                size = workbook.questionListCount
+                created_at = Timestamp.now()
+                public = workbook.isPublic
+                groupId = workbook.groupId?.value ?: ""
+            }
+    }
 
     var questions: List<FirebaseQuestion> = listOf()
 
@@ -57,6 +76,6 @@ data class FirebaseTest(
             questionListCount = size,
             downloadCount = downloadCount,
             isPublic = public,
-            groupId = groupId,
+            groupId = GroupId(groupId),
         )
 }

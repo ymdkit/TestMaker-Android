@@ -8,6 +8,7 @@ import com.example.domain.repository.SharedWorkbookRepository
 import com.example.domain.repository.UserRepository
 import com.example.domain.repository.WorkBookRepository
 import com.example.usecase.model.SharedWorkbookUseCaseModel
+import com.example.usecase.model.WorkbookUseCaseModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,6 +18,27 @@ class SharedWorkbookCommandUseCase @Inject constructor(
     private val workbookRepository: WorkBookRepository,
     private val userRepository: UserRepository,
 ) {
+
+    suspend fun uploadWorkbook(
+        groupId: String,
+        isPublic: Boolean,
+        comment: String,
+        workbook: WorkbookUseCaseModel
+    ) {
+        val user = userRepository.getUserOrNull() ?: return
+
+        try {
+            repository.createWorkbook(
+                user = user,
+                groupId = GroupId(groupId),
+                isPublic = isPublic,
+                workbook = workbook.toWorkbook(),
+                comment = comment
+            )
+        } catch (e: Exception) {
+            println("upload error: ${e.message}")
+        }
+    }
 
     suspend fun shareWorkbook(workbook: SharedWorkbookUseCaseModel) =
         repository.shareWorkbook(DocumentId(workbook.id))
