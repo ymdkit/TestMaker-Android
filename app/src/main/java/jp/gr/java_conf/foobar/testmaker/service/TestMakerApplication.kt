@@ -1,8 +1,8 @@
 package jp.gr.java_conf.foobar.testmaker.service
 
+import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import androidx.multidex.MultiDexApplication
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
@@ -13,7 +13,7 @@ import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
  * Created by keita on 2016/07/17.
  */
 @HiltAndroidApp
-class TestMakerApplication : MultiDexApplication() {
+class TestMakerApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()

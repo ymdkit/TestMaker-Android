@@ -143,7 +143,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Dep.kotlinVersion}")
     implementation("androidx.navigation:navigation-fragment-ktx:2.2.2")
     implementation("androidx.navigation:navigation-ui-ktx:2.2.2")
-    api("androidx.multidex:multidex:2.0.1")
     api(Dep.BillingClient.billing)
     testImplementation("org.robolectric:robolectric:4.3.1")
     testImplementation("junit:junit:4.13")
