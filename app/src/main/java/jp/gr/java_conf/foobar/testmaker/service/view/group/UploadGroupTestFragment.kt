@@ -29,7 +29,6 @@ import com.example.usecase.utils.Resource
 import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
 import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -47,9 +46,6 @@ class UploadGroupTestFragment : Fragment() {
 
     @Inject
     lateinit var logger: TestMakerLogger
-
-    @Inject
-    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
