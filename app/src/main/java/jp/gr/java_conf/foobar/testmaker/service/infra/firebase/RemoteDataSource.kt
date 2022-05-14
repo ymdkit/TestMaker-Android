@@ -3,14 +3,9 @@ package jp.gr.java_conf.foobar.testmaker.service.infra.firebase
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.example.infra.remote.entity.FirebaseGroup
 import com.example.infra.remote.entity.FirebaseQuestion
 import com.example.infra.remote.entity.FirebaseTest
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -29,8 +24,6 @@ class RemoteDataSource @Inject constructor(
     @ApplicationContext val context: Context,
     val auth: Auth
 ) {
-
-    private var myTests: MutableLiveData<List<DocumentSnapshot>>? = null
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -51,99 +44,6 @@ class RemoteDataSource @Inject constructor(
             .await()
             .toObjects(FirebaseQuestion::class.java).sortedBy { q -> q.order }
     }
-
-    fun setUser(user: FirebaseUser?) {
-
-        user ?: return
-
-        val myUser = MyFirebaseUser(
-            name = user.displayName
-                ?: "guest", id = user.uid
-        )
-
-        db.collection("users")
-            .document(user.uid)
-            .set(myUser)
-
-    }
-
-    fun getMyTests(): LiveData<List<DocumentSnapshot>> {
-        if (myTests == null) {
-            myTests = MutableLiveData()
-            fetchMyTests()
-        }
-        return myTests as LiveData<List<DocumentSnapshot>>
-    }
-
-    fun fetchMyTests() {
-
-        val user = auth.getUser() ?: return
-
-        db.collection(TESTS)
-            .whereEqualTo("userId", user.uid)
-            .orderBy("created_at", Query.Direction.DESCENDING)
-            .limit(300)
-            .get()
-            .addOnSuccessListener { query ->
-
-                myTests?.postValue(query.documents)
-
-            }
-            .addOnFailureListener {
-                Log.d("Debug", "fetch myTests failure: $it")
-            }
-    }
-
-    suspend fun deleteTest(documentId: String) =
-        db.collection(TESTS)
-            .document(documentId)
-            .delete()
-            .await()
-
-    suspend fun joinGroup(userId: String, group: FirebaseGroup) =
-        db.collection("users")
-            .document(userId)
-            .collection("groups")
-            .document(group.id)
-            .set(group)
-            .await()
-
-    suspend fun exitGroup(userId: String, groupId: String) =
-        db.collection("users")
-            .document(userId)
-            .collection("groups")
-            .document(groupId)
-            .delete()
-            .await()
-
-    suspend fun getTests(groupId: String) =
-        db.collection(TESTS)
-            .whereEqualTo("groupId", groupId)
-            .orderBy("created_at", Query.Direction.DESCENDING)
-            .limit(100)
-            .get()
-            .await()
-            .documents
-
-    suspend fun getGroup(groupId: String) =
-        db.collection("groups")
-            .document(groupId)
-            .get()
-            .await()
-            .toObject(FirebaseGroup::class.java)
-            ?.copy(id = groupId)
-
-    suspend fun updateGroup(group: FirebaseGroup) =
-        db.collection("groups")
-            .document(group.id)
-            .set(group)
-            .await()
-
-    suspend fun deleteGroup(documentId: String) =
-        db.collection("groups")
-            .document(documentId)
-            .delete()
-            .await()
 
     suspend fun getHistories(documentId: String) =
         db.collection(TESTS)

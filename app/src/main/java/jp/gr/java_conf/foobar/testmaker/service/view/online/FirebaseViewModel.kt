@@ -16,6 +16,7 @@ class FirebaseViewModel @Inject constructor(
     @SearchClient private val service: SearchApi
 ) : ViewModel() {
 
+    // todo ダウンロード数情報を更新する
     suspend fun updateTest(documentId: String, size: Int, downloadCount: Int) = service.updateTest(
         documentId = documentId,
         size = size,
