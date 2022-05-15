@@ -141,7 +141,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.2.2")
     api(Dep.BillingClient.billing)
     testImplementation("org.robolectric:robolectric:4.3.1")
-    testImplementation("junit:junit:4.13")
+    testImplementation(Dep.Test.jUnit4)
     androidTestImplementation("androidx.test.ext:junit:1.1.1")
     androidTestImplementation("tools.fastlane:screengrab:1.0.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")

@@ -23,8 +23,7 @@ class QuestionJudgeUseCase @Inject constructor(
             isCaseInsensitive = preferenceRepository.getAnswerSetting().isCaseInsensitive
         )
 
-    // todo テストを書く
-    private fun judge(
+    fun judge(
         expect: QuestionUseCaseModel,
         actual: List<String>,
         isSwapProblemAndAnswer: Boolean,

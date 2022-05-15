@@ -39,7 +39,8 @@ dependencies {
     implementation(Dep.Hilt.android)
     kapt(Dep.Hilt.compiler)
     implementation(Dep.Coroutine.core)
-
+    testImplementation(Dep.Test.jUnit4)
+    testImplementation(Dep.Test.mockK)
     implementation(project(":domain"))
     implementation(project(":core"))
 }

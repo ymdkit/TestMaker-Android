@@ -99,4 +99,9 @@ object Dep {
         const val studyPlus = "com.github.studyplus:Studyplus-Android-SDK:3.0.0"
     }
 
+    object Test {
+        const val jUnit4 = "junit:junit:4.13.2"
+        const val mockK = "io.mockk:mockk:1.12.4"
+    }
+
 }
