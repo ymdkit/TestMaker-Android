@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -109,98 +110,116 @@ class CreateWorkbookFragment : Fragment() {
                                 modifier = Modifier
                                     .padding(16.dp)
                             ) {
-                                Column(
+                                LazyColumn(
                                     modifier = Modifier
                                         .weight(weight = 1f, fill = true)
                                 ) {
                                     if (uiState.isImportingWorkbook) {
-                                        Box(
-                                            modifier = Modifier.fillMaxSize(),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            CircularProgressIndicator()
+                                        item {
+                                            Box(
+                                                modifier = Modifier.fillMaxSize(),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                CircularProgressIndicator()
+                                            }
                                         }
                                     } else {
-                                        Text(
-                                            modifier = Modifier.padding(bottom = 8.dp),
-                                            text = stringResource(id = R.string.section_create_workbook_by_app)
-                                        )
-                                        OutlinedTextField(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .focusRequester(focusRequester)
-                                                .padding(bottom = 8.dp),
-                                            value = name,
-                                            label = {
-                                                Text(text = stringResource(R.string.hint_workbook_name))
-                                            },
-                                            onValueChange = {
-                                                name = it
-                                            },
-                                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                            keyboardActions = KeyboardActions(onDone = {
-                                                focusManager.clearFocus()
-                                            })
-                                        )
-                                        ColorPicker(
-                                            modifier = Modifier.padding(bottom = 8.dp),
-                                            label = stringResource(id = R.string.picker_color),
-                                            value = color,
-                                            colorMapper = colorMapper,
-                                            onValueChange = {
-                                                color = it
-                                            }
-                                        )
-                                        TextPicker(
-                                            modifier = Modifier.padding(bottom = 8.dp),
-                                            label = stringResource(id = R.string.picker_folder),
-                                            entries = uiState.folderList
-                                                .map { it.name } + listOf(
-                                                stringResource(id = R.string.new_folder)
-                                            ),
-                                            value = folderName,
-                                            onValueChange = {
-                                                if (it == getString(R.string.new_folder)) {
-                                                    findNavController().navigate(
-                                                        CreateWorkbookFragmentDirections.actionCreateWorkbookToCreateFolder()
-                                                    )
-                                                } else {
-                                                    folderName = it
-                                                }
-                                            })
-                                        Spacer(modifier = Modifier.height(32.dp))
-                                        Text(
-                                            modifier = Modifier.padding(bottom = 8.dp),
-                                            text = stringResource(id = R.string.section_create_workbook_by_import),
-                                        )
-                                        OutlinedButton(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(56.dp)
-                                                .padding(bottom = 8.dp),
-                                            border = BorderStroke(
-                                                ButtonDefaults.OutlinedBorderSize,
-                                                MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
-                                            ),
-                                            onClick = { importFile.launch(arrayOf("text/*")) }) {
-                                            Text(text = stringResource(id = R.string.action_import))
+                                        item {
+                                            Text(
+                                                modifier = Modifier.padding(bottom = 8.dp),
+                                                text = stringResource(id = R.string.section_create_workbook_by_app)
+                                            )
                                         }
-                                        OutlinedButton(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(56.dp)
-                                                .padding(bottom = 8.dp),
-                                            border = BorderStroke(
-                                                ButtonDefaults.OutlinedBorderSize,
-                                                MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
-                                            ),
-                                            onClick = {
-                                                startActivity(Intent(Intent.ACTION_VIEW).apply {
-                                                    data =
-                                                        Uri.parse("https://ankimaker.com/howto/edit_csv")
+                                        item {
+                                            OutlinedTextField(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .focusRequester(focusRequester)
+                                                    .padding(bottom = 8.dp),
+                                                value = name,
+                                                label = {
+                                                    Text(text = stringResource(R.string.hint_workbook_name))
+                                                },
+                                                onValueChange = {
+                                                    name = it
+                                                },
+                                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                                keyboardActions = KeyboardActions(onDone = {
+                                                    focusManager.clearFocus()
                                                 })
-                                            }) {
-                                            Text(text = stringResource(id = R.string.help_import))
+                                            )
+                                        }
+                                        item {
+                                            ColorPicker(
+                                                modifier = Modifier.padding(bottom = 8.dp),
+                                                label = stringResource(id = R.string.picker_color),
+                                                value = color,
+                                                colorMapper = colorMapper,
+                                                onValueChange = {
+                                                    color = it
+                                                }
+                                            )
+                                        }
+                                        item {
+                                            TextPicker(
+                                                modifier = Modifier.padding(bottom = 8.dp),
+                                                label = stringResource(id = R.string.picker_folder),
+                                                entries = uiState.folderList
+                                                    .map { it.name } + listOf(
+                                                    stringResource(id = R.string.new_folder)
+                                                ),
+                                                value = folderName,
+                                                onValueChange = {
+                                                    if (it == getString(R.string.new_folder)) {
+                                                        findNavController().navigate(
+                                                            CreateWorkbookFragmentDirections.actionCreateWorkbookToCreateFolder()
+                                                        )
+                                                    } else {
+                                                        folderName = it
+                                                    }
+                                                })
+                                        }
+                                        item {
+                                            Spacer(modifier = Modifier.height(32.dp))
+                                        }
+                                        item {
+                                            Text(
+                                                modifier = Modifier.padding(bottom = 8.dp),
+                                                text = stringResource(id = R.string.section_create_workbook_by_import),
+                                            )
+                                        }
+                                        item {
+                                            OutlinedButton(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .height(56.dp)
+                                                    .padding(bottom = 8.dp),
+                                                border = BorderStroke(
+                                                    ButtonDefaults.OutlinedBorderSize,
+                                                    MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+                                                ),
+                                                onClick = { importFile.launch(arrayOf("text/*")) }) {
+                                                Text(text = stringResource(id = R.string.action_import))
+                                            }
+                                        }
+                                        item {
+                                            OutlinedButton(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .height(56.dp)
+                                                    .padding(bottom = 8.dp),
+                                                border = BorderStroke(
+                                                    ButtonDefaults.OutlinedBorderSize,
+                                                    MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+                                                ),
+                                                onClick = {
+                                                    startActivity(Intent(Intent.ACTION_VIEW).apply {
+                                                        data =
+                                                            Uri.parse("https://ankimaker.com/howto/edit_csv")
+                                                    })
+                                                }) {
+                                                Text(text = stringResource(id = R.string.help_import))
+                                            }
                                         }
                                     }
                                 }
