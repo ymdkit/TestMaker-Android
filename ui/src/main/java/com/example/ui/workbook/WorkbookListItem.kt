@@ -21,11 +21,12 @@ import com.example.usecase.model.WorkbookUseCaseModel
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WorkbookListItem(
+    modifier: Modifier = Modifier,
     workbook: WorkbookUseCaseModel,
     onClick: (WorkbookUseCaseModel) -> Unit
 ) {
     ListItem(
-        modifier = Modifier.clickable {
+        modifier = modifier.clickable {
             onClick(workbook)
         },
         icon = {
@@ -40,7 +41,12 @@ fun WorkbookListItem(
                 contentDescription = "workbook",
             )
         },
-        text = { Text(workbook.name) },
+        text = {
+            Text(
+                text = workbook.name,
+                maxLines = 1
+            )
+        },
         secondaryText = {
             Text(
                 stringResource(

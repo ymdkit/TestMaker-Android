@@ -36,7 +36,6 @@ class UserFolderCommandUseCase @Inject constructor(
     suspend fun swapFolder(sourceFolderId: Long, destFolderId: Long) {
         val sourceFolder = workBookRepository.getFolder(FolderId(sourceFolderId))
         val destFolder = workBookRepository.getFolder(FolderId(destFolderId))
-        workBookRepository.updateFolder(sourceFolder.copy(order = destFolder.order))
-        workBookRepository.updateFolder(destFolder.copy(order = sourceFolder.order))
+        workBookRepository.swapFolder(sourceFolder, destFolder)
     }
 }

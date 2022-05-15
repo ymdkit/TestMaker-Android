@@ -5,18 +5,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CloudUpload
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -37,6 +41,7 @@ import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -235,8 +240,8 @@ class WorkbookListFragment : Fragment() {
                                                 .weight(1f),
                                             state = pagerState,
                                             count = tabList.size
-                                        ) { index ->
-                                            when (index) {
+                                        ) { page ->
+                                            when (page) {
                                                 0 -> {
                                                     Column {
                                                         Scaffold(
@@ -245,10 +250,27 @@ class WorkbookListFragment : Fragment() {
                                                                 ResourceContent(
                                                                     resource = workbookListUiState.resources,
                                                                     onRetry = { workbookListViewModel.load() }) {
+
                                                                     val workbookList =
                                                                         it.workbookList
                                                                     val folderList =
                                                                         it.folderList
+
+                                                                    var overscrollJob by remember {
+                                                                        mutableStateOf<Job?>(
+                                                                            null
+                                                                        )
+                                                                    }
+                                                                    val dragDropListState =
+                                                                        rememberDragDropListState(
+                                                                            onMove = { from, to ->
+                                                                                // note この部分で state にアクセスしても、初期状態のままなので2回目以降の入れ替わりが正しく動作しない
+                                                                                workbookListViewModel.swapWorkbookOrFolder(
+                                                                                    from,
+                                                                                    to
+                                                                                )
+                                                                            })
+
                                                                     if (workbookList.isEmpty() && folderList.isEmpty()) {
                                                                         Column(
                                                                             modifier = Modifier.fillMaxSize(),
@@ -262,38 +284,75 @@ class WorkbookListFragment : Fragment() {
                                                                             )
                                                                         }
                                                                     } else {
-                                                                        LazyColumn(
-                                                                            modifier = Modifier
-                                                                                .fillMaxHeight()
+                                                                        Column(
+                                                                            modifier = Modifier.fillMaxHeight()
                                                                         ) {
                                                                             if (args.folderName.isNotEmpty()) {
-                                                                                item {
-                                                                                    ListItem(
-                                                                                        text = {
-                                                                                            Text(
-                                                                                                text = "/ ${args.folderName}",
-                                                                                                fontSize = 12.sp
-                                                                                            )
-                                                                                        }
-                                                                                    )
-                                                                                }
+                                                                                ListItem(
+                                                                                    text = {
+                                                                                        Text(
+                                                                                            text = "/ ${args.folderName}",
+                                                                                            fontSize = 12.sp
+                                                                                        )
+                                                                                    }
+                                                                                )
                                                                             }
-                                                                            if (folderList.isNotEmpty()) {
-                                                                                item {
-                                                                                    ListItem(
-                                                                                        text = {
-                                                                                            Text(
-                                                                                                stringResource(
-                                                                                                    id = R.string.folder
+                                                                            LazyColumn(
+                                                                                state = dragDropListState.lazyListState,
+                                                                                modifier = Modifier
+                                                                                    .fillMaxHeight()
+                                                                                    .pointerInput(
+                                                                                        Unit
+                                                                                    ) {
+                                                                                        detectDragGesturesAfterLongPress(
+                                                                                            onDrag = { change, offset ->
+                                                                                                change.consume()
+                                                                                                dragDropListState.onDrag(
+                                                                                                    offset
                                                                                                 )
-                                                                                            )
-                                                                                        }
-                                                                                    )
-                                                                                }
-                                                                            }
-                                                                            folderList.forEach {
-                                                                                item {
+
+                                                                                                if (overscrollJob?.isActive == true)
+                                                                                                    return@detectDragGesturesAfterLongPress
+
+                                                                                                dragDropListState
+                                                                                                    .checkForOverScroll()
+                                                                                                    .takeIf { it != 0f }
+                                                                                                    ?.let {
+                                                                                                        overscrollJob =
+                                                                                                            scope.launch {
+                                                                                                                dragDropListState.lazyListState.scrollBy(
+                                                                                                                    it
+                                                                                                                )
+                                                                                                            }
+                                                                                                    }
+                                                                                                    ?: run { overscrollJob?.cancel() }
+                                                                                            },
+                                                                                            onDragStart = { offset ->
+                                                                                                dragDropListState.onDragStart(
+                                                                                                    offset
+                                                                                                )
+                                                                                            },
+                                                                                            onDragEnd = { dragDropListState.onDragInterrupted() },
+                                                                                            onDragCancel = { dragDropListState.onDragInterrupted() }
+                                                                                        )
+                                                                                    }
+                                                                            ) {
+                                                                                itemsIndexed(
+                                                                                    folderList
+                                                                                ) { index, it ->
                                                                                     FolderListItem(
+                                                                                        modifier = Modifier.composed {
+                                                                                            val offsetOrNull =
+                                                                                                dragDropListState.elementDisplacement.takeIf {
+                                                                                                    index == dragDropListState.currentIndexOfDraggedItem
+                                                                                                }
+                                                                                            Modifier
+                                                                                                .graphicsLayer {
+                                                                                                    translationY =
+                                                                                                        offsetOrNull
+                                                                                                            ?: 0f
+                                                                                                }
+                                                                                        },
                                                                                         folder = it,
                                                                                         onClick = {
                                                                                             findNavController().navigate(
@@ -312,23 +371,22 @@ class WorkbookListFragment : Fragment() {
                                                                                         }
                                                                                     )
                                                                                 }
-                                                                            }
-                                                                            if (workbookList.isNotEmpty()) {
-                                                                                item {
-                                                                                    ListItem(
-                                                                                        text = {
-                                                                                            Text(
-                                                                                                stringResource(
-                                                                                                    id = R.string.workbook
-                                                                                                )
-                                                                                            )
-                                                                                        }
-                                                                                    )
-                                                                                }
-                                                                            }
-                                                                            workbookList.forEach {
-                                                                                item {
+                                                                                itemsIndexed(
+                                                                                    workbookList
+                                                                                ) { index, it ->
                                                                                     WorkbookListItem(
+                                                                                        modifier = Modifier.composed {
+                                                                                            val offsetOrNull =
+                                                                                                dragDropListState.elementDisplacement.takeIf {
+                                                                                                    index + folderList.size == dragDropListState.currentIndexOfDraggedItem
+                                                                                                }
+                                                                                            Modifier
+                                                                                                .graphicsLayer {
+                                                                                                    translationY =
+                                                                                                        offsetOrNull
+                                                                                                            ?: 0f
+                                                                                                }
+                                                                                        },
                                                                                         workbook = it,
                                                                                         onClick = {
                                                                                             scope.launch {
@@ -375,25 +433,6 @@ class WorkbookListFragment : Fragment() {
                                                                             modifier = Modifier
                                                                                 .fillMaxHeight()
                                                                         ) {
-                                                                            item {
-                                                                                Spacer(
-                                                                                    modifier = Modifier.height(
-                                                                                        8.dp
-                                                                                    )
-                                                                                )
-                                                                            }
-                                                                            if (state.value.isNotEmpty()) {
-                                                                                item {
-                                                                                    Text(
-                                                                                        modifier = Modifier.padding(
-                                                                                            horizontal = 16.dp
-                                                                                        ),
-                                                                                        text = stringResource(
-                                                                                            id = R.string.workbook
-                                                                                        )
-                                                                                    )
-                                                                                }
-                                                                            }
                                                                             state.value.forEach {
                                                                                 item {
                                                                                     SharedWorkbookListItem(

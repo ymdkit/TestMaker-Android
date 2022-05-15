@@ -14,6 +14,7 @@ interface WorkBookRepository {
     suspend fun createFolder(name: String, color: TestMakerColor)
     suspend fun updateFolder(folder: Folder)
     suspend fun deleteFolder(folderId: FolderId)
+    suspend fun swapFolder(sourceFolder: Folder, destFolder: Folder)
     suspend fun getWorkbookList(): List<Workbook>
     suspend fun getWorkbook(workbookId: WorkbookId): Workbook
     suspend fun createWorkbook(

@@ -75,6 +75,11 @@ class WorkbookRepositoryImpl @Inject constructor(
         refreshFolderList()
     }
 
+    override suspend fun swapFolder(sourceFolder: Folder, destFolder: Folder) {
+        folderDataSource.createFolder(RealmCategory.fromFolder((sourceFolder.copy(order = destFolder.order))))
+        folderDataSource.createFolder(RealmCategory.fromFolder((destFolder.copy(order = sourceFolder.order))))
+    }
+
     override suspend fun getWorkbookList(): List<Workbook> =
         workbookDataSource.getWorkbookList().map {
             it.toWorkbook()
@@ -183,7 +188,6 @@ class WorkbookRepositoryImpl @Inject constructor(
     override suspend fun swapWorkbook(sourceWorkbook: Workbook, destWorkbook: Workbook) {
         workbookDataSource.createWorkbook(RealmTest.fromWorkbook(sourceWorkbook.copy(order = destWorkbook.order)))
         workbookDataSource.createWorkbook(RealmTest.fromWorkbook(destWorkbook.copy(order = sourceWorkbook.order)))
-        refreshWorkbookList()
     }
 
     override suspend fun getWorkbookListByFolderName(folderName: String): List<Workbook> =

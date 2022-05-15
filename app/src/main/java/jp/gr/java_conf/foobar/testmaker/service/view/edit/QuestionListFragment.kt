@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
@@ -352,7 +351,7 @@ class QuestionListFragment : Fragment() {
                                                         .pointerInput(Unit) {
                                                             detectDragGesturesAfterLongPress(
                                                                 onDrag = { change, offset ->
-                                                                    change.consumeAllChanges()
+                                                                    change.consume()
                                                                     dragDropListState.onDrag(offset)
 
                                                                     if (overscrollJob?.isActive == true)

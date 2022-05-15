@@ -115,6 +115,26 @@ class WorkbookListViewModel @Inject constructor(
 
     fun swapFolder(sourceFolderId: Long, destFolderId: Long) =
         viewModelScope.launch {
+            val currentWorkbookList =
+                _uiState.value.resources.getOrNull()?.workbookList ?: return@launch
+            val currentFolderList =
+                _uiState.value.resources.getOrNull()?.folderList ?: return@launch
+            val sourceFolder =
+                currentFolderList.firstOrNull { it.id == sourceFolderId } ?: return@launch
+            val destFolder =
+                currentFolderList.firstOrNull { it.id == destFolderId } ?: return@launch
+
+            val newFolderList = currentFolderList.map {
+                if (it.id == sourceFolder.id) destFolder else if (it.id == destFolder.id) sourceFolder else it
+            }
+            _uiState.value = _uiState.value.copy(
+                resources = Resource.Success(
+                    WorkbookListResources(
+                        folderList = newFolderList,
+                        workbookList = currentWorkbookList
+                    )
+                )
+            )
             userFolderCommandUseCase.swapFolder(sourceFolderId, destFolderId)
         }
 
@@ -205,16 +225,44 @@ class WorkbookListViewModel @Inject constructor(
 
     fun swapWorkbook(sourceWorkbookId: Long, destWorkbookId: Long) =
         viewModelScope.launch {
+            val currentWorkbookList =
+                _uiState.value.resources.getOrNull()?.workbookList ?: return@launch
+            val currentFolderList =
+                _uiState.value.resources.getOrNull()?.folderList ?: return@launch
+            val sourceWorkbook =
+                currentWorkbookList.firstOrNull { it.id == sourceWorkbookId } ?: return@launch
+            val destWorkbook =
+                currentWorkbookList.firstOrNull { it.id == destWorkbookId } ?: return@launch
+
+            val newWorkbookList = currentWorkbookList.map {
+                if (it.id == sourceWorkbook.id) destWorkbook else if (it.id == destWorkbook.id) sourceWorkbook else it
+            }
+            _uiState.value = _uiState.value.copy(
+                resources = Resource.Success(
+                    WorkbookListResources(
+                        folderList = currentFolderList,
+                        workbookList = newWorkbookList
+                    )
+                )
+            )
             userWorkbookCommandUseCase.swapWorkbooks(sourceWorkbookId, destWorkbookId)
         }
 
-    private fun getNoFolderWorkbookList(
-        workBookList: List<WorkbookUseCaseModel>,
-        folderList: List<FolderUseCaseModel>
-    ) =
-        workBookList.filterNot { workbook ->
-            folderList.map { it.name }.contains(workbook.folderName)
+    fun swapWorkbookOrFolder(from: Int, to: Int) {
+        val workbookList = _uiState.value.resources.getOrNull()?.workbookList ?: return
+        val folderList = _uiState.value.resources.getOrNull()?.folderList ?: return
+        if (from == to) return
+
+        if (from <= folderList.lastIndex && to <= folderList.lastIndex) {
+            val sourceFolderId = folderList[from].id
+            val destFolderId = folderList[to].id
+            swapFolder(sourceFolderId, destFolderId)
+        } else if (from > folderList.lastIndex && to > folderList.lastIndex) {
+            val sourceWorkbookId = workbookList[from - folderList.size].id
+            val destWorkbookId = workbookList[to - folderList.size].id
+            swapWorkbook(sourceWorkbookId, destWorkbookId)
         }
+    }
 }
 
 data class WorkbookListUiState(

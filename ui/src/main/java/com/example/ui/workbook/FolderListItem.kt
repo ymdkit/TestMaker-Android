@@ -19,12 +19,13 @@ import com.example.usecase.model.FolderUseCaseModel
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FolderListItem(
+    modifier: Modifier = Modifier,
     folder: FolderUseCaseModel,
     onClick: (FolderUseCaseModel) -> Unit,
     onMenuClicked: (FolderUseCaseModel) -> Unit
 ) {
     ListItem(
-        modifier = Modifier.clickable {
+        modifier = modifier.clickable {
             onClick(folder)
         },
         icon = {
