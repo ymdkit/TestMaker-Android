@@ -36,8 +36,8 @@ import com.example.core.utils.Resource
 import com.example.ui.answer.ResultViewModel
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
-import com.example.ui.core.ClickableListItem
 import com.example.ui.core.TestMakerTopAppBar
+import com.example.ui.core.item.ClickableListItem
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData

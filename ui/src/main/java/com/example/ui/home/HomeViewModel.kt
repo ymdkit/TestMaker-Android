@@ -68,7 +68,7 @@ class HomeViewModel @Inject constructor(
 
     fun updateFolder(folder: FolderUseCaseModel, newFolderName: String) =
         viewModelScope.launch {
-            userFolderCommandUseCase.updateFolder(folder, newFolderName)
+            userFolderCommandUseCase.updateFolder(folder)
         }
 
     fun deleteFolder(folder: FolderUseCaseModel) =

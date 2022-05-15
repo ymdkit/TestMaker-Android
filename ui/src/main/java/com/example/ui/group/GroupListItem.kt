@@ -9,7 +9,7 @@ import androidx.compose.material.icons.filled.Group
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.ui.core.ClickableListItem
+import com.example.ui.core.item.ClickableListItem
 import com.example.usecase.model.GroupUseCaseModel
 
 @Composable

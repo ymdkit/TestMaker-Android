@@ -71,6 +71,24 @@ class WorkbookListFragment : Fragment() {
                                 is WorkbookListDrawerState.None -> {
                                     Spacer(modifier = Modifier.height(1.dp))
                                 }
+                                is WorkbookListDrawerState.OperateFolder -> {
+                                    val folder = state.folder
+                                    OperateFolder(
+                                        folder = folder,
+                                        onEdit = { newFolder ->
+                                            scope.launch {
+                                                drawerState.close()
+                                                workbookListViewModel.updateFolder(newFolder)
+                                            }
+                                        },
+                                        onDelete = {
+                                            scope.launch {
+                                                drawerState.close()
+                                                workbookListViewModel.deleteFolder(folder)
+                                            }
+                                        }
+                                    )
+                                }
                                 is WorkbookListDrawerState.OperateWorkbook -> {
                                     val workbook = state.workbook
                                     OperateWorkbook(
@@ -247,7 +265,18 @@ class WorkbookListFragment : Fragment() {
                                                                             folderList.forEach {
                                                                                 item {
                                                                                     FolderListItem(
-                                                                                        folder = it
+                                                                                        folder = it,
+                                                                                        onClick = {
+                                                                                            // todo
+                                                                                        },
+                                                                                        onMenuClicked = {
+                                                                                            scope.launch {
+                                                                                                workbookListViewModel.onFolderMenuClicked(
+                                                                                                    it
+                                                                                                )
+                                                                                                drawerState.open()
+                                                                                            }
+                                                                                        }
                                                                                     )
                                                                                 }
                                                                             }
@@ -434,6 +463,13 @@ class WorkbookListFragment : Fragment() {
                     )
                     val hostActivity = requireActivity() as? MainActivity
                     hostActivity?.navigateHomePage()
+                }
+                .launchIn(this)
+
+            workbookListViewModel.deleteFolderEvent
+                .receiveAsFlow()
+                .onEach {
+                    requireContext().showToast(getString(R.string.msg_success_delete_folder))
                 }
                 .launchIn(this)
         }

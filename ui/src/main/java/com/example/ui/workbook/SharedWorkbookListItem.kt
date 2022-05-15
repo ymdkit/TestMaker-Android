@@ -12,8 +12,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.ui.R
-import com.example.ui.core.ClickableListItem
 import com.example.ui.core.ColorMapper
+import com.example.ui.core.item.ClickableListItem
 import com.example.usecase.model.SharedWorkbookUseCaseModel
 
 @OptIn(ExperimentalMaterialApi::class)

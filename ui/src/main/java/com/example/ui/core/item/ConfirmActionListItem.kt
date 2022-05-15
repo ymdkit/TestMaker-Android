@@ -1,7 +1,6 @@
 package com.example.ui.core.item
 
 import androidx.compose.runtime.*
-import com.example.ui.core.ClickableListItem
 import com.example.ui.core.ConfirmDialog
 
 @Composable

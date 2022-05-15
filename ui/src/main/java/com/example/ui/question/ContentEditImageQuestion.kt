@@ -32,8 +32,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.example.core.QuestionImage
 import com.example.ui.R
-import com.example.ui.core.ClickableListItem
 import com.example.ui.core.GlideApp
+import com.example.ui.core.item.ClickableListItem
 import com.example.ui.core.showToast
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.example.ui.question
+package com.example.ui.workbook
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
@@ -6,57 +6,51 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.FileCopy
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.ui.R
-import com.example.ui.core.item.ClickableListItem
 import com.example.ui.core.item.ConfirmActionListItem
-import com.example.usecase.model.QuestionUseCaseModel
+import com.example.ui.core.item.EditTextListItem
+import com.example.usecase.model.FolderUseCaseModel
 
 @Composable
-fun OperateQuestion(
-    question: QuestionUseCaseModel,
-    onEdit: () -> Unit,
-    onCopy: () -> Unit,
+fun OperateFolder(
+    folder: FolderUseCaseModel,
+    onEdit: (FolderUseCaseModel) -> Unit,
     onDelete: () -> Unit
 ) {
     Text(
         modifier = Modifier.padding(16.dp),
-        text = question.problem
+        text = folder.name
     )
-    ClickableListItem(
+    EditTextListItem(
         icon = {
             Icon(
                 imageVector = Icons.Filled.Create,
-                contentDescription = "edit workbook"
+                contentDescription = "edit folder"
             )
         },
-        text = stringResource(id = R.string.edit),
-        onClick = onEdit
-    )
-    ClickableListItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Filled.FileCopy,
-                contentDescription = "copy workbook"
-            )
+        label = stringResource(id = R.string.edit),
+        value = folder.name,
+        dialogTitle = stringResource(id = R.string.title_edit_folder),
+        onValueSubmitted = {
+            onEdit(folder.copy(name = it))
         },
-        text = stringResource(id = R.string.copy_question),
-        onClick = onCopy
+        showingSecondaryText = false
     )
     ConfirmActionListItem(
         icon = {
             Icon(
                 imageVector = Icons.Filled.Delete,
-                contentDescription = "delete workbook"
+                contentDescription = "delete folder"
             )
         },
         label = stringResource(R.string.delete),
         confirmMessage = stringResource(
-            id = R.string.msg_delete_question
+            id = R.string.msg_delete_folder,
+            folder.name
         ),
         confirmButtonText = stringResource(
             id = R.string.button_delete_confirm

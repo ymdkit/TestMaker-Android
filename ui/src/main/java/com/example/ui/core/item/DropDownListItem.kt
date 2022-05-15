@@ -4,7 +4,6 @@ import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import com.example.ui.core.ClickableListItem
 
 @Composable
 fun DropDownListItem(

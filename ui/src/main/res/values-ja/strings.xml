@@ -248,4 +248,6 @@
     <string name="msg_delete_question">この問題を削除してもよろしいですか？</string>
     <string name="msg_failure_loading">読み込みに失敗しました</string>
     <string name="reload">再読み込み</string>
+    <string name="msg_delete_folder">このフォルダを削除しますか？（フォルダ内に含まれる問題集も全て削除されます）</string>
+    <string name="title_edit_folder">フォルダ名の編集</string>
 </resources>

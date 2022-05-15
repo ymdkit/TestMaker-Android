@@ -253,4 +253,6 @@
     <string name="msg_delete_question">delete this question?</string>
     <string name="msg_failure_loading">loading failure</string>
     <string name="reload">reload</string>
+    <string name="msg_delete_folder">delete this folder?</string>
+    <string name="title_edit_folder">edit folder</string>
 </resources>

@@ -5,7 +5,6 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import com.example.core.TestMakerColor
-import com.example.ui.core.ClickableListItem
 import com.example.ui.core.ColorMapper
 
 @Composable

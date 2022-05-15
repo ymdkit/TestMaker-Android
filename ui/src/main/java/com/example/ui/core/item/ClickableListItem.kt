@@ -1,4 +1,4 @@
-package com.example.ui.core
+package com.example.ui.core.item
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material.ExperimentalMaterialApi

@@ -3,25 +3,27 @@ package com.example.ui.core.item
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.KeyboardType
-import com.example.ui.core.ClickableListItem
 import com.example.ui.core.EditTextDialog
 import com.example.ui.preference.EditTextState
 
 @Composable
 fun EditTextListItem(
+    icon: @Composable (() -> Unit)? = null,
     label: String,
     value: String,
     keyboardType: KeyboardType = KeyboardType.Text,
     dialogTitle: String,
     placeholder: String = "",
     onValueSubmitted: (String) -> Unit,
+    showingSecondaryText: Boolean = true
 ) {
 
     var editTextState: EditTextState by remember { mutableStateOf(EditTextState.Empty) }
 
     ClickableListItem(
+        icon = icon,
         text = label,
-        secondaryText = value,
+        secondaryText = if (showingSecondaryText) value else "",
         onClick = {
             editTextState = EditTextState.Editing(value)
         }

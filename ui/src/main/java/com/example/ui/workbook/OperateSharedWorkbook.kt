@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.ui.R
-import com.example.ui.core.ClickableListItem
+import com.example.ui.core.item.ClickableListItem
 import com.example.ui.core.item.ConfirmActionListItem
 import com.example.usecase.model.SharedWorkbookUseCaseModel
 

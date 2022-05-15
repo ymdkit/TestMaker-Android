@@ -41,6 +41,10 @@ class WorkbookListViewModel @Inject constructor(
     val navigateToAnswerWorkbookEvent: ReceiveChannel<NavigateToAnswerWorkbookArgs>
         get() = _navigateToAnswerWorkbookEvent
 
+    private val _deleteFolderEvent: Channel<Unit> = Channel()
+    val deleteFolderEvent: ReceiveChannel<Unit>
+        get() = _deleteFolderEvent
+
     private val _questionListEmptyEvent: Channel<Unit> = Channel()
     val questionListEmptyEvent: ReceiveChannel<Unit>
         get() = _questionListEmptyEvent
@@ -80,19 +84,27 @@ class WorkbookListViewModel @Inject constructor(
             folderListWatchUseCase.load()
         }
 
-    fun updateFolder(folder: FolderUseCaseModel, newFolderName: String) =
+    fun updateFolder(folder: FolderUseCaseModel) =
         viewModelScope.launch {
-            userFolderCommandUseCase.updateFolder(folder, newFolderName)
+            userFolderCommandUseCase.updateFolder(folder)
         }
 
     fun deleteFolder(folder: FolderUseCaseModel) =
         viewModelScope.launch {
             userFolderCommandUseCase.deleteFolder(folder)
+            _deleteFolderEvent.send(Unit)
         }
 
     fun swapFolder(sourceFolderId: Long, destFolderId: Long) =
         viewModelScope.launch {
             userFolderCommandUseCase.swapFolder(sourceFolderId, destFolderId)
+        }
+
+    fun onFolderMenuClicked(folder: FolderUseCaseModel) =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                workbookListDrawerState = WorkbookListDrawerState.OperateFolder(folder)
+            )
         }
 
     fun onWorkbookClicked(workbook: WorkbookUseCaseModel) =
@@ -168,6 +180,7 @@ data class WorkbookListUiState(
 
 sealed class WorkbookListDrawerState {
     object None : WorkbookListDrawerState()
+    data class OperateFolder(val folder: FolderUseCaseModel) : WorkbookListDrawerState()
     data class OperateWorkbook(val workbook: WorkbookUseCaseModel) : WorkbookListDrawerState()
     data class OperateSharedWorkbook(val workbook: SharedWorkbookUseCaseModel) :
         WorkbookListDrawerState()

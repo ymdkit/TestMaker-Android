@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.core.utils.Resource
 import com.example.ui.core.*
+import com.example.ui.core.item.ClickableListItem
 import com.example.ui.core.item.ConfirmActionListItem
 import com.example.ui.group.GroupWorkbookListViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
