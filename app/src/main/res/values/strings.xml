@@ -249,4 +249,5 @@
     <string name="reset">reset</string>
     <string name="title_select_move_dest_work_book">select workbook</string>
     <string name="title_select_copy_dest_work_book">select workbook</string>
+    <string name="msg_empty_uploadable_workbook">no workbook are exists</string>
 </resources>

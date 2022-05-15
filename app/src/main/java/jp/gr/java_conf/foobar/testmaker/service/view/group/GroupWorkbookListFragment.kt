@@ -218,7 +218,6 @@ class GroupWorkbookListFragment : Fragment() {
                                                     }
                                                     ConfirmActionDropDownMenu(
                                                         label = stringResource(id = R.string.delete_group),
-                                                        // todo グループ名の編集 → グループの削除の順で作業した場合に最新のグループ名が反映されない問題
                                                         confirmMessage = stringResource(
                                                             id = R.string.msg_delete_group,
                                                             uiState.group.getOrNull()?.name ?: ""
@@ -229,7 +228,6 @@ class GroupWorkbookListFragment : Fragment() {
                                                 } else {
                                                     ConfirmActionDropDownMenu(
                                                         label = stringResource(id = R.string.exit_group),
-                                                        // todo グループ名の編集 → グループの退出の順で作業した場合に最新のグループ名が反映されない問題
                                                         confirmMessage = stringResource(
                                                             id = R.string.msg_exit_group,
                                                             uiState.group.getOrNull()?.name ?: ""

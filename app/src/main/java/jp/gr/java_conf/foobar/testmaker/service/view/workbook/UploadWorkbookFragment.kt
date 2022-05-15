@@ -114,7 +114,7 @@ class UploadWorkbookFragment : Fragment() {
                                                                     Text(
                                                                         // todo StringResource
                                                                         text = uiState.selectedWorkbook?.name
-                                                                            ?: "投稿可能な問題集が存在しません",
+                                                                            ?: stringResource(R.string.msg_empty_uploadable_workbook),
                                                                         color = MaterialTheme.colors.onSurface
                                                                     )
                                                                     Icon(
