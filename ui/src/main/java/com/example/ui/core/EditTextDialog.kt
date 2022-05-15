@@ -10,7 +10,6 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.ui.R
@@ -41,7 +40,7 @@ fun EditTextDialog(
                         .fillMaxWidth()
                         .padding(end = 16.dp)
                 ) {
-                    Text(text = title, fontWeight = FontWeight.Bold)
+                    Text(text = title)
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
                         value = value,
