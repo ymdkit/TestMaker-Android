@@ -150,7 +150,7 @@ dependencies {
     androidTestImplementation("com.jraska:falcon:2.1.1")
 
     implementation(project(":ui"))
-    implementation(project(":usecase")) // todo モジュール分割中の一時的な処置を削除する
+    implementation(project(":usecase")) // todo モジュール分割中の一時的な処置を削除する（フル Compose にした後）
     implementation(project(":infra"))
     implementation(project(":core"))
 }

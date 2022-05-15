@@ -258,8 +258,8 @@
 
 
         <argument
-            android:name="group"
-            app:argType="com.example.usecase.model.GroupUseCaseModel" />
+            android:name="groupId"
+            app:argType="string" />
 
         <action
             android:id="@+id/action_group_detail_to_upload_test"

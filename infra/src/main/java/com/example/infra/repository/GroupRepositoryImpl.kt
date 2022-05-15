@@ -30,7 +30,7 @@ class GroupRepositoryImpl @Inject constructor(
         get() = _updateGroupListFlow
 
     override suspend fun getBelongingGroupList(userId: UserId): List<Group> =
-        db.collection("users")
+        db.collection(USER_COLLECTION_NAME)
             .document(userId.value)
             .collection(GROUP_COLLECTION_NAME)
             .orderBy("createdAt", Query.Direction.DESCENDING)
@@ -39,6 +39,14 @@ class GroupRepositoryImpl @Inject constructor(
             .await()
             .toObjects(FirebaseGroup::class.java)
             .map { it.toGroup() }
+
+    override suspend fun getGroupOrNull(groupId: GroupId): Group? =
+        db.collection(GROUP_COLLECTION_NAME)
+            .document(groupId.value)
+            .get()
+            .await()
+            .toObject(FirebaseGroup::class.java)
+            ?.toGroup()
 
     override suspend fun createGroup(userId: UserId, groupName: String): Group {
         val ref = db.collection(GROUP_COLLECTION_NAME).document()

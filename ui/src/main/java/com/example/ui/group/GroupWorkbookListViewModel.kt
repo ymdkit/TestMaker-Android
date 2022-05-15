@@ -23,12 +23,14 @@ class GroupWorkbookListViewModel @Inject constructor(
     private val groupCommandUseCase: GroupCommandUseCase,
     private val sharedWorkbookCommandUseCase: SharedWorkbookCommandUseCase,
     private val userWatchUseCase: UserWatchUseCase,
-    private val userAuthCommandUseCase: UserAuthCommandUseCase
+    private val userAuthCommandUseCase: UserAuthCommandUseCase,
+    private val groupWatchUseCase: GroupWatchUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<GroupWorkbookListUiState> =
         MutableStateFlow(
             GroupWorkbookListUiState(
+                group = Resource.Empty,
                 workbookList = Resource.Empty,
                 showingMenu = false,
                 isOwner = false,
@@ -58,16 +60,17 @@ class GroupWorkbookListViewModel @Inject constructor(
     val downloadWorkbookEvent: ReceiveChannel<String>
         get() = _downloadWorkbookEvent
 
-    private lateinit var group: GroupUseCaseModel
+    private lateinit var groupId: String
 
     @OptIn(FlowPreview::class)
-    fun setup(group: GroupUseCaseModel) {
-        this.group = group
+    fun setup(groupId: String) {
+        this.groupId = groupId
         groupWorkbookListWatchUseCase.setup(
-            groupId = group.id,
+            groupId = groupId,
             scope = viewModelScope
         )
         userWatchUseCase.setup(scope = viewModelScope)
+        groupWatchUseCase.setup(groupId = groupId, scope = viewModelScope)
 
         groupWorkbookListWatchUseCase.flow
             .debounce(500)
@@ -78,14 +81,20 @@ class GroupWorkbookListViewModel @Inject constructor(
                 )
             }.launchIn(viewModelScope)
 
-        userWatchUseCase.flow
-            .onEach {
-                _uiState.value = _uiState.value.copy(
-                    isOwner = it != null && group.userId == it.id,
-                    isLogin = it != null
-                )
-            }
-            .launchIn(viewModelScope)
+        combine(
+            userWatchUseCase.flow,
+            groupWatchUseCase.flow
+        ) { user, groupResource ->
+            user to groupResource
+        }.onEach {
+            val user = it.first
+            val group = it.second
+            _uiState.value = _uiState.value.copy(
+                group = group,
+                isOwner = user != null && group.getOrNull()?.userId == user.id,
+                isLogin = user != null
+            )
+        }.launchIn(viewModelScope)
     }
 
     fun load() =
@@ -94,6 +103,7 @@ class GroupWorkbookListViewModel @Inject constructor(
                 isRefreshing = true
             )
             groupWorkbookListWatchUseCase.load()
+            groupWatchUseCase.load()
         }
 
     fun onUserCreated() =
@@ -104,6 +114,7 @@ class GroupWorkbookListViewModel @Inject constructor(
 
     fun onInviteButtonClicked() =
         viewModelScope.launch {
+            val group = _uiState.value.group.getOrNull() ?: return@launch
             val uri = groupCommandUseCase.inviteGroup(groupId = group.id)
             _inviteGroupEvent.send(group.name to uri)
         }
@@ -117,6 +128,7 @@ class GroupWorkbookListViewModel @Inject constructor(
 
     fun onEditGroupButtonClicked() =
         viewModelScope.launch {
+            val group = _uiState.value.group.getOrNull() ?: return@launch
             _uiState.value = _uiState.value.copy(
                 showingEditGroupDialog = true,
                 editingGroupName = group.name
@@ -140,6 +152,7 @@ class GroupWorkbookListViewModel @Inject constructor(
 
     fun onUpdateGroup(groupName: String) =
         viewModelScope.launch {
+            val group = _uiState.value.group.getOrNull() ?: return@launch
             val newGroup = group.copy(
                 name = groupName
             )
@@ -147,20 +160,21 @@ class GroupWorkbookListViewModel @Inject constructor(
                 group = newGroup
             )
             _uiState.value = _uiState.value.copy(
-                showingEditGroupDialog = false
+                showingEditGroupDialog = false,
+                group = Resource.Success(newGroup)
             )
-            group = newGroup
         }
 
     fun onDeleteGroupButtonClicked() =
         viewModelScope.launch {
+            val group = _uiState.value.group.getOrNull() ?: return@launch
             groupCommandUseCase.deleteGroup(group)
             _exitGroupEvent.send(Unit)
         }
 
     fun onExitGroupButtonClicked() =
         viewModelScope.launch {
-            groupCommandUseCase.exitGroup(group)
+            groupCommandUseCase.exitGroup(groupId)
             _exitGroupEvent.send(Unit)
         }
 
@@ -186,13 +200,14 @@ class GroupWorkbookListViewModel @Inject constructor(
     fun onDeleteWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
         viewModelScope.launch {
             sharedWorkbookCommandUseCase.deleteWorkbookFromGroup(
-                groupId = group.id,
+                groupId = groupId,
                 workbook = workbook
             )
         }
 }
 
 data class GroupWorkbookListUiState @OptIn(ExperimentalMaterialApi::class) constructor(
+    val group: Resource<GroupUseCaseModel?>,
     val workbookList: Resource<List<SharedWorkbookUseCaseModel>>,
     val showingMenu: Boolean,
     val showingEditGroupDialog: Boolean,

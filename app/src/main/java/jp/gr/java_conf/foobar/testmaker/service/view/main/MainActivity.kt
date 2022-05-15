@@ -15,6 +15,7 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
+import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupWorkbookListFragmentDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -78,6 +79,18 @@ class MainActivity : AppCompatActivity() {
                 }
                 .launchIn(this)
 
+            viewModel.joinGroupEvent
+                .receiveAsFlow()
+                .onEach {
+                    binding.bottomBar.selectedItemId = R.id.page_group
+                    navController.navigate(
+                        GroupWorkbookListFragmentDirections.actionGlobalPageGroupDetail(
+                            groupId = it
+                        )
+                    )
+                }
+                .launchIn(this)
+
 
             val pendingDynamicLinkData = withContext(Dispatchers.Default) {
                 FirebaseDynamicLinks.getInstance()
@@ -95,16 +108,6 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(R.id.action_global_page_home)
     }
 
-    private fun navigateGroupPage(groupId: String) {
-        binding.bottomBar.selectedItemId = R.id.page_group
-        // todo
-//        navController.navigate(
-//            GroupListFragmentDirections.actionGroupListToGroupDetail(
-//                groupId = groupId
-//            )
-//        )
-    }
-
     private fun handleDynamicLink(link: String) {
 
         val regex = Regex("""(?<=https://testmaker-1cb29\.com/).*|(?<=https://ankimaker\.com/).*""")
@@ -118,7 +121,7 @@ class MainActivity : AppCompatActivity() {
 
                 if (params.size != 2) return@let
 
-                navigateGroupPage(groupId = params[1])
+                viewModel.joinGroup(groupId = params[0])
 
             } else {
                 val workbookId = params[0]

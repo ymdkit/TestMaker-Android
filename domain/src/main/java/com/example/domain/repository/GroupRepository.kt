@@ -11,6 +11,7 @@ interface GroupRepository {
     val updateGroupListFlow: Flow<List<Group>>
 
     suspend fun getBelongingGroupList(userId: UserId): List<Group>
+    suspend fun getGroupOrNull(groupId: GroupId): Group?
     suspend fun createGroup(userId: UserId, groupName: String): Group
     suspend fun updateGroup(userId: UserId, group: Group)
     suspend fun inviteGroup(groupId: GroupId): Uri

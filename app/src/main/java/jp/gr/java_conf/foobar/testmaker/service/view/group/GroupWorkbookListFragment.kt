@@ -219,7 +219,7 @@ class GroupWorkbookListFragment : Fragment() {
                                                         // todo グループ名の編集 → グループの削除の順で作業した場合に最新のグループ名が反映されない問題
                                                         confirmMessage = stringResource(
                                                             id = R.string.msg_delete_group,
-                                                            args.group.name
+                                                            uiState.group.getOrNull()?.name ?: ""
                                                         ),
                                                         confirmButtonText = stringResource(id = R.string.delete),
                                                         onConfirmed = groupWorkbookListViewModel::onDeleteGroupButtonClicked
@@ -230,7 +230,7 @@ class GroupWorkbookListFragment : Fragment() {
                                                         // todo グループ名の編集 → グループの退出の順で作業した場合に最新のグループ名が反映されない問題
                                                         confirmMessage = stringResource(
                                                             id = R.string.msg_exit_group,
-                                                            args.group.name
+                                                            uiState.group.getOrNull()?.name ?: ""
                                                         ),
                                                         confirmButtonText = stringResource(id = R.string.delete),
                                                         onConfirmed = groupWorkbookListViewModel::onExitGroupButtonClicked
@@ -323,7 +323,7 @@ class GroupWorkbookListFragment : Fragment() {
                                         FloatingActionButton(onClick = {
                                             findNavController().navigate(
                                                 GroupWorkbookListFragmentDirections.actionGroupDetailToUploadTest(
-                                                    groupId = args.group.id
+                                                    groupId = args.groupId
                                                 )
                                             )
                                         }) {
@@ -351,36 +351,12 @@ class GroupWorkbookListFragment : Fragment() {
                 }
             }
         }
-
-//
-//        return DataBindingUtil.inflate<FragmentGroupDetailBinding>(
-//            inflater,
-//            R.layout.fragment_group_detail,
-//            container,
-//            false
-//        ).apply {
-//            binding = this
-//
-//
-//
-//
-//            buttonAdd.setOnClickListener {
-//                findNavController().navigate(
-//                    GroupDetailFragmentDirections.actionGroupDetailToUploadTest(
-//                        groupId = args.groupId
-//                    )
-//                )
-//            }
-//
-//
-//
-//        }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        groupWorkbookListViewModel.setup(group = args.group)
+        groupWorkbookListViewModel.setup(groupId = args.groupId)
         groupWorkbookListViewModel.load()
 
         lifecycleScope.launchWhenCreated {
@@ -416,7 +392,7 @@ class GroupWorkbookListFragment : Fragment() {
             groupWorkbookListViewModel.downloadWorkbookEvent
                 .receiveAsFlow()
                 .onEach {
-                    requireContext().showToast(getString(R.string.msg_success_download_test, it))
+                    requireContext().showToast(getString(R.string.msg_success_download_test))
                     val hostActivity = requireActivity() as? MainActivity
                     hostActivity?.navigateHomePage()
                 }
@@ -433,28 +409,4 @@ class GroupWorkbookListFragment : Fragment() {
             )
             type = "text/plain"
         }, null)
-
-
-//    private fun refresh() = lifecycleScope.launch {
-//        controller.tests = viewModel.getTests(args.groupId)
-//        group = viewModel.getGroup(args.groupId)
-//
-//        group ?: run {
-//            requireContext().showToast(getString(R.string.msg_group_deleted))
-//            exitGroup(args.groupId)
-//            return@launch
-//        }
-//
-//        joinGroup()
-//        binding.swipeRefresh.isRefreshing = false
-//
-//    }
-//
-//    private fun joinGroup() = lifecycleScope.launch {
-//        group?.let { group ->
-//            auth.getUser()?.uid?.let { userId ->
-//                viewModel.joinGroup(userId, group, args.groupId)
-//            }
-//        }
-//    }
 }
