@@ -49,8 +49,11 @@ class WorkbookListViewModel @Inject constructor(
     val questionListEmptyEvent: ReceiveChannel<Unit>
         get() = _questionListEmptyEvent
 
+    private lateinit var folderName: String
+
     @OptIn(ExperimentalMaterialApi::class)
-    fun setup() {
+    fun setup(folderName: String) {
+        this.folderName = folderName
         workbookListWatchUseCase.setup(scope = viewModelScope)
         folderListWatchUseCase.setup(scope = viewModelScope)
 
@@ -80,8 +83,16 @@ class WorkbookListViewModel @Inject constructor(
 
     fun load() =
         viewModelScope.launch {
-            workbookListWatchUseCase.load()
-            folderListWatchUseCase.load()
+            workbookListWatchUseCase.load(
+                workbookFilter = {
+                    if (folderName.isNotEmpty()) it.folderName == folderName else true
+                }
+            )
+            folderListWatchUseCase.load(
+                folderFilter = {
+                    folderName.isEmpty()
+                }
+            )
         }
 
     fun updateFolder(folder: FolderUseCaseModel) =

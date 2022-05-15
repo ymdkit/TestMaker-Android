@@ -36,12 +36,14 @@ class WorkbookListWatchUseCase @Inject constructor(
         }
     }
 
-    suspend fun load() {
+    suspend fun load(
+        workbookFilter: (WorkbookUseCaseModel) -> Boolean = { true }
+    ) {
         _flow.emit(Resource.Loading)
         val workbookList = repository.getWorkbookList()
         _flow.emit(Resource.Success(workbookList.map {
             WorkbookUseCaseModel.fromWorkbook(it)
-        }))
+        }.filter(workbookFilter)))
     }
 }
 

@@ -37,12 +37,14 @@ class FolderListWatchUseCase @Inject constructor(
         }
     }
 
-    suspend fun load() {
+    suspend fun load(
+        folderFilter: (FolderUseCaseModel) -> Boolean = { true }
+    ) {
         _flow.emit(Resource.Loading)
         val folderList = workBookRepository.getFolderList()
         _flow.emit(Resource.Success(folderList.map {
             FolderUseCaseModel.fromFolder(it)
-        }))
+        }.filter(folderFilter)))
     }
 
 }

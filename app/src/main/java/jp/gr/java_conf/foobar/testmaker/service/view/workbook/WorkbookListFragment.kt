@@ -20,10 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.core.utils.Resource
 import com.example.ui.answer.AnswerSetting
 import com.example.ui.answer.AnswerSettingViewModel
@@ -43,6 +45,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class WorkbookListFragment : Fragment() {
 
+    private val args: WorkbookListFragmentArgs by navArgs()
     private val adViewModel: AdViewModel by viewModels()
     private val workbookListViewModel: WorkbookListViewModel by viewModels()
     private val myWorkbookListViewModel: MyWorkbookListViewModel by viewModels()
@@ -162,10 +165,10 @@ class WorkbookListFragment : Fragment() {
                                         workbookName = state.workbook.name,
                                         onStartButtonClicked = {
                                             scope.launch {
+                                                drawerState.close()
                                                 workbookListViewModel.onStartAnswerClicked(
                                                     state.workbook.id
                                                 )
-                                                drawerState.close()
                                             }
                                         },
                                         answerSettingViewModel = answerSettingViewModel
@@ -243,22 +246,28 @@ class WorkbookListFragment : Fragment() {
                                                                             modifier = Modifier
                                                                                 .fillMaxHeight()
                                                                         ) {
-                                                                            item {
-                                                                                Spacer(
-                                                                                    modifier = Modifier.height(
-                                                                                        8.dp
+                                                                            if (args.folderName.isNotEmpty()) {
+                                                                                item {
+                                                                                    ListItem(
+                                                                                        text = {
+                                                                                            Text(
+                                                                                                text = "/ ${args.folderName}",
+                                                                                                fontSize = 12.sp
+                                                                                            )
+                                                                                        }
                                                                                     )
-                                                                                )
+                                                                                }
                                                                             }
                                                                             if (folderList.isNotEmpty()) {
                                                                                 item {
-                                                                                    Text(
-                                                                                        modifier = Modifier.padding(
-                                                                                            horizontal = 16.dp
-                                                                                        ),
-                                                                                        text = stringResource(
-                                                                                            id = R.string.folder
-                                                                                        )
+                                                                                    ListItem(
+                                                                                        text = {
+                                                                                            Text(
+                                                                                                stringResource(
+                                                                                                    id = R.string.folder
+                                                                                                )
+                                                                                            )
+                                                                                        }
                                                                                     )
                                                                                 }
                                                                             }
@@ -267,7 +276,11 @@ class WorkbookListFragment : Fragment() {
                                                                                     FolderListItem(
                                                                                         folder = it,
                                                                                         onClick = {
-                                                                                            // todo
+                                                                                            findNavController().navigate(
+                                                                                                WorkbookListFragmentDirections.actionHomeToHomeQuestion(
+                                                                                                    folderName = it.name
+                                                                                                )
+                                                                                            )
                                                                                         },
                                                                                         onMenuClicked = {
                                                                                             scope.launch {
@@ -282,13 +295,14 @@ class WorkbookListFragment : Fragment() {
                                                                             }
                                                                             if (workbookList.isNotEmpty()) {
                                                                                 item {
-                                                                                    Text(
-                                                                                        modifier = Modifier.padding(
-                                                                                            horizontal = 16.dp
-                                                                                        ),
-                                                                                        text = stringResource(
-                                                                                            id = R.string.workbook
-                                                                                        )
+                                                                                    ListItem(
+                                                                                        text = {
+                                                                                            Text(
+                                                                                                stringResource(
+                                                                                                    id = R.string.workbook
+                                                                                                )
+                                                                                            )
+                                                                                        }
                                                                                     )
                                                                                 }
                                                                             }
@@ -420,7 +434,7 @@ class WorkbookListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adViewModel.setup()
-        workbookListViewModel.setup()
+        workbookListViewModel.setup(folderName = args.folderName)
         myWorkbookListViewModel.setup()
         answerSettingViewModel.setup()
         workbookListViewModel.load()
