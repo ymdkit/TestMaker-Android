@@ -40,7 +40,8 @@ class GroupWorkbookListViewModel @Inject constructor(
                 selectedSharedWorkbook = null,
                 isRefreshing = true,
                 isLogin = false,
-                user = null
+                user = null,
+                isDownloading = false
             )
         )
     val uiState: StateFlow<GroupWorkbookListUiState>
@@ -193,8 +194,14 @@ class GroupWorkbookListViewModel @Inject constructor(
 
     fun onDownloadWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isDownloading = true,
+            )
             sharedWorkbookCommandUseCase.downloadWorkbook(documentId = workbook.id)
             _downloadWorkbookEvent.send(workbook.name)
+            _uiState.value = _uiState.value.copy(
+                isDownloading = false,
+            )
         }
 
     fun onShareWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
@@ -223,6 +230,7 @@ data class GroupWorkbookListUiState @OptIn(ExperimentalMaterialApi::class) const
     val selectedSharedWorkbook: SharedWorkbookUseCaseModelWithIsOwner?,
     val isRefreshing: Boolean,
     val isLogin: Boolean,
+    val isDownloading: Boolean
 )
 
 data class SharedWorkbookUseCaseModelWithIsOwner(

@@ -107,17 +107,6 @@ class GroupWorkbookListFragment : Fragment() {
                                 ClickableListItem(
                                     icon = {
                                         Icon(
-                                            imageVector = Icons.Filled.Download,
-                                            contentDescription = "download"
-                                        )
-                                    },
-                                    text = stringResource(id = R.string.download)
-                                ) {
-                                    groupWorkbookListViewModel.onDownloadWorkbookClicked(workbook = workbook)
-                                }
-                                ClickableListItem(
-                                    icon = {
-                                        Icon(
                                             imageVector = Icons.Filled.History,
                                             contentDescription = "history"
                                         )
@@ -170,6 +159,27 @@ class GroupWorkbookListFragment : Fragment() {
                                             }
                                         }
                                     )
+                                }
+                                Button(
+                                    enabled = !uiState.isDownloading,
+                                    onClick = {
+                                        groupWorkbookListViewModel.onDownloadWorkbookClicked(
+                                            workbook = workbook
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                        .defaultMinSize(minHeight = 48.dp),
+                                ) {
+                                    if (uiState.isDownloading) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(32.dp),
+                                            color = MaterialTheme.colors.onPrimary
+                                        )
+                                    } else {
+                                        Text(text = stringResource(id = com.example.ui.R.string.download))
+                                    }
                                 }
                             } else {
                                 Spacer(modifier = Modifier.height(1.dp))

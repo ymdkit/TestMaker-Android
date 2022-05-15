@@ -32,19 +32,12 @@ class SharedWorkbookListViewModel @Inject constructor(
                 query = "",
                 selectedSharedWorkbook = null,
                 isRefreshing = true,
-                isSearching = false
+                isSearching = false,
+                isDownloading = false
             )
         )
     val uiState: StateFlow<GroupWorkbookListUiState>
         get() = _uiState
-
-    private val _inviteGroupEvent: Channel<Pair<String, Uri>> = Channel()
-    val inviteGroupEvent: ReceiveChannel<Pair<String, Uri>>
-        get() = _inviteGroupEvent
-
-    private val _exitGroupEvent: Channel<Unit> = Channel()
-    val exitGroupEvent: ReceiveChannel<Unit>
-        get() = _exitGroupEvent
 
     private val _shareWorkbookEvent: Channel<Pair<String, Uri>> = Channel()
     val shareWorkbookEvent: ReceiveChannel<Pair<String, Uri>>
@@ -102,7 +95,13 @@ class SharedWorkbookListViewModel @Inject constructor(
 
     fun onDownloadWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isDownloading = true
+            )
             sharedWorkbookCommandUseCase.downloadWorkbook(documentId = workbook.id)
+            _uiState.value = _uiState.value.copy(
+                isDownloading = false
+            )
             _downloadWorkbookEvent.send(workbook.name)
         }
 
@@ -120,4 +119,5 @@ data class GroupWorkbookListUiState @OptIn(ExperimentalMaterialApi::class) const
     val selectedSharedWorkbook: SharedWorkbookUseCaseModel?,
     val isRefreshing: Boolean,
     val isSearching: Boolean,
+    val isDownloading: Boolean
 )

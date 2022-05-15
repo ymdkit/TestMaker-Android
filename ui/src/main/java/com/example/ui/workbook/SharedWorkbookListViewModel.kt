@@ -29,7 +29,8 @@ class MyWorkbookListViewModel @Inject constructor(
         MutableStateFlow(
             MyWorkbookListUiState(
                 myWorkbookList = Resource.Empty,
-                selectedSharedWorkbook = null
+                selectedSharedWorkbook = null,
+                isDownloading = false
             )
         )
     val uiState: StateFlow<MyWorkbookListUiState>
@@ -73,8 +74,14 @@ class MyWorkbookListViewModel @Inject constructor(
 
     fun onDownloadWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isDownloading = true
+            )
             sharedWorkbookCommandUseCase.downloadWorkbook(documentId = workbook.id)
             _downloadWorkbookEvent.send(workbook.name)
+            _uiState.value = _uiState.value.copy(
+                isDownloading = false
+            )
         }
 
     fun onShareWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
@@ -94,5 +101,6 @@ class MyWorkbookListViewModel @Inject constructor(
 
 data class MyWorkbookListUiState(
     val myWorkbookList: Resource<List<SharedWorkbookUseCaseModel>>,
-    val selectedSharedWorkbook: SharedWorkbookUseCaseModel?
+    val selectedSharedWorkbook: SharedWorkbookUseCaseModel?,
+    val isDownloading: Boolean
 )

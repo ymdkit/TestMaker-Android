@@ -1,11 +1,12 @@
 package com.example.ui.workbook
 
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import com.example.usecase.model.SharedWorkbookUseCaseModel
 @Composable
 fun OperateOwnSharedWorkbook(
     workbook: SharedWorkbookUseCaseModel,
+    isDownloading: Boolean,
     onDownload: () -> Unit,
     onShare: () -> Unit,
     onDelete: () -> Unit
@@ -26,16 +28,6 @@ fun OperateOwnSharedWorkbook(
     Text(
         modifier = Modifier.padding(16.dp),
         text = workbook.name
-    )
-    ClickableListItem(
-        icon = {
-            Icon(
-                imageVector = Icons.Filled.Download,
-                contentDescription = "download workbook"
-            )
-        },
-        text = stringResource(id = R.string.download),
-        onClick = onDownload
     )
     ClickableListItem(
         icon = {
@@ -64,4 +56,21 @@ fun OperateOwnSharedWorkbook(
         ),
         onConfirmed = onDelete
     )
+    Button(
+        enabled = !isDownloading,
+        onClick = onDownload,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .defaultMinSize(minHeight = 48.dp),
+    ) {
+        if (isDownloading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(32.dp),
+                color = MaterialTheme.colors.onPrimary
+            )
+        } else {
+            Text(text = stringResource(id = R.string.download))
+        }
+    }
 }

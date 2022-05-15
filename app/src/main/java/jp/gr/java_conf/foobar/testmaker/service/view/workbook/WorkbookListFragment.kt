@@ -60,6 +60,8 @@ class WorkbookListFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 val workbookListUiState by workbookListViewModel.uiState.collectAsState()
+                val myWorkbookListUiState by
+                myWorkbookListViewModel.uiState.collectAsState()
                 val drawerState =
                     rememberBottomDrawerState(BottomDrawerValue.Closed)
 
@@ -152,12 +154,12 @@ class WorkbookListFragment : Fragment() {
                                 is WorkbookListDrawerState.OperateSharedWorkbook -> {
                                     OperateOwnSharedWorkbook(
                                         workbook = state.workbook,
+                                        isDownloading = myWorkbookListUiState.isDownloading,
                                         onDownload = {
                                             scope.launch {
                                                 myWorkbookListViewModel.onDownloadWorkbookClicked(
                                                     workbook = state.workbook
                                                 )
-                                                drawerState.close()
                                             }
                                         },
                                         onShare = {
@@ -360,15 +362,14 @@ class WorkbookListFragment : Fragment() {
                                                     }
                                                 }
                                                 1 -> {
-                                                    val uiState =
-                                                        myWorkbookListViewModel.uiState.collectAsState()
+
 
                                                     Column {
                                                         Scaffold(
                                                             modifier = Modifier.weight(1f),
                                                             content = {
                                                                 when (val state =
-                                                                    uiState.value.myWorkbookList) {
+                                                                    myWorkbookListUiState.myWorkbookList) {
                                                                     is Resource.Success -> {
                                                                         LazyColumn(
                                                                             modifier = Modifier

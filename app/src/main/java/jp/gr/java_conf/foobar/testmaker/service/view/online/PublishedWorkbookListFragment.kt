@@ -112,17 +112,6 @@ class PublishedWorkbookListFragment : Fragment() {
                                 ClickableListItem(
                                     icon = {
                                         Icon(
-                                            imageVector = Icons.Filled.Download,
-                                            contentDescription = "download"
-                                        )
-                                    },
-                                    text = stringResource(id = R.string.download)
-                                ) {
-                                    sharedWorkbookListViewModel.onDownloadWorkbookClicked(workbook = workbook)
-                                }
-                                ClickableListItem(
-                                    icon = {
-                                        Icon(
                                             imageVector = Icons.Filled.Share,
                                             contentDescription = "share"
                                         )
@@ -146,6 +135,27 @@ class PublishedWorkbookListFragment : Fragment() {
                                     scope.launch {
                                         drawerState.close()
                                         reportWorkbook(documentId = workbook.id)
+                                    }
+                                }
+                                Button(
+                                    enabled = !uiState.isDownloading,
+                                    onClick = {
+                                        sharedWorkbookListViewModel.onDownloadWorkbookClicked(
+                                            workbook = workbook
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                        .defaultMinSize(minHeight = 48.dp),
+                                ) {
+                                    if (uiState.isDownloading) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(32.dp),
+                                            color = MaterialTheme.colors.onPrimary
+                                        )
+                                    } else {
+                                        Text(text = stringResource(id = com.example.ui.R.string.download))
                                     }
                                 }
                             } else {
