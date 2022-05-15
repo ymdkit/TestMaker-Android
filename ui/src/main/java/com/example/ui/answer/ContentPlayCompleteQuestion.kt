@@ -1,12 +1,10 @@
 package com.example.ui.answer
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -22,22 +20,18 @@ import androidx.compose.ui.unit.dp
 import com.example.core.utils.replaced
 import com.example.ui.R
 import com.example.ui.core.ContainedWideButton
-import kotlinx.coroutines.delay
 
 @Composable
 fun ContentPlayCompleteQuestion(
     state: PlayUiState.Complete,
     isSwap: Boolean,
-    onAnswered: (List<String>) -> Unit)
-{
+    onAnswered: (List<String>) -> Unit
+) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
-        delay(500)
-        scrollState.animateScrollTo(1000)
     }
 
     Column {
@@ -45,22 +39,21 @@ fun ContentPlayCompleteQuestion(
             mutableStateOf(List(state.question.getSwappableAnswers(isSwap).count()) { "" })
         }
 
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .verticalScroll(
-                    scrollState
-                )
                 .weight(
                     weight = 1f,
                     fill = true
                 )
         ) {
-            ContentProblem(
-                index = state.index,
-                question = state.question,
-                isSwap = isSwap
-            )
-            yourAnswers.forEachIndexed { index, _ ->
+            item {
+                ContentProblem(
+                    index = state.index,
+                    question = state.question,
+                    isSwap = isSwap
+                )
+            }
+            itemsIndexed(yourAnswers) { index, _ ->
                 OutlinedTextField(
                     modifier =
                     if (index == 0) Modifier
@@ -86,6 +79,9 @@ fun ContentPlayCompleteQuestion(
                     onValueChange = { text ->
                         yourAnswers = yourAnswers.replaced(index, text)
                     })
+            }
+            item {
+                Spacer(modifier = Modifier.height(96.dp))
             }
         }
         ContainedWideButton(

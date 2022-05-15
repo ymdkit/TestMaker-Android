@@ -3,8 +3,8 @@ package com.example.ui.answer
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -65,7 +65,7 @@ fun ContentBitmap(
                 }
             },
             modifier = Modifier
-                .fillMaxWidth()
+                .width(300.dp)
                 .height(200.dp)
         )
     }

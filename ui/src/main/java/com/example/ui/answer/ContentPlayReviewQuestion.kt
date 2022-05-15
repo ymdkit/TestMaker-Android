@@ -2,6 +2,8 @@ package com.example.ui.answer
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -38,6 +40,7 @@ fun ContentPlayReviewQuestion(
                     question = state.question,
                     isSwap = isSwap
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 ContentReview(
                     yourAnswer = state.yourAnswer,
                     isSwap = isSwap,

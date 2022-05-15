@@ -1,12 +1,10 @@
 package com.example.ui.answer
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -22,6 +20,7 @@ import com.example.ui.R
 import com.example.ui.core.ContainedWideButton
 import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ContentPlayWriteQuestion(
     state: PlayUiState.Write,
@@ -29,49 +28,51 @@ fun ContentPlayWriteQuestion(
     isSwap: Boolean
 ) {
     val focusRequester = remember { FocusRequester() }
-    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
         delay(500)
-        scrollState.animateScrollTo(1000)
     }
 
     Column {
         var yourAnswer by remember { mutableStateOf("") }
         val focusManager = LocalFocusManager.current
 
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .verticalScroll(
-                    scrollState
-                )
                 .weight(
                     weight = 1f,
                     fill = true
                 )
         ) {
-            ContentProblem(
-                index = state.index,
-                question = state.question,
-                isSwap = isSwap
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
-                value = yourAnswer,
-                label = {
-                    Text(text = stringResource(R.string.hint_answer_write))
-                },
-                onValueChange = {
-                    yourAnswer = it
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    focusManager.clearFocus()
-                })
-            )
+            item {
+                ContentProblem(
+                    index = state.index,
+                    question = state.question,
+                    isSwap = isSwap
+                )
+            }
+            item {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
+                    value = yourAnswer,
+                    label = {
+                        Text(text = stringResource(R.string.hint_answer_write))
+                    },
+                    onValueChange = {
+                        yourAnswer = it
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
+                    })
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.height(96.dp))
+            }
         }
         ContainedWideButton(
             modifier = Modifier.padding(vertical = 8.dp),
