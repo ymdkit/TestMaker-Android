@@ -245,7 +245,7 @@ class CreateWorkbookFragment : Fragment() {
                                         )
 
                                         requireContext().showToast(getString(R.string.msg_create_success_workbook))
-
+                                        requireActivity().hideKeyboard(windowToken)
                                         findNavController().popBackStack()
                                     },
                                     modifier = Modifier
