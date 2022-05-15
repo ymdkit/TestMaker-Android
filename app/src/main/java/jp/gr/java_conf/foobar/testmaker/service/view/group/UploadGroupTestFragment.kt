@@ -23,7 +23,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.core.utils.Resource
 import com.example.ui.core.*
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.UploadWorkbookViewModel
@@ -83,101 +82,98 @@ class UploadGroupTestFragment : Fragment() {
                                         onLogin = uploadWorkbookViewModel::onUserCreated
                                     ) {
 
-                                        when (val state = uiState.workbookList) {
-                                            is Resource.Success -> {
-                                                Column {
-                                                    LazyColumn(
-                                                        modifier = Modifier
-                                                            .weight(weight = 1f, fill = true)
-                                                    ) {
-                                                        item {
-                                                            Box {
-                                                                OutlinedButton(
-                                                                    modifier = Modifier
-                                                                        .fillMaxWidth()
-                                                                        .height(56.dp),
-                                                                    onClick = uploadWorkbookViewModel::onToggleDropDownMenu,
-                                                                    border = BorderStroke(
-                                                                        ButtonDefaults.OutlinedBorderSize,
-                                                                        MaterialTheme.colors.onSurface.copy(
-                                                                            alpha = ContentAlpha.disabled
+                                        ResourceContent(
+                                            resource = uiState.workbookList,
+                                            onRetry = { uploadWorkbookViewModel.load() }) {
+                                            Column {
+                                                LazyColumn(
+                                                    modifier = Modifier
+                                                        .weight(weight = 1f, fill = true)
+                                                ) {
+                                                    item {
+                                                        Box {
+                                                            OutlinedButton(
+                                                                modifier = Modifier
+                                                                    .fillMaxWidth()
+                                                                    .height(56.dp),
+                                                                onClick = uploadWorkbookViewModel::onToggleDropDownMenu,
+                                                                border = BorderStroke(
+                                                                    ButtonDefaults.OutlinedBorderSize,
+                                                                    MaterialTheme.colors.onSurface.copy(
+                                                                        alpha = ContentAlpha.disabled
+                                                                    )
+                                                                )
+                                                            ) {
+                                                                Text(
+                                                                    text = stringResource(id = R.string.label_workbook),
+                                                                    color = MaterialTheme.colors.onSurface
+                                                                )
+                                                                Spacer(
+                                                                    modifier = Modifier.weight(
+                                                                        weight = 1f,
+                                                                        fill = true
+                                                                    )
+                                                                )
+                                                                Text(
+                                                                    text = uiState.selectedWorkbook?.name
+                                                                        ?: stringResource(R.string.msg_empty_uploadable_workbook),
+                                                                    color = MaterialTheme.colors.onSurface
+                                                                )
+                                                                Icon(
+                                                                    Icons.Default.ArrowDropDown,
+                                                                    contentDescription = null,
+                                                                    tint = MaterialTheme.colors.onSurface.copy(
+                                                                        alpha = ContentAlpha.disabled
+                                                                    )
+                                                                )
+                                                            }
+                                                            DropdownMenu(
+                                                                expanded = uiState.showingDropDownMenu,
+                                                                onDismissRequest = uploadWorkbookViewModel::onToggleDropDownMenu
+                                                            ) {
+                                                                it.forEach {
+                                                                    DropdownMenuItem(onClick = {
+                                                                        uploadWorkbookViewModel.onWorkbookSelected(
+                                                                            it
                                                                         )
-                                                                    )
-                                                                ) {
-                                                                    Text(
-                                                                        text = stringResource(id = R.string.label_workbook),
-                                                                        color = MaterialTheme.colors.onSurface
-                                                                    )
-                                                                    Spacer(
-                                                                        modifier = Modifier.weight(
-                                                                            weight = 1f,
-                                                                            fill = true
-                                                                        )
-                                                                    )
-                                                                    Text(
-                                                                        text = uiState.selectedWorkbook?.name
-                                                                            ?: stringResource(R.string.msg_empty_uploadable_workbook),
-                                                                        color = MaterialTheme.colors.onSurface
-                                                                    )
-                                                                    Icon(
-                                                                        Icons.Default.ArrowDropDown,
-                                                                        contentDescription = null,
-                                                                        tint = MaterialTheme.colors.onSurface.copy(
-                                                                            alpha = ContentAlpha.disabled
-                                                                        )
-                                                                    )
-                                                                }
-                                                                DropdownMenu(
-                                                                    expanded = uiState.showingDropDownMenu,
-                                                                    onDismissRequest = uploadWorkbookViewModel::onToggleDropDownMenu
-                                                                ) {
-                                                                    state.value.forEach {
-                                                                        DropdownMenuItem(onClick = {
-                                                                            uploadWorkbookViewModel.onWorkbookSelected(
-                                                                                it
-                                                                            )
-                                                                            uploadWorkbookViewModel.onToggleDropDownMenu()
-                                                                        }) {
-                                                                            Text(it.name)
-                                                                        }
+                                                                        uploadWorkbookViewModel.onToggleDropDownMenu()
+                                                                    }) {
+                                                                        Text(it.name)
                                                                     }
                                                                 }
                                                             }
                                                         }
-                                                        item {
-                                                            OutlinedTextField(
-                                                                modifier = Modifier
-                                                                    .fillMaxWidth()
-                                                                    .padding(bottom = 8.dp),
-                                                                maxLines = 3,
-                                                                label = {
-                                                                    Text(text = stringResource(R.string.hint_overview))
-                                                                },
-                                                                value = uiState.comment,
-                                                                onValueChange = uploadWorkbookViewModel::onCommentChanged
-                                                            )
-                                                        }
                                                     }
-                                                    Button(
-                                                        enabled = !uiState.isUploading,
-                                                        onClick = uploadWorkbookViewModel::uploadWorkbook,
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
-                                                            .height(48.dp)
-                                                    ) {
-                                                        if (uiState.isUploading) {
-                                                            CircularProgressIndicator(
-                                                                modifier = Modifier.size(32.dp),
-                                                                color = MaterialTheme.colors.onPrimary
-                                                            )
-                                                        } else {
-                                                            Text(text = stringResource(id = R.string.button_upload_workbook))
-                                                        }
+                                                    item {
+                                                        OutlinedTextField(
+                                                            modifier = Modifier
+                                                                .fillMaxWidth()
+                                                                .padding(bottom = 8.dp),
+                                                            maxLines = 3,
+                                                            label = {
+                                                                Text(text = stringResource(R.string.hint_overview))
+                                                            },
+                                                            value = uiState.comment,
+                                                            onValueChange = uploadWorkbookViewModel::onCommentChanged
+                                                        )
                                                     }
                                                 }
-                                            }
-                                            else -> {
-                                                // todo
+                                                Button(
+                                                    enabled = !uiState.isUploading,
+                                                    onClick = uploadWorkbookViewModel::uploadWorkbook,
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .height(48.dp)
+                                                ) {
+                                                    if (uiState.isUploading) {
+                                                        CircularProgressIndicator(
+                                                            modifier = Modifier.size(32.dp),
+                                                            color = MaterialTheme.colors.onPrimary
+                                                        )
+                                                    } else {
+                                                        Text(text = stringResource(id = R.string.button_upload_workbook))
+                                                    }
+                                                }
                                             }
                                         }
                                     }
