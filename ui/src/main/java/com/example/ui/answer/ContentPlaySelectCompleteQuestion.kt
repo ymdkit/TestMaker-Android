@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.MaterialTheme
@@ -37,25 +37,22 @@ fun ContentPlaySelectCompleteQuestion(
         })
     }
 
-    val scrollState = rememberScrollState()
-
     Column {
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .verticalScroll(
-                    scrollState
-                )
                 .weight(
                     weight = 1f,
                     fill = true
                 )
         ) {
-            ContentProblem(
-                index = state.index,
-                question = state.question,
-                isSwap = false
-            )
-            state.choices.forEachIndexed { index, text ->
+            item {
+                ContentProblem(
+                    index = state.index,
+                    question = state.question,
+                    isSwap = false
+                )
+            }
+            itemsIndexed(state.choices) { index, text ->
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
@@ -67,11 +64,13 @@ fun ContentPlaySelectCompleteQuestion(
                         }
                     }) {
                     Row(
-                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
+                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Checkbox(
                             checked = isSelectedList[index], onCheckedChange = {
-                                isSelectedList = isSelectedList.replaced(index, !isSelectedList[index])
+                                isSelectedList =
+                                    isSelectedList.replaced(index, !isSelectedList[index])
                                 yourAnswers = if (!isSelectedList[index]) {
                                     yourAnswers.filter { it != text }
                                 } else {
@@ -93,7 +92,6 @@ fun ContentPlaySelectCompleteQuestion(
                     }
                 }
             }
-
         }
         ContainedWideButton(
             modifier = Modifier.padding(vertical = 4.dp),
