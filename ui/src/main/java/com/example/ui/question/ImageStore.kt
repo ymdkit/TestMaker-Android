@@ -7,7 +7,6 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 
-// todo ファイルの置き場所を再考する
 class ImageStore {
 
     // return file name
