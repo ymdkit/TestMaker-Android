@@ -15,6 +15,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 @Composable
 fun TestMakerAndroidTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    themeColor: TestMakerColor = TestMakerColor.BLUE,
     content: @Composable () -> Unit
 ) {
 
@@ -30,7 +31,6 @@ fun TestMakerAndroidTheme(
     }
 
     // todo NavigationCompose 導入の際に、 ViewModel を Inject する形に修正
-    // todo リアルタイムで反映
     val color = TestMakerColor.values().firstOrNull {
         PreferenceManager
             .getDefaultSharedPreferences(LocalContext.current)
@@ -38,24 +38,24 @@ fun TestMakerAndroidTheme(
                 "theme_color",
                 TestMakerColor.BLUE.name
             ) == it.name
-    } ?: TestMakerColor.BLUE
+    } ?: themeColor
 
     val colorMapper = ColorMapper(context = LocalContext.current)
-    val themeColor = colorMapper.colorToGraphicColor(color)
+    val newThemeColor = colorMapper.colorToGraphicColor(color)
 
     val colors = if (darkTheme) {
         darkColors(
-            primary = themeColor,
-            primaryVariant = themeColor,
-            secondary = themeColor,
-            secondaryVariant = themeColor
+            primary = newThemeColor,
+            primaryVariant = newThemeColor,
+            secondary = newThemeColor,
+            secondaryVariant = newThemeColor
         )
     } else {
         lightColors(
-            primary = themeColor,
-            primaryVariant = themeColor,
-            secondary = themeColor,
-            secondaryVariant = themeColor
+            primary = newThemeColor,
+            primaryVariant = newThemeColor,
+            secondary = newThemeColor,
+            secondaryVariant = newThemeColor
         )
     }
 

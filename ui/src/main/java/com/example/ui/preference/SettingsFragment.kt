@@ -67,7 +67,9 @@ class SettingsFragment : Fragment() {
                 val answerSetting = uiState.answerSetting
                 val user = uiState.user
 
-                TestMakerAndroidTheme {
+                TestMakerAndroidTheme(
+                    themeColor = uiState.themeColor
+                ) {
                     Scaffold(
                         topBar = {
                             TestMakerTopAppBar(
