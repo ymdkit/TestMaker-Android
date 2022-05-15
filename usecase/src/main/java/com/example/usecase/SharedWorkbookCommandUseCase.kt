@@ -68,12 +68,11 @@ class SharedWorkbookCommandUseCase @Inject constructor(
             color = workbook.color,
             folderName = ""
         )
-        questionList.forEach {
-            workbookRepository.createQuestion(
-                workbookId = newWorkbook.id,
-                request = CreateQuestionRequest.fromSharedQuestion(it)
-            )
-        }
+
+        workbookRepository.createQuestionList(
+            workbookId = newWorkbook.id,
+            requestList = questionList.map { CreateQuestionRequest.fromSharedQuestion(it) }
+        )
     }
 }
 

@@ -216,6 +216,39 @@ class WorkbookRepositoryImpl @Inject constructor(
         refreshWorkbookList()
     }
 
+    override suspend fun createQuestionList(
+        workbookId: WorkbookId,
+        requestList: List<CreateQuestionRequest>
+    ) {
+        val newQuestionId = workbookDataSource.generateQuestionId()
+        val newQuestionList = requestList.mapIndexed { index, it ->
+
+            val questionType = it.questionType
+
+            Quest.fromCreateQuestionRequest(
+                questionId = newQuestionId + index,
+                request = CreateQuestionRequest(
+                    questionType = questionType,
+                    problem = it.problem,
+                    answers = it.answers,
+                    explanation = it.explanation,
+                    problemImageUrl = it.problemImageUrl,
+                    explanationImageUrl = it.explanationImageUrl,
+                    otherSelections = it.otherSelections,
+                    isAutoGenerateOtherSelections = it.isAutoGenerateOtherSelections,
+                    isCheckAnswerOrder = it.isCheckAnswerOrder
+                ),
+            )
+        }
+        workbookDataSource.createQuestions(newQuestionList)
+
+        val workbook = workbookDataSource.getWorkbook(workbookId.value).toWorkbook()
+        workbookDataSource.createWorkbook(
+            RealmTest.fromWorkbook(workbook.copy(questionList = workbook.questionList + newQuestionList.map { it.toQuestion() }))
+        )
+        refreshWorkbookList()
+    }
+
     override suspend fun updateQuestion(question: Question) {
         workbookDataSource.updateQuestion(Quest.fromQuestion(question))
     }
