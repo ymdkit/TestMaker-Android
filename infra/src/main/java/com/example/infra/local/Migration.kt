@@ -58,7 +58,6 @@ class Migration : RealmMigration {
             val selectSchema = schema["Select"]
             personSchema!!.addRealmListField("answers", selectSchema)
                     ?.transform { obj: DynamicRealmObject ->
-                        // todo Fix hard coding to constant "COMPLETE"
                         if (obj.getInt("type") == 2) {
                             for (i in obj.getList("selections").indices) {
                                 val answer = realm.createObject("Select")

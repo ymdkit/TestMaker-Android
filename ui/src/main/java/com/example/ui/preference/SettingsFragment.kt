@@ -377,7 +377,6 @@ class SettingsFragment : Fragment() {
             )
         }, null)
 
-    // todo Dagger の Module に移動させる
     private fun getAppVersion() =
         requireContext()
             .packageManager

@@ -135,7 +135,6 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
                                     problemImage.getRawString()
                                 }
                             }
-                        // todo 画像のアップロード
 
                         batch.set(
                             questionRef,
