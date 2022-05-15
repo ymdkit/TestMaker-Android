@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 val workbookId = params[0]
-                // todo 読み込み中の UI
+                // todo 読み込み中の UI （Compose 化した後）
                 viewModel.downloadWorkbook(workbookId)
             }
         }
