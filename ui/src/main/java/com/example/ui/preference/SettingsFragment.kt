@@ -132,6 +132,13 @@ class SettingsFragment : Fragment() {
                                     }
                                     item {
                                         CheckboxListItem(
+                                            label = stringResource(id = R.string.setting_is_case_insensitive),
+                                            checked = answerSetting.isCaseInsensitive,
+                                            onCheckedChanged = preferenceViewModel::onIsCaseInsensitiveChanged
+                                        )
+                                    }
+                                    item {
+                                        CheckboxListItem(
                                             label = stringResource(id = R.string.setting_show_dialog),
                                             checked = answerSetting.isShowAnswerSettingDialog,
                                             onCheckedChanged = preferenceViewModel::onIsShowAnswerSettingDialogChanged

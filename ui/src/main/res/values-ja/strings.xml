@@ -21,7 +21,7 @@
     <string name="message_random">出題順をランダムにする</string>
     <string name="message_wrong_only">間違えた問題のみ出題する</string>
     <string name="message_switch_question">問題文と解答を入れ替える（記述問題）</string>
-    <string name="message_self">自己採点モード（記述問題）</string>
+    <string name="message_self">自己採点モード</string>
     <string name="message_success_load">%1$s を読み込みました</string>
     <string name="title_activity_edit">編集</string>
     <string name="hint_explanation">解説</string>
@@ -251,4 +251,5 @@
     <string name="msg_delete_folder">このフォルダを削除しますか？（フォルダ内に含まれる問題集も全て削除されます）</string>
     <string name="title_edit_folder">フォルダ名の編集</string>
     <string name="button_upload_and_workbook">アップロードして共有用リンクを発行</string>
+    <string name="setting_is_case_insensitive">大文字と小文字を区別しない</string>
 </resources>

@@ -138,6 +138,15 @@ class PreferenceViewModel @Inject constructor(
             )
         }
 
+    fun onIsCaseInsensitiveChanged(value: Boolean) =
+        viewModelScope.launch {
+            preferenceCommandUseCase.putAnswerSetting(
+                _uiState.value.answerSetting.copy(
+                    isCaseInsensitive = value
+                )
+            )
+        }
+
     fun onIsShowAnswerSettingDialogChanged(value: Boolean) =
         viewModelScope.launch {
             preferenceCommandUseCase.putAnswerSetting(

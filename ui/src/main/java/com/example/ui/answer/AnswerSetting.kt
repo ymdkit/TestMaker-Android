@@ -44,11 +44,6 @@ fun AnswerSetting(
         onCheckedChanged = answerSettingViewModel::onQuestionConditionChanged
     )
     CheckboxListItem(
-        label = stringResource(id = R.string.message_switch_question),
-        checked = uiState.isSwapProblemAndAnswer,
-        onCheckedChanged = answerSettingViewModel::onIsSwapProblemAndAnswerChanged
-    )
-    CheckboxListItem(
         label = stringResource(id = R.string.message_self),
         checked = uiState.isSelfScoring,
         onCheckedChanged = answerSettingViewModel::onIsSelfScoringChanged
@@ -57,11 +52,6 @@ fun AnswerSetting(
         label = stringResource(id = R.string.always_review),
         checked = uiState.isAlwaysShowExplanation,
         onCheckedChanged = answerSettingViewModel::onIsAlwaysShowExplanationChanged
-    )
-    CheckboxListItem(
-        label = stringResource(id = R.string.setting_sound),
-        checked = uiState.isPlaySound,
-        onCheckedChanged = answerSettingViewModel::onIsPlaySoundChanged
     )
     CheckboxListItem(
         label = stringResource(id = R.string.setting_show_dialog),
