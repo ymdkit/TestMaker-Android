@@ -137,6 +137,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.page_settings,
                 R.id.page_upload_workbook,
                 R.id.fragment_upload_group_test,
+                R.id.page_search,
                 R.id.page_group -> {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
                 }
