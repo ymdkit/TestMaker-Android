@@ -14,7 +14,6 @@ class GroupCommandUseCase @Inject constructor(
 ) {
 
     suspend fun createGroup(groupName: String) {
-        // todo エラーの伝搬
         val user = userRepository.getUserOrNull() ?: return
         val newGroup = groupRepository.createGroup(
             userId = user.id,
