@@ -88,12 +88,15 @@ class QuestionListFragment : Fragment() {
                                     OperateQuestion(
                                         question = state.question,
                                         onEdit = {
-                                            findNavController().navigate(
-                                                QuestionListFragmentDirections.actionQuestionListToEditQuestion(
-                                                    workbookId = args.workbookId,
-                                                    questionId = state.question.id
+                                            scope.launch {
+                                                drawerState.close()
+                                                findNavController().navigate(
+                                                    QuestionListFragmentDirections.actionQuestionListToEditQuestion(
+                                                        workbookId = args.workbookId,
+                                                        questionId = state.question.id
+                                                    )
                                                 )
-                                            )
+                                            }
                                         },
                                         onCopy = {
                                             scope.launch {
@@ -105,6 +108,7 @@ class QuestionListFragment : Fragment() {
                                             scope.launch {
                                                 drawerState.close()
                                                 questionListViewModel.deleteQuestions(listOf(state.question))
+                                                requireContext().showToast(getString(R.string.msg_success_delete_question))
                                             }
                                         },
                                     )

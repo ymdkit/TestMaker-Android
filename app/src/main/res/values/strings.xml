@@ -251,4 +251,5 @@
     <string name="title_select_copy_dest_work_book">select workbook</string>
     <string name="msg_empty_uploadable_workbook">no workbook are exists</string>
     <string name="msg_success_delete_folder">folder deleted</string>
+    <string name="msg_success_delete_question">delete question</string>
 </resources>

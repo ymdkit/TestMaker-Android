@@ -228,7 +228,7 @@
     <string name="button_login">ログイン</string>
     <string name="msg_failure_login">ログインに失敗しました（エラーコード %1$d）</string>
     <string name="label_workbook">問題集</string>
-    <string name="msg_succes_copy_questions_in_same_workbook">問題をコピーしました</string>
+    <string name="msg_succes_copy_questions_in_same_workbook">問題を末尾にコピーしました</string>
     <string name="msg_success_logout">ログアウトしました</string>
     <string name="dialog_edit_display_name">ユーザ名の変更</string>
     <string name="confirm_logout">ログアウトしますか？</string>
