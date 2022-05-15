@@ -20,7 +20,9 @@ class MainViewModel @Inject constructor(
 
     private val _uiState: MutableStateFlow<MainUiState> = MutableStateFlow(
         MainUiState(
-            isDownloading = false
+            isDownloading = false,
+            showingBottomBar = true,
+            selectedBottomBarPage = NavigationPage.HOME
         )
     )
     val uiState: MutableStateFlow<MainUiState>
@@ -51,9 +53,32 @@ class MainViewModel @Inject constructor(
             groupCommandUseCase.joinGroup(groupId = groupId)
             _joinGroupEvent.send(groupId)
         }
+
+    fun onShowingBottomBarChanged(value: Boolean) =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                showingBottomBar = value
+            )
+        }
+
+    fun onSelectedBottomBarPageChanged(value: NavigationPage) =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                selectedBottomBarPage = value
+            )
+        }
+
 }
 
 data class MainUiState(
-    val isDownloading: Boolean
+    val isDownloading: Boolean,
+    val showingBottomBar: Boolean,
+    val selectedBottomBarPage: NavigationPage
 )
 
+enum class NavigationPage {
+    HOME,
+    SEARCH,
+    GROUP,
+    SETTING
+}

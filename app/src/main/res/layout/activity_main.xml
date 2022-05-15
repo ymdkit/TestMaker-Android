@@ -17,15 +17,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/bottom_bar"/>
+            app:layout_constraintBottom_toTopOf="@id/compose_bottom_bar" />
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_bar"
+        <!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
+        <!--            android:id="@+id/bottom_bar"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:labelVisibilityMode="labeled"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:menu="@menu/bottom_navigation" />-->
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/compose_bottom_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:labelVisibilityMode="labeled"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:menu="@menu/bottom_navigation" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

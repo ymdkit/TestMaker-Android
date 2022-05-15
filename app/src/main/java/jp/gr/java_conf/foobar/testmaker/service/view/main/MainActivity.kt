@@ -4,13 +4,24 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isGone
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.example.ui.core.showToast
 import com.example.ui.home.MainViewModel
+import com.example.ui.home.NavigationPage
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -33,12 +44,75 @@ class MainActivity : AppCompatActivity() {
         (supportFragmentManager.findFragmentById(R.id.nav_main) as NavHostFragment).navController
     }
 
+    private val navigationItemList by lazy {
+        listOf(
+            NavigationItem(
+                page = NavigationPage.HOME,
+                resId = R.id.page_home,
+                icon = Icons.Default.Home,
+                contentDescription = "Home",
+                text = getString(R.string.title_page_home),
+            ),
+            NavigationItem(
+                page = NavigationPage.SEARCH,
+                resId = R.id.page_search,
+                icon = Icons.Default.Search,
+                contentDescription = "Search",
+                text = getString(R.string.title_page_search),
+            ),
+            NavigationItem(
+                page = NavigationPage.GROUP,
+                resId = R.id.page_group,
+                icon = Icons.Default.Group,
+                contentDescription = "Group",
+                text = getString(R.string.title_page_group),
+            ),
+            NavigationItem(
+                page = NavigationPage.SETTING,
+                resId = R.id.page_settings,
+                icon = Icons.Default.Settings,
+                contentDescription = "Settings",
+                text = getString(R.string.title_page_settings),
+            )
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        binding.bottomBar.setupWithNavController(navController)
+        binding.composeBottomBar.setContent {
+            TestMakerAndroidTheme {
+                Surface {
+                    val uiState by viewModel.uiState.collectAsState()
+
+                    if (uiState.showingBottomBar) {
+                        BottomAppBar(
+                            elevation = 0.dp,
+                            backgroundColor = Color.Transparent
+                        ) {
+                            navigationItemList.forEach {
+                                BottomNavigationItem(
+                                    selected = uiState.selectedBottomBarPage == it.page,
+                                    onClick = {
+                                        viewModel.onSelectedBottomBarPageChanged(it.page)
+                                        navigate(it.page)
+                                    },
+                                    icon = {
+                                        Icon(
+                                            imageVector = it.icon,
+                                            contentDescription = it.contentDescription
+                                        )
+                                    },
+                                    label = { Text(text = it.text) }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -51,10 +125,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.page_create_question,
                 R.id.page_edit_question,
                 R.id.page_answer_result -> {
-                    binding.bottomBar.isGone = true
+                    viewModel.onShowingBottomBarChanged(false)
                 }
                 else -> {
-                    binding.bottomBar.isGone = false
+                    viewModel.onShowingBottomBarChanged(true)
                 }
             }
 
@@ -82,7 +156,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.joinGroupEvent
                 .receiveAsFlow()
                 .onEach {
-                    binding.bottomBar.selectedItemId = R.id.page_group
+                    navigate(NavigationPage.GROUP)
                     navController.navigate(
                         GroupWorkbookListFragmentDirections.actionGlobalPageGroupDetail(
                             groupId = it
@@ -104,8 +178,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigateHomePage() {
-        binding.bottomBar.selectedItemId = R.id.page_home
-        navController.navigate(R.id.action_global_page_home)
+        navigate(NavigationPage.HOME)
+    }
+
+    private fun navigate(page: NavigationPage) {
+        val dest = navigationItemList.firstOrNull { it.page == page } ?: return
+        navController.navigate(dest.resId)
+        viewModel.onSelectedBottomBarPageChanged(dest.page)
     }
 
     private fun handleDynamicLink(link: String) {
@@ -130,4 +209,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    data class NavigationItem(
+        val page: NavigationPage,
+        val resId: Int,
+        val icon: ImageVector,
+        val contentDescription: String,
+        val text: String,
+    )
 }
+
