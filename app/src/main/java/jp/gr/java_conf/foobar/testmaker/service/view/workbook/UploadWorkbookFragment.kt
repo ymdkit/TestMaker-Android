@@ -78,6 +78,7 @@ class UploadWorkbookFragment : Fragment() {
                                 ) {
                                     RequireAuthentication(
                                         isLogin = uiState.isLogin,
+                                        message = stringResource(id = R.string.msg_not_login),
                                         onLogin = uploadWorkbookViewModel::onUserCreated
                                     ) {
 

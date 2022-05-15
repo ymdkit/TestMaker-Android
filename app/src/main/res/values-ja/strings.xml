@@ -150,7 +150,7 @@
     <string name="group">グループ</string>
     <string name="title_create_group">新規グループ作成</string>
     <string name="hint_group_name">グループ名を入力</string>
-    <string name="msg_not_login_in_group">「グループ」機能は複数人で問題集を共有する機能です。\nこの機能を利用するにはログインを行ってください</string>
+    <string name="msg_not_login_in_group">ログインして、グループのみんなで\n問題集を共有しましょう</string>
     <string name="msg_success_delete_test">問題集を削除しました</string>
     <string name="upload_group_test_fragment_label">問題集のアップロード</string>
     <string name="history_test_fragment_label">解答履歴</string>
@@ -248,4 +248,5 @@
     <string name="msg_success_delete_folder">フォルダを削除しました</string>
     <string name="msg_success_delete_question">問題を削除しました</string>
     <string name="msg_question_list_empty">編集画面から問題を作成してください</string>
+    <string name="msg_not_login_mypage">ログインして、複数の端末で\n問題集を共有しましょう</string>
 </resources>

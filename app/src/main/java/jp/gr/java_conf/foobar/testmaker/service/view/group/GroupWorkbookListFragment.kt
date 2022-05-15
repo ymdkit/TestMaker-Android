@@ -260,6 +260,7 @@ class GroupWorkbookListFragment : Fragment() {
                                     content = {
                                         RequireAuthentication(
                                             isLogin = uiState.isLogin,
+                                            message = stringResource(id = R.string.msg_not_login_in_group),
                                             onLogin = groupWorkbookListViewModel::onUserCreated
                                         ) {
                                             SwipeRefresh(state = rememberSwipeRefreshState(

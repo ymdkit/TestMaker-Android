@@ -52,6 +52,7 @@ class GroupListFragment : Fragment() {
                         ) {
                             RequireAuthentication(
                                 isLogin = uiState.isLogin,
+                                message = stringResource(id = R.string.msg_not_login_in_group),
                                 content = {
                                     Scaffold(
                                         content = {

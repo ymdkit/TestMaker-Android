@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.ui.R
 import com.firebase.ui.auth.AuthUI
@@ -19,6 +20,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 fun RequireAuthentication(
     isLogin: Boolean,
     onLogin: () -> Unit,
+    message: String,
     content: @Composable () -> Unit,
 ) {
 
@@ -49,7 +51,8 @@ fun RequireAuthentication(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResource(id = R.string.msg_not_login_in_group)
+                text = message,
+                textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(8.dp))
             Button(onClick = {

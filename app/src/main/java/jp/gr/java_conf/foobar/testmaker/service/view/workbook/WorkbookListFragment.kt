@@ -30,7 +30,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.core.utils.Resource
 import com.example.ui.answer.AnswerSetting
 import com.example.ui.answer.AnswerSettingViewModel
 import com.example.ui.core.*
@@ -38,6 +37,8 @@ import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.*
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
@@ -420,58 +421,62 @@ class WorkbookListFragment : Fragment() {
                                                     }
                                                 }
                                                 1 -> {
-
-
                                                     Column {
-                                                        Scaffold(
-                                                            modifier = Modifier.weight(1f),
+                                                        RequireAuthentication(
+                                                            isLogin = myWorkbookListUiState.isLogin,
+                                                            message = stringResource(id = R.string.msg_not_login_mypage),
+                                                            onLogin = myWorkbookListViewModel::onUserCreated,
                                                             content = {
-                                                                when (val state =
-                                                                    myWorkbookListUiState.myWorkbookList) {
-                                                                    is Resource.Success -> {
-                                                                        LazyColumn(
-                                                                            modifier = Modifier
-                                                                                .fillMaxHeight()
+                                                                Scaffold(
+                                                                    modifier = Modifier.weight(1f),
+                                                                    content = {
+                                                                        SwipeRefresh(
+                                                                            state = rememberSwipeRefreshState(
+                                                                                isRefreshing = myWorkbookListUiState.isRefreshing
+                                                                            ),
+                                                                            onRefresh = myWorkbookListViewModel::load
                                                                         ) {
-                                                                            state.value.forEach {
-                                                                                item {
-                                                                                    SharedWorkbookListItem(
-                                                                                        workbook = it,
-                                                                                        onClick = {
-                                                                                            scope.launch {
-                                                                                                workbookListViewModel.onSharedWorkbookClicked(
-                                                                                                    it
-                                                                                                )
-                                                                                                drawerState.open()
-                                                                                            }
-                                                                                        }
-                                                                                    )
+                                                                            ResourceContent(
+                                                                                resource = myWorkbookListUiState.myWorkbookList,
+                                                                                onRetry = myWorkbookListViewModel::load
+                                                                            ) {
+                                                                                LazyColumn(
+                                                                                    modifier = Modifier
+                                                                                        .fillMaxHeight()
+                                                                                ) {
+                                                                                    it.forEach {
+                                                                                        item {
+                                                                                            SharedWorkbookListItem(
+                                                                                                workbook = it,
+                                                                                                onClick = {
+                                                                                                    scope.launch {
+                                                                                                        workbookListViewModel.onSharedWorkbookClicked(
+                                                                                                            it
+                                                                                                        )
+                                                                                                        drawerState.open()
+                                                                                                    }
+                                                                                                }
+                                                                                            )
 
+                                                                                        }
+                                                                                    }
                                                                                 }
                                                                             }
                                                                         }
-                                                                    }
-                                                                    else -> {
-                                                                        Box(
-                                                                            modifier = Modifier.fillMaxSize(),
-                                                                            contentAlignment = Alignment.Center
-                                                                        ) {
-                                                                            CircularProgressIndicator()
+                                                                    },
+                                                                    floatingActionButton = {
+                                                                        FloatingActionButton(onClick = {
+                                                                            findNavController().navigate(
+                                                                                WorkbookListFragmentDirections.actionHomeToUploadWorkbook()
+                                                                            )
+                                                                        }) {
+                                                                            Icon(
+                                                                                Icons.Filled.CloudUpload,
+                                                                                contentDescription = "upload workbook"
+                                                                            )
                                                                         }
                                                                     }
-                                                                }
-                                                            },
-                                                            floatingActionButton = {
-                                                                FloatingActionButton(onClick = {
-                                                                    findNavController().navigate(
-                                                                        WorkbookListFragmentDirections.actionHomeToUploadWorkbook()
-                                                                    )
-                                                                }) {
-                                                                    Icon(
-                                                                        Icons.Filled.CloudUpload,
-                                                                        contentDescription = "upload workbook"
-                                                                    )
-                                                                }
+                                                                )
                                                             }
                                                         )
                                                         AdView(viewModel = adViewModel)

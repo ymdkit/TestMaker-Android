@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.core.utils.Resource
 import com.example.usecase.SharedOwnWorkbookListWatchUseCase
 import com.example.usecase.SharedWorkbookCommandUseCase
+import com.example.usecase.UserAuthCommandUseCase
+import com.example.usecase.UserWatchUseCase
 import com.example.usecase.model.SharedWorkbookUseCaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -22,7 +24,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MyWorkbookListViewModel @Inject constructor(
     private val sharedOwnWorkbookListWatchUseCase: SharedOwnWorkbookListWatchUseCase,
-    private val sharedWorkbookCommandUseCase: SharedWorkbookCommandUseCase
+    private val sharedWorkbookCommandUseCase: SharedWorkbookCommandUseCase,
+    private val userWatchUseCase: UserWatchUseCase,
+    private val userAuthCommandUseCase: UserAuthCommandUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MyWorkbookListUiState> =
@@ -30,7 +34,9 @@ class MyWorkbookListViewModel @Inject constructor(
             MyWorkbookListUiState(
                 myWorkbookList = Resource.Empty,
                 selectedSharedWorkbook = null,
-                isDownloading = false
+                isDownloading = false,
+                isRefreshing = true,
+                isLogin = false
             )
         )
     val uiState: StateFlow<MyWorkbookListUiState>
@@ -47,13 +53,23 @@ class MyWorkbookListViewModel @Inject constructor(
     @OptIn(ExperimentalMaterialApi::class)
     fun setup() {
         sharedOwnWorkbookListWatchUseCase.setup(scope = viewModelScope)
+        userWatchUseCase.setup(scope = viewModelScope)
 
         viewModelScope.launch {
 
             sharedOwnWorkbookListWatchUseCase.flow
                 .onEach {
                     _uiState.value = _uiState.value.copy(
-                        myWorkbookList = it
+                        myWorkbookList = it,
+                        isRefreshing = false
+                    )
+                }
+                .launchIn(this)
+
+            userWatchUseCase.flow
+                .onEach {
+                    _uiState.value = _uiState.value.copy(
+                        isLogin = it != null
                     )
                 }
                 .launchIn(this)
@@ -62,7 +78,16 @@ class MyWorkbookListViewModel @Inject constructor(
 
     fun load() =
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isRefreshing = true
+            )
             sharedOwnWorkbookListWatchUseCase.load()
+        }
+
+    fun onUserCreated() =
+        viewModelScope.launch {
+            userAuthCommandUseCase.registerUser()
+            load()
         }
 
     fun onWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
@@ -102,5 +127,7 @@ class MyWorkbookListViewModel @Inject constructor(
 data class MyWorkbookListUiState(
     val myWorkbookList: Resource<List<SharedWorkbookUseCaseModel>>,
     val selectedSharedWorkbook: SharedWorkbookUseCaseModel?,
-    val isDownloading: Boolean
+    val isDownloading: Boolean,
+    val isRefreshing: Boolean,
+    val isLogin: Boolean
 )

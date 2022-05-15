@@ -81,6 +81,7 @@ class UploadGroupTestFragment : Fragment() {
                                 ) {
                                     RequireAuthentication(
                                         isLogin = uiState.isLogin,
+                                        message = stringResource(id = R.string.msg_not_login_in_group),
                                         onLogin = uploadWorkbookViewModel::onUserCreated
                                     ) {
 
