@@ -253,4 +253,6 @@
     <string name="color_indigo">indigo</string>
     <string name="color_brown">brown</string>
     <string name="msg_delete_question">delete this question?</string>
+    <string name="msg_failure_loading">loading failure</string>
+    <string name="reload">reload</string>
 </resources>

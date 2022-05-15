@@ -246,4 +246,6 @@
     <string name="color_indigo">インディゴ</string>
     <string name="color_brown">ブラウン</string>
     <string name="msg_delete_question">この問題を削除してもよろしいですか？</string>
+    <string name="msg_failure_loading">読み込みに失敗しました</string>
+    <string name="reload">再読み込み</string>
 </resources>

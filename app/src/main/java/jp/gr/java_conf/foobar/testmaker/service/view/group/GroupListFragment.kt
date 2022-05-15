@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.core.utils.Resource
 import com.example.ui.core.*
 import com.example.ui.group.GroupListItem
 import com.example.ui.group.GroupListViewModel
@@ -60,28 +59,26 @@ class GroupListFragment : Fragment() {
                                                 state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
                                                 onRefresh = groupListViewModel::load
                                             ) {
-                                                when (val state = uiState.groupList) {
-                                                    is Resource.Success -> {
-                                                        LazyColumn(
-                                                            modifier = Modifier.fillMaxHeight()
-                                                        ) {
-                                                            state.value.forEach {
-                                                                item {
-                                                                    GroupListItem(
-                                                                        group = it,
-                                                                        onClick = {
-                                                                            findNavController().navigate(
-                                                                                GroupListFragmentDirections.actionGroupListToGroupDetail(
-                                                                                    groupId = it.id
-                                                                                )
+                                                ResourceContent(
+                                                    resource = uiState.groupList,
+                                                    onRetry = groupListViewModel::load
+                                                ) {
+                                                    LazyColumn(
+                                                        modifier = Modifier.fillMaxHeight()
+                                                    ) {
+                                                        it.forEach {
+                                                            item {
+                                                                GroupListItem(
+                                                                    group = it,
+                                                                    onClick = {
+                                                                        findNavController().navigate(
+                                                                            GroupListFragmentDirections.actionGroupListToGroupDetail(
+                                                                                groupId = it.id
                                                                             )
-                                                                        })
-                                                                }
+                                                                        )
+                                                                    })
                                                             }
                                                         }
-                                                    }
-                                                    else -> {
-                                                        // todo
                                                     }
                                                 }
                                             }
