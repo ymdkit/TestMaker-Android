@@ -27,6 +27,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.BillingClient
 import com.example.core.QuestionCondition
+import com.example.core.StudyPlusSetting
 import com.example.ui.R
 import com.example.ui.core.*
 import com.example.ui.core.item.*
@@ -247,7 +248,17 @@ class SettingsFragment : Fragment() {
                                             }
                                         )
                                     }
-                                    // todo StudyPlus 連携設定
+                                    if (uiState.isStudyPlusAuthenticated) {
+                                        item {
+                                            PickerListItem(
+                                                text = stringResource(id = R.string.preference_post_study_plus),
+                                                secondaryText = StudyPlusSetting.fromValue(uiState.studyPlusSetting).label,
+                                                itemList = StudyPlusSetting.values()
+                                                    .map { it.label to it.value },
+                                                onSelected = preferenceViewModel::onStudyPlusSettingChanged
+                                            )
+                                        }
+                                    }
                                     item {
                                         ClickableListItem(
                                             text = stringResource(id = R.string.help),

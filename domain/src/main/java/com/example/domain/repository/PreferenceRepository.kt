@@ -9,6 +9,7 @@ interface PreferenceRepository {
     val updateIsRemovedAdFlow: Flow<Boolean>
     val updateAnswerSettingFlow: Flow<AnswerSetting>
     val updateThemeColorFlow: Flow<TestMakerColor>
+    val updateStudyPlusSettingFlow: Flow<String>
 
     fun isRemovedAd(): Boolean
     suspend fun putIsRemovedAd(isRemovedAd: Boolean)
@@ -16,4 +17,6 @@ interface PreferenceRepository {
     suspend fun putAnswerSetting(answerSetting: AnswerSetting)
     suspend fun putThemeColor(color: TestMakerColor)
     fun getThemeColor(): TestMakerColor
+    suspend fun putStudyPlusSetting(setting: String)
+    fun getStudyPlusSetting(): String
 }

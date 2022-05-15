@@ -28,6 +28,11 @@ class PreferenceRepositoryImpl @Inject constructor(
     override val updateThemeColorFlow: Flow<TestMakerColor>
         get() = _updateThemeColorFlow
 
+    private val _updateStudyPlusSettingFlow: MutableSharedFlow<String> =
+        MutableSharedFlow()
+    override val updateStudyPlusSettingFlow: Flow<String>
+        get() = _updateStudyPlusSettingFlow
+
     override suspend fun putIsRemovedAd(isRemovedAd: Boolean) {
         preference.isRemovedAd = isRemovedAd
         _updateIsRemovedAdFlow.emit(isRemovedAd)
@@ -72,4 +77,12 @@ class PreferenceRepositoryImpl @Inject constructor(
     override fun getThemeColor(): TestMakerColor =
         TestMakerColor.values().firstOrNull { it.name == preference.themeColor }
             ?: TestMakerColor.BLUE
+
+    override suspend fun putStudyPlusSetting(setting: String) {
+        preference.uploadStudyPlus = setting
+        _updateStudyPlusSettingFlow.emit(setting)
+    }
+
+    override fun getStudyPlusSetting(): String =
+        preference.uploadStudyPlus
 }

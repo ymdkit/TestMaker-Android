@@ -8,6 +8,7 @@ import com.example.usecase.*
 import com.example.usecase.model.AnswerSettingUseCaseModel
 import com.example.usecase.model.UserUseCaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jp.studyplus.android.sdk.Studyplus
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,9 @@ class PreferenceViewModel @Inject constructor(
     private val preferenceCommandUseCase: UserPreferenceCommandUseCase,
     private val userWatchUseCase: UserWatchUseCase,
     private val userAuthCommandUseCase: UserAuthCommandUseCase,
-    private val themeColorWatchUseCase: ThemeColorWatchUseCase
+    private val themeColorWatchUseCase: ThemeColorWatchUseCase,
+    private val studyPlusSettingWatchUseCase: StudyPlusSettingWatchUseCase,
+    studyPlus: Studyplus
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<PreferenceUiState> =
@@ -31,7 +34,9 @@ class PreferenceViewModel @Inject constructor(
             PreferenceUiState(
                 answerSetting = answerSettingWatchUseCase.getAnswerSetting(),
                 user = null,
-                themeColor = TestMakerColor.BLUE
+                themeColor = TestMakerColor.BLUE,
+                isStudyPlusAuthenticated = studyPlus.isAuthenticated(),
+                studyPlusSetting = studyPlusSettingWatchUseCase.getStudyPlusSetting()
             )
         )
     val uiState: StateFlow<PreferenceUiState>
@@ -49,6 +54,9 @@ class PreferenceViewModel @Inject constructor(
             scope = viewModelScope
         )
         themeColorWatchUseCase.setup(
+            scope = viewModelScope
+        )
+        studyPlusSettingWatchUseCase.setup(
             scope = viewModelScope
         )
 
@@ -78,6 +86,14 @@ class PreferenceViewModel @Inject constructor(
                         _uiState.value.copy(
                             themeColor = it
                         )
+                    )
+                }
+                .launchIn(this)
+
+            studyPlusSettingWatchUseCase.flow
+                .onEach {
+                    _uiState.value = _uiState.value.copy(
+                        studyPlusSetting = it
                     )
                 }
                 .launchIn(this)
@@ -199,12 +215,19 @@ class PreferenceViewModel @Inject constructor(
         viewModelScope.launch {
             preferenceCommandUseCase.putIsRemovedAd(isRemovedAd = true)
         }
+
+    fun onStudyPlusSettingChanged(value: String) =
+        viewModelScope.launch {
+            preferenceCommandUseCase.putStudyPlusSetting(value)
+        }
 }
 
 data class PreferenceUiState(
     val answerSetting: AnswerSettingUseCaseModel,
     val user: UserUseCaseModel?,
-    val themeColor: TestMakerColor
+    val themeColor: TestMakerColor,
+    val isStudyPlusAuthenticated: Boolean,
+    val studyPlusSetting: String,
 )
 
 sealed class EditTextState {

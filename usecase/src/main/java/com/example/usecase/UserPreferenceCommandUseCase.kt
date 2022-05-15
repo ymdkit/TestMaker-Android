@@ -20,4 +20,7 @@ class UserPreferenceCommandUseCase @Inject constructor(
     suspend fun putThemeColor(themeColor: TestMakerColor) =
         preferenceRepository.putThemeColor(themeColor)
 
+    suspend fun putStudyPlusSetting(setting: String) =
+        preferenceRepository.putStudyPlusSetting(setting)
+
 }
