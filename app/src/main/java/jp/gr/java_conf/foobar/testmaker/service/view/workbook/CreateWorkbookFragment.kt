@@ -32,6 +32,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.core.TestMakerColor
 import com.example.ui.core.*
 import com.example.ui.theme.TestMakerAndroidTheme
@@ -51,6 +52,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CreateWorkbookFragment : Fragment() {
 
+    private val args: CreateWorkbookFragmentArgs by navArgs()
     private val createWorkbookViewModel: CreateWorkbookViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
 
@@ -102,7 +104,6 @@ class CreateWorkbookFragment : Fragment() {
                             var name by rememberSaveable { mutableStateOf("") }
                             var color by remember { mutableStateOf(TestMakerColor.BLUE) }
                             val uiState by createWorkbookViewModel.uiState.collectAsState()
-                            var folderName by rememberSaveable { mutableStateOf("") }
 
                             var showingValidationError by rememberSaveable { mutableStateOf(false) }
 
@@ -168,14 +169,14 @@ class CreateWorkbookFragment : Fragment() {
                                                     .map { it.name } + listOf(
                                                     stringResource(id = R.string.new_folder)
                                                 ),
-                                                value = folderName,
+                                                value = uiState.folderName ?: "",
                                                 onValueChange = {
                                                     if (it == getString(R.string.new_folder)) {
                                                         findNavController().navigate(
                                                             CreateWorkbookFragmentDirections.actionCreateWorkbookToCreateFolder()
                                                         )
                                                     } else {
-                                                        folderName = it
+                                                        createWorkbookViewModel.onFolderChanged(it)
                                                     }
                                                 })
                                         }
@@ -240,7 +241,7 @@ class CreateWorkbookFragment : Fragment() {
                                         createWorkbookViewModel.createWorkbook(
                                             name = name,
                                             color = color,
-                                            folderName = folderName
+                                            folderName = uiState.folderName ?: "",
                                         )
 
                                         requireContext().showToast(getString(R.string.msg_create_success_workbook))
@@ -285,7 +286,7 @@ class CreateWorkbookFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        createWorkbookViewModel.setup()
+        createWorkbookViewModel.setup(folderName = args.folderName)
         adViewModel.setup()
         createWorkbookViewModel.load()
 

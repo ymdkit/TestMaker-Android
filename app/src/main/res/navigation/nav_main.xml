@@ -39,14 +39,6 @@
             app:popExitAnim="@anim/alpha_gone" />
 
         <action
-            android:id="@+id/action_home_to_folder_workbook_list"
-            app:destination="@id/page_folder_workbook_list"
-            app:enterAnim="@anim/alpha_appear"
-            app:exitAnim="@anim/alpha_gone"
-            app:popEnterAnim="@anim/alpha_appear"
-            app:popExitAnim="@anim/alpha_gone" />
-
-        <action
             android:id="@+id/action_home_to_create_workbook"
             app:destination="@id/page_create_workbook"
             app:enterAnim="@anim/alpha_appear"
@@ -77,16 +69,6 @@
             app:exitAnim="@anim/alpha_gone"
             app:popEnterAnim="@anim/alpha_appear"
             app:popExitAnim="@anim/alpha_gone" />
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/page_folder_workbook_list"
-        android:name="jp.gr.java_conf.foobar.testmaker.service.view.workbook.FolderWorkbookListFragment">
-
-        <argument
-            android:name="folderName"
-            app:argType="string" />
 
     </fragment>
 
@@ -234,6 +216,12 @@
         android:id="@+id/page_create_workbook"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.workbook.CreateWorkbookFragment"
         android:label="@string/fragment_create_workbook">
+
+        <argument
+            android:name="folderName"
+            android:defaultValue=""
+            app:argType="string" />
+
 
         <action
             android:id="@+id/action_create_workbook_to_create_folder"

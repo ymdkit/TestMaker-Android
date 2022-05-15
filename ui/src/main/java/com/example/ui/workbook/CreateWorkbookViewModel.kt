@@ -26,7 +26,8 @@ class CreateWorkbookViewModel @Inject constructor(
         MutableStateFlow(
             CreateWorkbookUiState(
                 folderList = listOf(),
-                isImportingWorkbook = false
+                isImportingWorkbook = false,
+                folderName = null
             )
         )
     val uiState: StateFlow<CreateWorkbookUiState>
@@ -36,12 +37,15 @@ class CreateWorkbookViewModel @Inject constructor(
     val importWorkbookCompletionEvent: ReceiveChannel<String>
         get() = _importWorkbookCompletionEvent
 
-    fun setup() {
+    fun setup(folderName: String) {
         folderListWatchUseCase.setup(scope = viewModelScope)
 
         folderListWatchUseCase.flow
             .onEach {
-                _uiState.value = _uiState.value.copy(folderList = it.getOrNull() ?: emptyList())
+                _uiState.value = _uiState.value.copy(
+                    folderList = it.getOrNull() ?: emptyList(),
+                    folderName = it.getOrNull()?.firstOrNull { it.name == folderName }?.name
+                )
             }
             .launchIn(viewModelScope)
 
@@ -54,6 +58,13 @@ class CreateWorkbookViewModel @Inject constructor(
     fun createWorkbook(name: String, color: TestMakerColor, folderName: String) =
         viewModelScope.launch {
             userWorkbookCommandUseCase.createWorkbook(name, "", color, folderName)
+        }
+
+    fun onFolderChanged(value: String) =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                folderName = value
+            )
         }
 
     fun importWorkbook(
@@ -73,5 +84,6 @@ class CreateWorkbookViewModel @Inject constructor(
 
 data class CreateWorkbookUiState(
     val folderList: List<FolderUseCaseModel>,
-    val isImportingWorkbook: Boolean
+    val isImportingWorkbook: Boolean,
+    val folderName: String?
 )

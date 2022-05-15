@@ -407,7 +407,9 @@ class WorkbookListFragment : Fragment() {
                                                             floatingActionButton = {
                                                                 FloatingActionButton(onClick = {
                                                                     findNavController().navigate(
-                                                                        WorkbookListFragmentDirections.actionHomeToCreateWorkbook()
+                                                                        WorkbookListFragmentDirections.actionHomeToCreateWorkbook(
+                                                                            folderName = args.folderName
+                                                                        )
                                                                     )
                                                                 }) {
                                                                     Icon(
