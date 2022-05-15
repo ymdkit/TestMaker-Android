@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -23,6 +24,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.core.QuestionType
 import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
+import com.example.ui.core.TestMakerTopAppBar
 import com.example.ui.core.showToast
 import com.example.ui.question.CreateQuestionViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
@@ -55,13 +57,7 @@ class CreateQuestionFragment : Fragment() {
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
-                            TopAppBar(
-                                title = {
-                                    Text(
-                                        text = getString(R.string.title_activity_create_question),
-                                    )
-                                },
-                                elevation = 0.dp,
+                            TestMakerTopAppBar(
                                 navigationIcon = {
                                     Icon(
                                         imageVector = Icons.Filled.ArrowBack,
@@ -72,7 +68,8 @@ class CreateQuestionFragment : Fragment() {
                                                 findNavController().popBackStack()
                                             }
                                     )
-                                }
+                                },
+                                title = stringResource(id = R.string.title_activity_create_question)
                             )
                         },
                         content = {
@@ -96,10 +93,17 @@ class CreateQuestionFragment : Fragment() {
                                 }
                                 val coroutineScope = rememberCoroutineScope()
 
-                                TabRow(selectedTabIndex = uiState.questionType.value) {
+                                TabRow(
+                                    selectedTabIndex = uiState.questionType.value,
+                                    backgroundColor = Color.Transparent
+                                ) {
                                     QuestionType.values().forEachIndexed { index, format ->
                                         Tab(
                                             selected = uiState.questionType.value == index,
+                                            selectedContentColor = MaterialTheme.colors.onBackground,
+                                            unselectedContentColor = MaterialTheme.colors.onBackground.copy(
+                                                alpha = ContentAlpha.medium
+                                            ),
                                             onClick = {
                                                 coroutineScope.launch {
                                                     pagerState.animateScrollToPage(index)

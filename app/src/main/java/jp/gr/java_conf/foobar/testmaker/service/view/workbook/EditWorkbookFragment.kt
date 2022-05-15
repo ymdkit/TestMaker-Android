@@ -29,10 +29,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.core.utils.Resource
-import com.example.ui.core.AdView
-import com.example.ui.core.AdViewModel
-import com.example.ui.core.ColorMapper
-import com.example.ui.core.showToast
+import com.example.ui.core.*
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.EditWorkbookViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,12 +61,7 @@ class EditWorkbookFragment : Fragment() {
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
-                            TopAppBar(
-                                title = {
-                                    Text(
-                                        text = getString(R.string.title_edit_workbook),
-                                    )
-                                },
+                            TestMakerTopAppBar(
                                 navigationIcon = {
                                     Icon(
                                         imageVector = Icons.Filled.ArrowBack,
@@ -80,7 +72,8 @@ class EditWorkbookFragment : Fragment() {
                                                 findNavController().popBackStack()
                                             }
                                     )
-                                }
+                                },
+                                title = stringResource(id = R.string.title_edit_workbook)
                             )
                         },
                         content = {
