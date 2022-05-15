@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
@@ -27,6 +28,7 @@ fun EditQuestionForm(
     val uiState by viewModel.uiState.collectAsState()
 
     val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     Column {
         InputQuestionForm(
@@ -39,7 +41,7 @@ fun EditQuestionForm(
             enabled = uiState.shouldEnableCreateButton,
             onClick = {
                 viewModel.onUpdateButtonClicked()
-                focusRequester.requestFocus()
+                focusManager.clearFocus()
             },
             modifier = Modifier
                 .fillMaxWidth()

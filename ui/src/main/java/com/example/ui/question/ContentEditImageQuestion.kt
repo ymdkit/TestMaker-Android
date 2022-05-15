@@ -63,7 +63,8 @@ fun ContentEditImageQuestion(
                     CropImageDialogFragment(
                         bitmap = it,
                         onCrop = { newBitmap ->
-                            bitmap = newBitmap
+                            val path = ImageStore().saveImage(newBitmap, context = context)
+                            onValueChange(QuestionImage.LocalImage(path = path))
                         }
                     ).show(fragmentManager, "")
                 }
@@ -102,6 +103,7 @@ fun ContentEditImageQuestion(
     )
 
     LaunchedEffect(image) {
+        println("image: $image")
         when (image) {
             is QuestionImage.Empty -> {
                 bitmap = null
@@ -154,8 +156,6 @@ fun ContentEditImageQuestion(
         }
     }
     if (showingDialog) {
-
-
         Dialog(onDismissRequest = { showingDialog = false }) {
             Surface(shape = RoundedCornerShape(8.dp)) {
                 Column(
