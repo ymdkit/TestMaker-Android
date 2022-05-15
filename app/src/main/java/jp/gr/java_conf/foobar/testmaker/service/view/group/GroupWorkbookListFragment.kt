@@ -68,7 +68,8 @@ class GroupWorkbookListFragment : Fragment() {
                         drawerState = drawerState,
                         gesturesEnabled = !drawerState.isClosed,
                         drawerContent = {
-                            val workbook = uiState.selectedSharedWorkbook
+                            val workbook = uiState.selectedSharedWorkbook?.workbook
+                            val isOwner = uiState.selectedSharedWorkbook?.isOwner
 
                             if (workbook != null) {
                                 ListItem(
@@ -144,29 +145,30 @@ class GroupWorkbookListFragment : Fragment() {
                                         drawerState.close()
                                     }
                                 }
-                                // todo 持ち主かどうかの確認
-                                ConfirmActionListItem(
-                                    icon = {
-                                        Icon(
-                                            imageVector = Icons.Filled.Delete,
-                                            contentDescription = "delete"
-                                        )
-                                    },
-                                    label = stringResource(id = R.string.delete),
-                                    confirmMessage = stringResource(
-                                        id = com.example.ui.R.string.message_delete,
-                                        workbook.name
-                                    ),
-                                    confirmButtonText = stringResource(id = R.string.delete),
-                                    onConfirmed = {
-                                        scope.launch {
-                                            groupWorkbookListViewModel.onDeleteWorkbookClicked(
-                                                workbook
+                                if (isOwner == true) {
+                                    ConfirmActionListItem(
+                                        icon = {
+                                            Icon(
+                                                imageVector = Icons.Filled.Delete,
+                                                contentDescription = "delete"
                                             )
-                                            drawerState.close()
+                                        },
+                                        label = stringResource(id = R.string.delete),
+                                        confirmMessage = stringResource(
+                                            id = com.example.ui.R.string.message_delete,
+                                            workbook.name
+                                        ),
+                                        confirmButtonText = stringResource(id = R.string.delete),
+                                        onConfirmed = {
+                                            scope.launch {
+                                                groupWorkbookListViewModel.onDeleteWorkbookClicked(
+                                                    workbook
+                                                )
+                                                drawerState.close()
+                                            }
                                         }
-                                    }
-                                )
+                                    )
+                                }
                             } else {
                                 Spacer(modifier = Modifier.height(1.dp))
                             }

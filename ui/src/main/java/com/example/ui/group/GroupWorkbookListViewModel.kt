@@ -8,6 +8,7 @@ import com.example.core.utils.Resource
 import com.example.usecase.*
 import com.example.usecase.model.GroupUseCaseModel
 import com.example.usecase.model.SharedWorkbookUseCaseModel
+import com.example.usecase.model.UserUseCaseModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -38,7 +39,8 @@ class GroupWorkbookListViewModel @Inject constructor(
                 editingGroupName = "",
                 selectedSharedWorkbook = null,
                 isRefreshing = true,
-                isLogin = false
+                isLogin = false,
+                user = null
             )
         )
     val uiState: StateFlow<GroupWorkbookListUiState>
@@ -92,7 +94,8 @@ class GroupWorkbookListViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(
                 group = group,
                 isOwner = user != null && group.getOrNull()?.userId == user.id,
-                isLogin = user != null
+                isLogin = user != null,
+                user = user
             )
         }.launchIn(viewModelScope)
     }
@@ -181,7 +184,10 @@ class GroupWorkbookListViewModel @Inject constructor(
     fun onWorkbookClicked(workbook: SharedWorkbookUseCaseModel) =
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
-                selectedSharedWorkbook = workbook
+                selectedSharedWorkbook = SharedWorkbookUseCaseModelWithIsOwner(
+                    workbook = workbook,
+                    isOwner = _uiState.value.user?.id == workbook.userId
+                )
             )
         }
 
@@ -212,8 +218,14 @@ data class GroupWorkbookListUiState @OptIn(ExperimentalMaterialApi::class) const
     val showingMenu: Boolean,
     val showingEditGroupDialog: Boolean,
     val editingGroupName: String,
+    val user: UserUseCaseModel?,
     val isOwner: Boolean,
-    val selectedSharedWorkbook: SharedWorkbookUseCaseModel?,
+    val selectedSharedWorkbook: SharedWorkbookUseCaseModelWithIsOwner?,
     val isRefreshing: Boolean,
     val isLogin: Boolean,
+)
+
+data class SharedWorkbookUseCaseModelWithIsOwner(
+    val workbook: SharedWorkbookUseCaseModel,
+    val isOwner: Boolean
 )

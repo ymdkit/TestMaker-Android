@@ -9,9 +9,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.example.ui.R
 
 @Composable
 fun EditTextDialog(
@@ -52,12 +54,11 @@ fun EditTextDialog(
                 Spacer(modifier = Modifier.height(24.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     TextButton(onClick = onDismiss) {
-                        // todo ローカライズ
-                        Text(text = "キャンセル")
+                        Text(text = stringResource(id = R.string.cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(onClick = { onSubmit(value) }) {
-                        Text(text = "OK")
+                        Text(text = stringResource(id = R.string.ok))
                     }
                 }
             }
