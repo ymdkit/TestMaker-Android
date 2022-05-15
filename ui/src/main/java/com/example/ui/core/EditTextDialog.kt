@@ -22,6 +22,7 @@ fun EditTextDialog(
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     placeholder: String,
     onDismiss: () -> Unit,
+    validated: (String) -> Boolean = { true },
     onSubmit: (String) -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
@@ -56,7 +57,9 @@ fun EditTextDialog(
                         Text(text = stringResource(id = R.string.cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(onClick = { onSubmit(value) }) {
+                    TextButton(
+                        enabled = validated(value),
+                        onClick = { onSubmit(value) }) {
                         Text(text = stringResource(id = R.string.ok))
                     }
                 }

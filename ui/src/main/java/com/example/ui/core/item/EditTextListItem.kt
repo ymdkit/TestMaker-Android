@@ -14,6 +14,7 @@ fun EditTextListItem(
     keyboardType: KeyboardType = KeyboardType.Text,
     dialogTitle: String,
     placeholder: String = "",
+    validate: (String) -> Boolean = { true },
     onValueSubmitted: (String) -> Unit,
     showingSecondaryText: Boolean = true
 ) {
@@ -47,10 +48,10 @@ fun EditTextListItem(
                     editTextState = EditTextState.Empty
                 },
                 onSubmit = {
-                    // todo 値のバリデーション
                     onValueSubmitted(it)
                     editTextState = EditTextState.Empty
-                }
+                },
+                validated = validate
             )
     }
 }
