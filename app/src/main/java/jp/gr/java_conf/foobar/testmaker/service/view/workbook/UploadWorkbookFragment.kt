@@ -112,7 +112,6 @@ class UploadWorkbookFragment : Fragment() {
                                                                         )
                                                                     )
                                                                     Text(
-                                                                        // todo StringResource
                                                                         text = uiState.selectedWorkbook?.name
                                                                             ?: stringResource(R.string.msg_empty_uploadable_workbook),
                                                                         color = MaterialTheme.colors.onSurface
