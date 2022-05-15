@@ -555,6 +555,13 @@ class WorkbookListFragment : Fragment() {
                     )
                 }
                 .launchIn(this)
+
+            workbookListViewModel.questionListEmptyEvent
+                .receiveAsFlow()
+                .onEach {
+                    requireContext().showToast(getString(R.string.msg_question_list_empty))
+                }
+                .launchIn(this)
         }
     }
 

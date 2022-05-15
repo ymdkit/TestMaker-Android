@@ -247,4 +247,5 @@
     <string name="msg_empty_uploadable_workbook">投稿可能な問題集が存在しません</string>
     <string name="msg_success_delete_folder">フォルダを削除しました</string>
     <string name="msg_success_delete_question">問題を削除しました</string>
+    <string name="msg_question_list_empty">編集画面から問題を作成してください</string>
 </resources>

@@ -252,4 +252,5 @@
     <string name="msg_empty_uploadable_workbook">no workbook are exists</string>
     <string name="msg_success_delete_folder">folder deleted</string>
     <string name="msg_success_delete_question">delete question</string>
+    <string name="msg_question_list_empty">please create questions</string>
 </resources>
