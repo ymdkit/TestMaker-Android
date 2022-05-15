@@ -250,4 +250,5 @@
     <string name="reload">再読み込み</string>
     <string name="msg_delete_folder">このフォルダを削除しますか？（フォルダ内に含まれる問題集も全て削除されます）</string>
     <string name="title_edit_folder">フォルダ名の編集</string>
+    <string name="button_upload_and_workbook">アップロードして共有用リンクを発行</string>
 </resources>

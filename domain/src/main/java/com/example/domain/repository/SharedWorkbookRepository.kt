@@ -19,7 +19,7 @@ interface SharedWorkbookRepository {
         isPublic: Boolean,
         workbook: Workbook,
         comment: String
-    )
+    ): SharedWorkbook?
 
     suspend fun deleteWorkbook(userId: UserId, workbookId: DocumentId)
     suspend fun deleteWorkbookFromGroup(groupId: GroupId, workbookId: DocumentId)

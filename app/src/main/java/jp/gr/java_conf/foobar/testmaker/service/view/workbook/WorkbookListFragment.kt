@@ -116,7 +116,11 @@ class WorkbookListFragment : Fragment() {
                                                 )
                                             }
                                         },
-                                        onShare = { /*TODO*/ },
+                                        onShare = {
+                                            workbookListViewModel.onShareWorkbookClicked(
+                                                workbook
+                                            )
+                                        },
                                         onDelete = {
                                             scope.launch {
                                                 workbookListViewModel.deleteWorkbook(
@@ -130,6 +134,20 @@ class WorkbookListFragment : Fragment() {
                                                 drawerState.close()
                                             }
                                         })
+                                }
+                                is WorkbookListDrawerState.UploadWorkbook -> {
+                                    UploadWorkbook(
+                                        workbookName = state.workbook.name,
+                                        isUploading = workbookListUiState.isUploading,
+                                        onUpload = { isPrivateUpload ->
+                                            scope.launch {
+                                                workbookListViewModel.onUploadWorkbookClicked(
+                                                    workbook = state.workbook,
+                                                    isPrivateUpload = isPrivateUpload
+                                                )
+                                            }
+                                        }
+                                    )
                                 }
                                 is WorkbookListDrawerState.OperateSharedWorkbook -> {
                                     OperateOwnSharedWorkbook(
@@ -484,6 +502,17 @@ class WorkbookListFragment : Fragment() {
                 .receiveAsFlow()
                 .onEach {
                     requireContext().showToast(getString(R.string.msg_success_delete_folder))
+                }
+                .launchIn(this)
+
+            workbookListViewModel.shareWorkbookEvent
+                .receiveAsFlow()
+                .onEach {
+                    startActivity(
+                        actionSendIntent(
+                            text = getString(R.string.msg_share_test, it.first, it.second)
+                        )
+                    )
                 }
                 .launchIn(this)
         }

@@ -1,5 +1,6 @@
 package com.example.ui.workbook
 
+import android.net.Uri
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +24,8 @@ class WorkbookListViewModel @Inject constructor(
     private val folderListWatchUseCase: FolderListWatchUseCase,
     private val userWorkbookCommandUseCase: UserWorkbookCommandUseCase,
     private val userFolderCommandUseCase: UserFolderCommandUseCase,
-    private val answerSettingGetUseCase: AnswerSettingWatchUseCase
+    private val answerSettingGetUseCase: AnswerSettingWatchUseCase,
+    private val sharedWorkbookCommandUseCase: SharedWorkbookCommandUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<WorkbookListUiState> =
@@ -31,7 +33,8 @@ class WorkbookListViewModel @Inject constructor(
             WorkbookListUiState(
                 resources = Resource.Empty,
                 workbookListDrawerState = WorkbookListDrawerState.None,
-                isShowAnswerSettingDialog = answerSettingGetUseCase.getAnswerSetting().isShowAnswerSettingDialog
+                isShowAnswerSettingDialog = answerSettingGetUseCase.getAnswerSetting().isShowAnswerSettingDialog,
+                isUploading = false
             )
         )
     val uiState: StateFlow<WorkbookListUiState>
@@ -44,6 +47,10 @@ class WorkbookListViewModel @Inject constructor(
     private val _deleteFolderEvent: Channel<Unit> = Channel()
     val deleteFolderEvent: ReceiveChannel<Unit>
         get() = _deleteFolderEvent
+
+    private val _shareWorkbookEvent: Channel<Pair<String, Uri>> = Channel()
+    val shareWorkbookEvent: ReceiveChannel<Pair<String, Uri>>
+        get() = _shareWorkbookEvent
 
     private val _questionListEmptyEvent: Channel<Unit> = Channel()
     val questionListEmptyEvent: ReceiveChannel<Unit>
@@ -154,6 +161,33 @@ class WorkbookListViewModel @Inject constructor(
             }
         }
 
+    fun onShareWorkbookClicked(workbook: WorkbookUseCaseModel) =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                workbookListDrawerState = WorkbookListDrawerState.UploadWorkbook(workbook = workbook)
+            )
+        }
+
+    fun onUploadWorkbookClicked(workbook: WorkbookUseCaseModel, isPrivateUpload: Boolean) =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isUploading = true
+            )
+            val sharedWorkbook = sharedWorkbookCommandUseCase.uploadWorkbook(
+                groupId = "",
+                isPublic = !isPrivateUpload,
+                comment = "",
+                workbook = workbook
+            ) ?: return@launch
+
+            val uri = sharedWorkbookCommandUseCase.shareWorkbook(sharedWorkbook)
+            _shareWorkbookEvent.send(workbook.name to uri)
+            _uiState.value = _uiState.value.copy(
+                isUploading = false
+            )
+
+        }
+
     fun onStartAnswerClicked(workbookId: Long) =
         viewModelScope.launch {
             _navigateToAnswerWorkbookEvent.send(
@@ -186,7 +220,8 @@ class WorkbookListViewModel @Inject constructor(
 data class WorkbookListUiState(
     val resources: Resource<WorkbookListResources>,
     val workbookListDrawerState: WorkbookListDrawerState,
-    val isShowAnswerSettingDialog: Boolean
+    val isShowAnswerSettingDialog: Boolean,
+    val isUploading: Boolean
 )
 
 sealed class WorkbookListDrawerState {
@@ -196,6 +231,7 @@ sealed class WorkbookListDrawerState {
     data class OperateSharedWorkbook(val workbook: SharedWorkbookUseCaseModel) :
         WorkbookListDrawerState()
 
+    data class UploadWorkbook(val workbook: WorkbookUseCaseModel) : WorkbookListDrawerState()
     data class AnswerSetting(val workbook: WorkbookUseCaseModel) : WorkbookListDrawerState()
 }
 
@@ -207,9 +243,4 @@ data class WorkbookListResources(
 data class NavigateToAnswerWorkbookArgs(
     val workbookId: Long,
     val isRetry: Boolean
-)
-
-data class NavigateToAnswerSettingArgs(
-    val workbookId: Long,
-    val workbookName: String
 )

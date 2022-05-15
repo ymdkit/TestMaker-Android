@@ -23,19 +23,22 @@ class SharedWorkbookCommandUseCase @Inject constructor(
         isPublic: Boolean,
         comment: String,
         workbook: WorkbookUseCaseModel
-    ) {
-        val user = userRepository.getUserOrNull() ?: return
+    ): SharedWorkbookUseCaseModel? {
+        val user = userRepository.getUserOrNull() ?: return null
 
         try {
-            repository.createWorkbook(
+            val sharedWorkbook = repository.createWorkbook(
                 user = user,
                 groupId = GroupId(groupId),
                 isPublic = isPublic,
                 workbook = workbook.toWorkbook(),
                 comment = comment,
-            )
+            ) ?: return null
+
+            return SharedWorkbookUseCaseModel.fromSharedWorkbook(sharedWorkbook)
         } catch (e: Exception) {
             println("upload error: ${e.message}")
+            return null
         }
     }
 

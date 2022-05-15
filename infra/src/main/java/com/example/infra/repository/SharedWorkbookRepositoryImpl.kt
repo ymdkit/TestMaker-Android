@@ -86,35 +86,35 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
         isPublic: Boolean,
         workbook: Workbook,
         comment: String,
-    ) {
-        val workbookRef = db.collection(WORKBOOK_COLLECTION_NAME).document()
-        val workbookDocumentId = workbookRef.id
+    ): SharedWorkbook? {
         val batchOperationLimit = 500
+
+        var uploadedWorkbookList = listOf<SharedWorkbook>()
 
         workbook.questionList.sortedBy { it.order }.chunked(batchOperationLimit - 1)
             .forEachIndexed { index, list ->
+                val workbookRef = db.collection(WORKBOOK_COLLECTION_NAME).document()
+                val workbookDocumentId = workbookRef.id
 
                 val newWorkbookName = if (index == 0) workbook.name else "${workbook.name}($index)"
-
-                val newWorkbook = FirebaseTest.fromSharedWorkbook(
-                    SharedWorkbook(
-                        id = DocumentId(workbookDocumentId),
-                        name = newWorkbookName,
-                        color = workbook.color,
-                        userId = user.id,
-                        userName = user.displayName,
-                        comment = comment,
-                        questionListCount = workbook.questionList.size,
-                        downloadCount = 0,
-                        isPublic = isPublic,
-                        groupId = groupId,
-                    )
+                val newWorkbook = SharedWorkbook(
+                    id = DocumentId(workbookDocumentId),
+                    name = newWorkbookName,
+                    color = workbook.color,
+                    userId = user.id,
+                    userName = user.displayName,
+                    comment = comment,
+                    questionListCount = workbook.questionList.size,
+                    downloadCount = 0,
+                    isPublic = isPublic,
+                    groupId = groupId,
                 )
+                uploadedWorkbookList = uploadedWorkbookList + newWorkbook
 
                 db.runBatch { batch ->
                     batch.set(
                         workbookRef,
-                        newWorkbook
+                        FirebaseTest.fromSharedWorkbook(newWorkbook)
                     )
                     list.forEach {
                         val questionRef = db
@@ -158,6 +158,7 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
                 }.await()
             }
         _updateWorkbookListFlow.emit(getWorkbookListByUserId(userId = user.id))
+        return uploadedWorkbookList.firstOrNull()
     }
 
     private fun uploadImage(localPath: String, remotePath: String) {
