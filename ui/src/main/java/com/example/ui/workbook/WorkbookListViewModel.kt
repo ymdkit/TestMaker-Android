@@ -30,7 +30,8 @@ class WorkbookListViewModel @Inject constructor(
         MutableStateFlow(
             WorkbookListUiState(
                 resources = Resource.Empty,
-                workbookListDrawerState = WorkbookListDrawerState.None
+                workbookListDrawerState = WorkbookListDrawerState.None,
+                isShowAnswerSettingDialog = answerSettingGetUseCase.getAnswerSetting().isShowAnswerSettingDialog
             )
         )
     val uiState: StateFlow<WorkbookListUiState>
@@ -161,7 +162,8 @@ class WorkbookListViewModel @Inject constructor(
 
 data class WorkbookListUiState(
     val resources: Resource<WorkbookListResources>,
-    val workbookListDrawerState: WorkbookListDrawerState
+    val workbookListDrawerState: WorkbookListDrawerState,
+    val isShowAnswerSettingDialog: Boolean
 )
 
 sealed class WorkbookListDrawerState {

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -77,15 +77,8 @@ class AnswerResultFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner, object : OnBackPressedCallback(
-                true
-            ) {
-                override fun handleOnBackPressed() {
-                    findNavController().popBackStack(R.id.page_home, false)
-                }
-            }
-        )
+        // 誤って戻らないようにするため、システムの「戻る」を上書きする
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { /* do nothing */ }
 
         return ComposeView(requireContext()).apply {
             setContent {

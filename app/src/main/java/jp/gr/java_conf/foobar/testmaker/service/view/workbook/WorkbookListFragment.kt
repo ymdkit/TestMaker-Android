@@ -77,6 +77,9 @@ class WorkbookListFragment : Fragment() {
                                         workbook = workbook,
                                         onAnswer = {
                                             scope.launch {
+                                                if (!workbookListUiState.isShowAnswerSettingDialog) {
+                                                    drawerState.close()
+                                                }
                                                 workbookListViewModel.onAnswerWorkbookClicked(
                                                     workbook
                                                 )
@@ -141,10 +144,10 @@ class WorkbookListFragment : Fragment() {
                                         workbookName = state.workbook.name,
                                         onStartButtonClicked = {
                                             scope.launch {
-                                                drawerState.close()
                                                 workbookListViewModel.onStartAnswerClicked(
                                                     state.workbook.id
                                                 )
+                                                drawerState.close()
                                             }
                                         },
                                         answerSettingViewModel = answerSettingViewModel
