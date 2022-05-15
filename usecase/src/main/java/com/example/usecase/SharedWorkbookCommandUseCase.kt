@@ -33,7 +33,7 @@ class SharedWorkbookCommandUseCase @Inject constructor(
                 groupId = GroupId(groupId),
                 isPublic = isPublic,
                 workbook = workbook.toWorkbook(),
-                comment = comment
+                comment = comment,
             )
         } catch (e: Exception) {
             println("upload error: ${e.message}")

@@ -5,9 +5,7 @@ import com.example.domain.model.DocumentId
 import com.example.domain.model.GroupId
 import com.example.domain.model.SharedWorkbook
 import com.example.domain.model.UserId
-import com.example.infra.local.entity.RealmTest
 import com.google.firebase.Timestamp
-import java.text.SimpleDateFormat
 import java.util.*
 
 // フィールド名に is を含めるとフィールド名が正しく保存されない場合があります（2020/12/20）
@@ -32,8 +30,7 @@ data class FirebaseTest(
             FirebaseTest().apply {
                 documentId = workbook.id.value
                 name = workbook.name
-                // todo 値の反映
-                color = 0
+                color = workbook.color.ordinal
                 userId = workbook.userId.value
                 userName = workbook.userName
                 overview = workbook.comment
@@ -43,27 +40,6 @@ data class FirebaseTest(
                 public = workbook.isPublic
                 groupId = workbook.groupId?.value ?: ""
             }
-    }
-
-    var questions: List<FirebaseQuestion> = listOf()
-
-    @Deprecated("remove this method as soon as possible")
-    fun toTest(): RealmTest {
-        val test = RealmTest()
-        test.limit = 100
-        test.title = name
-        test.themeColor = TestMakerColor.BLUE.name
-        test.documentId = documentId
-        return test
-    }
-
-    fun getDate(): String {
-
-        val date = Date(created_at.seconds * 1000)
-        val df = SimpleDateFormat("yyyy-MM-dd")
-
-
-        return df.format(date)
     }
 
     fun toSharedWorkbook(documentId: String): SharedWorkbook =
