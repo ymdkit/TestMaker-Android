@@ -93,6 +93,7 @@ fun ContentPlayCompleteQuestion(
             onClick = {
                 onAnswered(yourAnswers)
                 yourAnswers = List(state.question.getSwappableAnswers(isSwap).count()) { "" }
+                focusManager.clearFocus()
             },
             text = stringResource(R.string.judge_question),
             color = MaterialTheme.colors.secondary

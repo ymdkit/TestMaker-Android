@@ -78,6 +78,7 @@ fun ContentPlayWriteQuestion(
             onClick = {
                 onAnswered(yourAnswer)
                 yourAnswer = ""
+                focusManager.clearFocus()
             },
             text = stringResource(R.string.judge_question),
             color = MaterialTheme.colors.secondary
