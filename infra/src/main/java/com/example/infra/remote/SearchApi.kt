@@ -1,5 +1,6 @@
 package com.example.infra.remote
 
+import com.example.core.TestMakerColor
 import com.example.domain.model.DocumentId
 import com.example.domain.model.SharedWorkbook
 import com.example.domain.model.UserId
@@ -34,6 +35,7 @@ data class SearchWorkbookResponse(
         SharedWorkbook(
             id = DocumentId(value = documentId),
             name = name,
+            color = TestMakerColor.values()[color.coerceIn(0, TestMakerColor.values().lastIndex)],
             userId = UserId(value = userId),
             userName = userName,
             comment = comment,

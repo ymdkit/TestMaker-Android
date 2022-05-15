@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -278,8 +279,11 @@ class GroupWorkbookListFragment : Fragment() {
                                                                                         .size(40.dp)
                                                                                         .padding(8.dp),
                                                                                     imageVector = Icons.Filled.Description,
-                                                                                    // todo 動的に色を変更
-                                                                                    tint = MaterialTheme.colors.primary,
+                                                                                    tint = ColorMapper(
+                                                                                        LocalContext.current
+                                                                                    ).colorToGraphicColor(
+                                                                                        it.color
+                                                                                    ),
                                                                                     contentDescription = "workbook",
                                                                                 )
                                                                             },

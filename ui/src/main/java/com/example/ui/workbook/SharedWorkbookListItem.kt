@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.core.TestMakerColor
 import com.example.ui.R
 import com.example.ui.core.ClickableListItem
 import com.example.ui.core.ColorMapper
@@ -31,8 +30,7 @@ fun SharedWorkbookListItem(
                     .padding(8.dp),
                 imageVector = Icons.Filled.Description,
                 contentDescription = "workbook",
-                // todo 色を動的に変更
-                tint = ColorMapper(LocalContext.current).colorToGraphicColor(TestMakerColor.BLUE)
+                tint = ColorMapper(LocalContext.current).colorToGraphicColor(workbook.color)
             )
         },
         text = workbook.name,

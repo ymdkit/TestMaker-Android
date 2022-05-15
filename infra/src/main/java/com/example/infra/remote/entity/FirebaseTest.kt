@@ -70,6 +70,7 @@ data class FirebaseTest(
         SharedWorkbook(
             id = DocumentId(documentId),
             name = name,
+            color = TestMakerColor.values()[color.coerceIn(0, TestMakerColor.values().lastIndex)],
             userId = UserId(value = userId),
             userName = userName,
             comment = overview,

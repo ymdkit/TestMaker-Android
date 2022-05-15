@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ExperimentalGraphicsApi
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -34,10 +35,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.core.utils.Resource
-import com.example.ui.core.AdView
-import com.example.ui.core.AdViewModel
-import com.example.ui.core.ClickableListItem
-import com.example.ui.core.showToast
+import com.example.ui.core.*
 import com.example.ui.sharedworkbook.SharedWorkbookListViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -214,8 +212,9 @@ class PublishedWorkbookListFragment : Fragment() {
                                                                             modifier = Modifier
                                                                                 .size(40.dp)
                                                                                 .padding(8.dp),
-                                                                            // todo 取得した値に置き換える
-                                                                            tint = MaterialTheme.colors.primary
+                                                                            tint = ColorMapper(
+                                                                                LocalContext.current
+                                                                            ).colorToGraphicColor(it.color)
                                                                         )
                                                                     },
                                                                     text = it.name,

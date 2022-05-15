@@ -120,7 +120,6 @@
     <string name="empty_test">make your first test</string>
     <string name="title_activity_edit_question">edit question</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hint_auto">auto generate</string>
     <string name="empty_question">make your first question</string>
     <string name="judge_question">OK</string>
@@ -160,7 +159,6 @@
     <string name="msg_success_delete_test">test deleted</string>
     <string name="upload_group_test_fragment_label">upload test</string>
     <string name="history_test_fragment_label">history</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="rename_group">rename group</string>
     <string name="delete_group">delete group</string>
     <string name="msg_delete_group">delete group %1$s</string>

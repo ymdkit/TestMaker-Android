@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import com.example.core.QuestionImage
+import com.example.core.TestMakerColor
 import com.example.domain.model.*
 import com.example.domain.repository.SharedWorkbookRepository
 import com.example.infra.remote.DynamicLinksCreator
@@ -100,6 +101,8 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
                     SharedWorkbook(
                         id = DocumentId(workbookDocumentId),
                         name = newWorkbookName,
+                        // todo 色設定
+                        color = TestMakerColor.BLUE,
                         userId = user.id,
                         userName = user.displayName,
                         comment = comment,
