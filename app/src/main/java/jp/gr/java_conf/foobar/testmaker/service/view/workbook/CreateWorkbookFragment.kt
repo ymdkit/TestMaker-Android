@@ -199,7 +199,10 @@ class CreateWorkbookFragment : Fragment() {
                                                     MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
                                                 ),
                                                 onClick = { importFile.launch(arrayOf("text/*")) }) {
-                                                Text(text = stringResource(id = R.string.action_import))
+                                                Text(
+                                                    text = stringResource(id = R.string.action_import),
+                                                    color = MaterialTheme.colors.onBackground
+                                                )
                                             }
                                         }
                                         item {
@@ -218,7 +221,10 @@ class CreateWorkbookFragment : Fragment() {
                                                             Uri.parse("https://ankimaker.com/howto/edit_csv")
                                                     })
                                                 }) {
-                                                Text(text = stringResource(id = R.string.help_import))
+                                                Text(
+                                                    text = stringResource(id = R.string.help_import),
+                                                    color = MaterialTheme.colors.onBackground
+                                                )
                                             }
                                         }
                                     }
