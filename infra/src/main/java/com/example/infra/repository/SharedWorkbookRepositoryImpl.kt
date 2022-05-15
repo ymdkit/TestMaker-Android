@@ -127,7 +127,7 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
                         val newImageUrl =
                             when (val problemImage = it.problemImageUrl) {
                                 is QuestionImage.LocalImage -> {
-                                    val imageRef = "${user.id}/${problemImage.getRawString()}"
+                                    val imageRef = "${user.id.value}/${problemImage.getRawString()}"
                                     uploadImage(problemImage.getRawString(), imageRef)
                                     imageRef
                                 }

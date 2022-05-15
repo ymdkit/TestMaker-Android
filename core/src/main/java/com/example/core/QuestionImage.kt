@@ -6,7 +6,6 @@ sealed class QuestionImage {
     data class LocalImage(val path: String) : QuestionImage()
 
     companion object {
-        // todo テスト作成
         fun fromRawString(rawString: String) =
             if (rawString.isNotEmpty()) {
                 if (rawString.contains("/")) {

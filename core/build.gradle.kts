@@ -33,4 +33,6 @@ android {
 }
 
 dependencies {
+    testImplementation(Dep.Test.jUnit4)
+    testImplementation(Dep.Test.mockK)
 }

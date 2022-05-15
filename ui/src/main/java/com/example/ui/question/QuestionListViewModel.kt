@@ -63,6 +63,7 @@ class QuestionListViewModel @Inject constructor(
 
         workbookWatchUseCase.flow
             .onEach {
+                println("questionImages ${it.getOrNull()?.questionList?.map { it.problemImageUrl }}")
                 _uiState.value = _uiState.value.copy(
                     questionList = it.map { it.questionList.map { it to false } }
                 )
