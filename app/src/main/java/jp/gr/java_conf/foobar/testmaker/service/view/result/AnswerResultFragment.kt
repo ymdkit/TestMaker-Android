@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
@@ -91,6 +91,7 @@ class AnswerResultFragment : Fragment() {
             setContent {
 
                 val uiState by viewModel.uiState.collectAsState()
+                val studyPlusRecordStatus: ResultViewModel.StudyPlusRecordStatus by viewModel.studyPlusRecordStatus.collectAsState()
                 val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
                 val scope = rememberCoroutineScope()
 
@@ -150,52 +151,52 @@ class AnswerResultFragment : Fragment() {
                                     is Resource.Success -> {
                                         Surface(color = MaterialTheme.colors.surface) {
                                             Column {
-                                                // todo LazyColumn に変更する
-                                                Column(
+                                                LazyColumn(
                                                     modifier = Modifier
                                                         .padding(16.dp)
-                                                        .verticalScroll(state = ScrollState(0))
                                                         .weight(weight = 1f, fill = true)
                                                 ) {
-                                                    ItemPieChart(
-                                                        dataSet =
-                                                        PieDataSet(
-                                                            listOf(
-                                                                state.value.correctCount,
-                                                                state.value.incorrectCount
-                                                            )
-                                                                .map {
-                                                                    PieEntry(it)
-                                                                }, ""
-                                                        ),
-                                                        centerText = state.value.scoreText
-                                                    )
-
-                                                    val studyPlusRecordStatus: ResultViewModel.StudyPlusRecordStatus by viewModel.studyPlusRecordStatus.collectAsState()
-
-                                                    AnimatedVisibility(
-                                                        visible = sharedPreferenceManager.uploadStudyPlus == resources.getStringArray(
-                                                            R.array.upload_setting_study_plus_values
-                                                        )[2] && studyPlusRecordStatus == ResultViewModel.StudyPlusRecordStatus.READY
-                                                    ) {
-                                                        WideOutlinedButton(
-                                                            onCLick = {
-                                                                viewModel.createStudyPlusRecord(
-                                                                    duration, requireContext()
+                                                    item {
+                                                        ItemPieChart(
+                                                            dataSet =
+                                                            PieDataSet(
+                                                                listOf(
+                                                                    state.value.correctCount,
+                                                                    state.value.incorrectCount
                                                                 )
-                                                            },
-                                                            text = getString(R.string.menu_upload_studyplus),
-                                                            modifier = Modifier.padding(vertical = 8.dp)
+                                                                    .map {
+                                                                        PieEntry(it)
+                                                                    }, ""
+                                                            ),
+                                                            centerText = state.value.scoreText
+                                                        )
+                                                    }
+                                                    item {
+                                                        AnimatedVisibility(
+                                                            visible = sharedPreferenceManager.uploadStudyPlus == resources.getStringArray(
+                                                                R.array.upload_setting_study_plus_values
+                                                            )[2] && studyPlusRecordStatus == ResultViewModel.StudyPlusRecordStatus.READY
+                                                        ) {
+                                                            WideOutlinedButton(
+                                                                onCLick = {
+                                                                    viewModel.createStudyPlusRecord(
+                                                                        duration, requireContext()
+                                                                    )
+                                                                },
+                                                                text = getString(R.string.menu_upload_studyplus),
+                                                                modifier = Modifier.padding(vertical = 8.dp)
+                                                            )
+                                                        }
+                                                    }
+                                                    item {
+                                                        Text(
+                                                            text = getString(R.string.label_result_questions),
+                                                            color = MaterialTheme.colors.primary,
+                                                            modifier = Modifier.padding(vertical = 4.dp)
                                                         )
                                                     }
 
-                                                    Text(
-                                                        text = getString(R.string.label_result_questions),
-                                                        color = MaterialTheme.colors.primary,
-                                                        modifier = Modifier.padding(vertical = 4.dp)
-                                                    )
-
-                                                    state.value.answeringQuestionList.mapIndexed { index, it ->
+                                                    itemsIndexed(state.value.answeringQuestionList) { index, it ->
                                                         ItemResultModel(
                                                             index + 1,
                                                             it.problem,
