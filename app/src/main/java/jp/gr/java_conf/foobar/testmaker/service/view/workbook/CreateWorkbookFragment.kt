@@ -200,19 +200,6 @@ class CreateWorkbookFragment : Fragment() {
                                             }) {
                                             Text(text = stringResource(id = R.string.help_import))
                                         }
-//                                        ClickableListItem(
-//                                            text = stringResource(id = R.string.action_import),
-//                                            onClick = { importFile.launch(arrayOf("text/*")) }
-//                                        )
-//                                        ClickableListItem(
-//                                            text = stringResource(id = R.string.help_import),
-//                                            onClick = {
-//                                                startActivity(Intent(Intent.ACTION_VIEW).apply {
-//                                                    data =
-//                                                        Uri.parse("https://ankimaker.com/howto/edit_csv")
-//                                                })
-//                                            }
-//                                        )
                                     }
                                 }
                                 Button(
