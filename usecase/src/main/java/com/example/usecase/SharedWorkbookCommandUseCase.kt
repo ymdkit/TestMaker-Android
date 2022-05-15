@@ -1,6 +1,5 @@
 package com.example.usecase
 
-import com.example.core.TestMakerColor
 import com.example.domain.model.CreateQuestionRequest
 import com.example.domain.model.DocumentId
 import com.example.domain.model.GroupId
@@ -63,8 +62,7 @@ class SharedWorkbookCommandUseCase @Inject constructor(
         val newWorkbook = workbookRepository.createWorkbook(
             name = workbook.name,
             remoteId = workbook.id.value,
-            // todo
-            color = TestMakerColor.BLUE,
+            color = workbook.color,
             folderName = ""
         )
         questionList.forEach {

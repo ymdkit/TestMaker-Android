@@ -27,10 +27,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.core.utils.Resource
 import com.example.ui.answer.AnswerSetting
 import com.example.ui.answer.AnswerSettingViewModel
-import com.example.ui.core.AdView
-import com.example.ui.core.AdViewModel
-import com.example.ui.core.TestMakerTopAppBar
-import com.example.ui.core.showToast
+import com.example.ui.core.*
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.*
 import com.google.accompanist.pager.HorizontalPager
@@ -201,88 +198,84 @@ class WorkbookListFragment : Fragment() {
                                                         Scaffold(
                                                             modifier = Modifier.weight(1f),
                                                             content = {
-                                                                when (val state =
-                                                                    workbookListUiState.resources) {
-                                                                    is Resource.Success -> {
-                                                                        val workbookList =
-                                                                            state.value.workbookList
-                                                                        val folderList =
-                                                                            state.value.folderList
-                                                                        if (workbookList.isEmpty() && folderList.isEmpty()) {
-                                                                            Column(
-                                                                                modifier = Modifier.fillMaxSize(),
-                                                                                horizontalAlignment = Alignment.CenterHorizontally,
-                                                                                verticalArrangement = Arrangement.Center
-                                                                            ) {
-                                                                                Text(
-                                                                                    text = stringResource(
-                                                                                        id = R.string.empty_test
+                                                                ResourceContent(
+                                                                    resource = workbookListUiState.resources,
+                                                                    onRetry = { workbookListViewModel.load() }) {
+                                                                    val workbookList =
+                                                                        it.workbookList
+                                                                    val folderList =
+                                                                        it.folderList
+                                                                    if (workbookList.isEmpty() && folderList.isEmpty()) {
+                                                                        Column(
+                                                                            modifier = Modifier.fillMaxSize(),
+                                                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                                                            verticalArrangement = Arrangement.Center
+                                                                        ) {
+                                                                            Text(
+                                                                                text = stringResource(
+                                                                                    id = R.string.empty_test
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                    } else {
+                                                                        LazyColumn(
+                                                                            modifier = Modifier
+                                                                                .fillMaxHeight()
+                                                                        ) {
+                                                                            item {
+                                                                                Spacer(
+                                                                                    modifier = Modifier.height(
+                                                                                        8.dp
                                                                                     )
                                                                                 )
                                                                             }
-                                                                        } else {
-                                                                            LazyColumn(
-                                                                                modifier = Modifier
-                                                                                    .fillMaxHeight()
-                                                                            ) {
+                                                                            if (folderList.isNotEmpty()) {
                                                                                 item {
-                                                                                    Spacer(
-                                                                                        modifier = Modifier.height(
-                                                                                            8.dp
+                                                                                    Text(
+                                                                                        modifier = Modifier.padding(
+                                                                                            horizontal = 16.dp
+                                                                                        ),
+                                                                                        text = stringResource(
+                                                                                            id = R.string.folder
                                                                                         )
                                                                                     )
                                                                                 }
-                                                                                if (folderList.isNotEmpty()) {
-                                                                                    item {
-                                                                                        Text(
-                                                                                            modifier = Modifier.padding(
-                                                                                                horizontal = 16.dp
-                                                                                            ),
-                                                                                            text = stringResource(
-                                                                                                id = R.string.folder
-                                                                                            )
-                                                                                        )
-                                                                                    }
+                                                                            }
+                                                                            folderList.forEach {
+                                                                                item {
+                                                                                    FolderListItem(
+                                                                                        folder = it
+                                                                                    )
                                                                                 }
-                                                                                folderList.forEach {
-                                                                                    item {
-                                                                                        FolderListItem(
-                                                                                            folder = it
+                                                                            }
+                                                                            if (workbookList.isNotEmpty()) {
+                                                                                item {
+                                                                                    Text(
+                                                                                        modifier = Modifier.padding(
+                                                                                            horizontal = 16.dp
+                                                                                        ),
+                                                                                        text = stringResource(
+                                                                                            id = R.string.workbook
                                                                                         )
-                                                                                    }
+                                                                                    )
                                                                                 }
-                                                                                if (workbookList.isNotEmpty()) {
-                                                                                    item {
-                                                                                        Text(
-                                                                                            modifier = Modifier.padding(
-                                                                                                horizontal = 16.dp
-                                                                                            ),
-                                                                                            text = stringResource(
-                                                                                                id = R.string.workbook
-                                                                                            )
-                                                                                        )
-                                                                                    }
-                                                                                }
-                                                                                workbookList.forEach {
-                                                                                    item {
-                                                                                        WorkbookListItem(
-                                                                                            workbook = it,
-                                                                                            onClick = {
-                                                                                                scope.launch {
-                                                                                                    drawerState.expand()
-                                                                                                }
-                                                                                                workbookListViewModel.onWorkbookClicked(
-                                                                                                    it
-                                                                                                )
+                                                                            }
+                                                                            workbookList.forEach {
+                                                                                item {
+                                                                                    WorkbookListItem(
+                                                                                        workbook = it,
+                                                                                        onClick = {
+                                                                                            scope.launch {
+                                                                                                drawerState.expand()
                                                                                             }
-                                                                                        )
-                                                                                    }
+                                                                                            workbookListViewModel.onWorkbookClicked(
+                                                                                                it
+                                                                                            )
+                                                                                        }
+                                                                                    )
                                                                                 }
                                                                             }
                                                                         }
-                                                                    }
-                                                                    else -> {
-                                                                        // todo
                                                                     }
                                                                 }
                                                             },

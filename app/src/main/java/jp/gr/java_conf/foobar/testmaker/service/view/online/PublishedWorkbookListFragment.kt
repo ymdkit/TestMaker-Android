@@ -34,7 +34,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.core.utils.Resource
 import com.example.ui.core.*
 import com.example.ui.sharedworkbook.SharedWorkbookListViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
@@ -198,43 +197,40 @@ class PublishedWorkbookListFragment : Fragment() {
                                                 state = rememberSwipeRefreshState(uiState.isRefreshing),
                                                 onRefresh = sharedWorkbookListViewModel::load
                                             ) {
-                                                when (val state = uiState.workbookList) {
-                                                    is Resource.Success -> {
-                                                        LazyColumn(
-                                                            modifier = Modifier.fillMaxHeight()
-                                                        ) {
-                                                            items(state.value) {
-                                                                ClickableListItem(
-                                                                    icon = {
-                                                                        Icon(
-                                                                            imageVector = Icons.Default.Description,
-                                                                            contentDescription = "workbook",
-                                                                            modifier = Modifier
-                                                                                .size(40.dp)
-                                                                                .padding(8.dp),
-                                                                            tint = ColorMapper(
-                                                                                LocalContext.current
-                                                                            ).colorToGraphicColor(it.color)
+                                                ResourceContent(
+                                                    resource = uiState.workbookList,
+                                                    onRetry = { sharedWorkbookListViewModel::load }) {
+                                                    LazyColumn(
+                                                        modifier = Modifier.fillMaxHeight()
+                                                    ) {
+                                                        items(it) {
+                                                            ClickableListItem(
+                                                                icon = {
+                                                                    Icon(
+                                                                        imageVector = Icons.Default.Description,
+                                                                        contentDescription = "workbook",
+                                                                        modifier = Modifier
+                                                                            .size(40.dp)
+                                                                            .padding(8.dp),
+                                                                        tint = ColorMapper(
+                                                                            LocalContext.current
+                                                                        ).colorToGraphicColor(it.color)
+                                                                    )
+                                                                },
+                                                                text = it.name,
+                                                                secondaryText = stringResource(
+                                                                    id = R.string.text_workbook_size,
+                                                                    it.questionListCount
+                                                                ),
+                                                                onClick = {
+                                                                    scope.launch {
+                                                                        sharedWorkbookListViewModel.onWorkbookClicked(
+                                                                            it
                                                                         )
-                                                                    },
-                                                                    text = it.name,
-                                                                    secondaryText = stringResource(
-                                                                        id = R.string.text_workbook_size,
-                                                                        it.questionListCount
-                                                                    ),
-                                                                    onClick = {
-                                                                        scope.launch {
-                                                                            sharedWorkbookListViewModel.onWorkbookClicked(
-                                                                                it
-                                                                            )
-                                                                            drawerState.open()
-                                                                        }
-                                                                    })
-                                                            }
+                                                                        drawerState.open()
+                                                                    }
+                                                                })
                                                         }
-                                                    }
-                                                    else -> {
-                                                        // todo
                                                     }
                                                 }
                                             }
@@ -282,7 +278,7 @@ class PublishedWorkbookListFragment : Fragment() {
             sharedWorkbookListViewModel.downloadWorkbookEvent
                 .receiveAsFlow()
                 .onEach {
-                    requireContext().showToast(getString(R.string.msg_success_download_test, it))
+                    requireContext().showToast(getString(R.string.msg_success_download_test))
                     val hostActivity = requireActivity() as? MainActivity
                     hostActivity?.navigateHomePage()
                 }
