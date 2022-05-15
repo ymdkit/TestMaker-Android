@@ -97,7 +97,6 @@ class AnswerWorkbookFragment : Fragment() {
                             val uiState = playViewModel.uiState.collectAsState()
                             val effectState = playViewModel.answerEffectState.collectAsState()
 
-                            // todo フォントサイズ変更
                             Column {
                                 Box(modifier = Modifier.weight(weight = 1f, fill = true)) {
                                     Column(
