@@ -52,6 +52,7 @@ dependencies {
     implementation(Dep.Compose.materialIconsCore)
     implementation(Dep.Compose.materialIconsExtended)
     implementation(Dep.Compose.activity)
+    implementation(Dep.Compose.systemUiController)
     implementation(Dep.PlayServices.ads)
     implementation(Dep.PlayServices.oss)
     api(Dep.BillingClient.billing)

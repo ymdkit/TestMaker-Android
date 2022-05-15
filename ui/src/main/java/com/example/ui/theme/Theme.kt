@@ -10,36 +10,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.example.core.TestMakerColor
 import com.example.ui.core.ColorMapper
-
-private val DarkColorPalette = darkColors(
-    primary = Color(0XFF0099CC),
-    secondaryVariant = Color(0XFF0099CC),
-//    primary = Color(0XFF0099CC),
-//    secondary = Color(0XFFBA7827),
-//    secondaryVariant = Color(0XFF0099CC),
-//    surface = Color(0X00000000),
-//    onPrimary = Color.White,
-//    onSurface = Color(0X99FFFFFF),
-//    onBackground = Color(0X99FFFFFF),
-//    onSecondary = Color.White,
-//    onError = Color.White
-)
-
-private val LightColorPalette = lightColors(
-    primary = Color(0XFF0099CC),
-    secondaryVariant = Color(0XFF0099CC),
-//    primary = Color(0XFF33B5E5),
-//    secondary = Color(0XFFFFA144),
-//    secondaryVariant = Color(0XFF0099CC),
-//    onPrimary = Color.White,
-//    onSecondary = Color.White,
-)
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun TestMakerAndroidTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+
+    val systemUiController = rememberSystemUiController()
+    if (darkTheme) {
+        systemUiController.setSystemBarsColor(
+            color = Color.Transparent
+        )
+    } else {
+        systemUiController.setSystemBarsColor(
+            color = Color.White
+        )
+    }
 
     // todo NavigationCompose 導入の際に、 ViewModel を Inject する形に修正
     // todo リアルタイムで反映

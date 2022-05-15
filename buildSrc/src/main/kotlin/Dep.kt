@@ -30,6 +30,8 @@ object Dep {
         const val materialIconsExtended =
             "androidx.compose.material:material-icons-extended:$composeVersion"
         const val activity = "androidx.activity:activity-compose:1.4.0"
+        const val systemUiController =
+            "com.google.accompanist:accompanist-systemuicontroller:0.24.8-beta"
     }
 
     object Material {
