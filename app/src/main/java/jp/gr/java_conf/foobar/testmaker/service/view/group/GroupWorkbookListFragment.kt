@@ -36,6 +36,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -198,6 +199,7 @@ class GroupWorkbookListFragment : Fragment() {
                                                 modifier = Modifier
                                                     .padding(16.dp)
                                                     .clickable {
+                                                        requireActivity().hideKeyboard(windowToken)
                                                         findNavController().popBackStack()
                                                     }
                                             )

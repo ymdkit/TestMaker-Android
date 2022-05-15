@@ -34,6 +34,7 @@ import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.EditWorkbookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.QuestionListFragmentArgs
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.TextPicker
@@ -69,6 +70,7 @@ class EditWorkbookFragment : Fragment() {
                                         modifier = Modifier
                                             .padding(16.dp)
                                             .clickable {
+                                                requireActivity().hideKeyboard(windowToken)
                                                 findNavController().popBackStack()
                                             }
                                     )

@@ -19,7 +19,7 @@ data class FormQuestionUiState(
     companion object {
         fun fromQuestionUseCaseModel(question: QuestionUseCaseModel) =
             FormQuestionUiState(
-                questionType = QuestionType.valueOf(question.type.value),
+                questionType = question.type,
                 problem = question.problem,
                 answerList = question.answers,
                 otherSelectionList = question.otherSelections,

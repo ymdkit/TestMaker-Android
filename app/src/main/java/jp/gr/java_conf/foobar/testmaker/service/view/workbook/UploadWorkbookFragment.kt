@@ -28,6 +28,7 @@ import com.example.ui.workbook.UploadWorkbookViewModel
 import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.OutlinedSwitch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -61,6 +62,7 @@ class UploadWorkbookFragment : Fragment() {
                                         modifier = Modifier
                                             .padding(16.dp)
                                             .clickable {
+                                                requireActivity().hideKeyboard(windowToken)
                                                 findNavController().popBackStack()
                                             }
                                     )

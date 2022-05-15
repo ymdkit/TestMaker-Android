@@ -38,6 +38,7 @@ import com.example.ui.workbook.CreateWorkbookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
+import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.TextPicker
 import kotlinx.coroutines.flow.launchIn
@@ -82,6 +83,7 @@ class CreateWorkbookFragment : Fragment() {
                                         modifier = Modifier
                                             .padding(16.dp)
                                             .clickable {
+                                                requireActivity().hideKeyboard(windowToken)
                                                 findNavController().popBackStack()
                                             }
                                     )

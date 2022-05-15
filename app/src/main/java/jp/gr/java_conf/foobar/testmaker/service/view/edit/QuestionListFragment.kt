@@ -41,6 +41,7 @@ import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.usecase.model.QuestionUseCaseModel
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
 import jp.gr.java_conf.foobar.testmaker.service.view.online.SearchTextField
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -195,6 +196,7 @@ class QuestionListFragment : Fragment() {
                                                 modifier = Modifier
                                                     .padding(16.dp)
                                                     .clickable {
+                                                        requireActivity().hideKeyboard(windowToken)
                                                         findNavController().popBackStack()
                                                     }
                                             )

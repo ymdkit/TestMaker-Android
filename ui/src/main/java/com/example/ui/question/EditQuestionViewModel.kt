@@ -70,10 +70,6 @@ class EditQuestionViewModel @Inject constructor(
         }
     }
 
-    fun load() = viewModelScope.launch {
-
-    }
-
     override fun onQuestionTypeChanged(value: QuestionType) =
         viewModelScope.launch {
             when (value) {

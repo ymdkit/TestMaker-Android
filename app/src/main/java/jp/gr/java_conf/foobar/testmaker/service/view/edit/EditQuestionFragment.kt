@@ -33,6 +33,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
+import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.EditQuestionForm
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -45,7 +46,6 @@ class EditQuestionFragment : Fragment() {
     private val args: EditQuestionFragmentArgs by navArgs()
     private val adViewModel: AdViewModel by viewModels()
     private val editQuestionViewModel: EditQuestionViewModel by viewModels()
-
 
     @OptIn(ExperimentalPagerApi::class)
     override fun onCreateView(
@@ -66,6 +66,7 @@ class EditQuestionFragment : Fragment() {
                                         modifier = Modifier
                                             .padding(16.dp)
                                             .clickable {
+                                                requireActivity().hideKeyboard(windowToken)
                                                 findNavController().popBackStack()
                                             }
                                     )
@@ -79,7 +80,7 @@ class EditQuestionFragment : Fragment() {
                                 val uiState by editQuestionViewModel.uiState.collectAsState()
 
                                 val pagerState = rememberPagerState(
-                                    initialPage = 0
+                                    initialPage = uiState.questionType.value
                                 )
 
                                 LaunchedEffect(pagerState) {
@@ -130,7 +131,7 @@ class EditQuestionFragment : Fragment() {
                                         .padding(16.dp)
                                         .weight(weight = 1f, fill = true),
                                     state = pagerState,
-                                    count = QuestionType.values().count()
+                                    count = QuestionType.values().size
                                 ) {
                                     EditQuestionForm(
                                         viewModel = editQuestionViewModel,
