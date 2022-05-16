@@ -4,19 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.core.utils.Resource
 import com.example.ui.core.AdView
@@ -48,7 +53,20 @@ class HistoryWorkbookFragment : Fragment() {
 
                 TestMakerAndroidTheme {
                     Scaffold(topBar = {
-                        TestMakerTopAppBar(title = stringResource(id = R.string.history_test_fragment_label))
+                        TestMakerTopAppBar(
+                            navigationIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = "Back",
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .clickable {
+                                            findNavController().popBackStack()
+                                        }
+                                )
+                            },
+                            title = stringResource(id = R.string.history_test_fragment_label)
+                        )
                     }) {
                         Column {
                             Column(modifier = Modifier.weight(1f))
