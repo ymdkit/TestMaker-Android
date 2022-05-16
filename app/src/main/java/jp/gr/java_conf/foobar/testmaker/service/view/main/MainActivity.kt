@@ -203,7 +203,7 @@ class MainActivity : AppCompatActivity() {
 
                 if (params.size != 2) return@let
 
-                viewModel.joinGroup(groupId = params[0])
+                viewModel.joinGroup(groupId = params[1])
 
             } else {
                 val workbookId = params[0]
