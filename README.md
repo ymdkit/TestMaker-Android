@@ -41,8 +41,8 @@
   * ads
   * oss-plugin
 * [Material Components for Android](https://github.com/material-components/material-components-android) (Google)
+* [Hilt](https://dagger.dev/hilt/) (Google)
 * [epoxy](https://github.com/airbnb/epoxy) (Airbnb)
 * [glide](https://github.com/bumptech/glide) (Bumptech)
-* [koin](https://github.com/InsertKoinIO/koin) (InsertKoinIO)
 * [Studyplus-Android-SDK](https://github.com/studyplus/Studyplus-Android-SDK) (Studyplus)
 * [SimpleCropView](https://github.com/igreenwood/SimpleCropView) (igreenwood)

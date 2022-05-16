@@ -1,42 +1,80 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.main
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isGone
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
+import com.example.ui.core.showToast
+import com.example.ui.home.MainViewModel
+import com.example.ui.home.NavigationPage
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.databinding.ActivityMainBinding
-import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
-import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListFragmentDirections
-import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsContainerFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsFragment
+import jp.gr.java_conf.foobar.testmaker.service.view.group.GroupWorkbookListFragmentDirections
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.*
-import java.util.*
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: MainViewModel by viewModel()
-    private val testViewModel: TestViewModel by viewModel()
-    private val logger: TestMakerLogger by inject()
+    private val viewModel: MainViewModel by viewModels()
 
     private val navController by lazy {
         (supportFragmentManager.findFragmentById(R.id.nav_main) as NavHostFragment).navController
+    }
+
+    private val navigationItemList by lazy {
+        listOf(
+            NavigationItem(
+                page = NavigationPage.HOME,
+                resId = R.id.page_home,
+                icon = Icons.Default.Home,
+                contentDescription = "Home",
+                text = getString(R.string.title_page_home),
+            ),
+            NavigationItem(
+                page = NavigationPage.SEARCH,
+                resId = R.id.page_search,
+                icon = Icons.Default.Search,
+                contentDescription = "Search",
+                text = getString(R.string.title_page_search),
+            ),
+            NavigationItem(
+                page = NavigationPage.GROUP,
+                resId = R.id.page_group,
+                icon = Icons.Default.Group,
+                contentDescription = "Group",
+                text = getString(R.string.title_page_group),
+            ),
+            NavigationItem(
+                page = NavigationPage.SETTING,
+                resId = R.id.page_settings,
+                icon = Icons.Default.Settings,
+                contentDescription = "Settings",
+                text = getString(R.string.title_page_settings),
+            )
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,44 +82,112 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        binding.bottomBar.setupWithNavController(navController)
+        binding.composeBottomBar.setContent {
+            TestMakerAndroidTheme {
+                Surface {
+                    val uiState by viewModel.uiState.collectAsState()
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.page_answer_workbook, R.id.page_answer_result -> {
-                    binding.bottomBar.isGone = true
-                }
-                else -> {
-                    binding.bottomBar.isGone = false
+                    if (uiState.showingBottomBar) {
+                        BottomAppBar(
+                            elevation = 0.dp,
+                            backgroundColor = Color.Transparent
+                        ) {
+                            navigationItemList.forEach {
+                                BottomNavigationItem(
+                                    selected = uiState.selectedBottomBarPage == it.page,
+                                    onClick = {
+                                        viewModel.onSelectedBottomBarPageChanged(it.page)
+                                        navigate(it.page)
+                                    },
+                                    icon = {
+                                        Icon(
+                                            imageVector = it.icon,
+                                            contentDescription = it.contentDescription
+                                        )
+                                    },
+                                    label = { Text(text = it.text) }
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        lifecycleScope.launch {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.page_answer_workbook,
+                R.id.page_create_workbook,
+                R.id.page_upload_workbook,
+                R.id.page_edit_workbook,
+                R.id.page_list_question,
+                R.id.page_create_folder,
+                R.id.page_create_question,
+                R.id.page_edit_question,
+                R.id.page_answer_result -> {
+                    viewModel.onShowingBottomBarChanged(false)
+                }
+                else -> {
+                    viewModel.onShowingBottomBarChanged(true)
+                }
+            }
+
+            when (destination.id) {
+                R.id.page_home,
+                R.id.page_settings,
+                R.id.page_upload_workbook,
+                R.id.fragment_upload_group_test,
+                R.id.page_search,
+                R.id.page_group -> {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+                }
+                else -> {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenCreated {
+
+            viewModel.downloadWorkbookEvent
+                .receiveAsFlow()
+                .onEach {
+                    showToast(getString(R.string.msg_success_download_test))
+                }
+                .launchIn(this)
+
+            viewModel.joinGroupEvent
+                .receiveAsFlow()
+                .onEach {
+                    navigate(NavigationPage.GROUP)
+                    navController.navigate(
+                        GroupWorkbookListFragmentDirections.actionGlobalPageGroupDetail(
+                            groupId = it
+                        )
+                    )
+                }
+                .launchIn(this)
+
+
             val pendingDynamicLinkData = withContext(Dispatchers.Default) {
                 FirebaseDynamicLinks.getInstance()
                     .getDynamicLink(intent).await()
             }
 
-            pendingDynamicLinkData ?: return@launch
+            pendingDynamicLinkData ?: return@launchWhenCreated
             val deepLink = pendingDynamicLinkData.link
             handleDynamicLink(deepLink.toString())
         }
     }
 
     fun navigateHomePage() {
-        testViewModel.refresh()
-        binding.bottomBar.selectedItemId = R.id.page_home
-        navController.navigate(R.id.action_global_page_home)
+        navigate(NavigationPage.HOME)
     }
 
-    private fun navigateGroupPage(groupId: String) {
-        binding.bottomBar.selectedItemId = R.id.page_group
-        navController.navigate(
-            GroupListFragmentDirections.actionGroupListToGroupDetail(
-                groupId = groupId
-            )
-        )
+    private fun navigate(page: NavigationPage) {
+        val dest = navigationItemList.firstOrNull { it.page == page } ?: return
+        navController.navigate(dest.resId)
+        viewModel.onSelectedBottomBarPageChanged(dest.page)
     }
 
     private fun handleDynamicLink(link: String) {
@@ -97,63 +203,22 @@ class MainActivity : AppCompatActivity() {
 
                 if (params.size != 2) return@let
 
-                navigateGroupPage(groupId = params[1])
+                viewModel.joinGroup(groupId = params[1])
 
             } else {
-                actionDownload(params[0])
+                val workbookId = params[0]
+                // todo 読み込み中の UI （Compose 化した後）
+                viewModel.downloadWorkbook(workbookId)
             }
         }
     }
 
-    private fun actionDownload(documentId: String) = lifecycleScope.launch {
-
-        executeJobWithDialog(
-            title = getString(R.string.downloading),
-            task = {
-                viewModel.downloadTest(documentId)
-            },
-            onSuccess = {
-                viewModel.convert(it)
-                testViewModel.refresh()
-                showToast(getString(R.string.msg_success_download_test, it.name))
-                logger.logCreateTestEvent(it.name, CreateTestSource.DYNAMIC_LINKS.title)
-            },
-            onFailure = {
-                showToast(getString(R.string.msg_failure_download_test))
-            }
-        )
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        when (requestCode) {
-            SettingsFragment.REQUEST_CODE_AUTH -> {
-                if (resultCode == RESULT_OK && data != null) {
-
-                    supportFragmentManager.findFragmentById(R.id.nav_main)?.childFragmentManager?.fragments?.get(
-                        0
-                    )
-                        ?.let {
-
-                            if (it is SettingsContainerFragment) {
-                                it.setStudyPlusAuthResult(data)
-                            }
-                        }
-                }
-            }
-        }
-    }
-
-    companion object {
-
-        const val REQUEST_SIGN_IN = 12346
-
-        fun startActivityWithClear(activity: Activity) {
-            val intent = Intent(activity, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            }
-            activity.startActivity(intent)
-        }
-    }
+    data class NavigationItem(
+        val page: NavigationPage,
+        val resId: Int,
+        val icon: ImageVector,
+        val contentDescription: String,
+        val text: String,
+    )
 }
+

@@ -9,19 +9,21 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.core.AnswerStatus
 import jp.gr.java_conf.foobar.testmaker.service.R
 
 data class ItemResultModel(
     val id: Int,
     val problem: String,
     val answer: String,
-    val isCorrect: Boolean
+    val answerStatus: AnswerStatus
 ) {
 
     @ExperimentalMaterialApi
@@ -64,10 +66,10 @@ data class ItemResultModel(
                 }
                 Image(
                     painterResource(
-                        id = if (isCorrect) R.drawable.ic_correct else R.drawable.ic_incorrect
+                        id = if (answerStatus == AnswerStatus.CORRECT) R.drawable.ic_correct else R.drawable.ic_incorrect
                     ),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(if (isCorrect) MaterialTheme.colors.secondary else MaterialTheme.colors.primary)
+                    colorFilter = ColorFilter.tint(if (answerStatus == AnswerStatus.CORRECT) MaterialTheme.colors.secondary else Color.Gray)
                 )
             }
         }

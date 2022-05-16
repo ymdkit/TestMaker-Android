@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/page_home">
 
@@ -14,9 +13,22 @@
         app:destination="@id/fragment_group_detail" />
 
     <fragment
-        android:id="@id/page_home"
-        android:name="jp.gr.java_conf.foobar.testmaker.service.view.main.HomeFragment"
-        android:label="@string/app_name" >
+        android:id="@+id/page_home"
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.workbook.WorkbookListFragment"
+        android:label="@string/app_name">
+
+        <argument
+            android:name="folderName"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_home_to_home_question"
+            app:destination="@id/page_home"
+            app:enterAnim="@anim/alpha_appear"
+            app:exitAnim="@anim/alpha_gone"
+            app:popEnterAnim="@anim/alpha_appear"
+            app:popExitAnim="@anim/alpha_gone" />
 
         <action
             android:id="@+id/action_home_to_list_question"
@@ -63,7 +75,7 @@
     <fragment
         android:id="@+id/page_answer_workbook"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.play.AnswerWorkbookFragment"
-        android:label="@string/fragment_answer_workbook" >
+        android:label="@string/fragment_answer_workbook">
 
         <argument
             android:name="workbookId"
@@ -71,8 +83,8 @@
 
         <argument
             android:name="isRetry"
-            app:argType="boolean"
-            android:defaultValue="false"/>
+            android:defaultValue="false"
+            app:argType="boolean" />
 
         <action
             android:id="@+id/action_answer_workbook_to_answer_result"
@@ -95,7 +107,7 @@
     <fragment
         android:id="@+id/page_answer_result"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.result.AnswerResultFragment"
-        android:label="@string/fragment_answer_workbook" >
+        android:label="@string/fragment_answer_workbook">
 
         <argument
             android:name="workbookId"
@@ -126,7 +138,7 @@
     <fragment
         android:id="@+id/page_list_question"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.edit.QuestionListFragment"
-        android:label="@string/fragment_list_question" >
+        android:label="@string/pgae_list_question">
 
         <argument
             android:name="workbookId"
@@ -160,7 +172,7 @@
     <fragment
         android:id="@+id/page_create_question"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.edit.CreateQuestionFragment"
-        android:label="@string/fragment_create_question" >
+        android:label="@string/fragment_create_question">
 
         <argument
             android:name="workbookId"
@@ -170,7 +182,7 @@
     <fragment
         android:id="@+id/page_edit_question"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.edit.EditQuestionFragment"
-        android:label="@string/fragment_create_question" >
+        android:label="@string/fragment_create_question">
 
         <argument
             android:name="workbookId"
@@ -184,7 +196,7 @@
     <fragment
         android:id="@+id/page_edit_workbook"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.workbook.EditWorkbookFragment"
-        android:label="@string/fragment_edit_workbook" >
+        android:label="@string/fragment_edit_workbook">
 
         <argument
             android:name="workbookId"
@@ -203,7 +215,13 @@
     <fragment
         android:id="@+id/page_create_workbook"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.workbook.CreateWorkbookFragment"
-        android:label="@string/fragment_create_workbook" >
+        android:label="@string/fragment_create_workbook">
+
+        <argument
+            android:name="folderName"
+            android:defaultValue=""
+            app:argType="string" />
+
 
         <action
             android:id="@+id/action_create_workbook_to_create_folder"
@@ -221,36 +239,20 @@
         android:label="@string/fragment_create_folder" />
 
     <fragment
-        android:id="@+id/page_share_workbook"
-        android:name="jp.gr.java_conf.foobar.testmaker.service.view.workbook.ShareWorkbookFragment"
-        android:label="@string/fragment_upload_workbook" >
-
-        <argument
-            android:name="workbookId"
-            app:argType="long" />
-
-    </fragment>
-
-    <fragment
         android:id="@+id/page_upload_workbook"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.workbook.UploadWorkbookFragment"
-        android:label="@string/fragment_upload_workbook" >
-
-        <argument
-            android:name="workbookId"
-            app:argType="long" />
+        android:label="@string/fragment_upload_workbook">
 
     </fragment>
 
     <fragment
-        android:id="@id/page_search"
+        android:id="@+id/page_search"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.online.PublishedWorkbookListFragment"
-        android:label="@string/title_activity_public_tests"
-        tools:layout="@layout/fragment_group_list" >
+        android:label="@string/title_activity_public_tests">
 
         <action
-            android:id="@+id/action_search_to_publish_workbook"
-            app:destination="@id/page_publish_workbook"
+            android:id="@+id/action_search_to_upload_workbook"
+            app:destination="@id/page_upload_workbook"
             app:enterAnim="@anim/alpha_appear"
             app:exitAnim="@anim/alpha_gone"
             app:popEnterAnim="@anim/alpha_appear"
@@ -259,21 +261,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/page_publish_workbook"
-        android:name="jp.gr.java_conf.foobar.testmaker.service.view.online.PublishWorkbookFragment"
-        android:label="@string/fragment_publish_workbook" >
-
-        <argument
-            android:name="workbookId"
-            app:argType="long" />
-
-    </fragment>
-
-    <fragment
-        android:id="@id/page_group"
+        android:id="@+id/page_group"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupListFragment"
-        android:label="@string/group_list_fragment_label"
-        tools:layout="@layout/fragment_group_list">
+        android:label="@string/group_list_fragment_label">
 
         <action
             android:id="@+id/action_group_list_to_group_detail"
@@ -281,14 +271,13 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_group_detail"
-        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupDetailFragment"
-        android:label="@string/group_detail_fragment_label"
-        tools:layout="@layout/fragment_group_detail">
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.GroupWorkbookListFragment"
+        android:label="@string/group_detail_fragment_label">
+
 
         <argument
             android:name="groupId"
-            app:argType="string"
-            android:defaultValue="" />
+            app:argType="string" />
 
         <action
             android:id="@+id/action_group_detail_to_upload_test"
@@ -302,33 +291,30 @@
     <fragment
         android:id="@+id/fragment_upload_group_test"
         android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.UploadGroupTestFragment"
-        android:label="@string/upload_group_test_fragment_label"
-        tools:layout="@layout/fragment_upload_group_test">
+        android:label="@string/upload_group_test_fragment_label">
 
         <argument
             android:name="groupId"
-            app:argType="string"
-            android:defaultValue="" />
+            android:defaultValue=""
+            app:argType="string" />
 
     </fragment>
     <fragment
         android:id="@+id/fragment_history_test"
-        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.HistoryTestFragment"
-        android:label="@string/history_test_fragment_label"
-        tools:layout="@layout/fragment_group_detail">
+        android:name="jp.gr.java_conf.foobar.testmaker.service.view.group.HistoryWorkbookFragment"
+        android:label="@string/history_test_fragment_label">
 
         <argument
             android:name="documentId"
-            app:argType="string"
-            android:defaultValue="" />
+            android:defaultValue=""
+            app:argType="string" />
 
     </fragment>
 
 
     <fragment
-        android:id="@id/page_settings"
-        android:name="jp.gr.java_conf.foobar.testmaker.service.view.preference.SettingsContainerFragment"
-        android:label="@string/title_page_settings"
-        tools:layout="@layout/fragment_group_list" />
+        android:id="@+id/page_settings"
+        android:name="com.example.ui.preference.SettingsFragment"
+        android:label="@string/title_page_settings" />
 
 </navigation>

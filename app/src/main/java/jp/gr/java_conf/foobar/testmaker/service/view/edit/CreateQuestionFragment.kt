@@ -10,45 +10,44 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.core.QuestionType
+import com.example.ui.core.AdView
+import com.example.ui.core.AdViewModel
+import com.example.ui.core.TestMakerTopAppBar
+import com.example.ui.core.showToast
+import com.example.ui.question.CreateQuestionViewModel
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.QuestionFormat
-import jp.gr.java_conf.foobar.testmaker.service.domain.Test
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditCompleteQuestion
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectCompleteQuestion
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditSelectQuestion
-import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.ContentEditWriteQuestion
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
+import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
+import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.CreateQuestionForm
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@AndroidEntryPoint
 class CreateQuestionFragment : Fragment() {
 
-    val sharedPreferenceManager: SharedPreferenceManager by inject()
-    private val testViewModel: TestViewModel by viewModel()
-
     private val args: CreateQuestionFragmentArgs by navArgs()
-    private val workbook: Test by lazy { testViewModel.get(args.workbookId) }
+    private val adViewModel: AdViewModel by viewModels()
+    private val createQuestionViewModel: CreateQuestionViewModel by viewModels()
 
-    private val logger: TestMakerLogger by inject()
-
-    @ExperimentalPagerApi
+    @OptIn(ExperimentalPagerApi::class)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,13 +58,7 @@ class CreateQuestionFragment : Fragment() {
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
-                            TopAppBar(
-                                title = {
-                                    Text(
-                                        text = getString(R.string.title_activity_create_question),
-                                    )
-                                },
-                                elevation = 0.dp,
+                            TestMakerTopAppBar(
                                 navigationIcon = {
                                     Icon(
                                         imageVector = Icons.Filled.ArrowBack,
@@ -73,28 +66,46 @@ class CreateQuestionFragment : Fragment() {
                                         modifier = Modifier
                                             .padding(16.dp)
                                             .clickable {
+                                                requireActivity().hideKeyboard(windowToken)
                                                 findNavController().popBackStack()
                                             }
                                     )
-                                }
+                                },
+                                title = stringResource(id = R.string.title_activity_create_question)
                             )
                         },
                         content = {
                             Column {
 
+                                val uiState by createQuestionViewModel.uiState.collectAsState()
+
+                                QuestionType.values().size
                                 val pagerState = rememberPagerState(
-                                    pageCount = QuestionFormat.values().size,
-                                    initialOffscreenLimit = 4,
-                                    infiniteLoop = false,
                                     initialPage = 0
                                 )
-                                val tabIndex = pagerState.currentPage
+
+                                LaunchedEffect(pagerState) {
+                                    snapshotFlow { pagerState.currentPage }.collect {
+                                        createQuestionViewModel.onQuestionTypeChanged(
+                                            QuestionType.valueOf(
+                                                it
+                                            )
+                                        )
+                                    }
+                                }
                                 val coroutineScope = rememberCoroutineScope()
 
-                                TabRow(selectedTabIndex = tabIndex) {
-                                    QuestionFormat.values().forEachIndexed { index, format ->
+                                TabRow(
+                                    selectedTabIndex = uiState.questionType.value,
+                                    backgroundColor = Color.Transparent
+                                ) {
+                                    QuestionType.values().forEachIndexed { index, format ->
                                         Tab(
-                                            selected = tabIndex == index,
+                                            selected = uiState.questionType.value == index,
+                                            selectedContentColor = MaterialTheme.colors.onBackground,
+                                            unselectedContentColor = MaterialTheme.colors.onBackground.copy(
+                                                alpha = ContentAlpha.medium
+                                            ),
                                             onClick = {
                                                 coroutineScope.launch {
                                                     pagerState.animateScrollToPage(index)
@@ -104,10 +115,10 @@ class CreateQuestionFragment : Fragment() {
                                                 Text(
                                                     stringResource(
                                                         id = when (format) {
-                                                            QuestionFormat.WRITE -> R.string.write
-                                                            QuestionFormat.SELECT -> R.string.select
-                                                            QuestionFormat.COMPLETE -> R.string.complete
-                                                            QuestionFormat.SELECT_COMPLETE -> R.string.select_complete
+                                                            QuestionType.WRITE -> R.string.write
+                                                            QuestionType.SELECT -> R.string.select
+                                                            QuestionType.COMPLETE -> R.string.complete
+                                                            QuestionType.SELECT_COMPLETE -> R.string.select_complete
                                                         }
                                                     )
                                                 )
@@ -119,109 +130,35 @@ class CreateQuestionFragment : Fragment() {
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .weight(weight = 1f, fill = true),
-                                    state = pagerState
-                                ) { page ->
-                                    when (QuestionFormat.values()[page]) {
-                                        QuestionFormat.WRITE -> ContentEditWriteQuestion(
-                                            questionId = -1,
-                                            order = -1,
-                                            initialProblem = "",
-                                            initialAnswer = "",
-                                            initialExplanation = "",
-                                            initialImageUrl = "",
-                                            onCreate = {
-                                                testViewModel.create(
-                                                    test = workbook,
-                                                    question = it.toQuestion()
-                                                )
-
-                                                logger.logCreateQuestion(it.toQuestion(), "self")
-                                                requireContext().showToast(getString(R.string.msg_create_question))
-                                            },
-                                            buttonTitle = stringResource(id = R.string.button_create_wuestion),
-                                            fragmentManager = childFragmentManager
-                                        )
-                                        QuestionFormat.SELECT -> ContentEditSelectQuestion(
-                                            questionId = -1,
-                                            order = -1,
-                                            initialProblem = "",
-                                            initialAnswer = "",
-                                            initialWrongChoices = listOf(),
-                                            initialExplanation = "",
-                                            initialIsAutoGenerateWrongChoices = false,
-                                            initialImageUrl = "",
-                                            onCreate = {
-                                                testViewModel.create(
-                                                    test = workbook,
-                                                    question = it.toQuestion()
-                                                )
-
-                                                logger.logCreateQuestion(it.toQuestion(), "self")
-                                                requireContext().showToast(getString(R.string.msg_create_question))
-                                            },
-                                            buttonTitle = stringResource(id = R.string.button_create_wuestion),
-                                            fragmentManager = childFragmentManager
-                                        )
-                                        QuestionFormat.COMPLETE ->
-                                            ContentEditCompleteQuestion(
-                                                questionId = -1,
-                                                order = -1,
-                                                initialProblem = "",
-                                                initialAnswers = listOf(),
-                                                initialExplanation = "",
-                                                initialIsCheckAnswerOrder = false,
-                                                initialImageUrl = "",
-                                                onCreate = {
-                                                    testViewModel.create(
-                                                        test = workbook,
-                                                        question = it.toQuestion()
-                                                    )
-
-                                                    logger.logCreateQuestion(
-                                                        it.toQuestion(),
-                                                        "self"
-                                                    )
-                                                    requireContext().showToast(getString(R.string.msg_create_question))
-                                                },
-                                                buttonTitle = stringResource(id = R.string.button_create_wuestion),
-                                                fragmentManager = childFragmentManager
-                                            )
-                                        QuestionFormat.SELECT_COMPLETE ->
-                                            ContentEditSelectCompleteQuestion(
-                                                questionId = -1,
-                                                order = -1,
-                                                initialProblem = "",
-                                                initialAnswers = listOf(),
-                                                initialWrongChoices = listOf(),
-                                                initialExplanation = "",
-                                                initialImageUrl = "",
-                                                initialIsCheckAnswerOrder = false,
-                                                initialIsAutoGenerateWrongChoices = false,
-                                                onCreate = {
-                                                    testViewModel.create(
-                                                        test = workbook,
-                                                        question = it.toQuestion()
-                                                    )
-
-                                                    logger.logCreateQuestion(
-                                                        it.toQuestion(),
-                                                        "self"
-                                                    )
-                                                    requireContext().showToast(getString(R.string.msg_create_question))
-                                                },
-                                                buttonTitle = stringResource(id = R.string.button_create_wuestion),
-                                                fragmentManager = childFragmentManager
-                                            )
-                                    }
+                                    state = pagerState,
+                                    count = QuestionType.values().size
+                                ) {
+                                    CreateQuestionForm(
+                                        viewModel = createQuestionViewModel,
+                                        fragmentManager = childFragmentManager
+                                    )
                                 }
-                                ComposeAdView(
-                                    isRemovedAd = sharedPreferenceManager.isRemovedAd,
-                                )
+                                AdView(viewModel = adViewModel)
                             }
                         }
                     )
                 }
             }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        createQuestionViewModel.setup(workbookId = args.workbookId)
+        adViewModel.setup()
+
+        lifecycleScope.launchWhenCreated {
+            createQuestionViewModel.onCreateQuestion
+                .receiveAsFlow()
+                .onEach {
+                    requireContext().showToast(getString(R.string.msg_create_question))
+                }
+                .launchIn(this)
         }
     }
 }

@@ -15,7 +15,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -25,49 +24,31 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.core.utils.Resource
+import com.example.ui.core.*
+import com.example.ui.theme.TestMakerAndroidTheme
+import com.example.ui.workbook.EditWorkbookViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
-import jp.gr.java_conf.foobar.testmaker.service.view.category.CategoryViewModel
+import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
 import jp.gr.java_conf.foobar.testmaker.service.view.edit.QuestionListFragmentArgs
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPickerItem
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.TextPicker
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class EditWorkbookFragment : Fragment() {
 
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
-    private val testViewModel: TestViewModel by viewModel()
-    private val categoryViewModel: CategoryViewModel by viewModel()
+    private val editWorkbookViewModel: EditWorkbookViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
-    private val logger: TestMakerLogger by inject()
-
-    private val colors by lazy {
-        listOf(
-            ColorPickerItem(id = 0, colorId = R.color.red, name = getString(R.string.red)),
-            ColorPickerItem(id = 1, colorId = R.color.orange, name = getString(R.string.orange)),
-            ColorPickerItem(id = 2, colorId = R.color.yellow, name = getString(R.string.yellow)),
-            ColorPickerItem(id = 3, colorId = R.color.green, name = getString(R.string.green)),
-            ColorPickerItem(
-                id = 4,
-                colorId = R.color.dark_green,
-                name = getString(R.string.dark_green)
-            ),
-            ColorPickerItem(id = 5, colorId = R.color.blue, name = getString(R.string.blue)),
-            ColorPickerItem(id = 6, colorId = R.color.navy, name = getString(R.string.navy)),
-            ColorPickerItem(id = 7, colorId = R.color.purple, name = getString(R.string.purple)),
-        )
-    }
+    @Inject
+    lateinit var colorMapper: ColorMapper
 
     private val args: QuestionListFragmentArgs by navArgs()
 
@@ -75,19 +56,13 @@ class EditWorkbookFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val workbook = testViewModel.get(args.workbookId)
 
         return ComposeView(requireContext()).apply {
             setContent {
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
-                            TopAppBar(
-                                title = {
-                                    Text(
-                                        text = getString(R.string.title_edit_workbook),
-                                    )
-                                },
+                            TestMakerTopAppBar(
                                 navigationIcon = {
                                     Icon(
                                         imageVector = Icons.Filled.ArrowBack,
@@ -95,148 +70,157 @@ class EditWorkbookFragment : Fragment() {
                                         modifier = Modifier
                                             .padding(16.dp)
                                             .clickable {
+                                                requireActivity().hideKeyboard(windowToken)
                                                 findNavController().popBackStack()
                                             }
                                     )
-                                }
+                                },
+                                title = stringResource(id = R.string.title_edit_workbook)
                             )
                         },
                         content = {
 
-                            val focusRequester = remember { FocusRequester() }
-                            val focusManager = LocalFocusManager.current
-                            LaunchedEffect(Unit) {
-                                focusRequester.requestFocus()
-                            }
+                            val uiState by editWorkbookViewModel.uiState.collectAsState()
 
-                            var name by rememberSaveable { mutableStateOf(workbook.title) }
-                            var color by remember {
-                                mutableStateOf(colors.find {
-                                    workbook.color == ContextCompat.getColor(
-                                        context,
-                                        it.colorId
-                                    )
-                                } ?: colors.first())
-                            }
-                            val folders by categoryViewModel.categoriesLiveData.observeAsState(
-                                listOf()
-                            )
-                            var folderName by rememberSaveable { mutableStateOf(workbook.category) }
+                            when (val state = uiState) {
+                                is Resource.Success -> {
 
-                            var showingValidationError by rememberSaveable { mutableStateOf(false) }
+                                    val workbook = state.value.workbook
 
-                            Column {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .weight(weight = 1f, fill = true)
-                                ) {
-                                    Column(
-                                        modifier = Modifier
-                                            .weight(weight = 1f, fill = true)
-                                    ) {
-                                        OutlinedTextField(
+                                    val focusRequester = remember { FocusRequester() }
+                                    val focusManager = LocalFocusManager.current
+                                    LaunchedEffect(Unit) {
+                                        focusRequester.requestFocus()
+                                    }
+
+                                    var name by rememberSaveable { mutableStateOf(workbook.name) }
+                                    var color by remember { mutableStateOf(workbook.color) }
+                                    var folderName by rememberSaveable { mutableStateOf(workbook.folderName) }
+
+                                    var showingValidationError by rememberSaveable {
+                                        mutableStateOf(
+                                            false
+                                        )
+                                    }
+
+                                    Column {
+                                        Column(
                                             modifier = Modifier
-                                                .fillMaxWidth()
-                                                .focusRequester(focusRequester)
-                                                .padding(bottom = 8.dp),
-                                            value = name,
-                                            label = {
-                                                Text(text = stringResource(R.string.hint_workbook_name))
-                                            },
-                                            onValueChange = {
-                                                name = it
-                                            },
-                                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                            keyboardActions = KeyboardActions(onDone = {
-                                                focusManager.clearFocus()
-                                            })
-                                        )
-                                        ColorPicker(
-                                            modifier = Modifier.padding(bottom = 8.dp),
-                                            label = stringResource(id = R.string.picker_color),
-                                            entries = colors,
-                                            value = color,
-                                            onValueChange = {
-                                                color = it
+                                                .padding(16.dp)
+                                                .weight(weight = 1f, fill = true)
+                                        ) {
+                                            Column(
+                                                modifier = Modifier
+                                                    .weight(weight = 1f, fill = true)
+                                            ) {
+                                                OutlinedTextField(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .focusRequester(focusRequester)
+                                                        .padding(bottom = 8.dp),
+                                                    value = name,
+                                                    label = {
+                                                        Text(text = stringResource(R.string.hint_workbook_name))
+                                                    },
+                                                    onValueChange = {
+                                                        name = it
+                                                    },
+                                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                                    keyboardActions = KeyboardActions(onDone = {
+                                                        focusManager.clearFocus()
+                                                    })
+                                                )
+                                                ColorPicker(
+                                                    modifier = Modifier.padding(bottom = 8.dp),
+                                                    label = stringResource(id = R.string.picker_color),
+                                                    value = color,
+                                                    colorMapper = colorMapper,
+                                                    onValueChange = {
+                                                        color = it
+                                                    }
+                                                )
+                                                TextPicker(
+                                                    modifier = Modifier.padding(bottom = 8.dp),
+                                                    label = stringResource(id = R.string.picker_folder),
+                                                    entries = state.value.folderList
+                                                        .map { it.name } + listOf(
+                                                        stringResource(id = R.string.new_folder)
+                                                    ),
+                                                    value = folderName,
+                                                    onValueChange = {
+                                                        if (it == getString(R.string.new_folder)) {
+                                                            findNavController().navigate(
+                                                                EditWorkbookFragmentDirections.actionEditWorkbookToCreateFolder()
+                                                            )
+                                                        } else {
+                                                            folderName = it
+                                                        }
+                                                    })
+
                                             }
-                                        )
-                                        TextPicker(
-                                            modifier = Modifier.padding(bottom = 8.dp),
-                                            label = stringResource(id = R.string.picker_folder),
-                                            entries = folders
-                                                .map { it.name } + listOf(
-                                                stringResource(id = R.string.new_folder)
-                                            ),
-                                            value = folderName,
-                                            onValueChange = {
-                                                if (it == getString(R.string.new_folder)) {
-                                                    findNavController().navigate(
-                                                        EditWorkbookFragmentDirections.actionEditWorkbookToCreateFolder()
+                                            Button(
+                                                onClick = {
+
+                                                    if (name.isEmpty()) {
+                                                        showingValidationError = true
+                                                        return@Button
+                                                    }
+
+                                                    editWorkbookViewModel.updateWorkbook(
+                                                        name = name,
+                                                        color = color,
+                                                        folderName = folderName
                                                     )
-                                                } else {
-                                                    folderName = it
-                                                }
-                                            })
 
-                                    }
-                                    Button(
-                                        onClick = {
+                                                    requireContext().showToast(getString(R.string.msg_update_success_workbook))
 
-                                            if (name.isEmpty()) {
-                                                showingValidationError = true
-                                                return@Button
+                                                    findNavController().popBackStack()
+                                                },
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .height(48.dp)
+                                            ) {
+                                                Text(text = stringResource(id = R.string.button_update_workbook))
                                             }
-
-                                            testViewModel.update(
-                                                test = workbook,
-                                                title = name,
-                                                color = ContextCompat.getColor(
-                                                    context,
-                                                    color.colorId
-                                                ),
-                                                category = folderName,
-                                            )
-
-                                            requireContext().showToast(getString(R.string.msg_update_success_workbook))
-
-                                            findNavController().popBackStack()
-                                        },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(48.dp)
-                                    ) {
-                                        Text(text = stringResource(id = R.string.button_update_workbook))
-                                    }
-                                    if (showingValidationError) {
-                                        AlertDialog(
-                                            onDismissRequest = {
-                                                showingValidationError = false
-                                            },
-                                            title = {
-                                                Text(stringResource(id = R.string.title_error_create_workbook))
-                                            },
-                                            text = {
-                                                Text(stringResource(id = R.string.msg_error_create_workbook))
-                                            },
-                                            confirmButton = {
-                                                TextButton(onClick = {
-                                                    showingValidationError = false
-                                                }) {
-                                                    Text(stringResource(id = R.string.ok))
-                                                }
+                                            if (showingValidationError) {
+                                                AlertDialog(
+                                                    onDismissRequest = {
+                                                        showingValidationError = false
+                                                    },
+                                                    title = {
+                                                        Text(stringResource(id = R.string.title_error_create_workbook))
+                                                    },
+                                                    text = {
+                                                        Text(stringResource(id = R.string.msg_error_create_workbook))
+                                                    },
+                                                    confirmButton = {
+                                                        TextButton(onClick = {
+                                                            showingValidationError = false
+                                                        }) {
+                                                            Text(stringResource(id = R.string.ok))
+                                                        }
+                                                    }
+                                                )
                                             }
-                                        )
+                                        }
+                                        AdView(viewModel = adViewModel)
                                     }
                                 }
-                                ComposeAdView(
-                                    isRemovedAd = sharedPreferenceManager.isRemovedAd,
-                                )
+                                else -> {
+                                    // do nothing
+                                }
                             }
                         }
                     )
                 }
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        editWorkbookViewModel.setup(workbookId = args.workbookId)
+        adViewModel.setup()
+        editWorkbookViewModel.load()
     }
 }

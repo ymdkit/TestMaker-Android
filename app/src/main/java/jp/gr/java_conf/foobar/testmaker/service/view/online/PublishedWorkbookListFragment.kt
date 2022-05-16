@@ -6,368 +6,346 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ExperimentalGraphicsApi
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.example.ui.core.*
+import com.example.ui.core.item.ClickableListItem
+import com.example.ui.sharedworkbook.SharedWorkbookListViewModel
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.domain.CreateTestSource
-import jp.gr.java_conf.foobar.testmaker.service.extensions.executeJobWithDialog
-import jp.gr.java_conf.foobar.testmaker.service.extensions.observeNonNull
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showErrorToast
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
-import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.infra.firebase.FirebaseTest
-import jp.gr.java_conf.foobar.testmaker.service.infra.logger.TestMakerLogger
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
-import jp.gr.java_conf.foobar.testmaker.service.view.main.TestViewModel
-import jp.gr.java_conf.foobar.testmaker.service.view.share.DialogMenuItem
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ListDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
+
+@AndroidEntryPoint
 class PublishedWorkbookListFragment : Fragment() {
 
-    companion object {
-        const val COLOR_MAX = 8F
-    }
+    private val sharedWorkbookListViewModel: SharedWorkbookListViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
-    private val testViewModel: TestViewModel by viewModel()
-    private val viewModel: FirebaseViewModel by viewModel()
-    private val sharedPreferenceManager: SharedPreferenceManager by inject()
-    private val logger: TestMakerLogger by inject()
 
-    @ExperimentalMaterialApi
-    @ExperimentalGraphicsApi
+    @OptIn(
+        ExperimentalMaterialApi::class,
+        ExperimentalGraphicsApi::class
+    )
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        viewModel.getTests()
-
-        viewModel.error.observeNonNull(this) {
-            requireContext().showErrorToast(it)
-        }
-
         return ComposeView(requireContext()).apply {
             setContent {
-
-                val tests by viewModel.tests.observeAsState(emptyList())
-                val isRefreshing by viewModel.loading.observeAsState(true)
-                val isSearching = mutableStateOf(false)
+                val uiState by sharedWorkbookListViewModel.uiState.collectAsState()
+                val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
+                val scope = rememberCoroutineScope()
 
                 TestMakerAndroidTheme {
-                    Scaffold(
-                        topBar = {
-                            TopAppBar(
-                                title = {
-                                    if (isSearching.value) {
-                                        SearchTextField(
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) {
-                                            viewModel.getTests(it)
-                                        }
-                                    } else {
+                    BottomDrawer(
+                        drawerState = drawerState,
+                        gesturesEnabled = !drawerState.isClosed,
+                        drawerContent = {
+                            val workbook = uiState.selectedSharedWorkbook
+
+                            if (workbook != null) {
+                                ListItem(
+                                    text = {
                                         Text(
-                                            text = getString(R.string.label_public_tests),
+                                            text = workbook.name,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                )
+                                ListItem(
+                                    text = {
+                                        Text(text = stringResource(id = R.string.workbook_post_user))
+                                    },
+                                    secondaryText = {
+                                        Text(
+                                            text = workbook.userName
+                                        )
+                                    }
+                                )
+                                if (workbook.comment.isNotEmpty()) {
+                                    ListItem(
+                                        text = {
+                                            Text(text = stringResource(id = R.string.overview))
+                                        },
+                                        secondaryText = {
+                                            Text(
+                                                text = workbook.comment
+                                            )
+                                        }
+                                    )
+                                }
+                                ClickableListItem(
+                                    icon = {
+                                        Icon(
+                                            imageVector = Icons.Filled.Share,
+                                            contentDescription = "share"
+                                        )
+                                    },
+                                    text = stringResource(id = R.string.share)
+                                ) {
+                                    scope.launch {
+                                        sharedWorkbookListViewModel.onShareWorkbookClicked(workbook = workbook)
+                                        drawerState.close()
+                                    }
+                                }
+                                ClickableListItem(
+                                    icon = {
+                                        Icon(
+                                            imageVector = Icons.Filled.Report,
+                                            contentDescription = "report"
+                                        )
+                                    },
+                                    text = stringResource(id = R.string.report)
+                                ) {
+                                    scope.launch {
+                                        drawerState.close()
+                                        reportWorkbook(documentId = workbook.id)
+                                    }
+                                }
+                                Button(
+                                    enabled = !uiState.isDownloading,
+                                    onClick = {
+                                        sharedWorkbookListViewModel.onDownloadWorkbookClicked(
+                                            workbook = workbook
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                        .defaultMinSize(minHeight = 48.dp),
+                                ) {
+                                    if (uiState.isDownloading) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(32.dp),
                                             color = MaterialTheme.colors.onPrimary
                                         )
+                                    } else {
+                                        Text(text = stringResource(id = com.example.ui.R.string.download))
                                     }
-
-                                },
-                                backgroundColor = MaterialTheme.colors.primary,
-                                actions = {
-                                    IconButton(onClick = {
-                                        isSearching.value = !isSearching.value
-                                    }) {
-                                        Image(
-                                            painter = painterResource(
-                                                id =
-                                                if (isSearching.value) R.drawable.ic_close_white
-                                                else R.drawable.ic_baseline_search_24
-                                            ),
-                                            contentDescription = "search",
-                                        )
-                                    }
-                                },
-                            )
-                        },
-                        content = {
-                            Surface(color = MaterialTheme.colors.surface) {
-                                Column {
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(weight = 1f, fill = true)
-                                            .fillMaxWidth()
-                                    ) {
-
-                                        SwipeRefresh(
-                                            state = rememberSwipeRefreshState(isRefreshing),
-                                            onRefresh = {
-                                                // todo 検索条件を反映させる
-                                                viewModel.getTests()
-                                            }) {
-
-                                            if (tests.isEmpty()) {
-                                                Text(
-                                                    modifier = Modifier
-                                                        .padding(16.dp)
-                                                        .align(Alignment.Center)
-                                                        .fillMaxWidth(),
-                                                    text = stringResource(id = R.string.msg_empty_published_workbooks)
+                                }
+                            } else {
+                                Spacer(modifier = Modifier.height(1.dp))
+                            }
+                        }
+                    ) {
+                        Column {
+                            Scaffold(
+                                modifier = Modifier.weight(1f),
+                                topBar = {
+                                    TopAppBar(
+                                        title = {
+                                            if (uiState.isSearching) {
+                                                SearchTextField(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    value = uiState.query,
+                                                    onValueChange = sharedWorkbookListViewModel::onQueryChanged,
+                                                    onSearch = sharedWorkbookListViewModel::load
                                                 )
                                             } else {
-                                                LazyColumn(
-                                                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                                                ) {
-                                                    items(tests) {
-                                                        ListItem(
-                                                            modifier = Modifier.clickable {
-                                                                onClickTest(it)
-                                                            },
-                                                            icon = {
-                                                                Icon(
-                                                                    imageVector = Icons.Default.Description,
-                                                                    contentDescription = "workbook",
-                                                                    modifier = Modifier
-                                                                        .size(40.dp)
-                                                                        .padding(8.dp),
-                                                                    tint = Color.Companion.hsv(
-                                                                        360F * it.color.toFloat() / COLOR_MAX,
-                                                                        0.5F,
-                                                                        0.9F
+                                                Text(
+                                                    text = getString(R.string.label_public_tests),
+                                                )
+                                            }
+                                        },
+                                        backgroundColor = Color.Transparent,
+                                        elevation = 0.dp,
+                                        actions = {
+                                            IconButton(
+                                                onClick =
+                                                sharedWorkbookListViewModel::onSearchButtonClicked
+                                            ) {
+                                                Icon(
+                                                    imageVector = if (uiState.isSearching) Icons.Filled.Close else Icons.Filled.Search,
+                                                    contentDescription = "search"
+                                                )
+                                            }
+                                        },
+                                    )
+                                },
+                                content = {
+                                    Column {
+                                        Box(
+                                            modifier = Modifier
+                                                .weight(weight = 1f, fill = true)
+                                                .fillMaxWidth()
+                                        ) {
+                                            SwipeRefresh(
+                                                state = rememberSwipeRefreshState(uiState.isRefreshing),
+                                                onRefresh = sharedWorkbookListViewModel::load
+                                            ) {
+                                                ResourceContent(
+                                                    resource = uiState.workbookList,
+                                                    onRetry = { sharedWorkbookListViewModel::load }) {
+                                                    LazyColumn(
+                                                        modifier = Modifier.fillMaxHeight()
+                                                    ) {
+                                                        items(it) {
+                                                            ClickableListItem(
+                                                                icon = {
+                                                                    Icon(
+                                                                        imageVector = Icons.Default.Description,
+                                                                        contentDescription = "workbook",
+                                                                        modifier = Modifier
+                                                                            .size(40.dp)
+                                                                            .padding(8.dp),
+                                                                        tint = ColorMapper(
+                                                                            LocalContext.current
+                                                                        ).colorToGraphicColor(it.color)
                                                                     )
-                                                                )
-                                                            },
-                                                            text = {
-                                                                Text(
-                                                                    text = it.name,
-                                                                    maxLines = 1
-                                                                )
-                                                            },
-                                                            secondaryText = {
-                                                                Row {
-                                                                    Text(
-                                                                        text = stringResource(
-                                                                            id = R.string.text_workbook_size,
-                                                                            it.size
-                                                                        ),
-                                                                    )
-                                                                    Text(
-                                                                        text = "・",
-                                                                    )
-                                                                    Text(
-                                                                        text = stringResource(
-                                                                            id = R.string.text_download_count,
-                                                                            it.downloadCount
-                                                                        ),
-                                                                    )
-                                                                }
-                                                            },
-                                                            singleLineSecondaryText = true,
-                                                        )
+                                                                },
+                                                                text = it.name,
+                                                                secondaryText = stringResource(
+                                                                    id = R.string.text_workbook_size,
+                                                                    it.questionListCount
+                                                                ),
+                                                                onClick = {
+                                                                    scope.launch {
+                                                                        sharedWorkbookListViewModel.onWorkbookClicked(
+                                                                            it
+                                                                        )
+                                                                        drawerState.open()
+                                                                    }
+                                                                })
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
-                                        Button(
-                                            onClick = {
-                                                logger.logEvent("upload_from_firebase_activity")
-
-                                                if(testViewModel.tests.isEmpty()){
-                                                    requireContext().showToast(requireContext().getString(R.string.msg_empty_tests))
-                                                }else{
-                                                    findNavController().navigate(
-                                                        PublishedWorkbookListFragmentDirections.actionSearchToPublishWorkbook(
-                                                            workbookId = testViewModel.tests.first().id
-                                                        )
-                                                    )
-                                                }
-                                            },
-                                            modifier = Modifier
-                                                .padding(16.dp)
-                                                .size(56.dp)
-                                                .clip(CircleShape)
-                                                .align(Alignment.BottomEnd),
-                                            contentPadding = PaddingValues(vertical = 16.dp),
-                                            colors = ButtonDefaults.buttonColors(
-                                                backgroundColor = MaterialTheme.colors.secondary
-                                            ),
-
-                                            ) {
-                                            Image(
-                                                painter = painterResource(id = R.drawable.ic_baseline_cloud_upload_24),
-                                                contentDescription = ""
-                                            )
-                                        }
                                     }
-                                    ComposeAdView(isRemovedAd = sharedPreferenceManager.isRemovedAd)
+                                },
+                                floatingActionButton = {
+                                    FloatingActionButton(onClick = {
+                                        findNavController().navigate(
+                                            PublishedWorkbookListFragmentDirections.actionSearchToUploadWorkbook()
+                                        )
+                                    }) {
+                                        Icon(
+                                            Icons.Filled.CloudUpload,
+                                            contentDescription = "upload workbook"
+                                        )
+                                    }
                                 }
-                            }
+                            )
+                            AdView(viewModel = adViewModel)
                         }
-                    )
+                    }
                 }
             }
         }
     }
 
-    private fun onClickTest(test: FirebaseTest) {
-        ListDialogFragment.newInstance(
-            test.name,
-            listOf(
-                DialogMenuItem(
-                    title = getString(R.string.download),
-                    iconRes = R.drawable.ic_file_download_white,
-                    action = { downloadTest(test) }),
-                DialogMenuItem(
-                    title = getString(R.string.info),
-                    iconRes = R.drawable.ic_info_white,
-                    action = { showInfoTest(test) }),
-                DialogMenuItem(
-                    title = getString(R.string.report),
-                    iconRes = R.drawable.ic_baseline_flag_24,
-                    action = { reportTest(test) })
-            )
-        ).show(
-            childFragmentManager,
-            "TAG"
-        )
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        sharedWorkbookListViewModel.setup()
+        sharedWorkbookListViewModel.load()
 
-    private fun downloadTest(test: FirebaseTest) {
-
-        requireActivity().executeJobWithDialog(
-            title = getString(R.string.downloading),
-            task = {
-                viewModel.downloadTest(test.documentId)
-            },
-            onSuccess = {
-                val workbook = viewModel.convert(it)
-
-                lifecycleScope.launch {
-                    viewModel.updateTest(
-                        documentId = test.documentId,
-                        size = workbook.questions.size,
-                        downloadCount = test.downloadCount + 1
+        lifecycleScope.launchWhenCreated {
+            sharedWorkbookListViewModel.shareWorkbookEvent
+                .receiveAsFlow()
+                .onEach {
+                    startActivity(
+                        actionSendIntent(
+                            text = getString(R.string.msg_share_test, it.first, it.second)
+                        )
                     )
                 }
+                .launchIn(this)
 
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.msg_success_download_test, it.name),
-                    Toast.LENGTH_SHORT
-                ).show()
-                logger.logCreateTestEvent(it.name, CreateTestSource.PUBLIC_DOWNLOAD.title)
-
-                val hostActivity = requireActivity() as? MainActivity
-                hostActivity?.navigateHomePage()
-            },
-            onFailure = {
-                requireContext().showToast(getString(R.string.msg_failure_download_test))
-            }
-        )
+            sharedWorkbookListViewModel.downloadWorkbookEvent
+                .receiveAsFlow()
+                .onEach {
+                    requireContext().showToast(getString(R.string.msg_success_download_test))
+                    val hostActivity = requireActivity() as? MainActivity
+                    hostActivity?.navigateHomePage()
+                }
+                .launchIn(this)
+        }
     }
 
-    private fun showInfoTest(test: FirebaseTest) {
-
-        ListDialogFragment.newInstance(
-            test.name,
-            listOf(
-                DialogMenuItem(
-                    title = getString(R.string.text_info_creator, test.userName),
-                    iconRes = R.drawable.ic_account,
-                    action = { }),
-                DialogMenuItem(
-                    title = getString(R.string.text_info_created_at, test.getDate()),
-                    iconRes = R.drawable.ic_baseline_calendar_today_24,
-                    action = { }),
-                DialogMenuItem(
-                    title = getString(R.string.text_info_overview, test.overview),
-                    iconRes = R.drawable.ic_baseline_description_24,
-                    action = { })
+    private fun actionSendIntent(text: String) =
+        Intent.createChooser(Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(
+                Intent.EXTRA_TEXT,
+                text
             )
-        ).show(childFragmentManager, "TAG")
+            type = "text/plain"
+        }, null)
 
-    }
-
-    private fun reportTest(test: FirebaseTest) {
-
+    private fun reportWorkbook(documentId: String) {
         val emailIntent = Intent(Intent.ACTION_SENDTO)
         emailIntent.data = Uri.parse("mailto:")
         emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("testmaker.contact@gmail.com"))
         emailIntent.putExtra(
             Intent.EXTRA_SUBJECT,
-            getString(R.string.report_subject, test.documentId)
+            getString(R.string.report_subject, documentId)
         )
         emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_body))
         startActivity(Intent.createChooser(emailIntent, null))
-
     }
 }
 
 @Composable
-fun SearchTextField(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
+fun SearchTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    onSearch: () -> Unit
+) {
 
-    val searchWord = remember {
-        mutableStateOf(TextFieldValue())
-    }
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val focusManager = LocalFocusManager.current
 
     BasicTextField(
-        value = searchWord.value,
-        onValueChange = {
-            searchWord.value = it
-        },
+        value = value,
+        onValueChange = onValueChange,
         keyboardActions = KeyboardActions(onSearch = {
             focusManager.clearFocus()
-            onSearch(searchWord.value.text)
+            onSearch()
         }),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         singleLine = true,
-        cursorBrush = SolidColor(MaterialTheme.colors.onPrimary),
+        cursorBrush = SolidColor(MaterialTheme.colors.onBackground),
         modifier = modifier.focusRequester(focusRequester),
-        textStyle = TextStyle(color = MaterialTheme.colors.onPrimary)
+        textStyle = TextStyle(color = MaterialTheme.colors.onBackground)
     )
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
-
 }

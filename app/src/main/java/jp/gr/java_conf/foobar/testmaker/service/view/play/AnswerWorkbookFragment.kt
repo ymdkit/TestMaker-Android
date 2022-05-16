@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -20,31 +20,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.ui.answer.*
+import com.example.ui.core.*
+import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.android.gms.ads.AdSize
+import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
-import jp.gr.java_conf.foobar.testmaker.service.extensions.showToast
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
-import jp.gr.java_conf.foobar.testmaker.service.view.play.component.*
-import jp.gr.java_conf.foobar.testmaker.service.view.result.MyTopAppBar
-import jp.gr.java_conf.foobar.testmaker.service.view.share.ConfirmDangerDialogFragment
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ComposeAdView
-import jp.gr.java_conf.foobar.testmaker.service.view.ui.theme.TestMakerAndroidTheme
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AnswerWorkbookFragment : Fragment() {
 
     private val args: AnswerWorkbookFragmentArgs by navArgs()
-    private val playViewModel: AnswerWorkbookViewModel by viewModel {
-        parametersOf(testId, args.isRetry)
-    }
-    val sharedPreferenceManager: SharedPreferenceManager by inject()
+    private val playViewModel: AnswerWorkbookViewModel by viewModels()
+    private val adViewModel: AdViewModel by viewModels()
 
-    private val testId: Long by lazy { args.workbookId }
+    @Inject
+    lateinit var sharedPreferenceManager: SharedPreferenceManager
 
     private val startTime = System.currentTimeMillis()
 
@@ -58,39 +55,43 @@ class AnswerWorkbookFragment : Fragment() {
         soundIncorrect = MediaPlayer.create(requireContext(), R.raw.mistake)
     }
 
-    @ExperimentalAnimationApi
+    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner, object: OnBackPressedCallback(
-                true
-            ) {
-                override fun handleOnBackPressed() {
-                    ConfirmDangerDialogFragment.newInstance(
-                        title = getString(R.string.play_dialog_confirm_interrupt),
-                        buttonText = getString(R.string.ok)
-                    ) {
-                        findNavController().popBackStack()
-                    }.show(childFragmentManager, "TAG")
-                }
-            }
-        )
+        // 誤って戻らないようにするため、システムの「戻る」を上書きする
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { /* do nothing */ }
 
         return ComposeView(requireContext()).apply {
             setContent {
                 TestMakerAndroidTheme {
                     Scaffold(
                         topBar = {
-                            MyTopAppBar(getString(R.string.title_activity_play))
+                            TestMakerTopAppBar(
+                                title = stringResource(id = R.string.title_activity_play),
+                                actions = {
+                                    ConfirmActionTextButton(
+                                        label = stringResource(id = R.string.finish_answer),
+                                        confirmMessage = stringResource(id = R.string.msg_finish_answer),
+                                        confirmButtonText = stringResource(id = R.string.button_finish)
+                                    ) {
+                                        requireActivity().hideKeyboard(windowToken)
+                                        findNavController().navigate(
+                                            AnswerWorkbookFragmentDirections.actionAnswerWorkbookToAnswerResult(
+                                                workbookId = args.workbookId,
+                                                duration = System.currentTimeMillis() - startTime
+                                            )
+                                        )
+                                    }
+                                }
+                            )
                         },
                         content = {
                             val uiState = playViewModel.uiState.collectAsState()
                             val effectState = playViewModel.answerEffectState.collectAsState()
 
-                            // todo フォントサイズ変更
                             Column {
                                 Box(modifier = Modifier.weight(weight = 1f, fill = true)) {
                                     Column(
@@ -169,7 +170,7 @@ class AnswerWorkbookFragment : Fragment() {
                                                     },
                                                     onModifyQuestion = {
                                                         findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
-                                                            workbookId = testId,
+                                                            workbookId = args.workbookId,
                                                             questionId = it.id
                                                         ))
                                                     }
@@ -184,17 +185,20 @@ class AnswerWorkbookFragment : Fragment() {
                                                     },
                                                     onModifyQuestion = {
                                                         findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
-                                                            workbookId = testId,
+                                                            workbookId = args.workbookId,
                                                             questionId = it.id
                                                         ))
                                                     }
                                                 )
                                             }
                                             is PlayUiState.Finish -> {
-                                                findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToAnswerResult(
-                                                    workbookId = testId,
-                                                    duration = System.currentTimeMillis() - startTime
-                                                ))
+                                                requireActivity().hideKeyboard(windowToken)
+                                                findNavController().navigate(
+                                                    AnswerWorkbookFragmentDirections.actionAnswerWorkbookToAnswerResult(
+                                                        workbookId = args.workbookId,
+                                                        duration = System.currentTimeMillis() - startTime
+                                                    )
+                                                )
                                             }
                                             is PlayUiState.NoQuestionExist -> {
                                                 requireContext().showToast(stringResource(id = R.string.msg_empty_question))
@@ -249,17 +253,26 @@ class AnswerWorkbookFragment : Fragment() {
                                         }
                                     }
                                 }
-                                ComposeAdView(
-                                    isRemovedAd = sharedPreferenceManager.isRemovedAd,
+                                AdView(
+                                    viewModel = adViewModel,
                                     adSize = AdSize.LARGE_BANNER
                                 )
                             }
                         }
                     )
-
                 }
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        adViewModel.setup()
+
+        playViewModel.setup(
+            args.workbookId,
+            args.isRetry
+        )
     }
 
     override fun onDestroy() {
