@@ -55,6 +55,11 @@ fun QuestionListItem(
                 maxLines = 1
             )
         },
-        secondaryText = { Text(text = question.getSingleLineAnswer()) }
+        secondaryText = {
+            Text(
+                text = question.getSingleLineAnswer(),
+                maxLines = 1
+            )
+        },
     )
 }
