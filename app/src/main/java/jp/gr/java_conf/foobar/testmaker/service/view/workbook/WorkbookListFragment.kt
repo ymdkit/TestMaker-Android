@@ -248,6 +248,16 @@ class WorkbookListFragment : Fragment() {
                                             when (page) {
                                                 0 -> {
                                                     Column {
+                                                        if (args.folderName.isNotEmpty()) {
+                                                            ListItem(
+                                                                text = {
+                                                                    Text(
+                                                                        text = "/ ${args.folderName}",
+                                                                        fontSize = 12.sp
+                                                                    )
+                                                                }
+                                                            )
+                                                        }
                                                         Scaffold(
                                                             modifier = Modifier.weight(1f),
                                                             content = {
@@ -291,16 +301,6 @@ class WorkbookListFragment : Fragment() {
                                                                         Column(
                                                                             modifier = Modifier.fillMaxHeight()
                                                                         ) {
-                                                                            if (args.folderName.isNotEmpty()) {
-                                                                                ListItem(
-                                                                                    text = {
-                                                                                        Text(
-                                                                                            text = "/ ${args.folderName}",
-                                                                                            fontSize = 12.sp
-                                                                                        )
-                                                                                    }
-                                                                                )
-                                                                            }
                                                                             LazyColumn(
                                                                                 state = dragDropListState.lazyListState,
                                                                                 modifier = Modifier
