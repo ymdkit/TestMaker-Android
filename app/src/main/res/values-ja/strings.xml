@@ -256,4 +256,5 @@
     <string name="button_login_confirm">ログイン</string>
     <string name="msg_success_exit_group">グループを退出しました</string>
     <string name="msg_success_create_group">グループを作成しました</string>
+    <string name="empty_group">所属しているグループはありません\n画面下のボタンからグループを作成してみましょう</string>
 </resources>

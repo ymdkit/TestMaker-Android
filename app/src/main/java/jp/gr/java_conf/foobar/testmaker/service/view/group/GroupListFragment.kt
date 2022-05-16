@@ -4,19 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -64,20 +66,31 @@ class GroupListFragment : Fragment() {
                                                     resource = uiState.groupList,
                                                     onRetry = groupListViewModel::load
                                                 ) {
-                                                    LazyColumn(
-                                                        modifier = Modifier.fillMaxHeight()
-                                                    ) {
-                                                        it.forEach {
-                                                            item {
-                                                                GroupListItem(
-                                                                    group = it,
-                                                                    onClick = {
-                                                                        findNavController().navigate(
-                                                                            GroupListFragmentDirections.actionGroupListToGroupDetail(
-                                                                                groupId = it.id
+                                                    if (it.isEmpty()) {
+                                                        Box(
+                                                            modifier = Modifier
+                                                                .fillMaxSize()
+                                                                .padding(16.dp),
+                                                            contentAlignment = Alignment.Center
+                                                        ) {
+                                                            Text(text = stringResource(id = R.string.empty_group))
+                                                        }
+                                                    } else {
+                                                        LazyColumn(
+                                                            modifier = Modifier.fillMaxHeight()
+                                                        ) {
+                                                            it.forEach {
+                                                                item {
+                                                                    GroupListItem(
+                                                                        group = it,
+                                                                        onClick = {
+                                                                            findNavController().navigate(
+                                                                                GroupListFragmentDirections.actionGroupListToGroupDetail(
+                                                                                    groupId = it.id
+                                                                                )
                                                                             )
-                                                                        )
-                                                                    })
+                                                                        })
+                                                                }
                                                             }
                                                         }
                                                     }
