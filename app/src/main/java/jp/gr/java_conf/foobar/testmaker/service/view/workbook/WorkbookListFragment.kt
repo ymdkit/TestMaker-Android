@@ -444,24 +444,43 @@ class WorkbookListFragment : Fragment() {
                                                                                 resource = myWorkbookListUiState.myWorkbookList,
                                                                                 onRetry = myWorkbookListViewModel::load
                                                                             ) {
-                                                                                LazyColumn(
-                                                                                    modifier = Modifier
-                                                                                        .fillMaxHeight()
-                                                                                ) {
-                                                                                    it.forEach {
-                                                                                        item {
-                                                                                            SharedWorkbookListItem(
-                                                                                                workbook = it,
-                                                                                                onClick = {
-                                                                                                    scope.launch {
-                                                                                                        workbookListViewModel.onSharedWorkbookClicked(
-                                                                                                            it
-                                                                                                        )
-                                                                                                        drawerState.open()
-                                                                                                    }
-                                                                                                }
-                                                                                            )
 
+                                                                                if (it.isEmpty()) {
+                                                                                    Column(
+                                                                                        modifier = Modifier
+                                                                                            .fillMaxSize()
+                                                                                            .padding(
+                                                                                                16.dp
+                                                                                            ),
+                                                                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                                                                        verticalArrangement = Arrangement.Center
+                                                                                    ) {
+                                                                                        Text(
+                                                                                            text = stringResource(
+                                                                                                id = R.string.empty_uploaded_test
+                                                                                            )
+                                                                                        )
+                                                                                    }
+                                                                                } else {
+                                                                                    LazyColumn(
+                                                                                        modifier = Modifier
+                                                                                            .fillMaxHeight()
+                                                                                    ) {
+                                                                                        it.forEach {
+                                                                                            item {
+                                                                                                SharedWorkbookListItem(
+                                                                                                    workbook = it,
+                                                                                                    onClick = {
+                                                                                                        scope.launch {
+                                                                                                            workbookListViewModel.onSharedWorkbookClicked(
+                                                                                                                it
+                                                                                                            )
+                                                                                                            drawerState.open()
+                                                                                                        }
+                                                                                                    }
+                                                                                                )
+
+                                                                                            }
                                                                                         }
                                                                                     }
                                                                                 }

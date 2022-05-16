@@ -167,7 +167,7 @@ class UploadWorkbookFragment : Fragment() {
                                                     }
                                                 }
                                                 Button(
-                                                    enabled = !uiState.isUploading,
+                                                    enabled = !uiState.isUploading && uiState.selectedWorkbook != null,
                                                     onClick = uploadWorkbookViewModel::uploadWorkbook,
                                                     modifier = Modifier
                                                         .fillMaxWidth()

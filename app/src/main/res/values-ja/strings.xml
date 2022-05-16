@@ -136,7 +136,7 @@
     <string name="tab_remote">問題集（共有）</string>
     <string name="preference_group_account">アカウント設定</string>
     <string name="setting_user_name">ユーザ名</string>
-    <string name="empty_uploaded_test"> アップロードしている問題集はありません。\n画面下部のボタンから問題集をアップロードしてください</string>
+    <string name="empty_uploaded_test"> アップロードしている問題集はありません\n画面下部のボタンから問題集をアップロードしてみましょう</string>
     <string name="title_activity_upload_test">問題集のアップロード</string>
     <string name="check_private">リンクを知っている人にのみ公開</string>
     <string name="label_public">全体公開</string>
