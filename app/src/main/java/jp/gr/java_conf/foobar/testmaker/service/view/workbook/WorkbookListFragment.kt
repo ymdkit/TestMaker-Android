@@ -1,10 +1,12 @@
 package jp.gr.java_conf.foobar.testmaker.service.view.workbook
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
@@ -35,6 +37,8 @@ import com.example.ui.answer.AnswerSettingViewModel
 import com.example.ui.core.*
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.*
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -70,6 +74,21 @@ class WorkbookListFragment : Fragment() {
                 myWorkbookListViewModel.uiState.collectAsState()
                 val drawerState =
                     rememberBottomDrawerState(BottomDrawerValue.Closed)
+
+                val launcher =
+                    rememberLauncherForActivityResult(FirebaseAuthUIActivityResultContract()) {
+                        if (it.resultCode == Activity.RESULT_OK) {
+                            myWorkbookListViewModel.onUserCreated()
+                        } else {
+                            val response = it.idpResponse
+                            context.showToast(
+                                context.getString(
+                                    com.example.ui.R.string.msg_failure_login,
+                                    response?.error?.errorCode
+                                )
+                            )
+                        }
+                    }
 
                 val scope = rememberCoroutineScope()
                 TestMakerAndroidTheme {
@@ -437,7 +456,26 @@ class WorkbookListFragment : Fragment() {
                                                                                     )
                                                                                 )
                                                                                 TextButton(onClick = {
-                                                                                    // todo
+                                                                                    val intent =
+                                                                                        AuthUI.getInstance()
+                                                                                            .createSignInIntentBuilder()
+                                                                                            .setAvailableProviders(
+                                                                                                arrayListOf(
+                                                                                                    AuthUI.IdpConfig.EmailBuilder()
+                                                                                                        .build(),
+                                                                                                    AuthUI.IdpConfig.GoogleBuilder()
+                                                                                                        .build()
+                                                                                                )
+                                                                                            )
+                                                                                            .setTosAndPrivacyPolicyUrls(
+                                                                                                "https://ankimaker.com/terms",
+                                                                                                "https://ankimaker.com/privacy"
+                                                                                            )
+                                                                                            .build()
+
+                                                                                    launcher.launch(
+                                                                                        intent
+                                                                                    )
                                                                                     workbookListViewModel.onDismissRequestAuthDialog()
                                                                                 }) {
                                                                                     Text(
