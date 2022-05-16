@@ -43,8 +43,6 @@ class AnswerWorkbookFragment : Fragment() {
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager
 
-    private val testId: Long by lazy { args.workbookId }
-
     private val startTime = System.currentTimeMillis()
 
     private var soundCorrect: MediaPlayer? = null
@@ -62,11 +60,6 @@ class AnswerWorkbookFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        playViewModel.setup(
-            testId,
-            args.isRetry
-        )
 
         // 誤って戻らないようにするため、システムの「戻る」を上書きする
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { /* do nothing */ }
@@ -87,7 +80,7 @@ class AnswerWorkbookFragment : Fragment() {
                                         requireActivity().hideKeyboard(windowToken)
                                         findNavController().navigate(
                                             AnswerWorkbookFragmentDirections.actionAnswerWorkbookToAnswerResult(
-                                                workbookId = testId,
+                                                workbookId = args.workbookId,
                                                 duration = System.currentTimeMillis() - startTime
                                             )
                                         )
@@ -177,7 +170,7 @@ class AnswerWorkbookFragment : Fragment() {
                                                     },
                                                     onModifyQuestion = {
                                                         findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
-                                                            workbookId = testId,
+                                                            workbookId = args.workbookId,
                                                             questionId = it.id
                                                         ))
                                                     }
@@ -192,7 +185,7 @@ class AnswerWorkbookFragment : Fragment() {
                                                     },
                                                     onModifyQuestion = {
                                                         findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
-                                                            workbookId = testId,
+                                                            workbookId = args.workbookId,
                                                             questionId = it.id
                                                         ))
                                                     }
@@ -202,7 +195,7 @@ class AnswerWorkbookFragment : Fragment() {
                                                 requireActivity().hideKeyboard(windowToken)
                                                 findNavController().navigate(
                                                     AnswerWorkbookFragmentDirections.actionAnswerWorkbookToAnswerResult(
-                                                        workbookId = testId,
+                                                        workbookId = args.workbookId,
                                                         duration = System.currentTimeMillis() - startTime
                                                     )
                                                 )
@@ -275,6 +268,11 @@ class AnswerWorkbookFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adViewModel.setup()
+
+        playViewModel.setup(
+            args.workbookId,
+            args.isRetry
+        )
     }
 
     override fun onDestroy() {

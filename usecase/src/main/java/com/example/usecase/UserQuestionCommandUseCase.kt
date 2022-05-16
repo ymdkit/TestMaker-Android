@@ -84,12 +84,7 @@ class UserQuestionCommandUseCase @Inject constructor(
         val sourceQuestion =
             workBookRepository.getQuestion(questionId = QuestionId(sourceQuestionId))
         val destQuestion = workBookRepository.getQuestion(questionId = QuestionId(destQuestionId))
-        workBookRepository.updateQuestion(
-            question = sourceQuestion.copy(order = destQuestion.order)
-        )
-        workBookRepository.updateQuestion(
-            question = destQuestion.copy(order = sourceQuestion.order)
-        )
+        workBookRepository.swapQuestion(sourceQuestion, destQuestion)
     }
 
     suspend fun moveQuestionsToOtherWorkbook(

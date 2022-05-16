@@ -12,6 +12,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -21,6 +23,7 @@ class AnswerWorkbookViewModel @Inject constructor(
     private val userQuestionCommandUseCase: UserQuestionCommandUseCase,
     private val userWorkbookCommandUseCase: UserWorkbookCommandUseCase,
     private val workbookGetUseCase: WorkbookGetUseCase,
+    private val workbookWatchUseCase: WorkbookWatchUseCase,
     private val answerSettingWatchUseCase: AnswerSettingWatchUseCase,
     private val judgeUseCase: QuestionJudgeUseCase,
     private val getOrGenerateSelectionListUseCase: GetOrGenerateSelectionListUseCase,
@@ -45,41 +48,66 @@ class AnswerWorkbookViewModel @Inject constructor(
     ) {
         this.workbookId = workbookId
         answerSettingWatchUseCase.setup(viewModelScope)
+        workbookWatchUseCase.setup(workbookId = workbookId, scope = viewModelScope)
 
         viewModelScope.launch {
-            workbook = workbookGetUseCase.getWorkbook(workbookId = workbookId)
 
-            answeringQuestions = workbook.questionList
+            workbookWatchUseCase.flow
+                .onEach {
+                    when (val current = _uiState.value) {
+                        is PlayUiState.Review -> {
+                            _uiState.value = current.copy(
+                                question = it.getOrNull()?.questionList?.firstOrNull { it.id == current.question.id }
+                                    ?: current.question
+                            )
+                        }
+                        is PlayUiState.ManualReview -> {
+                            _uiState.value = current.copy(
+                                question = it.getOrNull()?.questionList?.firstOrNull { it.id == current.question.id }
+                                    ?: current.question
+                            )
+                        }
+                        else -> { /* do nothing */
+                        }
+                    }
+                }
+                .launchIn(this)
 
-            if (isRetry) {
-                answeringQuestions = answeringQuestions.filter { it.isAnswering }
-            } else {
-                answeringQuestions = answeringQuestions.drop(
-                    answerSettingWatchUseCase.flow.value.startPosition
+            if (_uiState.value is PlayUiState.Initial) {
+                workbook = workbookGetUseCase.getWorkbook(workbookId = workbookId)
+
+                answeringQuestions = workbook.questionList
+
+                if (isRetry) {
+                    answeringQuestions = answeringQuestions.filter { it.isAnswering }
+                } else {
+                    answeringQuestions = answeringQuestions.drop(
+                        answerSettingWatchUseCase.flow.value.startPosition
+                    )
+                }
+
+                userWorkbookCommandUseCase.resetWorkbookIsAnswering(workbookId)
+
+                if (answerSettingWatchUseCase.flow.value.questionCondition == QuestionCondition.WRONG) {
+                    answeringQuestions =
+                        answeringQuestions.filter { it.answerStatus == AnswerStatus.INCORRECT }
+                }
+
+                if (answerSettingWatchUseCase.flow.value.isRandomOrder) {
+                    answeringQuestions = answeringQuestions.shuffled()
+                }
+
+                answeringQuestions = answeringQuestions.take(
+                    answerSettingWatchUseCase.flow.value.questionCount
                 )
+
+                if (answeringQuestions.isEmpty()) {
+                    _uiState.value = PlayUiState.NoQuestionExist
+                    return@launch
+                }
+
+                loadNext(-1)
             }
-
-            userWorkbookCommandUseCase.resetWorkbookIsAnswering(workbookId)
-
-            if (answerSettingWatchUseCase.flow.value.questionCondition == QuestionCondition.WRONG) {
-                answeringQuestions =
-                    answeringQuestions.filter { it.answerStatus == AnswerStatus.INCORRECT }
-            }
-
-            if (answerSettingWatchUseCase.flow.value.isRandomOrder) {
-                answeringQuestions = answeringQuestions.shuffled()
-            }
-
-            answeringQuestions = answeringQuestions.take(
-                answerSettingWatchUseCase.flow.value.questionCount
-            )
-
-            if (answeringQuestions.isEmpty()) {
-                _uiState.value = PlayUiState.NoQuestionExist
-                return@launch
-            }
-
-            loadNext(-1)
         }
     }
 

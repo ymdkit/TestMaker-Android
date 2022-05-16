@@ -34,4 +34,6 @@ interface WorkBookRepository {
     suspend fun getWorkbookListByFolderName(folderName: String): List<Workbook>
     suspend fun getQuestion(questionId: QuestionId): Question
     suspend fun updateQuestion(question: Question)
+    suspend fun swapQuestion(sourceQuestion: Question, destQuestion: Question)
+
 }

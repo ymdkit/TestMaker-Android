@@ -259,6 +259,12 @@ class WorkbookRepositoryImpl @Inject constructor(
 
     override suspend fun updateQuestion(question: Question) {
         workbookDataSource.updateQuestion(Quest.fromQuestion(question))
+        _updateWorkbookListFlow.emit(getWorkbookList())
+    }
+
+    override suspend fun swapQuestion(sourceQuestion: Question, destQuestion: Question) {
+        workbookDataSource.updateQuestion(Quest.fromQuestion(sourceQuestion.copy(order = destQuestion.order)))
+        workbookDataSource.updateQuestion(Quest.fromQuestion(destQuestion.copy(order = sourceQuestion.order)))
     }
 
     private suspend fun refreshWorkbookList() {

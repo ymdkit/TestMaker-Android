@@ -67,6 +67,7 @@ class EditQuestionViewModel @Inject constructor(
                         FormQuestionUiState.fromQuestionUseCaseModel(question = question)
                 }
                 .launchIn(this)
+            workbookWatchUseCase.load()
         }
     }
 
