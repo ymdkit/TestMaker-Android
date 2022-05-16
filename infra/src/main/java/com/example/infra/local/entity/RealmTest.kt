@@ -59,14 +59,14 @@ open class RealmTest : RealmObject() {
 
     fun questionsNonNull(): List<Quest> = questions?.sortedBy { it.order } ?: listOf()
 
-    fun toWorkbook(): Workbook = Workbook(
+    fun toWorkbook(folderNameList: List<String>): Workbook = Workbook(
         id = WorkbookId(value = id),
         remoteId = documentId,
         name = title ?: "no title",
         color = TestMakerColor.values().firstOrNull { it.name == themeColor }
             ?: TestMakerColor.BLUE,
         order = order,
-        folderName = getCategory(),
+        folderName = if (folderNameList.contains(getCategory())) getCategory() else "",
         questionList = questions?.map {
             it.toQuestion()
         } ?: listOf()

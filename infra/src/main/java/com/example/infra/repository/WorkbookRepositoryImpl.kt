@@ -80,13 +80,17 @@ class WorkbookRepositoryImpl @Inject constructor(
         folderDataSource.createFolder(RealmCategory.fromFolder((destFolder.copy(order = sourceFolder.order))))
     }
 
-    override suspend fun getWorkbookList(): List<Workbook> =
-        workbookDataSource.getWorkbookList().map {
-            it.toWorkbook()
+    override suspend fun getWorkbookList(): List<Workbook> {
+        val folderNameList = folderDataSource.getFolderList().map { it.name }
+        return workbookDataSource.getWorkbookList().map {
+            it.toWorkbook(folderNameList)
         }
+    }
 
-    override suspend fun getWorkbook(workbookId: WorkbookId): Workbook =
-        workbookDataSource.getWorkbook(id = workbookId.value).toWorkbook()
+    override suspend fun getWorkbook(workbookId: WorkbookId): Workbook {
+        val folderNameList = folderDataSource.getFolderList().map { it.name }
+        return workbookDataSource.getWorkbook(id = workbookId.value).toWorkbook(folderNameList)
+    }
 
     override suspend fun createWorkbook(
         name: String,
@@ -190,10 +194,12 @@ class WorkbookRepositoryImpl @Inject constructor(
         workbookDataSource.createWorkbook(RealmTest.fromWorkbook(destWorkbook.copy(order = sourceWorkbook.order)))
     }
 
-    override suspend fun getWorkbookListByFolderName(folderName: String): List<Workbook> =
-        workbookDataSource.getWorkbookList()
+    override suspend fun getWorkbookListByFolderName(folderName: String): List<Workbook> {
+        val folderNameList = folderDataSource.getFolderList().map { it.name }
+        return workbookDataSource.getWorkbookList()
             .filter { workbook -> workbook.getCategory() == folderName }
-            .map { it.toWorkbook() }
+            .map { it.toWorkbook(folderNameList) }
+    }
 
     override suspend fun getQuestion(questionId: QuestionId): Question =
         workbookDataSource.getQuestion(questionId.value).toQuestion()
@@ -202,6 +208,7 @@ class WorkbookRepositoryImpl @Inject constructor(
         workbookId: WorkbookId,
         request: CreateQuestionRequest
     ) {
+        val folderNameList = folderDataSource.getFolderList().map { it.name }
         val newQuestionId = workbookDataSource.generateQuestionId()
         val newQuestion = Quest.fromCreateQuestionRequest(
             questionId = newQuestionId,
@@ -209,7 +216,7 @@ class WorkbookRepositoryImpl @Inject constructor(
         )
 
         workbookDataSource.createQuestions(questionList = listOf(newQuestion))
-        val workbook = workbookDataSource.getWorkbook(workbookId.value).toWorkbook()
+        val workbook = workbookDataSource.getWorkbook(workbookId.value).toWorkbook(folderNameList)
         workbookDataSource.createWorkbook(
             RealmTest.fromWorkbook(workbook.copy(questionList = workbook.questionList + newQuestion.toQuestion()))
         )
@@ -220,6 +227,7 @@ class WorkbookRepositoryImpl @Inject constructor(
         workbookId: WorkbookId,
         requestList: List<CreateQuestionRequest>
     ) {
+        val folderNameList = folderDataSource.getFolderList().map { it.name }
         val newQuestionId = workbookDataSource.generateQuestionId()
         val newQuestionList = requestList.mapIndexed { index, it ->
 
@@ -242,7 +250,7 @@ class WorkbookRepositoryImpl @Inject constructor(
         }
         workbookDataSource.createQuestions(newQuestionList)
 
-        val workbook = workbookDataSource.getWorkbook(workbookId.value).toWorkbook()
+        val workbook = workbookDataSource.getWorkbook(workbookId.value).toWorkbook(folderNameList)
         workbookDataSource.createWorkbook(
             RealmTest.fromWorkbook(workbook.copy(questionList = workbook.questionList + newQuestionList.map { it.toQuestion() }))
         )

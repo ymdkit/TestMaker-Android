@@ -74,7 +74,9 @@ class WorkbookListViewModel @Inject constructor(
                 ) { folderList, workbookList ->
                     WorkbookListResources(
                         folderList = folderList,
-                        workbookList = workbookList
+                        workbookList = workbookList.filter {
+                            it.folderName == folderName
+                        }
                     )
                 }
             }
@@ -92,7 +94,7 @@ class WorkbookListViewModel @Inject constructor(
         viewModelScope.launch {
             workbookListWatchUseCase.load(
                 workbookFilter = {
-                    if (folderName.isNotEmpty()) it.folderName == folderName else true
+                    it.folderName == folderName
                 }
             )
             folderListWatchUseCase.load(
