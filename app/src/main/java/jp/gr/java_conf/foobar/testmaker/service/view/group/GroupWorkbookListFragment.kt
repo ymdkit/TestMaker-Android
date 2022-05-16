@@ -156,6 +156,7 @@ class GroupWorkbookListFragment : Fragment() {
                                                 groupWorkbookListViewModel.onDeleteWorkbookClicked(
                                                     workbook
                                                 )
+                                                requireContext().showToast(getString(R.string.msg_delete_workbook))
                                                 drawerState.close()
                                             }
                                         }
@@ -247,7 +248,10 @@ class GroupWorkbookListFragment : Fragment() {
                                                             uiState.group.getOrNull()?.name ?: ""
                                                         ),
                                                         confirmButtonText = stringResource(id = R.string.delete),
-                                                        onConfirmed = groupWorkbookListViewModel::onExitGroupButtonClicked
+                                                        onConfirmed = {
+                                                            groupWorkbookListViewModel.onExitGroupButtonClicked()
+                                                            requireContext().showToast(getString(R.string.msg_success_exit_group))
+                                                        }
                                                     )
                                                 }
                                             }

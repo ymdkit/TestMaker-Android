@@ -254,4 +254,6 @@
     <string name="msg_delete_workbook">問題集を削除しました</string>
     <string name="msg_login_for_share">問題集を共有するにはログインが必要です</string>
     <string name="button_login_confirm">ログイン</string>
+    <string name="msg_success_exit_group">グループを退出しました</string>
+    <string name="msg_success_create_group">グループを作成しました</string>
 </resources>

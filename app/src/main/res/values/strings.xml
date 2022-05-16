@@ -259,4 +259,6 @@
     <string name="msg_delete_workbook">delete test</string>
     <string name="msg_login_for_share">please login for using this feature</string>
     <string name="button_login_confirm">login</string>
+    <string name="msg_success_exit_group">exit group</string>
+    <string name="msg_success_create_group">create group</string>
 </resources>

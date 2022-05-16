@@ -106,7 +106,10 @@ class GroupListFragment : Fragment() {
                             onValueChanged = groupListViewModel::onGroupNameChanged,
                             placeholder = stringResource(id = R.string.hint_group_name),
                             onDismiss = groupListViewModel::onCancelCreateGroupButtonClicked,
-                            onSubmit = groupListViewModel::onCreateGroup,
+                            onSubmit = {
+                                groupListViewModel.onCreateGroup(it)
+                                requireContext().showToast(getString(R.string.msg_success_create_group))
+                            },
                             validated = { it.isNotEmpty() }
                         )
                     }
