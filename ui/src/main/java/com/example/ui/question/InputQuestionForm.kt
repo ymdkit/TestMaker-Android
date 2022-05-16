@@ -76,7 +76,8 @@ fun InputQuestionForm(
                 onValueChange = {
                     viewModel.onAnswerListChanged(uiState.answerList.replaced(index, it))
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                singleLine = uiState.shouldSingleLineAnswer,
+                keyboardOptions = if (uiState.shouldSingleLineAnswer) KeyboardOptions(imeAction = ImeAction.Done) else KeyboardOptions.Default,
                 keyboardActions = KeyboardActions(onDone = {
                     focusManager.clearFocus()
                 })

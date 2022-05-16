@@ -50,4 +50,7 @@ data class FormQuestionUiState(
         listOf(QuestionType.SELECT, QuestionType.SELECT_COMPLETE).contains(questionType)
     val shouldShowIsCheckAnswerOrder =
         listOf(QuestionType.COMPLETE, QuestionType.SELECT_COMPLETE).contains(questionType)
+    val shouldSingleLineAnswer =
+        listOf(QuestionType.COMPLETE, QuestionType.WRITE).contains(questionType)
+
 }
