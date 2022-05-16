@@ -257,4 +257,6 @@
     <string name="msg_create_folder">created folder</string>
     <string name="msg_success_update_folder">update folder</string>
     <string name="msg_delete_workbook">delete test</string>
+    <string name="msg_login_for_share">please login for using this feature</string>
+    <string name="button_login_confirm">login</string>
 </resources>

@@ -25,7 +25,9 @@ class WorkbookListViewModel @Inject constructor(
     private val userWorkbookCommandUseCase: UserWorkbookCommandUseCase,
     private val userFolderCommandUseCase: UserFolderCommandUseCase,
     private val answerSettingGetUseCase: AnswerSettingWatchUseCase,
-    private val sharedWorkbookCommandUseCase: SharedWorkbookCommandUseCase
+    private val sharedWorkbookCommandUseCase: SharedWorkbookCommandUseCase,
+    private val userWatchUseCase: UserWatchUseCase,
+    private val userAuthCommandUseCase: UserAuthCommandUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<WorkbookListUiState> =
@@ -34,7 +36,9 @@ class WorkbookListViewModel @Inject constructor(
                 resources = Resource.Empty,
                 workbookListDrawerState = WorkbookListDrawerState.None,
                 isShowAnswerSettingDialog = answerSettingGetUseCase.getAnswerSetting().isShowAnswerSettingDialog,
-                isUploading = false
+                isUploading = false,
+                isLogin = false,
+                showingRequestAuthDialog = false
             )
         )
     val uiState: StateFlow<WorkbookListUiState>
@@ -63,6 +67,7 @@ class WorkbookListViewModel @Inject constructor(
         this.folderName = folderName
         workbookListWatchUseCase.setup(scope = viewModelScope)
         folderListWatchUseCase.setup(scope = viewModelScope)
+        userWatchUseCase.setup(scope = viewModelScope)
 
         viewModelScope.launch {
             combine(
@@ -83,6 +88,14 @@ class WorkbookListViewModel @Inject constructor(
                 .onEach {
                     _uiState.value = _uiState.value.copy(
                         resources = it
+                    )
+                }
+                .launchIn(this)
+
+            userWatchUseCase.flow
+                .onEach {
+                    _uiState.value = _uiState.value.copy(
+                        isLogin = it != null
                     )
                 }
                 .launchIn(this)
@@ -161,6 +174,13 @@ class WorkbookListViewModel @Inject constructor(
             )
         }
 
+    fun onDismissRequestAuthDialog() =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                showingRequestAuthDialog = false
+            )
+        }
+
     fun onAnswerWorkbookClicked(workbook: WorkbookUseCaseModel) =
         viewModelScope.launch {
 
@@ -185,9 +205,15 @@ class WorkbookListViewModel @Inject constructor(
 
     fun onShareWorkbookClicked(workbook: WorkbookUseCaseModel) =
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                workbookListDrawerState = WorkbookListDrawerState.UploadWorkbook(workbook = workbook)
-            )
+            if (_uiState.value.isLogin) {
+                _uiState.value = _uiState.value.copy(
+                    workbookListDrawerState = WorkbookListDrawerState.UploadWorkbook(workbook = workbook)
+                )
+            } else {
+                _uiState.value = _uiState.value.copy(
+                    showingRequestAuthDialog = true
+                )
+            }
         }
 
     fun onUploadWorkbookClicked(workbook: WorkbookUseCaseModel, isPrivateUpload: Boolean) =
@@ -271,7 +297,9 @@ data class WorkbookListUiState(
     val resources: Resource<WorkbookListResources>,
     val workbookListDrawerState: WorkbookListDrawerState,
     val isShowAnswerSettingDialog: Boolean,
-    val isUploading: Boolean
+    val isUploading: Boolean,
+    val isLogin: Boolean,
+    val showingRequestAuthDialog: Boolean
 )
 
 sealed class WorkbookListDrawerState {

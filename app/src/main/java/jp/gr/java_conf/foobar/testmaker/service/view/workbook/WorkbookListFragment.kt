@@ -406,6 +406,51 @@ class WorkbookListFragment : Fragment() {
                                                                         }
                                                                     }
                                                                 }
+                                                                if (workbookListUiState.showingRequestAuthDialog) {
+                                                                    AlertDialog(
+                                                                        onDismissRequest = workbookListViewModel::onDismissRequestAuthDialog,
+                                                                        text = {
+                                                                            Text(
+                                                                                text = stringResource(
+                                                                                    id = R.string.msg_login_for_share
+                                                                                )
+                                                                            )
+                                                                        },
+                                                                        buttons = {
+                                                                            Row(
+                                                                                modifier = Modifier
+                                                                                    .fillMaxWidth()
+                                                                                    .padding(8.dp),
+                                                                                horizontalArrangement = Arrangement.End
+                                                                            ) {
+                                                                                TextButton(onClick = workbookListViewModel::onDismissRequestAuthDialog) {
+                                                                                    Text(
+                                                                                        text = stringResource(
+                                                                                            id = R.string.cancel
+                                                                                        ),
+                                                                                        color = MaterialTheme.colors.onBackground
+                                                                                    )
+                                                                                }
+                                                                                Spacer(
+                                                                                    modifier = Modifier.width(
+                                                                                        4.dp
+                                                                                    )
+                                                                                )
+                                                                                TextButton(onClick = {
+                                                                                    // todo
+                                                                                    workbookListViewModel.onDismissRequestAuthDialog()
+                                                                                }) {
+                                                                                    Text(
+                                                                                        text = stringResource(
+                                                                                            id = R.string.button_login_confirm,
+                                                                                        ),
+                                                                                        color = MaterialTheme.colors.onBackground
+                                                                                    )
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    )
+                                                                }
                                                             },
                                                             floatingActionButton = {
                                                                 FloatingActionButton(onClick = {

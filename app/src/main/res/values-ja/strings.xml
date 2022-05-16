@@ -252,4 +252,6 @@
     <string name="msg_create_folder">フォルダを作成しました</string>
     <string name="msg_success_update_folder">フォルダ情報を更新しました</string>
     <string name="msg_delete_workbook">問題集を削除しました</string>
+    <string name="msg_login_for_share">問題集を共有するにはログインが必要です</string>
+    <string name="button_login_confirm">ログイン</string>
 </resources>
