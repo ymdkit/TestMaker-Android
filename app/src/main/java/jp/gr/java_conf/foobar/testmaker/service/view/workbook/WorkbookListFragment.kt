@@ -90,12 +90,14 @@ class WorkbookListFragment : Fragment() {
                                             scope.launch {
                                                 drawerState.close()
                                                 workbookListViewModel.updateFolder(newFolder)
+                                                requireContext().showToast(getString(R.string.msg_success_update_folder))
                                             }
                                         },
                                         onDelete = {
                                             scope.launch {
                                                 drawerState.close()
                                                 workbookListViewModel.deleteFolder(folder)
+                                                requireContext().showToast(getString(R.string.msg_success_delete_folder))
                                             }
                                         }
                                     )

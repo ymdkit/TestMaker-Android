@@ -255,4 +255,5 @@
     <string name="msg_question_list_empty">please create questions</string>
     <string name="msg_not_login_mypage">please login to use this feature</string>
     <string name="msg_create_folder">created folder</string>
+    <string name="msg_success_update_folder">update folder</string>
 </resources>

@@ -250,4 +250,5 @@
     <string name="msg_question_list_empty">編集画面から問題を作成してください</string>
     <string name="msg_not_login_mypage">ログインして、複数の端末で\n問題集を共有しましょう</string>
     <string name="msg_create_folder">フォルダを作成しました</string>
+    <string name="msg_success_update_folder">フォルダ情報を更新しました</string>
 </resources>
