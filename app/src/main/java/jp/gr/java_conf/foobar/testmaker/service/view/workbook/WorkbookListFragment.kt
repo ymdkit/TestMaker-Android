@@ -183,6 +183,7 @@ class WorkbookListFragment : Fragment() {
                                                 myWorkbookListViewModel.onDeleteWorkbookClicked(
                                                     state.workbook
                                                 )
+                                                requireContext().showToast(getString(R.string.msg_delete_workbook))
                                                 drawerState.close()
                                             }
                                         }
