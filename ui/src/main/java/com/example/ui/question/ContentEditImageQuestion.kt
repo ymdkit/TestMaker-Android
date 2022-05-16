@@ -186,6 +186,7 @@ fun ContentEditImageQuestion(
                             },
                             text = stringResource(id = R.string.button_take_photo),
                             onClick = {
+                                showingDialog = false
                                 if (ContextCompat.checkSelfPermission(
                                         context,
                                         Manifest.permission.CAMERA
@@ -194,7 +195,6 @@ fun ContentEditImageQuestion(
                                 ) {
                                     askCameraPermitLauncher.launch(Manifest.permission.CAMERA)
                                 } else {
-                                    showingDialog = false
                                     CameraLauncher().takePicture(context) {
                                         takePictureLauncher.launch(null)
                                     }
