@@ -35,9 +35,9 @@ data class FormQuestionUiState(
     val shouldEnableCreateButton =
         when (questionType) {
             QuestionType.WRITE -> problem.isNotEmpty() && answerList.all { it.isNotEmpty() }
-            QuestionType.SELECT -> problem.isNotEmpty() && answerList.all { it.isNotEmpty() } && otherSelectionList.all { it.isNotEmpty() }
+            QuestionType.SELECT -> problem.isNotEmpty() && answerList.all { it.isNotEmpty() } && (otherSelectionList.all { it.isNotEmpty() } || isAutoGenerateOtherSelections)
             QuestionType.COMPLETE -> problem.isNotEmpty() && answerList.all { it.isNotEmpty() }
-            QuestionType.SELECT_COMPLETE -> problem.isNotEmpty() && answerList.all { it.isNotEmpty() } && otherSelectionList.all { it.isNotEmpty() }
+            QuestionType.SELECT_COMPLETE -> problem.isNotEmpty() && answerList.all { it.isNotEmpty() } && (otherSelectionList.all { it.isNotEmpty() } || isAutoGenerateOtherSelections)
         }
 
     val shouldShowAnswerListCount =
