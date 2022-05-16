@@ -30,6 +30,7 @@ import com.google.android.gms.ads.AdSize
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
+import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -83,6 +84,7 @@ class AnswerWorkbookFragment : Fragment() {
                                         confirmMessage = stringResource(id = R.string.msg_finish_answer),
                                         confirmButtonText = stringResource(id = R.string.button_finish)
                                     ) {
+                                        requireActivity().hideKeyboard(windowToken)
                                         findNavController().navigate(
                                             AnswerWorkbookFragmentDirections.actionAnswerWorkbookToAnswerResult(
                                                 workbookId = testId,
@@ -197,10 +199,13 @@ class AnswerWorkbookFragment : Fragment() {
                                                 )
                                             }
                                             is PlayUiState.Finish -> {
-                                                findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToAnswerResult(
-                                                    workbookId = testId,
-                                                    duration = System.currentTimeMillis() - startTime
-                                                ))
+                                                requireActivity().hideKeyboard(windowToken)
+                                                findNavController().navigate(
+                                                    AnswerWorkbookFragmentDirections.actionAnswerWorkbookToAnswerResult(
+                                                        workbookId = testId,
+                                                        duration = System.currentTimeMillis() - startTime
+                                                    )
+                                                )
                                             }
                                             is PlayUiState.NoQuestionExist -> {
                                                 requireContext().showToast(stringResource(id = R.string.msg_empty_question))
