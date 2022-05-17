@@ -46,6 +46,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.share.component.TextPicker
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.job
 import javax.inject.Inject
 
 
@@ -98,7 +99,9 @@ class CreateWorkbookFragment : Fragment() {
                             val focusRequester = remember { FocusRequester() }
                             val focusManager = LocalFocusManager.current
                             LaunchedEffect(Unit) {
-                                focusRequester.requestFocus()
+                                coroutineContext.job.invokeOnCompletion {
+                                    focusRequester.requestFocus()
+                                }
                             }
 
                             var name by rememberSaveable { mutableStateOf("") }

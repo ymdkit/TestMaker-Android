@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.example.core.utils.replaced
 import com.example.ui.R
 import com.example.ui.core.ContainedWideButton
+import kotlinx.coroutines.job
 
 @Composable
 fun ContentPlayCompleteQuestion(
@@ -31,7 +32,9 @@ fun ContentPlayCompleteQuestion(
     val focusManager = LocalFocusManager.current
 
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        coroutineContext.job.invokeOnCompletion {
+            focusRequester.requestFocus()
+        }
     }
 
     Column {

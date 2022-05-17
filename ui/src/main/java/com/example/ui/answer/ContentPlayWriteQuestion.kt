@@ -18,7 +18,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.ui.R
 import com.example.ui.core.ContainedWideButton
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.job
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -30,8 +30,9 @@ fun ContentPlayWriteQuestion(
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-        delay(500)
+        coroutineContext.job.invokeOnCompletion {
+            focusRequester.requestFocus()
+        }
     }
 
     Column {

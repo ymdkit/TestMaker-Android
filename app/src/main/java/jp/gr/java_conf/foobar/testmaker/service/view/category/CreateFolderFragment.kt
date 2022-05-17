@@ -31,6 +31,7 @@ import com.example.ui.theme.TestMakerAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
+import kotlinx.coroutines.job
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -61,7 +62,9 @@ class CreateFolderFragment : Fragment() {
                             val focusRequester = remember { FocusRequester() }
                             val focusManager = LocalFocusManager.current
                             LaunchedEffect(Unit) {
-                                focusRequester.requestFocus()
+                                coroutineContext.job.invokeOnCompletion {
+                                    focusRequester.requestFocus()
+                                }
                             }
 
                             var name by rememberSaveable { mutableStateOf("") }
