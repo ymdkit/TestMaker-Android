@@ -155,7 +155,7 @@ class SettingsFragment : Fragment() {
                                                 preferenceViewModel.onStartPositionChanged(it.toInt() - 1)
                                             },
                                             validate = {
-                                                it.isNotEmpty() && it.toIntOrNull() != null
+                                                it.isNotEmpty() && it.toIntOrNull() != null && it.toInt() >= 0
                                             }
                                         )
                                     }
@@ -169,7 +169,7 @@ class SettingsFragment : Fragment() {
                                                 preferenceViewModel.onQuestionCountChanged(it.toInt())
                                             },
                                             validate = {
-                                                it.isNotEmpty() && it.toIntOrNull() != null
+                                                it.isNotEmpty() && it.toIntOrNull() != null && it.toInt() >= 0
                                             }
                                         )
                                     }

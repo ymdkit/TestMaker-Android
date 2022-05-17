@@ -46,6 +46,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 
 
@@ -346,6 +347,8 @@ fun SearchTextField(
     )
 
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        coroutineContext.job.invokeOnCompletion {
+            focusRequester.requestFocus()
+        }
     }
 }

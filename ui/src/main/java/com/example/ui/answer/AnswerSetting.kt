@@ -66,6 +66,9 @@ fun AnswerSetting(
         onValueSubmitted = {
             answerSettingViewModel.onStartPositionChanged(it.toInt() - 1)
         },
+        validate = {
+            it.isNotEmpty() && it.toIntOrNull() != null && it.toInt() >= 0
+        }
     )
     EditTextListItem(
         label = stringResource(id = R.string.number_questions),
@@ -75,6 +78,9 @@ fun AnswerSetting(
         onValueSubmitted = {
             answerSettingViewModel.onQuestionCountChanged(it.toInt())
         },
+        validate = {
+            it.isNotEmpty() && it.toIntOrNull() != null && it.toInt() >= 0
+        }
     )
     ContainedWideButton(
         modifier = Modifier.padding(16.dp),

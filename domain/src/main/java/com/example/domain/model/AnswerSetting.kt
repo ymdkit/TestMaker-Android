@@ -14,4 +14,3 @@ data class AnswerSetting(
     val questionCount: Int,
     val startPosition: Int,
 )
-
