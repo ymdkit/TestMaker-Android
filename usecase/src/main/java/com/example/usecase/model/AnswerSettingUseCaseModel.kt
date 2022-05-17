@@ -26,8 +26,8 @@ data class AnswerSettingUseCaseModel(
                 isPlaySound = setting.isPlaySound,
                 isShowAnswerSettingDialog = setting.isShowAnswerSettingDialog,
                 isCaseInsensitive = setting.isCaseInsensitive,
-                questionCount = setting.questionCount,
-                startPosition = setting.startPosition
+                questionCount = setting.questionCount.coerceAtLeast(1),
+                startPosition = setting.startPosition.coerceAtLeast(1)
             )
     }
 
@@ -41,7 +41,7 @@ data class AnswerSettingUseCaseModel(
             isPlaySound = isPlaySound,
             isCaseInsensitive = isCaseInsensitive,
             isShowAnswerSettingDialog = isShowAnswerSettingDialog,
-            questionCount = questionCount,
-            startPosition = startPosition
+            questionCount = questionCount.coerceAtLeast(1),
+            startPosition = startPosition.coerceAtLeast(1)
         )
 }
