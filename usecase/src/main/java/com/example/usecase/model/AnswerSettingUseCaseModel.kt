@@ -27,7 +27,7 @@ data class AnswerSettingUseCaseModel(
                 isShowAnswerSettingDialog = setting.isShowAnswerSettingDialog,
                 isCaseInsensitive = setting.isCaseInsensitive,
                 questionCount = setting.questionCount.coerceAtLeast(1),
-                startPosition = setting.startPosition.coerceAtLeast(1)
+                startPosition = setting.startPosition.coerceAtLeast(0)
             )
     }
 
@@ -42,6 +42,6 @@ data class AnswerSettingUseCaseModel(
             isCaseInsensitive = isCaseInsensitive,
             isShowAnswerSettingDialog = isShowAnswerSettingDialog,
             questionCount = questionCount.coerceAtLeast(1),
-            startPosition = startPosition.coerceAtLeast(1)
+            startPosition = startPosition.coerceAtLeast(0)
         )
 }
