@@ -32,9 +32,9 @@ data class FirebaseGroup(
         return dateFormat.format(createdAt.seconds * 1000)
     }
 
-    fun toGroup(): Group =
+    fun toGroup(groupId: String): Group =
         Group(
-            id = GroupId(value = id),
+            id = GroupId(value = groupId),
             name = name,
             userId = UserId(value = userId),
             createdAt = getDate()

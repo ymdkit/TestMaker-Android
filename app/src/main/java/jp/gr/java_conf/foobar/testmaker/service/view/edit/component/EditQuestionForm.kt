@@ -8,9 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,13 +25,11 @@ fun EditQuestionForm(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
     Column {
         InputQuestionForm(
             modifier = Modifier.weight(weight = 1f, fill = true),
-            focusRequester = focusRequester,
             viewModel = viewModel,
             fragmentManager = fragmentManager
         )

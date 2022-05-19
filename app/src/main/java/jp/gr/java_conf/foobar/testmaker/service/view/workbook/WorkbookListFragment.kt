@@ -138,11 +138,13 @@ class WorkbookListFragment : Fragment() {
                                         onEdit = {
                                             scope.launch {
                                                 drawerState.close()
-                                                findNavController().navigate(
-                                                    WorkbookListFragmentDirections.actionHomeToListQuestion(
-                                                        workbook.id
+                                                if (findNavController().currentDestination?.id == R.id.page_home) {
+                                                    findNavController().navigate(
+                                                        WorkbookListFragmentDirections.actionHomeToListQuestion(
+                                                            workbook.id
+                                                        )
                                                     )
-                                                )
+                                                }
                                             }
                                         },
                                         onShare = {
@@ -615,12 +617,14 @@ class WorkbookListFragment : Fragment() {
             workbookListViewModel.navigateToAnswerWorkbookEvent
                 .receiveAsFlow()
                 .onEach {
-                    findNavController().navigate(
-                        WorkbookListFragmentDirections.actionHomeToAnswerWorkbook(
-                            workbookId = it.workbookId,
-                            isRetry = it.isRetry
+                    if (findNavController().currentDestination?.id == R.id.page_home) {
+                        findNavController().navigate(
+                            WorkbookListFragmentDirections.actionHomeToAnswerWorkbook(
+                                workbookId = it.workbookId,
+                                isRetry = it.isRetry
+                            )
                         )
-                    )
+                    }
                 }
                 .launchIn(this)
 

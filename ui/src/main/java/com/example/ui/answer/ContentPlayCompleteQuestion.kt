@@ -11,8 +11,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -20,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.example.core.utils.replaced
 import com.example.ui.R
 import com.example.ui.core.ContainedWideButton
-import kotlinx.coroutines.job
 
 @Composable
 fun ContentPlayCompleteQuestion(
@@ -28,14 +25,7 @@ fun ContentPlayCompleteQuestion(
     isSwap: Boolean,
     onAnswered: (List<String>) -> Unit
 ) {
-    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-
-    LaunchedEffect(Unit) {
-        coroutineContext.job.invokeOnCompletion {
-            focusRequester.requestFocus()
-        }
-    }
 
     Column {
         var yourAnswers: List<String> by remember {
@@ -61,7 +51,6 @@ fun ContentPlayCompleteQuestion(
                     modifier =
                     if (index == 0) Modifier
                         .fillMaxWidth()
-                        .focusRequester(focusRequester)
                         .padding(vertical = 8.dp)
                     else Modifier
                         .fillMaxWidth()
