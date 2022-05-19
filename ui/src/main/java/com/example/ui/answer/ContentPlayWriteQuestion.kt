@@ -10,15 +10,12 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.ui.R
 import com.example.ui.core.ContainedWideButton
-import kotlinx.coroutines.job
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -27,14 +24,6 @@ fun ContentPlayWriteQuestion(
     onAnswered: (String) -> Unit,
     isSwap: Boolean
 ) {
-    val focusRequester = remember { FocusRequester() }
-
-    LaunchedEffect(Unit) {
-        coroutineContext.job.invokeOnCompletion {
-            focusRequester.requestFocus()
-        }
-    }
-
     Column {
         var yourAnswer by remember { mutableStateOf("") }
         val focusManager = LocalFocusManager.current
@@ -56,8 +45,7 @@ fun ContentPlayWriteQuestion(
             item {
                 OutlinedTextField(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester),
+                        .fillMaxWidth(),
                     value = yourAnswer,
                     label = {
                         Text(text = stringResource(R.string.hint_answer_write))
