@@ -138,11 +138,13 @@ class WorkbookListFragment : Fragment() {
                                         onEdit = {
                                             scope.launch {
                                                 drawerState.close()
-                                                findNavController().navigate(
-                                                    WorkbookListFragmentDirections.actionHomeToListQuestion(
-                                                        workbook.id
+                                                if (findNavController().currentDestination?.id == R.id.page_home) {
+                                                    findNavController().navigate(
+                                                        WorkbookListFragmentDirections.actionHomeToListQuestion(
+                                                            workbook.id
+                                                        )
                                                     )
-                                                )
+                                                }
                                             }
                                         },
                                         onShare = {
