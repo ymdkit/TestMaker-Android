@@ -29,31 +29,37 @@ class GroupRepositoryImpl @Inject constructor(
     override val updateGroupListFlow: Flow<List<Group>>
         get() = _updateGroupListFlow
 
-    override suspend fun getBelongingGroupList(userId: UserId): List<Group> =
-        db.collection(USER_COLLECTION_NAME)
+    override suspend fun getBelongingGroupList(userId: UserId): List<Group> {
+        val documents = db.collection(USER_COLLECTION_NAME)
             .document(userId.value)
             .collection(GROUP_COLLECTION_NAME)
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .limit(100)
             .get()
             .await()
-            .toObjects(FirebaseGroup::class.java)
-            .map { it.toGroup() }
 
-    override suspend fun getGroupOrNull(groupId: GroupId): Group? =
-        db.collection(GROUP_COLLECTION_NAME)
+        return documents.map {
+            it.toObject(FirebaseGroup::class.java).toGroup(it.id)
+        }
+    }
+
+    override suspend fun getGroupOrNull(groupId: GroupId): Group? {
+        val document = db.collection(GROUP_COLLECTION_NAME)
             .document(groupId.value)
             .get()
             .await()
+
+        return document
             .toObject(FirebaseGroup::class.java)
-            ?.toGroup()
+            ?.toGroup(document.id)
+    }
 
     override suspend fun createGroup(userId: UserId, groupName: String): Group {
         val ref = db.collection(GROUP_COLLECTION_NAME).document()
         val group = FirebaseGroup(id = ref.id, userId = userId.value, name = groupName)
         ref.set(group).await()
 
-        return group.toGroup()
+        return group.toGroup(ref.id)
     }
 
     override suspend fun updateGroup(userId: UserId, group: Group) {
