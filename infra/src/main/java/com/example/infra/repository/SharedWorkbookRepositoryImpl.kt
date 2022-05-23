@@ -87,11 +87,11 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
         workbook: Workbook,
         comment: String,
     ): SharedWorkbook? {
-        val batchOperationLimit = 500
+        val batchOperationLimit = 499
 
         var uploadedWorkbookList = listOf<SharedWorkbook>()
 
-        workbook.questionList.sortedBy { it.order }.chunked(batchOperationLimit - 1)
+        workbook.questionList.sortedBy { it.order }.chunked(batchOperationLimit)
             .forEachIndexed { index, list ->
                 val workbookRef = db.collection(WORKBOOK_COLLECTION_NAME).document()
                 val workbookDocumentId = workbookRef.id
@@ -104,7 +104,7 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
                     userId = user.id,
                     userName = user.displayName,
                     comment = comment,
-                    questionListCount = workbook.questionList.size,
+                    questionListCount = workbook.questionList.size.coerceAtMost(batchOperationLimit),
                     downloadCount = 0,
                     isPublic = isPublic,
                     groupId = groupId,
