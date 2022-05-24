@@ -494,11 +494,13 @@ class WorkbookListFragment : Fragment() {
                                                             },
                                                             floatingActionButton = {
                                                                 FloatingActionButton(onClick = {
-                                                                    findNavController().navigate(
-                                                                        WorkbookListFragmentDirections.actionHomeToCreateWorkbook(
-                                                                            folderName = args.folderName
+                                                                    if (findNavController().currentDestination?.id == R.id.page_home) {
+                                                                        findNavController().navigate(
+                                                                            WorkbookListFragmentDirections.actionHomeToCreateWorkbook(
+                                                                                folderName = args.folderName
+                                                                            )
                                                                         )
-                                                                    )
+                                                                    }
                                                                 }) {
                                                                     Icon(
                                                                         Icons.Filled.Add,

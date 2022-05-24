@@ -34,10 +34,14 @@ class SharedWorkbookListWatchUseCase @Inject constructor(
     suspend fun load(query: String) {
         _flow.emit(Resource.Loading)
 
-        val workbookList = repository.getWorkbookList(query = query)
-        _flow.emit(Resource.Success(workbookList.map {
-            SharedWorkbookUseCaseModel.fromSharedWorkbook(it)
-        }))
+        try {
+            val workbookList = repository.getWorkbookList(query = query)
+            _flow.emit(Resource.Success(workbookList.map {
+                SharedWorkbookUseCaseModel.fromSharedWorkbook(it)
+            }))
+        } catch (e: Throwable) {
+            _flow.emit(Resource.Failure(e.message ?: ""))
+        }
     }
 }
 
