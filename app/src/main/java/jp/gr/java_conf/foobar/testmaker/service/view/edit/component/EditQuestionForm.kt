@@ -19,6 +19,7 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 
 @Composable
 fun EditQuestionForm(
+    modifier: Modifier = Modifier,
     viewModel: EditQuestionViewModel,
     fragmentManager: FragmentManager
 ) {
@@ -27,7 +28,9 @@ fun EditQuestionForm(
 
     val focusManager = LocalFocusManager.current
 
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         InputQuestionForm(
             modifier = Modifier.weight(weight = 1f, fill = true),
             viewModel = viewModel,

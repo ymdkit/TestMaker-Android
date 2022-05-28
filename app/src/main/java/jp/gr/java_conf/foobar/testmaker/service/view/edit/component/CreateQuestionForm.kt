@@ -20,13 +20,16 @@ import jp.gr.java_conf.foobar.testmaker.service.R
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CreateQuestionForm(
+    modifier: Modifier = Modifier,
     viewModel: CreateQuestionViewModel,
     fragmentManager: FragmentManager
 ) {
 
     val uiState by viewModel.uiState.collectAsState()
 
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         InputQuestionForm(
             modifier = Modifier.weight(weight = 1f, fill = true),
             viewModel = viewModel,

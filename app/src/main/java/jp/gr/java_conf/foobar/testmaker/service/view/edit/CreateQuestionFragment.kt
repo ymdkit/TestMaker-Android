@@ -10,7 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -29,8 +30,6 @@ import com.example.ui.core.showToast
 import com.example.ui.question.CreateQuestionViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
@@ -38,7 +37,6 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.CreateQuesti
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CreateQuestionFragment : Fragment() {
@@ -76,25 +74,7 @@ class CreateQuestionFragment : Fragment() {
                         },
                         content = {
                             Column {
-
                                 val uiState by createQuestionViewModel.uiState.collectAsState()
-
-                                QuestionType.values().size
-                                val pagerState = rememberPagerState(
-                                    initialPage = 0
-                                )
-
-                                LaunchedEffect(pagerState) {
-                                    snapshotFlow { pagerState.currentPage }.collect {
-                                        createQuestionViewModel.onQuestionTypeChanged(
-                                            QuestionType.valueOf(
-                                                it
-                                            )
-                                        )
-                                    }
-                                }
-                                val coroutineScope = rememberCoroutineScope()
-
                                 TabRow(
                                     selectedTabIndex = uiState.questionType.value,
                                     backgroundColor = Color.Transparent
@@ -107,9 +87,11 @@ class CreateQuestionFragment : Fragment() {
                                                 alpha = ContentAlpha.medium
                                             ),
                                             onClick = {
-                                                coroutineScope.launch {
-                                                    pagerState.animateScrollToPage(index)
-                                                }
+                                                createQuestionViewModel.onQuestionTypeChanged(
+                                                    QuestionType.valueOf(
+                                                        index
+                                                    )
+                                                )
                                             },
                                             text = {
                                                 Text(
@@ -126,18 +108,13 @@ class CreateQuestionFragment : Fragment() {
                                         )
                                     }
                                 }
-                                HorizontalPager(
+                                CreateQuestionForm(
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .weight(weight = 1f, fill = true),
-                                    state = pagerState,
-                                    count = QuestionType.values().size
-                                ) {
-                                    CreateQuestionForm(
-                                        viewModel = createQuestionViewModel,
-                                        fragmentManager = childFragmentManager
-                                    )
-                                }
+                                    viewModel = createQuestionViewModel,
+                                    fragmentManager = childFragmentManager
+                                )
                                 AdView(viewModel = adViewModel)
                             }
                         }
