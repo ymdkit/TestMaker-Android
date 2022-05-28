@@ -380,11 +380,13 @@ class WorkbookListFragment : Fragment() {
                                                                                         },
                                                                                         folder = it,
                                                                                         onClick = {
-                                                                                            findNavController().navigate(
-                                                                                                WorkbookListFragmentDirections.actionHomeToHomeQuestion(
-                                                                                                    folderName = it.name
+                                                                                            if (findNavController().currentDestination?.id == R.id.page_home) {
+                                                                                                findNavController().navigate(
+                                                                                                    WorkbookListFragmentDirections.actionHomeToHomeQuestion(
+                                                                                                        folderName = it.name
+                                                                                                    )
                                                                                                 )
-                                                                                            )
+                                                                                            }
                                                                                         },
                                                                                         onMenuClicked = {
                                                                                             scope.launch {
@@ -577,9 +579,11 @@ class WorkbookListFragment : Fragment() {
                                                                     },
                                                                     floatingActionButton = {
                                                                         FloatingActionButton(onClick = {
-                                                                            findNavController().navigate(
-                                                                                WorkbookListFragmentDirections.actionHomeToUploadWorkbook()
-                                                                            )
+                                                                            if (findNavController().currentDestination?.id == R.id.page_home) {
+                                                                                findNavController().navigate(
+                                                                                    WorkbookListFragmentDirections.actionHomeToUploadWorkbook()
+                                                                                )
+                                                                            }
                                                                         }) {
                                                                             Icon(
                                                                                 Icons.Filled.CloudUpload,
