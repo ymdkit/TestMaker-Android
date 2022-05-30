@@ -136,6 +136,19 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
                                 }
                             }
 
+                        val newExplanationImageUrl =
+                            when (val explanationImage = it.explanationImageUrl) {
+                                is QuestionImage.LocalImage -> {
+                                    val imageRef =
+                                        "${user.id.value}/${explanationImage.getRawString()}"
+                                    uploadImage(explanationImage.getRawString(), imageRef)
+                                    imageRef
+                                }
+                                else -> {
+                                    explanationImage.getRawString()
+                                }
+                            }
+
                         batch.set(
                             questionRef,
                             FirebaseQuestion.fromSharedQuestion(
@@ -146,7 +159,7 @@ class SharedWorkbookRepositoryImpl @Inject constructor(
                                     answerList = it.answers,
                                     otherSelectionList = it.otherSelections,
                                     problemImageUrl = newImageUrl,
-                                    explanationImageUrl = "",
+                                    explanationImageUrl = newExplanationImageUrl,
                                     questionType = it.type,
                                     isCheckAnswerOrder = it.isCheckAnswerOrder,
                                     isAutoGenerateOtherSelections = it.isAutoGenerateOtherSelections,
