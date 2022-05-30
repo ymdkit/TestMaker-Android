@@ -22,7 +22,7 @@ open class RealmTest : RealmObject() {
                 order = workbook.order
                 documentId = workbook.remoteId
                 setCategory(workbook.folderName)
-                workbook.questionList.forEach { addQuestion(Quest.fromQuestion(it)) }
+                workbook.questionList.forEach { addQuestion(RealmQuestion.fromQuestion(it)) }
             }
     }
 
@@ -32,12 +32,9 @@ open class RealmTest : RealmObject() {
     @Deprecated("migrate to themeColor")
     var color: Int = 0
     var themeColor: String = TestMakerColor.BLUE.name
-    var limit: Int = 100
-    var startPosition: Int = 0
     var title: String? = null
     private var category: String? = null
-    var history: Long = 0
-    private var questions: RealmList<Quest>? = null
+    private var questions: RealmList<RealmQuestion>? = null
     var documentId: String = ""
     var order: Int = 0
     var source: String = "undefined"
@@ -50,14 +47,12 @@ open class RealmTest : RealmObject() {
         return category ?: ""
     }
 
-    fun addQuestion(q: Quest) {
+    fun addQuestion(q: RealmQuestion) {
 
         questions ?: run { questions = RealmList() }
 
         questions?.add(q)
     }
-
-    fun questionsNonNull(): List<Quest> = questions?.sortedBy { it.order } ?: listOf()
 
     fun toWorkbook(folderNameList: List<String>): Workbook = Workbook(
         id = WorkbookId(value = id),

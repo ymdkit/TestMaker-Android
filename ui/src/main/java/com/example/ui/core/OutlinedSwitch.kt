@@ -1,4 +1,4 @@
-package jp.gr.java_conf.foobar.testmaker.service.view.share.component
+package com.example.ui.core
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Spacer

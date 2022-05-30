@@ -14,17 +14,18 @@ import io.realm.annotations.Required
 /**
  * Created by keita on 2017/02/08.
  */
-open class Quest : RealmObject() {
+open class RealmQuestion : RealmObject() {
 
     companion object {
         fun fromQuestion(question: Question) =
-            Quest().apply {
+            RealmQuestion().apply {
                 id = question.id.value
                 type = question.type.value
                 problem = question.problem
                 answer = question.answers.firstOrNull() ?: ""
                 explanation = question.explanation
                 imagePath = question.problemImageUrl.getRawString()
+                explanationImageUrl = question.explanationImageUrl.getRawString()
                 correct = question.answerStatus == AnswerStatus.CORRECT
                 solving = question.isAnswering
                 order = question.order
@@ -35,13 +36,14 @@ open class Quest : RealmObject() {
             }
 
         fun fromCreateQuestionRequest(questionId: Long, request: CreateQuestionRequest) =
-            Quest().apply {
+            RealmQuestion().apply {
                 this.id = questionId
                 this.problem = request.problem
                 this.answer = request.answers.firstOrNull() ?: ""
                 this.type = request.questionType.value
                 this.explanation = request.explanation
                 this.imagePath = request.problemImageUrl
+                this.explanationImageUrl = request.explanationImageUrl
                 this.order = questionId.toInt()
                 this.setSelections(request.otherSelections.toTypedArray())
                 this.setAnswers(request.answers.toTypedArray())
@@ -59,6 +61,7 @@ open class Quest : RealmObject() {
     var explanation: String = ""
     var correct: Boolean = false
     var imagePath: String = ""
+    var explanationImageUrl: String = ""
     var selections: RealmList<Select> = RealmList()
     var answers: RealmList<Select> = RealmList()
     var type: Int = 0
@@ -99,7 +102,7 @@ open class Quest : RealmObject() {
             problem = problem,
             explanation = explanation,
             problemImageUrl = QuestionImage.fromRawString(imagePath),
-            explanationImageUrl = QuestionImage.Empty, // todo カラム追加
+            explanationImageUrl = QuestionImage.fromRawString(explanationImageUrl),
             answerStatus = if (correct) AnswerStatus.CORRECT else AnswerStatus.INCORRECT, // todo 未解答状態への対応
             isAnswering = solving,
             order = order,

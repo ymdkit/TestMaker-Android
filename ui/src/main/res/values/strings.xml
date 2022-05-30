@@ -257,4 +257,5 @@
     <string name="title_edit_folder">edit folder</string>
     <string name="button_upload_and_workbook">upload and share</string>
     <string name="setting_is_case_insensitive">case insensitive</string>
+    <string name="button_add_explanation_image">add explanation image</string>
 </resources>
