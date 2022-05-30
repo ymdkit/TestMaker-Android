@@ -25,7 +25,7 @@ import com.example.core.Constants
 import com.example.core.utils.replaced
 import com.example.ui.R
 import com.example.ui.core.NumberPicker
-import jp.gr.java_conf.foobar.testmaker.service.view.share.component.OutlinedSwitch
+import com.example.ui.core.OutlinedSwitch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -170,9 +170,18 @@ fun InputQuestionForm(
         }
         item {
             ContentEditImageQuestion(
+                label = stringResource(id = R.string.button_add_image),
                 image = uiState.problemImage,
                 fragmentManager = fragmentManager,
                 onValueChange = viewModel::onProblemImageUrlChanged
+            )
+        }
+        item {
+            ContentEditImageQuestion(
+                label = stringResource(id = R.string.button_add_explanation_image),
+                image = uiState.explanationImage,
+                fragmentManager = fragmentManager,
+                onValueChange = viewModel::onExplanationImageUrlChanged
             )
         }
         item {

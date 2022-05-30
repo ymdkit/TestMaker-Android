@@ -139,7 +139,7 @@ class CreateQuestionViewModel @Inject constructor(
                 answers = inputValues.answerList,
                 explanation = inputValues.explanation,
                 problemImageUrl = inputValues.problemImage.getRawString(),
-                explanationImageUrl = "",
+                explanationImageUrl = inputValues.explanationImage.getRawString(),
                 otherSelections = inputValues.otherSelectionList,
                 isAutoGenerateOtherSelections = inputValues.isAutoGenerateOtherSelections,
                 isCheckAnswerOrder = inputValues.isCheckAnswerOrder

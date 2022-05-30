@@ -43,6 +43,7 @@ open class RealmQuestion : RealmObject() {
                 this.type = request.questionType.value
                 this.explanation = request.explanation
                 this.imagePath = request.problemImageUrl
+                this.explanationImageUrl = request.explanationImageUrl
                 this.order = questionId.toInt()
                 this.setSelections(request.otherSelections.toTypedArray())
                 this.setAnswers(request.answers.toTypedArray())

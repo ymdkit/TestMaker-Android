@@ -42,6 +42,7 @@ import java.io.IOException
 
 @Composable
 fun ContentEditImageQuestion(
+    label: String,
     image: QuestionImage,
     fragmentManager: FragmentManager,
     onValueChange: (QuestionImage) -> Unit
@@ -145,7 +146,7 @@ fun ContentEditImageQuestion(
     )
     {
         Text(
-            stringResource(id = R.string.button_add_image),
+            label,
             color = MaterialTheme.colors.onSurface
         )
         Spacer(modifier = Modifier.weight(weight = 1f, fill = true))
