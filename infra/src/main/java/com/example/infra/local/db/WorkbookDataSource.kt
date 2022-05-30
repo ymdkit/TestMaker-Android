@@ -1,6 +1,6 @@
 package com.example.infra.local.db
 
-import com.example.infra.local.entity.Quest
+import com.example.infra.local.entity.RealmQuestion
 import com.example.infra.local.entity.RealmTest
 import io.realm.Realm
 import io.realm.RealmModel
@@ -16,7 +16,7 @@ class WorkbookDataSource @Inject constructor(
         realm.where(T::class.java).max("id")?.toLong()?.plus(1) ?: 1L
 
     fun generateWorkbookId(): Long = generateId<RealmTest>()
-    fun generateQuestionId(): Long = generateId<Quest>()
+    fun generateQuestionId(): Long = generateId<RealmQuestion>()
 
     fun createWorkbook(workbook: RealmTest) =
         realm.executeTransaction { realm ->
@@ -46,26 +46,27 @@ class WorkbookDataSource @Inject constructor(
                 ?.deleteFromRealm()
         }
 
-    fun createQuestions(questionList: List<Quest>) =
+    fun createQuestions(questionList: List<RealmQuestion>) =
         realm.executeTransaction { realm ->
             questionList.forEach {
                 realm.copyToRealmOrUpdate(it)
             }
         }
 
-    fun getQuestion(questionId: Long): Quest = realm.copyFromRealm(
-        realm.where(Quest::class.java)
-            .equalTo("id", questionId).findFirst() ?: Quest()
+    fun getQuestion(questionId: Long): RealmQuestion = realm.copyFromRealm(
+        realm.where(RealmQuestion::class.java)
+            .equalTo("id", questionId).findFirst() ?: RealmQuestion()
     )
 
 
-    fun updateQuestion(question: Quest) =
+    fun updateQuestion(question: RealmQuestion) =
         realm.executeTransaction {
             it.copyToRealmOrUpdate(question)
         }
 
-    fun deleteQuestion(question: Quest) =
+    fun deleteQuestion(question: RealmQuestion) =
         realm.executeTransaction {
-            realm.where(Quest::class.java).equalTo("id", question.id).findFirst()?.deleteFromRealm()
+            realm.where(RealmQuestion::class.java).equalTo("id", question.id).findFirst()
+                ?.deleteFromRealm()
         }
 }

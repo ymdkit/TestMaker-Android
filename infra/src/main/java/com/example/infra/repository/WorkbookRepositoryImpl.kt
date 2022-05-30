@@ -6,8 +6,8 @@ import com.example.domain.model.*
 import com.example.domain.repository.WorkBookRepository
 import com.example.infra.local.db.FolderDataSource
 import com.example.infra.local.db.WorkbookDataSource
-import com.example.infra.local.entity.Quest
 import com.example.infra.local.entity.RealmCategory
+import com.example.infra.local.entity.RealmQuestion
 import com.example.infra.local.entity.RealmTest
 import com.example.infra.remote.CloudFunctionsApi
 import com.example.infra.remote.CloudFunctionsClient
@@ -155,7 +155,7 @@ class WorkbookRepositoryImpl @Inject constructor(
                 QuestionType.SELECT_COMPLETE -> it.answers
             }
 
-            Quest.fromCreateQuestionRequest(
+            RealmQuestion.fromCreateQuestionRequest(
                 questionId = newQuestionId + index,
                 request = CreateQuestionRequest(
                     questionType = questionType,
@@ -210,7 +210,7 @@ class WorkbookRepositoryImpl @Inject constructor(
     ) {
         val folderNameList = folderDataSource.getFolderList().map { it.name }
         val newQuestionId = workbookDataSource.generateQuestionId()
-        val newQuestion = Quest.fromCreateQuestionRequest(
+        val newQuestion = RealmQuestion.fromCreateQuestionRequest(
             questionId = newQuestionId,
             request = request
         )
@@ -233,7 +233,7 @@ class WorkbookRepositoryImpl @Inject constructor(
 
             val questionType = it.questionType
 
-            Quest.fromCreateQuestionRequest(
+            RealmQuestion.fromCreateQuestionRequest(
                 questionId = newQuestionId + index,
                 request = CreateQuestionRequest(
                     questionType = questionType,
@@ -258,13 +258,13 @@ class WorkbookRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateQuestion(question: Question) {
-        workbookDataSource.updateQuestion(Quest.fromQuestion(question))
+        workbookDataSource.updateQuestion(RealmQuestion.fromQuestion(question))
         _updateWorkbookListFlow.emit(getWorkbookList())
     }
 
     override suspend fun swapQuestion(sourceQuestion: Question, destQuestion: Question) {
-        workbookDataSource.updateQuestion(Quest.fromQuestion(sourceQuestion.copy(order = destQuestion.order)))
-        workbookDataSource.updateQuestion(Quest.fromQuestion(destQuestion.copy(order = sourceQuestion.order)))
+        workbookDataSource.updateQuestion(RealmQuestion.fromQuestion(sourceQuestion.copy(order = destQuestion.order)))
+        workbookDataSource.updateQuestion(RealmQuestion.fromQuestion(destQuestion.copy(order = sourceQuestion.order)))
     }
 
     private suspend fun refreshWorkbookList() {

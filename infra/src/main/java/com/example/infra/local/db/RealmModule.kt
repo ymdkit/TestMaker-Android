@@ -23,7 +23,7 @@ object LocalSourceModule {
     ): Realm {
         Realm.init(context)
         val config = RealmConfiguration.Builder()
-            .schemaVersion(19)
+            .schemaVersion(20)
             .build()
 
         try {

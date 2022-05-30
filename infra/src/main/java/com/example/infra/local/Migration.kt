@@ -188,7 +188,25 @@ class Migration : RealmMigration {
 
             oldVersion++
         }
-        //schemaVersion変えるの忘れるな(TestMakerApplication内)
+        if (oldVersion == 19L) {
+            val testSchema = schema["RealmTest"]
+            testSchema
+                ?.removeField("limit")
+                ?.removeField("startPosition")
+                ?.removeField("history")
+
+            schema.rename("Quest", "RealmQuestion")
+
+            val questionSchema = schema["RealmQuestion"]
+            questionSchema?.addField(
+                "explanationImageUrl",
+                String::class.java,
+                FieldAttribute.REQUIRED
+            )
+
+            oldVersion++
+        }
+        //schemaVersion変えるの忘れるな(RealmModule)
 
 
     }

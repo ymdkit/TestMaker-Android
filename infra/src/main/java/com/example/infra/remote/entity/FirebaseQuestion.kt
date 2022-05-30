@@ -3,7 +3,7 @@ package com.example.infra.remote.entity
 import com.example.core.QuestionType
 import com.example.domain.model.DocumentId
 import com.example.domain.model.SharedQuestion
-import com.example.infra.local.entity.Quest
+import com.example.infra.local.entity.RealmQuestion
 
 data class FirebaseQuestion(val question: String = "",
                             val answer: String = "",
@@ -33,9 +33,9 @@ data class FirebaseQuestion(val question: String = "",
             )
     }
 
-    fun toQuest(): Quest {
+    fun toQuest(): RealmQuestion {
 
-        val quest = Quest()
+        val quest = RealmQuestion()
         quest.problem = question
 
         if (answer.isNotEmpty()) {
