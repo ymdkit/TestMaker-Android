@@ -24,6 +24,10 @@ data class QuestionUseCaseModel(
     fun getSingleLineAnswer() = answers.joinToString(" ")
     fun getMultipleLineAnswer() = answers.joinToString("\n")
     fun getSwappableAnswers(isSwap: Boolean) = if (isSwap) listOf(problem) else answers
+    val isReversible = when (type) {
+        QuestionType.WRITE, QuestionType.COMPLETE -> true
+        QuestionType.SELECT, QuestionType.SELECT_COMPLETE -> false
+    }
 
     companion object {
         fun fromQuestion(question: Question): QuestionUseCaseModel =

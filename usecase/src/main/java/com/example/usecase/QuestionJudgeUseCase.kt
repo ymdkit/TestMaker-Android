@@ -1,6 +1,5 @@
 package com.example.usecase
 
-import com.example.core.QuestionType
 import com.example.core.utils.allIndexed
 import com.example.domain.repository.PreferenceRepository
 import com.example.usecase.model.QuestionUseCaseModel
@@ -33,7 +32,7 @@ class QuestionJudgeUseCase @Inject constructor(
         var expectAnswerList = expect.answers
         var actualAnswerList = actual
 
-        if (isSwapProblemAndAnswer && (expect.type == QuestionType.WRITE || expect.type == QuestionType.COMPLETE)) {
+        if (isSwapProblemAndAnswer && expect.isReversible) {
             expectAnswerList = listOf(expect.problem)
         }
 
