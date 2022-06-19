@@ -179,15 +179,17 @@ class AnswerWorkbookFragment : Fragment() {
                                             is PlayUiState.Review -> {
                                                 ContentPlayReviewQuestion(
                                                     state = state,
-                                                    isSwap = sharedPreferenceManager.reverse,
+                                                    isSwap = sharedPreferenceManager.reverse && state.question.isReversible,
                                                     onConfirmed = {
                                                         playViewModel.loadNext(state.index)
                                                     },
                                                     onModifyQuestion = {
-                                                        findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
-                                                            workbookId = args.workbookId,
-                                                            questionId = it.id
-                                                        ))
+                                                        findNavController().navigate(
+                                                            AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
+                                                                workbookId = args.workbookId,
+                                                                questionId = it.id
+                                                            )
+                                                        )
                                                     }
                                                 )
                                             }
@@ -205,7 +207,11 @@ class AnswerWorkbookFragment : Fragment() {
                                                 findNavController().popBackStack()
                                             }
                                             is PlayUiState.WaitingNextQuestion -> {
-                                                ContentProblem(index = state.index, question = state.question, isSwap = sharedPreferenceManager.reverse)
+                                                ContentProblem(
+                                                    index = state.index,
+                                                    question = state.question,
+                                                    isSwap = sharedPreferenceManager.reverse && state.question.isReversible
+                                                )
                                             }
                                         }
                                     }
