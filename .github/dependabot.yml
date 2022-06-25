@@ -1,0 +1,66 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "20:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.google.firebase:firebase-bom
+    versions:
+    - 27.0.0
+  - dependency-name: com.squareup.moshi:moshi
+    versions:
+    - 1.11.0
+    - 1.12.0
+  - dependency-name: com.squareup.moshi:moshi-kotlin
+    versions:
+    - 1.11.0
+    - 1.12.0
+  - dependency-name: com.airbnb.android:epoxy
+    versions:
+    - 4.3.1
+    - 4.4.0
+    - 4.4.1
+    - 4.4.2
+    - 4.4.3
+    - 4.4.4
+  - dependency-name: com.airbnb.android:epoxy-processor
+    versions:
+    - 4.3.1
+    - 4.4.0
+    - 4.4.1
+    - 4.4.2
+    - 4.4.3
+    - 4.4.4
+  - dependency-name: androidx.navigation:navigation-fragment-ktx
+    versions:
+    - 2.3.3
+    - 2.3.4
+  - dependency-name: org.jetbrains.kotlinx:kotlinx-coroutines-core
+    versions:
+    - 1.4.2-native-mt
+    - 1.4.3-native-mt
+  - dependency-name: com.firebaseui:firebase-ui-storage
+    versions:
+    - 7.1.1
+  - dependency-name: com.firebaseui:firebase-ui-firestore
+    versions:
+    - 7.1.1
+  - dependency-name: com.google.android.play:core-ktx
+    versions:
+    - 1.8.1
+  - dependency-name: com.google.firebase:firebase-firestore
+    versions:
+    - 22.0.2
+    - 22.1.0
+  - dependency-name: com.google.firebase:firebase-analytics
+    versions:
+    - 18.0.2
+  - dependency-name: org.koin:koin-core
+    versions:
+    - 2.2.2
+  - dependency-name: org.koin:koin-java
+    versions:
+    - 2.0.1
