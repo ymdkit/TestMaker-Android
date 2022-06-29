@@ -36,10 +36,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.ui.core.*
 import com.example.ui.core.item.ClickableListItem
+import com.example.ui.logger.LogEvent
 import com.example.ui.sharedworkbook.SharedWorkbookListViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
@@ -48,6 +51,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -56,6 +60,8 @@ class PublishedWorkbookListFragment : Fragment() {
     private val sharedWorkbookListViewModel: SharedWorkbookListViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
 
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     @OptIn(
         ExperimentalMaterialApi::class,
@@ -318,6 +324,13 @@ class PublishedWorkbookListFragment : Fragment() {
         )
         emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_body))
         startActivity(Intent.createChooser(emailIntent, null))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, LogEvent.SEARCH_SCREEN_OPEN.eventName)
+        }
     }
 }
 

@@ -63,6 +63,7 @@ dependencies {
     implementation(Dep.Firebase.storage)
     implementation(Dep.Firebase.authUi)
     implementation(Dep.Firebase.storageUi)
+    implementation(Dep.Firebase.analytics)
     implementation(Dep.Glide.core)
     kapt(Dep.Glide.compiler)
     implementation(Dep.Misc.studyPlus)

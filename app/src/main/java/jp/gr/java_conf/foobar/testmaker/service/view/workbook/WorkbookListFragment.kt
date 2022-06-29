@@ -35,6 +35,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.ui.answer.AnswerSetting
 import com.example.ui.answer.AnswerSettingViewModel
 import com.example.ui.core.*
+import com.example.ui.logger.LogEvent
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.*
 import com.firebase.ui.auth.AuthUI
@@ -43,6 +44,8 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.main.MainActivity
@@ -51,6 +54,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class WorkbookListFragment : Fragment() {
@@ -60,6 +64,9 @@ class WorkbookListFragment : Fragment() {
     private val workbookListViewModel: WorkbookListViewModel by viewModels()
     private val myWorkbookListViewModel: MyWorkbookListViewModel by viewModels()
     private val answerSettingViewModel: AnswerSettingViewModel by viewModels()
+
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
     override fun onCreateView(
@@ -684,6 +691,13 @@ class WorkbookListFragment : Fragment() {
                     requireContext().showToast(getString(R.string.msg_question_list_empty))
                 }
                 .launchIn(this)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, LogEvent.HOME_SCREEN_OPEN.eventName)
         }
     }
 

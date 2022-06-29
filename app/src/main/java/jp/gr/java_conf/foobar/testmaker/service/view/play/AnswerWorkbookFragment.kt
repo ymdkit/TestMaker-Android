@@ -25,8 +25,11 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.ui.answer.*
 import com.example.ui.core.*
+import com.example.ui.logger.LogEvent
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.android.gms.ads.AdSize
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
@@ -47,6 +50,9 @@ class AnswerWorkbookFragment : Fragment() {
 
     private var soundCorrect: MediaPlayer? = null
     private var soundIncorrect: MediaPlayer? = null
+
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -287,5 +293,13 @@ class AnswerWorkbookFragment : Fragment() {
         soundCorrect = null
         soundIncorrect?.release()
         soundIncorrect = null
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, LogEvent.ANSWER_SCREEN_OPEN.eventName)
+        }
     }
 }

@@ -33,12 +33,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.core.utils.Resource
 import com.example.ui.core.*
+import com.example.ui.logger.LogEvent
+
 import com.example.ui.question.OperateQuestion
 import com.example.ui.question.QuestionListDrawerState
 import com.example.ui.question.QuestionListItem
 import com.example.ui.question.QuestionListViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.usecase.model.QuestionUseCaseModel
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
@@ -48,6 +52,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by keita on 2017/02/12.
@@ -60,6 +65,8 @@ class QuestionListFragment : Fragment() {
     private val questionListViewModel: QuestionListViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
 
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
@@ -488,6 +495,13 @@ class QuestionListFragment : Fragment() {
             question = question
         )
         requireContext().showToast(getString(R.string.msg_succes_copy_questions_in_same_workbook))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, LogEvent.QUESTIONS_SCREEN_OPEN.eventName)
+        }
     }
 }
 

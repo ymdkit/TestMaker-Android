@@ -27,7 +27,11 @@ import androidx.navigation.findNavController
 import com.example.core.TestMakerColor
 import com.example.ui.core.*
 import com.example.ui.folder.CreateFolderViewModel
+import com.example.ui.logger.LogEvent
+
 import com.example.ui.theme.TestMakerAndroidTheme
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.view.share.component.ColorPicker
@@ -42,6 +46,9 @@ class CreateFolderFragment : Fragment() {
 
     @Inject
     lateinit var colorMapper: ColorMapper
+
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -163,5 +170,12 @@ class CreateFolderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adViewModel.setup()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, LogEvent.CREATE_FOLDER_SCREEN_OPEN.eventName)
+        }
     }
 }

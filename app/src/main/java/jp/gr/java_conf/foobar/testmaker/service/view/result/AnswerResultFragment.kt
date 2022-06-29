@@ -38,12 +38,15 @@ import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.TestMakerTopAppBar
 import com.example.ui.core.item.ClickableListItem
+import com.example.ui.logger.LogEvent
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.db.SharedPreferenceManager
@@ -70,6 +73,9 @@ class AnswerResultFragment : Fragment() {
 
     @Inject
     lateinit var sharedPreferenceManager: SharedPreferenceManager
+
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
@@ -290,6 +296,13 @@ class AnswerResultFragment : Fragment() {
                 val reviewInfo = it.result
                 manager.launchReviewFlow(requireActivity(), reviewInfo)
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, LogEvent.RESULT_SCREEN_OPEN.eventName)
         }
     }
 }

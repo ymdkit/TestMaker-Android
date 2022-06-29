@@ -31,9 +31,12 @@ import com.example.ui.core.*
 import com.example.ui.core.item.ClickableListItem
 import com.example.ui.core.item.ConfirmActionListItem
 import com.example.ui.group.GroupWorkbookListViewModel
+import com.example.ui.logger.LogEvent
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
@@ -42,6 +45,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -53,6 +57,9 @@ class GroupWorkbookListFragment : Fragment() {
 
     private val groupWorkbookListViewModel: GroupWorkbookListViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
+
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
@@ -431,4 +438,11 @@ class GroupWorkbookListFragment : Fragment() {
             )
             type = "text/plain"
         }, null)
+
+    override fun onResume() {
+        super.onResume()
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, LogEvent.GROUP_DETAILS_SCREEN_OPEN.eventName)
+        }
+    }
 }

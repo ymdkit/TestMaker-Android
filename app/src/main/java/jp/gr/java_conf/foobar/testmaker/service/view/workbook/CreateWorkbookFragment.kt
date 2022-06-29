@@ -35,8 +35,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.core.TestMakerColor
 import com.example.ui.core.*
+import com.example.ui.logger.LogEvent
+
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.CreateWorkbookViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.infra.util.TestMakerFileReader
@@ -60,6 +64,9 @@ class CreateWorkbookFragment : Fragment() {
     @Inject
     lateinit var colorMapper: ColorMapper
 
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
+
     private val importFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
         it ?: return@registerForActivityResult
         val (title, content) = TestMakerFileReader.readFileFromUri(it, requireActivity())
@@ -73,6 +80,12 @@ class CreateWorkbookFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(
+                FirebaseAnalytics.Param.SCREEN_NAME,
+                LogEvent.CREATE_WORKBOOK_SCREEN_OPEN.eventName
+            )
+        }
         return ComposeView(requireContext()).apply {
             setContent {
                 TestMakerAndroidTheme {
@@ -302,6 +315,16 @@ class CreateWorkbookFragment : Fragment() {
                     findNavController().popBackStack()
                 }
                 .launchIn(this)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(
+                FirebaseAnalytics.Param.SCREEN_NAME,
+                LogEvent.CREATE_WORKBOOK_SCREEN_OPEN.eventName
+            )
         }
     }
 

@@ -31,10 +31,13 @@ import com.example.core.StudyPlusSetting
 import com.example.ui.R
 import com.example.ui.core.*
 import com.example.ui.core.item.*
+import com.example.ui.logger.LogEvent
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -50,6 +53,9 @@ class SettingsFragment : Fragment() {
 
     @Inject
     lateinit var colorMapper: ColorMapper
+
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
@@ -370,6 +376,14 @@ class SettingsFragment : Fragment() {
         }
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, LogEvent.SETTINGS_SCREEN_OPEN.eventName)
+        }
+    }
+
     private fun authUIIntent() =
         AuthUI.getInstance()
             .createSignInIntentBuilder()
@@ -408,5 +422,6 @@ class SettingsFragment : Fragment() {
             .packageManager
             .getPackageInfo(requireContext().packageName, 0)
             .versionName
+
 
 }

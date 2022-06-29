@@ -27,9 +27,12 @@ import com.example.ui.core.AdView
 import com.example.ui.core.AdViewModel
 import com.example.ui.core.TestMakerTopAppBar
 import com.example.ui.core.showToast
+import com.example.ui.logger.LogEvent
 import com.example.ui.question.EditQuestionViewModel
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
@@ -37,6 +40,7 @@ import jp.gr.java_conf.foobar.testmaker.service.view.edit.component.EditQuestion
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class EditQuestionFragment : Fragment() {
@@ -44,6 +48,9 @@ class EditQuestionFragment : Fragment() {
     private val args: EditQuestionFragmentArgs by navArgs()
     private val adViewModel: AdViewModel by viewModels()
     private val editQuestionViewModel: EditQuestionViewModel by viewModels()
+
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     @OptIn(ExperimentalPagerApi::class)
     override fun onCreateView(
@@ -141,6 +148,13 @@ class EditQuestionFragment : Fragment() {
                     findNavController().popBackStack()
                 }
                 .launchIn(this)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, LogEvent.EDIT_QUESTION_SCREEN_OPEN.eventName)
         }
     }
 }

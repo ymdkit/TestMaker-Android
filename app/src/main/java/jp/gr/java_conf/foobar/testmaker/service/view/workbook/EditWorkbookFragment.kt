@@ -30,8 +30,11 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.core.utils.Resource
 import com.example.ui.core.*
+import com.example.ui.logger.LogEvent
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.EditWorkbookViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
@@ -53,11 +56,13 @@ class EditWorkbookFragment : Fragment() {
 
     private val args: QuestionListFragmentArgs by navArgs()
 
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         return ComposeView(requireContext()).apply {
             setContent {
                 TestMakerAndroidTheme {
@@ -225,5 +230,12 @@ class EditWorkbookFragment : Fragment() {
         editWorkbookViewModel.setup(workbookId = args.workbookId)
         adViewModel.setup()
         editWorkbookViewModel.load()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, LogEvent.EDIT_WORKBOOK_SCREEN.eventName)
+        }
     }
 }

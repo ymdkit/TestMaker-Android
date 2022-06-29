@@ -3,7 +3,6 @@ package jp.gr.java_conf.foobar.testmaker.service.modules
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,12 +14,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    @Provides
-    @Singleton
-    fun provideAnalytics(
-        @ApplicationContext context: Context
-    ): FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
 
     @Provides
     @Singleton
