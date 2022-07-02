@@ -144,6 +144,9 @@ class EditQuestionFragment : Fragment() {
             editQuestionViewModel.onUpdateQuestion
                 .receiveAsFlow()
                 .onEach {
+                    analytics.logEvent(
+                        LogEvent.QUESTIONS_BUTTON_UPDATE_QUESTION.eventName
+                    ) {}
                     requireContext().showToast(getString(R.string.msg_update_question))
                     findNavController().popBackStack()
                 }

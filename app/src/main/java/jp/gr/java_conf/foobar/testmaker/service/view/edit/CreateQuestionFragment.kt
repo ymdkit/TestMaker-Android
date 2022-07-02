@@ -140,6 +140,9 @@ class CreateQuestionFragment : Fragment() {
             createQuestionViewModel.onCreateQuestion
                 .receiveAsFlow()
                 .onEach {
+                    analytics.logEvent(
+                        LogEvent.QUESTIONS_BUTTON_CREATE_QUESTION.eventName
+                    ) {}
                     requireContext().showToast(getString(R.string.msg_create_question))
                 }
                 .launchIn(this)

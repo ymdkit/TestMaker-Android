@@ -95,6 +95,9 @@ class QuestionListFragment : Fragment() {
                                     OperateQuestion(
                                         question = state.question,
                                         onEdit = {
+                                            analytics.logEvent(
+                                                LogEvent.QUESTIONS_BUTTON_EDIT_QUESTION.eventName
+                                            ) {}
                                             scope.launch {
                                                 drawerState.close()
                                                 findNavController().navigate(
@@ -106,12 +109,18 @@ class QuestionListFragment : Fragment() {
                                             }
                                         },
                                         onCopy = {
+                                            analytics.logEvent(
+                                                LogEvent.QUESTIONS_BUTTON_COPY_QUESTION.eventName
+                                            ) {}
                                             scope.launch {
                                                 drawerState.close()
                                                 copyQuestion(state.question)
                                             }
                                         },
                                         onDelete = {
+                                            analytics.logEvent(
+                                                LogEvent.QUESTIONS_BUTTON_DELETE_QUESTION.eventName
+                                            ) {}
                                             scope.launch {
                                                 drawerState.close()
                                                 questionListViewModel.deleteQuestions(listOf(state.question))
@@ -214,7 +223,12 @@ class QuestionListFragment : Fragment() {
                                                     modifier = Modifier.fillMaxWidth(),
                                                     value = uiState.query,
                                                     onValueChange = questionListViewModel::onQueryChanged,
-                                                    onSearch = questionListViewModel::load
+                                                    onSearch = {
+                                                        analytics.logEvent(
+                                                            LogEvent.QUESTIONS_BUTTON_SEARCH_QUESTION.eventName
+                                                        ) {}
+                                                        questionListViewModel.load()
+                                                    }
                                                 )
                                             } else {
                                                 Text(
@@ -227,6 +241,9 @@ class QuestionListFragment : Fragment() {
                                         actions = {
                                             if (uiState.isSelectMode) {
                                                 IconButton(onClick = {
+                                                    analytics.logEvent(
+                                                        LogEvent.QUESTIONS_BUTTON_MOVE_QUESTIONS.eventName
+                                                    ) {}
                                                     scope.launch {
                                                         questionListViewModel.onMoveQuestionListButtonClicked()
                                                         drawerState.open()
@@ -238,6 +255,9 @@ class QuestionListFragment : Fragment() {
                                                     )
                                                 }
                                                 IconButton(onClick = {
+                                                    analytics.logEvent(
+                                                        LogEvent.QUESTIONS_BUTTON_COPY_QUESTIONS.eventName
+                                                    ) {}
                                                     scope.launch {
                                                         questionListViewModel.onCopyQuestionListButtonClicked()
                                                         drawerState.open()
@@ -250,6 +270,9 @@ class QuestionListFragment : Fragment() {
                                                 }
                                                 ConfirmActionIconButton(
                                                     onConfirmed = {
+                                                        analytics.logEvent(
+                                                            LogEvent.QUESTIONS_BUTTON_DELETE_QUESTIONS.eventName
+                                                        ) {}
                                                         questionListViewModel.deleteSelectedQuestionList()
                                                         questionListViewModel.onSelectModeChanged(
                                                             false
@@ -286,6 +309,9 @@ class QuestionListFragment : Fragment() {
                                                     )
                                                 }
                                                 TextButton(onClick = {
+                                                    analytics.logEvent(
+                                                        LogEvent.QUESTIONS_BUTTON_SELECT.eventName
+                                                    ) {}
                                                     questionListViewModel.onSelectModeChanged(true)
                                                 }) {
                                                     Text(
@@ -411,6 +437,9 @@ class QuestionListFragment : Fragment() {
                                                                         it
                                                                     )
                                                                 } else {
+                                                                    analytics.logEvent(
+                                                                        LogEvent.QUESTIONS_ITEM_OPERATE_QUESTION.eventName
+                                                                    ) {}
                                                                     scope.launch {
                                                                         questionListViewModel.onQuestionClicked(
                                                                             it
@@ -444,6 +473,9 @@ class QuestionListFragment : Fragment() {
                                 },
                                 floatingActionButton = {
                                     FloatingActionButton(onClick = {
+                                        analytics.logEvent(
+                                            LogEvent.QUESTIONS_BUTTON_CREATE_QUESTION.eventName
+                                        ) {}
                                         findNavController().navigate(
                                             QuestionListFragmentDirections
                                                 .actionQuestionListToCreateQuestion(args.workbookId)
