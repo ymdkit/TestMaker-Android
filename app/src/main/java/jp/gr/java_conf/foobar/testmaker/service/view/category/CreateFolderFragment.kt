@@ -128,6 +128,7 @@ class CreateFolderFragment : Fragment() {
                                                 name = name,
                                                 color = color
                                             )
+                                            analytics.logEvent(LogEvent.HOME_BUTTON_STORE_FOLDER.eventName) {}
                                             requireContext().showToast(getString(R.string.msg_create_folder))
                                             findNavController().popBackStack()
                                         },

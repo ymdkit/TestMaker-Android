@@ -70,6 +70,7 @@ class CreateWorkbookFragment : Fragment() {
     private val importFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
         it ?: return@registerForActivityResult
         val (title, content) = TestMakerFileReader.readFileFromUri(it, requireActivity())
+        analytics.logEvent(LogEvent.HOME_SUCCESS_IMPORT_WORKBOOK.eventName) {}
         createWorkbookViewModel.importWorkbook(
             workbookName = title,
             exportedWorkbook = content
@@ -173,6 +174,7 @@ class CreateWorkbookFragment : Fragment() {
                                                 value = color,
                                                 colorMapper = colorMapper,
                                                 onValueChange = {
+                                                    analytics.logEvent(LogEvent.HOME_BUTTON_SET_COLOR_TO_WORKBOOK.eventName) {}
                                                     color = it
                                                 }
                                             )
@@ -192,6 +194,7 @@ class CreateWorkbookFragment : Fragment() {
                                                             CreateWorkbookFragmentDirections.actionCreateWorkbookToCreateFolder()
                                                         )
                                                     } else {
+                                                        analytics.logEvent(LogEvent.HOME_BUTTON_SET_FOLDER_TO_WORKBOOK.eventName) {}
                                                         createWorkbookViewModel.onFolderChanged(it)
                                                     }
                                                 })
@@ -215,7 +218,10 @@ class CreateWorkbookFragment : Fragment() {
                                                     ButtonDefaults.OutlinedBorderSize,
                                                     MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
                                                 ),
-                                                onClick = { importFile.launch(arrayOf("text/*")) }) {
+                                                onClick = {
+                                                    analytics.logEvent(LogEvent.HOME_BUTTON_IMPORT_WORKBOOK.eventName) {}
+                                                    importFile.launch(arrayOf("text/*"))
+                                                }) {
                                                 Text(
                                                     text = stringResource(id = R.string.action_import),
                                                     color = MaterialTheme.colors.onBackground
@@ -233,6 +239,7 @@ class CreateWorkbookFragment : Fragment() {
                                                     MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
                                                 ),
                                                 onClick = {
+                                                    analytics.logEvent(LogEvent.HOME_BUTTON_HELP_FOR_IMPORT_WORKBOOK.eventName) {}
                                                     startActivity(Intent(Intent.ACTION_VIEW).apply {
                                                         data =
                                                             Uri.parse("https://ankimaker.com/howto/edit_csv")
@@ -248,7 +255,6 @@ class CreateWorkbookFragment : Fragment() {
                                 }
                                 Button(
                                     onClick = {
-
                                         if (name.isEmpty()) {
                                             showingValidationError = true
                                             return@Button
@@ -260,6 +266,7 @@ class CreateWorkbookFragment : Fragment() {
                                             folderName = uiState.folderName ?: "",
                                         )
 
+                                        analytics.logEvent(LogEvent.HOME_BUTTON_STORE_WORKBOOK.eventName) {}
                                         requireContext().showToast(getString(R.string.msg_create_success_workbook))
                                         requireActivity().hideKeyboard(windowToken)
                                         findNavController().popBackStack()

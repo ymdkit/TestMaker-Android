@@ -113,6 +113,9 @@ class WorkbookListFragment : Fragment() {
                                     OperateFolder(
                                         folder = folder,
                                         onEdit = { newFolder ->
+                                            analytics.logEvent(
+                                                LogEvent.HOME_BUTTON_UPDATE_FOLDER.eventName
+                                            ) {}
                                             scope.launch {
                                                 drawerState.close()
                                                 workbookListViewModel.updateFolder(newFolder)
@@ -120,6 +123,9 @@ class WorkbookListFragment : Fragment() {
                                             }
                                         },
                                         onDelete = {
+                                            analytics.logEvent(
+                                                LogEvent.HOME_BUTTON_DELETE_FOLDER.eventName
+                                            ) {}
                                             scope.launch {
                                                 drawerState.close()
                                                 workbookListViewModel.deleteFolder(folder)
@@ -133,6 +139,9 @@ class WorkbookListFragment : Fragment() {
                                     OperateWorkbook(
                                         workbook = workbook,
                                         onAnswer = {
+                                            analytics.logEvent(
+                                                LogEvent.HOME_BUTTON_PLAY_WORKBOOK.eventName
+                                            ) {}
                                             scope.launch {
                                                 if (!workbookListUiState.isShowAnswerSettingDialog) {
                                                     drawerState.close()
@@ -143,6 +152,9 @@ class WorkbookListFragment : Fragment() {
                                             }
                                         },
                                         onEdit = {
+                                            analytics.logEvent(
+                                                LogEvent.HOME_BUTTON_EDIT_WORKBOOK.eventName
+                                            ) {}
                                             scope.launch {
                                                 drawerState.close()
                                                 if (findNavController().currentDestination?.id == R.id.page_home) {
@@ -155,11 +167,17 @@ class WorkbookListFragment : Fragment() {
                                             }
                                         },
                                         onShare = {
+                                            analytics.logEvent(
+                                                LogEvent.HOME_BUTTON_SHARE_WORKBOOK.eventName
+                                            ) {}
                                             workbookListViewModel.onShareWorkbookClicked(
                                                 workbook
                                             )
                                         },
                                         onDelete = {
+                                            analytics.logEvent(
+                                                LogEvent.HOME_BUTTON_DELETE_WORKBOOK.eventName
+                                            ) {}
                                             scope.launch {
                                                 workbookListViewModel.deleteWorkbook(
                                                     workbook
@@ -192,6 +210,9 @@ class WorkbookListFragment : Fragment() {
                                         workbook = state.workbook,
                                         isDownloading = myWorkbookListUiState.isDownloading,
                                         onDownload = {
+                                            analytics.logEvent(
+                                                LogEvent.HOME_BUTTON_DOWNLOAD_UPLOADED_WORKBOOK.eventName
+                                            ) {}
                                             scope.launch {
                                                 myWorkbookListViewModel.onDownloadWorkbookClicked(
                                                     workbook = state.workbook
@@ -199,6 +220,9 @@ class WorkbookListFragment : Fragment() {
                                             }
                                         },
                                         onShare = {
+                                            analytics.logEvent(
+                                                LogEvent.HOME_BUTTON_SHARE_UPLOADED_WORKBOOK.eventName
+                                            ) {}
                                             scope.launch {
                                                 myWorkbookListViewModel.onShareWorkbookClicked(
                                                     workbook = state.workbook
@@ -207,6 +231,9 @@ class WorkbookListFragment : Fragment() {
                                             }
                                         },
                                         onDelete = {
+                                            analytics.logEvent(
+                                                LogEvent.HOME_BUTTON_DELETE_UPLOADED_WORKBOOK.eventName
+                                            ) {}
                                             scope.launch {
                                                 myWorkbookListViewModel.onDeleteWorkbookClicked(
                                                     state.workbook
@@ -387,6 +414,9 @@ class WorkbookListFragment : Fragment() {
                                                                                         },
                                                                                         folder = it,
                                                                                         onClick = {
+                                                                                            analytics.logEvent(
+                                                                                                LogEvent.HOME_ITEM_OPEN_FOLDER.eventName
+                                                                                            ) {}
                                                                                             if (findNavController().currentDestination?.id == R.id.page_home) {
                                                                                                 findNavController().navigate(
                                                                                                     WorkbookListFragmentDirections.actionHomeToHomeQuestion(
@@ -396,6 +426,9 @@ class WorkbookListFragment : Fragment() {
                                                                                             }
                                                                                         },
                                                                                         onMenuClicked = {
+                                                                                            analytics.logEvent(
+                                                                                                LogEvent.HOME_ITEM_OPEARATE_FOLDER.eventName
+                                                                                            ) {}
                                                                                             scope.launch {
                                                                                                 workbookListViewModel.onFolderMenuClicked(
                                                                                                     it
@@ -423,6 +456,9 @@ class WorkbookListFragment : Fragment() {
                                                                                         },
                                                                                         workbook = it,
                                                                                         onClick = {
+                                                                                            analytics.logEvent(
+                                                                                                LogEvent.HOME_ITEM_OPERATE_WORKBOOK.eventName
+                                                                                            ) {}
                                                                                             scope.launch {
                                                                                                 drawerState.expand()
                                                                                             }
@@ -504,6 +540,9 @@ class WorkbookListFragment : Fragment() {
                                                             floatingActionButton = {
                                                                 FloatingActionButton(onClick = {
                                                                     if (findNavController().currentDestination?.id == R.id.page_home) {
+                                                                        analytics.logEvent(
+                                                                            LogEvent.HOME_BUTTON_CREATE_WORKBOOK.eventName
+                                                                        ) {}
                                                                         findNavController().navigate(
                                                                             WorkbookListFragmentDirections.actionHomeToCreateWorkbook(
                                                                                 folderName = args.folderName
@@ -535,7 +574,12 @@ class WorkbookListFragment : Fragment() {
                                                                             state = rememberSwipeRefreshState(
                                                                                 isRefreshing = myWorkbookListUiState.isRefreshing
                                                                             ),
-                                                                            onRefresh = myWorkbookListViewModel::load
+                                                                            onRefresh = {
+                                                                                analytics.logEvent(
+                                                                                    LogEvent.HOME_REFRESH_UPLOADED_WORKBOOK.eventName
+                                                                                ) {}
+                                                                                myWorkbookListViewModel.load()
+                                                                            }
                                                                         ) {
                                                                             ResourceContent(
                                                                                 resource = myWorkbookListUiState.myWorkbookList,
@@ -568,6 +612,9 @@ class WorkbookListFragment : Fragment() {
                                                                                                 SharedWorkbookListItem(
                                                                                                     workbook = it,
                                                                                                     onClick = {
+                                                                                                        analytics.logEvent(
+                                                                                                            LogEvent.HOME_ITEM_OPERATE_UPLOADED_WORKBOOK.eventName
+                                                                                                        ) {}
                                                                                                         scope.launch {
                                                                                                             workbookListViewModel.onSharedWorkbookClicked(
                                                                                                                 it
@@ -586,6 +633,9 @@ class WorkbookListFragment : Fragment() {
                                                                     },
                                                                     floatingActionButton = {
                                                                         FloatingActionButton(onClick = {
+                                                                            analytics.logEvent(
+                                                                                LogEvent.HOME_BUTTON_UPLOAD_WORKBOOK.eventName
+                                                                            ) {}
                                                                             if (findNavController().currentDestination?.id == R.id.page_home) {
                                                                                 findNavController().navigate(
                                                                                     WorkbookListFragmentDirections.actionHomeToUploadWorkbook()
