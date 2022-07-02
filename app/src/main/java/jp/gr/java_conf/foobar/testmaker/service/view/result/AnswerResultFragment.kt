@@ -219,6 +219,9 @@ class AnswerResultFragment : Fragment() {
                                                             .weight(fill = true, weight = 1f)
                                                             .defaultMinSize(minHeight = 48.dp),
                                                         onClick = {
+                                                            analytics.logEvent(
+                                                                LogEvent.RESULT_BUTTON_BACK_HOME.eventName
+                                                            ) {}
                                                             findNavController().popBackStack(
                                                                 R.id.page_home,
                                                                 false
@@ -235,6 +238,9 @@ class AnswerResultFragment : Fragment() {
                                                             backgroundColor = MaterialTheme.colors.primary
                                                         ),
                                                         onClick = {
+                                                            analytics.logEvent(
+                                                                LogEvent.RESULT_BUTTON_RETRY.eventName
+                                                            ) {}
                                                             scope.launch {
                                                                 drawerState.open()
                                                             }

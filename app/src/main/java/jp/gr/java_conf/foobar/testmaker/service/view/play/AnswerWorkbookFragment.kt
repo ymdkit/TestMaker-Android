@@ -83,6 +83,9 @@ class AnswerWorkbookFragment : Fragment() {
                                         confirmMessage = stringResource(id = R.string.msg_finish_answer),
                                         confirmButtonText = stringResource(id = R.string.button_finish)
                                     ) {
+                                        analytics.logEvent(
+                                            LogEvent.ANSWER_BUTTON_END.eventName
+                                        ) {}
                                         requireActivity().hideKeyboard(windowToken)
                                         findNavController().navigate(
                                             AnswerWorkbookFragmentDirections.actionAnswerWorkbookToAnswerResult(
@@ -110,6 +113,9 @@ class AnswerWorkbookFragment : Fragment() {
                                                     state = state,
                                                     isSwap = sharedPreferenceManager.reverse,
                                                     onAnswered = { yourAnswer ->
+                                                        analytics.logEvent(
+                                                            LogEvent.ANSWER_SHOW_QUESTION.eventName
+                                                        ) {}
                                                         playViewModel.judgeIsCorrect(
                                                             state.index,
                                                             state.question,
@@ -121,6 +127,9 @@ class AnswerWorkbookFragment : Fragment() {
                                                 ContentPlaySelectQuestion(
                                                     state = state,
                                                     onAnswered = { yourAnswer ->
+                                                        analytics.logEvent(
+                                                            LogEvent.ANSWER_SHOW_QUESTION.eventName
+                                                        ) {}
                                                         playViewModel.judgeIsCorrect(
                                                             state.index,
                                                             state.question,
@@ -133,6 +142,9 @@ class AnswerWorkbookFragment : Fragment() {
                                                     state = state,
                                                     isSwap = sharedPreferenceManager.reverse,
                                                     onAnswered = { yourAnswers ->
+                                                        analytics.logEvent(
+                                                            LogEvent.ANSWER_SHOW_QUESTION.eventName
+                                                        ) {}
                                                         playViewModel.judgeIsCorrect(
                                                             state.index,
                                                             state.question,
@@ -144,6 +156,9 @@ class AnswerWorkbookFragment : Fragment() {
                                                 ContentPlaySelectCompleteQuestion(
                                                     state = state,
                                                     onAnswered = { yourAnswers ->
+                                                        analytics.logEvent(
+                                                            LogEvent.ANSWER_SHOW_QUESTION.eventName
+                                                        ) {}
                                                         playViewModel.judgeIsCorrect(
                                                             state.index,
                                                             state.question,
@@ -156,6 +171,9 @@ class AnswerWorkbookFragment : Fragment() {
                                                     state = state,
                                                     isSwap = sharedPreferenceManager.reverse,
                                                     onAnswered = {
+                                                        analytics.logEvent(
+                                                            LogEvent.ANSWER_SHOW_QUESTION.eventName
+                                                        ) {}
                                                         playViewModel.confirm(
                                                             state.index,
                                                             state.question
@@ -209,6 +227,9 @@ class AnswerWorkbookFragment : Fragment() {
                                                 )
                                             }
                                             is PlayUiState.NoQuestionExist -> {
+                                                analytics.logEvent(
+                                                    LogEvent.ANSWER_ERROR_QUESTIONS.eventName
+                                                ) {}
                                                 requireContext().showToast(stringResource(id = R.string.msg_empty_question))
                                                 findNavController().popBackStack()
                                             }
