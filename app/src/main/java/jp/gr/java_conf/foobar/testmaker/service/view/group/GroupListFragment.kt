@@ -91,6 +91,9 @@ class GroupListFragment : Fragment() {
                                                                     GroupListItem(
                                                                         group = it,
                                                                         onClick = {
+                                                                            analytics.logEvent(
+                                                                                LogEvent.GROUP_ITEM_OPEN_GROUP.eventName
+                                                                            ) {}
                                                                             findNavController().navigate(
                                                                                 GroupListFragmentDirections.actionGroupListToGroupDetail(
                                                                                     groupId = it.id
@@ -105,7 +108,12 @@ class GroupListFragment : Fragment() {
                                             }
                                         },
                                         floatingActionButton = {
-                                            FloatingActionButton(onClick = groupListViewModel::onCreateGroupButtonClicked) {
+                                            FloatingActionButton(onClick = {
+                                                analytics.logEvent(
+                                                    LogEvent.GROUP_BUTTON_CREATE_GROUP.eventName
+                                                ) {}
+                                                groupListViewModel.onCreateGroupButtonClicked()
+                                            }) {
                                                 Icon(
                                                     Icons.Filled.Add,
                                                     contentDescription = "create group"
@@ -127,6 +135,9 @@ class GroupListFragment : Fragment() {
                             placeholder = stringResource(id = R.string.hint_group_name),
                             onDismiss = groupListViewModel::onCancelCreateGroupButtonClicked,
                             onSubmit = {
+                                analytics.logEvent(
+                                    LogEvent.GROUP_BUTTON_STORE_GROUP.eventName
+                                ) {}
                                 groupListViewModel.onCreateGroup(it)
                                 requireContext().showToast(getString(R.string.msg_success_create_group))
                             },

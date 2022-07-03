@@ -24,15 +24,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.ui.core.*
+import com.example.ui.logger.LogEvent
 import com.example.ui.theme.TestMakerAndroidTheme
 import com.example.ui.workbook.UploadWorkbookViewModel
 import com.google.android.gms.ads.AdSize
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
 import jp.gr.java_conf.foobar.testmaker.service.utils.hideKeyboard
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class UploadGroupTestFragment : Fragment() {
@@ -42,6 +46,8 @@ class UploadGroupTestFragment : Fragment() {
     private val uploadWorkbookViewModel: UploadWorkbookViewModel by viewModels()
     private val adViewModel: AdViewModel by viewModels()
 
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -163,7 +169,12 @@ class UploadGroupTestFragment : Fragment() {
                                                 }
                                                 Button(
                                                     enabled = !uiState.isUploading,
-                                                    onClick = uploadWorkbookViewModel::uploadWorkbook,
+                                                    onClick = {
+                                                        analytics.logEvent(
+                                                            LogEvent.QUESTIONS_BUTTON_MOVE_QUESTIONS.eventName
+                                                        ) {}
+                                                        uploadWorkbookViewModel.uploadWorkbook()
+                                                    },
                                                     modifier = Modifier
                                                         .fillMaxWidth()
                                                         .height(48.dp)

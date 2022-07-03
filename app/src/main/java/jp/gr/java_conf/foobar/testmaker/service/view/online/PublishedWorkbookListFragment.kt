@@ -126,6 +126,9 @@ class PublishedWorkbookListFragment : Fragment() {
                                     text = stringResource(id = R.string.share)
                                 ) {
                                     scope.launch {
+                                        analytics.logEvent(
+                                            LogEvent.SEARCH_BUTTON_SHARE_WORKBOOK.eventName
+                                        ) {}
                                         sharedWorkbookListViewModel.onShareWorkbookClicked(workbook = workbook)
                                         drawerState.close()
                                     }
@@ -147,6 +150,9 @@ class PublishedWorkbookListFragment : Fragment() {
                                 Button(
                                     enabled = !uiState.isDownloading,
                                     onClick = {
+                                        analytics.logEvent(
+                                            LogEvent.SEARCH_BUTTON_DOWNLOAD_WORKBOOK.eventName
+                                        ) {}
                                         sharedWorkbookListViewModel.onDownloadWorkbookClicked(
                                             workbook = workbook
                                         )
@@ -193,8 +199,12 @@ class PublishedWorkbookListFragment : Fragment() {
                                         elevation = 0.dp,
                                         actions = {
                                             IconButton(
-                                                onClick =
-                                                sharedWorkbookListViewModel::onSearchButtonClicked
+                                                onClick = {
+                                                    analytics.logEvent(
+                                                        LogEvent.SEARCH_BUTTON_SEARCH_PUBLISHED_WORKBOOK.eventName
+                                                    ) {}
+                                                    sharedWorkbookListViewModel.onSearchButtonClicked()
+                                                }
                                             ) {
                                                 Icon(
                                                     imageVector = if (uiState.isSearching) Icons.Filled.Close else Icons.Filled.Search,
@@ -241,6 +251,9 @@ class PublishedWorkbookListFragment : Fragment() {
                                                                     it.questionListCount
                                                                 ),
                                                                 onClick = {
+                                                                    analytics.logEvent(
+                                                                        LogEvent.SEARCH_ITEM_OPERATE_WORKBOOK.eventName
+                                                                    ) {}
                                                                     scope.launch {
                                                                         sharedWorkbookListViewModel.onWorkbookClicked(
                                                                             it
@@ -257,6 +270,9 @@ class PublishedWorkbookListFragment : Fragment() {
                                 },
                                 floatingActionButton = {
                                     FloatingActionButton(onClick = {
+                                        analytics.logEvent(
+                                            LogEvent.SEARCH_BUTTON_UPLOAD_WORKBOOK.eventName
+                                        ) {}
                                         findNavController().navigate(
                                             PublishedWorkbookListFragmentDirections.actionSearchToUploadWorkbook()
                                         )

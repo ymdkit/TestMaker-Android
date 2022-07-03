@@ -427,7 +427,7 @@ class WorkbookListFragment : Fragment() {
                                                                                         },
                                                                                         onMenuClicked = {
                                                                                             analytics.logEvent(
-                                                                                                LogEvent.HOME_ITEM_OPEARATE_FOLDER.eventName
+                                                                                                LogEvent.HOME_ITEM_OPERATE_FOLDER.eventName
                                                                                             ) {}
                                                                                             scope.launch {
                                                                                                 workbookListViewModel.onFolderMenuClicked(

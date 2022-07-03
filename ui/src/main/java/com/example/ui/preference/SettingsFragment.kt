@@ -192,7 +192,12 @@ class SettingsFragment : Fragment() {
                                             label = stringResource(id = R.string.prefrence_theme_color),
                                             value = colorMapper.colorToLabel(uiState.themeColor),
                                             colorMapper = colorMapper,
-                                            onValueChange = preferenceViewModel::onThemeColorChanged
+                                            onValueChange = { newValue ->
+                                                analytics.logEvent(
+                                                    LogEvent.SETTINGS_BUTTON_EDIT_THEME_COLOR.eventName
+                                                ) {}
+                                                preferenceViewModel.onThemeColorChanged(newValue)
+                                            }
                                         )
                                     }
                                     item {
@@ -209,7 +214,14 @@ class SettingsFragment : Fragment() {
                                                 label = stringResource(id = R.string.setting_user_name),
                                                 value = user.displayName,
                                                 dialogTitle = stringResource(id = R.string.dialog_edit_display_name),
-                                                onValueSubmitted = preferenceViewModel::onDisplayNameSubmitted,
+                                                onValueSubmitted = { newValue ->
+                                                    analytics.logEvent(
+                                                        LogEvent.SETTINGS_BUTTON_EDIT_USER_NAME.eventName
+                                                    ) {}
+                                                    preferenceViewModel.onDisplayNameSubmitted(
+                                                        newValue
+                                                    )
+                                                }
                                             )
                                         }
                                         item {
@@ -217,7 +229,13 @@ class SettingsFragment : Fragment() {
                                                 label = stringResource(id = R.string.logout),
                                                 confirmMessage = stringResource(id = R.string.confirm_logout),
                                                 confirmButtonText = stringResource(id = R.string.button_logout),
-                                                onConfirmed = preferenceViewModel::onLogoutButtonClicked
+                                                onConfirmed = {
+                                                    analytics.logEvent(
+                                                        LogEvent.SETTINGS_BUTTON_LOGOUT.eventName
+                                                    ) {}
+                                                    preferenceViewModel.onLogoutButtonClicked()
+                                                }
+
                                             )
                                         }
                                     } else {
@@ -225,6 +243,9 @@ class SettingsFragment : Fragment() {
                                             ClickableListItem(
                                                 text = stringResource(id = R.string.login),
                                                 onClick = {
+                                                    analytics.logEvent(
+                                                        LogEvent.SETTINGS_BUTTON_LOGIN.eventName
+                                                    ) {}
                                                     launcher.launch(authUIIntent())
                                                 }
                                             )
@@ -242,6 +263,9 @@ class SettingsFragment : Fragment() {
                                         ClickableListItem(
                                             text = stringResource(id = R.string.action_remove_ad),
                                             onClick = {
+                                                analytics.logEvent(
+                                                    LogEvent.SETTINGS_BUTTON_REMOVE_AD.eventName
+                                                ) {}
                                                 if (!adViewModel.isRemovedAd.value) {
                                                     purchaseViewModel.launchBillingFlow(
                                                         activity = requireActivity(),
@@ -269,6 +293,9 @@ class SettingsFragment : Fragment() {
                                         ClickableListItem(
                                             text = stringResource(id = R.string.help),
                                             onClick = {
+                                                analytics.logEvent(
+                                                    LogEvent.SETTINGS_BUTTON_FAQ.eventName
+                                                ) {}
                                                 startActivity(Intent(Intent.ACTION_VIEW).apply {
                                                     data = Uri.parse("https://ankimaker.com/guide")
                                                 })

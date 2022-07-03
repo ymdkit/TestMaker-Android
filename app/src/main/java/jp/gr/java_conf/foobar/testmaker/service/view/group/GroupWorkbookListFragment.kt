@@ -121,6 +121,9 @@ class GroupWorkbookListFragment : Fragment() {
                                     },
                                     text = stringResource(id = R.string.history)
                                 ) {
+                                    analytics.logEvent(
+                                        LogEvent.GROUP_BUTTON_HISTORY_WORKBOOK.eventName
+                                    ) {}
                                     scope.launch {
                                         drawerState.close()
                                         findNavController().navigate(
@@ -139,6 +142,9 @@ class GroupWorkbookListFragment : Fragment() {
                                     },
                                     text = stringResource(id = R.string.share)
                                 ) {
+                                    analytics.logEvent(
+                                        LogEvent.GROUP_BUTTON_SHARE_WORKBOOK.eventName
+                                    ) {}
                                     scope.launch {
                                         groupWorkbookListViewModel.onShareWorkbookClicked(workbook = workbook)
                                         drawerState.close()
@@ -159,6 +165,9 @@ class GroupWorkbookListFragment : Fragment() {
                                         ),
                                         confirmButtonText = stringResource(id = R.string.delete),
                                         onConfirmed = {
+                                            analytics.logEvent(
+                                                LogEvent.GROUP_BUTTON_DELETE_WORKBOOK.eventName
+                                            ) {}
                                             scope.launch {
                                                 groupWorkbookListViewModel.onDeleteWorkbookClicked(
                                                     workbook
@@ -172,6 +181,9 @@ class GroupWorkbookListFragment : Fragment() {
                                 Button(
                                     enabled = !uiState.isDownloading,
                                     onClick = {
+                                        analytics.logEvent(
+                                            LogEvent.GROUP_BUTTON_DOWNLOAD_WORKBOOK.eventName
+                                        ) {}
                                         groupWorkbookListViewModel.onDownloadWorkbookClicked(
                                             workbook = workbook
                                         )
@@ -214,7 +226,12 @@ class GroupWorkbookListFragment : Fragment() {
                                         },
                                         actions = {
                                             IconButton(
-                                                onClick = groupWorkbookListViewModel::onInviteButtonClicked,
+                                                onClick = {
+                                                    analytics.logEvent(
+                                                        LogEvent.GROUP_BUTTON_INVITE_GROUP.eventName
+                                                    ) {}
+                                                    groupWorkbookListViewModel.onInviteButtonClicked()
+                                                },
                                                 content = {
                                                     Icon(
                                                         imageVector = Icons.Filled.GroupAdd,
@@ -256,6 +273,9 @@ class GroupWorkbookListFragment : Fragment() {
                                                         ),
                                                         confirmButtonText = stringResource(id = R.string.delete),
                                                         onConfirmed = {
+                                                            analytics.logEvent(
+                                                                LogEvent.GROUP_BUTTON_EXIT_GROUP.eventName
+                                                            ) {}
                                                             groupWorkbookListViewModel.onExitGroupButtonClicked()
                                                             requireContext().showToast(getString(R.string.msg_success_exit_group))
                                                         }
@@ -318,6 +338,9 @@ class GroupWorkbookListFragment : Fragment() {
                                                                                 it.questionListCount
                                                                             ),
                                                                             onClick = {
+                                                                                analytics.logEvent(
+                                                                                    LogEvent.GROUP_ITEM_OPERATE_WORKBOOK.eventName
+                                                                                ) {}
                                                                                 scope.launch {
                                                                                     groupWorkbookListViewModel.onWorkbookClicked(
                                                                                         workbook = it
