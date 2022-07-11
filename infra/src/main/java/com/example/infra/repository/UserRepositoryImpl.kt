@@ -5,9 +5,11 @@ import com.example.domain.model.UserId
 import com.example.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -34,6 +36,12 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateUser(user: User) {
+        val currentUser = auth.currentUser ?: return
+        val profileUpdates = userProfileChangeRequest {
+            displayName = user.displayName
+        }
+        currentUser.updateProfile(profileUpdates).await()
+
         db.collection(COLLECTION_NAME)
             .document(user.id.value)
             .set(CreateUserRequest.fromUser(user))

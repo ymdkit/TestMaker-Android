@@ -42,7 +42,7 @@ object Dep {
         const val bom = "com.google.firebase:firebase-bom:26.2.0"
         const val core = "com.google.firebase:firebase-core"
         const val storage = "com.google.firebase:firebase-storage"
-        const val auth = "com.google.firebase:firebase-auth"
+        const val auth = "com.google.firebase:firebase-auth-ktx"
         const val fireStore = "com.google.firebase:firebase-firestore"
         const val dynamicLinks = "com.google.firebase:firebase-dynamic-links-ktx"
         const val analytics = "com.google.firebase:firebase-analytics-ktx"
