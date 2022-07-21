@@ -265,8 +265,10 @@ class WorkbookListFragment : Fragment() {
                                 topBar = {
                                     TestMakerTopAppBar(title = stringResource(id = R.string.app_name))
                                 },
-                                content = {
-                                    Column {
+                                content = { padding ->
+                                    Column(
+                                        modifier = Modifier.padding(padding)
+                                    ) {
                                         val tabList = listOf(
                                             stringResource(id = R.string.tab_local),
                                             stringResource(id = R.string.tab_remote)
@@ -315,8 +317,11 @@ class WorkbookListFragment : Fragment() {
                                                         }
                                                         Scaffold(
                                                             modifier = Modifier.weight(1f),
-                                                            content = {
+                                                            content = { padding ->
                                                                 ResourceContent(
+                                                                    modifier = Modifier.padding(
+                                                                        padding
+                                                                    ),
                                                                     resource = workbookListUiState.resources,
                                                                     onRetry = { workbookListViewModel.load() }) {
 
@@ -569,8 +574,11 @@ class WorkbookListFragment : Fragment() {
                                                             content = {
                                                                 Scaffold(
                                                                     modifier = Modifier.weight(1f),
-                                                                    content = {
+                                                                    content = { padding ->
                                                                         SwipeRefresh(
+                                                                            modifier = Modifier.padding(
+                                                                                padding
+                                                                            ),
                                                                             state = rememberSwipeRefreshState(
                                                                                 isRefreshing = myWorkbookListUiState.isRefreshing
                                                                             ),

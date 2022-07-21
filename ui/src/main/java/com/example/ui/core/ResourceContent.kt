@@ -13,6 +13,7 @@ import com.example.ui.R
 
 @Composable
 fun <T> ResourceContent(
+    modifier: Modifier = Modifier,
     resource: Resource<T>,
     onRetry: () -> Unit,
     onSuccess: @Composable (T) -> Unit,
@@ -21,7 +22,7 @@ fun <T> ResourceContent(
         is Resource.Success -> onSuccess(resource.value)
         is Resource.Failure -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
