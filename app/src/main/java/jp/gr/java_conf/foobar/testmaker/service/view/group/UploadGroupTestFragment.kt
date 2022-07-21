@@ -78,14 +78,15 @@ class UploadGroupTestFragment : Fragment() {
                                 }
                             )
                         },
-                        content = {
+                        content = { padding ->
                             Column {
                                 Scaffold(
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .weight(weight = 1f, fill = true)
-                                ) {
+                                ) { padding ->
                                     RequireAuthentication(
+                                        modifier = Modifier.padding(padding),
                                         isLogin = uiState.isLogin,
                                         message = stringResource(id = R.string.msg_not_login_in_group),
                                         onLogin = uploadWorkbookViewModel::onUserCreated

@@ -145,10 +145,13 @@ class AnswerResultFragment : Fragment() {
                             topBar = {
                                 TestMakerTopAppBar(title = stringResource(id = R.string.label_result))
                             },
-                            content = {
+                            content = { padding ->
                                 when (val state = uiState) {
                                     is Resource.Success -> {
-                                        Surface(color = MaterialTheme.colors.surface) {
+                                        Surface(
+                                            modifier = Modifier.padding(padding),
+                                            color = MaterialTheme.colors.surface
+                                        ) {
                                             Column {
                                                 LazyColumn(
                                                     modifier = Modifier

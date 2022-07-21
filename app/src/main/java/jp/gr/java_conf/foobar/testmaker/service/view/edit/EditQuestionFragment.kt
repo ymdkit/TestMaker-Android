@@ -79,8 +79,10 @@ class EditQuestionFragment : Fragment() {
                                 title = stringResource(id = R.string.title_activity_edit_question)
                             )
                         },
-                        content = {
-                            Column {
+                        content = { padding ->
+                            Column(
+                                modifier = Modifier.padding(padding)
+                            ) {
                                 val uiState by editQuestionViewModel.uiState.collectAsState()
 
                                 TabRow(

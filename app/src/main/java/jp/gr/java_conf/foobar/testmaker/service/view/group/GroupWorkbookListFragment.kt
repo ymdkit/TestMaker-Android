@@ -286,19 +286,21 @@ class GroupWorkbookListFragment : Fragment() {
                                         title = stringResource(id = R.string.group_detail_fragment_label)
                                     )
                                 },
-                            ) {
+                            ) { padding ->
                                 Scaffold(
-                                    content = {
+                                    content = { p ->
                                         RequireAuthentication(
+                                            modifier = Modifier.padding(p),
                                             isLogin = uiState.isLogin,
                                             message = stringResource(id = R.string.msg_not_login_in_group),
                                             onLogin = groupWorkbookListViewModel::onUserCreated
                                         ) {
-                                            SwipeRefresh(state = rememberSwipeRefreshState(
-                                                isRefreshing = uiState.isRefreshing
-                                            ), onRefresh = {
-                                                groupWorkbookListViewModel.load()
-                                            }) {
+                                            SwipeRefresh(
+                                                state = rememberSwipeRefreshState(
+                                                    isRefreshing = uiState.isRefreshing
+                                                ), onRefresh = {
+                                                    groupWorkbookListViewModel.load()
+                                                }) {
                                                 when (val state = uiState.workbookList) {
                                                     is Resource.Success -> {
                                                         if (state.value.isNotEmpty()) {

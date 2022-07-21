@@ -79,8 +79,10 @@ class CreateQuestionFragment : Fragment() {
                                 title = stringResource(id = R.string.title_activity_create_question)
                             )
                         },
-                        content = {
-                            Column {
+                        content = { padding ->
+                            Column(
+                                modifier = Modifier.padding(padding)
+                            ) {
                                 val uiState by createQuestionViewModel.uiState.collectAsState()
                                 TabRow(
                                     selectedTabIndex = uiState.questionType.value,

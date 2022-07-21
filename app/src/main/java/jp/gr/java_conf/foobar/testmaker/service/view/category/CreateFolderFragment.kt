@@ -64,7 +64,7 @@ class CreateFolderFragment : Fragment() {
                                 title = stringResource(id = R.string.fragment_create_folder)
                             )
                         },
-                        content = {
+                        content = { padding ->
 
                             val focusRequester = remember { FocusRequester() }
                             val focusManager = LocalFocusManager.current

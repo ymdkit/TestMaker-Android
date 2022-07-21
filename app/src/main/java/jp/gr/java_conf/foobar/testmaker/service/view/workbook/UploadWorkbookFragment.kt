@@ -68,14 +68,15 @@ class UploadWorkbookFragment : Fragment() {
                                 }
                             )
                         },
-                        content = {
+                        content = { padding ->
                             Column {
                                 Scaffold(
                                     modifier = Modifier
-                                        .padding(16.dp)
+                                        .padding(padding)
                                         .weight(weight = 1f, fill = true)
-                                ) {
+                                ) { p ->
                                     RequireAuthentication(
+                                        modifier = Modifier.padding(p),
                                         isLogin = uiState.isLogin,
                                         message = stringResource(id = R.string.msg_not_login),
                                         onLogin = uploadWorkbookViewModel::onUserCreated

@@ -97,7 +97,7 @@ class AnswerWorkbookFragment : Fragment() {
                                 }
                             )
                         },
-                        content = {
+                        content = { padding ->
                             val uiState = playViewModel.uiState.collectAsState()
                             val effectState = playViewModel.answerEffectState.collectAsState()
 
@@ -108,6 +108,7 @@ class AnswerWorkbookFragment : Fragment() {
                                             .padding(16.dp)
                                     ) {
                                         when (val state = uiState.value) {
+                                            is PlayUiState.Initial -> {}
                                             is PlayUiState.Write -> {
                                                 ContentPlayWriteQuestion(
                                                     state = state,
@@ -193,10 +194,12 @@ class AnswerWorkbookFragment : Fragment() {
                                                         )
                                                     },
                                                     onModifyQuestion = {
-                                                        findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
-                                                            workbookId = args.workbookId,
-                                                            questionId = it.id
-                                                        ))
+                                                        findNavController().navigate(
+                                                            AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
+                                                                workbookId = args.workbookId,
+                                                                questionId = it.id
+                                                            )
+                                                        )
                                                     }
                                                 )
                                             }
