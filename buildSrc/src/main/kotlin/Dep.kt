@@ -1,15 +1,16 @@
 object Dep {
-    const val compileSdkVersion = 31
+    const val compileSdkVersion = 32
     const val minSdkVersion = 23
     const val targetSdkVersion = 30
 
-    const val kotlinVersion = "1.6.10"
+    const val kotlinVersion = "1.7.0"
     const val fragmentVersion = "1.3.2"
     const val navVersion = "2.3.3"
-    const val hiltVersion = "2.41"
+    const val hiltVersion = "2.42"
     const val retrofitVersion = "2.9.0"
     const val moshiVersion = "1.9.2"
-    const val composeVersion = "1.1.1"
+    const val composeVersion = "1.2.0-rc03"
+    const val composeCompilerVersion = "1.2.0"
     const val coroutineVersion = "1.6.1"
     const val lifeCycleVersion = "2.4.1"
     const val glideVersion = "4.13.0"
