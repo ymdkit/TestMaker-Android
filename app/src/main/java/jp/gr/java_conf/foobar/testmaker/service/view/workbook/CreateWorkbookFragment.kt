@@ -108,7 +108,7 @@ class CreateWorkbookFragment : Fragment() {
                                 }
                             )
                         },
-                        content = {
+                        content = { padding ->
 
                             val focusRequester = remember { FocusRequester() }
                             val focusManager = LocalFocusManager.current

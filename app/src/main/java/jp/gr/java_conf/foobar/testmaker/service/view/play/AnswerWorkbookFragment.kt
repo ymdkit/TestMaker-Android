@@ -97,7 +97,7 @@ class AnswerWorkbookFragment : Fragment() {
                                 }
                             )
                         },
-                        content = {
+                        content = { padding ->
                             val uiState = playViewModel.uiState.collectAsState()
                             val effectState = playViewModel.answerEffectState.collectAsState()
 
@@ -194,10 +194,12 @@ class AnswerWorkbookFragment : Fragment() {
                                                         )
                                                     },
                                                     onModifyQuestion = {
-                                                        findNavController().navigate(AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
-                                                            workbookId = args.workbookId,
-                                                            questionId = it.id
-                                                        ))
+                                                        findNavController().navigate(
+                                                            AnswerWorkbookFragmentDirections.actionAnswerWorkbookToEditQuestion(
+                                                                workbookId = args.workbookId,
+                                                                questionId = it.id
+                                                            )
+                                                        )
                                                     }
                                                 )
                                             }

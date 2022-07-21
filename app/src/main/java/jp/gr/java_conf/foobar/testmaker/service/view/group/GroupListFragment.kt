@@ -58,14 +58,15 @@ class GroupListFragment : Fragment() {
                         Scaffold(
                             modifier = Modifier.weight(1f),
                             topBar = { TestMakerTopAppBar(title = stringResource(id = R.string.group_list_fragment_label)) },
-                        ) {
+                        ) { padding ->
                             RequireAuthentication(
                                 isLogin = uiState.isLogin,
                                 message = stringResource(id = R.string.msg_not_login_in_group),
                                 content = {
                                     Scaffold(
-                                        content = {
+                                        content = { p ->
                                             SwipeRefresh(
+                                                modifier = Modifier.padding(p),
                                                 state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
                                                 onRefresh = groupListViewModel::load
                                             ) {

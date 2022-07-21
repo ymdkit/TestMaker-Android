@@ -84,7 +84,7 @@ class EditWorkbookFragment : Fragment() {
                                 title = stringResource(id = R.string.title_edit_workbook)
                             )
                         },
-                        content = {
+                        content = { padding ->
 
                             val uiState by editWorkbookViewModel.uiState.collectAsState()
 

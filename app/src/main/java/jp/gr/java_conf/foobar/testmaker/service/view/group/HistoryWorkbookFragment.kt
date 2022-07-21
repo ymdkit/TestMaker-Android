@@ -67,8 +67,10 @@ class HistoryWorkbookFragment : Fragment() {
                             },
                             title = stringResource(id = R.string.history_test_fragment_label)
                         )
-                    }) {
-                        Column {
+                    }) { padding ->
+                        Column(
+                            modifier = Modifier.padding(padding)
+                        ) {
                             Column(modifier = Modifier.weight(1f))
                             {
                                 when (val state = uiState.answerHistoryList) {

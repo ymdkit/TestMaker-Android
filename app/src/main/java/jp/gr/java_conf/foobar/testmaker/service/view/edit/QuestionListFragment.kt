@@ -362,7 +362,7 @@ class QuestionListFragment : Fragment() {
                                         }
                                     )
                                 },
-                                content = {
+                                content = { padding ->
                                     when (val state = uiState.questionList) {
                                         is Resource.Success -> {
                                             if (state.value.isNotEmpty()) {
@@ -382,6 +382,7 @@ class QuestionListFragment : Fragment() {
                                                 LazyColumn(
                                                     state = dragDropListState.lazyListState,
                                                     modifier = Modifier
+                                                        .padding(padding)
                                                         .fillMaxHeight()
                                                         .pointerInput(Unit) {
                                                             detectDragGesturesAfterLongPress(

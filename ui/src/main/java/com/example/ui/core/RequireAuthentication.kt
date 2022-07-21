@@ -18,6 +18,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 
 @Composable
 fun RequireAuthentication(
+    modifier: Modifier = Modifier,
     isLogin: Boolean,
     onLogin: () -> Unit,
     message: String,
@@ -44,7 +45,7 @@ fun RequireAuthentication(
         content()
     } else {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
