@@ -108,6 +108,7 @@ class AnswerWorkbookFragment : Fragment() {
                                             .padding(16.dp)
                                     ) {
                                         when (val state = uiState.value) {
+                                            is PlayUiState.Initial -> {}
                                             is PlayUiState.Write -> {
                                                 ContentPlayWriteQuestion(
                                                     state = state,
