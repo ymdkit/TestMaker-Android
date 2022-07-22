@@ -141,6 +141,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.page_group -> {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
                 }
+                R.id.page_create_question,
+                R.id.page_edit_question,
+                R.id.page_answer_workbook -> {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+                }
                 else -> {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
                 }
