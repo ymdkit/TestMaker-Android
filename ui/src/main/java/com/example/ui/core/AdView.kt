@@ -23,7 +23,7 @@ fun AdView(
         AndroidView(
             factory = {
                 AdView(it).apply {
-                    this.adSize = adSize
+                    this.setAdSize(adSize)
                     adUnitId = "ca-app-pub-8942090726462263/8420884238"
                     loadAd(AdRequest.Builder().build())
                 }

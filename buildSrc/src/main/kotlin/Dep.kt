@@ -40,7 +40,7 @@ object Dep {
     }
 
     object Firebase {
-        const val bom = "com.google.firebase:firebase-bom:26.2.0"
+        const val bom = "com.google.firebase:firebase-bom:30.5.0"
         const val core = "com.google.firebase:firebase-core"
         const val storage = "com.google.firebase:firebase-storage"
         const val auth = "com.google.firebase:firebase-auth-ktx"
@@ -59,7 +59,7 @@ object Dep {
     }
 
     object PlayServices {
-        const val ads = "com.google.android.gms:play-services-ads:19.3.0"
+        const val ads = "com.google.android.gms:play-services-ads:21.0.0"
         const val oss = "com.google.android.gms:play-services-oss-licenses:17.0.0"
     }
 
