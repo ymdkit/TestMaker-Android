@@ -113,7 +113,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.0.5")
     implementation(Dep.Compose.activity)
     implementation("com.google.accompanist:accompanist-swiperefresh:0.23.1")
-    implementation("com.google.accompanist:accompanist-pager:0.19.0")
+    implementation("com.google.accompanist:accompanist-pager:0.28.0")
     implementation(Dep.PlayServices.ads)
     implementation("com.google.android.play:core-ktx:1.8.0")
     implementation(Dep.Misc.studyPlus)
