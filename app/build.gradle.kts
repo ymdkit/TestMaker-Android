@@ -110,7 +110,7 @@ dependencies {
     implementation(Dep.Compose.material)
     implementation(Dep.Compose.materialIconsCore)
     implementation(Dep.Compose.materialIconsExtended)
-    implementation("androidx.compose.runtime:runtime-livedata:1.0.5")
+    implementation("androidx.compose.runtime:runtime-livedata:1.3.3")
     implementation(Dep.Compose.activity)
     implementation("com.google.accompanist:accompanist-swiperefresh:0.23.1")
     implementation("com.google.accompanist:accompanist-pager:0.19.0")
