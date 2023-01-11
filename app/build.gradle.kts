@@ -146,7 +146,7 @@ dependencies {
     androidTestImplementation("tools.fastlane:screengrab:1.0.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
     androidTestImplementation("androidx.test:rules:1.2.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.3")
     androidTestImplementation("com.jraska:falcon:2.1.1")
 
     implementation(project(":ui"))
