@@ -7,7 +7,7 @@ buildscript {
         maven("https://plugins.gradle.org/m2/")
     }
     dependencies {
-        classpath("io.realm:realm-gradle-plugin:6.0.2")
+        classpath("io.realm:realm-gradle-plugin:10.13.2-transformer-api")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dep.kotlinVersion}")
         classpath("com.google.gms:google-services:4.3.10")
         classpath("com.google.android.gms:oss-licenses-plugin:0.10.5")
