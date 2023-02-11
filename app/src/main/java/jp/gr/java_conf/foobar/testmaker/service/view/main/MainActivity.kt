@@ -18,10 +18,13 @@ import androidx.compose.ui.unit.dp
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import androidx.preference.PreferenceManager
 import com.example.ui.core.showToast
 import com.example.ui.home.MainViewModel
 import com.example.ui.home.NavigationPage
 import com.example.ui.theme.TestMakerAndroidTheme
+import com.example.usecase.UserLogsUseCase
+import com.example.usecase.UserPreferenceCommandUseCase
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import dagger.hilt.android.AndroidEntryPoint
 import jp.gr.java_conf.foobar.testmaker.service.R
@@ -31,14 +34,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
+
+    @Inject
+    lateinit var userLogsUseCase: UserLogsUseCase
+
+    @Inject
+    lateinit var preferenceCommandUseCase: UserPreferenceCommandUseCase
 
     private val navController by lazy {
         (supportFragmentManager.findFragmentById(R.id.nav_main) as NavHostFragment).navController
@@ -182,6 +193,17 @@ class MainActivity : AppCompatActivity() {
             pendingDynamicLinkData ?: return@launchWhenCreated
             val deepLink = pendingDynamicLinkData.link
             handleDynamicLink(deepLink.toString())
+        }
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            val key = "alreadyUploaded"
+
+            if (!pref.getBoolean(key, false)) {
+                userLogsUseCase.uploadUserLogs()
+                pref.edit().putBoolean(key, true)
+                    .apply()
+            }
         }
     }
 
