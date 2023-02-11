@@ -66,4 +66,6 @@ open class RealmTest : RealmObject() {
             it.toQuestion()
         } ?: listOf()
     )
+
+    fun getQuestions() = questions ?: listOf()
 }

@@ -29,8 +29,8 @@ android {
         minSdk = Dep.minSdkVersion
         targetSdk = Dep.targetSdkVersion
         multiDexEnabled = true
-        versionCode = 190
-        versionName = "6.0.13"
+        versionCode = 191
+        versionName = "6.0.14"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -150,6 +150,7 @@ dependencies {
     androidTestImplementation("com.jraska:falcon:2.1.1")
 
     implementation(project(":ui"))
+    implementation(project(":domain"))
     implementation(project(":usecase")) // todo モジュール分割中の一時的な処置を削除する（フル Compose にした後）
     implementation(project(":infra"))
     implementation(project(":core"))
