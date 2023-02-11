@@ -1,7 +1,7 @@
 object Dep {
     const val compileSdkVersion = 32
     const val minSdkVersion = 23
-    const val targetSdkVersion = 30
+    const val targetSdkVersion = 32
 
     const val kotlinVersion = "1.7.0"
     const val fragmentVersion = "1.3.2"
